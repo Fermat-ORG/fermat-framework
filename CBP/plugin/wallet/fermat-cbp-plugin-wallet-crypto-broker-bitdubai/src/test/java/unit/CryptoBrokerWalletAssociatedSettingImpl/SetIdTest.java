@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 public class SetIdTest {
 
     @Test
-    public void setId(){
+    public void setId() {
         CryptoBrokerWalletAssociatedSettingImpl cryptoBrokerWalletAssociatedSetting = mock(CryptoBrokerWalletAssociatedSettingImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoBrokerWalletAssociatedSetting).setId(Mockito.any(UUID.class));
     }

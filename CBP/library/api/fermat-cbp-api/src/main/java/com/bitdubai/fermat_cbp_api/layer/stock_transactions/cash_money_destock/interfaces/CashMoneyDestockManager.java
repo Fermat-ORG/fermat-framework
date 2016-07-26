@@ -12,22 +12,21 @@ import java.math.BigDecimal;
  * Created by franklin on 16/11/15.
  */
 public interface CashMoneyDestockManager extends FermatManager {
-        /**
-         * Method that create the transaction Destock
-         *
-         * @param publicKeyActor
-         * @param fiatCurrency
-         * @param cbpWalletPublicKey
-         * @param cshWalletPublicKey
-         * @param cashReference
-         * @param amount
-         * @param memo
-         * @param priceReference
-         * @param originTransaction
-         *
-         * @throws CantCreateCashMoneyDestockException
-         */
-        void createTransactionDestock(
+    /**
+     * Method that create the transaction Destock
+     *
+     * @param publicKeyActor
+     * @param fiatCurrency
+     * @param cbpWalletPublicKey
+     * @param cshWalletPublicKey
+     * @param cashReference
+     * @param amount
+     * @param memo
+     * @param priceReference
+     * @param originTransaction
+     * @throws CantCreateCashMoneyDestockException
+     */
+    void createTransactionDestock(
             String publicKeyActor,
             FiatCurrency fiatCurrency,
             String cbpWalletPublicKey,
@@ -38,5 +37,5 @@ public interface CashMoneyDestockManager extends FermatManager {
             BigDecimal priceReference,
             OriginTransaction originTransaction,
             String originTransactionId
-        ) throws CantCreateCashMoneyDestockException;
+    ) throws CantCreateCashMoneyDestockException;
 }

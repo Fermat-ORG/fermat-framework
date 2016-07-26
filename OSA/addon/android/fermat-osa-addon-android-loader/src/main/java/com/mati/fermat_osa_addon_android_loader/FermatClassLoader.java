@@ -5,7 +5,7 @@ import android.util.Log;
 /**
  * Created by Matias Furszyfer on 2016.06.22..
  */
-public class FermatClassLoader extends ClassLoader{
+public class FermatClassLoader extends ClassLoader {
 
     private static final String TAG = "FermatClassLoader";
     private ClassLoader classLoader;
@@ -32,16 +32,16 @@ public class FermatClassLoader extends ClassLoader{
                 if (c != null)
                     return c;
             }
-        }catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
 //            Log.i(TAG,"Clase no encontrada");
-            try{
+            try {
                 if (classLoaderParent != null) {
                     Class<?> c = classLoaderParent.loadClass(className);
                     if (c != null)
                         return c;
                 }
-            }catch (ClassNotFoundException e1){
+            } catch (ClassNotFoundException e1) {
                 e1.printStackTrace();
 //                Log.i(TAG,"Clase padre no encontrada");
                 try {
@@ -50,12 +50,12 @@ public class FermatClassLoader extends ClassLoader{
                         return c;
                     else
                         return super.loadClass(className);
-                }catch (Exception e2){
-                    Log.i(TAG,"Clase base no encontrada");
+                } catch (Exception e2) {
+                    Log.i(TAG, "Clase base no encontrada");
                     e2.printStackTrace();
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return super.loadClass(className);

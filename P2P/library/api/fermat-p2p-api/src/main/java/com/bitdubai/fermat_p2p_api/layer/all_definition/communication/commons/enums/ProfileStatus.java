@@ -2,6 +2,8 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.e
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
+import java.io.Serializable;
+
 /**
  * The enum class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus</code>
  * Enums all the status of a p2p component profile in Fermat.
@@ -12,7 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public enum ProfileStatus implements FermatEnum {
+public enum ProfileStatus  implements FermatEnum, Serializable  {
 
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.

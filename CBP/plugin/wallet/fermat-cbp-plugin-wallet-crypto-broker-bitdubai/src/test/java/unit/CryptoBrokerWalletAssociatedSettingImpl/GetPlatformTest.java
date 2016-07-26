@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetPlatformTest {
     @Test
-    public void getPlatform(){
+    public void getPlatform() {
         CryptoBrokerWalletAssociatedSettingImpl cryptoBrokerWalletAssociatedSetting = mock(CryptoBrokerWalletAssociatedSettingImpl.class);
         when(cryptoBrokerWalletAssociatedSetting.getPlatform()).thenReturn(Platforms.BANKING_PLATFORM);
         assertThat(cryptoBrokerWalletAssociatedSetting.getPlatform()).isNotNull();

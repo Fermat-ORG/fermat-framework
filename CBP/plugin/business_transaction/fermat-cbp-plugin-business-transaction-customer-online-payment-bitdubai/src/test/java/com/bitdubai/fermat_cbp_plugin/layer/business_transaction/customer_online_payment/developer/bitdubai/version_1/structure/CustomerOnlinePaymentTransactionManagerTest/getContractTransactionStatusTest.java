@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.structure.CustomerOnlinePaymentTransactionManagerTest;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
@@ -7,7 +8,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.structure.CustomerOnlinePaymentTransactionManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,15 +34,16 @@ public class getContractTransactionStatusTest {
     TransactionTransmissionManager transactionTransmissionManager;
     @Mock
     CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+
     @Before
-    public void setup() throws Exception{
+    public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus(anyString())).
                 thenReturn(ContractTransactionStatus.ACK_OFFLINE_PAYMENT);
     }
 
     @Test
-    public void getContractTransactionStatusTest_Should_Return_Not_Null() throws Exception{
+    public void getContractTransactionStatusTest_Should_Return_Not_Null() throws Exception {
         customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(customerBrokerContractPurchaseManager,
                 customerOnlinePaymentBusinessTransactionDao,
                 customerBrokerPurchaseNegotiationManager,
@@ -52,7 +53,7 @@ public class getContractTransactionStatusTest {
     }
 
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getContractTransactionStatusTest_Should_Throw_UnexpectedResultReturnedFromDatabaseException() throws Exception{
+    public void getContractTransactionStatusTest_Should_Throw_UnexpectedResultReturnedFromDatabaseException() throws Exception {
         customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(
                 customerBrokerContractPurchaseManager,
                 customerOnlinePaymentBusinessTransactionDao,
@@ -62,9 +63,9 @@ public class getContractTransactionStatusTest {
     }
 
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getContractTransactionStatusTest_Should_Throw_Generic_UnexpectedResultReturnedFromDatabaseException() throws Exception{
+    public void getContractTransactionStatusTest_Should_Throw_Generic_UnexpectedResultReturnedFromDatabaseException() throws Exception {
         customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(
-                null,null, null,errorManager);
+                null, null, null, errorManager);
         customerOnlinePaymentTransactionManager.getContractTransactionStatus("Test");
     }
 }

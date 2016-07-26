@@ -11,15 +11,17 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.en
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData</code>
  * represents a crypto broker and exposes all the functionality of it.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/11/2015.
  * Updated by Manuel Perez on (darkpriestrelative@gmail.com) on 05/07/16.
  */
 public final class CryptoBrokerExposingData extends AbstractCBPActorExposingData {
 
     private final CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
+
     /**
      * Default constructor with parameters
+     *
      * @param publicKey
      * @param alias
      * @param image
@@ -46,11 +48,12 @@ public final class CryptoBrokerExposingData extends AbstractCBPActorExposingData
         this.cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
                 CryptoCurrency.BITCOIN,
                 FiatCurrency.US_DOLLAR,
-                "Selling Bitcoin");
+                "No Available Merchandises.");
     }
 
     /**
      * Constructor including CryptoBrokerIdentityExtraData as parameter.
+     *
      * @param publicKey
      * @param alias
      * @param image
@@ -83,19 +86,19 @@ public final class CryptoBrokerExposingData extends AbstractCBPActorExposingData
     public CryptoBrokerExposingData(
             CryptoBrokerIdentity cryptoBrokerIdentity,
             Location location,
-            ProfileStatus profileStatus){
+            ProfileStatus profileStatus) {
         super(
                 cryptoBrokerIdentity.getPublicKey(),
                 cryptoBrokerIdentity.getAlias(),
                 cryptoBrokerIdentity.getProfileImage(),
-                location,cryptoBrokerIdentity.getFrequency().getRefreshInterval(),
+                location, cryptoBrokerIdentity.getFrequency().getRefreshInterval(),
                 cryptoBrokerIdentity.getAccuracy(),
                 profileStatus);
         this.cryptoBrokerIdentityExtraData =
                 cryptoBrokerIdentity.getCryptoBrokerIdentityExtraData();
     }
 
-    public CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData(){
+    public CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData() {
         return this.cryptoBrokerIdentityExtraData;
     }
 }

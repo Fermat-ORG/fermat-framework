@@ -15,7 +15,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 /**
- *Created by Yordin Alayn on 22.01.16.
+ * Created by Yordin Alayn on 22.01.16.
  * Based in SingleChoiceViewHolder of Star_negotiation by nelson
  */
 public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnClickListener {
@@ -30,8 +30,8 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
 
         descriptionTextView = (TextView) itemView.findViewById(R.id.ccw_description_text);
         buttonValue = (Button) itemView.findViewById(R.id.ccw_single_choice_value);
-        separatorLineDown= itemView.findViewById(R.id.ccw_line_down);
-        separatorLineUp= itemView.findViewById(R.id.ccw_line_up);
+        separatorLineDown = itemView.findViewById(R.id.ccw_line_down);
+        separatorLineUp = itemView.findViewById(R.id.ccw_line_up);
         buttonValue.setOnClickListener(this);
     }
 
@@ -103,9 +103,9 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
         try {
             if (type == ClauseType.CUSTOMER_CURRENCY || type == ClauseType.BROKER_CURRENCY) {
                 if (FiatCurrency.codeExists(clauseValue))
-                    friendlyValue = FiatCurrency.getByCode(clauseValue).getFriendlyName() + "(" + clauseValue + ")";
+                    friendlyValue = new StringBuilder().append(FiatCurrency.getByCode(clauseValue).getFriendlyName()).append("(").append(clauseValue).append(")").toString();
                 else if (CryptoCurrency.codeExists(clauseValue))
-                    friendlyValue = CryptoCurrency.getByCode(clauseValue).getFriendlyName() + "(" + clauseValue + ")";
+                    friendlyValue = new StringBuilder().append(CryptoCurrency.getByCode(clauseValue).getFriendlyName()).append("(").append(clauseValue).append(")").toString();
 
             } else if (type == ClauseType.CUSTOMER_PAYMENT_METHOD || type == ClauseType.BROKER_PAYMENT_METHOD) {
                 friendlyValue = MoneyType.getByCode(clauseValue).getFriendlyName();

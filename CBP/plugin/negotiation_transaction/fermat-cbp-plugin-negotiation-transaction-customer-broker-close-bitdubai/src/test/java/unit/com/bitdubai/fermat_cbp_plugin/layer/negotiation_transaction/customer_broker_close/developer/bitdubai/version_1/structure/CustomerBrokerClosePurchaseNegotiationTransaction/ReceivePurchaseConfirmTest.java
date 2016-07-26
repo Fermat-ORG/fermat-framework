@@ -13,8 +13,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.UUID;
-
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 
@@ -29,7 +27,7 @@ public class ReceivePurchaseConfirmTest {
     private CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation;
 
     @Test
-    public void receivePurchaseConfirm() throws Exception{
+    public void receivePurchaseConfirm() throws Exception {
 
         CustomerBrokerClosePurchaseNegotiationTransaction customerBrokerClosePurchaseNegotiationTransaction = mock(CustomerBrokerClosePurchaseNegotiationTransaction.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(customerBrokerClosePurchaseNegotiationTransaction).receivePurchaseConfirm(customerBrokerPurchaseNegotiation);

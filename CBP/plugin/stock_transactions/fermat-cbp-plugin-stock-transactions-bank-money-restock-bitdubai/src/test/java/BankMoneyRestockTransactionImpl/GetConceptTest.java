@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetConceptTest {
 
     @Test
-    public void getConcept() throws Exception{
+    public void getConcept() throws Exception {
         BankMoneyRestockTransactionImpl bankMoneyRestockTransaction = mock(BankMoneyRestockTransactionImpl.class);
         when(bankMoneyRestockTransaction.getConcept()).thenReturn(new String());
         assertThat(bankMoneyRestockTransaction.getConcept()).isNotNull();

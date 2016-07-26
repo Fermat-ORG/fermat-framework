@@ -3,7 +3,7 @@ package com.bitdubai.fermat_api.layer.all_definition.enums.interfaces;
 /**
  * The interface <code>com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum</code>
  * haves the representation of the basic functionality of a Fermat Enum.
- *
+ * <p/>
  * Created by Leon Acosta (laion.cj91@gmail.com) on 16/09/2015.
  */
 public interface FermatEnum {

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetAmountTest {
 
     @Test
-    public void getAmount(){
+    public void getAmount() {
         CryptoBrokerStockTransactionImpl cryptoBrokerStockTransaction = mock(CryptoBrokerStockTransactionImpl.class);
         when(cryptoBrokerStockTransaction.getAmount()).thenReturn(BigDecimal.ONE);
         assertThat(cryptoBrokerStockTransaction.getAmount()).isNotNull();

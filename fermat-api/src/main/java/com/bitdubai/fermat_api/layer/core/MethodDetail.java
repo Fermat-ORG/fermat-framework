@@ -14,14 +14,14 @@ import java.util.concurrent.TimeUnit;
 @Target(ElementType.METHOD) //on class level
 public @interface MethodDetail {
 
-    public enum LoopType{
-        MAIN,BACKGROUND
+    public enum LoopType {
+        MAIN, BACKGROUND
     }
 
     LoopType looType();
 
     /**
-     *  if the method take much time to the timeout, the method will be stopped and return null
+     * if the method take much time to the timeout, the method will be stopped and return null
      *
      * @return
      */

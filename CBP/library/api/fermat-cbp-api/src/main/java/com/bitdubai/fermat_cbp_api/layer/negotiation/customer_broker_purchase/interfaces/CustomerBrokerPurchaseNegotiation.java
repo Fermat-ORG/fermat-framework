@@ -8,5 +8,5 @@ import java.io.Serializable;
 /**
  * Created by jorge on 10-10-2015.
  */
-public interface CustomerBrokerPurchaseNegotiation extends Negotiation, Serializable{
+public interface CustomerBrokerPurchaseNegotiation extends Negotiation, Serializable {
 }

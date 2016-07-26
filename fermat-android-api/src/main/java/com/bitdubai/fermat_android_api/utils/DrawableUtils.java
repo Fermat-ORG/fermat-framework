@@ -9,11 +9,11 @@ import android.support.v4.content.ContextCompat;
  */
 public class DrawableUtils {
 
-    public static Drawable resToDrawable(Context context,int resId){
+    public static Drawable resToDrawable(Context context, int resId) {
         Drawable drawable = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             drawable = context.getDrawable(resId);
-        }else{
+        } else {
             drawable = ContextCompat.getDrawable(context, resId);
         }
         return drawable;

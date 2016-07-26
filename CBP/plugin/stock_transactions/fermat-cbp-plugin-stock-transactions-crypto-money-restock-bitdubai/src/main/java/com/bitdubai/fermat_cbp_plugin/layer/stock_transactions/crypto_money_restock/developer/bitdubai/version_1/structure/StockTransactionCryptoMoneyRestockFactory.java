@@ -21,13 +21,13 @@ public class StockTransactionCryptoMoneyRestockFactory {
     /**
      * Constructor with params.
      *
-     * @param pluginDatabaseSystem  database system reference.
-     * @param pluginId              of this module.
+     * @param pluginDatabaseSystem database system reference.
+     * @param pluginId             of this module.
      */
     public StockTransactionCryptoMoneyRestockFactory(final PluginDatabaseSystem pluginDatabaseSystem,
                                                      final UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
+        this.pluginId = pluginId;
     }
 
     private StockTransactionsCryptoMoneyRestockDatabaseDao getStockTransactionCryptoMoneyRestockDao() {

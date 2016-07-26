@@ -30,7 +30,7 @@ public class CantSaveEventException extends CBPException {
      * @param possibleReason
      */
     public CantSaveEventException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

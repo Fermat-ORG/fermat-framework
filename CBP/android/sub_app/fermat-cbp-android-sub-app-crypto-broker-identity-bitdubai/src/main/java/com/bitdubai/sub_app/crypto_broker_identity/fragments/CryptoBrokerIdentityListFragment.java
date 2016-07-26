@@ -282,7 +282,7 @@ public class CryptoBrokerIdentityListFragment
         @Override
         public void onReceive(FermatBundle fermatBundle) {
             try {
-                if(isAttached) {
+                if (isAttached) {
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                     if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)) {

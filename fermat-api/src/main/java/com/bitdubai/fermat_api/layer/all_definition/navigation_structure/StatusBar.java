@@ -47,11 +47,11 @@ public class StatusBar implements com.bitdubai.fermat_api.layer.all_definition.n
      */
     @Override
     public void setColor(String color) {
-        this.color=color;
+        this.color = color;
     }
 
     @Override
     public void setVisible(boolean isVisible) {
-        this.isVisible=isVisible;
+        this.isVisible = isVisible;
     }
 }

@@ -13,8 +13,8 @@ import org.junit.rules.ExpectedException;
 public class ConstructorTest {
 
     @Test
-    public void constructorIntOk(){
-        Version version = new Version(1,0,0);
+    public void constructorIntOk() {
+        Version version = new Version(1, 0, 0);
 
         Assert.assertEquals(version.getMajor(), 1);
         Assert.assertEquals(version.getMinor(), 0);
@@ -22,7 +22,7 @@ public class ConstructorTest {
     }
 
     @Test
-    public void constructorStringOk(){
+    public void constructorStringOk() {
         Version version = new Version("1.0.0");
 
         Assert.assertEquals(version.getMajor(), 1);
@@ -31,8 +31,8 @@ public class ConstructorTest {
     }
 
     @Test
-    public void getterAndSetterTest(){
-        Version version = new Version(1,0,0);
+    public void getterAndSetterTest() {
+        Version version = new Version(1, 0, 0);
 
         version.setMajor(2);
         version.setMinor(1);
@@ -44,8 +44,8 @@ public class ConstructorTest {
 
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void constructorNullValue(){
+    @Test(expected = IllegalArgumentException.class)
+    public void constructorNullValue() {
         Version version = new Version(null);
     }
 
@@ -53,21 +53,21 @@ public class ConstructorTest {
     public final ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void constructorInvalidVersion1(){
+    public void constructorInvalidVersion1() {
 
         expectedException.expect(IllegalArgumentException.class);
         Version version1 = new Version("1,3,5");
     }
 
     @Test
-    public void constructorInvalidVersion2(){
+    public void constructorInvalidVersion2() {
 
         expectedException.expect(IllegalArgumentException.class);
         Version version1 = new Version("1.3.5.5");
     }
 
     @Test
-    public void constructorInvalidVersion3(){
+    public void constructorInvalidVersion3() {
 
         expectedException.expect(IllegalArgumentException.class);
         Version version1 = new Version("1.a.5");

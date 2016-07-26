@@ -158,4 +158,32 @@
         android:layout_alignParentBottom="false"
         android:layout_height="20dp"/>
 
+    <View
+        android:layout_width="20dp"
+        android:layout_height="9dp"
+        android:layout_below="@+id/acceptButton"
+        android:visibility="visible"
+        />
+
+    <View
+        android:layout_width="20dp"
+        android:layout_height="9dp"
+        android:layout_below="@+id/pendingButton"
+        android:visibility="visible"
+        />
+
+    <View
+        android:layout_width="20dp"
+        android:layout_height="9dp"
+        android:layout_below="@+id/blockedButton"
+        android:visibility="visible"
+        />
+
+    <View
+        android:layout_width="20dp"
+        android:layout_height="9dp"
+        android:layout_below="@+id/connectedButton"
+        android:visibility="visible"
+        />
+
 </RelativeLayout>

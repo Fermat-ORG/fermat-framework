@@ -13,7 +13,7 @@ public abstract class AbstractBrokerAckOfflinePaymentEventHandler implements Fer
     public void setBrokerAckOfflinePaymentRecorderService(
             BrokerAckOfflinePaymentRecorderService brokerAckOfflinePaymentRecorderService) throws
             CantSetObjectException {
-        if(brokerAckOfflinePaymentRecorderService ==null){
+        if (brokerAckOfflinePaymentRecorderService == null) {
             throw new CantSetObjectException("brokerAckOfflinePaymentRecorderService is null");
         }
         this.brokerAckOfflinePaymentRecorderService = brokerAckOfflinePaymentRecorderService;

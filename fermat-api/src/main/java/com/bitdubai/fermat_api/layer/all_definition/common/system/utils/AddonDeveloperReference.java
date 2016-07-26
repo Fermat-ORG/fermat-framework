@@ -16,7 +16,7 @@ public class AddonDeveloperReference implements Serializable {
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
     private AddonReference addonReference;
-    private  Developers     developer     ;
+    private Developers developer;
 
     public AddonDeveloperReference(final Developers developer) {
 
@@ -27,10 +27,10 @@ public class AddonDeveloperReference implements Serializable {
     }
 
     public AddonDeveloperReference(final AddonReference addonReference,
-                                   final Developers     developer     ) {
+                                   final Developers developer) {
 
         this.addonReference = addonReference;
-        this.developer       = developer      ;
+        this.developer = developer;
     }
 
     public final Developers getDeveloper() {
@@ -59,18 +59,19 @@ public class AddonDeveloperReference implements Serializable {
     @Override
     public final int hashCode() {
         int c = 0;
-        if(developer!=null)
+        if (developer != null)
             c += developer.hashCode();
-        if(addonReference != null)
-            c+= addonReference.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        if (addonReference != null)
+            c += addonReference.hashCode();
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override
     public String toString() {
-        return "AddonDeveloperReference{" +
-                "addonReference=" + addonReference +
-                ", developer=" + developer +
-                '}';
+        return new StringBuilder()
+                .append("AddonDeveloperReference{")
+                .append("addonReference=").append(addonReference)
+                .append(", developer=").append(developer)
+                .append('}').toString();
     }
 }

@@ -90,7 +90,7 @@ public abstract class FermatServiceWorker extends Thread {
         return executor;
     }
 
-    public void shutdownNow(){
+    public void shutdownNow() {
         interrupt();
     }
 

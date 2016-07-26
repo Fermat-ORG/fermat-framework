@@ -479,7 +479,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
      * <p/>
      * Update Contract Status to CANCELLED for expiration time in payment submit.
      * If Expiration Time is done, Update the contract status to CANCELLED.
-     *
      */
     private void changeTransactionStatusFromInContractSubmitToCancelledIfExpirationTimeReached() throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantGetListPurchaseNegotiationsException, CantGetListClauseException, CantUpdateCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
         final List<CustomerBrokerPurchase> userLevelTransactions = dao.getCustomerBrokerPurchases(null);
@@ -538,7 +537,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
      * <p/>
      * Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento de notificacion
      * siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
-     *
      */
     private void updateContractExpirationDateWhitStatusInContractSubmitAndNotify() throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantUpdateCustomerBrokerContractPurchaseException {
 
@@ -694,9 +692,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
      * check if the negotiation is registered in the database of this plugin
      *
      * @param negotiationId the negotiation ID
-     *
      * @return <code>true</code> if the negotiation is registerd. <code>false</code> otherwise
-     *
      * @throws DatabaseOperationException
      * @throws InvalidParameterException
      */
@@ -715,7 +711,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
      *
      * @param valueFilter the value of the filter
      * @param columnValue the column to filter
-     *
      * @return the database filter object
      */
     private DatabaseTableFilter getFilterTable(final String valueFilter, final String columnValue) {
@@ -766,9 +761,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
      * Return the market exchange rate for the given currency
      *
      * @param customerCurrency the currency
-     *
      * @return the market rate
-     *
      * @throws CantGetExchangeRateException
      */
     private float getMarketExchangeRate(String customerCurrency) throws CantGetExchangeRateException {

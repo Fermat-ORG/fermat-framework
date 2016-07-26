@@ -1,22 +1,15 @@
 package CryptoBrokerWalletModuleContractBasicInformation;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleContractBasicInformation;
-
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Random;
-import java.util.UUID;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Calendar;
+import java.util.Random;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -37,7 +30,6 @@ public class ConstructionTest {
     private String paymentCurrency = new String();
     private ContractStatus status = ContractStatus.CANCELLED;
     CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = null;
-
 
 
     @Test

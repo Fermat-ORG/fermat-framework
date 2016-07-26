@@ -17,7 +17,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
@@ -157,7 +156,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      *
      * @param eventType   event type
      * @param eventSource event source
-     *
      * @throws CantSaveEventException
      */
     public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
@@ -182,12 +180,11 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * @param eventType   event type
      * @param eventSource event source
      * @param eventId     event ID
-     *
      * @throws CantSaveEventException
      */
     public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
         try {
-            if(isContractHashInDatabase(eventId)){
+            if (isContractHashInDatabase(eventId)) {
                 return;
             }
             DatabaseTable databaseTable = getDatabaseEventsTable();
@@ -214,9 +211,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * This method returns the actual contract transaction status
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return the contract transaction status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws
@@ -246,15 +241,14 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * @param purchaseContract the object with the purchase contract information to persist
      * @param currencyCode     the code of the sent crypto currency
      * @param cryptoAmount     the amount of crypto currency
-     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(CustomerBrokerContractPurchase purchaseContract,
                                           String currencyCode,
                                           long cryptoAmount) throws CantInsertRecordException {
         try {
-            if(isContractHashInDatabase(purchaseContract.getContractId())){
-                System.out.println("The contract "+purchaseContract+" exists in database");
+            if (isContractHashInDatabase(purchaseContract.getContractId())) {
+                System.out.println(new StringBuilder().append("The contract ").append(purchaseContract).append(" exists in database").toString());
                 return;
             }
             DatabaseTable databaseTable = getDatabaseSubmitTable();
@@ -286,7 +280,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * @param merchandiseCurrency   the merchandise crypto currency to be send
      * @param blockchainNetworkType the blockchain network type
      * @param intraActorPublicKey   the intra actor public key
-     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(CustomerBrokerContractSale saleContract,
@@ -301,8 +294,8 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                                           FeeOrigin feeOrigin,
                                           long fee) throws CantInsertRecordException {
         try {
-            if(isContractHashInDatabase(saleContract.getContractId())){
-                System.out.println("The contract "+saleContract+" exists in database");
+            if (isContractHashInDatabase(saleContract.getContractId())) {
+                System.out.println(new StringBuilder().append("The contract ").append(saleContract).append(" exists in database").toString());
                 return;
             }
             DatabaseTable databaseTable = getDatabaseSubmitTable();
@@ -338,7 +331,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * This method returns a BusinessTransactionRecord list from the pending Crypto De Stock transactions
      *
      * @return the list of business transaction
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -365,7 +357,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * This method returns a BusinessTransactionRecord list from the pending Crypto transactions
      *
      * @return the list of business transaction
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -393,9 +384,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * The BusinessTransactionRecord contains all the Submit Online Merchandise table record.
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return the business transaction record associated with the contract Hash
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public BusinessTransactionRecord getBrokerBusinessTransactionRecord(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
@@ -446,13 +435,13 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             businessTransactionRecord.setFee(record.getLongValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_FEE_COLUMN_NAME));
             String feeOriginString = record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_ORIGIN_FEE_COLUMN_NAME);
             FeeOrigin feeOrigin;
-            if(feeOriginString==null||feeOriginString.isEmpty()){
-                feeOrigin=FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+            if (feeOriginString == null || feeOriginString.isEmpty()) {
+                feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
             } else {
-                try{
+                try {
                     feeOrigin = FeeOrigin.getByCode(feeOriginString);
-                } catch (InvalidParameterException ex){
-                    feeOrigin=FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+                } catch (InvalidParameterException ex) {
+                    feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
                 }
             }
             businessTransactionRecord.setFeeOrigin(feeOrigin);
@@ -476,7 +465,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * Update a Business Transaction Record in database
      *
      * @param businessTransactionRecord object with the updated information
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -513,7 +501,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * This method returns the pending to submit crypto transactions
      *
      * @return list of business transaction ID
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -538,7 +525,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * This method returns the pending to submit notifications transactions
      *
      * @return the list of business transaction records
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -564,7 +550,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
 
     /**
      * @return list of Business Transaction records pending to Submit Confirmation
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -590,7 +575,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
 
     /**
      * @return list of Business Transaction records with Crypto Status PENDING_SUBMIT
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -616,7 +600,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
 
     /**
      * @return list of Business Transaction records with Crypto Status ON_CRYPTO_NETWORK
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -641,7 +624,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
 
     /**
      * @return list of Business Transaction records with Crypto Status ON_BLOCKCHAIN
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -668,9 +650,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * This method returns the event type recorded in database by event id
      *
      * @param eventId the event ID
-     *
      * @return the String with the event type code
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public String getEventType(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
@@ -697,7 +677,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
 
     /**
      * @return a list of pending events
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -737,9 +716,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * This method checks if the given contract hash exists in database.
      *
      * @param contractHash the contract Hash/ID to check
-     *
      * @return <code>true</code> if the given contract hash exists in database. <code>false</code> otherwise
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public boolean isContractHashInDatabase(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
@@ -762,7 +739,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      *
      * @param eventId     the event ID
      * @param eventStatus the new event status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -783,8 +759,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
 
         } catch (CantLoadTableToMemoryException exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
-            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Updating parameter " +
-                    SUBMIT_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, new StringBuilder().append("Updating parameter ").append(SUBMIT_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
 
         } catch (Exception exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
@@ -796,9 +771,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * This method returns the completion date from database.
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return the completion date in millis
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public long getCompletionDateByContractHash(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
@@ -825,7 +798,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      *
      * @param contractHash   the contract Hash/ID
      * @param completionDate the new completion date
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -884,7 +856,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      *
      * @param record                    the data base record
      * @param businessTransactionRecord the business transaction record
-     *
      * @return the filled data base record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, BusinessTransactionRecord businessTransactionRecord) {
@@ -923,7 +894,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * @param purchaseContract the purchase contract object
      * @param currencyCode     the code of the sent crypto currency
      * @param cryptoAmount     the amount of crypto currency
-     *
      * @return the filled database record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record,
@@ -959,7 +929,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * @param merchandiseCurrency   the merchandise crypto currency to be send
      * @param blockchainNetworkType the blockchain network type
      * @param intraActorPk          the intra actor public key
-     *
      * @return the filled data base record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record,
@@ -1008,9 +977,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * @param key         the search key.
      * @param keyColumn   the column to search.
      * @param valueColumn the column that contain the value.
-     *
      * @return List<BusinessTransactionRecord>
-     *
      * @throws CantGetContractListException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
@@ -1034,9 +1001,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * @param key         String with the search key.
      * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
-     *
      * @return List<BusinessTransactionRecord>
-     *
      * @throws CantGetContractListException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
@@ -1061,7 +1026,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * @param key         String with the search key.
      * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
-     *
      * @return List of String values
      */
     private List<String> getStringList(String key, String keyColumn, String valueColumn) throws CantGetContractListException {
@@ -1083,7 +1047,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             return contractHashList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetContractListException(e, "Getting " + valueColumn + " based on " + key, "Cannot load the table into memory");
+            throw new CantGetContractListException(e, new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(), "Cannot load the table into memory");
         }
     }
 
@@ -1093,9 +1057,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * @param key         the key to search
      * @param keyColumn   the column where is the key
      * @param valueColumn the column with the value
-     *
      * @return the value for the given parameters
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private String getValue(String key, String keyColumn, String valueColumn) throws UnexpectedResultReturnedFromDatabaseException {
@@ -1121,7 +1083,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * This method check the database record result.
      *
      * @param records the records to check
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private void checkDatabaseRecords(List<DatabaseTableRecord> records) throws UnexpectedResultReturnedFromDatabaseException {
@@ -1135,6 +1096,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         recordsSize = records.size();
 
         if (recordsSize > VALID_RESULTS_NUMBER)
-            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
+            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(VALID_RESULTS_NUMBER).append(", but I got ").append(recordsSize).toString());
     }
 }

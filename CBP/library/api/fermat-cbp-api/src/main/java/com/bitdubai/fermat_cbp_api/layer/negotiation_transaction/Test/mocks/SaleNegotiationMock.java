@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -14,26 +13,26 @@ import java.util.UUID;
  */
 public class SaleNegotiationMock implements CustomerBrokerSaleNegotiation {
 
-    private final UUID   negotiationId;
-    String              customerPublicKey;
-    String              brokerPublicKey;
-//    private final String publicKeyCustomer;
+    private final UUID negotiationId;
+    String customerPublicKey;
+    String brokerPublicKey;
+    //    private final String publicKeyCustomer;
 //    private final String publicKeyBroker;
-    Long                startDate;
-//    private final Long   startDataTime;
-    private final Long   negotiationExpirationDate;
-    NegotiationStatus   status;
-//    private NegotiationStatus statusNegotiation;
+    Long startDate;
+    //    private final Long   startDataTime;
+    private final Long negotiationExpirationDate;
+    NegotiationStatus status;
+    //    private NegotiationStatus statusNegotiation;
     private final Collection<Clause> clauses;
 
     private final Boolean nearExpirationDatetime;
 
-    private Long   lastNegotiationUpdateDate;
+    private Long lastNegotiationUpdateDate;
     private String cancelReason;
     private String memo;
 
     public SaleNegotiationMock(
-            UUID   negotiationId,
+            UUID negotiationId,
             String customerPublicKey,
             String brokerPublicKey,
             Long startDate,
@@ -42,7 +41,7 @@ public class SaleNegotiationMock implements CustomerBrokerSaleNegotiation {
             Collection<Clause> clauses,
             Boolean nearExpirationDatetime,
             Long lastNegotiationUpdateDate
-    ){
+    ) {
         this.negotiationId = negotiationId;
         this.customerPublicKey = customerPublicKey;
         this.brokerPublicKey = brokerPublicKey;

@@ -11,8 +11,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by Matias Furszyfer on 2016.03.09..
  */
-public class AbstractDesktopFragment<S extends FermatSession,R extends ResourceProviderManager> extends AbstractFermatFragment<S,R> {
-
+public class AbstractDesktopFragment<S extends FermatSession, R extends ResourceProviderManager> extends AbstractFermatFragment<S, R> {
 
 
     protected void selectSubApp(InstalledSubApp installedSubApp) throws Exception {
@@ -31,7 +30,7 @@ public class AbstractDesktopFragment<S extends FermatSession,R extends ResourceP
     }
 
     private DesktopAppSelector getDesktopAppSelector() throws Exception {
-        if(getActivity() instanceof DesktopAppSelector){
+        if (getActivity() instanceof DesktopAppSelector) {
             return (DesktopAppSelector) getActivity();
         }
         throw new Exception("big problem occur");

@@ -29,38 +29,39 @@ public abstract class LocalSocketSession {
     private boolean isReceiverActive;
 
 
-    public LocalSocketSession(String pkIdentity,LocalSocket localSocket) {
+    public LocalSocketSession(String pkIdentity, LocalSocket localSocket) {
         this.localSocket = localSocket;
         this.pkIdentity = pkIdentity;
     }
 
-    public void startReceiving(){
-        if (objectInputStream!=null) throw new RuntimeException("InvalidState");
-        if (runner!=null) runner.interrupt();
-        try{
-            if(objectInputStream==null) objectInputStream = new ObjectInputStream(localSocket.getInputStream());
-        }catch (Exception e){
+    public void startReceiving() {
+        if (objectInputStream != null) throw new RuntimeException("InvalidState");
+        if (runner != null) runner.interrupt();
+        try {
+            if (objectInputStream == null)
+                objectInputStream = new ObjectInputStream(localSocket.getInputStream());
+        } catch (Exception e) {
             e.printStackTrace();
         }
         runner = new Thread(new SessionRunner());
         runner.start();
     }
 
-    public void startSender(){
-        if(objectOutputStream==null){
+    public void startSender() {
+        if (objectOutputStream == null) {
             try {
                 objectOutputStream = new ObjectOutputStream(localSocket.getOutputStream());
                 isSenderActive = true;
                 objectOutputStream.flush();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
 
-    public void stop(){
-        if(!runner.isInterrupted()) runner.interrupt();
+    public void stop() {
+        if (!runner.isInterrupted()) runner.interrupt();
     }
 
     public void destroy() throws IOException {
@@ -72,36 +73,36 @@ public abstract class LocalSocketSession {
     public void clear() throws IOException {
         try {
             localSocket.close();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
     }
 
-    public void stopSender(){
+    public void stopSender() {
         try {
             if (isSenderActive) {
                 if (objectOutputStream != null) {
                     objectOutputStream.close();
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void stopReceiver(){
-        if(isReceiverActive){
+    public void stopReceiver() {
+        if (isReceiverActive) {
             try {
                 runner.interrupt();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                if(objectInputStream!=null) {
+                if (objectInputStream != null) {
                     objectInputStream.close();
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -112,18 +113,19 @@ public abstract class LocalSocketSession {
 
     ObjectOutputStream objectOutputStream;
 
-    public void sendMessage(String requestId,Object object){
-        if(! (object instanceof Serializable)) throw new IllegalArgumentException("Object :"+object.getClass().getName()+" is nos Serializable");
-        if(localSocket!=null){
-            FermatModuleObjectWrapper fermatModuleObjectWrapper = new FermatModuleObjectWrapper((Serializable) object,true,requestId);
+    public void sendMessage(String requestId, Object object) {
+        if (!(object instanceof Serializable))
+            throw new IllegalArgumentException(new StringBuilder().append("Object :").append(object.getClass().getName()).append(" is nos Serializable").toString());
+        if (localSocket != null) {
+            FermatModuleObjectWrapper fermatModuleObjectWrapper = new FermatModuleObjectWrapper((Serializable) object, true, requestId);
 //            ObjectOutput out = null;
             try {
 //                objectOutputStream.flush();
 //                objectOutputStream.write(1);
                 objectOutputStream.writeObject(fermatModuleObjectWrapper);
             } catch (IOException e) {
-                if(!localSocket.isConnected()){
-                    if (!localSocket.isOutputShutdown()){
+                if (!localSocket.isConnected()) {
+                    if (!localSocket.isOutputShutdown()) {
                         try {
                             localSocket.getOutputStream().flush();
                         } catch (IOException e1) {
@@ -138,9 +140,9 @@ public abstract class LocalSocketSession {
                     }
                 }
                 e.printStackTrace();
-            }catch (IllegalBlockingModeException e){
+            } catch (IllegalBlockingModeException e) {
                 e.printStackTrace();
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             } finally {
 //                try {
@@ -158,8 +160,8 @@ public abstract class LocalSocketSession {
         }
     }
 
-    public void addWaitingMessage(String dataId){
-        Log.i(TAG,"Message arrive, unlocking wait..");
+    public void addWaitingMessage(String dataId) {
+        Log.i(TAG, "Message arrive, unlocking wait..");
 //        messageSize.incrementAndGet();
 //        waitMessageLocker.unblock();
 //        synchronized (waitMessageLocker){
@@ -168,7 +170,7 @@ public abstract class LocalSocketSession {
     }
 
     public void connect() {
-        if(!localSocket.isConnected())
+        if (!localSocket.isConnected())
             //todo: sacar ese nombre del path del server
             try {
                 localSocket.connect(new LocalSocketAddress(PlatformService.SERVER_NAME));
@@ -195,48 +197,47 @@ public abstract class LocalSocketSession {
         @Override
         public void run() {
             try {
-                if(localSocket!=null) {
+                if (localSocket != null) {
                     isReceiverActive = true;
                     int read = -1;
-                        while (isReceiverActive) {
-                                if(objectInputStream.available()!=0) {
-                                    read = +objectInputStream.read();
-                                }else {
-                                    read = 0;
-                                    if (read != -1) {
-                                        Log.i(TAG, "pidiendo objeto");
-                                        FermatModuleObjectWrapper object = null;
-                                        try {
-                                            if(localSocket.isConnected()) {
-                                                Object o = objectInputStream.readObject();
-                                                if(o instanceof FermatModuleObjectWrapper){
-                                                    object = (FermatModuleObjectWrapper) o;
-                                                }else{
-                                                    Log.e(TAG,"ERROR, object returned is not FermatModuleObjectWrapper. Object: "+o.getClass().getName());
-                                                }
-                                            }
-                                            else Log.e(TAG,"Socket cerrado, hace falta cerrar hilo");
-                                        } catch (OptionalDataException e) {
-                                            e.printStackTrace();
-                                            read = +objectInputStream.read();
-                                            Log.e(TAG, String.valueOf(read));
-                                        }
-                                        //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
-                                        if (object != null) {
-                                            onReceiveMessage(object);
-                                            read--;
-                                            //messageSize.decrementAndGet();
+                    while (isReceiverActive) {
+                        if (objectInputStream.available() != 0) {
+                            read = +objectInputStream.read();
+                        } else {
+                            read = 0;
+                            if (read != -1) {
+                                Log.i(TAG, "pidiendo objeto");
+                                FermatModuleObjectWrapper object = null;
+                                try {
+                                    if (localSocket.isConnected()) {
+                                        Object o = objectInputStream.readObject();
+                                        if (o instanceof FermatModuleObjectWrapper) {
+                                            object = (FermatModuleObjectWrapper) o;
                                         } else {
-                                            Log.e(TAG, "Object receiver null");
-                                            Log.e(TAG, "Read: " + read);
-//                                        TimeUnit.SECONDS.sleep(2);
+                                            Log.e(TAG, new StringBuilder().append("ERROR, object returned is not FermatModuleObjectWrapper. Object: ").append(o.getClass().getName()).toString());
                                         }
-                                    } else {
-                                        //Log.e(TAG,"end of input stream");
-//                                    isReceiverActive = false;
-                                    }
+                                    } else Log.e(TAG, "Socket cerrado, hace falta cerrar hilo");
+                                } catch (OptionalDataException e) {
+                                    e.printStackTrace();
+                                    read = +objectInputStream.read();
+                                    Log.e(TAG, String.valueOf(read));
                                 }
+                                //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
+                                if (object != null) {
+                                    onReceiveMessage(object);
+                                    read--;
+                                    //messageSize.decrementAndGet();
+                                } else {
+                                    Log.e(TAG, "Object receiver null");
+                                    Log.e(TAG, new StringBuilder().append("Read: ").append(read).toString());
+//                                        TimeUnit.SECONDS.sleep(2);
+                                }
+                            } else {
+                                //Log.e(TAG,"end of input stream");
+//                                    isReceiverActive = false;
+                            }
                         }
+                    }
                 }
 
             } catch (IOException e) {
@@ -248,7 +249,7 @@ public abstract class LocalSocketSession {
                     e1.printStackTrace();
                 }
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

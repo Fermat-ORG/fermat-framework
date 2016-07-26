@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
@@ -52,14 +53,19 @@ public class HttpHelper {
     /**
      * This method accepts an URL and fetches its content, returning it in a string
      **/
-    public static String getHTTPContent(String url) {
+    public static String getHTTPContent(String receiveurl) {
         InputStream stream = null;
         BufferedReader reader;
         String content = "";
 
         try {
-            stream = new URL(url).openStream();
-            reader = new BufferedReader(new InputStreamReader(stream, Charset.forName("UTF-8")));
+          //  stream = new URL(url).openStream();
+            URL url=new URL(receiveurl);
+            URLConnection con = url.openConnection();
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);
+          //  reader = new BufferedReader(new InputStreamReader(stream, Charset.forName("UTF-8")));
+            reader = new BufferedReader(new InputStreamReader(con.getInputStream(), Charset.forName("UTF-8")));
             content = readAll(reader);
         } catch (IOException e) {
             e.printStackTrace();

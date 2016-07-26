@@ -10,17 +10,17 @@ import org.junit.Test;
 public class CreatePrivateKeyStressLoad {
 
     @Test
-    public void createPrivateKeyTest(){
+    public void createPrivateKeyTest() {
         int times = 101;
         long now = System.currentTimeMillis();
-        for (int i=0; i < times; i++){
+        for (int i = 0; i < times; i++) {
             ECCKeyPair keyPair = new ECCKeyPair();
             keyPair.getPrivateKey();
             keyPair.getPublicKey();
         }
         long after = System.currentTimeMillis();
         long diff = after - now;
-        System.out.println("total: " + diff + ". Time each: " + diff / times);
+        System.out.println(new StringBuilder().append("total: ").append(diff).append(". Time each: ").append(diff / times).toString());
         // Duration (ms) of previous implementation: 39 ms each. not too bad. do we need bitcoinJ?
     }
 }

@@ -42,6 +42,6 @@ public class CurrencyPairAndProvider {
 
     @Override
     public String toString() {
-        return currencyFrom.getCode() + "/" + currencyTo.getCode() + " - " + providerName;
+        return new StringBuilder().append(currencyFrom.getCode()).append("/").append(currencyTo.getCode()).append(" - ").append(providerName).toString();
     }
 }

@@ -51,8 +51,8 @@ import java.util.concurrent.Executors;
  */
 public final class CryptoBrokerActorNetworkServiceManager implements CryptoBrokerManager {
 
-    private final CryptoBrokerActorNetworkServiceDao        cryptoBrokerActorNetworkServiceDao;
-    private final CryptoBrokerActorNetworkServicePluginRoot pluginRoot                        ;
+    private final CryptoBrokerActorNetworkServiceDao cryptoBrokerActorNetworkServiceDao;
+    private final CryptoBrokerActorNetworkServicePluginRoot pluginRoot;
 
     /**
      * Executor
@@ -63,8 +63,8 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                                                   final CryptoBrokerActorNetworkServicePluginRoot pluginRoot) {
 
         this.cryptoBrokerActorNetworkServiceDao = cryptoBrokerActorNetworkServiceDao;
-        this.pluginRoot                         = pluginRoot                        ;
-        this.executorService                    = Executors.newFixedThreadPool(3)   ;
+        this.pluginRoot = pluginRoot;
+        this.executorService = Executors.newFixedThreadPool(3);
     }
 
     @Override
@@ -80,7 +80,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     cryptoBroker.getLocation(),
                     Actors.CBP_CRYPTO_BROKER,
                     cryptoBroker.getImage(),
-                    0,0
+                    0, 0
             );
 
         } catch (final ActorAlreadyRegisteredException | CantRegisterActorException e) {
@@ -88,7 +88,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Problem trying to register an identity component.");
 
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Unhandled Exception.");
@@ -107,7 +107,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     actor.getCryptoBrokerIdentityExtraData().toJson(),
                     actor.getImage()
             );
-        }catch (Exception e){
+        } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Unhandled Exception.");
@@ -122,11 +122,11 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             for (final CryptoBrokerExposingData cryptoBroker : cryptoBrokerExposingDataList)
                 this.exposeIdentity(cryptoBroker);
 
-        } catch (final CantExposeIdentityException e){
+        } catch (final CantExposeIdentityException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentitiesException(e, null, "Problem trying to expose an identity.");
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentitiesException(e, null, "Unhandled Exception.");
@@ -152,14 +152,14 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
         try {
 
-            final ProtocolState           state  = ProtocolState          .PROCESSING_SEND;
-            final RequestType             type   = RequestType            .SENT           ;
-            final ConnectionRequestAction action = ConnectionRequestAction.REQUEST        ;
+            final ProtocolState state = ProtocolState.PROCESSING_SEND;
+            final RequestType type = RequestType.SENT;
+            final ConnectionRequestAction action = ConnectionRequestAction.REQUEST;
 
             cryptoBrokerActorNetworkServiceDao.createConnectionRequest(
                     brokerInformation,
-                    state            ,
-                    type             ,
+                    state,
+                    type,
                     action
             );
 
@@ -171,11 +171,11 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     Actors.CBP_CRYPTO_BROKER
             );
 
-        } catch (final CantRequestConnectionException e){
+        } catch (final CantRequestConnectionException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRequestConnectionException(e, null, "Unhandled Exception.");
@@ -188,8 +188,8 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * - Action        : DISCONNECT.
      */
     @Override
-    public final void disconnect(final UUID requestId) throws CantDisconnectException            ,
-                                                              ConnectionRequestNotFoundException {
+    public final void disconnect(final UUID requestId) throws CantDisconnectException,
+            ConnectionRequestNotFoundException {
 
         try {
 
@@ -220,11 +220,11 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                 );
             }
 
-        } catch (final CantDisconnectException | ConnectionRequestNotFoundException e){
+        } catch (final CantDisconnectException | ConnectionRequestNotFoundException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDisconnectException(e, null, "Unhandled Exception.");
@@ -237,7 +237,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * - Protocol State: PROCESSING_SEND.
      */
     @Override
-    public final void denyConnection(final UUID requestId) throws CantDenyConnectionRequestException ,
+    public final void denyConnection(final UUID requestId) throws CantDenyConnectionRequestException,
             ConnectionRequestNotFoundException {
 
         try {
@@ -259,11 +259,11 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     cbcr.getSenderActorType()
             );
 
-        } catch (final CantDenyConnectionRequestException | ConnectionRequestNotFoundException e){
+        } catch (final CantDenyConnectionRequestException | ConnectionRequestNotFoundException e) {
             // ConnectionRequestNotFoundException - THIS SHOULD NOT HAPPEN.
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDenyConnectionRequestException(e, null, "Unhandled Exception.");
@@ -274,12 +274,12 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * I update the record with the new address an then, i indicate the ns agent the action that it must take:
      * - Action        : CANCEL.
      * - Protocol State: PROCESSING_SEND.
-     *
+     * <p/>
      * We must to validate if the record is in PENDING_REMOTE_ACTION.
      */
     @Override
     public final void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException,
-            ConnectionRequestNotFoundException  {
+            ConnectionRequestNotFoundException {
 
     }
 
@@ -290,7 +290,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      */
     @Override
     public final void acceptConnection(final UUID requestId) throws CantAcceptConnectionRequestException,
-            ConnectionRequestNotFoundException  {
+            ConnectionRequestNotFoundException {
 
         try {
 
@@ -311,11 +311,11 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     cbcr.getSenderActorType()
             );
 
-        } catch (final CantAcceptConnectionRequestException | ConnectionRequestNotFoundException e){
+        } catch (final CantAcceptConnectionRequestException | ConnectionRequestNotFoundException e) {
             // ConnectionRequestNotFoundException - THIS SHOULD NOT HAPPEN.
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAcceptConnectionRequestException(e, null, "Unhandled Exception.");
@@ -326,7 +326,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * we'll return all the request news with a pending local action.
      * State : PENDING_LOCAL_ACTION.
      *
-     * @throws CantListPendingConnectionRequestsException  if something goes wrong.
+     * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
     @Override
     public final List<CryptoBrokerConnectionRequest> listPendingConnectionNews(Actors actorType) throws CantListPendingConnectionRequestsException {
@@ -335,11 +335,11 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             return cryptoBrokerActorNetworkServiceDao.listPendingConnectionNews(actorType);
 
-        } catch (final CantListPendingConnectionRequestsException e){
+        } catch (final CantListPendingConnectionRequestsException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListPendingConnectionRequestsException(e, null, "Unhandled Exception.");
@@ -350,7 +350,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * we'll return all the request updates with a pending local action.
      * State : PENDING_LOCAL_ACTION.
      *
-     * @throws CantListPendingConnectionRequestsException  if something goes wrong.
+     * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
     @Override
     public final List<CryptoBrokerConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException {
@@ -359,11 +359,11 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             return cryptoBrokerActorNetworkServiceDao.listPendingConnectionUpdates();
 
-        } catch (final CantListPendingConnectionRequestsException e){
+        } catch (final CantListPendingConnectionRequestsException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListPendingConnectionRequestsException(e, null, "Unhandled Exception.");
@@ -372,16 +372,16 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
 
     @Override
-    public CryptoBrokerExtraData<CryptoBrokerQuote> requestQuotes(final String requesterPublicKey   ,
-                                                                  final Actors requesterActorType   ,
+    public CryptoBrokerExtraData<CryptoBrokerQuote> requestQuotes(final String requesterPublicKey,
+                                                                  final Actors requesterActorType,
                                                                   final String cryptoBrokerPublicKey) throws CantRequestQuotesException {
 
         try {
 
             final UUID newId = UUID.randomUUID();
 
-            final ProtocolState           state  = ProtocolState          .PROCESSING_SEND;
-            final RequestType             type   = RequestType            .SENT           ;
+            final ProtocolState state = ProtocolState.PROCESSING_SEND;
+            final RequestType type = RequestType.SENT;
 
             CryptoBrokerActorNetworkServiceQuotesRequest quotesRequest = cryptoBrokerActorNetworkServiceDao.createQuotesRequest(
                     newId,
@@ -402,11 +402,11 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             return quotesRequest;
 
-        } catch (final CantRequestQuotesException e){
+        } catch (final CantRequestQuotesException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRequestQuotesException(e, null, "Unhandled Exception.");
@@ -420,11 +420,11 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             return cryptoBrokerActorNetworkServiceDao.listPendingQuotesRequests(ProtocolState.PENDING_LOCAL_ACTION, requestType);
 
-        } catch (final CantListPendingQuotesRequestsException e){
+        } catch (final CantListPendingQuotesRequestsException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListPendingQuotesRequestsException(e, null, "Unhandled Exception.");
@@ -432,10 +432,10 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     }
 
     @Override
-    public void answerQuotesRequest(final UUID                    requestId ,
-                                    final long                    updateTime,
-                                    final List<CryptoBrokerQuote> quotes    ) throws CantAnswerQuotesRequestException,
-                                                                                     QuotesRequestNotFoundException  {
+    public void answerQuotesRequest(final UUID requestId,
+                                    final long updateTime,
+                                    final List<CryptoBrokerQuote> quotes) throws CantAnswerQuotesRequestException,
+            QuotesRequestNotFoundException {
 
         try {
 
@@ -456,11 +456,11 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     quotesRequest.getRequesterActorType()
             );
 
-        } catch (final QuotesRequestNotFoundException | CantAnswerQuotesRequestException e){
+        } catch (final QuotesRequestNotFoundException | CantAnswerQuotesRequestException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAnswerQuotesRequestException(e, null, "Unhandled Exception.");
@@ -474,15 +474,15 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             cryptoBrokerActorNetworkServiceDao.confirmQuotesRequest(requestId);
 
-        } catch (final QuotesRequestNotFoundException e){
+        } catch (final QuotesRequestNotFoundException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (final CantConfirmQuotesRequestException e){
+        } catch (final CantConfirmQuotesRequestException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConfirmException(e, "", "Error in DAO, trying to confirm the quotes request.");
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConfirmException(e, null, "Unhandled Exception.");
@@ -496,26 +496,26 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             cryptoBrokerActorNetworkServiceDao.confirmActorConnectionRequest(requestId);
 
-        } catch (final ConnectionRequestNotFoundException e){
+        } catch (final ConnectionRequestNotFoundException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (final CantConfirmConnectionRequestException e){
+        } catch (final CantConfirmConnectionRequestException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConfirmException(e, "", "Error in DAO, trying to confirm the request.");
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConfirmException(e, null, "Unhandled Exception.");
         }
     }
 
-    private void sendMessage(final String jsonMessage      ,
+    private void sendMessage(final String jsonMessage,
                              final String identityPublicKey,
-                             final Actors identityType     ,
-                             final String actorPublicKey   ,
-                             final Actors actorType        ) {
+                             final Actors identityType,
+                             final String actorPublicKey,
+                             final Actors actorType) {
 
         executorService.submit(new Runnable() {
             @Override

@@ -154,8 +154,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
 
-        final String merchandise= clauses.get(CUSTOMER_CURRENCY).getValue();
-        final String exchangeAmount =fixFormat(clauses.get(EXCHANGE_RATE).getValue());
+        final String merchandise = clauses.get(CUSTOMER_CURRENCY).getValue();
+        final String exchangeAmount = fixFormat(clauses.get(EXCHANGE_RATE).getValue());
 
 
         final String paymentCurrency = clauses.get(BROKER_CURRENCY).getValue();
@@ -623,9 +623,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             locations = new ArrayList<>();
         }
 
-        if (locations.isEmpty())
+        if (locations.isEmpty()) {
+            appSession.setData(FragmentsCommons.LAST_ACTIVITY, Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode());
             Toast.makeText(getActivity(), "You don't have Locations. Add one in the Wallet Settings.", Toast.LENGTH_LONG).show();
-        else {
+            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS, appSession.getAppPublicKey());
+        } else {
             final SimpleListDialogFragment<NegotiationLocations> dialogFragment = new SimpleListDialogFragment<>();
             dialogFragment.configure("placeToDelivery", locations);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<NegotiationLocations>() {
@@ -762,9 +764,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         BigDecimal conversion = new BigDecimal(0);
         try {
-            if(compareLessThan1(value)){
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
             conversion = new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(
@@ -776,12 +778,12 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     }
 
 
-    private String fixFormat(String value){
+    private String fixFormat(String value) {
 
         try {
-            if(compareLessThan1(value)){
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
             return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
@@ -792,14 +794,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
     }
 
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
         try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
             }
         } catch (ParseException e) {
             e.printStackTrace();

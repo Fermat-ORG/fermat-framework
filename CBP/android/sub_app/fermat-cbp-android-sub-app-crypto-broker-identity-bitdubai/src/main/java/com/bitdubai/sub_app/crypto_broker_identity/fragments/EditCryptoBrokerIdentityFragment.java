@@ -37,11 +37,11 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
@@ -127,9 +127,9 @@ public class EditCryptoBrokerIdentityFragment
         }
 
         //Check if GPS is on and coordinate are fine
-        try{
+        try {
             location = appSession.getModuleManager().getLocation();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -139,7 +139,7 @@ public class EditCryptoBrokerIdentityFragment
         } catch (Exception e) {
             settings = new IdentityBrokerPreferenceSettings();
             settings.setGpsDialogEnabled(true);
-            isGpsDialogEnable=true;
+            isGpsDialogEnable = true;
         }
 
         turnGPSOn();
@@ -516,18 +516,17 @@ public class EditCryptoBrokerIdentityFragment
         return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    private void checkGPSOn(){
-        if(location!= null){
-            if(location.getLongitude()==0 || location.getLatitude()==0){
-                if (isGpsDialogEnable ) {
+    private void checkGPSOn() {
+        if (location != null) {
+            if (location.getLongitude() == 0 || location.getLatitude() == 0) {
+                if (isGpsDialogEnable) {
                     turnOnGPSDialog();
                 }
 
             }
-        }else
-             if (isGpsDialogEnable ) {
-                turnOnGPSDialog();
-            }
+        } else if (isGpsDialogEnable) {
+            turnOnGPSDialog();
+        }
     }
 
     public void turnOnGPSDialog() {

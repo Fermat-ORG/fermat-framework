@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class WelcomeDialogsData {
 
-    public static List<WelcomeDialogItem> getWelcomeDialogData(){
+    public static List<WelcomeDialogItem> getWelcomeDialogData() {
 
         List<WelcomeDialogItem> list = new ArrayList<>();
 

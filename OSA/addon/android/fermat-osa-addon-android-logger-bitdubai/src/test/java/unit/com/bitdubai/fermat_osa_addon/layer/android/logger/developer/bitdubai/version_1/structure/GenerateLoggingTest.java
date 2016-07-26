@@ -14,10 +14,11 @@ public class GenerateLoggingTest {
     LoggerManager root;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         root = new LoggerManager();
 
     }
+
     @Test
     public void ExecuteLog() {
         root.log(LogLevel.NOT_LOGGING, "Simple Login", "Intermediate Login", "Agressive logging");

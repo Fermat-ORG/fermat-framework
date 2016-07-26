@@ -17,7 +17,7 @@ public class GetTransactionStatusTest {
     private TransactionStatusRestockDestock transactionStatusRestockDestock = TransactionStatusRestockDestock.INIT_TRANSACTION;
 
     @Test
-    public void getTransactionStatus(){
+    public void getTransactionStatus() {
         BankMoneyRestockTransactionImpl bankMoneyRestockTransaction = mock(BankMoneyRestockTransactionImpl.class);
         when(bankMoneyRestockTransaction.getTransactionStatus()).thenReturn(transactionStatusRestockDestock);
         assertThat(bankMoneyRestockTransaction.getTransactionStatus()).isNotNull();

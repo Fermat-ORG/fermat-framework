@@ -38,7 +38,7 @@ public class ConstructionTest {
     BlockchainNetworkType mBlockchainNetworkType = BlockchainNetworkType.PRODUCTION;
 
     @Test
-    public void Construction_ValidParameters_NewObjectCreated(){
+    public void Construction_ValidParameters_NewObjectCreated() {
 
         CryptoMoneyDestockTransactionImpl cryptoMoneyDestockTransaction = new CryptoMoneyDestockTransactionImpl(
                 this.transactionId,

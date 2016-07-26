@@ -1,4 +1,3 @@
-
 package com.bitdubai.fermat_api.layer.all_definition.util;
 
 
@@ -146,7 +145,6 @@ public final class Validate {
             return Collections.EMPTY_LIST;
         } else return objectToGet;
     }
-
 
 
     private static Date today() {

@@ -15,41 +15,41 @@ public enum Platforms implements FermatEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    ART_PLATFORM                        ("ART","Artist"),
-    BLOCKCHAINS                         ("BCH","Blockchain"),
-    BANKING_PLATFORM                    ("BNK","Banking"),
-    COMMUNICATION_PLATFORM              ("CP","Communication"),
-    CRYPTO_BROKER_PLATFORM              ("CBP","Brokers"),
-    CURRENCY_EXCHANGE_RATE_PLATFORM     ("CER","Exchange"),
-    CASH_PLATFORM                       ("CSH","Cash"),
-    CHAT_PLATFORM                       ("CHT","Chat"),
-    CRYPTO_COMMODITY_MONEY              ("CCM","Crypto Commodity"),
-    CRYPTO_CURRENCY_PLATFORM            ("CCP","Crypto Currencies"),
-    DIGITAL_ASSET_PLATFORM              ("DAP","Digital Assets"),
-    OPERATIVE_SYSTEM_API                ("OSA","OSA"),
-    PLUG_INS_PLATFORM                   ("PIP","Tools"),
-    WALLET_PRODUCTION_AND_DISTRIBUTION  ("WPD","Wallets"),
-    TOKENLY                             ("TKY","Tokenly");
+    ART_PLATFORM("ART", "Artist"),
+    BLOCKCHAINS("BCH", "Blockchain"),
+    BANKING_PLATFORM("BNK", "Banking"),
+    COMMUNICATION_PLATFORM("CP", "Communication"),
+    CRYPTO_BROKER_PLATFORM("CBP", "Brokers"),
+    CURRENCY_EXCHANGE_RATE_PLATFORM("CER", "Exchange"),
+    CASH_PLATFORM("CSH", "Cash"),
+    CHAT_PLATFORM("CHT", "Chat"),
+    CRYPTO_COMMODITY_MONEY("CCM", "Crypto Commodity"),
+    CRYPTO_CURRENCY_PLATFORM("CCP", "Crypto Currencies"),
+    DIGITAL_ASSET_PLATFORM("DAP", "Digital Assets"),
+    OPERATIVE_SYSTEM_API("OSA", "OSA"),
+    PLUG_INS_PLATFORM("PIP", "Tools"),
+    WALLET_PRODUCTION_AND_DISTRIBUTION("WPD", "Wallets"),
+    TOKENLY("TKY", "Tokenly");
 
     private final String code;
     private final String textForm;
 
-    Platforms(final String code    ,
+    Platforms(final String code,
               final String textForm) {
 
-        this.code     = code    ;
+        this.code = code;
         this.textForm = textForm;
     }
 
     public static Platforms getByCode(final String code) throws InvalidParameterException {
 
         for (Platforms platform : Platforms.values()) {
-            if(platform.getCode().equals(code))
+            if (platform.getCode().equals(code))
                 return platform;
         }
 
         throw new InvalidParameterException(
-                "Code Received: " + code,
+                new StringBuilder().append("Code Received: ").append(code).toString(),
                 "The received code is not valid for the Platforms enum"
         );
     }

@@ -20,7 +20,7 @@ import java.util.UUID;
  * The Plugin File System is the implementation of the file system that is handled to external plugins. It differs
  * from the Platform File System in that this one requires the plug in to identify itself.
  * That Plugin manage binary files
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
  * Updated by Leon Acosta - (laion.cj91@gmail.com) on 08/04/2016.
  */
@@ -29,24 +29,24 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
     private static final int HASH_PRIME_NUMBER_PRODUCT = 6547;
     private static final int HASH_PRIME_NUMBER_ADD = 3847;
 
-    private final UUID         ownerId      ;
-    private final String       fileName     ;
-    private final String       directoryName;
-    private final FilePrivacy  privacyLevel ;
-    private final FileLifeSpan lifeSpan     ;
-    private       byte[]       content      ;
+    private final UUID ownerId;
+    private final String fileName;
+    private final String directoryName;
+    private final FilePrivacy privacyLevel;
+    private final FileLifeSpan lifeSpan;
+    private byte[] content;
 
-    public LinuxPluginBinaryFile(final UUID         ownerId      ,
-                                 final String       directoryName,
-                                 final String       fileName     ,
-                                 final FilePrivacy  privacyLevel ,
-                                 final FileLifeSpan lifeSpan     ){
+    public LinuxPluginBinaryFile(final UUID ownerId,
+                                 final String directoryName,
+                                 final String fileName,
+                                 final FilePrivacy privacyLevel,
+                                 final FileLifeSpan lifeSpan) {
 
-        this.ownerId       = ownerId      ;
+        this.ownerId = ownerId;
         this.directoryName = directoryName;
-        this.fileName      = fileName     ;
-        this.privacyLevel  = privacyLevel ;
-        this.lifeSpan      = lifeSpan     ;
+        this.fileName = fileName;
+        this.privacyLevel = privacyLevel;
+        this.lifeSpan = lifeSpan;
     }
 
     public String getFileName() {
@@ -69,7 +69,7 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
         return lifeSpan;
     }
 
-	/**
+    /**
      * PluginBinaryFile Interface implementation.
      */
     @Override
@@ -86,7 +86,7 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
     public void persistToMedia() throws CantPersistFileException {
 
         try {
-           /**
+            /**
              *  Evaluate privacyLevel to determine the location of directory - external or internal
              */
             String path = buildPath();
@@ -111,12 +111,12 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
                  */
                 OutputStream outputStream;
 
-                outputStream =  new BufferedOutputStream(new FileOutputStream(file));
+                outputStream = new BufferedOutputStream(new FileOutputStream(file));
                 outputStream.write(this.content);
                 outputStream.close();
             }
 
-            
+
         } catch (Exception e) {
             throw new CantPersistFileException(e.getMessage());
         }
@@ -125,7 +125,7 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
     private String buildPath() {
 
         String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
+        if (privacyLevel == FilePrivacy.PUBLIC)
             path += EnvironmentVariables.getExternalStorageDirectory().toString();
         else
             path += EnvironmentVariables.getInternalStorageDirectory().toString();
@@ -138,18 +138,18 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
     @Override
     public void loadFromMedia() throws CantLoadFileException {
 
-    	FileInputStream  binaryStream = null;
-    	
-        try {
-        /**
-         *  Evaluate privacyLevel to determine the location of directory - external or internal
-         */
-        String path = buildPath();
+        FileInputStream binaryStream = null;
 
-        /**
-         * Get the file handle.
-         */
-        File file = new File(path, this.fileName);
+        try {
+            /**
+             *  Evaluate privacyLevel to determine the location of directory - external or internal
+             */
+            String path = buildPath();
+
+            /**
+             * Get the file handle.
+             */
+            File file = new File(path, this.fileName);
 
 
             /**
@@ -170,19 +170,19 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
             /**
              * return content.
              */
-            this.content =buffer.toByteArray();
+            this.content = buffer.toByteArray();
 
         } catch (Exception e) {
             throw new CantLoadFileException(e.getMessage());
-            
+
         } finally {
-        	try {
-        		if (binaryStream != null)
-        		binaryStream.close();	
-        	} catch (Exception e) {
-        		e.printStackTrace();
-        	}
-        	
+            try {
+                if (binaryStream != null)
+                    binaryStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -199,13 +199,13 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
             file.delete();
 
         } catch (Exception e) {
-            throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(e),"","Check the cause of this error");
+            throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause of this error");
         }
     }
 
     @Override
-    public boolean equals(Object o){
-        if(!(o instanceof LinuxPluginBinaryFile))
+    public boolean equals(Object o) {
+        if (!(o instanceof LinuxPluginBinaryFile))
             return false;
 
         LinuxPluginBinaryFile compare = (LinuxPluginBinaryFile) o;
@@ -213,16 +213,16 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int c = 0;
         c += directoryName.hashCode();
         c += fileName.hashCode();
         c += privacyLevel.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String path = buildPath();
         return path + "/" + fileName;
     }

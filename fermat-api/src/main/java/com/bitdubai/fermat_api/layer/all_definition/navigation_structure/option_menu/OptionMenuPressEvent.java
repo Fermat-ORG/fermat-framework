@@ -7,6 +7,7 @@ public interface OptionMenuPressEvent<O> {
 
     /**
      * Press on option event
+     *
      * @return
      */
     O onPress();

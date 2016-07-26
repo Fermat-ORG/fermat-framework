@@ -38,28 +38,23 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingEnd="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingStart="8dp"
-            android:paddingBottom="8dp"
+            android:gravity="center_horizontal"
             android:text="Description of dialog"
             android:textColor="#5ddad1"
             android:textSize="20sp"
             tools:ignore="HardcodedText" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/view" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:gravity="center"
-            android:paddingEnd="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingStart="8dp"
+            android:gravity="center_horizontal"
             android:visibility="visible"
-            android:paddingTop="5dp"
             android:text="User name"
             android:textColor="#3f3f3f"
             android:textSize="18sp"
@@ -78,8 +73,8 @@
             android:paddingBottom="40dp"
             android:text="Description of dialog"
             android:textColor="#212121"
-            android:textSize="20sp"
-            android:visibility="gone"
+            android:textSize="18sp"
+            android:visibility="visible"
             tools:ignore="HardcodedText" />
 
         <View

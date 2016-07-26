@@ -1,7 +1,6 @@
 package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure;
 
 
-
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
@@ -9,7 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantDecr
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantEncryptException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-//import java.util.Base64;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -28,6 +27,8 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+//import java.util.Base64;
+
 /**
  * Created by ciencias on 22.01.15. Migrated to Desktop by Matias
  */
@@ -43,13 +44,13 @@ public class DesktopPluginTextFile implements PluginTextFile {
     /**
      * PluginTextFile interface member variables.
      */
-    
+
     public FileLifeSpan getLifeSpan() {
-		return lifeSpan;
-	}
+        return lifeSpan;
+    }
 
     public void setLifeSpan(FileLifeSpan lifeSpan) {
-            this.lifeSpan = lifeSpan;
+        this.lifeSpan = lifeSpan;
     }
 
 
@@ -57,35 +58,35 @@ public class DesktopPluginTextFile implements PluginTextFile {
     private String fileName;
 
     public String getFileName() {
-            return fileName;
+        return fileName;
     }
 
     public void setFileName(String fileName) {
-            this.fileName = fileName;
+        this.fileName = fileName;
     }
 
     public FilePrivacy getPrivacyLevel() {
-            return privacyLevel;
+        return privacyLevel;
     }
 
     public void setPrivacyLevel(FilePrivacy privacyLevel) {
-            this.privacyLevel = privacyLevel;
+        this.privacyLevel = privacyLevel;
     }
 
     public String getDirectoryName() {
-            return directoryName;
+        return directoryName;
     }
 
     public void setDirectoryName(String directoryName) {
-            this.directoryName = directoryName;
+        this.directoryName = directoryName;
     }
 
     public UUID getOwnerId() {
-            return ownerId;
+        return ownerId;
     }
 
     public void setOwnerId(UUID ownerId) {
-            this.ownerId = ownerId;
+        this.ownerId = ownerId;
     }
 
 
@@ -100,13 +101,13 @@ public class DesktopPluginTextFile implements PluginTextFile {
     /**
      * <p>PlugIn implementation constructor
      *
-     * @param ownerId PlugIn Id
+     * @param ownerId       PlugIn Id
      * @param directoryName name of the directory where the files are saved
-     * @param fileName name of file
-     * @param privacyLevel level of privacy for the file, if it is public or private
-     * @param lifeSpan lifetime of the file, whether it is permanent or temporary
+     * @param fileName      name of file
+     * @param privacyLevel  level of privacy for the file, if it is public or private
+     * @param lifeSpan      lifetime of the file, whether it is permanent or temporary
      */
-    public DesktopPluginTextFile(UUID ownerId,String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public DesktopPluginTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
 
         this.ownerId = ownerId;
         this.fileName = fileName;
@@ -115,23 +116,23 @@ public class DesktopPluginTextFile implements PluginTextFile {
         this.directoryName = directoryName;
 
     }
-    
+
     /**
      * PluginTextFile interface implementation.
      */
 
     /**
-     *<p>This method returns the contents of a file in string.
+     * <p>This method returns the contents of a file in string.
      *
      * @return String file content
      */
     @Override
-    public String getContent()  {
+    public String getContent() {
         return this.content;
     }
 
     /**
-     *<p>This method sets the contents of a file in string.
+     * <p>This method sets the contents of a file in string.
      *
      * @param content file content
      */
@@ -148,29 +149,30 @@ public class DesktopPluginTextFile implements PluginTextFile {
      */
     @Override
     public void persistToMedia() throws CantPersistFileException {
-        
-        try 
-        {
+
+        try {
 
             /**
              *  Evaluate privacyLevel to determine the location of directory - external or internal
              */
             String path = "";
-            if(privacyLevel == FilePrivacy.PUBLIC)
+            if (privacyLevel == FilePrivacy.PUBLIC)
                 path = EnviromentVariables.getExternalStorageDirectory().toString();
             else
                 path = EnviromentVariables.getInternalStorageDirectory().toString();
-               // path = this.context.getFilesDir().toString();
-                // acá iria el path de donde están los archivos
+            // path = this.context.getFilesDir().toString();
+            // acá iria el path de donde están los archivos
 
             /**
              * If the directory does not exist, we create it here.
              */
-            
-            File storagePath = new File(path +"/"+ this.directoryName);
-            if (!storagePath.exists() && storagePath.mkdirs()) {storagePath=null;}
-                
-           
+
+            File storagePath = new File(path + "/" + this.directoryName);
+            if (!storagePath.exists() && storagePath.mkdirs()) {
+                storagePath = null;
+            }
+
+
             /**
              * Then we create the file.
              */
@@ -182,23 +184,21 @@ public class DesktopPluginTextFile implements PluginTextFile {
             /**
              * We encrypt the content.
              */
-            String encryptedContent = this.encrypt(this.content,this.ownerId.toString());
+            String encryptedContent = this.encrypt(this.content, this.ownerId.toString());
 
             /**
              * We write the encrypted content into the file.
              */
-            outputStream =  new BufferedOutputStream(new FileOutputStream(file));
+            outputStream = new BufferedOutputStream(new FileOutputStream(file));
             outputStream.write(encryptedContent.getBytes(Charset.forName("UTF-8")));
             outputStream.close();
 
 
-            
         } catch (Exception e) {
 
             throw new CantPersistFileException(e.getMessage());
         }
     }
-    
 
 
     /**
@@ -208,27 +208,26 @@ public class DesktopPluginTextFile implements PluginTextFile {
      */
     @Override
     public void loadFromMedia() throws CantLoadFileException {
-    	BufferedReader bufferedReader = null;
-        try 
-        {
+        BufferedReader bufferedReader = null;
+        try {
             /**
              *  Evaluate privacyLevel to determine the location of directory - external or internal
              */
             String path = "";
-            if(privacyLevel == FilePrivacy.PUBLIC)
+            if (privacyLevel == FilePrivacy.PUBLIC)
                 path = EnviromentVariables.getExternalStorageDirectory().toString();
             else
                 path = EnviromentVariables.getInternalStorageDirectory().toString();
-                //path = this.context.getFilesDir().toString();
-                // acá iria el path de donde están los archivos
+            //path = this.context.getFilesDir().toString();
+            // acá iria el path de donde están los archivos
 
             /**
              * We open the file and read its encrypted content.
              */
-            File file = new File(path +"/"+ this.directoryName, this.fileName);
+            File file = new File(path + "/" + this.directoryName, this.fileName);
 
-            InputStream inputStream ;
-            inputStream =  new BufferedInputStream(new FileInputStream(file));
+            InputStream inputStream;
+            inputStream = new BufferedInputStream(new FileInputStream(file));
 
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
 
@@ -240,33 +239,33 @@ public class DesktopPluginTextFile implements PluginTextFile {
                 stringBuilder.append(line);
             }
             inputStream.close();
-            
+
             /**
              * Now we decrypt it.
              */
             String decryptedContent = "";
-            
+
             try {
                 decryptedContent = this.decrypt(stringBuilder.toString());
 
             } catch (CantDecryptException e) {
-                throw new CantLoadFileException("Error trying to decrypt file: " +this.fileName);
+                throw new CantLoadFileException("Error trying to decrypt file: " + this.fileName);
             }
 
             /**
              * Finally, I load it into memory.
              */
             this.content = decryptedContent;
-            
+
         } catch (Exception e) {
             throw new CantLoadFileException(e.getMessage());
         } finally {
-        	try {
-        		bufferedReader.close();
-        		bufferedReader=null;
-        	} catch (Exception e) {
-        		e.printStackTrace();
-        	}
+            try {
+                bufferedReader.close();
+                bufferedReader = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -274,7 +273,7 @@ public class DesktopPluginTextFile implements PluginTextFile {
     public void delete() {
         String path = "";
 
-        File file = new File(path +"/" + ownerId.toString() +"/"+ this.directoryName, this.fileName);
+        File file = new File(path + "/" + ownerId.toString() + "/" + this.directoryName, this.fileName);
         file.delete();
     }
 
@@ -282,8 +281,8 @@ public class DesktopPluginTextFile implements PluginTextFile {
     /**
      * Private Encrypting Method.
      */
-    
-    private  String encrypt(String text, String secretKey) throws CantEncryptException {
+
+    private String encrypt(String text, String secretKey) throws CantEncryptException {
 
         String base64EncryptedString = "";
 
@@ -303,8 +302,8 @@ public class DesktopPluginTextFile implements PluginTextFile {
             //base64EncryptedString = new String(base64Bytes, "UTF-8");
 
         } catch (Exception e) {
-        	e.printStackTrace();
-            throw  new CantEncryptException();
+            e.printStackTrace();
+            throw new CantEncryptException();
         }
         return base64EncryptedString;
     }
@@ -313,8 +312,8 @@ public class DesktopPluginTextFile implements PluginTextFile {
     /**
      * Private Decrypting Method.
      */
-    
-    private  String decrypt(String encryptedText) throws CantDecryptException {
+
+    private String decrypt(String encryptedText) throws CantDecryptException {
 
         String secretKey = this.ownerId.toString();
         String base64EncryptedString = "";
@@ -338,13 +337,12 @@ public class DesktopPluginTextFile implements PluginTextFile {
             //this is meanwhile i fix the problem with gradle
             return encryptedText;
         } catch (Exception e) {
-        	e.printStackTrace();
-            throw  new CantDecryptException();
+            e.printStackTrace();
+            throw new CantDecryptException();
 
         }
 
     }
-
 
 
 }

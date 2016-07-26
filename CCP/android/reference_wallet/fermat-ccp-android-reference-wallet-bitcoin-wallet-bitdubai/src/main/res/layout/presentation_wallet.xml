@@ -81,7 +81,7 @@
                 android:orientation="vertical">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="match_parent"
+                    android:layout_width="184dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
@@ -89,7 +89,7 @@
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/this_is_a_simple_bitcoin_only_wallet_text"
+                    android:text="This is a basic bitcon wallet. Its main features include:"
                     android:textSize="14sp"
                     android:textColor="@color/grey_900" />
 
@@ -127,7 +127,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
-                    android:text="@string/to_begin_choose_an_avatar_below_text"
+                    android:text="To begin pick an avatar  from below. You can  customize it later with your  own name and image."
                     android:textSize="12sp"
                     android:textColor="@color/grey_900"/>
 

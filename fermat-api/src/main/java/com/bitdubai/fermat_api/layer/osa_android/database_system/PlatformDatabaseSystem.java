@@ -11,22 +11,20 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
  */
 
 /**
+ * <p>The abstract class <code>PlatformDatabaseSystem</code> is a interface
+ * that define the methods to manage database system. Used from PlugIn
+ * The Database System knows which databases are already accessible on this device.
  *
- *  <p>The abstract class <code>PlatformDatabaseSystem</code> is a interface
- *     that define the methods to manage database system. Used from PlugIn
- *     The Database System knows which databases are already accessible on this device.
- *
- *
- *  @author  Luis
- *  @version 1.0.0
- *  @since   18/01/15.
- * */
+ * @author Luis
+ * @version 1.0.0
+ * @since 18/01/15.
+ */
 
- public interface PlatformDatabaseSystem extends FermatManager {
+public interface PlatformDatabaseSystem extends FermatManager {
 
     Database openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException;
 
-    Database createDatabase (String databaseName) throws CantCreateDatabaseException;
+    Database createDatabase(String databaseName) throws CantCreateDatabaseException;
 
     void deleteDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException;
 

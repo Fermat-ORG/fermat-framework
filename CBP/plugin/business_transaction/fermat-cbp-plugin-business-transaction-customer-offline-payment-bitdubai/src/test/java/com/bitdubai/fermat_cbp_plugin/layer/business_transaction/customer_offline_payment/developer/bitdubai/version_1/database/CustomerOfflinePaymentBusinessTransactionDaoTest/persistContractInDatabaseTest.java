@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDaoTest;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -9,7 +10,6 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseConstants;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -43,43 +43,49 @@ public class persistContractInDatabaseTest {
     @Mock
     CustomerBrokerContractSale customerBrokerContractSale;
     private UUID testId;
+
     @Before
-    public void setup()throws Exception{
+    public void setup() throws Exception {
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
         customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(
-                pluginDatabaseSystem,testId,mockDatabase,errorManager);
+                pluginDatabaseSystem, testId, mockDatabase, errorManager);
         setupMockitoGeneraRules();
     }
-    public void setupMockitoGeneraRules()throws Exception{
+
+    public void setupMockitoGeneraRules() throws Exception {
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
         doNothing().when(databaseTable).insertRecord(databaseTableRecord);
     }
+
     //Test First persistContractInDatabaseTest method in Dao
     @Test
-    public void persistContractInDatabaseTest() throws Exception{
+    public void persistContractInDatabaseTest() throws Exception {
         when(mockDatabase.getTable(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TABLE_NAME
         )).thenReturn(databaseTable);
         customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
-        verify(databaseTable,times(1)).insertRecord(databaseTableRecord);
+        verify(databaseTable, times(1)).insertRecord(databaseTableRecord);
 
     }
+
     @Test(expected = CantInsertRecordException.class)
-    public void persistContractInDatabaseTest_Should_Throw_Exception() throws Exception{
+    public void persistContractInDatabaseTest_Should_Throw_Exception() throws Exception {
         customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
     }
+
     //Test Second persistContractInDatabaseTest method in Dao
     @Test
-    public void persistContractInDatabaseTest_() throws Exception{
+    public void persistContractInDatabaseTest_() throws Exception {
         when(mockDatabase.getTable(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TABLE_NAME
         )).thenReturn(databaseTable);
         customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
-        verify(databaseTable,times(1)).insertRecord(databaseTableRecord);
+        verify(databaseTable, times(1)).insertRecord(databaseTableRecord);
     }
+
     @Test(expected = CantInsertRecordException.class)
-    public void persistContractInDatabaseTest_Should_Throw_Exception_() throws Exception{
+    public void persistContractInDatabaseTest_Should_Throw_Exception_() throws Exception {
         customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
     }
 }

@@ -3,8 +3,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmi
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.google.gson.Gson;
 
-import java.util.UUID;
-
 /**
  * Created by Yordin Alayn on 02.12.15.
  */
@@ -12,9 +10,12 @@ public class NegotiationTransmissionMessage {
 
     private NegotiationTransmissionType messageType;
 
-    public NegotiationTransmissionMessage() { }
+    public NegotiationTransmissionMessage() {
+    }
 
-    public NegotiationTransmissionMessage(final NegotiationTransmissionType messageType) { this.messageType = messageType; }
+    public NegotiationTransmissionMessage(final NegotiationTransmissionType messageType) {
+        this.messageType = messageType;
+    }
 
     public NegotiationTransmissionType getMessageType() {
         return messageType;

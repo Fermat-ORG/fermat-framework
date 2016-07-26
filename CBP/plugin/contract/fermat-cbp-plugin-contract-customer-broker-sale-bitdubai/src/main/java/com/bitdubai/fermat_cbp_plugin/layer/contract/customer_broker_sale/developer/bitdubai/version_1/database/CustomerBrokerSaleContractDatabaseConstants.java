@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.devel
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleContractDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Angel Veloz - (vlzangel91@gmail.com) on 23/12/15.
  *
  * @version 1.0
