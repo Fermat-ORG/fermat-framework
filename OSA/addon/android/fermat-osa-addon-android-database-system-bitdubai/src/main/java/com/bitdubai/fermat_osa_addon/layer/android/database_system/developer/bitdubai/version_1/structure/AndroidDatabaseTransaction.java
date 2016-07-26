@@ -174,7 +174,7 @@ public class AndroidDatabaseTransaction implements DatabaseTransaction {
 
         //los select van a ser asignados a una variable y
         // esa variable va a ser usada en un insert o update para asignarla a un campo
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         buffer.append("SELECT TABLES:");
         if (selectTables == null)
