@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
@@ -27,12 +28,15 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,6 +64,10 @@ public class ContactFragment
     ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<String> contactid=new ArrayList<>();
     ArrayList<String> contactalias =new ArrayList<>();
+
+    TextView contactStatus;
+    TextView contactName;
+    TextView contactStatusDate;
 
     public static ContactFragment newInstance() {
         return new ContactFragment();}
@@ -91,35 +99,50 @@ public class ContactFragment
 
         try {
             Contact con= (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA); //hatSession.getSelectedContact();
-            contactname.add(con.getAlias());
-            contactid.add(con.getRemoteActorPublicKey());
-            if(con.getContactStatus() != null) {
-                contactalias.add(con.getContactStatus().toString());
-            }
+//            contactname.add(con.getAlias());
+//            contactid.add(con.getRemoteActorPublicKey());
+//            if(con.getContactStatus() != null) {
+//                contactalias.add(con.getContactStatus().toString());
+//            }
+
+            contactStatus = (TextView) layout.findViewById(R.id.contact_status_input);
+            if(con.getContactStatus() != null){
+                contactStatus.setText(con.getContactStatus());
+            } else
+                contactStatus.setText("No Status");
+
             ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
             BitmapDrawable bmd = new BitmapDrawable(bytes);
             contacticon.add(bmd.getBitmap());
 
-            ContactAdapter adapter = new ContactAdapter(getActivity(), contactname, contactalias, contactid, "detail", errorManager);
-            FermatTextView name = (FermatTextView) layout.findViewById(R.id.contact_name);
-            if(contactalias != null  && !contactalias.isEmpty()) {
-                name.setText(contactalias.get(0));
-            }
-            FermatTextView id = (FermatTextView) layout.findViewById(R.id.uuid);
-            id.setText(contactid.get(0).toString());
+            long time = con.getCreationDate();
+            Date date = new java.util.Date(time);
+            String myDate = date.toString();
+
+            contactStatusDate = (TextView) layout.findViewById(R.id.contact_status_date);
+            contactStatusDate.setText(myDate);
+
+//            ContactAdapter adapter = new ContactAdapter(getActivity(), contactname, contactalias, contactid, "detail", errorManager);
+            contactName = (TextView) layout.findViewById(R.id.contact_name_fragment);
+            contactName.setText(con.getAlias());
+//            if(contactalias != null  && !contactalias.isEmpty()) {
+//
+//            }
+//            FermatTextView id = (FermatTextView) layout.findViewById(R.id.uuid);
+//            id.setText(contactid.get(0).toString());
 
             // set circle bitmap
             ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
-            mImage.setImageBitmap(Utils.getCircleBitmap(contacticon.get(0)));
+            mImage.setImageBitmap(contacticon.get(0));
 
-            LinearLayout detalles = (LinearLayout) layout.findViewById(R.id.contact_details_layout);
+//            LinearLayout detalles = (LinearLayout) layout.findViewById(R.id.contact_details_layout);
 
-            final int adapterCount = adapter.getCount();
+//            final int adapterCount = adapter.getCount();
 
-            for (int i = 0; i < adapterCount; i++) {
-                View item = adapter.getView(i, null, null);
-                detalles.addView(item);
-            }
+//            for (int i = 0; i < adapterCount; i++) {
+//                View item = adapter.getView(i, null, null);
+//                detalles.addView(item);
+//            }
         }catch (Exception e){
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -127,7 +150,7 @@ public class ContactFragment
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+                changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
             }
         });
 
