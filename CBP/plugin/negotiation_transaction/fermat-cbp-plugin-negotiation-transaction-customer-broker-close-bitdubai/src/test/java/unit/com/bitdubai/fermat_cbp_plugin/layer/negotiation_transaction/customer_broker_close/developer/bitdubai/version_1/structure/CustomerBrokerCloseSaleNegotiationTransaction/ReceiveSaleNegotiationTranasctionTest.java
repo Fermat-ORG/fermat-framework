@@ -31,7 +31,7 @@ public class ReceiveSaleNegotiationTranasctionTest {
     private UUID transactionId = UUID.randomUUID();
 
     @Test
-    public void receiveSaleNegotiationTranasction() throws Exception{
+    public void receiveSaleNegotiationTranasction() throws Exception {
 
         CustomerBrokerCloseSaleNegotiationTransaction customerBrokerCloseSaleNegotiationTransaction = mock(CustomerBrokerCloseSaleNegotiationTransaction.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(customerBrokerCloseSaleNegotiationTransaction).receiveSaleNegotiationTranasction(transactionId, customerBrokerSaleNegotiation);

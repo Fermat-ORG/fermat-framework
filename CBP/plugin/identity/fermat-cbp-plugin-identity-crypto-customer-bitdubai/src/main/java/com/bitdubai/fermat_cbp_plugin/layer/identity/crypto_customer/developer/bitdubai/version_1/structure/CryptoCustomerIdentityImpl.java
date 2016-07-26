@@ -21,7 +21,7 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Seria
     private final String publicKey;
     private byte[] profileImage;
     private final boolean published;
-    private long   accuracy;
+    private long accuracy;
     private GeoFrequency frequency;
 
     public CryptoCustomerIdentityImpl(final String alias,
@@ -30,13 +30,13 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Seria
                                       final byte[] profileImage,
                                       final boolean published,
                                       final long accuracy,
-                                      final GeoFrequency frequency){
+                                      final GeoFrequency frequency) {
         this.alias = alias;
         this.privateKey = privateKey;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.published = published;
-        this.accuracy      = accuracy     ;
+        this.accuracy = accuracy;
         this.frequency = frequency;
     }
 
@@ -63,7 +63,9 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Seria
     }
 
     @Override
-    public boolean isPublished(){ return this.published; }
+    public boolean isPublished() {
+        return this.published;
+    }
 
     @Override
     public ExposureLevel getExposureLevel() {
@@ -71,12 +73,12 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Seria
     }
 
     @Override
-    public String createMessageSignature(String message) throws CantCreateMessageSignatureException{
-        try{
+    public String createMessageSignature(String message) throws CantCreateMessageSignatureException {
+        try {
             return AsymmetricCryptography.createMessageSignature(message, privateKey);
 
-        } catch(Exception ex){
-            throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, "Message: "+ message, "The message could be invalid");
+        } catch (Exception ex) {
+            throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, new StringBuilder().append("Message: ").append(message).toString(), "The message could be invalid");
         }
     }
 
@@ -91,30 +93,34 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Seria
     }
 
 
-    public boolean equals(Object o){
-        if(!(o instanceof CryptoCustomerIdentity))
+    public boolean equals(Object o) {
+        if (!(o instanceof CryptoCustomerIdentity))
             return false;
         CryptoCustomerIdentity compare = (CryptoCustomerIdentity) o;
         return alias.equals(compare.getAlias()) && publicKey.equals(compare.getPublicKey());
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int c = 0;
         c += alias.hashCode();
         c += privateKey.hashCode();
         c += publicKey.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override
     public String toString() {
-        return "CryptoCustomerIdentityImpl{" +
-                "alias='" + alias + '\'' +
-                ", privateKey='" + privateKey + '\'' +
-                ", publicKey='" + publicKey + '\'' +
-                ", profileImage=" + (profileImage != null) +
-                ", published=" + published +
-                '}';
+        return new StringBuilder()
+                .append("CryptoCustomerIdentityImpl{")
+                .append("alias='").append(alias)
+                .append('\'')
+                .append(", privateKey='").append(privateKey)
+                .append('\'')
+                .append(", publicKey='").append(publicKey)
+                .append('\'')
+                .append(", profileImage=").append(profileImage != null)
+                .append(", published=").append(published)
+                .append('}').toString();
     }
 }

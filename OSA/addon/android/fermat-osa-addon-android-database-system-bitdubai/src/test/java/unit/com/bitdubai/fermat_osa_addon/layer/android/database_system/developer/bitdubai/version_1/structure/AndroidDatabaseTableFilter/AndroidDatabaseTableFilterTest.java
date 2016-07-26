@@ -24,7 +24,7 @@ public class AndroidDatabaseTableFilterTest {
     AndroidDatabaseTableFilter filter2;
 
     @Before
-    public void setUpTableFilter1(){
+    public void setUpTableFilter1() {
         filter1 = constructDatabaseTableColumn(
                 columna1,
                 DatabaseFilterType.EQUAL,
@@ -33,7 +33,7 @@ public class AndroidDatabaseTableFilterTest {
     }
 
     @Test
-    public void Variables_AreEquals(){
+    public void Variables_AreEquals() {
         filter2 = constructDatabaseTableColumn(
                 columna1,
                 DatabaseFilterType.EQUAL,
@@ -46,7 +46,7 @@ public class AndroidDatabaseTableFilterTest {
     }
 
     @Test
-    public void Variables_NotEquals(){
+    public void Variables_NotEquals() {
         filter2 = constructDatabaseTableColumn(
                 columna2,
                 DatabaseFilterType.LIKE,
@@ -59,10 +59,10 @@ public class AndroidDatabaseTableFilterTest {
     }
 
     private AndroidDatabaseTableFilter constructDatabaseTableColumn(
-        String column,
-        DatabaseFilterType type,
-        String value
-    ){
+            String column,
+            DatabaseFilterType type,
+            String value
+    ) {
         AndroidDatabaseTableFilter tableFilter = new AndroidDatabaseTableFilter();
         tableFilter.setColumn(column);
         tableFilter.setType(type);

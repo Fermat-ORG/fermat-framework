@@ -45,11 +45,11 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     private Database database;
 
     public CustomerBrokerCloseNegotiationTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final Database database) {
-        this.pluginDatabaseSystem   = pluginDatabaseSystem;
-        this.pluginId               = pluginId;
-        this.database               = database;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginId = pluginId;
+        this.database = database;
     }
-    
+
     /*INITIALIZE DATABASE*/
     public void initialize() throws CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException {
         try {
@@ -71,7 +71,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     }
 
     //CREATE SEND NEW NEGOTIATION TRANSACTION
-    public void createCustomerBrokerCloseNegotiationTransaction(UUID transactionId, Negotiation negotiation, NegotiationType negotiationType, NegotiationTransactionStatus statusTransaction) throws CantRegisterCustomerBrokerCloseNegotiationTransactionException{
+    public void createCustomerBrokerCloseNegotiationTransaction(UUID transactionId, Negotiation negotiation, NegotiationType negotiationType, NegotiationTransactionStatus statusTransaction) throws CantRegisterCustomerBrokerCloseNegotiationTransactionException {
 
         Date time = new Date();
         long timestamp = time.getTime();
@@ -95,22 +95,22 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
 
             table.insertRecord(record);
 
-            if(statusTransaction.getCode() == NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode()) {
-                System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
-            }else{
-                System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + "transactionId: " + transactionId + " ****\n");
+            if (statusTransaction.getCode() == NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode()) {
+                System.out.print(new StringBuilder().append("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - DAO. CONFIRM negotiationType: ").append(negotiationType.getCode()).append(" transactionId: ").append(transactionId).append(" ****\n").toString());
+            } else {
+                System.out.print(new StringBuilder().append("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - DAO. NEGOTIATION negotiationType: ").append(negotiationType.getCode()).append("transactionId: ").append(transactionId).append(" ****\n").toString());
             }
 
-        } catch (CantInsertRecordException e){
+        } catch (CantInsertRecordException e) {
             throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, "customer broker close Negotiation Transaction", "Cant create new customer broker close Negotiation Transaction, insert database problems.");
         } catch (Exception e) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException (e.getMessage(), FermatException.wrapException(e), "customer broker close Negotiation Transaction", "Cant create new customer broker close Negotiation Transaction, unknown failure.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "customer broker close Negotiation Transaction", "Cant create new customer broker close Negotiation Transaction, unknown failure.");
         }
 
     }
 
     //UPDATE STATUS NEW NEGOTIATION TRANSACTION
-    public void updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(UUID transactionId, NegotiationTransactionStatus statusTransaction) throws CantRegisterCustomerBrokerCloseNegotiationTransactionException{
+    public void updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(UUID transactionId, NegotiationTransactionStatus statusTransaction) throws CantRegisterCustomerBrokerCloseNegotiationTransactionException {
         try {
             if (!transactionExists(transactionId))
                 throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException("Cant Update Status customer broker close Negotiation Transaction, not exists.", "customer broker close Negotiation Transaction, Update State", "Cant Update State customer broker close Negotiation Transaction, not exists");
@@ -121,7 +121,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             record.setStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_STATUS_COLUMN_NAME, statusTransaction.getCode());
             table.updateRecord(record);
 
-            System.out.print("\n\n**** 8) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - DAO - UPDATE STATUS NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
+            System.out.print(new StringBuilder().append("\n\n**** 8) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - DAO - UPDATE STATUS NEGOTIATION STATUS : ").append(NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode()).append(" ****\n").toString());
         } catch (CantUpdateRecordException e) {
             throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, "customer broker close Negotiation Transaction, Update State", "Cant Update State customer broker close Negotiation Transaction, update database problems.");
         } catch (Exception e) {
@@ -130,7 +130,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     }
 
     //GET NEGOTIATION TRANSACTION FROM TRANSACTION ID
-    public CustomerBrokerClose getRegisterCustomerBrokerCloseNegotiationTranasction(UUID transactionId) throws CantRegisterCustomerBrokerCloseNegotiationTransactionException{
+    public CustomerBrokerClose getRegisterCustomerBrokerCloseNegotiationTranasction(UUID transactionId) throws CantRegisterCustomerBrokerCloseNegotiationTransactionException {
 
         try {
 
@@ -154,7 +154,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             return getTransaction;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "customer broker close Negotiation Transaction not return register", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "customer broker close Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "customer broker close Negotiation Transaction not return register", "unknown failure.");
         }
@@ -162,7 +162,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     }
 
     //GET NEGOTIATION TRANSACTIO FROM NEGOTIATION ID
-    public CustomerBrokerClose getRegisterCustomerBrokerCloseNegotiationTranasctionFromNegotiationId(UUID negotiationId) throws CantRegisterCustomerBrokerCloseNegotiationTransactionException{
+    public CustomerBrokerClose getRegisterCustomerBrokerCloseNegotiationTranasctionFromNegotiationId(UUID negotiationId) throws CantRegisterCustomerBrokerCloseNegotiationTransactionException {
 
         try {
 
@@ -186,7 +186,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             return getTransaction;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction not return register", "unknown failure.");
         }
@@ -194,7 +194,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     }
 
     //GET LIST NEW NEGOTIATION TRANSACTION
-    public List<CustomerBrokerClose> getAllRegisterCustomerBrokerCloseNegotiationTranasction() throws CantRegisterCustomerBrokerCloseNegotiationTransactionException{
+    public List<CustomerBrokerClose> getAllRegisterCustomerBrokerCloseNegotiationTranasction() throws CantRegisterCustomerBrokerCloseNegotiationTransactionException {
 
 
         try {
@@ -218,7 +218,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             return getTransactions;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "customer broker close Negotiation Transaction not return register", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "customer broker close Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "customer broker close Negotiation Transaction not return register", "unknown failure.");
         }
@@ -226,7 +226,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     }
 
     //GET LIST NEGOTIATION TRANSACTION PENDING TO SUBMIT
-    public List<CustomerBrokerClose> getPendingToSubmitNegotiation() throws CantGetNegotiationTransactionListException{
+    public List<CustomerBrokerClose> getPendingToSubmitNegotiation() throws CantGetNegotiationTransactionListException {
 
         try {
 
@@ -250,7 +250,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             return getTransactions;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
+            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction not return register", "unknown failure.");
         }
@@ -258,7 +258,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     }
 
     //GET LIST NEW NEGOTIATION TRANSACTION PENDING TO CONFIRM
-    public List<CustomerBrokerClose> getPendingToConfirmtNegotiation() throws CantGetNegotiationTransactionListException{
+    public List<CustomerBrokerClose> getPendingToConfirmtNegotiation() throws CantGetNegotiationTransactionListException {
 
         try {
 
@@ -282,7 +282,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             return getTransactions;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
+            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction not return register", "unknown failure.");
         }
@@ -318,7 +318,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             return getTransactions;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker Close Negotiation Transaction not return register", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
+            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker Close Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Close Negotiation Transaction not return register", "unknown failure.");
         }
@@ -344,7 +344,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
 
         } catch (CantUpdateRecordException e) {
             throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, "Customer Broker Close Negotiation Transaction, Update Confirm Transaction", "Cant Update Confirm Transaction Customer Broker Close Negotiation Transaction, update database problems.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Negotiation Transaction, Customer Broker Close", "Cant confirm Transaction, unknown failure.");
         }
     }
@@ -369,7 +369,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
 
         } catch (CantUpdateRecordException e) {
             throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, "Customer Broker Close Negotiation Transaction, Update Confirm Transaction", "Cant Update Confirm Transaction Customer Broker Close Negotiation Transaction, update database problems.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Negotiation Transaction, Customer Broker Close", "Cant confirm Transaction, unknown failure.");
         }
     }
@@ -417,10 +417,10 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     /*EVENT*/
     //GET LIST PENDING EVENT
     public List<UUID> getPendingEvents() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
-        try{
+        try {
 
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TABLE_NAME);
-            List<UUID> eventTypeList=new ArrayList<>();
+            List<UUID> eventTypeList = new ArrayList<>();
             UUID eventId;
             table.addStringFilter(
                     CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_STATUS_COLUMN_NAME,
@@ -428,37 +428,37 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
                     DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 //There is no records in database, I'll return an empty list.
                 return eventTypeList;
             }
-            for(DatabaseTableRecord databaseTableRecord : records){
-                eventId=databaseTableRecord.getUUIDValue(
+            for (DatabaseTableRecord databaseTableRecord : records) {
+                eventId = databaseTableRecord.getUUIDValue(
                         CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_ID_COLUMN_NAME);
                 eventTypeList.add(eventId);
             }
             return eventTypeList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE,e,"Getting events in EventStatus.PENDING","Cannot load the table into memory");
+            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE, e, "Getting events in EventStatus.PENDING", "Cannot load the table into memory");
         }
     }
 
     //GET EVENT TYPE OF TRANSACTION
     public String getEventType(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
-        try{
+        try {
 
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TABLE_NAME);
             table.addUUIDFilter(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
             checkDatabaseRecords(records);
-            String value=records.get(0).getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TYPE_COLUMN_NAME);
+            String value = records.get(0).getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TYPE_COLUMN_NAME);
 
             return value;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new UnexpectedResultReturnedFromDatabaseException(e,"Getting value from database","Cannot load the database table");
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting value from database", "Cannot load the database table");
         }
 
     }
@@ -482,14 +482,14 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
 
         } catch (CantInsertRecordException exception) {
             throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
-        } catch(Exception exception){
+        } catch (Exception exception) {
             throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
         }
     }
 
     //UPDATE STATUS THE EVENT
     public void updateEventTansactionStatus(UUID eventId, EventStatus eventStatus) throws CantRegisterCustomerBrokerCloseEventException, CantUpdateRecordException {
-        try{
+        try {
 
             if (!eventExists(eventId))
                 throw new CantRegisterCustomerBrokerCloseEventException("Cant Update Status Customer Broker Close Negotiation Transaction, Event Id not exists.", "Customer Broker Close Negotiation Transaction, Update Event State", "Cant Update Event State Customer Broker Close Negotiation Transaction, Id not exists");
@@ -504,7 +504,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
 
 //            System.out.print("\n\n**** 19.1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT ****\n");
 
-        }  catch (CantLoadTableToMemoryException e) {
+        } catch (CantLoadTableToMemoryException e) {
             throw new CantRegisterCustomerBrokerCloseEventException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "Customer Broker Close Negotiation Transaction Update Event Status Not Found", "unknown failure");
         }
     }
@@ -512,7 +512,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     /*END EVENT*/
 
     /*PRIVATE METHOD*/
-    
+
     private Database getDataBase() {
         return database;
     }
@@ -524,7 +524,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     private DatabaseTable getDatabaseEventTable() {
         return getDataBase().getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TABLE_NAME);
     }
-    
+
     private boolean eventExists(UUID eventId) throws CantRegisterCustomerBrokerCloseEventException {
 
         try {
@@ -538,7 +538,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             return table.getRecords().size() > 0;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerCloseEventException(em.getMessage(), em, "Customer Broker Close Negotiation Transaction Event Id Not Exists", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerCloseEventException(em.getMessage(), em, "Customer Broker Close Negotiation Transaction Event Id Not Exists", new StringBuilder().append("Cant load ").append(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerCloseEventException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Close Negotiation Transaction Event Id Not Exists", "unknown failure.");
         }
@@ -555,35 +555,35 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             table.loadToMemory();
             return table.getRecords().size() > 0;
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "customer broker close Negotiation Transaction Id Not Exists", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "customer broker close Negotiation Transaction Id Not Exists", new StringBuilder().append("Cant load ").append(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "customer broker close Negotiation Transaction Id Not Exists", "unknown failure.");
         }
     }
 
-    private CustomerBrokerClose getCustomerBrokerCloseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
+    private CustomerBrokerClose getCustomerBrokerCloseFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
-        UUID                            transactionId       = record.getUUIDValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TRANSACTION_ID_COLUMN_NAME);
-        UUID                            negotiationId       = record.getUUIDValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_ID_COLUMN_NAME);
-        String                          publicKeyBroker     = record.getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_PUBLIC_KEY_BROKER_COLUMN_NAME);
-        String                          publicKeyCustomer   = record.getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
-        NegotiationTransactionStatus    status              = NegotiationTransactionStatus.getByCode(record.getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_STATUS_COLUMN_NAME));
-        NegotiationType                 negotiationType     = NegotiationType.getByCode(record.getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_TYPE_COLUMN_NAME));
-        String                          negotiationXML      = record.getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_XML_COLUMN_NAME);
-        long                            timestamp           = record.getLongValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TIMESTAMP_COLUMN_NAME);
+        UUID transactionId = record.getUUIDValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TRANSACTION_ID_COLUMN_NAME);
+        UUID negotiationId = record.getUUIDValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_ID_COLUMN_NAME);
+        String publicKeyBroker = record.getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_PUBLIC_KEY_BROKER_COLUMN_NAME);
+        String publicKeyCustomer = record.getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
+        NegotiationTransactionStatus status = NegotiationTransactionStatus.getByCode(record.getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_STATUS_COLUMN_NAME));
+        NegotiationType negotiationType = NegotiationType.getByCode(record.getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_TYPE_COLUMN_NAME));
+        String negotiationXML = record.getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_XML_COLUMN_NAME);
+        long timestamp = record.getLongValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TIMESTAMP_COLUMN_NAME);
 
-        return new CustomerBrokerCloseImpl(transactionId,negotiationId,publicKeyBroker,publicKeyCustomer,status, negotiationType, negotiationXML,timestamp);
+        return new CustomerBrokerCloseImpl(transactionId, negotiationId, publicKeyBroker, publicKeyCustomer, status, negotiationType, negotiationXML, timestamp);
     }
-    
-    private String getValue(String key,String keyColumn,String valueColumn) throws UnexpectedResultReturnedFromDatabaseException {
-        try{
+
+    private String getValue(String key, String keyColumn, String valueColumn) throws UnexpectedResultReturnedFromDatabaseException {
+        try {
 
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME);
             table.addStringFilter(keyColumn, key, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
             checkDatabaseRecords(records);
-            String value=records.get(0).getStringValue(valueColumn);
+            String value = records.get(0).getStringValue(valueColumn);
 
             return value;
 
@@ -595,24 +595,24 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
 
     }
 
-    private List<String> getStringList(String key,String keyColumn,String valueColumn) throws CantGetNegotiationTransactionListException {
-        try{
+    private List<String> getStringList(String key, String keyColumn, String valueColumn) throws CantGetNegotiationTransactionListException {
+        try {
 
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME);
             if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException ("CANT GET NEGOTIATION TRANSACTION LISt. TABLE NO FOUNT.", "NEGOTIATION TRANSACTION customer broker close", "CANT GET NEGOTIATION TRANSACTION LIST, TABLE NO FOUNT.");
+                throw new CantGetUserDeveloperIdentitiesException("CANT GET NEGOTIATION TRANSACTION LISt. TABLE NO FOUNT.", "NEGOTIATION TRANSACTION customer broker close", "CANT GET NEGOTIATION TRANSACTION LIST, TABLE NO FOUNT.");
             }
-            List<String> negotiationList=new ArrayList<>();
+            List<String> negotiationList = new ArrayList<>();
             String negotiation;
-            table.addStringFilter(keyColumn,key,DatabaseFilterType.EQUAL);
+            table.addStringFilter(keyColumn, key, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 //There is no records in database, I'll return an empty list.
                 return negotiationList;
             }
 
-            for(DatabaseTableRecord databaseTableRecord : records){
+            for (DatabaseTableRecord databaseTableRecord : records) {
                 negotiation = databaseTableRecord.getStringValue(valueColumn);
                 negotiationList.add(negotiation);
             }
@@ -620,9 +620,9 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             return negotiationList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE,e,"Getting "+valueColumn+" based on "+key,"Cannot load the table into memory");
-        } catch (Exception e){
-            throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e),"Getting "+valueColumn+" based on "+key,"Cannot load the table into memory");
+            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE, e, new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(), "Cannot load the table into memory");
+        } catch (Exception e) {
+            throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(), "Cannot load the table into memory");
         }
     }
 
@@ -630,12 +630,14 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
         //Represents the maximum number of records in records
         int validResultsNumber = 1;
         int recordsSize;
-        if(records.isEmpty()){ return; }
+        if (records.isEmpty()) {
+            return;
+        }
         recordsSize = records.size();
-        if(recordsSize > validResultsNumber){
-            throw new UnexpectedResultReturnedFromDatabaseException("I excepted "+validResultsNumber+", but I got "+recordsSize);
+        if (recordsSize > validResultsNumber) {
+            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(validResultsNumber).append(", but I got ").append(recordsSize).toString());
         }
     }
-    
-    
+
+
 }

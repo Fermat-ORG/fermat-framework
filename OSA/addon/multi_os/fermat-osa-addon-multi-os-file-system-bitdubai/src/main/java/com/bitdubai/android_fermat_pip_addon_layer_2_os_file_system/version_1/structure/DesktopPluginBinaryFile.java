@@ -1,7 +1,6 @@
 package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure;
 
 
-
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -39,7 +38,7 @@ public class DesktopPluginBinaryFile implements PluginBinaryFile {
     FileLifeSpan lifeSpan;
     UUID ownerId;
 
-    public DesktopPluginBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public DesktopPluginBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
 
         this.ownerId = ownerId;
         this.directoryName = directoryName;
@@ -48,49 +47,49 @@ public class DesktopPluginBinaryFile implements PluginBinaryFile {
         this.lifeSpan = lifeSpan;
 
     }
-    
+
 
     public String getFileName() {
-            return fileName;
+        return fileName;
     }
 
     public void setFileName(String fileName) {
-            this.fileName = fileName;
+        this.fileName = fileName;
     }
 
     public String getDirectoryName() {
-            return directoryName;
+        return directoryName;
     }
 
     public void setDirectoryName(String directoryName) {
-            this.directoryName = directoryName;
+        this.directoryName = directoryName;
     }
 
     public FilePrivacy getPrivacyLevel() {
-            return privacyLevel;
+        return privacyLevel;
     }
 
     public void setPrivacyLevel(FilePrivacy privacyLevel) {
-            this.privacyLevel = privacyLevel;
+        this.privacyLevel = privacyLevel;
     }
 
     public UUID getOwnerId() {
-            return ownerId;
+        return ownerId;
     }
 
     public void setOwnerId(UUID ownerId) {
-            this.ownerId = ownerId;
+        this.ownerId = ownerId;
     }
 
     public FileLifeSpan getLifeSpan() {
-            return lifeSpan;
+        return lifeSpan;
     }
 
     public void setLifeSpan(FileLifeSpan lifeSpan) {
-            this.lifeSpan = lifeSpan;
+        this.lifeSpan = lifeSpan;
     }
 
-	/**
+    /**
      * PluginBinaryFile Interface implementation.
      */
     @Override
@@ -107,28 +106,28 @@ public class DesktopPluginBinaryFile implements PluginBinaryFile {
     public void persistToMedia() throws CantPersistFileException {
 
         try {
-           /**
+            /**
              *  Evaluate privacyLevel to determine the location of directory - external or internal
              */
             String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
-             path = EnviromentVariables.getExternalStorageDirectory() == null ? "" : EnviromentVariables.getExternalStorageDirectory().toString();
-        else
-             
+            if (privacyLevel == FilePrivacy.PUBLIC)
+                path = EnviromentVariables.getExternalStorageDirectory() == null ? "" : EnviromentVariables.getExternalStorageDirectory().toString();
+            else
+
             /**
              * I set the path where the file is going to be located.
              */
 
 
-            if(!this.directoryName.isEmpty())
-                path += "/" + this.ownerId + "/" + this.directoryName;
+                if (!this.directoryName.isEmpty())
+                    path += "/" + this.ownerId + "/" + this.directoryName;
 
             /**
              * If the directory does not exist the I create it.
              */
             File storagePath = new File(path);
             if (!storagePath.exists() && storagePath.mkdirs()) {
-            	storagePath=null;
+                storagePath = null;
             }
 
             /**
@@ -143,12 +142,12 @@ public class DesktopPluginBinaryFile implements PluginBinaryFile {
                  */
                 OutputStream outputStream;
 
-                outputStream =  new BufferedOutputStream(new FileOutputStream(file));
+                outputStream = new BufferedOutputStream(new FileOutputStream(file));
                 outputStream.write(this.content);
                 outputStream.close();
             }
 
-            
+
         } catch (Exception e) {
             throw new CantPersistFileException(e.getMessage());
         }
@@ -158,21 +157,21 @@ public class DesktopPluginBinaryFile implements PluginBinaryFile {
     @Override
     public void loadFromMedia() throws CantLoadFileException {
 
-    	FileInputStream  binaryStream = null;
-    	
-        try {
-        /**
-         *  Evaluate privacyLevel to determine the location of directory - external or internal
-         */
-        String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
-            path = EnviromentVariables.getExternalStorageDirectory().toString();
-            
+        FileInputStream binaryStream = null;
 
-        /**
-         * Get the file handle.
-         */
-        File file = new File(path + "/" + this.ownerId + "/" + this.directoryName + "/" + this.fileName);
+        try {
+            /**
+             *  Evaluate privacyLevel to determine the location of directory - external or internal
+             */
+            String path = "";
+            if (privacyLevel == FilePrivacy.PUBLIC)
+                path = EnviromentVariables.getExternalStorageDirectory().toString();
+
+
+            /**
+             * Get the file handle.
+             */
+            File file = new File(path + "/" + this.ownerId + "/" + this.directoryName + "/" + this.fileName);
 
 
             /**
@@ -193,19 +192,19 @@ public class DesktopPluginBinaryFile implements PluginBinaryFile {
             /**
              * return content.
              */
-            this.content =buffer.toByteArray();
+            this.content = buffer.toByteArray();
 
         } catch (Exception e) {
             throw new CantLoadFileException(e.getMessage());
-            
+
         } finally {
-        	try {
-        		if (binaryStream != null)
-        		binaryStream.close();	
-        	} catch (Exception e) {
-        		e.printStackTrace();
-        	}
-        	
+            try {
+                if (binaryStream != null)
+                    binaryStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

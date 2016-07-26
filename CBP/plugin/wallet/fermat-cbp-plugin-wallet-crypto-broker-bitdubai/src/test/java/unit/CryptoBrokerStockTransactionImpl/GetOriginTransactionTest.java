@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class GetOriginTransactionTest {
 
     @Test
-    public void getOriginTransaction(){
+    public void getOriginTransaction() {
         CryptoBrokerStockTransactionImpl cryptoBrokerStockTransaction = mock(CryptoBrokerStockTransactionImpl.class);
         when(cryptoBrokerStockTransaction.getOriginTransaction()).thenReturn(OriginTransaction.RESTOCK_AUTOMATIC);
         assertThat(cryptoBrokerStockTransaction.getOriginTransaction()).isNotNull();

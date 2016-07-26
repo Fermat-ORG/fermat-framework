@@ -37,7 +37,7 @@ public class CantGetCompletionDateException extends CBPException {
             Exception cause,
             String context,
             String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

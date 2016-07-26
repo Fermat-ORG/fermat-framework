@@ -23,7 +23,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 
     private static final NetworkStateReceiver instance = new NetworkStateReceiver();
 
-    public static NetworkStateReceiver getInstance(){
+    public static NetworkStateReceiver getInstance() {
         return instance;
     }
 
@@ -33,19 +33,19 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     }
 
     public void onReceive(Context context, Intent intent) {
-        if(intent == null || intent.getExtras() == null)
+        if (intent == null || intent.getExtras() == null)
             return;
 
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = manager.getActiveNetworkInfo();
 
-        if(ni != null && ni.getState() == NetworkInfo.State.CONNECTED) {
+        if (ni != null && ni.getState() == NetworkInfo.State.CONNECTED) {
             Log.i("FERMAT", "CONNECTED");
             connected = true;
-        } else if (ni != null && ni.getState() == NetworkInfo.State.DISCONNECTED){
+        } else if (ni != null && ni.getState() == NetworkInfo.State.DISCONNECTED) {
             Log.i("FERMAT", "DISCONNECTED");
-            connected=false;
-        } else if(intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,Boolean.FALSE)) {
+            connected = false;
+        } else if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, Boolean.FALSE)) {
             connected = false;
         }
 
@@ -55,13 +55,13 @@ public class NetworkStateReceiver extends BroadcastReceiver {
             Log.i("FERMAT", key);
         }
         ni = (NetworkInfo) intent.getExtras().get("networkInfo");
-        if(ni != null && ni.getState() == NetworkInfo.State.CONNECTED) {
+        if (ni != null && ni.getState() == NetworkInfo.State.CONNECTED) {
             Log.i("FERMAT", "CONNECTED");
             connected = true;
-        } else if (ni != null && ni.getState() == NetworkInfo.State.DISCONNECTED){
+        } else if (ni != null && ni.getState() == NetworkInfo.State.DISCONNECTED) {
             Log.i("FERMAT", "DISCONNECTED");
-            connected=false;
-        } else if(intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,Boolean.FALSE)) {
+            connected = false;
+        } else if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, Boolean.FALSE)) {
             connected = false;
         }
 
@@ -71,15 +71,15 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 
     private void notifyStateToAll(NetworkInfo ni) {
         DeviceNetwork deviceNetwork = buildDeviceNetwork(ni);
-        for(com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver listener : listeners) {
-            notifyState(listener,deviceNetwork);
+        for (com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver listener : listeners) {
+            notifyState(listener, deviceNetwork);
         }
     }
 
-    private void notifyState(com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver listener,DeviceNetwork deviceNetwork) {
-        if(connected == null || listener == null)
+    private void notifyState(com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver listener, DeviceNetwork deviceNetwork) {
+        if (connected == null || listener == null)
             return;
-        if(connected == true)
+        if (connected == true)
             listener.networkAvailable(deviceNetwork);
         else
             listener.networkUnavailable();
@@ -99,13 +99,13 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     }
 
 
-    private DeviceNetwork buildDeviceNetwork(NetworkInfo netinfo){
+    private DeviceNetwork buildDeviceNetwork(NetworkInfo netinfo) {
         boolean isConnected = netinfo.isConnected();
         ConnectionType connectionType = null;
-        switch(netinfo.getType()) {
+        switch (netinfo.getType()) {
 
             case android.net.ConnectivityManager.TYPE_MOBILE_DUN:
-                connectionType = ConnectionType.MOBILE_DUN ;
+                connectionType = ConnectionType.MOBILE_DUN;
 
                 break;
             case android.net.ConnectivityManager.TYPE_MOBILE_HIPRI:
@@ -143,7 +143,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
                 break;
         }
 
-        return new DeviceNetwork(connectionType,isConnected);
+        return new DeviceNetwork(connectionType, isConnected);
     }
 
 }

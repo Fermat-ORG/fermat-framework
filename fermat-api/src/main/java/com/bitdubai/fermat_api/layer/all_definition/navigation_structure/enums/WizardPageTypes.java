@@ -45,7 +45,7 @@ public enum WizardPageTypes {
             case "CWPPS3":
                 return WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_3;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the Plugins enum");
 
         }
         //return null;

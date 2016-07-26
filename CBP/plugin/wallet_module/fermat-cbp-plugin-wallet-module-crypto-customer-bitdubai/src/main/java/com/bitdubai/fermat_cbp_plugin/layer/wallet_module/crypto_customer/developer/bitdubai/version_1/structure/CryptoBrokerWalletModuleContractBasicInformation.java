@@ -59,17 +59,16 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
             try {
                 for (Clause clause : customerBrokerPurchaseNegotiation.getClauses()) {
                     if (clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY) {
-                        amount = Float.valueOf(clause.getValue().replace(",",""));
+                        amount = Float.valueOf(clause.getValue().replace(",", ""));
                     }
-                    if (clause.getType()== ClauseType.EXCHANGE_RATE) {
-                        exchangeRateAmount = Float.valueOf(clause.getValue().replace(",",""));
+                    if (clause.getType() == ClauseType.EXCHANGE_RATE) {
+                        exchangeRateAmount = Float.valueOf(clause.getValue().replace(",", ""));
                     }
                 }
             } catch (CantGetListClauseException e) {
                 e.printStackTrace();
             }
-        }
-        else{
+        } else {
             this.cancellationReason = "";
             negotiationId = UUID.randomUUID();
             date = instance.getTimeInMillis();
@@ -84,7 +83,9 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     }
 
     @Override
-    public byte[] getCryptoCustomerImage() { return customerImage; }
+    public byte[] getCryptoCustomerImage() {
+        return customerImage;
+    }
 
     @Override
     public String getCryptoBrokerAlias() {

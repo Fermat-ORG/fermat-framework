@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
@@ -188,7 +187,7 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     }
 
     @Override
-    public void setNegotiationType(NegotiationType negotiationType){
+    public void setNegotiationType(NegotiationType negotiationType) {
         this.negotiationType = negotiationType;
     }
 

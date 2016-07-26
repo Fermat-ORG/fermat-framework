@@ -156,7 +156,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 stepTitle.setText("Payment Delivery");
 
-                if(stockInWallet(contractDetail.getContractId())){
+                if (stockInWallet(contractDetail.getContractId())) {
                     switch (itemInfo.getContractStatus()) {
                         case PENDING_PAYMENT:
 
@@ -164,12 +164,12 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                             if (inProcessStatus == PAYMENT_SENDING_IN_PROCESS) {
                                 textDescription.setText("You sent:");
                                 textDescriptionDate.setVisibility(View.INVISIBLE);
-    //                            textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
+                                //                            textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
 
                                 cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_changed));
                                 stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_changed));
                                 textDescription.setTextColor(res.getColor(R.color.description_text_status_changed));
-    //                            textDescriptionDate.setTextColor(res.getColor(R.color.description_text_status_changed));
+                                //                            textDescriptionDate.setTextColor(res.getColor(R.color.description_text_status_changed));
                                 amountAndMethodTextView.setTextColor(res.getColor(R.color.description_text_status_changed));
 
                                 confirmButton.setVisibility(View.VISIBLE);
@@ -184,7 +184,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                             break;
                         default:
                             textDescription.setText("You sent:");
-                            textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
+                            textDescriptionDate.setText(new StringBuilder().append("on ").append(getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate())).toString());
                             cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                             stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_accepted));
                             textDescription.setTextColor(res.getColor(R.color.description_text_status_accepted));
@@ -216,7 +216,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         break;
                     default:
                         textDescription.setText("Broker received:");
-                        textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
+                        textDescriptionDate.setText(new StringBuilder().append("on ").append(getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate())).toString());
                         cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                         stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_accepted));
                         textDescription.setTextColor(res.getColor(R.color.description_text_status_accepted));
@@ -244,7 +244,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         break;
                     default:
                         textDescription.setText("Broker sent:");
-                        textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
+                        textDescriptionDate.setText(new StringBuilder().append("on ").append(getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate())).toString());
                         cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                         stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_accepted));
                         textDescription.setTextColor(res.getColor(R.color.description_text_status_accepted));
@@ -292,7 +292,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         break;
                     default:
                         textDescription.setText("You received:");
-                        textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
+                        textDescriptionDate.setText(new StringBuilder().append("on ").append(getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate())).toString());
                         cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                         stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_accepted));
                         textDescription.setTextColor(res.getColor(R.color.description_text_status_accepted));

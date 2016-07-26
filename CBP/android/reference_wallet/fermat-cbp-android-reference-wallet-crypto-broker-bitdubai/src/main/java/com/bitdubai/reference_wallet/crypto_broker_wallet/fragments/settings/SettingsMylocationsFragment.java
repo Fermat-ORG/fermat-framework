@@ -74,9 +74,9 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment<Referenc
             locationList = new ArrayList<>();
             locationListIds = new ArrayList<>();
 
-            if( locations != null ){
-                if(!locations.isEmpty()) {
-                    for(NegotiationLocations l : locations){
+            if (locations != null) {
+                if (!locations.isEmpty()) {
+                    for (NegotiationLocations l : locations) {
                         if (!l.getLocation().equals("settings") && !l.getLocation().equals("wizard")) {
                             locationList.add(l.getLocation());
                             locationListIds.add(l);

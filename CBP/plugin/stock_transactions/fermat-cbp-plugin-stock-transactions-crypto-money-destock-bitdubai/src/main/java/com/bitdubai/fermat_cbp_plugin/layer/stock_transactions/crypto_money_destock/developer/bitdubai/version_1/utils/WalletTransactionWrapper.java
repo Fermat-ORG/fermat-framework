@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * The Class <code>WalletTransactionWrapper</code>
  * contains the instance interface WalletTransaction
- *
+ * <p/>
  * Created by franklin on 17/11/15.
  */
 public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRecord {

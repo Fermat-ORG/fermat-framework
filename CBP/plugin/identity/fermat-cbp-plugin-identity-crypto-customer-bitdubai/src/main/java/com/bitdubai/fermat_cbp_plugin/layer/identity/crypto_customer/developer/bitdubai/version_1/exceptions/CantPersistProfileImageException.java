@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Yordin Alayn on 09.10.15.
  */
-public class CantPersistProfileImageException  extends FermatException {
+public class CantPersistProfileImageException extends FermatException {
 
 
     public CantPersistProfileImageException(final String message, final Exception cause, final String context, final String possibleReason) {

@@ -55,7 +55,7 @@ public class PluginVersionReference implements Serializable {
     }
 
     public static PluginVersionReference PluginVersionReferenceFactory(String platformCode, String layerCode, String pluginsCode, String developerCode, String version) throws InvalidParameterException {
-        return new PluginVersionReference(Platforms.getByCode(platformCode),Layers.getByCode(layerCode), Plugins.getByCode(pluginsCode),Developers.getByCode(developerCode),new Version());
+        return new PluginVersionReference(Platforms.getByCode(platformCode), Layers.getByCode(layerCode), Plugins.getByCode(pluginsCode), Developers.getByCode(developerCode), new Version());
     }
 
     public final Version getVersion() {
@@ -81,19 +81,19 @@ public class PluginVersionReference implements Serializable {
                 ((pluginDeveloperReference == null && that.getPluginDeveloperReference() == null) || (pluginDeveloperReference != null && pluginDeveloperReference.equals(that.getPluginDeveloperReference())));
     }
 
-    public Platforms getPlatform(){
+    public Platforms getPlatform() {
         return pluginDeveloperReference.getPluginReference().getLayerReference().getPlatformReference().getPlatform();
     }
 
-    public Layers getLayers(){
+    public Layers getLayers() {
         return pluginDeveloperReference.getPluginReference().getLayerReference().getLayer();
     }
 
-    public FermatPluginsEnum getPlugins(){
+    public FermatPluginsEnum getPlugins() {
         return pluginDeveloperReference.getPluginReference().getPlugin();
     }
 
-    public Developers getDeveloper(){
+    public Developers getDeveloper() {
         return pluginDeveloperReference.getDeveloper();
 
     }
@@ -104,34 +104,39 @@ public class PluginVersionReference implements Serializable {
         int c = 0;
         if (pluginDeveloperReference != null)
             c += pluginDeveloperReference.hashCode();
-        if(version!=null)
+        if (version != null)
             c += version.hashCode();
         return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override
     public final String toString() {
-        return "PluginVersionReference{" +
-                "pluginDeveloperReference=" + pluginDeveloperReference +
-                ", version=" + version +
-                "}";
+        return new StringBuilder()
+                .append("PluginVersionReference{")
+                .append("pluginDeveloperReference=").append(pluginDeveloperReference)
+                .append(", version=").append(version)
+                .append("}").toString();
     }
 
     public final String toString2() {
-        return "PluginVersionReference{" +
-                "platform=" + pluginDeveloperReference.getPluginReference().getLayerReference().getPlatformReference().getPlatform() +
-                ", layer=" + pluginDeveloperReference.getPluginReference().getLayerReference().getLayer() +
-                ", plugin=" + pluginDeveloperReference.getPluginReference().getPlugin() +
-                ", developer=" + pluginDeveloperReference.getDeveloper() +
-                ", version=" + version +
-                '}';
+        return new StringBuilder()
+                .append("PluginVersionReference{")
+                .append("platform=").append(pluginDeveloperReference.getPluginReference().getLayerReference().getPlatformReference().getPlatform())
+                .append(", layer=").append(pluginDeveloperReference.getPluginReference().getLayerReference().getLayer())
+                .append(", plugin=").append(pluginDeveloperReference.getPluginReference().getPlugin())
+                .append(", developer=").append(pluginDeveloperReference.getDeveloper())
+                .append(", version=").append(version)
+                .append('}').toString();
     }
 
     public final String toString3() {
-        return "Plugin{" +
-                "" + pluginDeveloperReference.getPluginReference().getLayerReference().getPlatformReference().getPlatform() +
-                ", " + pluginDeveloperReference.getPluginReference().getLayerReference().getLayer() +
-                ", " + pluginDeveloperReference.getPluginReference().getPlugin() +
-                "}";
+        return new StringBuilder()
+                .append("Plugin{")
+                .append(pluginDeveloperReference.getPluginReference().getLayerReference().getPlatformReference().getPlatform())
+                .append(", ")
+                .append(pluginDeveloperReference.getPluginReference().getLayerReference().getLayer())
+                .append(", ")
+                .append(pluginDeveloperReference.getPluginReference().getPlugin())
+                .append("}").toString();
     }
 }

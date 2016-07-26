@@ -25,20 +25,20 @@ import java.util.List;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/05/2016.
  *
- * @author  lnacosta
+ * @author lnacosta
  * @version 1.0
- * @since   Java JDK 1.7
+ * @since Java JDK 1.7
  */
 public class DesktopDatabaseTransaction implements DatabaseTransaction {
 
     private List<DatabaseTable> updateTables;
-    private List<DatabaseTableRecord>  updateRecords;
+    private List<DatabaseTableRecord> updateRecords;
 
     private List<DatabaseTable> insertTables;
-    private List<DatabaseTableRecord>  insertRecords;
+    private List<DatabaseTableRecord> insertRecords;
 
     private List<DatabaseTable> deleteTables;
-    private List<DatabaseTableRecord>  deleteRecords;
+    private List<DatabaseTableRecord> deleteRecords;
 
     private DesktopDatabaseBridge database;
 
@@ -139,12 +139,12 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
      */
     @Override
     public void addRecordToUpdate(DatabaseTable table,
-                                  DatabaseTableRecord record){
+                                  DatabaseTableRecord record) {
 
-        if(updateTables == null)
+        if (updateTables == null)
             updateTables = new ArrayList<>();
 
-        if(updateRecords == null)
+        if (updateRecords == null)
             updateRecords = new ArrayList<>();
 
         updateTables.add(table);
@@ -153,12 +153,12 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
 
     @Override
     public void addRecordToInsert(DatabaseTable table,
-                                  DatabaseTableRecord record){
+                                  DatabaseTableRecord record) {
 
-        if(insertTables == null)
+        if (insertTables == null)
             insertTables = new ArrayList<>();
 
-        if(insertRecords == null)
+        if (insertRecords == null)
             insertRecords = new ArrayList<>();
 
         insertTables.add(table);
@@ -167,19 +167,19 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
 
     @Override
     public void addRecordToSelect(DatabaseTable selectTable,
-                                  DatabaseTableRecord selectRecord){
+                                  DatabaseTableRecord selectRecord) {
 
         throw new NotImplementedException();
     }
 
     @Override
     public void addRecordToDelete(DatabaseTable deleteTable,
-                                  DatabaseTableRecord deleteRecord){
+                                  DatabaseTableRecord deleteRecord) {
 
-        if(deleteTables == null)
+        if (deleteTables == null)
             deleteTables = new ArrayList<>();
 
-        if(deleteRecords == null)
+        if (deleteRecords == null)
             deleteRecords = new ArrayList<>();
 
         deleteTables.add(deleteTable);
@@ -187,19 +187,19 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
     }
 
     @Override
-    public List<DatabaseTableRecord> getRecordsToUpdate(){
+    public List<DatabaseTableRecord> getRecordsToUpdate() {
 
         return updateRecords;
     }
 
     @Override
-    public List<DatabaseTableRecord> getRecordsToInsert(){
+    public List<DatabaseTableRecord> getRecordsToInsert() {
 
         return insertRecords;
     }
 
     @Override
-    public List<DatabaseTableRecord> getRecordsToSelect(){
+    public List<DatabaseTableRecord> getRecordsToSelect() {
 
         throw new NotImplementedException();
     }
@@ -210,7 +210,7 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
     }
 
     @Override
-    public List<DatabaseTable> getTablesToUpdate(){
+    public List<DatabaseTable> getTablesToUpdate() {
         return this.updateTables;
     }
 
@@ -219,19 +219,19 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
     }
 
     @Override
-    public List<DatabaseTable> getTablesToInsert(){
+    public List<DatabaseTable> getTablesToInsert() {
 
         return insertTables;
     }
 
     @Override
-    public List<DatabaseTable> getTablesToSelect(){
+    public List<DatabaseTable> getTablesToSelect() {
 
         throw new NotImplementedException();
     }
 
     @Override
-    public String toString(){
+    public String toString() {
 
         StringBuilder builder = new StringBuilder();
 
@@ -239,55 +239,55 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
 
         if (insertTables == null)
             insertTables = new ArrayList<>();
-        for(DatabaseTable table : insertTables)
+        for (DatabaseTable table : insertTables)
             builder.append(" ").append(table.toString());
         builder.append("\n");
         builder.append("INSERT RECORDS:");
 
         if (insertRecords == null)
             insertRecords = new ArrayList<>();
-        for(DatabaseTableRecord record : insertRecords)
+        for (DatabaseTableRecord record : insertRecords)
             builder.append(" ").append(record.toString());
         builder.append("\n");
         builder.append("UPDATE TABLES:");
 
         if (updateTables == null)
             updateTables = new ArrayList<>();
-        for(DatabaseTable table : updateTables)
+        for (DatabaseTable table : updateTables)
             builder.append(" ").append(table.toString());
         builder.append("\n");
         builder.append("UPDATE RECORDS:");
 
         if (updateRecords == null)
             updateRecords = new ArrayList<>();
-        for(DatabaseTableRecord record : updateRecords)
+        for (DatabaseTableRecord record : updateRecords)
             builder.append(" ").append(record.toString());
 
         builder.append("DELETE TABLES:");
         if (deleteTables == null)
             deleteTables = new ArrayList<>();
-        for(DatabaseTable table : deleteTables)
+        for (DatabaseTable table : deleteTables)
             builder.append(" ").append(table.toString());
         builder.append("\n");
 
         builder.append("DELETE RECORDS:");
         if (deleteRecords == null)
             deleteRecords = new ArrayList<>();
-        for(DatabaseTableRecord record : deleteRecords)
+        for (DatabaseTableRecord record : deleteRecords)
             builder.append(" ").append(record.toString());
 
         return builder.toString();
     }
 
-    private void updateTransactionRecord(final Connection          connection,
-                                         final DatabaseTable       table     ,
-                                         final DatabaseTableRecord record    ) throws CantUpdateRecordException {
+    private void updateTransactionRecord(final Connection connection,
+                                         final DatabaseTable table,
+                                         final DatabaseTableRecord record) throws CantUpdateRecordException {
 
 
         List<DatabaseRecord> records = record.getValues();
         StringBuilder strRecords = new StringBuilder();
 
-        List<String> strValues  = new ArrayList<>();
+        List<String> strValues = new ArrayList<>();
 
         for (DatabaseRecord dbRecord : records) {
 
@@ -313,25 +313,25 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
         } catch (SQLException exception) {
             throw new CantUpdateRecordException(
                     exception,
-                    "table: "+table+" - record: "+record,
+                    "table: " + table + " - record: " + record,
                     "There was an error in database while trying to update a record of the transaction."
             );
         } catch (Exception exception) {
             throw new CantUpdateRecordException(
                     exception,
-                    "table: "+table+" - record: "+record,
+                    "table: " + table + " - record: " + record,
                     "Unhandled error while trying to update a record in the transaction."
             );
         }
     }
 
-    private void insertTransactionRecord(final Connection          connection,
-                                         final DatabaseTable       table     ,
-                                         final DatabaseTableRecord record    ) throws CantInsertRecordException {
+    private void insertTransactionRecord(final Connection connection,
+                                         final DatabaseTable table,
+                                         final DatabaseTableRecord record) throws CantInsertRecordException {
 
         List<String> strRecords = new ArrayList<>();
-        List<String> strValues  = new ArrayList<>();
-        List<String> strSigns  = new ArrayList<>();
+        List<String> strValues = new ArrayList<>();
+        List<String> strSigns = new ArrayList<>();
 
         List<DatabaseRecord> records = record.getValues();
 
@@ -341,7 +341,7 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
             strSigns.add("?");
         }
 
-        String SQL_QUERY = "INSERT INTO " + table.getTableName() + "(" + StringUtils.join(strRecords, ",") + ")" + " VALUES (" + StringUtils.join(strSigns, ",") + ")";
+        String SQL_QUERY = new StringBuilder().append("INSERT INTO ").append(table.getTableName()).append("(").append(StringUtils.join(strRecords, ",")).append(")").append(" VALUES (").append(StringUtils.join(strSigns, ",")).append(")").toString();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_QUERY)) {
 
@@ -353,21 +353,21 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
         } catch (SQLException exception) {
             throw new CantInsertRecordException(
                     exception,
-                    "table: "+table+" - record: "+record,
+                    "table: " + table + " - record: " + record,
                     "There was an error in database while trying to insert a record of the transaction."
             );
         } catch (Exception exception) {
             throw new CantInsertRecordException(
                     exception,
-                    "table: "+table+" - record: "+record,
+                    "table: " + table + " - record: " + record,
                     "Unhandled error while trying to insert a record in the transaction."
             );
         }
     }
 
-    private void deleteTransactionRecord(final Connection          connection,
-                                         final DatabaseTable       table     ,
-                                         final DatabaseTableRecord record    ) throws CantDeleteRecordException {
+    private void deleteTransactionRecord(final Connection connection,
+                                         final DatabaseTable table,
+                                         final DatabaseTableRecord record) throws CantDeleteRecordException {
 
         String SQL_QUERY = "DELETE FROM " + table.getTableName() + table.makeFilter();
 
@@ -378,13 +378,13 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
         } catch (SQLException exception) {
             throw new CantDeleteRecordException(
                     exception,
-                    "table: "+table+" - record: "+record,
+                    "table: " + table + " - record: " + record,
                     "There was an error in database while trying to delete a record of the transaction."
             );
         } catch (Exception exception) {
             throw new CantDeleteRecordException(
                     exception,
-                    "table: "+table+" - record: "+record,
+                    "table: " + table + " - record: " + record,
                     "Unhandled error while trying to delete a record in the transaction."
             );
         }

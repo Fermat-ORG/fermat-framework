@@ -11,7 +11,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  * Created by angel on 23/7/15.
  */
 
-public class AndroidVariableTest{
+public class AndroidVariableTest {
 
     AndroidVariable variable1;
     AndroidVariable variable2;
@@ -23,12 +23,12 @@ public class AndroidVariableTest{
     String value2 = "Value_2";
 
     @Before
-    public void setUpVariable1(){
+    public void setUpVariable1() {
         variable1 = constructAndroidVariable(name1, value1);
     }
 
     @Test
-    public void Variables_AreEquals(){
+    public void Variables_AreEquals() {
         variable2 = constructAndroidVariable(name1, value1);
 
         assertThat(variable1.getName()).isEqualTo(variable2.getName());
@@ -37,7 +37,7 @@ public class AndroidVariableTest{
     }
 
     @Test
-    public void Variables_NotEquals(){
+    public void Variables_NotEquals() {
         variable2 = constructAndroidVariable(name2, value2);
 
         assertThat(variable1.getName()).isNotEqualTo(variable2.getName());
@@ -48,7 +48,7 @@ public class AndroidVariableTest{
     private AndroidVariable constructAndroidVariable(
             String name,
             String value
-    ){
+    ) {
         AndroidVariable variable = new AndroidVariable();
 
         variable.setName(name);

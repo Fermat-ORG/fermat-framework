@@ -5,13 +5,13 @@ import android.graphics.Typeface;
 import android.view.View;
 
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.ui.adapters.AdapterChangeListener;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.ItemTouchHelperAdapter;
-import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.sub_app.wallet_manager.holder.FermatAppHolder;
-import com.bitdubai.fermat_api.layer.desktop.Item;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,54 +24,54 @@ public class BottomNavigationAdapter extends FermatAdapter<Item, FermatAppHolder
     private AdapterChangeListener adapterChangeListener;
 
     public BottomNavigationAdapter(Context context) {
-            super(context);
-            tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
-        }
+        super(context);
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
+    }
 
-        public BottomNavigationAdapter(Context context, List<Item> dataSet, DesktopHolderClickCallback desktopHolderClickCallback) {
-            super(context, dataSet);
-            this.desktopHolderClickCallback = desktopHolderClickCallback;
-            tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
-        }
+    public BottomNavigationAdapter(Context context, List<Item> dataSet, DesktopHolderClickCallback desktopHolderClickCallback) {
+        super(context, dataSet);
+        this.desktopHolderClickCallback = desktopHolderClickCallback;
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
+    }
 
 
-        @Override
-        protected FermatAppHolder createHolder(View itemView, int type) {
-            FermatAppHolder fermatAppHolder = new FermatAppHolder(itemView);
-            return fermatAppHolder;
-        }
+    @Override
+    protected FermatAppHolder createHolder(View itemView, int type) {
+        FermatAppHolder fermatAppHolder = new FermatAppHolder(itemView);
+        return fermatAppHolder;
+    }
 
-        @Override
-        protected int getCardViewResource() {
-            return R.layout.grid_launcher;
-        }
+    @Override
+    protected int getCardViewResource() {
+        return R.layout.grid_launcher;
+    }
 
-        @Override
-        protected void bindHolder(FermatAppHolder holder, Item data, final int position) {
+    @Override
+    protected void bindHolder(FermatAppHolder holder, Item data, final int position) {
 
-            holder.name.setText(data.getName());
+        holder.name.setText(data.getName());
 //            byte[] profileImage = data.getIcon();
 //            if (profileImage != null) {
 //                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
 //                holder.thumbnail.setImageBitmap(bitmap);
 //            }
-            if(data.getIconResource()!=0)
-                if(data.getType()!= InterfaceType.EMPTY)
-                    holder.thumbnail.setImageResource(data.getIconResource());
+        if (data.getIconResource() != 0)
+            if (data.getType() != InterfaceType.EMPTY)
+                holder.thumbnail.setImageResource(data.getIconResource());
 
-            holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dataSet.get(position).selected = !dataSet.get(position).selected;
-                    Item item = dataSet.get(position);
-                    notifyItemChanged(position);
-                    desktopHolderClickCallback.onHolderItemClickListener(item, position);
-                    if (adapterChangeListener != null)
-                        adapterChangeListener.onDataSetChanged(dataSet);
-                }
-            });
+        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dataSet.get(position).selected = !dataSet.get(position).selected;
+                Item item = dataSet.get(position);
+                notifyItemChanged(position);
+                desktopHolderClickCallback.onHolderItemClickListener(item, position);
+                if (adapterChangeListener != null)
+                    adapterChangeListener.onDataSetChanged(dataSet);
+            }
+        });
 
-        }
+    }
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {

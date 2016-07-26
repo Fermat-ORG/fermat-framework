@@ -10,9 +10,9 @@ import com.mati.fermat_osa_addon_android_hardware.version_1.PluginHardwareAndroi
 /**
  * The class <code>com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.DeveloperBitDubai</code>
  * Haves the logic of instantiation of all versions of Plugin Database System Android Addon.
- *
+ * <p/>
  * Here we can choose between the different versions of the Plugin Database System Addon.
- *
+ * <p/>
  * Created by furszy
  */
 public class PluginHardwareDeveloperBitDubai extends AbstractAddonDeveloper {

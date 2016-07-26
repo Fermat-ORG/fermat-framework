@@ -135,6 +135,12 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
         this.isErrorReport = isErrorReportEnabled;
     }
 
+    @Override
+    public void reportUnexpectedPluginException(Plugins plugin, Platforms platform, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception, String[] mailTo, String extraData) {
+        String msgException = processException(plugin.toString(), unexpectedPluginExceptionSeverity.toString()+",ExtraData: "+extraData, exception);
+        if (isErrorReport) sendReport(mailTo, msgException);
+    }
+
     private String processException(final String source, final String severity, final Exception exception) {
         return printErrorReport(source, severity, FermatException.wrapException(exception));
     }

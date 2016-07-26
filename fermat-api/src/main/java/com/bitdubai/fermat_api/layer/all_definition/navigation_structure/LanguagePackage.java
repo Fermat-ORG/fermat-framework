@@ -8,17 +8,17 @@ import java.util.Map;
 /**
  * Created by rodrigo on 2015.07.17..
  */
-public class LanguagePackage implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatLanguagePackage,Serializable {
+public class LanguagePackage implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatLanguagePackage, Serializable {
 
-   // DeviceUser author;
+    // DeviceUser author;
     String name;
     Languages language;
-    Map<String,String> translation;
+    Map<String, String> translation;
 
 
     //public void setAuthor(DeviceUser author) {
-       // this.author = author;
-   // }
+    // this.author = author;
+    // }
 
     public void setName(String name) {
         this.name = name;

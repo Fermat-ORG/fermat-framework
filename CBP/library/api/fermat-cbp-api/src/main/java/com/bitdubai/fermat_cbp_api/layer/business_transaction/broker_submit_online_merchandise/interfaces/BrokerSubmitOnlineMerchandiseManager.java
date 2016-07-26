@@ -59,7 +59,6 @@ public interface BrokerSubmitOnlineMerchandiseManager extends BrokerSubmitMercha
      * @param cbpWalletPublicKey
      * @param contractHash
      * @param merchandiseCurrency
-     *
      * @throws CantSubmitMerchandiseException
      */
     void submitMerchandise(BigDecimal referencePrice,
@@ -79,7 +78,6 @@ public interface BrokerSubmitOnlineMerchandiseManager extends BrokerSubmitMercha
      * @param referencePrice
      * @param cbpWalletPublicKey
      * @param contractHash
-     *
      * @param merchandiseCurrency
      * @throws CantSubmitMerchandiseException
      */

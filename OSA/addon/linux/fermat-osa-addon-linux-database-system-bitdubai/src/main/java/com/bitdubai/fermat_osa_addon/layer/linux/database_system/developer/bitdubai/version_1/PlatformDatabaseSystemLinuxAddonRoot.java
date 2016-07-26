@@ -36,7 +36,7 @@ public class PlatformDatabaseSystemLinuxAddonRoot extends AbstractAddon {
 
         try {
 
-           fermatManager = new DesktopPlatformDatabaseSystem();
+            fermatManager = new DesktopPlatformDatabaseSystem();
 
             super.start();
 

@@ -1,6 +1,5 @@
 package utils;
 
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.utils.CustomerBrokerSaleImpl;
 
@@ -20,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class getTransactionStatus {
 
     @Test
-    public void getPurchaseStatus(){
+    public void getPurchaseStatus() {
         CustomerBrokerSaleImpl customerBrokerPurchaseImpl = mock(CustomerBrokerSaleImpl.class);
         when(customerBrokerPurchaseImpl.getTransactionStatus()).thenReturn(TransactionStatus.COMPLETED);
         assertThat(customerBrokerPurchaseImpl.getTransactionStatus()).isNotNull();

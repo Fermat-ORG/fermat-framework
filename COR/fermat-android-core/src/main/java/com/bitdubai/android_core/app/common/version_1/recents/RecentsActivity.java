@@ -43,7 +43,7 @@ import java.util.List;
 
 /**
  * The main Recents activity that is started from AlternateRecentsComponent.
- *
+ * <p/>
  * Created by Matias Furszyfer
  */
 public class RecentsActivity extends Activity implements Overview.RecentsViewCallbacks, OverviewAdapter.Callbacks, RecentCallback<RecentApp> {
@@ -55,7 +55,9 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
     List<FermatRecentApp> recents;
     private FermatTextView emptyView;
 
-    /** Called with the activity is first created. */
+    /**
+     * Called with the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +65,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
 
         // Initialize the widget host (the host id is static and does not change)
 
-        Log.i(TAG,"onCreate");
+        Log.i(TAG, "onCreate");
         // Set the Recents layout
         setContentView(R.layout.recents);
 
@@ -116,7 +118,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
         RecentApp recentApp;
         for (Object object : objects) {
             recentApp = (RecentApp) object;
-            if(recentApp.getFermatApp().getAppType() != FermatAppType.DESKTOP) {
+            if (recentApp.getFermatApp().getAppType() != FermatAppType.DESKTOP) {
                 recentApp.getFermatApp().setBanner(selectBannerSwitch(recentApp.getPublicKey()));
                 models.add(recentApp);
             }
@@ -153,7 +155,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
 //            },i));
 //        }
 
-        RecentsAdapter recentsAdapter = new RecentsAdapter(this,models);
+        RecentsAdapter recentsAdapter = new RecentsAdapter(this, models);
         recentsAdapter.setCallbacks(this);
         recentsAdapter.setRecentCallback(this);
 
@@ -166,9 +168,9 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
 //            }
 //        },2000);
 
-        if(models.isEmpty()){
+        if (models.isEmpty()) {
             emptyView.setText("Nothing to show");
-            FermatAnimationsUtils.showEmpty(this,true,emptyView);
+            FermatAnimationsUtils.showEmpty(this, true, emptyView);
         }
 
     }
@@ -200,7 +202,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
     @Override
     public void onAllCardsDismissed() {
         emptyView.setText("Nothing to show");
-        FermatAnimationsUtils.showEmpty(this,true,emptyView);
+        FermatAnimationsUtils.showEmpty(this, true, emptyView);
     }
 
     @Override
@@ -240,9 +242,8 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
     }
 
 
-
     // metodo totalmente innecesario que será eliminado una vez que se puedan instalar las apps desde la store
-    private int selectBannerSwitch(String key){
+    private int selectBannerSwitch(String key) {
         int res = 0;
 
         try {
@@ -276,7 +277,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
                     break;
 
             }
-        }catch (IllegalArgumentException i){
+        } catch (IllegalArgumentException i) {
             try {
                 switch (SubAppsPublicKeys.valueOf(key)) {
                     case CHT_OPEN_CHAT:
@@ -317,7 +318,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
                         break;
 
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 res = R.drawable.banner_bitcoin_wallet;
             }
 

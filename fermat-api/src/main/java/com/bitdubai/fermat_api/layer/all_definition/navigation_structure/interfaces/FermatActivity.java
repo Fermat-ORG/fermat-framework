@@ -1,13 +1,12 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -15,7 +14,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public interface FermatActivity extends Serializable{
+public interface FermatActivity extends Serializable {
     void setColor(String color);
 
     String getColor();
@@ -30,13 +29,13 @@ public interface FermatActivity extends Serializable{
 
     FermatFragment getFragment(String fragment);
 
-    TitleBar getTitleBar() ;
+    TitleBar getTitleBar();
 
-    SideMenu getSideMenu() ;
+    SideMenu getSideMenu();
 
-    OptionsMenu getOptionsMenu() ;
+    OptionsMenu getOptionsMenu();
 
-    TabStrip getTabStrip() ;
+    TabStrip getTabStrip();
 
     StatusBar getStatusBar();
 

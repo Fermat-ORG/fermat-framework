@@ -9,8 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum WalletType implements FermatEnum {
 
     NICHE("NICHE"),
-    REFERENCE("REFER"),
-    ;
+    REFERENCE("REFER"),;
 
     private String code;
 
@@ -25,11 +24,13 @@ public enum WalletType implements FermatEnum {
 
     public static WalletType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "NICHE":  return WalletType.NICHE;
-            case "REFER":  return WalletType.REFERENCE;
+            case "NICHE":
+                return WalletType.NICHE;
+            case "REFER":
+                return WalletType.REFERENCE;
             //Modified by Manuel Perez on 03/08/2015
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the WalletType enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the WalletType enum");
         }
     }
 }

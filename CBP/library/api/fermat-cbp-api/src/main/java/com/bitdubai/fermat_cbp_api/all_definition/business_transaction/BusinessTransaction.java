@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_cbp_api.all_definition.business_transaction;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+
 import java.util.UUID;
 
 /**

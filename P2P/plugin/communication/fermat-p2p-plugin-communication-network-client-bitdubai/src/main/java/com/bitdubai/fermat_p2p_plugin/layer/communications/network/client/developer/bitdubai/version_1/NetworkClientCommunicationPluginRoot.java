@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
@@ -38,11 +39,13 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.P2PLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.daos.NodeConnectionHistoryDao;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.event_handler.NetworkClientConnectedToNodeEventHandler;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantInitializeNetworkClientP2PDatabaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection;
@@ -60,6 +63,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -117,6 +121,11 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
      */
     public static final String SERVER_IP = HardcodeConstants.SERVER_IP_DEFAULT;
 
+    /**
+     * Holds the listeners references
+     */
+    protected List<FermatEventListener> listenersAdded;
+
     /*
      * Represent the networkClientCommunicationConnection
      */
@@ -155,6 +164,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     public NetworkClientCommunicationPluginRoot() {
         super(new PluginVersionReference(new Version()));
         this.scheduledExecutorService = Executors.newScheduledThreadPool(2);
+        this.listenersAdded        = new CopyOnWriteArrayList<>();
     }
 
     @Override
@@ -250,6 +260,10 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             }
 
             p2PLayerManager.register(this);
+//            FermatEventListener networkClientConnected = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_CONNNECTED_TO_NODE);
+//            networkClientConnected.setEventHandler(new NetworkClientConnectedToNodeEventHandler(this));
+//            eventManager.addListener(networkClientConnected);
+//            listenersAdded.add(networkClientConnected);
 
             connectivityManager.registerListener(new NetworkStateReceiver() {
                 @Override
@@ -291,6 +305,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
     }
 
+    public void register(){
+        p2PLayerManager.registerReconnect(this);
+    }
 
     /**
      * This method validate is all required resource are injected into
@@ -632,7 +649,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             * Create and Scheduled the supervisorConnectionAgent
             */
             final NetworkClientCommunicationSupervisorConnectionAgent supervisorConnectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
-            scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 20, TimeUnit.SECONDS);
+            scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 7, TimeUnit.SECONDS);
 
 //            executorService = Executors.newSingleThreadExecutor();
 //            executorService.submit(thread);

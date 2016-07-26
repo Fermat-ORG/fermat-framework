@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by Matias Furszyfer on 2016.07.06..
  */
-public class FermatTextViewRuntime extends FermatView implements Serializable{
+public class FermatTextViewRuntime extends FermatView implements Serializable {
 
     private float titleSize = 24;
     private String title;

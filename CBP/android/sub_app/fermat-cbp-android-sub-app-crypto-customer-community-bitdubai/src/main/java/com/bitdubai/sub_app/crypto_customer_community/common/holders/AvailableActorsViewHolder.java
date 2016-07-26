@@ -30,6 +30,8 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
     private FermatTextView customerName;
     private FermatTextView customerLocation;
     private FermatTextView connectionText;
+    private String placeAddress;
+    private String countryAddress;
 
     private Resources res;
 
@@ -83,14 +85,20 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         }
 
         customerName.setText(data.getAlias());
-        if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("OF"))
+        if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("OF"))
             customerName.setTextColor(Color.RED);
-        else if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
+        else if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
             customerName.setTextColor(Color.GREEN);
-        else if(data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
-            customerName.setTextColor(Color.BLACK);//res.getColor(R.color.color_black_light));
+        else if (data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
+            customerName.setTextColor(Color.parseColor("#4d4d4d"));//res.getColor(R.color.color_black_light));
 
-        customerLocation.setText(String.format("%s / %s", data.getCountry(), data.getPlace()));
+        if (data.getCountry().equals("null") || data.getCountry().equals("") || data.getCountry().equals("country"))
+            countryAddress = "--";
+        else countryAddress = data.getCountry();
+        if (data.getPlace().equals("null") || data.getPlace().equals("") || data.getPlace().equals("country"))
+            placeAddress = "--";
+        else placeAddress = data.getPlace();
+        customerLocation.setText(String.format("%s / %s", placeAddress, countryAddress));
         customerImage.setImageDrawable(getImgDrawable(data.getImage()));
     }
 

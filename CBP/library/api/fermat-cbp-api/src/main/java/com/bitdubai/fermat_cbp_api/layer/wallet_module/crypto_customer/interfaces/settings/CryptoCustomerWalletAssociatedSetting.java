@@ -13,23 +13,30 @@ import java.util.UUID;
 public interface CryptoCustomerWalletAssociatedSetting extends Serializable {
     //TODO: Documentar y manejo de excepciones
     UUID getId();
+
     void setId(UUID id);
 
     String getCustomerPublicKey();
-    void   setCustomerPublicKey(String customerPublicKey);
+
+    void setCustomerPublicKey(String customerPublicKey);
 
     Platforms getPlatform();
+
     void setPlatform(Platforms platform);
 
     String getWalletPublicKey();
+
     void setWalletPublicKey(String walletPublicKey);
 
     FermatEnum getMerchandise();
+
     void setMerchandise(FermatEnum merchandise);
 
     MoneyType getMoneyType();
+
     void setMoneyType(MoneyType moneyType);
 
     String getBankAccount();
+
     void setBankAccount(String bankAccount);
 }

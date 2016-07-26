@@ -107,9 +107,10 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
 
         FermatTextView paymentMethod = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_payment_method);
         String typeOfPaymentStr = "";
-        try{
+        try {
             typeOfPaymentStr = MoneyType.getByCode(contractBasicInfo.getTypeOfPayment()).getFriendlyName();
-        }catch (InvalidParameterException e) {}
+        } catch (InvalidParameterException e) {
+        }
         paymentMethod.setText(typeOfPaymentStr);
 
         LinearLayout cancellationReasonContainer = (LinearLayout) rootView.findViewById(R.id.cbw_cancellation_reason_container);

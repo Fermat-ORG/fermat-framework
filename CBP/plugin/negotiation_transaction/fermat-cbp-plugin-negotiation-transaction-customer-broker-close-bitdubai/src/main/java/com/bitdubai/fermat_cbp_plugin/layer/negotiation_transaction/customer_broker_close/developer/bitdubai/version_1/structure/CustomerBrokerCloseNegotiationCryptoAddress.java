@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -28,7 +29,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantNegotiationAddCryptoAdreessException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
@@ -40,30 +40,30 @@ import java.util.Collection;
 public class CustomerBrokerCloseNegotiationCryptoAddress {
 
     /*Represent Address Book Manager*/
-    private CryptoAddressBookManager                                cryptoAddressBookManager;
+    private CryptoAddressBookManager cryptoAddressBookManager;
 
     /*Represent Vault Manager*/
-    private CryptoVaultManager                                      cryptoVaultManager;
+    private CryptoVaultManager cryptoVaultManager;
 
     /*Represent Wallet Manager*/
-    private WalletManagerManager                                    walletManagerManager;
+    private WalletManagerManager walletManagerManager;
 
     /*Represent the NegotiationTransactionCustomerBrokerClosePluginRoot*/
-    private NegotiationTransactionCustomerBrokerClosePluginRoot     pluginRoot;
+    private NegotiationTransactionCustomerBrokerClosePluginRoot pluginRoot;
 
-    private  IntraWalletUserIdentityManager                         intraWalletUserIdentityManager;
+    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     public CustomerBrokerCloseNegotiationCryptoAddress(
-        CryptoAddressBookManager                            cryptoAddressBookManager,
-        CryptoVaultManager                                  cryptoVaultManager,
-        WalletManagerManager                                walletManagerManager,
-        NegotiationTransactionCustomerBrokerClosePluginRoot pluginRoot,
-        IntraWalletUserIdentityManager                      intraWalletUserIdentityManager
-    ){
-        this.cryptoAddressBookManager       = cryptoAddressBookManager;
-        this.cryptoVaultManager             = cryptoVaultManager;
-        this.walletManagerManager           = walletManagerManager;
-        this.pluginRoot                     = pluginRoot;
+            CryptoAddressBookManager cryptoAddressBookManager,
+            CryptoVaultManager cryptoVaultManager,
+            WalletManagerManager walletManagerManager,
+            NegotiationTransactionCustomerBrokerClosePluginRoot pluginRoot,
+            IntraWalletUserIdentityManager intraWalletUserIdentityManager
+    ) {
+        this.cryptoAddressBookManager = cryptoAddressBookManager;
+        this.cryptoVaultManager = cryptoVaultManager;
+        this.walletManagerManager = walletManagerManager;
+        this.pluginRoot = pluginRoot;
         this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
     }
 
@@ -74,11 +74,11 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
 
             System.out.print("\n\n**** 3.1.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. ADD CRYPTO ADDRESS ****\n");
 
-            if (isCryptoCurrency(negotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)) {
+            if (isCryptoCurrency(negotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
 
-                Collection<Clause>                      negotiationClauses  = negotiation.getClauses();
-                CustomerBrokerCloseCryptoAddressRequest request             = getRequest(negotiation);
-                String                                  cryptoCurrencyType  = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.CUSTOMER_CURRENCY);
+                Collection<Clause> negotiationClauses = negotiation.getClauses();
+                CustomerBrokerCloseCryptoAddressRequest request = getRequest(negotiation);
+                String cryptoCurrencyType = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.CUSTOMER_CURRENCY);
 
                 negotiationClauses = addCryptoAdreess(negotiationClauses, request, ClauseType.CUSTOMER_CRYPTO_ADDRESS, cryptoCurrencyType);
 
@@ -100,10 +100,10 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
 
             return negotiation;
 
-        } catch (CantGetListClauseException e){
+        } catch (CantGetListClauseException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantNegotiationAddCryptoAdreessException(e.getMessage(),e, CantNegotiationAddCryptoAdreessException.DEFAULT_MESSAGE, "ERROR ADD CRYPTO ADREESS AN PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
-        } catch (Exception e){
+            throw new CantNegotiationAddCryptoAdreessException(e.getMessage(), e, CantNegotiationAddCryptoAdreessException.DEFAULT_MESSAGE, "ERROR ADD CRYPTO ADREESS AN PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
+        } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantNegotiationAddCryptoAdreessException(e.getMessage(), FermatException.wrapException(e), CantNegotiationAddCryptoAdreessException.DEFAULT_MESSAGE, "ERROR ADD CRYPTO ADREESS AN PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         }
@@ -117,36 +117,36 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
 
             System.out.print("\n\n**** 3.1.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. ADD CRYPTO ADDRESS ****\n");
 
-            if (isCryptoCurrency(negotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)) {
+            if (isCryptoCurrency(negotiation.getClauses(), ClauseType.CUSTOMER_PAYMENT_METHOD)) {
 
-                Collection<Clause>                      negotiationClauses  = negotiation.getClauses();
-                CustomerBrokerCloseCryptoAddressRequest request             = getRequest(negotiation);
-                String                                  cryptoCurrencyType  = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.BROKER_CURRENCY);
+                Collection<Clause> negotiationClauses = negotiation.getClauses();
+                CustomerBrokerCloseCryptoAddressRequest request = getRequest(negotiation);
+                String cryptoCurrencyType = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.BROKER_CURRENCY);
 
-                negotiationClauses  = addCryptoAdreess(negotiationClauses, request, ClauseType.BROKER_CRYPTO_ADDRESS, cryptoCurrencyType);
+                negotiationClauses = addCryptoAdreess(negotiationClauses, request, ClauseType.BROKER_CRYPTO_ADDRESS, cryptoCurrencyType);
 
                 return new CustomerBrokerSaleNegotiationImpl(
-                    negotiation.getNegotiationId(),
-                    negotiation.getCustomerPublicKey(),
-                    negotiation.getBrokerPublicKey(),
-                    negotiation.getStartDate(),
-                    negotiation.getNegotiationExpirationDate(),
-                    negotiation.getStatus(),
-                    negotiation.getNearExpirationDatetime(),
-                    negotiationClauses,
-                    negotiation.getLastNegotiationUpdateDate(),
-                    negotiation.getCancelReason(),
-                    negotiation.getMemo()
+                        negotiation.getNegotiationId(),
+                        negotiation.getCustomerPublicKey(),
+                        negotiation.getBrokerPublicKey(),
+                        negotiation.getStartDate(),
+                        negotiation.getNegotiationExpirationDate(),
+                        negotiation.getStatus(),
+                        negotiation.getNearExpirationDatetime(),
+                        negotiationClauses,
+                        negotiation.getLastNegotiationUpdateDate(),
+                        negotiation.getCancelReason(),
+                        negotiation.getMemo()
                 );
 
             }
 
             return negotiation;
 
-        } catch (CantGetListClauseException e){
+        } catch (CantGetListClauseException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantNegotiationAddCryptoAdreessException(e.getMessage(),e, CantNegotiationAddCryptoAdreessException.DEFAULT_MESSAGE, "ERROR ADD CRYPTO ADREESS AN SALE NEGOTIATION, UNKNOWN FAILURE.");
-        } catch (Exception e){
+            throw new CantNegotiationAddCryptoAdreessException(e.getMessage(), e, CantNegotiationAddCryptoAdreessException.DEFAULT_MESSAGE, "ERROR ADD CRYPTO ADREESS AN SALE NEGOTIATION, UNKNOWN FAILURE.");
+        } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantNegotiationAddCryptoAdreessException(e.getMessage(), FermatException.wrapException(e), CantNegotiationAddCryptoAdreessException.DEFAULT_MESSAGE, "ERROR ADD CRYPTO ADREESS AN SALE NEGOTIATION, UNKNOWN FAILURE.");
         }
@@ -164,10 +164,10 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
                     }
                 }
             }
-            
+
             return false;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDetermineCryptoCurrencyException(e.getMessage(), FermatException.wrapException(e), CantDetermineCryptoCurrencyException.DEFAULT_MESSAGE, "ERROR DETERMINE CRYPTO CURRENCY, UNKNOWN FAILURE.");
         }
@@ -176,22 +176,22 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
 
     //ADD NEW CRYPTO ADDRESS A THE CLAUSES
     private Collection<Clause> addCryptoAdreess(
-        Collection<Clause>                      negotiationClauses,
-        CustomerBrokerCloseCryptoAddressRequest request,
-        ClauseType                              cryptoAddressType,
-        String                                  cryptoCurrencyType)
-    throws CantAddCryptoAddressNegotiationException{
+            Collection<Clause> negotiationClauses,
+            CustomerBrokerCloseCryptoAddressRequest request,
+            ClauseType cryptoAddressType,
+            String cryptoCurrencyType)
+            throws CantAddCryptoAddressNegotiationException {
 
         try {
 
             System.out.print("\n\n**** 3.1.1.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. ADD CRYPTO ADDRESS ****\n");
 
-            Collection<Clause>  negotiationClausesNew   = new ArrayList<>();
+            Collection<Clause> negotiationClausesNew = new ArrayList<>();
 
             for (Clause clause : negotiationClauses) {
                 if (clause.getType() == cryptoAddressType) {
                     negotiationClausesNew.add(
-                            addClause(clause, cryptoAdreessActor(request,cryptoCurrencyType))
+                            addClause(clause, cryptoAdreessActor(request, cryptoCurrencyType))
                     );
                 } else {
                     negotiationClausesNew.add(
@@ -202,71 +202,71 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
 
             return negotiationClausesNew;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAddCryptoAddressNegotiationException(e.getMessage(), FermatException.wrapException(e), CantAddCryptoAddressNegotiationException.DEFAULT_MESSAGE, "ERROR ADD CRYPTO ADDRESS IN THE NEGOTIATION, UNKNOWN FAILURE.");
         }
     }
 
     //ADD VALUES A THE CLAUSES
-    private Clause addClause(Clause clause, String value) throws CantAddClauseNegotiationException{
+    private Clause addClause(Clause clause, String value) throws CantAddClauseNegotiationException {
 
         try {
 
             return new CustomerBrokerNegotiationClauseImpl(
-                clause.getClauseId(),
-                clause.getType(),
-                value,
-                clause.getStatus(),
-                clause.getProposedBy(),
-                clause.getIndexOrder()
+                    clause.getClauseId(),
+                    clause.getType(),
+                    value,
+                    clause.getStatus(),
+                    clause.getProposedBy(),
+                    clause.getIndexOrder()
             );
 
-        } catch (Exception e){
+        } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAddClauseNegotiationException(e.getMessage(), FermatException.wrapException(e), CantAddClauseNegotiationException.DEFAULT_MESSAGE, "ERROR ADD CLAUSE IN THE NEGOTIATION, UNKNOWN FAILURE.");
         }
     }
 
     //RETURN PURCHASE REQUEST THE CRYPTO ADDRESS
-    private CustomerBrokerCloseCryptoAddressRequest getRequest(CustomerBrokerPurchaseNegotiation negotiation) throws CantGetRequestCryptoAddressException{
+    private CustomerBrokerCloseCryptoAddressRequest getRequest(CustomerBrokerPurchaseNegotiation negotiation) throws CantGetRequestCryptoAddressException {
         IntraWalletUserIdentity intraUser;
         try {
 
-            if(intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
+            if (intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()) {
                 throw new CantGetRequestCryptoAddressException(CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, null, CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, "ERROR GET REQUEST THE CRYPTO ADDRESS IN THE NEGOTIATION, UNKNOWN FAILURE.");
-            }else{
-                intraUser= intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+            } else {
+                intraUser = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
             }
 
             System.out.print("\n\n**** 3.1.1.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. GET REQUEST ****\n");
 
             CustomerBrokerCloseCryptoAddressRequest request = new CustomerBrokerCloseCryptoAddressRequestImpl(
-                Actors.INTRA_USER,
-                Actors.CBP_CRYPTO_CUSTOMER,
-                intraUser.getPublicKey(),
-                negotiation.getCustomerPublicKey(),
-                CryptoCurrency.BITCOIN,
-                BlockchainNetworkType.getDefaultBlockchainNetworkType()
+                    Actors.INTRA_USER,
+                    Actors.CBP_CRYPTO_CUSTOMER,
+                    intraUser.getPublicKey(),
+                    negotiation.getCustomerPublicKey(),
+                    CryptoCurrency.BITCOIN,
+                    BlockchainNetworkType.getDefaultBlockchainNetworkType()
             );
 
             return request;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetRequestCryptoAddressException(e.getMessage(), FermatException.wrapException(e), CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, "ERROR GET REQUEST THE CRYPTO ADDRESS IN THE NEGOTIATION, UNKNOWN FAILURE.");
         }
     }
 
     //RETURN SALE REQUEST THE CRYPTO ADDRESS
-    private CustomerBrokerCloseCryptoAddressRequest getRequest(CustomerBrokerSaleNegotiation negotiation) throws CantGetRequestCryptoAddressException{
+    private CustomerBrokerCloseCryptoAddressRequest getRequest(CustomerBrokerSaleNegotiation negotiation) throws CantGetRequestCryptoAddressException {
         IntraWalletUserIdentity intraUser;
         try {
 
-            if(intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
+            if (intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()) {
                 throw new CantGetRequestCryptoAddressException(CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, null, CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, "ERROR GET REQUEST THE CRYPTO ADDRESS IN THE NEGOTIATION, UNKNOWN FAILURE.");
-            }else{
-                intraUser= intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+            } else {
+                intraUser = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
             }
 
             System.out.print("\n\n**** 3.1.1.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. GET REQUEST ****\n");
@@ -282,31 +282,31 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
 
             return request;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetRequestCryptoAddressException(e.getMessage(), FermatException.wrapException(e), CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, "ERROR GET REQUEST THE CRYPTO ADDRESS IN THE NEGOTIATION, UNKNOWN FAILURE.");
         }
     }
 
     //GENERATE AND REGISTER THE NEW CRYPTO ADDRESS OF THE ACTOR
-    private String cryptoAdreessActor(CustomerBrokerCloseCryptoAddressRequest request, String cryptoCurrencyType) throws CantGetGenerateCryptoAddressException{
+    private String cryptoAdreessActor(CustomerBrokerCloseCryptoAddressRequest request, String cryptoCurrencyType) throws CantGetGenerateCryptoAddressException {
 
-        CryptoVaultSelector     cryptoVaultSelector     = new CryptoVaultSelector(this.cryptoVaultManager);
-        WalletManagerSelector   walletManagerSelector   = new WalletManagerSelector(this.walletManagerManager);
-        String                  adreess                 = null;
-        CryptoAddress           cryptoAdreess;
+        CryptoVaultSelector cryptoVaultSelector = new CryptoVaultSelector(this.cryptoVaultManager);
+        WalletManagerSelector walletManagerSelector = new WalletManagerSelector(this.walletManagerManager);
+        String adreess = null;
+        CryptoAddress cryptoAdreess;
         IntraWalletUserIdentity intraUser;
-        CryptoCurrencyVault     currencyVault;
+        CryptoCurrencyVault currencyVault;
         try {
 
-            if(intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
+            if (intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()) {
                 throw new CantGetRequestCryptoAddressException(CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, null, CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, "ERROR GET REQUEST THE CRYPTO ADDRESS IN THE NEGOTIATION, UNKNOWN FAILURE.");
-            }else{
-                intraUser= intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+            } else {
+                intraUser = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
             }
 
             //TODO YORDIN: ADAPTATION TO FERMATS
-            if(cryptoCurrencyType.equals(CryptoCurrency.BITCOIN)){
+            if (cryptoCurrencyType.equals(CryptoCurrency.BITCOIN)) {
                 //TODO BITCOIN
                 currencyVault = CryptoCurrencyVault.BITCOIN_VAULT;
             } else {
@@ -326,15 +326,15 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
                     currencyVault
             );
 
-            cryptoAdreess   = customerBrokerCloseCryptoAddress.CryptoAddressesNew(request);
-            adreess         = cryptoAdreess.getAddress();
-            adreess = adreess +":"+intraUser.getPublicKey();
-            System.out.print("\n\n**** 3.1.1.2.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CRYPTO ADDRESS: "+adreess+" ****\n");
+            cryptoAdreess = customerBrokerCloseCryptoAddress.CryptoAddressesNew(request);
+            adreess = cryptoAdreess.getAddress();
+            adreess = new StringBuilder().append(adreess).append(":").append(intraUser.getPublicKey()).toString();
+            System.out.print(new StringBuilder().append("\n\n**** 3.1.1.2.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CRYPTO ADDRESS: ").append(adreess).append(" ****\n").toString());
 
-        } catch (CantCryptoAddressesNewException e){
+        } catch (CantCryptoAddressesNewException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetGenerateCryptoAddressException(e.getMessage(),e, CantGetGenerateCryptoAddressException.DEFAULT_MESSAGE, "ERROR GET CRYPTO ADDRESS GENERATE AND REGISTER, FAILED GENERATION THE CRYPTO ADDRESS.");
-        } catch (Exception e){
+            throw new CantGetGenerateCryptoAddressException(e.getMessage(), e, CantGetGenerateCryptoAddressException.DEFAULT_MESSAGE, "ERROR GET CRYPTO ADDRESS GENERATE AND REGISTER, FAILED GENERATION THE CRYPTO ADDRESS.");
+        } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetGenerateCryptoAddressException(e.getMessage(), FermatException.wrapException(e), CantGetGenerateCryptoAddressException.DEFAULT_MESSAGE, "ERROR GET CRYPTO ADDRESS GENERATE AND REGISTER, UNKNOWN FAILURE.");
         }

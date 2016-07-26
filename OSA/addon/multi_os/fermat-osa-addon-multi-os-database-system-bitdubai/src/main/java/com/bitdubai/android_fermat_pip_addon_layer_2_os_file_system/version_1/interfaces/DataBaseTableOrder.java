@@ -7,7 +7,7 @@ public interface DataBaseTableOrder {
 
     public void setColumName(String column);
 
-    public void setDirection (DatabaseFilterOrder direction);
+    public void setDirection(DatabaseFilterOrder direction);
 
     public String getColumName();
 
