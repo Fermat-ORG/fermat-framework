@@ -23,6 +23,8 @@ public interface DatabaseTable {
 
     void loadToMemory() throws CantLoadTableToMemoryException;
 
+    List<DatabaseTableRecord> loadDatabaseRecords() throws CantLoadTableToMemoryException;
+
     void truncate() throws CantTruncateTableException;
 
     long getCount() throws CantLoadTableToMemoryException;
