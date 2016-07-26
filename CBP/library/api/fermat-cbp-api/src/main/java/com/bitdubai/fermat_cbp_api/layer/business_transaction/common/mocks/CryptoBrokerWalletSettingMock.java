@@ -44,7 +44,7 @@ public class CryptoBrokerWalletSettingMock implements CryptoBrokerWalletSetting 
 
     @Override
     public List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings() throws CantGetCryptoBrokerWalletSettingException {
-        List<CryptoBrokerWalletAssociatedSetting> cryptoBrokerWalletAssociatedSettingList=new ArrayList<>();
+        List<CryptoBrokerWalletAssociatedSetting> cryptoBrokerWalletAssociatedSettingList = new ArrayList<>();
         cryptoBrokerWalletAssociatedSettingList.add(new CryptoBrokerWalletAssociatedSettingMock("CashOnHandWalletPublicKey", MoneyType.CASH_ON_HAND));
         cryptoBrokerWalletAssociatedSettingList.add(new CryptoBrokerWalletAssociatedSettingMock("CryptoWalletPublicKey", MoneyType.CRYPTO));
         cryptoBrokerWalletAssociatedSettingList.add(new CryptoBrokerWalletAssociatedSettingMock("BankWalletPublicKey", MoneyType.BANK));

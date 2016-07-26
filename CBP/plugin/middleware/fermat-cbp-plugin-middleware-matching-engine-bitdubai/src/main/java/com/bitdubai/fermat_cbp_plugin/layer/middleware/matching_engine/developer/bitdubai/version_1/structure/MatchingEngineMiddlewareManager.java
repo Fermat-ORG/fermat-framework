@@ -112,7 +112,7 @@ public final class MatchingEngineMiddlewareManager implements MatchingEngineMana
         return inputTransactions;
     }
 
-    public void addEarningsExtractor(EarningExtractor extractor){
+    public void addEarningsExtractor(EarningExtractor extractor) {
         earningExtractorManager.addEarningExtractor(extractor);
     }
 }

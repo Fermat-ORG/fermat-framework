@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * The exception <code>CantStartLayerException</code>
  * is thrown when there is an error trying to start a layer class.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
 public class CantStartLayerException extends FermatException {

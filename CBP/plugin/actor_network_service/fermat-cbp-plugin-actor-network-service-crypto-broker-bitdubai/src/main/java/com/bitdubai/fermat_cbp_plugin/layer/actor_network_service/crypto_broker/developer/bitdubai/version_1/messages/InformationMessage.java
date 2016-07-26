@@ -11,33 +11,33 @@ import java.util.UUID;
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.InformationMessage</code>
  * contains the structure of a Information message for this plugin.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/11/2015.
  */
 public class InformationMessage extends NetworkServiceMessage {
 
-    private final UUID                    requestId;
-    private final ConnectionRequestAction action   ;
+    private final UUID requestId;
+    private final ConnectionRequestAction action;
 
-    public InformationMessage(final UUID                    requestId,
-                              final ConnectionRequestAction action   ) {
+    public InformationMessage(final UUID requestId,
+                              final ConnectionRequestAction action) {
 
         super(MessageTypes.CONNECTION_INFORMATION);
 
         this.requestId = requestId;
-        this.action    = action   ;
+        this.action = action;
     }
 
     private InformationMessage(JsonObject jsonObject, Gson gson) {
 
         super(MessageTypes.CONNECTION_INFORMATION);
 
-        this.requestId   = UUID.fromString(jsonObject.get("requestId").getAsString());
-        this.action      = gson.fromJson(jsonObject.get("action").getAsString(), ConnectionRequestAction.class);
+        this.requestId = UUID.fromString(jsonObject.get("requestId").getAsString());
+        this.action = gson.fromJson(jsonObject.get("action").getAsString(), ConnectionRequestAction.class);
 
     }
 
-    public static InformationMessage fromJson(String jsonString){
+    public static InformationMessage fromJson(String jsonString) {
 
         Gson gson = new Gson();
         JsonParser jsonParser = new JsonParser();
@@ -51,9 +51,9 @@ public class InformationMessage extends NetworkServiceMessage {
         Gson gson = new Gson();
 
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("messageType",          getMessageType().toString());
-        jsonObject.addProperty("requestId",   requestId.toString());
-        jsonObject.addProperty("action",      action.toString());
+        jsonObject.addProperty("messageType", getMessageType().toString());
+        jsonObject.addProperty("requestId", requestId.toString());
+        jsonObject.addProperty("action", action.toString());
         return gson.toJson(jsonObject);
 
     }
@@ -68,9 +68,10 @@ public class InformationMessage extends NetworkServiceMessage {
 
     @Override
     public String toString() {
-        return "InformationMessage{" +
-                "requestId=" + requestId +
-                ", action=" + action +
-                '}';
+        return new StringBuilder()
+                .append("InformationMessage{")
+                .append("requestId=").append(requestId)
+                .append(", action=").append(action)
+                .append('}').toString();
     }
 }

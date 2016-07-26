@@ -11,10 +11,10 @@ public abstract class AbstractCloseContractEventHandler implements FermatEventHa
     public CloseContractRecorderService closeContractRecorderService;
 
     public void setCloseContractRecorderService(CloseContractRecorderService closeContractRecorderService) throws CantSetObjectException {
-        if(closeContractRecorderService==null){
+        if (closeContractRecorderService == null) {
             throw new CantSetObjectException("closeContractRecorderService is null");
         }
-        this.closeContractRecorderService=closeContractRecorderService;
+        this.closeContractRecorderService = closeContractRecorderService;
     }
 
 }

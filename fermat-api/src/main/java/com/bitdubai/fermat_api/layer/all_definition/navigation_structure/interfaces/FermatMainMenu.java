@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by rodrigo on 2015.07.20..
  */
-public interface FermatMainMenu<M extends MenuItem>  extends Serializable {
+public interface FermatMainMenu<M extends MenuItem> extends Serializable {
     List<M> getMenuItems();
 
 

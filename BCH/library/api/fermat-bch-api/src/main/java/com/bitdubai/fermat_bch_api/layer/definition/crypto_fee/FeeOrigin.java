@@ -2,6 +2,8 @@ package com.bitdubai.fermat_bch_api.layer.definition.crypto_fee;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
+import java.io.Serializable;
+
 /**
  * Created by rodrigo on 7/2/16.
  * Specifies from where the Fee will be taken. When sending crypto on a transaction, the fee can be deducted from the amount of crypto
@@ -10,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * If the fee comes from the funds, then we are sending a total of 15000 satothis, 10000 to user and 5000 fee.
  */
 
-public enum FeeOrigin {
+public enum FeeOrigin implements Serializable {
     SUBSTRACT_FEE_FROM_AMOUNT("AMOUNT"),
     SUBSTRACT_FEE_FROM_FUNDS("FUNDS");
 

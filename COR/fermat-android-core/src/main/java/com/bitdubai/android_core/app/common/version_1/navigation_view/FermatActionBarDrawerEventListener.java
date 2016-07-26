@@ -57,11 +57,11 @@ public class FermatActionBarDrawerEventListener extends ActionBarDrawerToggle {
     public void onDrawerOpened(View drawerView) {
         super.onDrawerOpened(drawerView);
         FermatUIAdapter fermatUIAdapter = activityWeakReference.get().getAdapter();
-        if(fermatUIAdapter!=null){
-            if(!fermatUIAdapter.getLstCurrentFragments().isEmpty()){
+        if (fermatUIAdapter != null) {
+            if (!fermatUIAdapter.getLstCurrentFragments().isEmpty()) {
                 List<AbstractFermatFragmentInterface> list = fermatUIAdapter.getLstCurrentFragments();
                 for (AbstractFermatFragmentInterface abstractFermatFragment : list) {
-                    if(abstractFermatFragment instanceof AbstractFermatFragment){
+                    if (abstractFermatFragment instanceof AbstractFermatFragment) {
                         ((AbstractFermatFragment) abstractFermatFragment).onDrawerOpen();
                     }
                 }
@@ -73,11 +73,11 @@ public class FermatActionBarDrawerEventListener extends ActionBarDrawerToggle {
     public void onDrawerClosed(View drawerView) {
         super.onDrawerClosed(drawerView);
         FermatUIAdapter fermatUIAdapter = activityWeakReference.get().getAdapter();
-        if(fermatUIAdapter!=null){
-            if(!fermatUIAdapter.getLstCurrentFragments().isEmpty()){
+        if (fermatUIAdapter != null) {
+            if (!fermatUIAdapter.getLstCurrentFragments().isEmpty()) {
                 List<AbstractFermatFragmentInterface> list = fermatUIAdapter.getLstCurrentFragments();
                 for (AbstractFermatFragmentInterface abstractFermatFragment : list) {
-                    if(abstractFermatFragment instanceof AbstractFermatFragment){
+                    if (abstractFermatFragment instanceof AbstractFermatFragment) {
                         ((AbstractFermatFragment) abstractFermatFragment).onDrawerClose();
                     }
                 }

@@ -27,15 +27,15 @@ import java.util.UUID;
 public class TransactionTransmissionConnectionsDAO {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final UUID pluginId            ;
+    private final UUID pluginId;
 
     private Database database;
 
     public TransactionTransmissionConnectionsDAO(final PluginDatabaseSystem pluginDatabaseSystem,
-                                            final UUID                 pluginId            ) {
+                                                 final UUID pluginId) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
+        this.pluginId = pluginId;
     }
 
     public void initialize() throws CantInitializeDatabaseException {
@@ -87,8 +87,8 @@ public class TransactionTransmissionConnectionsDAO {
 
         } catch (CantInsertRecordException e) {
 
-            throw new CantUpdateRecordDataBaseException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
-        }catch (Exception e) {
+            throw new CantUpdateRecordDataBaseException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
+        } catch (Exception e) {
 
             throw new CantUpdateRecordDataBaseException(CantInitializeDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
@@ -99,7 +99,7 @@ public class TransactionTransmissionConnectionsDAO {
             PendingRequestNotFoundException {
 
         if (transmissionId == null)
-            throw new CantGetTransactionTransmissionException("",null, "requestId, can not be null","");
+            throw new CantGetTransactionTransmissionException("", null, "requestId, can not be null", "");
 
         try {
 
@@ -115,22 +115,20 @@ public class TransactionTransmissionConnectionsDAO {
             if (!records.isEmpty())
                 return buildTransactionTransmissionRecord(records.get(0));
             else
-                throw new PendingRequestNotFoundException(null, "RequestID: "+transmissionId, "Can not find an address exchange request with the given request id.");
+                throw new PendingRequestNotFoundException(null, new StringBuilder().append("RequestID: ").append(transmissionId).toString(), "Can not find an address exchange request with the given request id.");
 
 
         } catch (CantLoadTableToMemoryException exception) {
 
-            throw new CantGetTransactionTransmissionException("",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            throw new CantGetTransactionTransmissionException("", exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         } catch (InvalidParameterException exception) {
 
-            throw new CantGetTransactionTransmissionException("",exception , "Check the cause." ,""                                                                              );
-        }catch (Exception e) {
+            throw new CantGetTransactionTransmissionException("", exception, "Check the cause.", "");
+        } catch (Exception e) {
 
             throw new CantGetTransactionTransmissionException(CantGetTransactionTransmissionException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
-
-
 
 
     private TransactionTransmissionConnectionRecord buildTransactionTransmissionRecord(DatabaseTableRecord record) throws InvalidParameterException {

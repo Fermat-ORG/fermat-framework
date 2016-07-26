@@ -34,15 +34,15 @@ public class ConstructionTest {
     @Mock
     private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS,                layer = Layers.CRYPTO_MODULE,       plugin = Plugins.CRYPTO_ADDRESS_BOOK)
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
     @Mock
     private CryptoAddressBookManager cryptoAddressBookManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS,                layer = Layers.CRYPTO_VAULT,        plugin = Plugins.BITCOIN_VAULT)
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
     @Mock
     private CryptoVaultManager cryptoVaultManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM,   layer = Layers.MIDDLEWARE,          plugin = Plugins.WALLET_MANAGER)
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
     @Mock
     private WalletManagerManager walletManagerManager;
 
@@ -52,7 +52,7 @@ public class ConstructionTest {
     private CustomerBrokerCloseManagerImpl testObj1;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         testObj1 = new CustomerBrokerCloseManagerImpl(
                 customerBrokerNewNegotiationTransactionDatabaseDao,
                 customerBrokerPurchaseNegotiationManager,

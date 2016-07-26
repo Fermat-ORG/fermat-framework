@@ -14,6 +14,8 @@ public abstract class TestGeneric1<P1> {
         this.p1 = p1;
     }
 
-    public P1 getP1() { return p1; }
+    public P1 getP1() {
+        return p1;
+    }
 
 }

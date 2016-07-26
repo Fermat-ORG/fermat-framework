@@ -1,7 +1,6 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.AndroidPluginTextFile;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -18,9 +17,9 @@ import org.robolectric.annotation.Config;
 
 import java.util.UUID;
 
+import static com.googlecode.catchexception.CatchException.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.robolectric.Shadows.shadowOf;
-import static com.googlecode.catchexception.CatchException.*;
 
 /**
  * Created by jorgegonzalez on 2015.06.29..
@@ -39,7 +38,7 @@ public class PersistToMediaTest {
     private FileLifeSpan testLifeSpan;
 
     @Before
-    public void setUpValues(){
+    public void setUpValues() {
         testId = UUID.randomUUID();
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
         testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
@@ -51,14 +50,14 @@ public class PersistToMediaTest {
     }
 
     @Test
-    public void PersistToMedia_ValidValues_MethodInvokedSuccesFully() throws Exception{
+    public void PersistToMedia_ValidValues_MethodInvokedSuccesFully() throws Exception {
         testTextFile = new AndroidPluginTextFile(testId, testContext, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         catchException(testTextFile).persistToMedia();
         assertThat(caughtException()).isNull();
     }
 
     @Test
-    public void PersistToMedia_InValidFileName_MethodInvokedSuccesFully() throws Exception{
+    public void PersistToMedia_InValidFileName_MethodInvokedSuccesFully() throws Exception {
         testTextFile = new AndroidPluginTextFile(testId, testContext, testDirectory, "", testPrivacyLevel, testLifeSpan);
         catchException(testTextFile).persistToMedia();
         assertThat(caughtException()).isInstanceOf(CantPersistFileException.class);

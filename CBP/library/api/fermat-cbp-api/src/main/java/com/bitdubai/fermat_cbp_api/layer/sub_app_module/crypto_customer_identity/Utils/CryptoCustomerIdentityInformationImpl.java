@@ -19,7 +19,7 @@ public class CryptoCustomerIdentityInformationImpl implements CryptoCustomerIden
     private final String publicKey;
     private final byte[] profileImage;
     private final ExposureLevel exposureLevel;
-    private long   accuracy;
+    private long accuracy;
     private GeoFrequency frequency;
 
 
@@ -28,12 +28,12 @@ public class CryptoCustomerIdentityInformationImpl implements CryptoCustomerIden
                                                  final byte[] profileImage,
                                                  final ExposureLevel exposureLevel,
                                                  final long accuracy,
-                                                 final GeoFrequency frequency){
+                                                 final GeoFrequency frequency) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.exposureLevel = exposureLevel;
-        this.accuracy      = accuracy     ;
+        this.accuracy = accuracy;
         this.frequency = frequency;
     }
 

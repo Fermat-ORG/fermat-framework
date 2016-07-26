@@ -12,7 +12,9 @@ public class OperatingSystemCheck {
      */
     public enum OperatingSystemType {
         Android, Windows, MacOS, Linux, Unix, Solaris, Other
-    };
+    }
+
+    ;
 
     /**
      * Represent the current operating system
@@ -40,29 +42,28 @@ public class OperatingSystemCheck {
                 String jvm = System.getProperty("java.vm.name", "generic").toLowerCase(Locale.ENGLISH);
                 String jvmVendorUrl = System.getProperty("java.vendor.url", "generic").toLowerCase(Locale.ENGLISH);
 
-                System.out.println("OperatingSystemCheck - jvm= "+ jvm);
-                System.out.println("OperatingSystemCheck - jvmVendor= "+ jvmVendorUrl);
+                System.out.println(new StringBuilder().append("OperatingSystemCheck - jvm= ").append(jvm).toString());
+                System.out.println(new StringBuilder().append("OperatingSystemCheck - jvmVendor= ").append(jvmVendorUrl).toString());
 
-                if(jvmVendorUrl.equalsIgnoreCase("http://www.android.com/") || jvm.equalsIgnoreCase("Dalvik")){
+                if (jvmVendorUrl.equalsIgnoreCase("http://www.android.com/") || jvm.equalsIgnoreCase("Dalvik")) {
                     current = OperatingSystemType.Android;
-                }else {
+                } else {
                     current = OperatingSystemType.Linux;
                 }
 
-            } else if (OS.contains("nix") || OS.contains("nux") || OS.contains("aix")){
+            } else if (OS.contains("nix") || OS.contains("nux") || OS.contains("aix")) {
                 current = OperatingSystemType.Unix;
-            }else if (OS.contains("sunos")){
+            } else if (OS.contains("sunos")) {
                 current = OperatingSystemType.Solaris;
-            }
-            else {
+            } else {
                 current = OperatingSystemType.Other;
             }
 
-            System.out.println("OperatingSystemCheck - current = "+ current);
+            System.out.println(new StringBuilder().append("OperatingSystemCheck - current = ").append(current).toString());
 
         }
 
         return current;
     }
-    
+
 }

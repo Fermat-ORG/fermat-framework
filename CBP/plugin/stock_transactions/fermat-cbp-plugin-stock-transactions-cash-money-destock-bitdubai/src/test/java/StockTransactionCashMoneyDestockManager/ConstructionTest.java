@@ -1,8 +1,8 @@
 package StockTransactionCashMoneyDestockManager;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.StockTransactionCashMoneyDestockManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +28,7 @@ public class ConstructionTest {
     private final UUID pluginId = UUID.randomUUID();
 
     @Test
-    public void Construction_ValidParameters_NewObjectCreated(){
+    public void Construction_ValidParameters_NewObjectCreated() {
 
         StockTransactionCashMoneyDestockManager stockTransactionCashMoneyDestockManager = new StockTransactionCashMoneyDestockManager(
                 this.pluginDatabaseSystem,

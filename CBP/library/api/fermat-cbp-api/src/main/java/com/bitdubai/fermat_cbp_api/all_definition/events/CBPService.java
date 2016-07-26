@@ -8,10 +8,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceExc
  */
 public interface CBPService {
 
-    void start () throws CantStartServiceException;
+    void start() throws CantStartServiceException;
 
     void stop();
 
-    ServiceStatus getStatus ();
+    ServiceStatus getStatus();
 
 }

@@ -6,7 +6,9 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -33,11 +35,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destoc
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.database.StockTransactionsCashMoneyDestockDeveloperFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.exceptions.CantInitializeCashMoneyDestockDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.StockTransactionCashMoneyDestockManager;
-import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.events.StockTransactionsCashMoneyDestockMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.events.StockTransactionsCashMoneyDestockMonitorAgent2;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -88,12 +87,12 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
             System.out.println("******* Init Cash Money Destock ******");
             startMonitorAgent();
             database.closeDatabase();
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException  e) {
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException e) {
             try {
                 startMonitorAgent();
                 StockTransactionsCashMoneyDestockDatabaseFactory stockTransactionsCashMoneyDestockDatabaseFactory = new StockTransactionsCashMoneyDestockDatabaseFactory(this.pluginDatabaseSystem);
                 stockTransactionsCashMoneyDestockDatabaseFactory.createDatabase(this.pluginId, StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_DATABASE_NAME);
-            } catch (CantCreateDatabaseException | CantStartAgentException cantCreateDatabaseException ) {
+            } catch (CantCreateDatabaseException | CantStartAgentException cantCreateDatabaseException) {
                 reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantStartPluginException();
             } catch (Exception exception) {
@@ -161,8 +160,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
 
             stockTransactionsCashMoneyDestockMonitorAgent.start();
             serviceStatus = ServiceStatus.STARTED;
-        }
-        else {
+        } else {
             stockTransactionsCashMoneyDestockMonitorAgent.start();
             serviceStatus = ServiceStatus.STARTED;
         }

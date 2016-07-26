@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * Created by Furszyfer Matias on 2015.07.17..
  */
-public class Tab implements FermatTab,Serializable {
+public class Tab implements FermatTab, Serializable {
 
     /**
      * Tab class member variables
@@ -44,7 +44,7 @@ public class Tab implements FermatTab,Serializable {
      * Tab class getters
      */
 
-    public String getLabel(){
+    public String getLabel() {
         return this.label;
     }
 
@@ -55,7 +55,7 @@ public class Tab implements FermatTab,Serializable {
     }
 
 
-    public FermatFragment getFragment(){
+    public FermatFragment getFragment() {
         return fragment;
     }
 
@@ -66,7 +66,7 @@ public class Tab implements FermatTab,Serializable {
     /**
      * Tab class setters
      */
-    public void setLabel(String texto){
+    public void setLabel(String texto) {
         this.label = texto;
     }
 
@@ -86,8 +86,8 @@ public class Tab implements FermatTab,Serializable {
         this.fermatView = fermatView;
     }
 
-    public boolean hasCustomView(){
-        return fermatView!=null;
+    public boolean hasCustomView() {
+        return fermatView != null;
     }
 
     @Override

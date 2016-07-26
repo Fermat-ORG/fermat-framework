@@ -24,7 +24,7 @@ import java.util.UUID;
  * The final Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.TransactionTransmissionNetworkServiceDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by lnacosta (laion.cj91@gmail.com) on 30/10/2015.
  *
  * @version 1.0
@@ -34,15 +34,15 @@ import java.util.UUID;
 public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final UUID                 pluginId            ;
+    private final UUID pluginId;
 
-    private       Database             database            ;
+    private Database database;
 
     public TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem,
                                                                          final UUID pluginId) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
+        this.pluginId = pluginId;
     }
 
     public void initializeDatabase(final String tableId) throws CantInitializeDatabaseException {
@@ -57,7 +57,7 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
 
                 } catch (final CantOpenDatabaseException e) {
 
-                    throw new CantInitializeDatabaseException(e, "tableId: " + tableId, "Error trying to open the database.");
+                    throw new CantInitializeDatabaseException(e, new StringBuilder().append("tableId: ").append(tableId).toString(), "Error trying to open the database.");
 
                 } catch (final DatabaseNotFoundException e) {
 
@@ -69,7 +69,7 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
 
                     } catch (final CantCreateDatabaseException z) {
 
-                        throw new CantInitializeDatabaseException(z, "tableId: " + tableId, "Error trying to create the database.");
+                        throw new CantInitializeDatabaseException(z, new StringBuilder().append("tableId: ").append(tableId).toString(), "Error trying to create the database.");
                     }
                 }
                 break;
@@ -81,7 +81,7 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
 
                 } catch (CantOpenDatabaseException e) {
 
-                    throw new CantInitializeDatabaseException(e, "tableId: " + tableId, "Error trying to open the database.");
+                    throw new CantInitializeDatabaseException(e, new StringBuilder().append("tableId: ").append(tableId).toString(), "Error trying to open the database.");
 
                 } catch (DatabaseNotFoundException e) {
 
@@ -93,7 +93,7 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
 
                     } catch (CantCreateDatabaseException z) {
 
-                        throw new CantInitializeDatabaseException(z, "tableId: " + tableId, "Error trying to create the database.");
+                        throw new CantInitializeDatabaseException(z, new StringBuilder().append("tableId: ").append(tableId).toString(), "Error trying to create the database.");
                     }
                 }
         }
@@ -118,7 +118,7 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
 
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(final DeveloperObjectFactory developerObjectFactory,
-                                                             final DeveloperDatabase      developerDatabase     ) {
+                                                             final DeveloperDatabase developerDatabase) {
 
         List<DeveloperDatabaseTable> tables = new ArrayList<>();
 
@@ -172,14 +172,14 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
                  */
                 List<String> incomingMessagesColumns = new ArrayList<>();
 
-                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME                    );
-                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME     );
-                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME   );
-                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME    );
-                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME    );
-                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_CONTENT_TYPE_COLUMN_NAME          );
-                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME                );
-                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_CONTENT_COLUMN_NAME               );
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME);
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME);
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_CONTENT_TYPE_COLUMN_NAME);
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME);
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_CONTENT_COLUMN_NAME);
                 /**
                  * Table incoming messages addition.
                  */
@@ -191,16 +191,16 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
                  */
                 List<String> outgoingMessagesColumns = new ArrayList<>();
 
-                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME                    );
-                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME     );
-                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME   );
-                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME    );
-                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME    );
-                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_CONTENT_TYPE_COLUMN_NAME          );
-                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME                );
-                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME     );
-                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME            );
-                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_CONTENT_COLUMN_NAME               );
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME);
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME);
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_CONTENT_TYPE_COLUMN_NAME);
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME);
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME);
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_CONTENT_COLUMN_NAME);
                 /**
                  * Table outgoing messages addition.
                  */
@@ -212,12 +212,12 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
                  */
                 List<String> queriesColumns = new ArrayList<>();
 
-                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_ID_COLUMN_NAME                       );
-                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_BROADCAST_CODE_COLUMN_NAME           );
-                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_DISCOVERY_QUERY_PARAMS_COLUMN_NAME   );
-                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_EXECUTION_TIME_COLUMN_NAME           );
-                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_TYPE_COLUMN_NAME                     );
-                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_STATUS_COLUMN_NAME                   );
+                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_ID_COLUMN_NAME);
+                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_BROADCAST_CODE_COLUMN_NAME);
+                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_DISCOVERY_QUERY_PARAMS_COLUMN_NAME);
+                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_EXECUTION_TIME_COLUMN_NAME);
+                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_TYPE_COLUMN_NAME);
+                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_STATUS_COLUMN_NAME);
 
                 /**
                  * Table queries messages addition.
@@ -230,7 +230,7 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
     }
 
     public final List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
-                                                                            final DeveloperDatabase      developerDatabase     ,
+                                                                            final DeveloperDatabase developerDatabase,
                                                                             final DeveloperDatabaseTable developerDatabaseTable) {
 
         try {

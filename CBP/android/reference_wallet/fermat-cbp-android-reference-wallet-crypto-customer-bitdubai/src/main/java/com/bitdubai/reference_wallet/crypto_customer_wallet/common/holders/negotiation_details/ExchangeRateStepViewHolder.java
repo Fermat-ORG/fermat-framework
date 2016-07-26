@@ -14,7 +14,6 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.StepItemGetter;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
@@ -142,13 +141,12 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
     }
 
 
-
-    private String fixFormat(String value){
+    private String fixFormat(String value) {
 
         try {
-            if(compareLessThan1(value)){
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
             return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
@@ -159,14 +157,14 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
 
     }
 
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
         try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
             }
         } catch (ParseException e) {
             e.printStackTrace();

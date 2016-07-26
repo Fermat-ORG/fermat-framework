@@ -78,9 +78,9 @@ public class CloseContractMonitorAgent2
              */
             List<String> pendingEventsIdList = closeContractBusinessTransactionDao.getPendingEvents();
             for (String eventId : pendingEventsIdList) {
-                try{
+                try {
                     checkPendingEvent(eventId);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -107,6 +107,13 @@ public class CloseContractMonitorAgent2
                 for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    if (remoteBusinessTransaction != Plugins.CLOSE_CONTRACT)
+                        continue;
+
+                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
 
                     try {
                         contractType = closeContractBusinessTransactionDao.getContractType(contractHash);
@@ -122,7 +129,7 @@ public class CloseContractMonitorAgent2
                         return;
                     }
 
-                    System.out.println("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus = " + contractTransactionStatus);
+                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus = ").append(contractTransactionStatus).toString());
                     if (contractTransactionStatus == ContractTransactionStatus.CHECKING_CLOSING_CONTRACT) {
 
                         switch (contractType) {
@@ -160,6 +167,13 @@ public class CloseContractMonitorAgent2
                 for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    if (remoteBusinessTransaction != Plugins.CLOSE_CONTRACT)
+                        continue;
+
+                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
 
                     try {
                         contractTransactionStatus = closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
@@ -168,7 +182,7 @@ public class CloseContractMonitorAgent2
                         return;
                     }
 
-                    System.out.println("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - contractTransactionStatus = " + contractTransactionStatus);
+                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - contractTransactionStatus = ").append(contractTransactionStatus).toString());
                     if (contractTransactionStatus == ContractTransactionStatus.SUBMIT_CLOSING_CONTRACT_CONFIRMATION) {
                         closeContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_COMPLETED);
                         raiseNewContractClosedEvent();

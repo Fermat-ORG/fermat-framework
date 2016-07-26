@@ -4,9 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 /**

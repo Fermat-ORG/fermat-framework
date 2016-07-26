@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetRestockAutomaticTest {
 
     @Test
-    public void getRestockAutomatic(){
+    public void getRestockAutomatic() {
         CryptoBrokerWalletSettingSpreadImpl cryptoBrokerWalletSettingSpread = mock(CryptoBrokerWalletSettingSpreadImpl.class);
         when(cryptoBrokerWalletSettingSpread.getRestockAutomatic()).thenReturn(true);
         assertThat(cryptoBrokerWalletSettingSpread.getRestockAutomatic()).isNotNull();

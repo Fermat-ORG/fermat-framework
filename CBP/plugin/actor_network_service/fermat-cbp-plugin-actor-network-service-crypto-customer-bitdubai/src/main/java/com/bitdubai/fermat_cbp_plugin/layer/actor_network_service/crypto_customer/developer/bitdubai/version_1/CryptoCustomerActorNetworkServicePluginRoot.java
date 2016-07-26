@@ -26,9 +26,9 @@ import java.util.List;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/11/2015.
  *
- * @author  lnacosta
+ * @author lnacosta
  * @version 1.0
- * @since   Java JDK 1.7
+ * @since Java JDK 1.7
  */
 @PluginInfo(createdBy = "lnacosta", maintainerMail = "laion.cj91@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_CUSTOMER)
 public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractActorNetworkService implements DatabaseManagerForDevelopers {

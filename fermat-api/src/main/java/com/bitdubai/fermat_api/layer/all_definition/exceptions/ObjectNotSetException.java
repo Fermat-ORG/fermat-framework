@@ -9,7 +9,7 @@ public class ObjectNotSetException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "Object not set.";
 
-    public ObjectNotSetException(String message){
+    public ObjectNotSetException(String message) {
         super(DEFAULT_MESSAGE, null, message, "null value");
     }
 

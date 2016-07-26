@@ -34,7 +34,7 @@ public interface CryptoCustomerModuleManager {
      *
      * @param cryptoCustomerToAddName      The name of the crypto customer to add
      * @param cryptoCustomerToAddPublicKey The public key of the crypto customer to add
-     * @param profileImage            The profile image that the crypto customer has
+     * @param profileImage                 The profile image that the crypto customer has
      * @throws CantAcceptRequestException
      */
     void acceptCryptoCustomer(String cryptoCustomerToAddName, String cryptoCustomerToAddPublicKey, byte[] profileImage) throws CantAcceptRequestException;
@@ -59,6 +59,7 @@ public interface CryptoCustomerModuleManager {
 
     /**
      * The method <code>cancelCryptoCustomer</code> cancels an crypto Customer from the list managed by this
+     *
      * @param cryptoCustomerToCancelPublicKey
      * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerCancellingFailedException
      */

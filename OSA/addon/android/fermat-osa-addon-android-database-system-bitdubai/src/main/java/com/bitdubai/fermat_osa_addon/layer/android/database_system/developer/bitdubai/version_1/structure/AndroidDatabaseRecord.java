@@ -225,10 +225,10 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append("[");
-        for (Map.Entry<String,DatabaseRecord> record : values.entrySet()) {
+        for (Map.Entry<String, DatabaseRecord> record : values.entrySet()) {
             buffer.append(" ")
-                  .append(record.getValue().toString())
-                  .append(",");
+                    .append(record.getValue().toString())
+                    .append(",");
         }
         buffer.append("]");
         return buffer.toString();

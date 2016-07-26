@@ -431,8 +431,7 @@ public enum Activities implements FermatEnum {
     //Combo Chat
     CHT_COMBO_HOME("CHTCH"),
     CHT_COMBO_PROFILE("CHTCP"),
-    CHT_COMBO_WORLD("CHTW"),
-    ;
+    CHT_COMBO_WORLD("CHTW"),;
 
     private String code;
 
@@ -870,8 +869,8 @@ public enum Activities implements FermatEnum {
                 return DAP_WALLET_ASSET_USER_ASSET_REDEEM_SELECT_REDEEMPOINTS;
             case "DWAUSA":
                 return DAP_WALLET_ASSET_USER_SETTINGS_ACTIVITY;
-            case  "DWAUSMN":
-                return  DAP_WALLET_ASSET_USER_SETTINGS_MAIN_NETWORK;
+            case "DWAUSMN":
+                return DAP_WALLET_ASSET_USER_SETTINGS_MAIN_NETWORK;
             case "DWAUSN":
                 return DAP_WALLET_ASSET_USER_SETTINGS_NOTIFICATIONS;
             case "DWRPMA":
@@ -908,11 +907,11 @@ public enum Activities implements FermatEnum {
             case "CHTGI":
                 return Activities.CHT_CHAT_GEOLOCATION_IDENTITY;
             case "CHTBWOD":
-                return  Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL;
+                return Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL;
             case "CHTBWTD":
-                return  Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL;
+                return Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL;
             case "CHTBWTSD":
-                return  Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL;
+                return Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL;
             case "CHTOPOD":
                 return Activities.CHT_CHAT_OPEN_PROFILE_DETAIL;
             case "CHTOSER":
@@ -955,9 +954,9 @@ public enum Activities implements FermatEnum {
                 return DAP_WALLET_REDEEM_POINT_SETTINGS_MAIN_NETWORK;
             case "DWRPASA":
                 return DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_ACTIVITY;
-            case"DWRPASN":
+            case "DWRPASN":
                 return DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_NOTIFICATIONS;
-            case"DAUCAP":
+            case "DAUCAP":
                 return DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE;
             case "DARPCAP":
                 return DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE;
@@ -1035,42 +1034,42 @@ public enum Activities implements FermatEnum {
                 return TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT;
             //FERMAT WALLET
             case "CWRWFWBV1M":
-                return  CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_MAIN;
+                return CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_MAIN;
             case "CWRWFWBV1T":
-                return  CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS;
+                return CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS;
             case "CWRWFWBV1PR":
-                return  CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST;
+                return CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST;
             case "CWRWFWBV1C":
-                return   CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_CONTACTS;
+                return CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_CONTACTS;
             case "CWRWFWBV1S":
-                return  CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_SETTINGS;
+                return CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_SETTINGS;
             case "CWRWFWBV1SW":
-                return  CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_SEND_WALLET;
+                return CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_SEND_WALLET;
             case "CWRWFWBV1CV":
-                return  CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_CHUNCK_VALUES;
+                return CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_CHUNCK_VALUES;
 
             case "CCPBFWSFA":
-                return  CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY;
+                return CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY;
             case "CCPBFWRFA":
-                return  CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_ACTIVITY;
+                return CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_ACTIVITY;
             case "CCPBFWCDA":
-                return  CCP_BITCOIN_FERMAT_WALLET_CONTACT_DETAIL_ACTIVITY;
+                return CCP_BITCOIN_FERMAT_WALLET_CONTACT_DETAIL_ACTIVITY;
             case "CCPBFWSA":
-                return  CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY;
+                return CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY;
             case "CCPBFWSAN":
-                return  CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY_NOTIFICATIONS;
+                return CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY_NOTIFICATIONS;
             case "CCPBFWSAMN":
-                return  CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK;
+                return CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK;
             case "CCPBFWACA":
                 return CCP_BITCOIN_FERMAT_WALLET_ADD_CONNECTION_ACTIVITY;
             case "CCPBFWNIA":
-                return   CCP_BITCOIN_FERMAT_WALLET_NO_IDENTITY_ACTIVITY;
+                return CCP_BITCOIN_FERMAT_WALLET_NO_IDENTITY_ACTIVITY;
             case "CCPBFWMNA":
-                return  CCP_BITCOIN_FERMAT_WALLET_MNEMONIC_ACTIVITY;
+                return CCP_BITCOIN_FERMAT_WALLET_MNEMONIC_ACTIVITY;
             case "CCPBFWCVD":
-                return  CCP_BITCOIN_FERMAT_WALLET_CHUNCK_VALUE_DETAIL_ACTIVITY;
+                return CCP_BITCOIN_FERMAT_WALLET_CHUNCK_VALUE_DETAIL_ACTIVITY;
             case "CCPBFSER":
-                return   CCP_BITCOIN_FERMAT_WALLET_OPEN_SEND_ERROR_REPORT;
+                return CCP_BITCOIN_FERMAT_WALLET_OPEN_SEND_ERROR_REPORT;
             //TKY fan Wallet
             case "TKYFWMA":
                 return TKY_FAN_WALLET_MAIN_ACTIVITY;
@@ -1116,7 +1115,7 @@ public enum Activities implements FermatEnum {
                 return CHT_COMBO_WORLD;
             default:
                 throw new InvalidParameterException(
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "This code is not valid for the Activities enum"
                 );
         }

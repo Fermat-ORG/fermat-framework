@@ -28,14 +28,20 @@ public enum TransactionMetadataState implements FermatEnum {
 
     public TransactionMetadataState getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "NINSY": return TransactionMetadataState.NOT_IN_NETWORK_SERVICE_YET;
-            case "PCS":   return TransactionMetadataState.PROCESSING;
-            case "SNT":   return TransactionMetadataState.SENT;
-            case "SBDNS": return TransactionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE;
-            case "SBDV":  return TransactionMetadataState.SEEN_BY_DESTINATION_VAULT;
-            case "CIDW":  return TransactionMetadataState.CREDITED_IN_DESTINATION_WALLET;
+            case "NINSY":
+                return TransactionMetadataState.NOT_IN_NETWORK_SERVICE_YET;
+            case "PCS":
+                return TransactionMetadataState.PROCESSING;
+            case "SNT":
+                return TransactionMetadataState.SENT;
+            case "SBDNS":
+                return TransactionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE;
+            case "SBDV":
+                return TransactionMetadataState.SEEN_BY_DESTINATION_VAULT;
+            case "CIDW":
+                return TransactionMetadataState.CREDITED_IN_DESTINATION_WALLET;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "The code read was: " + code, "Missing branch in switch statement");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("The code read was: ").append(code).toString(), "Missing branch in switch statement");
         }
     }
 }

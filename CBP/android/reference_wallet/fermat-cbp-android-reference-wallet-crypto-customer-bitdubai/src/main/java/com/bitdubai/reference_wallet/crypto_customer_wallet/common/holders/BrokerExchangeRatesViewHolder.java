@@ -5,19 +5,13 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
-import org.bitcoin.protocols.payments.Protos;
-
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Locale;
 
 /**
  * View Holder for the {@link com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerExchangeRatesAdapter}
@@ -28,7 +22,7 @@ import java.util.Locale;
  */
 public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
 
-    private NumberFormat numberFormat=DecimalFormat.getInstance();
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
 
     private final Resources res;
 
@@ -39,12 +33,10 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
         res = itemView.getResources();
 
 
-
         exchangeRateItem = (FermatTextView) itemView.findViewById(R.id.ccw_broker_exchange_rate_item);
     }
 
     public void bind(MerchandiseExchangeRate data) {
-
 
 
         String exchangeRate = fixFormat(String.valueOf(data.getExchangeRate()));
@@ -68,12 +60,12 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
     }
 
 
-    private String fixFormat(String value){
+    private String fixFormat(String value) {
 
         try {
-            if(compareLessThan1(value)){
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
             return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
@@ -84,14 +76,14 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
 
     }
 
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
         try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
             }
         } catch (ParseException e) {
             e.printStackTrace();

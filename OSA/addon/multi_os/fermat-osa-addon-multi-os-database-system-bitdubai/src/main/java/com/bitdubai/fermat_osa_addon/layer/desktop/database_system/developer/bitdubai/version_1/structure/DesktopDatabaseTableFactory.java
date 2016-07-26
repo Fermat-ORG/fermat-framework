@@ -4,6 +4,7 @@ package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
+
 import java.util.ArrayList;
 
 /**
@@ -12,8 +13,8 @@ import java.util.ArrayList;
 
 /**
  * This class define methods to sets the columns that were used to make the filter on a table.
- *
- *
+ * <p/>
+ * <p/>
  * *
  */
 
@@ -23,7 +24,7 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
      * DatabaseTableFactory Member Variables.
      */
 
-    private String indexName ="";
+    private String indexName = "";
     private String tableName;
     ArrayList<DatabaseTableColumn> tableColumns = new ArrayList<DatabaseTableColumn>();
 
@@ -31,9 +32,10 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
 
     /**
      * <p>DatabaseTableFactory class constructor
+     *
      * @param tableName table name to use
      */
-    public DesktopDatabaseTableFactory (String tableName){
+    public DesktopDatabaseTableFactory(String tableName) {
         this.tableName = tableName;
     }
 
@@ -42,8 +44,9 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
      */
 
     /**
-     *<p>Define the index field in the table
-     * @param index  index field name
+     * <p>Define the index field in the table
+     *
+     * @param index index field name
      */
     @Override
     public void addIndex(String index) {
@@ -51,33 +54,33 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
     }
 
     /**
-     *<p>Returns the index field in the table
+     * <p>Returns the index field in the table
      *
      * @return String index field name
      */
 
     @Override
-    public String getIndex(){
+    public String getIndex() {
         return indexName;
     }
 
     /**
-     *<p> Returns the name of the table
+     * <p> Returns the name of the table
      *
      * @return String table name
      */
     @Override
-    public  String getTableName (){
+    public String getTableName() {
         return this.tableName;
     }
 
     /**
-     *<p>Sets properties of a new column to the table
+     * <p>Sets properties of a new column to the table
      *
-     * @param columnName New column name
-     * @param dataType New column data type
+     * @param columnName   New column name
+     * @param dataType     New column data type
      * @param dataTypeSize New column data size
-     * @param primaryKey Boolean column if primary ley
+     * @param primaryKey   Boolean column if primary ley
      */
 
     @Override
@@ -98,7 +101,7 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
      * @return ArrayList of DatabaseTableColumn object
      */
     @Override
-    public  ArrayList<DatabaseTableColumn> getColumns (){
+    public ArrayList<DatabaseTableColumn> getColumns() {
         return this.tableColumns;
     }
 

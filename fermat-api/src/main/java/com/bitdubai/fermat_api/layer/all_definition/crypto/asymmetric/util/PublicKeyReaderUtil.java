@@ -37,8 +37,7 @@ import java.util.StringTokenizer;
  * @author jSVNServe Team
  * @version $Id$
  */
-public final class PublicKeyReaderUtil
-{
+public final class PublicKeyReaderUtil {
     /**
      * Begin marker for the SECSH public key file format.
      *
@@ -51,7 +50,7 @@ public final class PublicKeyReaderUtil
      *
      * @see #extractSecSHBase64(String)
      */
-    private static final String END_PUB_KEY   = "---- END SSH2 PUBLIC KEY ----";
+    private static final String END_PUB_KEY = "---- END SSH2 PUBLIC KEY ----";
 
     /**
      * Key name of the type of public key for DSA algorithm.
@@ -71,15 +70,14 @@ public final class PublicKeyReaderUtil
      * Default constructor is private so that the public key read utility class
      * could not be instantiated.
      */
-    private PublicKeyReaderUtil()
-    {
+    private PublicKeyReaderUtil() {
     }
 
     /**
      * Decodes given public <code>_key</code> text and returns the related
      * public key instance.
      *
-     * @param _key      text key of the encoded public key
+     * @param _key text key of the encoded public key
      * @return decoded public key
      * @throws PublicKeyParseException if the public key could not be parsed
      *                                 from <code>_key</code>
@@ -87,15 +85,14 @@ public final class PublicKeyReaderUtil
      * @see PublicKeyParseException.ErrorCode#UNKNOWN_PUBLIC_KEY_CERTIFICATE_FORMAT
      */
     public static PublicKey load(final String _key)
-        throws PublicKeyParseException
-    {
+            throws PublicKeyParseException {
         final int c = _key.charAt(0);
 
         final String base64;
 
-        if (c == 's')  {
+        if (c == 's') {
             base64 = PublicKeyReaderUtil.extractOpenSSHBase64(_key);
-        } else if (c == '-')  {
+        } else if (c == '-') {
             base64 = PublicKeyReaderUtil.extractSecSHBase64(_key);
         } else {
             throw new PublicKeyParseException(
@@ -105,11 +102,11 @@ public final class PublicKeyReaderUtil
         final SSH2DataBuffer buf = new SSH2DataBuffer(Base64.decodeBase64(base64.getBytes()));
         final String type = buf.readString();
         final PublicKey ret;
-        if (PublicKeyReaderUtil.SSH2_DSA_KEY.equals(type))  {
+        if (PublicKeyReaderUtil.SSH2_DSA_KEY.equals(type)) {
             ret = decodeDSAPublicKey(buf);
-        } else if (PublicKeyReaderUtil.SSH2_RSA_KEY.equals(type))  {
+        } else if (PublicKeyReaderUtil.SSH2_RSA_KEY.equals(type)) {
             ret = decodePublicKey(buf);
-        } else  {
+        } else {
             throw new PublicKeyParseException(
                     PublicKeyParseException.ErrorCode.UNKNOWN_PUBLIC_KEY_CERTIFICATE_FORMAT);
         }
@@ -124,7 +121,7 @@ public final class PublicKeyReaderUtil
      * <code>ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAIEA1on8gxCGJJWSRT4uOrR130....</code>
      * </p>
      *
-     * @param _key      text of the public key defined in the OpenSSH format
+     * @param _key text of the public key defined in the OpenSSH format
      * @return base64 encoded public-key data
      * @throws PublicKeyParseException if the OpenSSH public key string is
      *                                 corrupt
@@ -132,8 +129,7 @@ public final class PublicKeyReaderUtil
      * @see <a href="http://www.openssh.org">OpenSSH</a>
      */
     public static String extractOpenSSHBase64(final String _key)
-        throws PublicKeyParseException
-    {
+            throws PublicKeyParseException {
         final String base64;
         try {
             final StringTokenizer st = new StringTokenizer(_key);
@@ -167,48 +163,47 @@ public final class PublicKeyReaderUtil
      * ---- END SSH2 PUBLIC KEY ----
      * </pre></p>
      *
-     * @param _key      text of the public key defined in the SECSH format
+     * @param _key text of the public key defined in the SECSH format
      * @return base64 encoded public-key data
      * @throws PublicKeyParseException if the SECSSH key text file is corrupt
      * @see PublicKeyParseException.ErrorCode#CORRUPT_SECSSH_PUBLIC_KEY_STRING
      * @see <a href="http://tools.ietf.org/html/draft-ietf-secsh-publickeyfile">IETF Draft for the SECSH format</a>
      */
     private static String extractSecSHBase64(final String _key)
-        throws PublicKeyParseException
-    {
+            throws PublicKeyParseException {
         final StringBuilder base64Data = new StringBuilder();
 
         boolean startKey = false;
         boolean startKeyBody = false;
         boolean endKey = false;
         boolean nextLineIsHeader = false;
-        for (final String line : _key.split("\n"))  {
+        for (final String line : _key.split("\n")) {
             final String trimLine = line.trim();
-            if (!startKey && trimLine.equals(PublicKeyReaderUtil.BEGIN_PUB_KEY))  {
+            if (!startKey && trimLine.equals(PublicKeyReaderUtil.BEGIN_PUB_KEY)) {
                 startKey = true;
-            } else if (startKey)  {
-                if (trimLine.equals(PublicKeyReaderUtil.END_PUB_KEY))  {
+            } else if (startKey) {
+                if (trimLine.equals(PublicKeyReaderUtil.END_PUB_KEY)) {
                     endKey = true;
                     break;
-                } else if (nextLineIsHeader)  {
-                    if (!trimLine.endsWith("\\"))  {
+                } else if (nextLineIsHeader) {
+                    if (!trimLine.endsWith("\\")) {
                         nextLineIsHeader = false;
                     }
-                } else if (trimLine.indexOf(':') > 0)  {
-                    if (startKeyBody)  {
+                } else if (trimLine.indexOf(':') > 0) {
+                    if (startKeyBody) {
                         throw new PublicKeyParseException(
                                 PublicKeyParseException.ErrorCode.CORRUPT_SECSSH_PUBLIC_KEY_STRING);
-                    } else if (trimLine.endsWith("\\"))  {
+                    } else if (trimLine.endsWith("\\")) {
                         nextLineIsHeader = true;
                     }
-                } else  {
+                } else {
                     startKeyBody = true;
                     base64Data.append(trimLine);
                 }
             }
         }
 
-        if (!endKey)  {
+        if (!endKey) {
             throw new PublicKeyParseException(
                     PublicKeyParseException.ErrorCode.CORRUPT_SECSSH_PUBLIC_KEY_STRING);
         }
@@ -228,8 +223,8 @@ public final class PublicKeyReaderUtil
      * </ul>
      * With the specification the related DSA public key is generated.</p>
      *
-     * @param _buffer   SSH2 data buffer where the type of the key is already
-     *                  read
+     * @param _buffer SSH2 data buffer where the type of the key is already
+     *                read
      * @return DSA public key instance
      * @throws PublicKeyParseException if the SSH2 public key blob could not be
      *                                 decoded
@@ -238,8 +233,7 @@ public final class PublicKeyReaderUtil
      * @see <a href="http://tools.ietf.org/html/rfc4253#section-6.6">RFC 4253 Section 6.6</a>
      */
     private static PublicKey decodeDSAPublicKey(final SSH2DataBuffer _buffer)
-        throws PublicKeyParseException
-    {
+            throws PublicKeyParseException {
         final BigInteger p = _buffer.readMPint();
         final BigInteger q = _buffer.readMPint();
         final BigInteger g = _buffer.readMPint();
@@ -267,8 +261,8 @@ public final class PublicKeyReaderUtil
      * </ul>
      * With the specification the related RSA public key is generated.</p>
      *
-     * @param _buffer   key / certificate data (certificate or public key
-     *                  format identifier is already read)
+     * @param _buffer key / certificate data (certificate or public key
+     *                format identifier is already read)
      * @return RSA public key instance
      * @throws PublicKeyParseException if the SSH2 public key blob could not be
      *                                 decoded
@@ -277,8 +271,7 @@ public final class PublicKeyReaderUtil
      * @see <a href="http://tools.ietf.org/html/rfc4253#section-6.6">RFC 4253 Section 6.6</a>
      */
     private static PublicKey decodePublicKey(final SSH2DataBuffer _buffer)
-        throws PublicKeyParseException
-    {
+            throws PublicKeyParseException {
         final BigInteger e = _buffer.readMPint();
         final BigInteger n = _buffer.readMPint();
 
@@ -302,8 +295,7 @@ public final class PublicKeyReaderUtil
      *
      * @see <a href="http://tools.ietf.org/html/rfc4253#section-6.6">RFC 4253 Section 6.6</a>
      */
-    private static class SSH2DataBuffer
-    {
+    private static class SSH2DataBuffer {
         /**
          * SSH2 data.
          */
@@ -320,8 +312,7 @@ public final class PublicKeyReaderUtil
          * @param _data binaray data blob
          * @see #data
          */
-        public SSH2DataBuffer(final byte[] _data)
-        {
+        public SSH2DataBuffer(final byte[] _data) {
             this.data = _data;
         }
 
@@ -335,8 +326,7 @@ public final class PublicKeyReaderUtil
          * @see #readByteArray()
          */
         public BigInteger readMPint()
-            throws PublicKeyParseException
-        {
+                throws PublicKeyParseException {
             final byte[] raw = this.readByteArray();
             return (raw.length > 0) ? new BigInteger(raw) : BigInteger.valueOf(0);
         }
@@ -352,8 +342,7 @@ public final class PublicKeyReaderUtil
          * @see #readByteArray()
          */
         public String readString()
-            throws PublicKeyParseException
-        {
+                throws PublicKeyParseException {
             return new String(this.readByteArray());
         }
 
@@ -363,8 +352,7 @@ public final class PublicKeyReaderUtil
          *
          * @return 32 bit integer value
          */
-        private int readUInt32()
-        {
+        private int readUInt32() {
             final int byte1 = this.data[this.pos++];
             final int byte2 = this.data[this.pos++];
             final int byte3 = this.data[this.pos++];
@@ -377,7 +365,7 @@ public final class PublicKeyReaderUtil
          * array. The byte array is defined as:
          * <ul>
          * <li>first the length of the byte array is defined as integer
-         *     (see {@link #readUInt32()})</li>
+         * (see {@link #readUInt32()})</li>
          * <li>then the byte array itself is defined</li>
          * </ul>
          *
@@ -388,10 +376,9 @@ public final class PublicKeyReaderUtil
          * @see PublicKeyParseException.ErrorCode#CORRUPT_BYTE_ARRAY_ON_READ
          */
         private byte[] readByteArray()
-            throws PublicKeyParseException
-        {
+                throws PublicKeyParseException {
             final int len = this.readUInt32();
-            if ((len < 0) || (len > (this.data.length - this.pos)))  {
+            if ((len < 0) || (len > (this.data.length - this.pos))) {
                 throw new PublicKeyParseException(
                         PublicKeyParseException.ErrorCode.CORRUPT_BYTE_ARRAY_ON_READ);
             }
@@ -408,8 +395,7 @@ public final class PublicKeyReaderUtil
      * enumeration {@link ErrorCode}.
      */
     public static final class PublicKeyParseException
-            extends Exception
-    {
+            extends Exception {
         /**
          * Defines the serialize version unique identifier.
          */
@@ -423,10 +409,9 @@ public final class PublicKeyReaderUtil
         /**
          * Creates a new exception for defined <code>_errorCode</code>.
          *
-         * @param _errorCode    error code
+         * @param _errorCode error code
          */
-        private PublicKeyParseException(final ErrorCode _errorCode)
-        {
+        private PublicKeyParseException(final ErrorCode _errorCode) {
             super(_errorCode.message);
             this.errorCode = _errorCode;
         }
@@ -435,12 +420,11 @@ public final class PublicKeyReaderUtil
          * Creates a new exception for defined <code>_errorCode</code> and
          * <code>_cause</code>.
          *
-         * @param _errorCode    error code
-         * @param _cause        throwable clause
+         * @param _errorCode error code
+         * @param _cause     throwable clause
          */
         private PublicKeyParseException(final ErrorCode _errorCode,
-                                        final Throwable _cause)
-        {
+                                        final Throwable _cause) {
             super(_errorCode.message, _cause);
             this.errorCode = _errorCode;
         }
@@ -452,16 +436,14 @@ public final class PublicKeyReaderUtil
          * @return error code of the public key parse exception instance
          * @see #errorCode
          */
-        public ErrorCode getErrorCode()
-        {
+        public ErrorCode getErrorCode() {
             return this.errorCode;
         }
 
         /**
          * Enumeration of the error codes if the public key could not parsed.
          */
-        public enum ErrorCode
-        {
+        public enum ErrorCode {
             /**
              * The format of the given ASCII key is not known and could not be
              * parsed. Only OpenSSH (starts with 's') and SECSH (starts with
@@ -526,10 +508,9 @@ public final class PublicKeyReaderUtil
              * Constructor used to initialize the error codes with an error
              * message.
              *
-             * @param _message  message text of the error code
+             * @param _message message text of the error code
              */
-            ErrorCode(final String _message)
-            {
+            ErrorCode(final String _message) {
                 this.message = _message;
             }
         }

@@ -23,10 +23,8 @@ public class ProfitComputationTest {
 
     enum FiatCurrency implements Currency {
 
-        ARGENTINIAN_PESO ("ARS"),
-        US_DOLLAR ("USD"),
-
-        ;
+        ARGENTINIAN_PESO("ARS"),
+        US_DOLLAR("USD"),;
 
         final String code;
 
@@ -48,10 +46,8 @@ public class ProfitComputationTest {
 
     enum CryptoCurrency implements Currency {
 
-        BITCOIN   ("BTC"),
-        LITECOIN  ("LTC"),
-
-        ;
+        BITCOIN("BTC"),
+        LITECOIN("LTC"),;
 
         final String code;
 
@@ -73,13 +69,13 @@ public class ProfitComputationTest {
 
     class ExchangeTransaction {
 
-        Currency currencySold    ;
+        Currency currencySold;
         Currency currencyReceived;
-        long     amount;
-        long     exchangeRate;
+        long amount;
+        long exchangeRate;
 
-        boolean  registered;
-        long     remains;
+        boolean registered;
+        long remains;
     }
 
     @Test

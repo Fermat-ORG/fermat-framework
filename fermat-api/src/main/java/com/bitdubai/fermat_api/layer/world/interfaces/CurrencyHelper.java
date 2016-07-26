@@ -30,7 +30,7 @@ public class CurrencyHelper {
 
             default:
                 throw new InvalidParameterException(
-                        "Currency Type: " + type + " - Code: " + code,
+                        new StringBuilder().append("Currency Type: ").append(type).append(" - Code: ").append(code).toString(),
                         "We couldn't find a currency associated with the given information."
                 );
         }
@@ -57,7 +57,7 @@ public class CurrencyHelper {
 
             default:
                 throw new InvalidParameterException(
-                        "Currency Type: " + type + " - Code: " + code,
+                        new StringBuilder().append("Currency Type: ").append(type).append(" - Code: ").append(code).toString(),
                         "We couldn't find a currency associated with the given information."
                 );
         }
@@ -75,7 +75,7 @@ public class CurrencyHelper {
             return CryptoCurrency.getByCode(code);
         }
 
-        throw new InvalidParameterException("Currency Code: " + code,
+        throw new InvalidParameterException(new StringBuilder().append("Currency Code: ").append(code).toString(),
                 "We couldn't find a currency associated with the given information.");
     }
 }

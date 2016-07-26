@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class getCurrencyType {
 
     @Test
-    public void getCurrencyType(){
+    public void getCurrencyType() {
         CustomerBrokerSaleImpl customerBrokerPurchaseImpl = mock(CustomerBrokerSaleImpl.class);
         when(customerBrokerPurchaseImpl.getCurrencyType()).thenReturn(new String());
         assertThat(customerBrokerPurchaseImpl.getCurrencyType()).isNotNull();

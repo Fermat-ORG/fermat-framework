@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
  * The Class <code>package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerActorDatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
- *
+ * <p/>
  * Created by Angel Veloz - (vlzangel91@gmail.com) on 19/11/15.
  *
  * @version 1.0

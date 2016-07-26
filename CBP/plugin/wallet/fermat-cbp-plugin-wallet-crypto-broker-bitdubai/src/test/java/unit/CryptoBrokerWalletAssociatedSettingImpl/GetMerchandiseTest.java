@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class GetMerchandiseTest {
 
     @Test
-    public void getMerchandise(){
+    public void getMerchandise() {
         CryptoBrokerWalletAssociatedSettingImpl cryptoBrokerWalletAssociatedSetting = mock(CryptoBrokerWalletAssociatedSettingImpl.class);
         when(cryptoBrokerWalletAssociatedSetting.getMerchandise()).thenReturn(CryptoCurrency.BITCOIN);
         assertThat(cryptoBrokerWalletAssociatedSetting.getMerchandise()).isNotNull();

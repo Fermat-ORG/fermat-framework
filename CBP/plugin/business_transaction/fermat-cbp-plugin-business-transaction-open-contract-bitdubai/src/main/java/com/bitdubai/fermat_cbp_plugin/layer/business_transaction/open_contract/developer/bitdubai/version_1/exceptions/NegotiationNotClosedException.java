@@ -5,7 +5,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CBPException;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 27/11/15.
  */
-public class NegotiationNotClosedException extends CBPException{
+public class NegotiationNotClosedException extends CBPException {
 
     private static final String DEFAULT_MESSAGE = "The Negotiation is not closed";
 

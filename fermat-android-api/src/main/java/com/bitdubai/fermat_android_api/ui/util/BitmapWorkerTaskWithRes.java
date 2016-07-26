@@ -38,8 +38,8 @@ public class BitmapWorkerTaskWithRes extends AsyncTask<Integer, Void, Drawable> 
     protected Drawable doInBackground(Integer... params) {
         int data = params[0];
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return res.getDrawable(data,null);
-        }else{
+            return res.getDrawable(data, null);
+        } else {
             return res.getDrawable(data);
         }
     }
@@ -51,7 +51,7 @@ public class BitmapWorkerTaskWithRes extends AsyncTask<Integer, Void, Drawable> 
         if (bitmap != null) {
             //if (imageView != null) {
             //imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(res,bitmap));
-            if(imageView!=null) {
+            if (imageView != null) {
                 imageView.setImageDrawable((isCircle) ? ImagesUtils.getRoundedBitmap(res, ((BitmapDrawable) bitmap).getBitmap()) : bitmap);
             }
             //}

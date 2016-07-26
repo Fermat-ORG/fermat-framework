@@ -23,10 +23,10 @@ import static org.mockito.Mockito.when;
 public class GetDatabaseTableListTest {
 
     @Test
-    public void getDatabaseTableList() throws Exception{
+    public void getDatabaseTableList() throws Exception {
         CryptoBrokerWalletPluginRoot cryptoBrokerWalletPluginRoot = mock(CryptoBrokerWalletPluginRoot.class);
-        when(cryptoBrokerWalletPluginRoot.getDatabaseTableList(Mockito.any(DeveloperObjectFactory.class),Mockito.any(DeveloperDatabase.class))).thenReturn(new ArrayList<DeveloperDatabaseTable>());
-        assertThat(cryptoBrokerWalletPluginRoot.getDatabaseTableList(Mockito.any(DeveloperObjectFactory.class),Mockito.any(DeveloperDatabase.class))).isNotNull();
+        when(cryptoBrokerWalletPluginRoot.getDatabaseTableList(Mockito.any(DeveloperObjectFactory.class), Mockito.any(DeveloperDatabase.class))).thenReturn(new ArrayList<DeveloperDatabaseTable>());
+        assertThat(cryptoBrokerWalletPluginRoot.getDatabaseTableList(Mockito.any(DeveloperObjectFactory.class), Mockito.any(DeveloperDatabase.class))).isNotNull();
     }
 
 }
