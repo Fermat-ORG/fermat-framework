@@ -11,12 +11,12 @@
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:gravity="center"
         android:padding="16dp"
         android:text="Fermat Network Offline"
         android:textColor="#FFF"
         android:textSize="17sp"
+        android:background="#7DD5CA"
         tools:ignore="HardcodedText"
         android:focusable="false"
         android:focusableInTouchMode="false"

@@ -122,7 +122,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private ImageView imageView_contact;
     private FermatButton send_button;
     private TextView txt_notes;
-    private BitcoinConverter bitcoinConverter;
+    private BitcoinConverter bitcoinConverter;////
     private String feeLevel = "";
     private String feeOrigin = "";
     private LinearLayout feed_advances;
@@ -191,9 +191,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 cryptoWallet.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
 
             }
-
-
-
 
 
             availableBalance = cryptoWallet.getBalance(com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType);
@@ -294,9 +291,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
+
         feed_Substract= (CheckBox) rootView.findViewById(R.id.checkBoxSubstract);
-
-
+        /////
         advances_btn = (LinearLayout) rootView.findViewById(R.id.advances_btn);
         layoutAdvances = (LinearLayout) rootView.findViewById(R.id.feed_advances);
         feeGroup = (RadioGroup) rootView.findViewById(R.id.feeGroup);
@@ -326,7 +323,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         }
 
         editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.valueOf(feeLevel).getFee())));
-
 
         feeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
