@@ -334,7 +334,8 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
         ExchangeRate rate = null;
         try {
-            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.FERMAT, fiatCurrency);
+            //TODO: cambiar la currency a Fermat cuando esten los providers listos
+            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, fiatCurrency);
             CurrencyExchangeRateProviderManager  rateProviderManager = exchangeProviderFilterManagerproviderFilter.getProviderReference(rateProviderManagerId);
             //your exchange rate.
             rate = rateProviderManager.getCurrentExchangeRate(wantedCurrencyPair);
@@ -403,7 +404,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
 
             Map<UUID, String> providerEUR = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
-                    new CurrencyPairImpl(CryptoCurrency.FERMAT, FiatCurrency.EURO));
+                    new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.EURO));
             if (providerEUR.size()>0){
                 Iterator entries = providerEUR.entrySet().iterator();
                 while (entries.hasNext()) {
@@ -427,7 +428,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     public  List<ExchangeRateProvider> getExchangeRateProviderManagers(FiatCurrency fiatCurrency) throws CantGetCurrencyExchangeProviderException {
         List<ExchangeRateProvider> filteredProviders = new ArrayList<>();
         try {
-            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.FERMAT, fiatCurrency);
+            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, fiatCurrency);
 
             Collection<CurrencyExchangeRateProviderManager> providers = exchangeProviderFilterManagerproviderFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
 
