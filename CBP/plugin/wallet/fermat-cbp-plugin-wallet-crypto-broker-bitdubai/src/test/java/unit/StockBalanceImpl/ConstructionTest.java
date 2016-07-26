@@ -1,6 +1,5 @@
 package unit.StockBalanceImpl;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -17,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.CryptoBrokerWalletPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.StockBalanceImpl;
 
 import org.junit.Test;
@@ -120,7 +120,7 @@ public class ConstructionTest {
                 this.database,
                 this.plugin,
                 this.pluginFileSystem,
-                Mockito.any(ErrorManager.class),
+                Mockito.any(CryptoBrokerWalletPluginRoot.class),
                 Mockito.any(Broadcaster.class)
         );
         assertThat(stockBalance).isNotNull();
