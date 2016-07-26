@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +24,7 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
+import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
@@ -41,7 +41,6 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.adapters.ConnectionsListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AvailableActorsListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.DisconnectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
 
@@ -158,42 +157,42 @@ public class ConnectionsTabFragment
 
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
+//        if (layoutManager == null) {
+//            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT, LinearLayoutManager.VERTICAL, false);
+//            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+//                @Override
+//                public int getSpanSize(int position) {
+//                    final int itemViewType = adapter.getItemViewType(position);
+//                    switch (itemViewType) {
+//                        case AvailableActorsListAdapter.DATA_ITEM:
+//                            return 1;
+//                        case AvailableActorsListAdapter.LOADING_ITEM:
+//                            return SPAN_COUNT;
+//                        default:
+//                            return GridLayoutManager.DEFAULT_SPAN_COUNT;
+//                    }
+//                }
+//            });
+//
+//            layoutManager = gridLayoutManager;
+//        }
+
         if (layoutManager == null) {
-            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT, LinearLayoutManager.VERTICAL, false);
-            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    final int itemViewType = adapter.getItemViewType(position);
-                    switch (itemViewType) {
-                        case AvailableActorsListAdapter.DATA_ITEM:
-                            return 1;
-                        case AvailableActorsListAdapter.LOADING_ITEM:
-                            return SPAN_COUNT;
-                        default:
-                            return GridLayoutManager.DEFAULT_SPAN_COUNT;
-                    }
-                }
-            });
-
-            layoutManager = gridLayoutManager;
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         }
-
 
         return layoutManager;
     }
 
     @Override
     public RecyclerView.OnScrollListener getScrollListener() {
-        //TODO: Descomentar esto cuando funcione lo de la paginacion en P2P
-//        if (scrollListener == null) {
-//            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
-//            endlessScrollListener.setOnLoadMoreDataListener(this);
-//            scrollListener = endlessScrollListener;
-//        }
-//
-//        return scrollListener;
+        if (scrollListener == null) {
+            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
+            endlessScrollListener.setOnLoadMoreDataListener(this);
+            scrollListener = endlessScrollListener;
+        }
 
-        return null;
+        return scrollListener;
     }
 
     @Override
@@ -256,10 +255,6 @@ public class ConnectionsTabFragment
 
                 helpDialog.show();
                 return true;
-
-            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
-                //TODO: colocar aqui el codigo para mostrar el SearchView
-                return true;
         }
 
         return false;
@@ -308,7 +303,7 @@ public class ConnectionsTabFragment
     @Override
     public List<CryptoBrokerCommunityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
-        if(isVisible) {
+        if (isVisible) {
             try {
                 offset = pos;
                 if (moduleManager.getSelectedActorIdentity() != null) {
@@ -324,6 +319,7 @@ public class ConnectionsTabFragment
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {

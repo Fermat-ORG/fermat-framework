@@ -15,14 +15,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
@@ -70,7 +67,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 
 /**
@@ -82,11 +78,6 @@ import java.util.regex.Pattern;
  */
 @PluginInfo(createdBy = "nelsonalfo", maintainerMail = "nelsonalfo@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_BROKER)
 public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBrokerWalletPreferenceSettings, ActiveActorIdentityInformation> implements LogManagerForDevelopers {
-
-    private CryptoBrokerWalletModuleManager moduleManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    LogManager logManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     PluginFileSystem pluginFileSystem;
@@ -178,18 +169,17 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
     IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
-    Broadcaster broadcaster;
+    /**
+     * Logging level for this plugin
+     */
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
+
+    private CryptoBrokerWalletModuleManager moduleManager;
+
 
     public CryptoBrokerWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
-
-    /** Logging level for this plugin */
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
-
-    private SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager;
-
 
     @Override
     public List<String> getClassesFullPath() {
@@ -212,29 +202,6 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
             } else {
                 CryptoBrokerWalletModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
-        }
-    }
-
-    /**
-     * Static method to get the logging level from any class under root.
-     *
-     * @param className the class name
-     *
-     * @return the log level for this class
-     */
-    public static LogLevel getLogLevelByClass(String className) {
-        try {
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split(Pattern.quote("$"));
-            return CryptoBrokerWalletModulePluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e) {
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
         }
     }
 
@@ -276,12 +243,13 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                     customerBrokerCloseManager,
                     cryptoCustomerActorConnectionManager,
                     pluginFileSystem,
-                    pluginId,
-                    broadcaster);
+                    pluginId
+            );
 
         return moduleManager;
     }
 
+    @SuppressWarnings("unused")
     private void preConfigureWallet() {
         try {
             final String brokerWalletPublicKey = "crypto_broker_wallet";

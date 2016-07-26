@@ -1504,6 +1504,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         }
     }
 
+
     @Override
     public ArrayList<FermatWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListFermatWalletIntraUserIdentityException {
 

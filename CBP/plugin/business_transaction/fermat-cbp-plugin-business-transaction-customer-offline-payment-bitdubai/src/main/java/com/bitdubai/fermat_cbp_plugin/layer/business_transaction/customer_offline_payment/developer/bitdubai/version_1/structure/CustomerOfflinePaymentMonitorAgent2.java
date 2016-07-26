@@ -21,7 +21,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetExcepti
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.AbstractBusinessTransactionAgent;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_offline_payment.events.CustomerOfflinePaymentConfirmed;
@@ -35,8 +34,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.except
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot;
@@ -62,6 +59,7 @@ public class CustomerOfflinePaymentMonitorAgent2
 
     /**
      * Default constructor with parameters
+     *
      * @param sleepTime
      * @param timeUnit
      * @param initDelayTime
@@ -100,7 +98,7 @@ public class CustomerOfflinePaymentMonitorAgent2
             // Check contract status to send.
             List<CustomerOfflinePaymentRecord> pendingToSubmitNotificationList = customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
             for (CustomerOfflinePaymentRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                try{
+                try {
                     contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
 
                     System.out.println("OFFLINE_PAYMENT - [Customer] Sending notification: OFFLINE_PAYMENT_SUBMITTED");
@@ -116,7 +114,7 @@ public class CustomerOfflinePaymentMonitorAgent2
 
                     customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED);
                     System.out.println("OFFLINE_PAYMENT - [Customer] Update Business Transaction Status: OFFLINE_PAYMENT_SUBMITTED");
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -125,7 +123,7 @@ public class CustomerOfflinePaymentMonitorAgent2
             // Check pending notifications - Broker side
             List<CustomerOfflinePaymentRecord> pendingToSubmitConfirmationList = customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitConfirmList();
             for (CustomerOfflinePaymentRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                try{
+                try {
                     contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
                     System.out.println("OFFLINE_PAYMENT - [Broker] Sending Confirmation");
@@ -140,7 +138,7 @@ public class CustomerOfflinePaymentMonitorAgent2
 
                     customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT);
                     System.out.println("OFFLINE_PAYMENT - [Broker] Update Business Transaction Status: CONFIRM_OFFLINE_PAYMENT");
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -148,9 +146,9 @@ public class CustomerOfflinePaymentMonitorAgent2
             // Check if pending events
             List<String> pendingEventsIdList = customerOfflinePaymentBusinessTransactionDao.getPendingEvents();
             for (String eventId : pendingEventsIdList) {
-                try{
+                try {
                     checkPendingEvent(eventId);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -178,6 +176,14 @@ public class CustomerOfflinePaymentMonitorAgent2
                 for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("CUSTOMER_OFFLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.CUSTOMER_OFFLINE_PAYMENT)
+                        continue;
+
+                    System.out.println("CUSTOMER_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
+
                     if (customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
                         contractTransactionStatus = customerOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(contractHash);
                         //TODO: analyze what we need to do here.
@@ -192,7 +198,7 @@ public class CustomerOfflinePaymentMonitorAgent2
                                 getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
                         Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
                         String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
-                        if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
+                        if (!MoneyType.CRYPTO.getCode().equals(clauseValue)) {
                             customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(saleContract);
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
                             customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
@@ -217,6 +223,13 @@ public class CustomerOfflinePaymentMonitorAgent2
                 for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("CUSTOMER_OFFLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.CUSTOMER_OFFLINE_PAYMENT)
+                        continue;
+
+                    System.out.println("CUSTOMER_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
                         customerOnlinePaymentRecord = customerOfflinePaymentBusinessTransactionDao.getCustomerOfflinePaymentRecord(contractHash);

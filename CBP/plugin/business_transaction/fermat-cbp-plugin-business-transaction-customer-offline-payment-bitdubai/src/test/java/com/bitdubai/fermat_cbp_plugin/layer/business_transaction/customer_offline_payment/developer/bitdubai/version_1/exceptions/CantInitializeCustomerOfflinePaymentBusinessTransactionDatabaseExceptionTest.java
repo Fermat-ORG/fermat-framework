@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.exceptions;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,17 +27,19 @@ public class CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseExce
     ErrorManager errorManager;
     private UUID testId;
     private CustomerOfflinePaymentBusinessTransactionDao customerOfflinePaymentBusinessTransactionDao;
+
     @Before
-    public void setup()throws Exception{
+    public void setup() throws Exception {
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
         customerOfflinePaymentBusinessTransactionDao =
-                new CustomerOfflinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
+                new CustomerOfflinePaymentBusinessTransactionDao(mockPluginDatabaseSystem, testId, mockDatabase, errorManager);
     }
+
     @Test(expected = CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException.class)
-    public void CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseExceptionTest()throws Exception{
+    public void CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseExceptionTest() throws Exception {
         customerOfflinePaymentBusinessTransactionDao =
-                new CustomerOfflinePaymentBusinessTransactionDao(null,null,mockDatabase,errorManager);
+                new CustomerOfflinePaymentBusinessTransactionDao(null, null, mockDatabase, errorManager);
         customerOfflinePaymentBusinessTransactionDao.initialize();
 
     }

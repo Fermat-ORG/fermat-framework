@@ -8,23 +8,24 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
  * Created by franklin on 20/01/16.
  */
 public class BankAccountNumberImpl implements BankAccountNumber {
-    private String          bankName;
+    private String bankName;
     private BankAccountType bankAccountType;
-    private String          alias;
-    private String          account;
-    private FiatCurrency    currencyType;
-    private String          imageId;
+    private String alias;
+    private String account;
+    private FiatCurrency currencyType;
+    private String imageId;
 
-    public BankAccountNumberImpl(String bankName, BankAccountType bankAccountType, String alias, String account, FiatCurrency currencyType, String imageId){
-        this.bankName        = bankName;
+    public BankAccountNumberImpl(String bankName, BankAccountType bankAccountType, String alias, String account, FiatCurrency currencyType, String imageId) {
+        this.bankName = bankName;
         this.bankAccountType = bankAccountType;
-        this.alias           = alias;
-        this.account         = account;
-        this.currencyType    = currencyType;
-        this.imageId    = imageId;
+        this.alias = alias;
+        this.account = account;
+        this.currencyType = currencyType;
+        this.imageId = imageId;
     }
 
-    public BankAccountNumberImpl(){}
+    public BankAccountNumberImpl() {
+    }
 
     @Override
     public String getBankName() {

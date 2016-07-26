@@ -8,10 +8,10 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum ScreenSize {
 
     XSMALL("xsmall"),
-    SMALL ("small"),
-    MEDIUM ("medium"),
-    LARGE ("large"),
-    XLARGE ("xlarge");
+    SMALL("small"),
+    MEDIUM("medium"),
+    LARGE("large"),
+    XLARGE("xlarge");
 
     private final String code;
 
@@ -19,18 +19,26 @@ public enum ScreenSize {
         this.code = code;
     }
 
-    public String getCode() { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
-    public static ScreenSize getByCode(String code)throws InvalidParameterException {
+    public static ScreenSize getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "xsmall": return ScreenSize.XSMALL;
-            case "small": return ScreenSize.SMALL;
-            case "normal": return ScreenSize.MEDIUM;
-            case "large": return ScreenSize.LARGE;
-            case "xlarge": return ScreenSize.XLARGE;
+            case "xsmall":
+                return ScreenSize.XSMALL;
+            case "small":
+                return ScreenSize.SMALL;
+            case "normal":
+                return ScreenSize.MEDIUM;
+            case "large":
+                return ScreenSize.LARGE;
+            case "xlarge":
+                return ScreenSize.XLARGE;
             //Modified by Manuel Perez on 04/08/2015
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ScreenSize enum");
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the ScreenSize enum");
 
         }
 

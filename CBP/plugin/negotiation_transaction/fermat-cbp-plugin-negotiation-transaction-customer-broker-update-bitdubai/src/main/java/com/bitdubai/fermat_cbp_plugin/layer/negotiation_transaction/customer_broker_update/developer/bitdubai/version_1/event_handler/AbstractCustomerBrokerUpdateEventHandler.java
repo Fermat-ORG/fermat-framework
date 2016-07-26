@@ -10,8 +10,8 @@ public abstract class AbstractCustomerBrokerUpdateEventHandler implements Fermat
 
     public CustomerBrokerUpdateServiceEventHandler customerBrokerUpdateServiceEventHandler;
 
-    public void setCustomerBrokerUpdateService(CustomerBrokerUpdateServiceEventHandler customerBrokerUpdateServiceEventHandler) throws CantSetObjectException{
-        if(customerBrokerUpdateServiceEventHandler == null){
+    public void setCustomerBrokerUpdateService(CustomerBrokerUpdateServiceEventHandler customerBrokerUpdateServiceEventHandler) throws CantSetObjectException {
+        if (customerBrokerUpdateServiceEventHandler == null) {
             throw new CantSetObjectException("CustomerBrokerUpdateServiceEventHandler is null");
         }
         this.customerBrokerUpdateServiceEventHandler = customerBrokerUpdateServiceEventHandler;

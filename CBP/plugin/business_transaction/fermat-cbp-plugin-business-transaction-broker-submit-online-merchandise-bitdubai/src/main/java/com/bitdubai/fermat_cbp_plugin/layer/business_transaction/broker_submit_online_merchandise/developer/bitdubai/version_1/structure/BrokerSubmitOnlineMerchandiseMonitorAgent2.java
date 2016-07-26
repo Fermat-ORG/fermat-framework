@@ -23,7 +23,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetExcepti
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerSubmitMerchandiseConfirmed;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.AbstractBusinessTransactionAgent;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CryptoMoneyDeStockRecord;
@@ -40,22 +39,16 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.ex
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
-import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.exceptions.CantCreateCryptoMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces.CryptoMoneyDestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.BrokerSubmitOnlineMerchandisePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOnlineMerchandiseBusinessTransactionDao;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetCryptoStatusException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetSendCryptoTransactionHashException;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.IntraActorCryptoTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
@@ -139,7 +132,6 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
      * This method sets the IntraActorCryptoTransactionManager
      *
      * @param outgoingIntraActorManager
-     *
      * @throws CantSetObjectException
      */
     private void setIntraActorCryptoTransactionManager(
@@ -169,7 +161,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToDeStockTransactionList = dao.getPendingDeStockTransactionList();
             for (BusinessTransactionRecord pendingToDeStockTransaction : pendingToDeStockTransactionList) {
-                try{
+                try {
                     CryptoMoneyDeStockRecord cryptoMoneyDeStockRecord = new CryptoMoneyDeStockRecord(pendingToDeStockTransaction);
 
                     //Execute the de stock transaction.
@@ -189,7 +181,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
 
                     pendingToDeStockTransaction.setContractTransactionStatus(PENDING_SUBMIT_ONLINE_MERCHANDISE);
                     dao.updateBusinessTransactionRecord(pendingToDeStockTransaction);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -199,7 +191,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<String> pendingToSubmitCrypto = dao.getPendingToSubmitCryptoList();
             for (String pendingContractHash : pendingToSubmitCrypto) {
-                try{
+                try {
                     BusinessTransactionRecord businessTransactionRecord = dao.getBrokerBusinessTransactionRecord(pendingContractHash);
 
                     //I'll check if the merchandise was sent in a previous loop
@@ -239,7 +231,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
                     businessTransactionRecord.setTransactionId(outgoingCryptoTransactionId.toString());
                     businessTransactionRecord.setContractTransactionStatus(CRYPTO_MERCHANDISE_SUBMITTED);
                     dao.updateBusinessTransactionRecord(businessTransactionRecord);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -250,7 +242,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitNotificationList = dao.getPendingToSubmitNotificationList();
             for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                try{
+                try {
                     contractHash = pendingToSubmitNotificationRecord.getContractHash();
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
@@ -265,7 +257,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
                     //Updating the business transaction record
                     pendingToSubmitNotificationRecord.setContractTransactionStatus(ONLINE_MERCHANDISE_SUBMITTED);
                     dao.updateBusinessTransactionRecord(pendingToSubmitNotificationRecord);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -276,7 +268,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitConfirmationList = dao.getPendingToSubmitConfirmationList();
             for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                try{
+                try {
                     contractHash = pendingToSubmitConfirmationRecord.getContractHash();
 
                     transactionTransmissionManager.confirmNotificationReception(
@@ -293,7 +285,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
                     dao.updateBusinessTransactionRecord(pendingToSubmitConfirmationRecord);
 
                     raiseIncomingMoneyNotificationEvent(pendingToSubmitConfirmationRecord);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -306,9 +298,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingTransactions = dao.getPendingCryptoTransactionList();
             for (BusinessTransactionRecord onlinePaymentRecord : pendingTransactions) {
-                try{
+                try {
                     checkPendingTransaction(onlinePaymentRecord);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -318,11 +310,11 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingSubmitContractList = dao.getPendingToSubmitCryptoStatusList();
             for (BusinessTransactionRecord pendingSubmitContractRecord : pendingSubmitContractList) {
-                try{
+                try {
                     CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(pendingSubmitContractRecord.getTransactionHash());
                     pendingSubmitContractRecord.setCryptoStatus(cryptoStatus);
                     dao.updateBusinessTransactionRecord(pendingSubmitContractRecord);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -332,11 +324,11 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingOnCryptoNetworkContractList = dao.getOnCryptoNetworkCryptoStatusList();
             for (BusinessTransactionRecord onCryptoNetworkContractRecord : pendingOnCryptoNetworkContractList) {
-                try{
+                try {
                     CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(onCryptoNetworkContractRecord.getTransactionHash());
                     onCryptoNetworkContractRecord.setCryptoStatus(cryptoStatus);
                     dao.updateBusinessTransactionRecord(onCryptoNetworkContractRecord);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -346,11 +338,11 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingOnBlockchainContractList = dao.getOnBlockchainCryptoStatusList();
             for (BusinessTransactionRecord onBlockchainContractRecord : pendingOnBlockchainContractList) {
-                try{
+                try {
                     onBlockchainContractRecord.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
                     onBlockchainContractRecord.setContractTransactionStatus(PENDING_SUBMIT_ONLINE_MERCHANDISE_NOTIFICATION);
                     dao.updateBusinessTransactionRecord(onBlockchainContractRecord);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -363,9 +355,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<String> pendingEventsIdList = dao.getPendingEvents();
             for (String eventId : pendingEventsIdList) {
-                try{
+                try {
                     checkPendingEvent(eventId);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -492,8 +484,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
      * @param record the Business Transaction record associated with the crypto transaction
      */
     private void raiseIncomingMoneyNotificationEvent(BusinessTransactionRecord record) {
-        System.out.println("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoCurrency() = " + record.getCryptoCurrency());
-        System.out.println("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoAmount() = " + record.getCryptoAmount());
+        System.out.println(new StringBuilder().append("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoCurrency() = ").append(record.getCryptoCurrency()).toString());
+        System.out.println(new StringBuilder().append("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoAmount() = ").append(record.getCryptoAmount()).toString());
 
         FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_MONEY_NOTIFICATION);
         IncomingMoneyNotificationEvent event = (IncomingMoneyNotificationEvent) fermatEvent;
@@ -514,7 +506,6 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
      * check the status of the crypto transaction and update the Business Transaction accordingly
      *
      * @param businessTransactionRecord the business transaction record associated with the crypto transaction
-     *
      * @throws CantUpdateRecordException
      */
     private void checkPendingTransaction(BusinessTransactionRecord businessTransactionRecord) throws CantUpdateRecordException {

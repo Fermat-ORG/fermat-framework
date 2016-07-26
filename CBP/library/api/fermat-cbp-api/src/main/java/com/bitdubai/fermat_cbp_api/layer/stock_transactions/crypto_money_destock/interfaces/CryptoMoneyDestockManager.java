@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 /**
  * Created by franklin on 16/11/15.
  */
-public interface CryptoMoneyDestockManager  extends FermatManager {
+public interface CryptoMoneyDestockManager extends FermatManager {
 
     void createTransactionDestock(
             String publicKeyActor,

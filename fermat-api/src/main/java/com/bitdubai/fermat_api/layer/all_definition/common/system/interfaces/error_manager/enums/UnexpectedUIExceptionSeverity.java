@@ -12,30 +12,32 @@ public enum UnexpectedUIExceptionSeverity implements FermatEnum {
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
-    CRASH          ("C"),
-    NOT_IMPORTANT  ("NI"),
-    UNSTABLE       ("U"),
-
-    ;
+    CRASH("C"),
+    NOT_IMPORTANT("NI"),
+    UNSTABLE("U"),;
 
     private final String code;
 
-    UnexpectedUIExceptionSeverity(final String code){
+    UnexpectedUIExceptionSeverity(final String code) {
         this.code = code;
     }
 
     public static UnexpectedUIExceptionSeverity getByCode(final String code) throws InvalidParameterException {
 
-        switch (code){
+        switch (code) {
 
-            case "C":  return CRASH        ;
-            case "NI": return NOT_IMPORTANT;
-            case "U":  return UNSTABLE     ;
+            case "C":
+                return CRASH;
+            case "NI":
+                return NOT_IMPORTANT;
+            case "U":
+                return UNSTABLE;
 
-            default: throw new InvalidParameterException(
-                    "Code: " + code,
-                    "The received code is not valid for the UnexpectedUIExceptionSeverity enum"
-            );
+            default:
+                throw new InvalidParameterException(
+                        new StringBuilder().append("Code: ").append(code).toString(),
+                        "The received code is not valid for the UnexpectedUIExceptionSeverity enum"
+                );
 
         }
     }

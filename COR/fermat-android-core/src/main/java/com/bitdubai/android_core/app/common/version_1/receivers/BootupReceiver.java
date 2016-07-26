@@ -7,9 +7,7 @@ import android.widget.Toast;
 
 
 /**
- *
- *  Created by Matias Furszyfer
- *
+ * Created by Matias Furszyfer
  */
 
 public class BootupReceiver extends BroadcastReceiver {

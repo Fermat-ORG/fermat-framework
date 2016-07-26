@@ -15,9 +15,7 @@ public enum AppStructureType {
     // Combo Apps type 2 re use fragments from another App
     COMBO_TYPE_2,
     // Combo Apps type 3 re use fragments from another App and include his own fragments
-    COMBO_TYPE_3
-    ;
-
+    COMBO_TYPE_3;
 
 
 }

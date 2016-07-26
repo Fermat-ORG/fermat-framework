@@ -14,7 +14,7 @@ public class CryptoCustomerActorInformation implements CryptoBrokerActor {
 
     private final ActorIdentity identity;
 
-    public CryptoCustomerActorInformation(final ActorIdentity identity){
+    public CryptoCustomerActorInformation(final ActorIdentity identity) {
         this.identity = identity;
     }
 
@@ -24,17 +24,17 @@ public class CryptoCustomerActorInformation implements CryptoBrokerActor {
     }
 
     @Override
-    public boolean equals(final Object o){
-        if(!(o instanceof CryptoBrokerActor))
+    public boolean equals(final Object o) {
+        if (!(o instanceof CryptoBrokerActor))
             return false;
         CryptoBrokerActor compare = (CryptoBrokerActor) o;
         return this.identity.equals(compare.getIdentity());
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int c = 0;
         c += identity.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 }

@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by Matias Furszyfer on 2015.09.1..
  */
-public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTitleBar,Serializable {
+public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTitleBar, Serializable {
 
     /**
      * class private attributes
@@ -21,7 +21,7 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
     private String iconName;
 
     private RuntimeFernatComboBox comboBox;
-    private int labelSize=-1;
+    private int labelSize = -1;
     private String titleColor;
     private byte[] toggleIcon;
     private boolean isTitleTextStatic;
@@ -32,7 +32,7 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
     /**
      * This icon will be used for open the navigationDrawer, go back
      * If you put the appLink of the item "Back" the app will back when the user press the item
-      */
+     */
 
     private MenuItem navItem;
 
@@ -68,7 +68,7 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
         return backgroundImage;
     }
 
-    public int getLabelSize(){
+    public int getLabelSize() {
         return labelSize;
     }
 
@@ -144,7 +144,7 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
         this.isTitleTextStatic = isTitleTextStatic;
     }
 
-    public boolean isTitleTextStatic(){
+    public boolean isTitleTextStatic() {
         return isTitleTextStatic;
     }
 

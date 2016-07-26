@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 public class SetMemoTest {
 
     @Test
-    public void setMemo(){
+    public void setMemo() {
         BankMoneyDestockTransactionImpl bankMoneyDestockTransaction = mock(BankMoneyDestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(bankMoneyDestockTransaction).setMemo(Mockito.any(String.class));
     }

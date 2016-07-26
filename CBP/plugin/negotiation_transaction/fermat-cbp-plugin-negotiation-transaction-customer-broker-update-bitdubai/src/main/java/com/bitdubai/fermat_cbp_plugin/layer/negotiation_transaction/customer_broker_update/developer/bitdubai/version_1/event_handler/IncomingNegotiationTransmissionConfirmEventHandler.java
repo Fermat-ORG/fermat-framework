@@ -10,26 +10,26 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmissio
 /**
  * Created by Yordin Alayn 18.12.15
  */
-public class IncomingNegotiationTransmissionConfirmEventHandler extends AbstractCustomerBrokerUpdateEventHandler{
+public class IncomingNegotiationTransmissionConfirmEventHandler extends AbstractCustomerBrokerUpdateEventHandler {
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if(this.customerBrokerUpdateServiceEventHandler.getStatus()== ServiceStatus.STARTED) {
+        if (this.customerBrokerUpdateServiceEventHandler.getStatus() == ServiceStatus.STARTED) {
 
             try {
                 this.customerBrokerUpdateServiceEventHandler.incomingNegotiationTransactionConfirmEventHandler((IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent);
-            } catch(CantSaveEventException exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingNegotiationTransmissionConfirmEventHandler", "Check the cause");
-            } catch(ClassCastException exception){
+            } catch (CantSaveEventException exception) {
+                throw new CantSaveEventException(exception, "Handling the IncomingNegotiationTransmissionConfirmEventHandler", "Check the cause");
+            } catch (ClassCastException exception) {
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("EXCEPTION DETECTOR----------------------------------");
                 //exception.printStackTrace();
                 throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the IncomingNegotiationTransmissionConfirmEventHandler", "Cannot cast this event");
-            } catch(Exception exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingNegotiationTransmissionConfirmEventHandler", "Unexpected exception");
+            } catch (Exception exception) {
+                throw new CantSaveEventException(exception, "Handling the IncomingNegotiationTransmissionConfirmEventHandler", "Unexpected exception");
             }
 
-        }else {
+        } else {
             throw new TransactionServiceNotStartedException();
         }
     }

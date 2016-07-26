@@ -23,83 +23,83 @@ public class NegotiationPurchaseTestData {
 
     private final CustomerBrokerPurchaseNegotiationDao dao;
 
-    public NegotiationPurchaseTestData(CustomerBrokerPurchaseNegotiationDao dao){
+    public NegotiationPurchaseTestData(CustomerBrokerPurchaseNegotiationDao dao) {
         this.dao = dao;
         load();
     }
 
-    public void load(){
+    public void load() {
 
         List<Clause> clauses = new ArrayList<>();
 
         clauses.add(
-            new CustomerBrokerPurchaseClause(
-                UUID.randomUUID(),
-                ClauseType.BROKER_CURRENCY,
-                CryptoCurrency.BITCOIN.getCode(),
-                ClauseStatus.AGREED,
-                ActorType.BROKER.getCode(),
-                (short) 0
-            )
+                new CustomerBrokerPurchaseClause(
+                        UUID.randomUUID(),
+                        ClauseType.BROKER_CURRENCY,
+                        CryptoCurrency.BITCOIN.getCode(),
+                        ClauseStatus.AGREED,
+                        ActorType.BROKER.getCode(),
+                        (short) 0
+                )
         );
 
         clauses.add(
-            new CustomerBrokerPurchaseClause(
-                UUID.randomUUID(),
-                ClauseType.CUSTOMER_CURRENCY,
-                FiatCurrency.US_DOLLAR.getCode(),
-                ClauseStatus.AGREED,
-                ActorType.CUSTOMER.getCode(),
-                (short) 1
-            )
+                new CustomerBrokerPurchaseClause(
+                        UUID.randomUUID(),
+                        ClauseType.CUSTOMER_CURRENCY,
+                        FiatCurrency.US_DOLLAR.getCode(),
+                        ClauseStatus.AGREED,
+                        ActorType.CUSTOMER.getCode(),
+                        (short) 1
+                )
         );
 
         clauses.add(
-            new CustomerBrokerPurchaseClause(
-                UUID.randomUUID(),
-                ClauseType.EXCHANGE_RATE,
-                "430.34",
-                ClauseStatus.CHANGED,
-                ActorType.CUSTOMER.getCode(),
-                (short) 2
-            )
+                new CustomerBrokerPurchaseClause(
+                        UUID.randomUUID(),
+                        ClauseType.EXCHANGE_RATE,
+                        "430.34",
+                        ClauseStatus.CHANGED,
+                        ActorType.CUSTOMER.getCode(),
+                        (short) 2
+                )
         );
 
         clauses.add(
-            new CustomerBrokerPurchaseClause(
-                UUID.randomUUID(),
-                ClauseType.BROKER_CURRENCY_QUANTITY,
-                "49,59",
-                ClauseStatus.CHANGED,
-                ActorType.CUSTOMER.getCode(),
-                (short) 3
-            )
+                new CustomerBrokerPurchaseClause(
+                        UUID.randomUUID(),
+                        ClauseType.BROKER_CURRENCY_QUANTITY,
+                        "49,59",
+                        ClauseStatus.CHANGED,
+                        ActorType.CUSTOMER.getCode(),
+                        (short) 3
+                )
         );
 
         clauses.add(
-            new CustomerBrokerPurchaseClause(
-                UUID.randomUUID(),
-                ClauseType.CUSTOMER_CURRENCY_QUANTITY,
-                "30,047",
-                ClauseStatus.CHANGED,
-                ActorType.CUSTOMER.getCode(),
-                (short) 4
-            )
+                new CustomerBrokerPurchaseClause(
+                        UUID.randomUUID(),
+                        ClauseType.CUSTOMER_CURRENCY_QUANTITY,
+                        "30,047",
+                        ClauseStatus.CHANGED,
+                        ActorType.CUSTOMER.getCode(),
+                        (short) 4
+                )
         );
 
 
         CustomerBrokerPurchaseNegotiation neg = new CustomerBrokerPurchaseNegotiationInformation(
-            UUID.randomUUID(),
-            "publicKeyCustomer",
-            "publicKeyBroker",
-            System.currentTimeMillis(),
-            System.currentTimeMillis()+100000,
-            NegotiationStatus.WAITING_FOR_BROKER,
-            clauses,
-            false,
-            "",
-            "",
-            System.currentTimeMillis()
+                UUID.randomUUID(),
+                "publicKeyCustomer",
+                "publicKeyBroker",
+                System.currentTimeMillis(),
+                System.currentTimeMillis() + 100000,
+                NegotiationStatus.WAITING_FOR_BROKER,
+                clauses,
+                false,
+                "",
+                "",
+                System.currentTimeMillis()
         );
 
         try {
@@ -107,8 +107,6 @@ public class NegotiationPurchaseTestData {
         } catch (CantCreateCustomerBrokerPurchaseNegotiationException e) {
 
         }
-
-
 
 
         List<Clause> clauses2 = new ArrayList<>();
@@ -174,7 +172,7 @@ public class NegotiationPurchaseTestData {
                 "publicKeyCustomer2",
                 "publicKeyBroker2",
                 System.currentTimeMillis(),
-                System.currentTimeMillis()+100000,
+                System.currentTimeMillis() + 100000,
                 NegotiationStatus.SENT_TO_BROKER,
                 clauses2,
                 false,

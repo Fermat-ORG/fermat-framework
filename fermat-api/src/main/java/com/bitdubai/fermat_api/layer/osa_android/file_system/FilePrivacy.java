@@ -3,14 +3,13 @@ package com.bitdubai.fermat_api.layer.osa_android.file_system;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- *  <p>The enum <code>FilePrivacy</code>
- *     defines the type of privacy for a file
+ * <p>The enum <code>FilePrivacy</code>
+ * defines the type of privacy for a file
  *
- *
- *  @author  Luis
- *  @version 1.0.0
- *  @since   22/01/15.
- * */
+ * @author Luis
+ * @version 1.0.0
+ * @since 22/01/15.
+ */
 public enum FilePrivacy {
 
     //Modified by Manuel Perez on 05/08/2015
@@ -19,13 +18,13 @@ public enum FilePrivacy {
 
     private String code;
 
-    FilePrivacy(String code){
+    FilePrivacy(String code) {
 
-        this.code=code;
+        this.code = code;
 
     }
 
-    public String getCode(){
+    public String getCode() {
 
         return this.code;
 
@@ -33,14 +32,14 @@ public enum FilePrivacy {
 
     public static FilePrivacy getByCode(String code) throws InvalidParameterException {
 
-        switch (code){
+        switch (code) {
 
             case "PRIVATE":
                 return FilePrivacy.PRIVATE;
             case "PUBLIC":
                 return FilePrivacy.PUBLIC;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the FilePrivacy enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the FilePrivacy enum");
 
 
         }

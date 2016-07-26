@@ -17,7 +17,7 @@ import java.util.List;
  * The Class <code>CryptoBrokerWalletDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Yordin Alayn - (y.alayn@gmail.com) on 30/10/15.
  * Modified by Franklin 01.12.2015
  *
@@ -25,11 +25,11 @@ import java.util.List;
  * @since Java JDK 1.7
  */
 
-public class CryptoBrokerWalletDeveloperDatabaseFactory  {
+public class CryptoBrokerWalletDeveloperDatabaseFactory {
     String pluginId;
     List<String> wallets;
 
-    public CryptoBrokerWalletDeveloperDatabaseFactory (String pluginId, List<String> wallets){
+    public CryptoBrokerWalletDeveloperDatabaseFactory(String pluginId, List<String> wallets) {
         this.pluginId = pluginId;
         this.wallets = wallets;
     }
@@ -40,7 +40,7 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory  {
          * Remember that a database name in this plug-in is the internal wallet id.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        for(String databaseName : this.wallets)
+        for (String databaseName : this.wallets)
             databases.add(developerObjectFactory.getNewDeveloperDatabase(databaseName, this.pluginId));
         return databases;
     }
@@ -72,7 +72,7 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory  {
         /**
          * stockWalletColumns table
          */
-        DeveloperDatabaseTable  cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME, stockWalletColumns);
+        DeveloperDatabaseTable cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME, stockWalletColumns);
         tables.add(cryptoTransactionsTable);
 
         /**
@@ -88,7 +88,7 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory  {
         /**
          * stockWalletTotalBalanceColumns table
          */
-        DeveloperDatabaseTable  stockWalletTotalBalances = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME, stockWalletTotalBalancesColumns);
+        DeveloperDatabaseTable stockWalletTotalBalances = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME, stockWalletTotalBalancesColumns);
         tables.add(stockWalletTotalBalances);
 
         /**
@@ -103,7 +103,7 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory  {
         /**
          * walletSettingSpreadColumns table
          */
-        DeveloperDatabaseTable  walletSettingSpread = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_TABLE_NAME, walletSettingSpreadColumns);
+        DeveloperDatabaseTable walletSettingSpread = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_TABLE_NAME, walletSettingSpreadColumns);
         tables.add(walletSettingSpread);
 
         /**
@@ -120,7 +120,7 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory  {
         /**
          * walletSettingAssociatedColumns table
          */
-        DeveloperDatabaseTable  walletSettingAssociated = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_TABLE_NAME, walletSettingAssociatedColumns);
+        DeveloperDatabaseTable walletSettingAssociated = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_TABLE_NAME, walletSettingAssociatedColumns);
         tables.add(walletSettingAssociated);
 
         /**
@@ -136,13 +136,13 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory  {
         /**
          * walletSettingAssociatedColumns table
          */
-        DeveloperDatabaseTable  walletSettingProvider = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_TABLE_NAME, walletSettingProviderColumns);
+        DeveloperDatabaseTable walletSettingProvider = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_TABLE_NAME, walletSettingProviderColumns);
         tables.add(walletSettingProvider);
 
         return tables;
     }
 
-    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory,  Database database, DeveloperDatabaseTable developerDatabaseTable) {
+    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, Database database, DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
          */
@@ -154,12 +154,12 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory  {
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -179,7 +179,7 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory  {
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }

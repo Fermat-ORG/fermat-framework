@@ -68,8 +68,8 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
                                                         final ConnectionState connectionState,
                                                         final UUID connectionId,
                                                         final Location location,
-                                                        String country,
-                                                        String place) {
+                                                        final ProfileStatus profileStatus,
+                                                        CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData) {
 
         this.publicKey = publicKey;
         this.alias = alias;
@@ -77,8 +77,19 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.connectionState = connectionState;
         this.connectionId = connectionId;
         this.location = location;
-        this.country = country;
-        this.place = place;
+        this.profileStatus = profileStatus;
+        this.cryptoBrokerIdentityExtraData = cryptoBrokerIdentityExtraData;
+    }
+
+    public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerActorConnection actorConnection, CryptoBrokerExposingData exposingData) {
+
+        this.publicKey = actorConnection.getPublicKey();
+        this.alias = actorConnection.getAlias();
+        this.image = actorConnection.getImage();
+        this.connectionState = actorConnection.getConnectionState();
+        this.connectionId = actorConnection.getConnectionId();
+        this.location = exposingData.getLocation();
+        this.cryptoBrokerIdentityExtraData = exposingData.getCryptoBrokerIdentityExtraData();
     }
 
     public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerActorConnection actorConnection, Location location) {
@@ -91,6 +102,15 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.location = location;
     }
 
+    public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerActorConnection actorConnection) {
+
+        this.publicKey = actorConnection.getPublicKey();
+        this.alias = actorConnection.getAlias();
+        this.image = actorConnection.getImage();
+        this.connectionState = actorConnection.getConnectionState();
+        this.connectionId = actorConnection.getConnectionId();
+    }
+
     public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerExposingData exposingData) {
 
         this.publicKey = exposingData.getPublicKey();
@@ -100,8 +120,28 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.connectionId = null;
         this.location = exposingData.getLocation();
         this.cryptoBrokerIdentityExtraData = exposingData.getCryptoBrokerIdentityExtraData();
-        if(exposingData.getProfileStatus() != null)
+        if (exposingData.getProfileStatus() != null)
             this.profileStatus = exposingData.getProfileStatus();
+    }
+
+    public CryptoBrokerCommunitySubAppModuleInformation(String publicKey,
+                                                        String alias,
+                                                        byte[] image,
+                                                        ConnectionState connectionState,
+                                                        UUID connectionId,
+                                                        Location location,
+                                                        String country,
+                                                        String place,
+                                                        CryptoBrokerIdentityExtraData brokerExtraData) {
+        this.publicKey = publicKey;
+        this.alias = alias;
+        this.image = image;
+        this.connectionState = connectionState;
+        this.connectionId = connectionId;
+        this.location = location;
+        this.country = country;
+        this.place = place;
+        this.cryptoBrokerIdentityExtraData = brokerExtraData;
     }
 
     @Override
@@ -141,13 +181,18 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
 
     @Override
     public String toString() {
-        return "CryptoBrokerCommunitySubAppModuleInformation{" +
-                "publicKey='" + publicKey + '\'' +
-                ", alias='" + alias + '\'' +
-                ", connectionState='" + connectionState + '\'' +
-                ", connectionId='" + connectionId + '\'' +
-                ", image=" + (image != null) +
-                '}';
+        return new StringBuilder()
+                .append("CryptoBrokerCommunitySubAppModuleInformation{")
+                .append("publicKey='").append(publicKey)
+                .append('\'')
+                .append(", alias='").append(alias)
+                .append('\'')
+                .append(", connectionState='").append(connectionState)
+                .append('\'')
+                .append(", connectionId='").append(connectionId)
+                .append('\'')
+                .append(", image=").append(image != null)
+                .append('}').toString();
     }
 
     @Override
@@ -167,12 +212,12 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
 
     @Override
     public CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData() {
-        if(cryptoBrokerIdentityExtraData==null){
+        if (cryptoBrokerIdentityExtraData == null) {
             //Default CryptoBrokerIdentityExtraData
             this.cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
                     CryptoCurrency.BITCOIN,
                     FiatCurrency.US_DOLLAR,
-                    "Selling Bitcoin");
+                    "Not Available Merchandises");
         }
         return this.cryptoBrokerIdentityExtraData;
     }

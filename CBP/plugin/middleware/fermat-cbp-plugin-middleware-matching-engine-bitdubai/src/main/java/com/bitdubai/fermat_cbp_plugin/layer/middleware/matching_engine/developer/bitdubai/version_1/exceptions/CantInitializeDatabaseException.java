@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
+
 /**
  * The Class <code>package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/02/16.
  *
  * @author lnacosta

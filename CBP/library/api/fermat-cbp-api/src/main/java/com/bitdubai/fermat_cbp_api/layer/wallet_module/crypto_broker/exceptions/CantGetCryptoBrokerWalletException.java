@@ -33,7 +33,7 @@ public class CantGetCryptoBrokerWalletException extends FermatException {
     /**
      * Call CantGetCryptoBrokerWalletException(DEFAULT_MESSAGE, cause, "", "")
      *
-     * @param cause   the exception that triggered the throwing of the current exception, if there are no other exceptions to be declared here, the cause should be null
+     * @param cause the exception that triggered the throwing of the current exception, if there are no other exceptions to be declared here, the cause should be null
      */
     public CantGetCryptoBrokerWalletException(Exception cause) {
         this(DEFAULT_MESSAGE, cause, "", "");

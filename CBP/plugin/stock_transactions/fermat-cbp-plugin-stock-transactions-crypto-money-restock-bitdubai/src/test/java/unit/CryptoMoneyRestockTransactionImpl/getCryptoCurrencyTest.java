@@ -19,7 +19,7 @@ public class getCryptoCurrencyTest {
     private CryptoCurrency cryptoCurrency = CryptoCurrency.BITCOIN;
 
     @Test
-    public void getCryptoCurrency(){
+    public void getCryptoCurrency() {
         CryptoMoneyRestockTransactionImpl cryptoMoneyRestockTransaction = mock(CryptoMoneyRestockTransactionImpl.class);
         when(cryptoMoneyRestockTransaction.getCryptoCurrency()).thenReturn(cryptoCurrency);
         assertThat(cryptoMoneyRestockTransaction.getCryptoCurrency()).isNotNull();

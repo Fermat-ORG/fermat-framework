@@ -16,8 +16,8 @@ import java.util.List;
 public class CheckListArgumentsTest {
 
     @Test
-    public void checkValidArgumentsTest() throws Exception{
-        List<String> arguments=new ArrayList<>();
+    public void checkValidArgumentsTest() throws Exception {
+        List<String> arguments = new ArrayList<>();
         arguments.add("Argument 0");
         arguments.add("Argument 1");
         arguments.add("Argument 2");
@@ -28,12 +28,12 @@ public class CheckListArgumentsTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void checkInvalidArgumentsTest() throws Exception{
-        List<String> arguments=new ArrayList<>();
+    public void checkInvalidArgumentsTest() throws Exception {
+        List<String> arguments = new ArrayList<>();
         arguments.add("Argument 0");
         arguments.add(null);
         arguments.add("Argument 2");
-        String exceptionMessage="The argument 1 is null";
+        String exceptionMessage = "The argument 1 is null";
         thrown.expect(ObjectNotSetException.class);
         thrown.expectMessage(exceptionMessage);
         ObjectChecker.checkArguments(arguments);

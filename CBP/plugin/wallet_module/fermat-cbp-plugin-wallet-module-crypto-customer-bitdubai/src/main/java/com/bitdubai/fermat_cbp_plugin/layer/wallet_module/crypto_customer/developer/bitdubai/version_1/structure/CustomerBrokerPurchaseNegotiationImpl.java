@@ -13,24 +13,26 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
+
 /**
  * Created by franklin on 13/01/16.
  */
 public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurchaseNegotiation, Serializable {
-    private String            customerPublicKey;
-    private String            brokerPublicKey;
-    private UUID              negotiationId;
-    private Long              startDate;
-    private Long              lastNegotiationUpdateDate;
-    private Long              negotiationExpirationDate;
+    private String customerPublicKey;
+    private String brokerPublicKey;
+    private UUID negotiationId;
+    private Long startDate;
+    private Long lastNegotiationUpdateDate;
+    private Long negotiationExpirationDate;
     private NegotiationStatus status;
-    private Boolean           nearExpirationDatetime;
-    private Collection<Clause>clauses;
-    private String            cancelReason;
-    private String            memo;
-    private boolean           dataHasChanged;
+    private Boolean nearExpirationDatetime;
+    private Collection<Clause> clauses;
+    private String cancelReason;
+    private String memo;
+    private boolean dataHasChanged;
 
-    public CustomerBrokerPurchaseNegotiationImpl(){}
+    public CustomerBrokerPurchaseNegotiationImpl() {
+    }
 
     public CustomerBrokerPurchaseNegotiationImpl(CustomerBrokerPurchaseNegotiation negotiationInfo) {
         dataHasChanged = false;
@@ -60,7 +62,8 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     public String getCustomerPublicKey() {
         return customerPublicKey;
     }
-    void   setCustomerPublicKey(String customerPublicKey){
+
+    void setCustomerPublicKey(String customerPublicKey) {
         this.customerPublicKey = customerPublicKey;
     }
 
@@ -71,7 +74,10 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     public String getBrokerPublicKey() {
         return brokerPublicKey;
     }
-    void   setBrokerPublicKey(String brokerPublicKey){ this.brokerPublicKey = brokerPublicKey; }
+
+    void setBrokerPublicKey(String brokerPublicKey) {
+        this.brokerPublicKey = brokerPublicKey;
+    }
 
     /**
      * @return the Negotiation ID
@@ -80,7 +86,10 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     public UUID getNegotiationId() {
         return negotiationId;
     }
-    void   setNegotiationId(UUID negotiationId){ this.negotiationId = negotiationId; }
+
+    void setNegotiationId(UUID negotiationId) {
+        this.negotiationId = negotiationId;
+    }
 
     /**
      * @return a long representation of the Datetime the negotiation started
@@ -89,7 +98,10 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     public Long getStartDate() {
         return startDate;
     }
-    void   setStartDate(Long startDate){ this.startDate = startDate; }
+
+    void setStartDate(Long startDate) {
+        this.startDate = startDate;
+    }
 
     /**
      * @return a long representation of the last Datetime the negotiation was updated
@@ -114,7 +126,11 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     public Long getNegotiationExpirationDate() {
         return negotiationExpirationDate;
     }
-    void   setNegotiationExpirationDate(Long negotiationExpirationDate) { this.negotiationExpirationDate = negotiationExpirationDate; }
+
+    void setNegotiationExpirationDate(Long negotiationExpirationDate) {
+        this.negotiationExpirationDate = negotiationExpirationDate;
+    }
+
     /**
      * @return the negotiation Status
      */
@@ -122,7 +138,11 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     public NegotiationStatus getStatus() {
         return status;
     }
-    void   setStatus(NegotiationStatus status) { this.status = status; }
+
+    void setStatus(NegotiationStatus status) {
+        this.status = status;
+    }
+
     /**
      * @return a Boolean with NearExpirationDatetime
      */
@@ -130,7 +150,10 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     public Boolean getNearExpirationDatetime() {
         return nearExpirationDatetime;
     }
-    void   setNearExpirationDatetime(Boolean nearExpirationDatetime) { this.nearExpirationDatetime = nearExpirationDatetime; }
+
+    void setNearExpirationDatetime(Boolean nearExpirationDatetime) {
+        this.nearExpirationDatetime = nearExpirationDatetime;
+    }
 
     /**
      * @return the clauses that conform this negotiation
@@ -140,7 +163,10 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     public Collection<Clause> getClauses() throws CantGetListClauseException {
         return clauses;
     }
-    void   setClauses(Collection<Clause> clauses) { this.clauses = clauses; }
+
+    void setClauses(Collection<Clause> clauses) {
+        this.clauses = clauses;
+    }
 
     /**
      * set a string representing the reason why the negotiation was cancelled
@@ -185,7 +211,7 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
         return dataHasChanged;
     }
 
-    public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo){
+    public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo) {
         dataHasChanged = dataHasChanged || !negotiationInfo.getCancelReason().equals(cancelReason);
         cancelReason = negotiationInfo.getCancelReason();
 
@@ -201,14 +227,14 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
             clauses.add(new CryptoCustomerWalletModuleClausesImpl(value, customerPublicKey));
         }
 
-        this.status = NegotiationStatus.SENT_TO_BROKER;
+        this.status = dataHasChanged ? NegotiationStatus.SENT_TO_BROKER : NegotiationStatus.WAITING_FOR_CLOSING;
     }
 
     @Override
     public String toString() {
         return com.google.common.base.Objects.toStringHelper(this).
                 add("startDate", startDate).
-                add("lastNegotiationUpdateDate",lastNegotiationUpdateDate).
+                add("lastNegotiationUpdateDate", lastNegotiationUpdateDate).
                 add("nearExpirationDatetime", nearExpirationDatetime).
                 add("cancelReason", cancelReason).
                 add("memo", memo).

@@ -21,23 +21,23 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractDeveloperUtilsPlugin<T extends DeveloperTool> extends AbstractPlugin {
 
-    private final Map<AddonVersionReference , AbstractAddon > availableAddonReferences ;
+    private final Map<AddonVersionReference, AbstractAddon> availableAddonReferences;
     private final Map<PluginVersionReference, AbstractPlugin> availablePluginReferences;
 
     private final DevelopersUtilReference developersUtilReference;
 
-    public AbstractDeveloperUtilsPlugin(final PluginVersionReference  pluginVersionReference,
+    public AbstractDeveloperUtilsPlugin(final PluginVersionReference pluginVersionReference,
                                         final DevelopersUtilReference developersUtilReference) {
         super(pluginVersionReference);
 
         this.developersUtilReference = developersUtilReference;
 
-        this.availableAddonReferences  = new ConcurrentHashMap<>();
+        this.availableAddonReferences = new ConcurrentHashMap<>();
         this.availablePluginReferences = new ConcurrentHashMap<>();
     }
 
     public final void registerAvailableAddon(final AddonVersionReference addonVersionReference,
-                                             final AbstractAddon         abstractAddon        ) {
+                                             final AbstractAddon abstractAddon) {
 
         availableAddonReferences.put(addonVersionReference, abstractAddon);
     }
@@ -47,7 +47,7 @@ public abstract class AbstractDeveloperUtilsPlugin<T extends DeveloperTool> exte
     }
 
     public final void registerAvailablePlugin(final PluginVersionReference pluginVersionReference,
-                                              final AbstractPlugin abstractPlugin        ) {
+                                              final AbstractPlugin abstractPlugin) {
 
         availablePluginReferences.put(pluginVersionReference, abstractPlugin);
     }

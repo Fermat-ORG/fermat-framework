@@ -24,7 +24,7 @@ public class ApplicationsHelper implements FermatApplicationCaller {
         this.context = new WeakReference<Context>(context);
     }
 
-    public void openFermatHome(){
+    public void openFermatHome() {
         try {
             Intent intent;
             intent = new Intent();
@@ -38,7 +38,7 @@ public class ApplicationsHelper implements FermatApplicationCaller {
     }
 
     public void openFermatApp(String appPublicKey) throws Exception {
-        try{
+        try {
             Intent intent;
             intent = new Intent();
             intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appPublicKey);
@@ -46,13 +46,13 @@ public class ApplicationsHelper implements FermatApplicationCaller {
             //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             intent.setAction("org.fermat.APP_LAUNCHER");
             context.get().sendBroadcast(intent);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new Exception("App public key not exist");
         }
     }
 
-    public void openRecentsScreen(){
-        Intent resultIntent = new Intent(context.get(),RecentsActivity.class);
+    public void openRecentsScreen() {
+        Intent resultIntent = new Intent(context.get(), RecentsActivity.class);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         resultIntent.putExtra(ApplicationConstants.RECENT_APPS, FermatApplication.getInstance().getAppManager().getRecentsAppsStack().toArray());
         context.get().startActivity(resultIntent);

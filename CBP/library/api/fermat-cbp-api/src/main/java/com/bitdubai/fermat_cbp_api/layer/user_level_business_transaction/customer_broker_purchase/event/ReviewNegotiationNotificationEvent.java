@@ -5,13 +5,12 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 
-
 import java.util.Arrays;
 
 /**
  * Created by José Vilchez on 28/01/16.
  */
-public class ReviewNegotiationNotificationEvent  implements FermatEvent{
+public class ReviewNegotiationNotificationEvent implements FermatEvent {
 
     public ReviewNegotiationNotificationEvent(EventType eventType) {
         this.eventType = eventType;
@@ -29,17 +28,17 @@ public class ReviewNegotiationNotificationEvent  implements FermatEvent{
     private String textBody;
 
     /**
-     *  Image
+     * Image
      */
     private byte[] image;
 
     /**
-     *  Screen/activity to show
+     * Screen/activity to show
      */
     private Activities screen;
 
     /**
-     *  Component to show
+     * Component to show
      */
     private String localPublicKey;
 
@@ -132,16 +131,21 @@ public class ReviewNegotiationNotificationEvent  implements FermatEvent{
 
     @Override
     public String toString() {
-        return "ReviewNegotiationNotificationEvent{" +
-                "eventType=" + eventType +
-                ", eventSource=" + eventSource +
-                ", alertTitle='" + alertTitle + '\'' +
-                ", textTitle='" + textTitle + '\'' +
-                ", textBody='" + textBody + '\'' +
-                ", image=" + Arrays.toString(image) +
-                ", screen=" + screen +
-                ", localPublicKey='" + localPublicKey + '\'' +
-                ", notificationType='" + notificationType + '\'' +
-                '}';
+        return new StringBuilder()
+                .append("ReviewNegotiationNotificationEvent{")
+                .append("eventType=").append(eventType)
+                .append(", eventSource=").append(eventSource)
+                .append(", alertTitle='").append(alertTitle)
+                .append('\'')
+                .append(", textTitle='").append(textTitle)
+                .append('\'')
+                .append(", textBody='").append(textBody)
+                .append('\'')
+                .append(", image=").append(Arrays.toString(image))
+                .append(", screen=").append(screen)
+                .append(", localPublicKey='").append(localPublicKey)
+                .append('\'')
+                .append(", notificationType='").append(notificationType)
+                .append('\'').append('}').toString();
     }
 }

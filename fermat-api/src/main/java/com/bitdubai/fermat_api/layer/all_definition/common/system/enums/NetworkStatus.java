@@ -12,21 +12,21 @@ public enum NetworkStatus {
 
     private String code;
 
-    NetworkStatus(String code){
+    NetworkStatus(String code) {
 
-        this.code=code;
+        this.code = code;
 
     }
 
-    public String getCode(){
+    public String getCode() {
 
         return this.code;
 
     }
 
-    public static NetworkStatus getByCode(String code)throws InvalidParameterException {
+    public static NetworkStatus getByCode(String code) throws InvalidParameterException {
 
-        switch (code){
+        switch (code) {
 
             case "CON":
                 return NetworkStatus.CONNECTED;
@@ -34,7 +34,7 @@ public enum NetworkStatus {
                 return NetworkStatus.DISCONNECTED;
 
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the NotificationDescriptor enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the NotificationDescriptor enum");
 
 
         }
