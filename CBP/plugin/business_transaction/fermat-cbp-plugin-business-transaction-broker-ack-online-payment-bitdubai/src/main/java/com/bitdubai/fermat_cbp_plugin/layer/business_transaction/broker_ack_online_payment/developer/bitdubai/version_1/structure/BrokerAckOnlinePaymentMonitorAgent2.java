@@ -204,11 +204,11 @@ public class BrokerAckOnlinePaymentMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println("BROKER_ACK_ONLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("BROKER_ACK_ONLINE_PAYMENT - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
                     if (remoteBusinessTransaction != Plugins.BROKER_ACK_ONLINE_PAYMENT)
                         continue;
 
-                    System.out.println("BROKER_ACK_ONLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("BROKER_ACK_ONLINE_PAYMENT - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
 
                     if (!dao.isContractHashInDatabase(contractHash)) {
                         CustomerBrokerContractPurchase contractPurchase = contractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
@@ -243,11 +243,11 @@ public class BrokerAckOnlinePaymentMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println("BROKER_ACK_ONLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("BROKER_ACK_ONLINE_PAYMENT - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
                     if (remoteBusinessTransaction != Plugins.BROKER_ACK_ONLINE_PAYMENT)
                         continue;
 
-                    System.out.println("BROKER_ACK_ONLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("BROKER_ACK_ONLINE_PAYMENT - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
 
                     if (dao.isContractHashInDatabase(contractHash)) {
                         businessTransactionRecord = dao.getBusinessTransactionRecordByContractHash(contractHash);

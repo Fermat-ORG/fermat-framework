@@ -257,11 +257,11 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println("BROKER_SUBMIT_OFFLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("BROKER_SUBMIT_OFFLINE_MERCHANDISE - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
                     if (remoteBusinessTransaction != Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE)
                         continue;
 
-                    System.out.println("BROKER_SUBMIT_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("BROKER_SUBMIT_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
 
                     if (brokerSubmitOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
                         contractTransactionStatus = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getContractTransactionStatus(contractHash);
@@ -310,11 +310,11 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println("BROKER_SUBMIT_OFFLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("BROKER_SUBMIT_OFFLINE_MERCHANDISE - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
                     if (remoteBusinessTransaction != Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE)
                         continue;
 
-                    System.out.println("BROKER_SUBMIT_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("BROKER_SUBMIT_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
 
                     if (brokerSubmitOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
 
