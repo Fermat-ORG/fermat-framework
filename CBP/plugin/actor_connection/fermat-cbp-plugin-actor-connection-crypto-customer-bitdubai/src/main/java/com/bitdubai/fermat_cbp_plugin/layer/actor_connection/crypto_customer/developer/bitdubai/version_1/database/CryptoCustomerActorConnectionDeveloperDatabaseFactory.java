@@ -14,7 +14,7 @@ import java.util.UUID;
 public class CryptoCustomerActorConnectionDeveloperDatabaseFactory extends ActorConnectionDeveloperDatabaseFactory {
 
     public CryptoCustomerActorConnectionDeveloperDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem,
-                                                                 final UUID                 pluginId            ) {
+                                                                 final UUID pluginId) {
 
         super(
                 pluginDatabaseSystem,

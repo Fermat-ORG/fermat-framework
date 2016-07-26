@@ -13,7 +13,7 @@ import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
 public class CryptoCustomerIdentityResourceSearcher extends ResourceSearcher {
 
 
-    public int obtainResDrawable(Context context,int id){
+    public int obtainResDrawable(Context context, int id) {
         int resId = 0;
         switch (id) {
             case FragmentsCommons.ADD_IDENTITY_OPTION_MENU_ID:

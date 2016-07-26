@@ -29,27 +29,27 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * The class <code>AbstractAddon</code>
  * contains the basic functionality of a Fermat Addon.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
 public abstract class AbstractAddon implements Addon, Service {
 
     private final Map<AddonVersionReference, Field> addonNeededReferences;
 
-    private Field   osContextField     ;
+    private Field osContextField;
     private boolean referencesCollected;
 
     private final AddonVersionReference addonVersionReference;
 
-    protected     ServiceStatus         serviceStatus        ;
+    protected ServiceStatus serviceStatus;
 
     public AbstractAddon(final AddonVersionReference addonVersionReference) {
 
         this.addonVersionReference = addonVersionReference;
 
         this.addonNeededReferences = new ConcurrentHashMap<>();
-        this.referencesCollected   = false;
-        this.serviceStatus         = ServiceStatus.CREATED;
+        this.referencesCollected = false;
+        this.serviceStatus = ServiceStatus.CREATED;
     }
 
     public final AddonVersionReference getAddonVersionReference() {
@@ -172,9 +172,9 @@ public abstract class AbstractAddon implements Addon, Service {
         }
     }
 
-    public final void assignAddonReference(final AddonVersionReference avr          ,
-                                           final FermatManager         fermatManager) throws CantAssignReferenceException   ,
-                                                                                             IncompatibleReferenceException {
+    public final void assignAddonReference(final AddonVersionReference avr,
+                                           final FermatManager fermatManager) throws CantAssignReferenceException,
+            IncompatibleReferenceException {
 
         try {
 
@@ -182,21 +182,21 @@ public abstract class AbstractAddon implements Addon, Service {
 
             if (field == null) {
                 throw new CantAssignReferenceException(
-                        "Addon receiving: " + this.addonVersionReference + " ---- Given addon: " + avr.toString(),
+                        new StringBuilder().append("Addon receiving: ").append(this.addonVersionReference).append(" ---- Given addon: ").append(avr.toString()).toString(),
                         "The addon doesn't need the given reference."
                 );
             }
 
             if (fermatManager == null) {
                 throw new CantAssignReferenceException(
-                        "Addon receiving: " + this.addonVersionReference + " ---- Given addon is null. "+ avr.toString(),
+                        new StringBuilder().append("Addon receiving: ").append(this.addonVersionReference).append(" ---- Given addon is null. ").append(avr.toString()).toString(),
                         "Please check the given addon."
                 );
             }
 
             final Class<?> refManager = field.getType();
 
-            if(refManager.isAssignableFrom(fermatManager.getClass())) {
+            if (refManager.isAssignableFrom(fermatManager.getClass())) {
                 field.setAccessible(true);
                 field.set(this, refManager.cast(fermatManager));
 
@@ -204,8 +204,12 @@ public abstract class AbstractAddon implements Addon, Service {
 
             } else {
                 throw new IncompatibleReferenceException(
-                        "Working addon: "+this.getAddonVersionReference().toString3()+
-                                " ---- classExpected: "+refManager.getName() + " --- classReceived: " + fermatManager.getClass().getName(),
+                        new StringBuilder()
+                                .append("Working addon: ")
+                                .append(this.getAddonVersionReference().toString3())
+                                .append(" ---- classExpected: ").append(refManager.getName())
+                                .append(" --- classReceived: ").append(fermatManager.getClass().getName())
+                                .toString(),
                         ""
                 );
             }
@@ -214,29 +218,28 @@ public abstract class AbstractAddon implements Addon, Service {
 
             throw new CantAssignReferenceException(
                     e,
-                    "Working addon: "+this.getAddonVersionReference().toString3()+ " +++++ Reference to assign: "+ avr.toString(),
+                    new StringBuilder().append("Working addon: ").append(this.getAddonVersionReference().toString3()).append(" +++++ Reference to assign: ").append(avr.toString()).toString(),
                     "Error assigning references for the addon."
             );
         }
     }
 
-    public final void assignOsContext(final Object object) throws CantAssignOsContextException   ,
-                                                                  IncompatibleOsContextException {
+    public final void assignOsContext(final Object object) throws CantAssignOsContextException,
+            IncompatibleOsContextException {
 
         try {
 
             final Class<?> osContextClass = this.osContextField.getType();
 
-            if(osContextClass.isAssignableFrom(object.getClass())) {
-                this.osContextField .setAccessible(true);
-                this.osContextField .set(this, osContextClass.cast(object));
+            if (osContextClass.isAssignableFrom(object.getClass())) {
+                this.osContextField.setAccessible(true);
+                this.osContextField.set(this, osContextClass.cast(object));
 
                 this.osContextField = null;
 
             } else {
                 throw new IncompatibleOsContextException(
-                        "Working addon: "+this.getAddonVersionReference().toString3()+
-                                " ---- classExpected: "+osContextClass.getName() + " --- classReceived: " + object.getClass().getName(),
+                        new StringBuilder().append("Working addon: ").append(this.getAddonVersionReference().toString3()).append(" ---- classExpected: ").append(osContextClass.getName()).append(" --- classReceived: ").append(object.getClass().getName()).toString(),
                         ""
                 );
             }
@@ -245,7 +248,7 @@ public abstract class AbstractAddon implements Addon, Service {
 
             throw new CantAssignOsContextException(
                     e,
-                    "Working addon: "+this.getAddonVersionReference().toString3()+ " +++++ Os Context to assign: "+ object.toString(),
+                    new StringBuilder().append("Working addon: ").append(this.getAddonVersionReference().toString3()).append(" +++++ Os Context to assign: ").append(object.toString()).toString(),
                     "Error assigning references for the addon."
             );
         }

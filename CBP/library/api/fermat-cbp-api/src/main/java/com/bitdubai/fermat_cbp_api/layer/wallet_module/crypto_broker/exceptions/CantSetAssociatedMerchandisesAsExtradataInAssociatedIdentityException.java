@@ -24,7 +24,7 @@ public class CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityExcepti
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException(Exception cause, String context, String possibleReason){
+    public CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException(Exception cause, String context, String possibleReason) {
         super("Cant Set Associated Merchandises As Extradata InAssociated Identity", cause, context, possibleReason);
     }
 }

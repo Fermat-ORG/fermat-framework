@@ -19,13 +19,13 @@ public abstract class AbstractAgent {
     private String threadName;
     private ScheduledExecutorService scheduledExecutorService;
 
-    public AbstractAgent(long sleepTime,TimeUnit timeUnit) {
+    public AbstractAgent(long sleepTime, TimeUnit timeUnit) {
         this.sleepTime = sleepTime;
         this.timeUnit = timeUnit;
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     }
 
-    public AbstractAgent(long sleepTime,TimeUnit timeUnit,long initDelayTime) {
+    public AbstractAgent(long sleepTime, TimeUnit timeUnit, long initDelayTime) {
         this.sleepTime = sleepTime;
         this.timeUnit = timeUnit;
         this.initDelayTime = initDelayTime;
@@ -34,26 +34,27 @@ public abstract class AbstractAgent {
 
 
     public void start() throws CantStartAgentException {
-        if(isRunning()) throw new CantStartAgentException("Agent is already running, first use stop() method to reset");
-        this.scheduledExecutorService.scheduleWithFixedDelay(agentJob(),initDelayTime,sleepTime,timeUnit);
+        if (isRunning())
+            throw new CantStartAgentException("Agent is already running, first use stop() method to reset");
+        this.scheduledExecutorService.scheduleWithFixedDelay(agentJob(), initDelayTime, sleepTime, timeUnit);
         this.status = AgentStatus.STARTED;
     }
 
     public void stop() throws CantStopAgentException {
-        if(isStop()) throw new CantStopAgentException("Agent is not running");
+        if (isStop()) throw new CantStopAgentException("Agent is not running");
         this.scheduledExecutorService.shutdownNow();
         this.status = AgentStatus.STOPPED;
     }
 
-    public AgentStatus getStatus(){
+    public AgentStatus getStatus() {
         return status;
     }
 
-    public boolean isRunning(){
+    public boolean isRunning() {
         return status == AgentStatus.STARTED;
     }
 
-    public boolean isStop(){
+    public boolean isStop() {
         return status == AgentStatus.STOPPED;
     }
 

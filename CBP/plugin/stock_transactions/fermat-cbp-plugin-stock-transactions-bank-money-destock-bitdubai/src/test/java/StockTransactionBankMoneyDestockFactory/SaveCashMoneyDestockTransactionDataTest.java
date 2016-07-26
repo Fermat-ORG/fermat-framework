@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 public class SaveCashMoneyDestockTransactionDataTest {
 
     @Test
-    public void saveCashMoneyDestockTransactionData() throws Exception{
+    public void saveCashMoneyDestockTransactionData() throws Exception {
         StockTransactionBankMoneyDestockFactory stockTransactionBankMoneyDestockFactory = mock(StockTransactionBankMoneyDestockFactory.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(stockTransactionBankMoneyDestockFactory).saveBankMoneyDestockTransactionData(Mockito.any(BankMoneyTransaction.class));
     }

@@ -5,8 +5,8 @@ package com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer
  */
 public class CantGetActiveConnectionException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1040284501010116568L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1040284501010116568L;
 }

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetAmountTest {
 
     @Test
-    public void getAmount() throws Exception{
+    public void getAmount() throws Exception {
         CashMoneyDestockTransactionImpl cashMoneyDestockTransaction = mock(CashMoneyDestockTransactionImpl.class);
         when(cashMoneyDestockTransaction.getAmount()).thenReturn(BigDecimal.ONE);
         assertThat(cashMoneyDestockTransaction.getAmount()).isNotNull();

@@ -16,7 +16,7 @@ import java.util.UUID;
 public class GenerateString {
 
     @Test
-    public void parseSkin(){
+    public void parseSkin() {
         identityTest designerIdentity = new identityTest();
         designerIdentity.setPublicKey("asdasd");
         designerIdentity.setAlias("asd");

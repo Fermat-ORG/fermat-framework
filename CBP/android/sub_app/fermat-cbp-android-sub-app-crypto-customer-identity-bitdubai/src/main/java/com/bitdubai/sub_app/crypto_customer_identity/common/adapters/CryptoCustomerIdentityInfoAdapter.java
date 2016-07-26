@@ -34,9 +34,9 @@ public class CryptoCustomerIdentityInfoAdapter
     }
 
     @Override
-    protected void bindHolder(final CryptoCustomerIdentityInfoViewHolder holder  ,
-                              final CryptoCustomerIdentityInformation    data    ,
-                              final int                                  position) {
+    protected void bindHolder(final CryptoCustomerIdentityInfoViewHolder holder,
+                              final CryptoCustomerIdentityInformation data,
+                              final int position) {
 
         filter = getFilter();
 

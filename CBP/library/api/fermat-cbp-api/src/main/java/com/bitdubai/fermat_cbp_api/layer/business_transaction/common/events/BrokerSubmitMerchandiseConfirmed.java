@@ -19,32 +19,35 @@ public class BrokerSubmitMerchandiseConfirmed extends GenericCBPFermatEvent {
         super(eventType);
     }
 
-    public PlatformComponentType getDestinationPlatformComponentType(){
+    public PlatformComponentType getDestinationPlatformComponentType() {
         return destinationPlatformComponentType;
     }
 
-    public void setDestinationPlatformComponentType(PlatformComponentType destinationPlatformComponentType){
+    public void setDestinationPlatformComponentType(PlatformComponentType destinationPlatformComponentType) {
         this.destinationPlatformComponentType = destinationPlatformComponentType;
     }
 
     /**
      * This method set the contract hash from a opened contract.
+     *
      * @param contractHash
      */
-    public void setContractHash(String contractHash){
-        this.contractHash=contractHash;
+    public void setContractHash(String contractHash) {
+        this.contractHash = contractHash;
     }
 
     /**
      * This method returns the contract hash from a opened contract.
+     *
      * @return
      */
-    public String getContractHash(){
+    public String getContractHash() {
         return this.contractHash;
     }
 
     /**
      * This method returns the payment type
+     *
      * @return
      */
     public MoneyType getPaymentType() {
@@ -53,6 +56,7 @@ public class BrokerSubmitMerchandiseConfirmed extends GenericCBPFermatEvent {
 
     /**
      * This method sets the mecrhandise type
+     *
      * @param moneyType
      */
     public void setMerchandiseType(MoneyType moneyType) {

@@ -35,12 +35,14 @@ public interface CryptoDesktopInstalledWallet {
 
     /**
      * This method tell us the type of the wallet
+     *
      * @return WalletType enum
      */
     WalletType getWalletType();
 
     /**
      * This method tell us the Screen Size of the wallet
+     *
      * @return String ScreenSize
      */
     String getWalletScreenSize();
@@ -48,6 +50,7 @@ public interface CryptoDesktopInstalledWallet {
 
     /**
      * This method tell us the Navigation Structure Version of the wallet
+     *
      * @return String NavigationStructureVersion
      */
     String getWalletNavigationStructureVersion();
@@ -57,7 +60,7 @@ public interface CryptoDesktopInstalledWallet {
      * registers the wallet)
      *
      * @return an string that is result of the method getCode of an enum that can be inferred by the
-     *         WalletCategory of the wallet.
+     * WalletCategory of the wallet.
      */
     String getWalletPlatformIdentifier();
 
@@ -105,7 +108,6 @@ public interface CryptoDesktopInstalledWallet {
     String getWalletDeveloperName();
 
     /**
-     *
      * @return
      */
     String getWalletDeviceUserPublicKey();

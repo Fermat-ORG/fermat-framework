@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 
 public class CantCalculateSuggestedPricePurchaseException extends FermatException {
     public static final String DEFAULT_MESSAGE = "Falled To Calculate Base Price Merchandise Currency.";
+
     public CantCalculateSuggestedPricePurchaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
 public class SetTransactionStatusTest {
 
     @Test
-    public void setTransactionStatus(){
+    public void setTransactionStatus() {
         BankMoneyDestockTransactionImpl bankMoneyDestockTransaction = mock(BankMoneyDestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(bankMoneyDestockTransaction).setTransactionStatus(Mockito.any(TransactionStatusRestockDestock.class));
     }

@@ -57,7 +57,8 @@
             android:text="Send Connection Request"
             android:textColor="#6d6e70"
             android:textSize="16sp"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            android:visibility="gone" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/user_name"

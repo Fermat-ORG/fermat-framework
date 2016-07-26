@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 public class SetCryWalletPublicKeyTest {
 
     @Test
-    public void setCryWalletPublicKey(){
+    public void setCryWalletPublicKey() {
         CryptoMoneyDestockTransactionImpl cryptoMoneyDestockTransaction = mock(CryptoMoneyDestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoMoneyDestockTransaction).setCryWalletPublicKey(Mockito.any(String.class));
     }

@@ -9,9 +9,9 @@ import java.util.List;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public interface FermatSideMenu  extends Serializable {
+public interface FermatSideMenu extends Serializable {
 
-    List<MenuItem> getMenuItems ();
+    List<MenuItem> getMenuItems();
 
     boolean hasFooter();
 

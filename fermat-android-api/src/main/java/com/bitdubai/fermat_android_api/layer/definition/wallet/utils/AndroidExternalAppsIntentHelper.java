@@ -9,15 +9,15 @@ import android.widget.Toast;
  */
 public class AndroidExternalAppsIntentHelper {
 
-    public static void sendMail(Context context,String[] mail,String subject,String body){
+    public static void sendMail(Context context, String[] mail, String subject, String body) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
 //        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"recipient@example.com"});
 //        i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
 //        i.putExtra(Intent.EXTRA_TEXT   , "body of email");
-        i.putExtra(Intent.EXTRA_EMAIL  , mail);
+        i.putExtra(Intent.EXTRA_EMAIL, mail);
         i.putExtra(Intent.EXTRA_SUBJECT, subject);
-        i.putExtra(Intent.EXTRA_TEXT   , body);
+        i.putExtra(Intent.EXTRA_TEXT, body);
         try {
             context.startActivity(Intent.createChooser(i, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {

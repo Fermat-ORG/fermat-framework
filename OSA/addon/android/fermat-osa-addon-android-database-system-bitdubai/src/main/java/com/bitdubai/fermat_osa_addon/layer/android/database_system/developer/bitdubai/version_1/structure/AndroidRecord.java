@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 
 /**
  * This class define methods to access the properties of the object Database Record
- *
+ * <p/>
  * Created by Natalia on 25/03/2015.
  * Modified by Leon Acosta (laion.cj91@gmail.com) on 03/02/2016.
  *
@@ -18,36 +18,36 @@ public class AndroidRecord implements DatabaseRecord {
     /**
      * DatabaseRecord Interface member variables.
      */
-    private final String  recordName   ;
-    private final String  recordValue  ;
-    private final boolean recordChange ;
+    private final String recordName;
+    private final String recordValue;
+    private final boolean recordChange;
     private final boolean useOfVariable;
 
-    public AndroidRecord(final String  recordName  ,
-                         final String  recordValue ,
+    public AndroidRecord(final String recordName,
+                         final String recordValue,
                          final boolean recordChange) {
 
-        this.recordName    = recordName  ;
-        this.recordValue   = recordValue ;
-        this.recordChange  = recordChange;
-        this.useOfVariable = false       ;
+        this.recordName = recordName;
+        this.recordValue = recordValue;
+        this.recordChange = recordChange;
+        this.useOfVariable = false;
     }
 
     /**
      * DatabaseRecord interface implementation.
      */
     @Override
-    public String getName(){
+    public String getName() {
         return this.recordName;
     }
 
     @Override
-    public String getValue(){
+    public String getValue() {
         return this.recordValue;
     }
 
     @Override
-    public boolean isChange(){
+    public boolean isChange() {
         return this.recordChange;
     }
 
@@ -57,8 +57,8 @@ public class AndroidRecord implements DatabaseRecord {
     }
 
     @Override
-    public String toString(){
-        return recordName + "=" + recordValue;
+    public String toString() {
+        return new StringBuilder().append(recordName).append("=").append(recordValue).toString();
     }
 
 }

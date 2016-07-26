@@ -21,7 +21,7 @@ public class GetTransactionTransmissionStatesTest {
     private TransactionTransmissionStates transactionTransmissionStates = TransactionTransmissionStates.CONFIRM_CONTRACT;
 
     @Test
-    public void getTransactionTransmissionStates() throws Exception{
+    public void getTransactionTransmissionStates() throws Exception {
         BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class);
         when(businessTransactionMetadataRecord.getState()).thenReturn(transactionTransmissionStates).thenCallRealMethod();
         assertThat(businessTransactionMetadataRecord.getState()).isNotNull();

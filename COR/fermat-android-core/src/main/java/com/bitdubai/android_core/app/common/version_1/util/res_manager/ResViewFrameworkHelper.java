@@ -26,7 +26,7 @@ public class ResViewFrameworkHelper {
         switch (fermatView.getId()) {
             case TAB_WITH_ICON:
                 TabBadgeView tabBadgeView = (TabBadgeView) fermatView;
-                LayoutInflater inflater = (LayoutInflater)  context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.custom_tab, null);
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_tab_title);
                 FermatTextViewRuntime fermatTextViewRuntime = tabBadgeView.getFermatTextViewRuntime();
@@ -43,7 +43,6 @@ public class ResViewFrameworkHelper {
         }
         return view;
     }
-
 
 
 }

@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterO
 
 /**
  * This class define methods to set and get the filter order of query.
- *
+ * <p/>
  * *
  */
 
@@ -32,12 +32,12 @@ public class AndroidDatabaseTableOrder implements DataBaseTableOrder {
      */
 
     /**
-     *<p>This method gets the column to order the query
+     * <p>This method gets the column to order the query
      *
      * @return String column name
      */
     @Override
-    public String getColumnName(){
+    public String getColumnName() {
 
         return this.columnName;
     }
@@ -45,10 +45,10 @@ public class AndroidDatabaseTableOrder implements DataBaseTableOrder {
     /**
      * <p>This method gets the direction of the order of the query
      *
-     * @return  DatabaseFilterOrder enum,ASC or DESC
+     * @return DatabaseFilterOrder enum,ASC or DESC
      */
     @Override
-    public DatabaseFilterOrder getDirection (){
+    public DatabaseFilterOrder getDirection() {
         return this.direction;
     }
 

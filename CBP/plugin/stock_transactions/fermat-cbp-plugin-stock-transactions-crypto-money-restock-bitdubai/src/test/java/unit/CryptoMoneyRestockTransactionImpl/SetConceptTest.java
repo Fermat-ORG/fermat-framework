@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 public class SetConceptTest {
 
     @Test
-    public void setConcept(){
+    public void setConcept() {
         CryptoMoneyRestockTransactionImpl cryptoMoneyRestockTransaction = mock(CryptoMoneyRestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoMoneyRestockTransaction).setConcept(Mockito.any(String.class));
     }

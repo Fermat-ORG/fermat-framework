@@ -3,5 +3,5 @@ package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interface
 import java.security.interfaces.ECPrivateKey;
 
 public interface PrivateKey extends ECPrivateKey {
-	String toHexString();
+    String toHexString();
 }

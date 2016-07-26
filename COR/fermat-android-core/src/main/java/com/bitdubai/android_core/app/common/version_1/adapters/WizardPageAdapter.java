@@ -16,7 +16,7 @@ import java.util.List;
  * @author Matias Furszyfer
  * @version 1.0
  */
-public class WizardPageAdapter<F extends Fragment & AbstractFermatFragmentInterface> extends FragmentStatePagerAdapter implements FermatUIAdapter<F>{
+public class WizardPageAdapter<F extends Fragment & AbstractFermatFragmentInterface> extends FragmentStatePagerAdapter implements FermatUIAdapter<F> {
 
     private List<F> fragments;
 

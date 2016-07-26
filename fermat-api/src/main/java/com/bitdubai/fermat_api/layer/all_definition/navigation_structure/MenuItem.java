@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by Matias Furszyfer on 2015.07.17..
  */
-public class MenuItem implements FermatMenuItem,Serializable {
+public class MenuItem implements FermatMenuItem, Serializable {
 
     /**
      * MenuItem class member variables
@@ -21,7 +21,7 @@ public class MenuItem implements FermatMenuItem,Serializable {
     Activities linkToActivity;
     private String appLinkPublicKey;
 
-    boolean selected=false;
+    boolean selected = false;
     private int notifications;
     private int id;
 
@@ -48,7 +48,7 @@ public class MenuItem implements FermatMenuItem,Serializable {
     public MenuItem() {
     }
 
-    public MenuItem(String label, String icon, Activities linkToActivity,String appLinkPublicKey) {
+    public MenuItem(String label, String icon, Activities linkToActivity, String appLinkPublicKey) {
         this.label = label;
         this.icon = icon;
         this.linkToActivity = linkToActivity;

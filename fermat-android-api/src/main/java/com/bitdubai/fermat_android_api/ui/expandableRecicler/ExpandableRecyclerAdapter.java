@@ -276,7 +276,6 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     }
 
 
-
     /**
      * <p/>
      * Called when a {@link ParentListItem} is triggered to expand.
@@ -589,9 +588,9 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                     try {
                         mItemList.add(parentIndex + i + 1, childItemList.get(i));
                         notifyItemInserted(parentIndex + i + 1);
-                    }catch (Exception e){
-                        Log.e(TAG,"Error: expandParentListItem.");
-                       // e.printStackTrace();
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error: expandParentListItem.");
+                        // e.printStackTrace();
                     }
                 }
             }
@@ -669,7 +668,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * Notify subClass when dataset is change to stop work if is running
      */
-    protected void onChangeDataSet(){
+    protected void onChangeDataSet() {
 
     }
 

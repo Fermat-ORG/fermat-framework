@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by Yordin Alayn on 24.09.15.
  */
- 
-public enum CashOperationType  implements FermatEnum {
+
+public enum CashOperationType implements FermatEnum {
     ON_HAND("ONH"),
     DELIVERY("DEL");
 
@@ -24,9 +24,12 @@ public enum CashOperationType  implements FermatEnum {
 
     public static CashOperationType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "COH": return CashOperationType.ON_HAND;
-            case "CAD": return CashOperationType.DELIVERY;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the CashCurrencyType enum");
+            case "COH":
+                return CashOperationType.ON_HAND;
+            case "CAD":
+                return CashOperationType.DELIVERY;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the CashCurrencyType enum");
         }
     }
 }

@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetLastCOnnectionTest {
 
     @Test
-    public void getLastConnection() throws Exception{
+    public void getLastConnection() throws Exception {
         TransactionTransmissionConnectionRecord transactionTransmissionConnectionRecord = mock(TransactionTransmissionConnectionRecord.class);
         when(transactionTransmissionConnectionRecord.getLastConnection()).thenReturn(new String());
         assertThat(transactionTransmissionConnectionRecord.getLastConnection()).isNotNull();

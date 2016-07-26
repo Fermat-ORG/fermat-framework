@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 
 /**
  * Created by Matias Furszyfer on 2016.03.05..
- *
+ * <p/>
  * This class acts like a router to open every app in fermat and put it in the front of the task stack
  */
 public class AppLauncherReceiver extends BroadcastReceiver {
@@ -25,19 +25,20 @@ public class AppLauncherReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(TAG,"onReceive");
+        Log.i(TAG, "onReceive");
         String appPublicKey = intent.getStringExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
         String activityToOpen = null;
         FermatApp fermatApp = null;
         try {
-             fermatApp = FermatApplication.getInstance().getAppManager().getApp(appPublicKey);
+            fermatApp = FermatApplication.getInstance().getAppManager().getApp(appPublicKey);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (fermatApp==null) throw new RuntimeException("Error, app is not available. Please remove data in your app if your are testing or you are a developer. Report this issue to furszy");
+        if (fermatApp == null)
+            throw new RuntimeException("Error, app is not available. Please remove data in your app if your are testing or you are a developer. Report this issue to furszy");
         FermatAppType fermatAppType = fermatApp.getAppType(); //(FermatAppType) intent.getSerializableExtra(ApplicationConstants.INTENT_APP_TYPE);
         Class<?> clazz = null;
-        switch (fermatAppType){
+        switch (fermatAppType) {
             case WALLET:
             case SUB_APP:
                 clazz = AppActivity.class;
@@ -46,13 +47,14 @@ public class AppLauncherReceiver extends BroadcastReceiver {
                 activityToOpen = intent.getStringExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN);
                 clazz = DesktopActivity.class;
         }
-        Intent data = new Intent(context,clazz);
+        Intent data = new Intent(context, clazz);
         data.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appPublicKey);
         data.putExtra(ApplicationConstants.INTENT_APP_TYPE, fermatAppType);
-        if(activityToOpen!=null) data.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN,activityToOpen);
+        if (activityToOpen != null)
+            data.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN, activityToOpen);
         data.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(data);
-        if(context instanceof FermatActivity){
+        if (context instanceof FermatActivity) {
             ((FermatActivity) context).finish();
         }
     }

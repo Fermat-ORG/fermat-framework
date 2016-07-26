@@ -31,7 +31,7 @@ public class ImagesUtils {
         try {
             Bitmap srcBitmap = BitmapFactory.decodeResource(res, drawableId);
             return getRoundedBitmap(res, srcBitmap);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
 
@@ -112,7 +112,7 @@ public class ImagesUtils {
     /**
      * Bitmap to compressed byte[]
      *
-     * @param bitmap Bitmap
+     * @param bitmap  Bitmap
      * @param quality int
      * @return byte array
      */
@@ -124,9 +124,9 @@ public class ImagesUtils {
     /**
      * Bitmap to compressed byte[]
      *
-     * @param bitmap Bitmap
+     * @param bitmap  Bitmap
      * @param quality int
-     * @param format Bitmap.CompressFormat
+     * @param format  Bitmap.CompressFormat
      * @return byte array
      */
     public static byte[] toCompressedByteArray(Bitmap bitmap, int quality, Bitmap.CompressFormat format) {
@@ -136,11 +136,9 @@ public class ImagesUtils {
     }
 
 
-
-
-    public static Bitmap cropImage(Bitmap srcBmp){
+    public static Bitmap cropImage(Bitmap srcBmp) {
         Bitmap dstBmp = null;
-        if(srcBmp.getWidth()!=srcBmp.getHeight()) {
+        if (srcBmp.getWidth() != srcBmp.getHeight()) {
             if (srcBmp.getWidth() >= srcBmp.getHeight()) {
 
                 dstBmp = Bitmap.createBitmap(

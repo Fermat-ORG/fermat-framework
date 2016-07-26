@@ -18,21 +18,22 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {
 
-    private final Actors                identityTypeRequesting          = Actors.CBP_CRYPTO_CUSTOMER;
+    private final Actors identityTypeRequesting = Actors.CBP_CRYPTO_CUSTOMER;
 
-    private final Actors                identityTypeResponding          = Actors.CBP_CRYPTO_BROKER;
+    private final Actors identityTypeResponding = Actors.CBP_CRYPTO_BROKER;
 
-    private final String                identityPublicKeyRequesting     = "identityPublicKeyRequesting";
+    private final String identityPublicKeyRequesting = "identityPublicKeyRequesting";
 
-    private final String                identityPublicKeyResponding     = "identityPublicKeyResponding";
+    private final String identityPublicKeyResponding = "identityPublicKeyResponding";
 
-    private final CryptoCurrency        cryptoCurrency                  = CryptoCurrency.BITCOIN;
+    private final CryptoCurrency cryptoCurrency = CryptoCurrency.BITCOIN;
 
-    private final BlockchainNetworkType blockchainNetworkType           = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+    private final BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
     private CustomerBrokerCloseCryptoAddressRequestImpl testObj1;
+
     @Before
-    public void setUp(){
+    public void setUp() {
 
         testObj1 = new CustomerBrokerCloseCryptoAddressRequestImpl(
                 identityTypeRequesting,

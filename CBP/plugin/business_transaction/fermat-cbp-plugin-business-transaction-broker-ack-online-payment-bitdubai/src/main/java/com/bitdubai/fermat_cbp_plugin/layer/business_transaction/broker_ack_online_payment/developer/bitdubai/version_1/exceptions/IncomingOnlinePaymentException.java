@@ -5,7 +5,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CBPException;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 17/12/15.
  */
-public class IncomingOnlinePaymentException  extends CBPException {
+public class IncomingOnlinePaymentException extends CBPException {
     /**
      * Represent the default message
      */
@@ -31,7 +31,7 @@ public class IncomingOnlinePaymentException  extends CBPException {
      * @param possibleReason
      */
     public IncomingOnlinePaymentException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

@@ -13,7 +13,7 @@ public class DevelopersUtilReference {
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
-    private  DeveloperUtils developerUtil;
+    private DeveloperUtils developerUtil;
 
     public DevelopersUtilReference(final DeveloperUtils developerUtil) {
 
@@ -40,16 +40,17 @@ public class DevelopersUtilReference {
     @Override
     public final int hashCode() {
         int c = 0;
-        if(developerUtil!=null)
+        if (developerUtil != null)
             c += developerUtil.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override
     public String toString() {
-        return "DevelopersUtilReference{" +
-                "developerUtil=" + developerUtil +
-                '}';
+        return new StringBuilder()
+                .append("DevelopersUtilReference{")
+                .append("developerUtil=").append(developerUtil)
+                .append('}').toString();
     }
 
 }

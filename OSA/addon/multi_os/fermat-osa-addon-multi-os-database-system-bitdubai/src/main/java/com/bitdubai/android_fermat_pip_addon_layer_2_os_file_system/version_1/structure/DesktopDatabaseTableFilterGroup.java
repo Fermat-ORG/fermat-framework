@@ -4,6 +4,7 @@ package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
+
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
 
 /**
  * This class define methods to set and get the filter group of query.
- *
+ * <p/>
  * *
  */
 public class DesktopDatabaseTableFilterGroup implements DatabaseTableFilterGroup {
@@ -41,7 +42,7 @@ public class DesktopDatabaseTableFilterGroup implements DatabaseTableFilterGroup
     }
 
     /**
-     *<p>This method sets a list of DatabaseTableFilter objects
+     * <p>This method sets a list of DatabaseTableFilter objects
      *
      * @param filters List of DatabaseTableFilter object
      */
@@ -63,7 +64,7 @@ public class DesktopDatabaseTableFilterGroup implements DatabaseTableFilterGroup
     /**
      * <p>This method sets a list of DatabaseTableFilterGroup objects
      *
-     * @param subGroups  List of DatabaseTableFilterGroup object
+     * @param subGroups List of DatabaseTableFilterGroup object
      */
     @Override
     public void setSubGroups(List<DatabaseTableFilterGroup> subGroups) {

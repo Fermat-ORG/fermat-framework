@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 public class SetFiatCurrencyTest {
 
     @Test
-    public void setFiatCurrency(){
+    public void setFiatCurrency() {
         CashMoneyDestockTransactionImpl cashMoneyDestockTransaction = mock(CashMoneyDestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cashMoneyDestockTransaction).setFiatCurrency(Mockito.any(FiatCurrency.class));
     }

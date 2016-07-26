@@ -55,11 +55,13 @@ public class CashMoneyDeStockRecord extends AbstractDeStockRecord {
 
     @Override
     public String toString() {
-        return "CashMoneyDeStockRecord{" +
-                abstractToString() +
-                "fiatCurrency=" + fiatCurrency +
-                ", cshWalletPublicKey='" + cshWalletPublicKey + '\'' +
-                ", cashReference='" + cashReference + '\'' +
-                '}';
+        return new StringBuilder()
+                .append("CashMoneyDeStockRecord{").append(abstractToString())
+                .append("fiatCurrency=").append(fiatCurrency)
+                .append(", cshWalletPublicKey='").append(cshWalletPublicKey)
+                .append('\'')
+                .append(", cashReference='").append(cashReference)
+                .append('\'')
+                .append('}').toString();
     }
 }

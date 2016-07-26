@@ -35,16 +35,16 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Matias Furszyfer on 2016.06.29..
  */
-public class FermatFramework implements FermatApplicationSession<FermatSystem>,FermatContext {
+public class FermatFramework implements FermatApplicationSession<FermatSystem>, FermatContext {
 
     private static final String TAG = "FermatFramework";
 
     /**
      * Application states
      */
-    public static final int STATE_NOT_CREATED=0;
-    public static final int STATE_STARTED=1;
-    public static final int STATE_STARTED_DESKTOP=2;
+    public static final int STATE_NOT_CREATED = 0;
+    public static final int STATE_STARTED = 1;
+    public static final int STATE_STARTED_DESKTOP = 2;
 
 
     /**
@@ -53,7 +53,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
     private Application application;
 
     /**
-     *  Fermat platform
+     * Fermat platform
      */
 
     private FermatSystem fermatSystem;
@@ -64,15 +64,15 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
     private ReceiversManager receiversManager;
 
     /**
-     *  Application state
+     * Application state
      */
-    public static int applicationState=STATE_NOT_CREATED;
+    public static int applicationState = STATE_NOT_CREATED;
     private boolean fermatRunning;
     private Thread.UncaughtExceptionHandler defaultUncaughtHandler = Thread.getDefaultUncaughtExceptionHandler();
 
 
     /**
-     *  NotificationReceiver
+     * NotificationReceiver
      */
     private NotificationReceiver notificationReceiver;
 
@@ -91,13 +91,13 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
     private boolean isApplicationInForeground;
     private ScheduledExecutorService scheduledExecutorService;
 
-    public static FermatFramework init(Application application){
+    public static FermatFramework init(Application application) {
         return new FermatFramework(application);
     }
 
 
     /**
-     *  Application session constructor
+     * Application session constructor
      */
 
     private FermatFramework(Application application) {
@@ -110,11 +110,12 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 
 
     /**
-     *  Method to get the fermat system
+     * Method to get the fermat system
+     *
      * @return FermatSystem
      */
     public FermatSystem getFermatSystem() {
-        if(fermatSystem==null){
+        if (fermatSystem == null) {
             fermatSystem = FermatSystem.getInstance();
         }
         return fermatSystem;
@@ -131,13 +132,13 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
     }
 
     /**
-     *  Method to change the application state from services or activities
+     * Method to change the application state from services or activities
      *
-     * @param applicationState  is an application state constant from FermatFramework class
+     * @param applicationState is an application state constant from FermatFramework class
      */
 
-    public void changeApplicationState(int applicationState){
-        FermatFramework.applicationState =applicationState;
+    public void changeApplicationState(int applicationState) {
+        FermatFramework.applicationState = applicationState;
     }
 
     /**
@@ -146,7 +147,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
      * @return application state constant from FermatFramework class
      */
 
-    public int getApplicationState(){
+    public int getApplicationState() {
         return applicationState;
     }
 
@@ -166,7 +167,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
                 handleUncaughtException(thread, e);
 //                ACRA.getErrorReporter().handleSilentException(e);
                 ACRA.getErrorReporter().handleException(e);
-                ACRA.getErrorReporter().uncaughtException(thread,e);
+                ACRA.getErrorReporter().uncaughtException(thread, e);
             }
         });
 
@@ -179,7 +180,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
             Smith<ClassLoader> sClassLoader = new Smith<ClassLoader>(
                     mPackageInfo, "mClassLoader");
             mBaseClassLoader = sClassLoader.get();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -189,7 +190,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 
         boolean isThisProcessFermatFrontApp = isThisProcessFermatFrontApp();
         runServiceHelpers(isThisProcessFermatFrontApp);
-        if(!isThisProcessFermatFrontApp){
+        if (!isThisProcessFermatFrontApp) {
             notificationReceiver = new NotificationReceiver(this);
             IntentFilter intentFilter = new IntentFilter(NotificationReceiver.INTENT_NAME);
             application.getApplicationContext().registerReceiver(notificationReceiver, intentFilter);
@@ -230,7 +231,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
         anrWatchDog.setANRListener(new ANRWatchDog.ANRListener() {
             @Override
             public void onAppNotResponding(final ANRError error) {
-                Log.e(TAG,"Imprimiendo errod:");
+                Log.e(TAG, "Imprimiendo errod:");
                 error.printStackTrace();
 
 //                new AlertDialog.Builder(application.getApplicationContext())
@@ -263,23 +264,20 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
         anrWatchDog.start();
 
 
-
-
     }
-
 
 
     void handleUncaughtException(Thread thread, Throwable e) {
         Toast.makeText(application.getApplicationContext(), "Sorry, The app is not working", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(application.getApplicationContext(),StartActivity.class);
+        Intent intent = new Intent(application.getApplicationContext(), StartActivity.class);
         application.startActivity(intent);
     }
 
-    public FermatAppsManagerService getAppManager(){
+    public FermatAppsManagerService getAppManager() {
         return getServicesHelpers().getAppManager();
     }
 
-    public NotificationService getNotificationService(){
+    public NotificationService getNotificationService() {
         return getServicesHelpers().getNotificationService();
     }
 
@@ -287,7 +285,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
         return servicesHelpers;
     }
 
-    public boolean isApplicationInForeground(){
+    public boolean isApplicationInForeground() {
         return isApplicationInForeground;
     }
 
@@ -298,7 +296,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
         int processId = android.os.Process.myPid();
 
         String myProcessName = application.getPackageName();
-        Log.i(TAG,"context:"+myProcessName);
+        Log.i(TAG, new StringBuilder().append("context:").append(myProcessName).toString());
 
     }
 
@@ -311,7 +309,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
         for (int idx = 0; idx < procInfos.size(); idx++) {
             ActivityManager.RunningAppProcessInfo process = procInfos.get(idx);
             String processName = process.processName;
-            if(pId != process.pid) {
+            if (pId != process.pid) {
                 if (processName.equals("org.fermat")) {
                     return true;
                 }
@@ -320,14 +318,14 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
         return false;
     }
 
-    private void runServiceHelpers(final boolean isFermatOpen){
+    private void runServiceHelpers(final boolean isFermatOpen) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     servicesHelpers = new ServicesHelpers(application.getApplicationContext(), isFermatOpen);
                     servicesHelpers.bindServices();
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -336,29 +334,29 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
     }
 
     public synchronized void setFermatRunning(boolean fermatRunning) {
-        Log.i(TAG,"Fermat running: "+fermatRunning);
+        Log.i(TAG, new StringBuilder().append("Fermat running: ").append(fermatRunning).toString());
         this.fermatRunning = fermatRunning;
     }
 
     public boolean isFermatRunning() {
-        if(!fermatRunning){
+        if (!fermatRunning) {
             try {
-                if(getServicesHelpers().getClientSideBrokerServiceAIDL()!=null)
+                if (getServicesHelpers().getClientSideBrokerServiceAIDL() != null)
                     fermatRunning = getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
-            }catch (Exception e){
-                Log.e(TAG,"isFermatRunning launch exception");
+            } catch (Exception e) {
+                Log.e(TAG, "isFermatRunning launch exception");
             }
         }
         return fermatRunning;
     }
 
-    public void appOnBackground(){
-        Log.i(TAG,"Disconnecting app, onBackground");
+    public void appOnBackground() {
+        Log.i(TAG, "Disconnecting app, onBackground");
         servicesHelpers.getClientSideBrokerServiceAIDL().disconnect();
     }
 
-    public void appOnForeground(){
-        Log.i(TAG,"Reconnecting app, onForeground");
+    public void appOnForeground() {
+        Log.i(TAG, "Reconnecting app, onForeground");
         isApplicationInForeground = true;
         servicesHelpers.getClientSideBrokerServiceAIDL().connect();
     }
@@ -381,11 +379,11 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 //    public ProxyBuilder
 
     @Override
-    public Object loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... args) {
+    public Object loadProxyObject(String moduleName, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface, Object... args) {
         return loaderManager.objectProxyFactory(moduleName, interfaceLoader, interfaces, returnInterface, args);
     }
 
-    public ClassLoader getExternalLoader(String name){
+    public ClassLoader getExternalLoader(String name) {
         return loaderManager.getExternalLoader(name);
     }
 
@@ -402,12 +400,12 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
         return loaderManager;
     }
 
-    public void registerReceiver(FermatIntentFilter fermatIntentFilter,FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey){
+    public void registerReceiver(FermatIntentFilter fermatIntentFilter, FermatBroadcastReceiver fermatBroadcastReceiver, String appPublicKey) {
         fermatBroadcastReceiver.setBroadcasterType(fermatIntentFilter.getBroadcasterType());
-        receiversManager.registerReceiver(fermatIntentFilter.getBroadcasterType(),fermatBroadcastReceiver,appPublicKey);
+        receiversManager.registerReceiver(fermatIntentFilter.getBroadcasterType(), fermatBroadcastReceiver, appPublicKey);
     }
 
-    public void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey){
+    public void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver, String appPublicKey) {
         receiversManager.unregisterReceiver(fermatBroadcastReceiver, appPublicKey);
     }
 

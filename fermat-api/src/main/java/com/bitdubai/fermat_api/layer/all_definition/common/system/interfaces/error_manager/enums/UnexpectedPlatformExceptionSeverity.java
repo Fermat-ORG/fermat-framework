@@ -15,30 +15,33 @@ public enum UnexpectedPlatformExceptionSeverity implements FermatEnum {
     DISABLES_ALL_THE_PLATFORM("DATP"),
     DISABLES_ALL_PLUGINS("DAP"),
     DISABLES_ONE_PLUGIN("DOP"),
-    NOT_IMPORTANT("NI"),
-
-    ;
+    NOT_IMPORTANT("NI"),;
 
     private final String code;
 
-    UnexpectedPlatformExceptionSeverity(final String code){
+    UnexpectedPlatformExceptionSeverity(final String code) {
         this.code = code;
     }
 
 
     public static UnexpectedPlatformExceptionSeverity getByCode(final String code) throws InvalidParameterException {
 
-        switch (code){
+        switch (code) {
 
-            case "DATP": return DISABLES_ALL_THE_PLATFORM;
-            case "DAP":  return DISABLES_ALL_PLUGINS     ;
-            case "DOP":  return DISABLES_ONE_PLUGIN      ;
-            case "NI":   return NOT_IMPORTANT            ;
+            case "DATP":
+                return DISABLES_ALL_THE_PLATFORM;
+            case "DAP":
+                return DISABLES_ALL_PLUGINS;
+            case "DOP":
+                return DISABLES_ONE_PLUGIN;
+            case "NI":
+                return NOT_IMPORTANT;
 
-            default: throw new InvalidParameterException(
-                    "Code: " + code,
-                    "The received code is not valid for the UnexpectedPlatformExceptionSeverity enum"
-            );
+            default:
+                throw new InvalidParameterException(
+                        new StringBuilder().append("Code: ").append(code).toString(),
+                        "The received code is not valid for the UnexpectedPlatformExceptionSeverity enum"
+                );
         }
     }
 

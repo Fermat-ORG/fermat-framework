@@ -19,7 +19,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by jorge on 30-09-2015.
@@ -28,58 +27,67 @@ import java.util.UUID;
 public interface Wallet {
     /**
      * This method load the instance the StockBalance
+     *
      * @return StockBalance
-     * @exception CantGetStockCryptoBrokerWalletException
+     * @throws CantGetStockCryptoBrokerWalletException
      */
     StockBalance getStockBalance() throws CantGetStockCryptoBrokerWalletException, CantStartPluginException;
+
     /**
      * This method load the instance the CryptoBrokerWalletSetting
+     *
      * @return StockBalance
-     * @exception CantGetCryptoBrokerWalletSettingException
+     * @throws CantGetCryptoBrokerWalletSettingException
      */
     CryptoBrokerWalletSetting getCryptoWalletSetting() throws CantGetCryptoBrokerWalletSettingException;
+
     /**
      * This method load the list CryptoBrokerStockTransaction
+     *
      * @param merchandise
      * @param moneyType
      * @param transactionType
      * @param balanceType
      * @return List<CryptoBrokerStockTransaction>
-     * @exception CantGetCryptoBrokerStockTransactionException
+     * @throws CantGetCryptoBrokerStockTransactionException
      */
     List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(Currency merchandise, MoneyType moneyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction
+     *
      * @param merchandise
      * @param fiatCurrency
      * @param moneyType
      * @return FiatIndex
-     * @exception CantGetCryptoBrokerMarketRateException
+     * @throws CantGetCryptoBrokerMarketRateException
      */
     FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, MoneyType moneyType) throws CantGetCryptoBrokerMarketRateException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction
+     *
      * @param merchandise
      * @param quantity
      * @param payment
      * @return Quote
-     * @exception CantGetCryptoBrokerQuoteException
+     * @throws CantGetCryptoBrokerQuoteException
      */
     Quote getQuote(Currency merchandise, float quantity, Currency payment) throws CantGetCryptoBrokerQuoteException;
 
     /**
      * This method load the update the transaction mark field seen in true
+     *
      * @return void
-     * @exception CantGetTransactionCryptoBrokerWalletMatchingException
+     * @throws CantGetTransactionCryptoBrokerWalletMatchingException
      */
     void markAsSeen(String OriginTransactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException;
 
     /**
      * This method load the list CurrencyMatching
+     *
      * @return CurrencyMatching
-     * @exception CantGetTransactionCryptoBrokerWalletMatchingException
+     * @throws CantGetTransactionCryptoBrokerWalletMatchingException
      */
     List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException;
 }

@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * The exception <code>com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.exceptions.CantHashFileNameException</code>
  * is thrown when there is an error trying to hash the database name.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/12/2015.
  */
 public class CantHashFileNameException extends FermatException {

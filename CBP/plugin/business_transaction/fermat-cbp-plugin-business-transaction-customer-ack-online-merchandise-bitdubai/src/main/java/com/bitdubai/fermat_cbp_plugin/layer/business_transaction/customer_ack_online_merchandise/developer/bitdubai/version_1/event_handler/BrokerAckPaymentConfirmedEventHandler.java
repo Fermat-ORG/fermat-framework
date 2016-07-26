@@ -13,22 +13,22 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.Brok
 public class BrokerAckPaymentConfirmedEventHandler extends AbstractCustomerAckOnlineMerchandiseEventHandler {
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if(this.customerAckOnlineMerchandiseRecorderService.getStatus()== ServiceStatus.STARTED) {
+        if (this.customerAckOnlineMerchandiseRecorderService.getStatus() == ServiceStatus.STARTED) {
 
             try {
                 this.customerAckOnlineMerchandiseRecorderService.brokerAckPaymentConfirmedEventHandler((BrokerAckPaymentConfirmed) fermatEvent);
-            } catch(CantSaveEventException exception){
-                throw new CantSaveEventException(exception,"Handling the BrokerAckPaymentConfirmed", "Check the cause");
-            } catch(ClassCastException exception){
+            } catch (CantSaveEventException exception) {
+                throw new CantSaveEventException(exception, "Handling the BrokerAckPaymentConfirmed", "Check the cause");
+            } catch (ClassCastException exception) {
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("EXCEPTION DETECTOR----------------------------------");
                 //exception.printStackTrace();
                 throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the BrokerAckPaymentConfirmed", "Cannot cast this event");
-            } catch(Exception exception){
-                throw new CantSaveEventException(exception,"Handling the BrokerAckPaymentConfirmed", "Unexpected exception");
+            } catch (Exception exception) {
+                throw new CantSaveEventException(exception, "Handling the BrokerAckPaymentConfirmed", "Unexpected exception");
             }
 
-        }else {
+        } else {
             throw new TransactionServiceNotStartedException();
         }
     }

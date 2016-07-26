@@ -70,7 +70,7 @@
                         android:layout_height="24dp"
                         android:id="@+id/notification_location"
                         android:layout_gravity="center"
-                        android:text="City - State"
+                        android:text="Not Location"
                         android:textSize="12dp"
                         android:textColor="#aaaaab"
                         android:layout_weight="0.70"

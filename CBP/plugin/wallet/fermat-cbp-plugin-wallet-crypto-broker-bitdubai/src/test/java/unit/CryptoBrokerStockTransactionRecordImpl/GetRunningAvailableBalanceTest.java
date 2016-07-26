@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetRunningAvailableBalanceTest {
 
     @Test
-    public void getRunningAvailableBalance(){
+    public void getRunningAvailableBalance() {
         CryptoBrokerStockTransactionRecordImpl cryptoBrokerStockTransactionRecord = mock(CryptoBrokerStockTransactionRecordImpl.class);
         when(cryptoBrokerStockTransactionRecord.getRunningAvailableBalance()).thenReturn(BigDecimal.ONE);
         assertThat(cryptoBrokerStockTransactionRecord.getRunningAvailableBalance()).isNotNull();

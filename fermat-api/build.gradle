@@ -26,7 +26,7 @@ apply plugin: 'maven-publish'
 
 
 group = "com.bitdubai.fermat.api"
-version = '2.0.10'
+version = '2.0.11'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
@@ -39,7 +39,7 @@ targetCompatibility = 1.7
 jar {
     manifest {
         attributes 'Implementation-Title': 'fermat-api',
-                   'Implementation-Version': '2.0.10'
+                   'Implementation-Version': '2.0.11'
     }
 }
 

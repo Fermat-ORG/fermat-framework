@@ -24,10 +24,14 @@ public enum NegotiationTransactionType implements FermatEnum {
 
     public static NegotiationTransactionType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "CBN": return NegotiationTransactionType.CUSTOMER_BROKER_NEW;
-            case "CBU": return NegotiationTransactionType.CUSTOMER_BROKER_UPDATE;
-            case "CBC": return NegotiationTransactionType.CUSTOMER_BROKER_CLOSE;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the NegotiationTransactionType enum");
+            case "CBN":
+                return NegotiationTransactionType.CUSTOMER_BROKER_NEW;
+            case "CBU":
+                return NegotiationTransactionType.CUSTOMER_BROKER_UPDATE;
+            case "CBC":
+                return NegotiationTransactionType.CUSTOMER_BROKER_CLOSE;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the NegotiationTransactionType enum");
         }
     }
 }

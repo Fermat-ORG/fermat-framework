@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 public class SetTimeStampTest {
 
     @Test
-    public void setTimeStamp(){
+    public void setTimeStamp() {
         BankMoneyDestockTransactionImpl bankMoneyDestockTransaction = mock(BankMoneyDestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(bankMoneyDestockTransaction).setTimeStamp(Mockito.any(Timestamp.class));
     }

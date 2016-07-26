@@ -22,7 +22,7 @@ public class SettingsSlider {
     private SettingsAdapter adapter;
     private View txt_more_settings;
 
-    public SettingsSlider(FermatActivity activity,List<SettingsItem> lstItems) {
+    public SettingsSlider(FermatActivity activity, List<SettingsItem> lstItems) {
         this.activity = activity;
         this.lstItems = lstItems;
         setUp();
@@ -31,20 +31,21 @@ public class SettingsSlider {
     private void setUp() {
         txt_more_settings = activity.findViewById(R.id.more_settings);
         recyclerView = (RecyclerView) activity.findViewById(R.id.settings_recycler_view);
-        if(recyclerView!=null) {
+        if (recyclerView != null) {
             recyclerView.setHasFixedSize(true);
             layoutManager = new LinearLayoutManager(activity);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             recyclerView.setLayoutManager(layoutManager);
-            adapter = new SettingsAdapter(activity, lstItems, null);;
+            adapter = new SettingsAdapter(activity, lstItems, null);
+            ;
             recyclerView.setAdapter(adapter);
-            recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(4,20));
+            recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(4, 20));
         }
 
         txt_more_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.changeActivity(Activities.DESKTOP_MORE_SETTINGS.getCode(),null,null);
+                activity.changeActivity(Activities.DESKTOP_MORE_SETTINGS.getCode(), null, null);
             }
         });
     }
@@ -54,10 +55,10 @@ public class SettingsSlider {
     }
 
 
-    public void reset(){
+    public void reset() {
         recyclerView.clearOnChildAttachStateChangeListeners();
         recyclerView.clearOnScrollListeners();
-        adapter =null;
+        adapter = null;
         activity = null;
         recyclerView = null;
         layoutManager = null;
@@ -65,8 +66,8 @@ public class SettingsSlider {
     }
 
     public void changeIcon(SettingsType settingsType, int res) {
-        for (int i=0;i<adapter.getItemCount();i++){
-            if(adapter.getItem(i).getSettingsType() == settingsType){
+        for (int i = 0; i < adapter.getItemCount(); i++) {
+            if (adapter.getItem(i).getSettingsType() == settingsType) {
                 adapter.getItem(i).setImageRes(res);
                 break;
             }
