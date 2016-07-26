@@ -93,11 +93,11 @@ public abstract class LocalSocketSession {
     }
 
     public void destroy() throws IOException {
-        Log.e(TAG,"destroy method, stopReciever");
+        Log.i(TAG,"destroy method, stopReciever");
         stopReceiver();
-        Log.e(TAG, "destroy method, stopSender");
+        Log.i(TAG, "destroy method, stopSender");
         stopSender();
-        Log.e(TAG, "destroy method, clear");
+        Log.i(TAG, "destroy method, clear");
         clear();
     }
 
@@ -184,14 +184,14 @@ public abstract class LocalSocketSession {
             if (!localSocket.isConnected()) {
                 //todo: sacar ese nombre del path del server
                 try {
-                    Log.e(TAG,"Connect method, connecting localsocket");
+                    Log.i(TAG,"Connect method, connecting localsocket");
                     localSocket.connect(new LocalSocketAddress(PlatformService.SERVER_NAME));
                     localSocket.setReceiveBufferSize(500000);
                     localSocket.setSoTimeout(0);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }else Log.e(TAG,"Connect method, localsocket connected");
+            }else Log.i(TAG,"Connect method, localsocket connected");
         }else Log.e(TAG,"Connect method, localsocket null");
     }
 

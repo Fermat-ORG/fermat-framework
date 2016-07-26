@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure;
 
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
@@ -19,8 +22,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantTruncateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 import java.util.ArrayList;
@@ -58,6 +63,8 @@ public class AndroidDatabaseTable implements DatabaseTable {
     private DatabaseTableFilterGroup tableFilterGroup;
 
     private List<DatabaseAggregateFunction> tableAggregateFunction;
+
+    private List<String> columns;
 
     // Public constructor declarations.
 
@@ -160,31 +167,31 @@ public class AndroidDatabaseTable implements DatabaseTable {
         SQLiteDatabase database = null;
         try {
             List<DatabaseRecord> records = record.getValues();
-            StringBuilder query = new StringBuilder("");
-            StringBuilder strRecords = new StringBuilder();
-
+//            StringBuilder query = new StringBuilder("");
+//            StringBuilder strRecords = new StringBuilder();
+            ContentValues contentValues =  new ContentValues();
             for (int i = 0; i < records.size(); ++i) {
 
-                if (records.get(i).isChange()) {
-
-                    if (strRecords.length() > 0)
-                        strRecords.append(",");
-
-                    strRecords.append(records.get(i).getName())
-                            .append(" = '")
-                            .append(records.get(i).getValue())
-                            .append("'");
+                DatabaseRecord androidRecord = records.get(i);
+                if (androidRecord.isChange()) {
+//                    if (strRecords.length() > 0)
+//                        strRecords.append(",");
+                    contentValues.put(androidRecord.getName(),androidRecord.getValue());
+//                    strRecords.append(records.get(i).getName())
+//                            .append(" = '")
+//                            .append(records.get(i).getValue())
+//                            .append("'");
                 }
             }
-
-            query.append("UPDATE ")
-                    .append(tableName)
-                    .append(" SET ")
-                    .append(strRecords)
-                    .append(makeFilter());
+//            query.append("UPDATE ")
+//                    .append(tableName)
+//                    .append(" SET ")
+//                    .append(strRecords)
+//                    .append(makeFilter());
 
             database = this.database.getWritableDatabase();
-            database.execSQL(query.toString());
+            Log.i("AndroidDatabase","Database name:"+tableName+" update quantity: "+database.update(tableName, contentValues, makeFilter2(), null));
+//            database.execSQL(query.toString());
 
         } catch (Exception exception) {
             throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
@@ -213,26 +220,34 @@ public class AndroidDatabaseTable implements DatabaseTable {
          */
         SQLiteDatabase database = null;
         try {
-            StringBuilder strRecords = new StringBuilder("");
-            StringBuilder strValues = new StringBuilder("");
+//            StringBuilder strRecords = new StringBuilder("");
+//            StringBuilder strValues = new StringBuilder("");
 
             List<DatabaseRecord> records = record.getValues();
-
+            ContentValues contentValues = new ContentValues();
 
             for (int i = 0; i < records.size(); ++i) {
-                if (strRecords.length() > 0)
-                    strRecords.append(",");
-                strRecords.append(records.get(i).getName());
+//                if (strRecords.length() > 0)
+//                    strRecords.append(",");
+//                strRecords.append(records.get(i).getName());
 
-                if (strValues.length() > 0)
-                    strValues.append(",");
 
-                strValues.append("'")
-                        .append(records.get(i).getValue())
-                        .append("'");
+                //test
+                DatabaseRecord databaseRecord = records.get(i);
+                contentValues.put(databaseRecord.getName(), databaseRecord.getValue());
+
+
+//                if (strValues.length() > 0)
+//                    strValues.append(",");
+//
+//                strValues.append("'")
+//                        .append(records.get(i).getValue())
+//                        .append("'");
             }
             database = this.database.getWritableDatabase();
-            database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
+            Log.i("AndroidDatabase", "Database name:"+tableName+" insert quantity: " + database.insert(tableName, null, contentValues));
+
+//            database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
         } catch (Exception exception) {
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         } finally {
@@ -294,7 +309,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         try {
             database = this.database.getReadableDatabase();
 
-            List<String> columns = getColumns(database);
+            if(columns==null) columns = getColumns(database);
             queryString.append("SELECT *");
             queryString.append(makeOutputColumns());
             queryString.append(" FROM ");
@@ -303,11 +318,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
             queryString.append(makeOrder());
             queryString.append(topSentence);
             queryString.append(offsetSentence);
-
-//            database.beginTransaction();
-//            SQLiteStatement sqLiteStatement = database.compileStatement(queryString.toString());
-
-
 
             cursor = database.rawQuery(queryString.toString(), null);
             while (cursor.moveToNext()) {
@@ -339,17 +349,79 @@ public class AndroidDatabaseTable implements DatabaseTable {
     }
 
     @Override
+    public List<DatabaseTableRecord> loadDatabaseRecords() throws CantLoadTableToMemoryException {
+
+        List<DatabaseTableRecord> records = new ArrayList<>();
+        StringBuilder queryString = new StringBuilder("");
+        String topSentence = "";
+        String offsetSentence = "";
+        if (!this.top.isEmpty())
+            topSentence = " LIMIT " + this.top;
+
+        if (!this.offset.isEmpty())
+            offsetSentence = " OFFSET " + this.offset;
+
+        Cursor cursor = null;
+
+        /**
+         * Get columns name to read values of files
+         *
+         */
+        SQLiteDatabase database = null;
+        try {
+            database = this.database.getReadableDatabase();
+
+            if(columns==null) columns = getColumns(database);
+            queryString.append("SELECT *");
+            queryString.append(makeOutputColumns());
+            queryString.append(" FROM ");
+            queryString.append(tableName);
+            queryString.append(makeFilter());
+            queryString.append(makeOrder());
+            queryString.append(topSentence);
+            queryString.append(offsetSentence);
+
+            cursor = database.rawQuery(queryString.toString(), null);
+            while (cursor.moveToNext()) {
+                AndroidDatabaseRecord tableRecord = new AndroidDatabaseRecord();
+
+                for (String column : columns) {
+                    DatabaseRecord recordValue = new AndroidRecord(
+                            column,
+                            cursor.getString(cursor.getColumnIndex(column)),
+                            false
+                    );
+                    tableRecord.addValue(recordValue);
+                }
+
+                records.add(tableRecord);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            if (cursor != null)
+                cursor.close();
+            throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "Check the cause for this error");
+        } finally {
+            if (database != null)
+                database.close();
+
+            if (cursor != null)
+                cursor.close();
+        }
+        return records;
+    }
+
+    @Override
     public List<DatabaseTableRecord> customQuery(final String query, final boolean customResult) throws CantLoadTableToMemoryException {
         Cursor cursor = null;
         SQLiteDatabase database = null;
-        List<String> columns = null;
 
         List<DatabaseTableRecord> databaseTableRecords = new ArrayList<>();
         try {
             database = this.database.getReadableDatabase();
 
             if (!customResult)
-                columns = getColumns(database);
+                if(columns==null) columns = getColumns(database);
 
             cursor = database.rawQuery(query, null);
             while (cursor.moveToNext()) {
@@ -592,6 +664,38 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
     }
 
+
+    public String makeFilter2() {
+
+        // I check the definition for the filter object, filter type, filter columns names
+        // and build the WHERE statement
+        String filter = "";
+        StringBuilder strFilter = new StringBuilder();
+
+        if (this.tableFilter != null) {
+            for (int i = 0; i < tableFilter.size(); ++i) {
+
+                strFilter.append(makeInternalCondition(tableFilter.get(i)));
+
+                if (i < tableFilter.size() - 1)
+                    strFilter.append(" AND ");
+            }
+
+
+            filter = strFilter.toString();
+//            if (strFilter.length() > 0) filter = " WHERE " + filter;
+
+            return filter;
+        } else {
+            //if set group filter
+            if (this.tableFilterGroup != null) {
+                return makeGroupFilters2(this.tableFilterGroup);
+            } else {
+                return filter;
+            }
+        }
+    }
+
     public String makeGroupFilters(DatabaseTableFilterGroup databaseTableFilterGroup) {
 
         StringBuilder strFilter = new StringBuilder();
@@ -634,6 +738,51 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
         return filter;
     }
+
+    public String makeGroupFilters2(DatabaseTableFilterGroup databaseTableFilterGroup) {
+
+        StringBuilder strFilter = new StringBuilder();
+        String filter;
+
+        if (databaseTableFilterGroup != null && (databaseTableFilterGroup.getFilters().size() > 0 || databaseTableFilterGroup.getSubGroups().size() > 0)) {
+            strFilter.append("(");
+            strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
+
+            int ix = 0;
+
+            if (databaseTableFilterGroup.getSubGroups() != null){
+
+                for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
+                    if (subGroup.getFilters().size() > 0 || ix > 0) {
+                        switch (databaseTableFilterGroup.getOperator()) {
+                            case AND:
+                                strFilter.append(" AND ");
+                                break;
+                            case OR:
+                                strFilter.append(" OR ");
+                                break;
+                            default:
+                                strFilter.append(" ");
+                        }
+                    }
+                    strFilter.append("(");
+                    strFilter.append(makeGroupFilters(subGroup));
+                    strFilter.append(")");
+                    ix++;
+                }
+
+            }
+
+            strFilter.append(")");
+        }
+
+        filter = strFilter.toString();
+//        if (strFilter.length() > 0) filter = " WHERE " + filter;
+
+        return filter;
+    }
+
+
 
     public String makeOutputColumns() {
 
@@ -698,7 +847,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
             database = this.database.getReadableDatabase();
             c = database.rawQuery(" SELECT * from " + tableName + " WHERE pk=" + pk, null);
 
-            List<String> columns = getColumns(database);
+            if(columns==null) columns = getColumns(database);
             AndroidDatabaseRecord tableRecord1 = new AndroidDatabaseRecord();
             if (c.moveToFirst()) {
 
@@ -723,7 +872,9 @@ public class AndroidDatabaseTable implements DatabaseTable {
             c.close();
             return tableRecord1;
         } catch (Exception e) {
-            c.close();
+            if (c != null) {
+                c.close();
+            }
             //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             return null;
         } finally {
@@ -884,4 +1035,18 @@ public class AndroidDatabaseTable implements DatabaseTable {
         return strFilter.toString();
     }
 
+    public long recordsSize() throws Exception{
+        try{
+            SQLiteDatabase db = this.database.getReadableDatabase();
+            long cnt  = DatabaseUtils.queryNumEntries(db, tableName);
+            db.close();
+            return cnt;
+        } catch (DatabaseNotFoundException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (CantOpenDatabaseException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }
