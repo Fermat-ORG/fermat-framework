@@ -3,7 +3,6 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -23,12 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
-
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.StringWheelAdapter;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.custom_view.WheelView;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.interfaces.OnWheelChangedListener;
-
 
 import java.util.ArrayList;
 import java.util.List;

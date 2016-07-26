@@ -321,9 +321,10 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * Throw the method <code>isValidAddress</code> you can validate in the specific vault if a specific crypto address is valid.
      *
      * @param cryptoAddress to validate
+     * @param blockchainNetworkType to validate
      * @return boolean value, true if positive, false if negative.
      */
-    boolean isValidAddress(CryptoAddress cryptoAddress);
+    boolean isValidAddress(CryptoAddress cryptoAddress,BlockchainNetworkType blockchainNetworkType);
     // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
 

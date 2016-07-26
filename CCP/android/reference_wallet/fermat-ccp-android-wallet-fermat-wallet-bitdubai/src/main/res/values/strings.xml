@@ -248,7 +248,6 @@
     <array name="items" translatable="false">
         <item>MainNet</item>
         <item>TestNet</item>
-        <item>RegTest</item>
     </array>
 
 </resources>
