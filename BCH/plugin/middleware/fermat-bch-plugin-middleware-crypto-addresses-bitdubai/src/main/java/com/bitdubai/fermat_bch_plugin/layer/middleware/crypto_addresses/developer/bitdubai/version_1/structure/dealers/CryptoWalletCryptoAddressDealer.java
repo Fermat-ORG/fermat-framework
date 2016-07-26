@@ -43,6 +43,8 @@ public final class CryptoWalletCryptoAddressDealer extends CryptoAddressDealer {
 
     @Override
     public void handleCryptoAddressesNew(final CryptoAddressRequest request) throws CantHandleCryptoAddressesNewException {
+            if (request == null)
+                return;
 
         try {
 

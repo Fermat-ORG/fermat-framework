@@ -159,4 +159,8 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
     public boolean getResultado(){
         return result;
     }
+
+    public void setResultado(boolean resultado){
+        result = resultado;
+    }
 }
