@@ -673,7 +673,7 @@ public class CryptoBrokerCommunityManager
 
         if (name.equals("Customer")) {
             try {
-                final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 0, GeoFrequency.NONE);
+                final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 10, GeoFrequency.NORMAL);
                 createdPublicKey = createdIdentity.getPublicKey();
 
                 new Thread() {

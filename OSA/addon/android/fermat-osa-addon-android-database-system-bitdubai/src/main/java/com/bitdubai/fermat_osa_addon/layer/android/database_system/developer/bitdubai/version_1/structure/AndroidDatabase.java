@@ -265,7 +265,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                      *
                      */
                     AndroidVariable variable = new AndroidVariable(
-                            new StringBuilder().append("@").append(c.getColumnName(columnsCant)).toString(),
+                            "@" + c.getColumnName(columnsCant),
                             c.getString(columnsCant)
                     );
 
@@ -274,12 +274,19 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 } while (c.moveToNext());
             }
             c.close();
-
             return variablesResult;
         } catch (Exception exception) {
             if (c != null)
                 c.close();
             throw new CantSelectRecordException(CantSelectRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
+        } finally {
+            if (c != null) {
+                try {
+                    c.close();
+                }catch (Exception e){
+                    //nothing
+                }
+            }
         }
     }
 
@@ -288,7 +295,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         String databasePath = getDatabasePath();
 
         if (!(new File(databasePath)).exists()) {
-            String context = new StringBuilder().append("database Constructed Path: ").append(databasePath).toString();
+            String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check if the constructed path is valid";
             throw new DatabaseNotFoundException(DatabaseNotFoundException.DEFAULT_MESSAGE, null, context, possibleReason);
         }
@@ -296,7 +303,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         try {
             return SQLiteDatabase.openDatabase(databasePath, null, SQLiteDatabase.OPEN_READWRITE, null);
         } catch (SQLiteException exception) {
-            String context = new StringBuilder().append("database Constructed Path: ").append(databasePath).toString();
+            String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check the cause for this error as we have already checked that the database exists";
             throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, exception, context, possibleReason);
         } catch (Exception e) {
@@ -308,7 +315,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         String databasePath = getDatabasePath();
 
         if (!(new File(databasePath)).exists()) {
-            String context = new StringBuilder().append("database Constructed Path: ").append(databasePath).toString();
+            String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check if the constructed path is valid";
             throw new DatabaseNotFoundException(DatabaseNotFoundException.DEFAULT_MESSAGE, null, context, possibleReason);
         }
@@ -316,7 +323,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         try {
             return SQLiteDatabase.openDatabase(databasePath, null, SQLiteDatabase.OPEN_READONLY, null);
         } catch (SQLiteException exception) {
-            String context = new StringBuilder().append("database Constructed Path: ").append(databasePath).toString();
+            String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check the cause for this error as we have already checked that the database exists";
             throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, exception, context, possibleReason);
         } catch (Exception e) {
@@ -341,7 +348,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         String databasePath = getDatabasePath();
 
         if (!(new File(databasePath)).exists()) {
-            String context = new StringBuilder().append("database Constructed Path: ").append(databasePath).toString();
+            String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check if the constructed path is valid";
             throw new DatabaseNotFoundException(DatabaseNotFoundException.DEFAULT_MESSAGE, null, context, possibleReason);
         }
@@ -357,7 +364,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
              */
             String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(exception);
-            String context = new StringBuilder().append("database Constructed Path: ").append(databasePath).toString();
+            String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check the cause for this error as we have already checked that the database exists";
             throw new CantOpenDatabaseException(message, cause, context, possibleReason);
         } catch (Exception e) {
@@ -392,7 +399,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
          * * *
          */
         String message = "SOMETHING UNEXPECTED HAS HAPPENED";
-        String context = new StringBuilder().append("Constructed database Path: ").append(databasePath).toString();
+        String context = "Constructed database Path: " + databasePath;
         String possibleCause = "The most probable reason is that the database path could not be found";
         throw new DatabaseNotFoundException(message, null, context, possibleCause);
     }
@@ -421,10 +428,10 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         /**
          * Hash data base name
          */
-        File databaseFile = new File(new StringBuilder().append(storagePath.getPath()).append("/").append(databaseName.replace("-", "")).append(".db").toString());
+        File databaseFile = new File(storagePath.getPath() + "/" + databaseName.replace("-", "") + ".db");
 
         if (databaseFile.exists()) {
-            String context = new StringBuilder().append("database File: ").append(databaseFile.getPath()).toString();
+            String context = "database File: " + databaseFile.getPath();
             String possibleReasons = "This happens if the database has already been created";
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, null, context, possibleReasons);
         }
@@ -436,9 +443,9 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         try {
             SQLiteDatabase.openOrCreateDatabase(databaseFile, null).close();
         } catch (SQLiteException ex) {
-            String context = new StringBuilder().append("Storage Path: ").append(storagePath.getPath()).toString();
+            String context = "Storage Path: " + storagePath.getPath();
             context += CantCreateDatabaseException.CONTEXT_CONTENT_SEPARATOR;
-            context += new StringBuilder().append("database Name: ").append(databaseName).toString();
+            context += "database Name: " + databaseName;
             String possibleReasons = "This can happen if the database File where we wanted to create the database can't be created";
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, ex, context, possibleReasons);
         } catch (Exception e) {
@@ -455,9 +462,9 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      */
     private String getPath() {
         if (ownerId != null)
-            return new StringBuilder().append(path).append("/databases/").append(ownerId.toString()).toString();
+            return path + "/databases/" + ownerId.toString();
         else
-            return new StringBuilder().append(path).append("/databases/").toString();
+            return path + "/databases/";
     }
 
     /**
@@ -468,7 +475,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      * @return string full path of database
      */
     private String getDatabasePath() {
-        return new StringBuilder().append(getPath()).append("/").append(databaseName.replace("-", "")).append(".db").toString();
+        return getPath() + "/" + databaseName.replace("-", "") + ".db";
     }
 
     /**
@@ -488,15 +495,15 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         StringBuilder query = new StringBuilder("");
 
         if (this.ownerId != ownerId) {
-            String context = new StringBuilder().append("database Owner Id: ").append(ownerId).toString();
+            String context = "database Owner Id: " + ownerId;
             context += InvalidOwnerIdException.CONTEXT_CONTENT_SEPARATOR;
-            context += new StringBuilder().append("Owner Id in the method invocation: ").append(ownerId).toString();
+            context += "Owner Id in the method invocation: " + ownerId;
             String possibleReason = "The owner Id passed in the Invocation doesn't belong to the Android database Owner, maybe this was a passed object";
             throw new InvalidOwnerIdException(InvalidOwnerIdException.DEFAULT_MESSAGE, null, context, possibleReason);
         }
 
         if (table == null) {
-            String context = new StringBuilder().append("Owner Id : ").append(ownerId.toString()).toString();
+            String context = "Owner Id : " + ownerId.toString();
             String possibleReason = "DatabaseTableFactory can't be null.";
             throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, null, context, possibleReason);
         }
