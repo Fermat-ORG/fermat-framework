@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -33,7 +34,6 @@ import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.database.YahooProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.database.YahooProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.exceptions.CantInitializeYahooProviderDatabaseException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -130,7 +130,7 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
 
         String url = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20(%22" +
                 currencyPair.getFrom().getCode() + currencyPair.getTo().getCode() +
@@ -151,8 +151,8 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
             purchasePrice = Double.valueOf(aux);
 
         } catch (JSONException e) {
-          //  this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-          //  throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Yahoo CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
+            //  this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            //  throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Yahoo CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
             purchasePrice = 0;
             salePrice = 0;
             providerIsDown = true;
@@ -160,7 +160,7 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
 
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), purchasePrice, salePrice, (new Date().getTime() / 1000));
-        if(!providerIsDown) {
+        if (!providerIsDown) {
             try {
                 dao.saveExchangeRate(exchangeRate);
             } catch (CantSaveExchangeRateException e) {
@@ -183,7 +183,7 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
 
         return dao.getQueriedExchangeRateHistory(currencyPair);
     }

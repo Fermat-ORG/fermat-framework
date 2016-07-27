@@ -3,18 +3,12 @@ package com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.versi
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -59,7 +53,6 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantGetChtActorSearchResult;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantRequestActorConnectionException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
-
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.ChatSupAppModulePluginRoot;
 
@@ -85,22 +78,21 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     private final UUID pluginId;
     private ChatSupAppModulePluginRoot chatSupAppModulePluginRoot;
     private final com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager;
-    private String                                         subAppPublicKey                       ;
+    private String subAppPublicKey;
 
     public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager,
                                    ChatIdentityManager chatIdentityManager,
                                    PluginFileSystem pluginFileSystem,
                                    ChatActorConnectionManager chatActorConnectionManager,
                                    UUID pluginId,
-                                   ChatSupAppModulePluginRoot chatSupAppModulePluginRoot, com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager)
-    {
+                                   ChatSupAppModulePluginRoot chatSupAppModulePluginRoot, com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager) {
         super(pluginFileSystem, pluginId);
-        this.middlewareChatManager          = middlewareChatManager         ;
-        this.chatIdentityManager            = chatIdentityManager           ;
-        this.pluginFileSystem               = pluginFileSystem              ;
-        this.chatActorConnectionManager     = chatActorConnectionManager    ;
-        this.pluginId                       = pluginId                      ;
-        this.chatSupAppModulePluginRoot     = chatSupAppModulePluginRoot    ;
+        this.middlewareChatManager = middlewareChatManager;
+        this.chatIdentityManager = chatIdentityManager;
+        this.pluginFileSystem = pluginFileSystem;
+        this.chatActorConnectionManager = chatActorConnectionManager;
+        this.pluginId = pluginId;
+        this.chatSupAppModulePluginRoot = chatSupAppModulePluginRoot;
         this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
     }
 
@@ -171,7 +163,7 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
 
     @Override
     public void saveMessage(Message message) throws CantSaveMessageException {
-        System.out.println("*** 12345 case 2:send msg in Module layer" + new Timestamp(System.currentTimeMillis()));
+        System.out.println(new StringBuilder().append("*** 12345 case 2:send msg in Module layer").append(new Timestamp(System.currentTimeMillis())).toString());
         middlewareChatManager.saveMessage(message);
     }
 
@@ -338,7 +330,7 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
      */
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available",0, null);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available", 0, null);
     }
 
     @Override
@@ -455,22 +447,21 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
 //        }
 
         List<ChatIdentity> IdentitiesInDevice = new ArrayList<>();
-        try{
+        try {
             IdentitiesInDevice = chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
             //TODO:Revisar como asignar estos valores deben ser seteados al entrar a la comunidad setear los settings necesario
-            if(IdentitiesInDevice != null && IdentitiesInDevice.size() > 0) {
+            if (IdentitiesInDevice != null && IdentitiesInDevice.size() > 0) {
                 appSettings.setLastSelectedIdentityPublicKey(IdentitiesInDevice.get(0).getPublicKey());
                 appSettings.setLastSelectedActorType(IdentitiesInDevice.get(0).getActorType());
             }
-        } catch(CantListChatIdentityException e) {
+        } catch (CantListChatIdentityException e) {
             e.printStackTrace();
             /*Do nothing*/
         }
 
 
         //If appSettings exists, get its selectedActorIdentityPublicKey property
-        if(appSettings != null)
-        {
+        if (appSettings != null) {
             String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
             Actors lastSelectedActorType = appSettings.getLastSelectedActorType();
 
@@ -478,10 +469,9 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
 
                 ChatActorCommunitySelectableIdentityImpl selectedIdentity = null;
 
-                if(lastSelectedActorType == Actors.CHAT)
-                {
-                    for(ChatIdentity i : IdentitiesInDevice) {
-                        if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
+                if (lastSelectedActorType == Actors.CHAT) {
+                    for (ChatIdentity i : IdentitiesInDevice) {
+                        if (i.getPublicKey().equals(lastSelectedIdentityPublicKey))
                             selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage());
                     }
                 }
@@ -510,5 +500,7 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
 //    }
 
     @Override
-    public void setAppPublicKey(String publicKey) { this.subAppPublicKey= publicKey;}
+    public void setAppPublicKey(String publicKey) {
+        this.subAppPublicKey = publicKey;
+    }
 }

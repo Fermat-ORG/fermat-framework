@@ -26,8 +26,8 @@ public class AbstractCHTFermatEvent implements FermatEvent {
 
     private UUID messageId;
 
-    public AbstractCHTFermatEvent(EventType eventType){
-        this.eventType=eventType;
+    public AbstractCHTFermatEvent(EventType eventType) {
+        this.eventType = eventType;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class AbstractCHTFermatEvent implements FermatEvent {
 
     @Override
     public void setSource(EventSource eventSource) {
-        this.eventSource=eventSource;
+        this.eventSource = eventSource;
     }
 
     @Override
@@ -71,10 +71,11 @@ public class AbstractCHTFermatEvent implements FermatEvent {
 
     @Override
     public String toString() {
-        return "AbstractCHTFermatEvent{" +
-                "eventType=" + eventType +
-                ", eventSource=" + eventSource +
-                ", chatId=" + chatId +
-                '}';
+        return new StringBuilder()
+                .append("AbstractCHTFermatEvent{")
+                .append("eventType=").append(eventType)
+                .append(", eventSource=").append(eventSource)
+                .append(", chatId=").append(chatId)
+                .append('}').toString();
     }
 }

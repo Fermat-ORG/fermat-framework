@@ -13,38 +13,38 @@ import java.util.UUID;
 public class ChatConnectionRequest {
 
 
-    private final UUID requestId           ;
-    private final String                  senderPublicKey     ;
-    private final Actors senderActorType     ;
-    private final String                  senderAlias         ;
-    private final byte[]                  senderImage         ;
-    private final String                  destinationPublicKey;
-    private final RequestType             requestType         ;
-    private final ProtocolState           protocolState       ;
-    private final ConnectionRequestAction requestAction       ;
-    private final long                    sentTime            ;
+    private final UUID requestId;
+    private final String senderPublicKey;
+    private final Actors senderActorType;
+    private final String senderAlias;
+    private final byte[] senderImage;
+    private final String destinationPublicKey;
+    private final RequestType requestType;
+    private final ProtocolState protocolState;
+    private final ConnectionRequestAction requestAction;
+    private final long sentTime;
 
-    public ChatConnectionRequest(final UUID                    requestId           ,
-                                         final String                  senderPublicKey     ,
-                                         final Actors                  senderActorType     ,
-                                         final String                  senderAlias         ,
-                                         final byte[]                  senderImage         ,
-                                         final String                  destinationPublicKey,
-                                         final RequestType             requestType         ,
-                                         final ProtocolState           protocolState       ,
-                                         final ConnectionRequestAction requestAction       ,
-                                         final long                    sentTime            ) {
+    public ChatConnectionRequest(final UUID requestId,
+                                 final String senderPublicKey,
+                                 final Actors senderActorType,
+                                 final String senderAlias,
+                                 final byte[] senderImage,
+                                 final String destinationPublicKey,
+                                 final RequestType requestType,
+                                 final ProtocolState protocolState,
+                                 final ConnectionRequestAction requestAction,
+                                 final long sentTime) {
 
-        this.requestId            = requestId           ;
-        this.senderPublicKey      = senderPublicKey     ;
-        this.senderActorType      = senderActorType     ;
-        this.senderAlias          = senderAlias         ;
-        this.senderImage          = senderImage         ;
+        this.requestId = requestId;
+        this.senderPublicKey = senderPublicKey;
+        this.senderActorType = senderActorType;
+        this.senderAlias = senderAlias;
+        this.senderImage = senderImage;
         this.destinationPublicKey = destinationPublicKey;
-        this.requestType          = requestType         ;
-        this.protocolState        = protocolState       ;
-        this.requestAction        = requestAction       ;
-        this.sentTime             = sentTime            ;
+        this.requestType = requestType;
+        this.protocolState = protocolState;
+        this.requestAction = requestAction;
+        this.sentTime = sentTime;
     }
 
     /**
@@ -119,17 +119,21 @@ public class ChatConnectionRequest {
 
     @Override
     public String toString() {
-        return "CryptoBrokerConnectionRequest{" +
-                "requestId=" + requestId +
-                ", senderPublicKey='" + senderPublicKey + '\'' +
-                ", senderActorType=" + senderActorType +
-                ", senderAlias='" + senderAlias + '\'' +
-                ", senderImage=" + (senderImage != null )+
-                ", destinationPublicKey='" + destinationPublicKey + '\'' +
-                ", requestType=" + requestType +
-                ", protocolState=" + protocolState +
-                ", requestAction=" + requestAction +
-                ", sentTime=" + sentTime +
-                '}';
+        return new StringBuilder()
+                .append("CryptoBrokerConnectionRequest{")
+                .append("requestId=").append(requestId)
+                .append(", senderPublicKey='").append(senderPublicKey)
+                .append('\'')
+                .append(", senderActorType=").append(senderActorType)
+                .append(", senderAlias='").append(senderAlias)
+                .append('\'')
+                .append(", senderImage=").append(senderImage != null)
+                .append(", destinationPublicKey='").append(destinationPublicKey)
+                .append('\'')
+                .append(", requestType=").append(requestType)
+                .append(", protocolState=").append(protocolState)
+                .append(", requestAction=").append(requestAction)
+                .append(", sentTime=").append(sentTime)
+                .append('}').toString();
     }
 }

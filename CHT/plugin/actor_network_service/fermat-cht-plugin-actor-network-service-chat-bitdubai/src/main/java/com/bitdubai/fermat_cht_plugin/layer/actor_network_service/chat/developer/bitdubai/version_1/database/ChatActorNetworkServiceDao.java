@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -43,8 +45,6 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatConnect
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantFindRequestException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,22 +58,22 @@ public class ChatActorNetworkServiceDao {
 
     private ErrorManager errorManager;
 
-    private static final String PROFILE_IMAGE_DIRECTORY_NAME   = DeviceDirectory.LOCAL_USERS.getName() + "/CBP/cryptoBrokerActorNS";
+    private static final String PROFILE_IMAGE_DIRECTORY_NAME = new StringBuilder().append(DeviceDirectory.LOCAL_USERS.getName()).append("/CBP/cryptoBrokerActorNS").toString();
     private static final String PROFILE_IMAGE_FILE_NAME_PREFIX = "profileImage";
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final PluginFileSystem pluginFileSystem    ;
-    private final UUID pluginId            ;
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID pluginId;
 
     private Database database;
 
     public ChatActorNetworkServiceDao(final PluginDatabaseSystem pluginDatabaseSystem,
-                                              final PluginFileSystem pluginFileSystem,
-                                              final UUID pluginId) {
+                                      final PluginFileSystem pluginFileSystem,
+                                      final UUID pluginId) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginFileSystem     = pluginFileSystem    ;
-        this.pluginId             = pluginId            ;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
     public void initialize() throws CantInitializeDatabaseException {
@@ -118,10 +118,10 @@ public class ChatActorNetworkServiceDao {
 
     /**
      * Return all the pending requests depending on the action informed through parameters.
-     **
-     * @return a list of ChatConnectionRequest instances.
+     * *
      *
-     * @throws CantListPendingConnectionRequestsException  if something goes wrong.
+     * @return a list of ChatConnectionRequest instances.
+     * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
     public final List<ChatConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException {
 
@@ -141,7 +141,7 @@ public class ChatActorNetworkServiceDao {
 
             final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
 
-            for(final ConnectionRequestAction action : actions)
+            for (final ConnectionRequestAction action : actions)
                 tableFilters.add(connectionNewsTable.getNewFilter(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, DatabaseFilterType.EQUAL, action.getCode()));
 
             final DatabaseTableFilterGroup filterGroup = connectionNewsTable.getNewFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
@@ -166,12 +166,9 @@ public class ChatActorNetworkServiceDao {
         } catch (final InvalidParameterException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
-            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
+            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code.");
         }
     }
-
-
-
 
 
     public final List<ChatConnectionRequest> listAllPendingRequestsByActorType(final Actors actorType, final List<ConnectionRequestAction> actions) throws CantListPendingConnectionRequestsException {
@@ -187,7 +184,7 @@ public class ChatActorNetworkServiceDao {
 
             final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
 
-            for(final ConnectionRequestAction action : actions)
+            for (final ConnectionRequestAction action : actions)
                 tableFilters.add(connectionNewsTable.getNewFilter(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, DatabaseFilterType.EQUAL, action.getCode()));
 
             final DatabaseTableFilterGroup filterGroup = connectionNewsTable.getNewFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
@@ -212,12 +209,12 @@ public class ChatActorNetworkServiceDao {
         } catch (final InvalidParameterException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
-            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
+            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code.");
         }
     }
 
 
-        public final List<ChatConnectionRequest> listPendingConnectionNews(final Actors actorType) throws CantListPendingConnectionRequestsException {
+    public final List<ChatConnectionRequest> listPendingConnectionNews(final Actors actorType) throws CantListPendingConnectionRequestsException {
 
         try {
 
@@ -252,7 +249,7 @@ public class ChatActorNetworkServiceDao {
         } catch (final InvalidParameterException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
-            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
+            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code.");
         }
     }
 
@@ -260,11 +257,9 @@ public class ChatActorNetworkServiceDao {
     /**
      * Return all the pending requests depending on the protocol state informed through parameters.
      *
-     * @param protocolState  the protocol state that we need to bring.
-     *
+     * @param protocolState the protocol state that we need to bring.
      * @return a list of ChatConnectionRequest instances.
-     *
-     * @throws CantListPendingConnectionRequestsException  if something goes wrong.
+     * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
     public final List<ChatConnectionRequest> listAllRequestByProtocolState(final ProtocolState protocolState) throws CantListPendingConnectionRequestsException {
 
@@ -292,7 +287,7 @@ public class ChatActorNetworkServiceDao {
         } catch (final InvalidParameterException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
-            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
+            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code.");
         }
     }
 
@@ -300,11 +295,9 @@ public class ChatActorNetworkServiceDao {
     /**
      * Return all the pending requests depending on the protocol state informed through parameters.
      *
-     * @param protocolStates  list of the protocol states that we need to bring.
-     *
+     * @param protocolStates list of the protocol states that we need to bring.
      * @return a list of ChatConnectionRequest instances.
-     *
-     * @throws CantListPendingConnectionRequestsException  if something goes wrong.
+     * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
     public final List<ChatConnectionRequest> listAllRequestByProtocolStates(final List<ProtocolState> protocolStates) throws CantListPendingConnectionRequestsException {
 
@@ -314,7 +307,7 @@ public class ChatActorNetworkServiceDao {
 
             final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
 
-            for(final ProtocolState protocolState : protocolStates)
+            for (final ProtocolState protocolState : protocolStates)
                 tableFilters.add(connectionNewsTable.getNewFilter(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, DatabaseFilterType.EQUAL, protocolState.getCode()));
 
             final DatabaseTableFilterGroup filterGroup = connectionNewsTable.getNewFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
@@ -339,28 +332,28 @@ public class ChatActorNetworkServiceDao {
         } catch (final InvalidParameterException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
-            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
+            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code.");
         }
     }
 
 
     public final void createConnectionRequest(final ChatConnectionInformation chatActor,
-                                              final ProtocolState                     state            ,
-                                              final RequestType                       type             ,
-                                              final ConnectionRequestAction           action           ) throws CantRequestConnectionException {
+                                              final ProtocolState state,
+                                              final RequestType type,
+                                              final ConnectionRequestAction action) throws CantRequestConnectionException {
 
         try {
 
             final ChatConnectionRequest connectionNew = new ChatConnectionRequest(
-                    chatActor.getConnectionId()        ,
-                    chatActor.getSenderPublicKey()     ,
-                    chatActor.getSenderActorType()     ,
-                    chatActor.getSenderAlias()         ,
-                    chatActor.getSenderImage()         ,
+                    chatActor.getConnectionId(),
+                    chatActor.getSenderPublicKey(),
+                    chatActor.getSenderActorType(),
+                    chatActor.getSenderAlias(),
+                    chatActor.getSenderImage(),
                     chatActor.getDestinationPublicKey(),
-                    type                                       ,
-                    state                                      ,
-                    action                                     ,
+                    type,
+                    state,
+                    action,
                     chatActor.getSendingTime()
             );
 
@@ -375,7 +368,7 @@ public class ChatActorNetworkServiceDao {
 
             entityRecord = buildConnectionNewDatabaseRecord(entityRecord, connectionNew);
 
-            if(isNewRecord(addressExchangeRequestTable,filter))
+            if (isNewRecord(addressExchangeRequestTable, filter))
                 addressExchangeRequestTable.insertRecord(entityRecord);
             else
                 addressExchangeRequestTable.updateRecord(entityRecord);
@@ -405,12 +398,11 @@ public class ChatActorNetworkServiceDao {
      *
      * @param requestId id of the connection request.
      * @param state     PROCESSING_SEND, PROCESSING_RECEIVE
-     *
-     * @throws CantDenyConnectionRequestException    if something goes wrong.
-     * @throws ConnectionRequestNotFoundException    if we cannot find the request.
+     * @throws CantDenyConnectionRequestException if something goes wrong.
+     * @throws ConnectionRequestNotFoundException if we cannot find the request.
      */
-    public void denyConnection(final UUID          requestId,
-                               final ProtocolState state    ) throws CantDenyConnectionRequestException,
+    public void denyConnection(final UUID requestId,
+                               final ProtocolState state) throws CantDenyConnectionRequestException,
             ConnectionRequestNotFoundException {
 
         if (requestId == null)
@@ -435,13 +427,13 @@ public class ChatActorNetworkServiceDao {
 
                 final DatabaseTableRecord record = records.get(0);
 
-                record.setFermatEnum(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME , state );
+                record.setFermatEnum(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, state);
                 record.setFermatEnum(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, action);
 
                 connectionNewsTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor connection request with that requestId.");
 
         } catch (final CantUpdateRecordException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -462,12 +454,11 @@ public class ChatActorNetworkServiceDao {
      *
      * @param requestId id of the connection request.
      * @param state     PROCESSING_SEND, PROCESSING_RECEIVE
-     *
-     * @throws CantDisconnectException    if something goes wrong.
-     * @throws ConnectionRequestNotFoundException    if we cannot find the request.
+     * @throws CantDisconnectException            if something goes wrong.
+     * @throws ConnectionRequestNotFoundException if we cannot find the request.
      */
-    public void disconnectConnection(final UUID          requestId,
-                                     final ProtocolState state    ) throws CantDisconnectException,
+    public void disconnectConnection(final UUID requestId,
+                                     final ProtocolState state) throws CantDisconnectException,
             ConnectionRequestNotFoundException {
 
         if (requestId == null)
@@ -492,13 +483,13 @@ public class ChatActorNetworkServiceDao {
 
                 final DatabaseTableRecord record = records.get(0);
 
-                record.setFermatEnum(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME , state );
+                record.setFermatEnum(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, state);
                 record.setFermatEnum(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, action);
 
                 connectionNewsTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor connection request with that requestId.");
 
         } catch (final CantUpdateRecordException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -530,7 +521,7 @@ public class ChatActorNetworkServiceDao {
             if (!records.isEmpty())
                 return buildConnectionNewRecord(records.get(0));
             else
-                throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor Connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor Connection request with that requestId.");
 
         } catch (final CantLoadTableToMemoryException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -549,13 +540,12 @@ public class ChatActorNetworkServiceDao {
      *
      * @param requestId id of the address exchange request we want to confirm.
      * @param state     protocol state to change
-     *
-     * @throws CantChangeProtocolStateException      if something goes wrong.
-     * @throws ConnectionRequestNotFoundException    if i can't find the record.
+     * @throws CantChangeProtocolStateException   if something goes wrong.
+     * @throws ConnectionRequestNotFoundException if i can't find the record.
      */
-    public void changeProtocolState(final UUID          requestId,
-                                    final ProtocolState state    ) throws CantChangeProtocolStateException,
-            ConnectionRequestNotFoundException  {
+    public void changeProtocolState(final UUID requestId,
+                                    final ProtocolState state) throws CantChangeProtocolStateException,
+            ConnectionRequestNotFoundException {
 
         if (requestId == null)
             throw new CantChangeProtocolStateException(null, "", "The requestId is required, can not be null");
@@ -581,7 +571,7 @@ public class ChatActorNetworkServiceDao {
                 actorConnectionRequestTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor Connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor Connection request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -602,12 +592,11 @@ public class ChatActorNetworkServiceDao {
      * Action: NONE.
      *
      * @param requestId id of the address exchange request we want to confirm.
-     *
-     * @throws CantConfirmConnectionRequestException   if something goes wrong.
-     * @throws ConnectionRequestNotFoundException      if i can't find the record.
+     * @throws CantConfirmConnectionRequestException if something goes wrong.
+     * @throws ConnectionRequestNotFoundException    if i can't find the record.
      */
     public void confirmActorConnectionRequest(final UUID requestId) throws CantConfirmConnectionRequestException,
-            ConnectionRequestNotFoundException   {
+            ConnectionRequestNotFoundException {
 
         if (requestId == null) {
             throw new CantConfirmConnectionRequestException(null, "", "The requestId is required, can not be null");
@@ -615,7 +604,7 @@ public class ChatActorNetworkServiceDao {
 
         try {
 
-            ProtocolState           state  = ProtocolState          .DONE;
+            ProtocolState state = ProtocolState.DONE;
             ConnectionRequestAction action = ConnectionRequestAction.NONE;
 
             DatabaseTable actorConnectionRequestTable = database.getTable(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
@@ -635,7 +624,7 @@ public class ChatActorNetworkServiceDao {
                 actorConnectionRequestTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an address exchange request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -668,13 +657,12 @@ public class ChatActorNetworkServiceDao {
      *
      * @param requestId id of the connection request.
      * @param state     PROCESSING_SEND, PROCESSING_RECEIVE
-     *
-     * @throws CantAcceptConnectionRequestException  if something goes wrong.
-     * @throws ConnectionRequestNotFoundException    if we cannot find the request.
+     * @throws CantAcceptConnectionRequestException if something goes wrong.
+     * @throws ConnectionRequestNotFoundException   if we cannot find the request.
      */
-    public void acceptConnection(final UUID          requestId,
-                                 final ProtocolState state    ) throws CantAcceptConnectionRequestException,
-            ConnectionRequestNotFoundException  {
+    public void acceptConnection(final UUID requestId,
+                                 final ProtocolState state) throws CantAcceptConnectionRequestException,
+            ConnectionRequestNotFoundException {
 
         if (requestId == null)
             throw new CantAcceptConnectionRequestException(null, "", "The requestId is required, can not be null");
@@ -704,7 +692,7 @@ public class ChatActorNetworkServiceDao {
                 connectionNewsTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor connection request with that requestId.");
 
         } catch (final CantUpdateRecordException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -718,7 +706,7 @@ public class ChatActorNetworkServiceDao {
     }
 
 
-    public String getDestinationPublicKey(final UUID connectionId) throws CantListPendingConnectionRequestsException  ,
+    public String getDestinationPublicKey(final UUID connectionId) throws CantListPendingConnectionRequestsException,
             ConnectionRequestNotFoundException {
 
         if (connectionId == null)
@@ -741,7 +729,7 @@ public class ChatActorNetworkServiceDao {
 
             } else
                 throw new ConnectionRequestNotFoundException(
-                        "connectionId: "+connectionId,
+                        new StringBuilder().append("connectionId: ").append(connectionId).toString(),
                         "Cannot find an actor connection request with that requestId."
                 );
 
@@ -750,7 +738,7 @@ public class ChatActorNetworkServiceDao {
 
             throw new CantListPendingConnectionRequestsException(
                     cantLoadTableToMemoryException,
-                    "connectionId: "+connectionId,
+                    new StringBuilder().append("connectionId: ").append(connectionId).toString(),
                     "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
@@ -780,20 +768,20 @@ public class ChatActorNetworkServiceDao {
     }
 
 
-    private DatabaseTableRecord buildConnectionNewDatabaseRecord(final DatabaseTableRecord           record       ,
+    private DatabaseTableRecord buildConnectionNewDatabaseRecord(final DatabaseTableRecord record,
                                                                  final ChatConnectionRequest connectionNew) {
 
         try {
 
-            record.setUUIDValue  (ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME            , connectionNew.getRequestId())           ;
-            record.setStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME     , connectionNew.getSenderPublicKey())     ;
-            record.setFermatEnum (ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME     , connectionNew.getSenderActorType())     ;
-            record.setStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME          , connectionNew.getSenderAlias())         ;
+            record.setUUIDValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME, connectionNew.getRequestId());
+            record.setStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME, connectionNew.getSenderPublicKey());
+            record.setFermatEnum(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME, connectionNew.getSenderActorType());
+            record.setStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME, connectionNew.getSenderAlias());
             record.setStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME, connectionNew.getDestinationPublicKey());
-            record.setFermatEnum (ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          , connectionNew.getRequestType())         ;
-            record.setFermatEnum (ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         , connectionNew.getProtocolState())       ;
-            record.setFermatEnum (ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        , connectionNew.getRequestAction())       ;
-            record.setLongValue  (ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             , connectionNew.getSentTime())            ;
+            record.setFermatEnum(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME, connectionNew.getRequestType());
+            record.setFermatEnum(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, connectionNew.getProtocolState());
+            record.setFermatEnum(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, connectionNew.getRequestAction());
+            record.setLongValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME, connectionNew.getSentTime());
 
             if (connectionNew.getSenderImage() != null && connectionNew.getSenderImage().length > 0)
                 persistNewUserProfileImage(connectionNew.getSenderPublicKey(), connectionNew.getSenderImage());
@@ -804,7 +792,7 @@ public class ChatActorNetworkServiceDao {
             // TODO add better error management, "throws CantBuildDatabaseRecordException".
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
-            System.err.println("error trying to persist image:"+e.getMessage());
+            System.err.println(new StringBuilder().append("error trying to persist image:").append(e.getMessage()).toString());
             return record;
         }
     }
@@ -812,15 +800,15 @@ public class ChatActorNetworkServiceDao {
     private ChatConnectionRequest buildConnectionNewRecord(final DatabaseTableRecord record) throws InvalidParameterException {
 
         try {
-            UUID   requestId             = record.getUUIDValue  (ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME            );
-            String senderPublicKey       = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME);
-            String senderActorTypeString = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME     );
-            String senderAlias           = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME          );
-            String destinationPublicKey  = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
-            String requestTypeString     = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          );
-            String protocolStateString   = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         );
-            String requestActionString   = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        );
-            Long   sentTime              = record.getLongValue  (ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             );
+            UUID requestId = record.getUUIDValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME);
+            String senderPublicKey = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME);
+            String senderActorTypeString = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME);
+            String senderAlias = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME);
+            String destinationPublicKey = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
+            String requestTypeString = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME);
+            String protocolStateString = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME);
+            String requestActionString = record.getStringValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME);
+            Long sentTime = record.getLongValue(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME);
 
             Actors senderActorType = Actors.getByCode(senderActorTypeString);
             RequestType requestType = RequestType.getByCode(requestTypeString);
@@ -859,7 +847,7 @@ public class ChatActorNetworkServiceDao {
         }
     }
 
-    private void persistNewUserProfileImage(final String publicKey   ,
+    private void persistNewUserProfileImage(final String publicKey,
                                             final byte[] profileImage) throws CantPersistProfileImageException {
 
         try {
@@ -906,7 +894,7 @@ public class ChatActorNetworkServiceDao {
     }
 
     private byte[] getProfileImage(final String publicKey) throws CantGetProfileImageException,
-            FileNotFoundException       {
+            FileNotFoundException {
 
         try {
 
@@ -946,7 +934,8 @@ public class ChatActorNetworkServiceDao {
             );
         }
     }
+
     private String buildProfileImageFileName(final String publicKey) {
-        return PROFILE_IMAGE_FILE_NAME_PREFIX + "_" + publicKey;
+        return new StringBuilder().append(PROFILE_IMAGE_FILE_NAME_PREFIX).append("_").append(publicKey).toString();
     }
 }

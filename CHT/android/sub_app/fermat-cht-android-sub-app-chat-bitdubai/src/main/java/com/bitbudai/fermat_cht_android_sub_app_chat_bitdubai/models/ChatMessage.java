@@ -40,6 +40,7 @@ public class ChatMessage {
     public void setStatus(String status) {
         this.status = status;
     }
+
     public UUID getId() {
         return id;
     }

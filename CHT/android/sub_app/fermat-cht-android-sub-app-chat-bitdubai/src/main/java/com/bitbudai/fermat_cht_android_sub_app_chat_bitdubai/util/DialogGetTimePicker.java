@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.TimePicker;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -21,6 +20,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 public class DialogGetTimePicker extends FermatDialog {
     String formatedDate;
     String time_select;
+
     public DialogGetTimePicker(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources) {
         super(activity, referenceAppFermatSession, resources);
     }
@@ -30,10 +30,10 @@ public class DialogGetTimePicker extends FermatDialog {
         super.onCreate(savedInstanceState);
         Button btnselect = (Button) findViewById(R.id.buttondialog);
         TimePicker time = (TimePicker) findViewById(R.id.ChtTimePicker);
-        int   hour  = time.getHour();
-        int   minute = time.getMinute();
+        int hour = time.getHour();
+        int minute = time.getMinute();
 
-        time_select = hour+":"+minute;
+        time_select = new StringBuilder().append(hour).append(":").append(minute).toString();
         btnselect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,8 +42,16 @@ public class DialogGetTimePicker extends FermatDialog {
             }
         });
     }
-    public String getTimeSelect(){return time_select; }
-    public Boolean isGetTimeSelect(){if(getTimeSelect() != null && getTimeSelect() != "") return true; else return false;}
+
+    public String getTimeSelect() {
+        return time_select;
+    }
+
+    public Boolean isGetTimeSelect() {
+        if (getTimeSelect() != null && getTimeSelect() != "") return true;
+        else return false;
+    }
+
     @Override
     protected int setLayoutId() {
         return R.layout.cht_dialog_time_picker;

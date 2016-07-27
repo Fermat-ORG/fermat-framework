@@ -16,16 +16,17 @@ public class ActorConnectionSearch extends ChatActorConnectionSearch {
     public ActorConnectionSearch(ChatLinkedActorIdentity actorIdentity, ActorConnectionDao<ChatLinkedActorIdentity, ChatActorConnection> dao) {
         super(actorIdentity, dao);
     }
+
     public ConnectionState getChatActorConnectionState(String publicKey) throws CantListActorConnectionsException {
 
         resetFilters();
 
-            List<ChatActorConnection> chatActorConnectionList = getResult();
+        List<ChatActorConnection> chatActorConnectionList = getResult();
 
-            for(ChatActorConnection chatActorConnection : chatActorConnectionList){
-                if(chatActorConnection.getPublicKey().equals(publicKey))
-                    return chatActorConnection.getConnectionState();
-            }
+        for (ChatActorConnection chatActorConnection : chatActorConnectionList) {
+            if (chatActorConnection.getPublicKey().equals(publicKey))
+                return chatActorConnection.getConnectionState();
+        }
 
         return ConnectionState.NO_CONNECTED;
     }

@@ -313,8 +313,13 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                 rate = provider.getCurrentExchangeRate(currencyPair);
             } else {
                 List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(providerFilter.getProviderReferencesFromCurrencyPair(currencyPair));
-                if (!providers.isEmpty())
-                    rate = providers.get(0).getCurrentExchangeRate(currencyPair);
+                if (!providers.isEmpty()) {
+                    for (CurrencyExchangeRateProviderManager provider : providers) {
+                        final ExchangeRate currentExchangeRate = provider.getCurrentExchangeRate(currencyPair);
+                        if (currentExchangeRate.getSalePrice() != 0)
+                            rate = currentExchangeRate;
+                    }
+                }
             }
 
             priceReference = (float) (rate != null ? rate.getSalePrice() : 0);
@@ -854,7 +859,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         return volatility;
     }
 
-    private float getBalanceFrozenByMerchandise(FermatEnum merchandise, MoneyType moneyType, BalanceType balanceType, float priceReference) throws CantLoadTableToMemoryException {
+    public float getBalanceFrozenByMerchandise(FermatEnum merchandise, MoneyType moneyType, BalanceType balanceType, float priceReference) throws CantLoadTableToMemoryException {
         float rateFrozen = 0;
 
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME);

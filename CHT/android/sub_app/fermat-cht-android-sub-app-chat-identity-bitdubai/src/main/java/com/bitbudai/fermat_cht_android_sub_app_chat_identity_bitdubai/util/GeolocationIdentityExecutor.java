@@ -1,8 +1,5 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util;
 
-import android.util.Log;
-
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
@@ -33,6 +30,7 @@ public class GeolocationIdentityExecutor {
 
     /**
      * <code>GelocationidentityExecutor</code> this is constructor
+     *
      * @param imageInBytes
      * @param Publickey
      * @param identityName
@@ -54,6 +52,7 @@ public class GeolocationIdentityExecutor {
 
     /**
      * <code>GelocationidentityExecutor</code> this is constructor
+     *
      * @param session
      * @param Publickey
      * @param identityName
@@ -64,8 +63,8 @@ public class GeolocationIdentityExecutor {
      */
 
     public GeolocationIdentityExecutor(ReferenceAppFermatSession<ChatIdentityModuleManager> session, String Publickey, String identityName, byte[] imageInBytes, String identityConnectionState, String country, String state, String city, GeoFrequency frecuency, long acuraccy) {
-        this(imageInBytes, Publickey ,
-                identityName, identityConnectionState, country, state, city, acuraccy,frecuency);
+        this(imageInBytes, Publickey,
+                identityName, identityConnectionState, country, state, city, acuraccy, frecuency);
         identity = null;
         if (session != null) {
             this.moduleManager = session.getModuleManager();

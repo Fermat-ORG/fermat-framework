@@ -290,6 +290,154 @@
                     android:background="#bbccc7" />
 
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:id="@+id/advances_btn" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:text="@string/fee_advances_text"
+                        android:textColor="#12aca1"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_arrow_down_expanded" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/feed_advances"
+                    android:visibility="visible">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#bbccc7" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:paddingTop="10dp"
+                            android:text="@string/fee_amount_text"
+                            android:textColor="#12aca1"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="3dip"
+                        android:paddingLeft="7dip"
+                        android:paddingRight="7dip"
+                        android:paddingTop="3dip" >
+
+                        <EditText
+                            android:id="@+id/feed_amount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:background="@null"
+                            android:gravity="left"
+                            android:inputType="numberDecimal"
+                            android:paddingBottom="7dip"
+                            android:paddingLeft="14dip"
+                            android:paddingRight="14dip"
+                            android:paddingTop="7dip"
+                            android:state_selected="false"
+                            android:textColor="#1d1d26"
+                            android:textColorHint="#9a9a9c"
+                            android:textSize="16sp"
+                            android:textStyle="normal"
+                            android:maxLength="12"
+                            android:editable="false"
+                            android:text="0.0001" />
+
+                        <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="25dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginEnd="5dp"
+                            android:id="@+id/checkBoxSubstract"
+                            android:checked="true"
+                            android:gravity="center_vertical"
+                            android:text="@string/fee_option_text"
+                            android:textColor="#333"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:paddingTop="0dp"
+                            android:text="@string/title_Fee"
+                            android:textColor="#12aca1"
+                            android:textSize="12sp" />
+
+                        <RadioGroup
+                            android:id="@+id/feeGroup"
+                            android:orientation="horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:layout_column="0"
+                            android:layout_span="3" >
+
+                            <RadioButton
+                                android:id="@+id/fee_low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/fee_low"
+                                android:layout_marginRight="0dp"
+                                android:textColor="#333"
+                                android:textSize="12sp" />
+
+                            <RadioButton
+                                android:id="@+id/fee_Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/fee_Medium"
+                                android:textColor="#333"
+                                android:textSize="12sp" />
+
+                            <RadioButton
+                                android:id="@+id/fee_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/fee_High"
+                                android:textColor="#333"
+                                android:textSize="12sp" />
+                        </RadioGroup>
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#bbccc7" />
+
+                <LinearLayout
                     android:id="@+id/linear_send"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

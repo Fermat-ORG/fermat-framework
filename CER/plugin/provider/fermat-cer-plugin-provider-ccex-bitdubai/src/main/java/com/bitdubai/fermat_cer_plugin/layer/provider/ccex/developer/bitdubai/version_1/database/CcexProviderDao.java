@@ -61,22 +61,22 @@ public class CcexProviderDao {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(Plugins.CCEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeCcexProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, "");
+                throw new CantInitializeCcexProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, new StringBuilder().append("Database Name: ").append(CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME).toString(), "");
             }
-        }catch (CantOpenDatabaseException cantOpenDatabaseException) {
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.CCEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeCcexProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, "");
+            throw new CantInitializeCcexProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, new StringBuilder().append("Database Name: ").append(CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME).toString(), "");
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.CCEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantInitializeCcexProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, "");
+            throw new CantInitializeCcexProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), new StringBuilder().append("Database Name: ").append(CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME).toString(), "");
         }
     }
 
     public void initializeProvider(String providerName) throws CantInitializeProviderInfoException {
         //Try to get info, if there's no info, populate.
-        try{
+        try {
             this.getProviderInfo();
-        }catch (CantGetProviderInfoException e){
+        } catch (CantGetProviderInfoException e) {
             this.populateProviderInfo(providerName);
         }
     }
@@ -92,18 +92,17 @@ public class CcexProviderDao {
         constructRecordFromExchangeRate(newRecord, exchangeRate);
         try {
             table.insertRecord(newRecord);
-        }catch (CantInsertRecordException e) {
+        } catch (CantInsertRecordException e) {
             throw new CantSaveExchangeRateException(e.getMessage(), e, "Ccex provider plugin", "Cant save new record in table");
         }
     }
 
 
-    public List<ExchangeRate> getQueriedExchangeRateHistory(ExchangeRateType exchangeRateType, CurrencyPair currencyPair) throws CantGetExchangeRateException
-    {
+    public List<ExchangeRate> getQueriedExchangeRateHistory(ExchangeRateType exchangeRateType, CurrencyPair currencyPair) throws CantGetExchangeRateException {
         List<ExchangeRate> exchangeRateList = new ArrayList<>();
         DatabaseTable table = null;
 
-        switch(exchangeRateType) {
+        switch (exchangeRateType) {
             case CURRENT:
                 table = this.database.getTable(CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME);
                 table.addStringFilter(CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME, currencyPair.getFrom().getCode(), DatabaseFilterType.EQUAL);
@@ -119,9 +118,9 @@ public class CcexProviderDao {
                 exchangeRateList.add(exchangeRate);
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't load table to memory");
-        }catch (CantCreateExchangeRateException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't create ExchangeRate object");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get History for currencyPair: ").append(currencyPair.toString()).toString(), "Couldn't load table to memory");
+        } catch (CantCreateExchangeRateException e) {
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get History for currencyPair: ").append(currencyPair.toString()).toString(), "Couldn't create ExchangeRate object");
         }
 
         return exchangeRateList;
@@ -148,7 +147,7 @@ public class CcexProviderDao {
         List<DatabaseTableRecord> records;
         DatabaseTable table = this.database.getTable(CcexProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
 
-        try{
+        try {
             table.loadToMemory();
             records = table.getRecords();
         } catch (CantLoadTableToMemoryException e) {
@@ -156,10 +155,11 @@ public class CcexProviderDao {
         }
 
         if (records.size() != 1)
-            throw new CantGetProviderInfoException("Inconsistent number of fetched records (" + records.size() + "), should be 1.");
+            throw new CantGetProviderInfoException(new StringBuilder().append("Inconsistent number of fetched records (").append(records.size()).append("), should be 1.").toString());
 
         return records.get(0);
     }
+
     private void populateProviderInfo(String providerName) throws CantInitializeProviderInfoException {
         DatabaseTable table = this.database.getTable(CcexProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
         DatabaseTableRecord newRecord = table.getEmptyRecord();
@@ -169,14 +169,10 @@ public class CcexProviderDao {
 
         try {
             table.insertRecord(newRecord);
-        }catch (CantInsertRecordException e) {
+        } catch (CantInsertRecordException e) {
             throw new CantInitializeProviderInfoException(e.getMessage());
         }
     }
-
-
-
-
 
 
     /* INTERNAL HELPER FUNCTIONS */
@@ -202,35 +198,32 @@ public class CcexProviderDao {
         try {
             String fromCurrencyStr = record.getStringValue(CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME);
 
-            if(FiatCurrency.codeExists(fromCurrencyStr))
+            if (FiatCurrency.codeExists(fromCurrencyStr))
                 fromCurrency = FiatCurrency.getByCode(fromCurrencyStr);
-            else if(CryptoCurrency.codeExists(fromCurrencyStr))
+            else if (CryptoCurrency.codeExists(fromCurrencyStr))
                 fromCurrency = CryptoCurrency.getByCode(fromCurrencyStr);
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Ccex provider plugin", "Invalid From Currency value stored in table"
-                    + CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "Ccex provider plugin", new StringBuilder().append("Invalid From Currency value stored in table").append(CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME).append(" for id ").append(id).toString());
         }
 
         Currency toCurrency;
         try {
             String toCurrencyStr = record.getStringValue(CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME);
 
-            if(FiatCurrency.codeExists(toCurrencyStr))
+            if (FiatCurrency.codeExists(toCurrencyStr))
                 toCurrency = FiatCurrency.getByCode(toCurrencyStr);
-            else if(CryptoCurrency.codeExists(toCurrencyStr))
+            else if (CryptoCurrency.codeExists(toCurrencyStr))
                 toCurrency = CryptoCurrency.getByCode(toCurrencyStr);
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Ccex provider plugin", "Invalid To Currency value stored in table"
-                    + CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "Ccex provider plugin", new StringBuilder().append("Invalid To Currency value stored in table").append(CcexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME).append(" for id ").append(id).toString());
         }
 
         return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);
     }
-
 
 
 }

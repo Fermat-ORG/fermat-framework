@@ -205,11 +205,11 @@ public class CustomerAckOnlineMerchandiseMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println("CUSTOMER_ACK_ONLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("CUSTOMER_ACK_ONLINE_MERCHANDISE - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
                     if (remoteBusinessTransaction != Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE)
                         continue;
 
-                    System.out.println("CUSTOMER_ACK_ONLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("CUSTOMER_ACK_ONLINE_MERCHANDISE - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
 
                     if (!dao.isContractHashInDatabase(contractHash)) {
                         CustomerBrokerContractSale saleContract = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
@@ -247,11 +247,11 @@ public class CustomerAckOnlineMerchandiseMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println("CUSTOMER_ACK_ONLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("CUSTOMER_ACK_ONLINE_MERCHANDISE - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
                     if (remoteBusinessTransaction != Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE)
                         continue;
 
-                    System.out.println("CUSTOMER_ACK_ONLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("CUSTOMER_ACK_ONLINE_MERCHANDISE - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
 
                     if (dao.isContractHashInDatabase(contractHash)) {
                         businessTransactionRecord = dao.getBusinessTransactionRecordByContractHash(contractHash);

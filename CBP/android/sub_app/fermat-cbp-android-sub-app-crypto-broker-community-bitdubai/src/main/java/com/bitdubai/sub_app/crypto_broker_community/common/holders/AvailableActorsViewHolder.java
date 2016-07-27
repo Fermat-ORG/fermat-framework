@@ -87,7 +87,7 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("OF"))
             brokerName.setTextColor(Color.RED);
         else if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
-            brokerName.setTextColor(Color.GREEN);
+            brokerName.setTextColor(Color.parseColor("#3CD84E"));//VERDE NO BRILLANTE
         else if (data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
             brokerName.setTextColor(Color.parseColor("#4d4d4d"));//BLACK);//res.getColor(R.color.color_black_light));
 

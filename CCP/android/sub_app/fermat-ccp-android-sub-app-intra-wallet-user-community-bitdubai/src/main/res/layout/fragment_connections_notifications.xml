@@ -5,6 +5,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/no_notifications_icon"
+            tools:ignore="ContentDescription"
+            android:visibility="visible" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NO NOTIFICATIONS"
+            android:textColor="#b8b8b8"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="10dp" />
+
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -30,34 +59,6 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <!--Empty view-->
-        <LinearLayout
-            android:id="@+id/empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#ffffff"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/no_notifications_icon"
-                tools:ignore="ContentDescription"
-                android:visibility="visible" />
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="NO NOTIFICATIONS"
-                android:textColor="#b8b8b8"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText"
-                android:layout_gravity="center_horizontal"
-                android:paddingTop="10dp" />
-
-        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"

@@ -23,18 +23,18 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
     private String state;
     private String city;
     private String connectionState;
-    private long   accuracy;
+    private long accuracy;
     private GeoFrequency frequency;
 
     ChatActorCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias,
                                              byte[] image, String status, String country,
                                              String state, String city, String connectionState,
-                                             long accuracy, GeoFrequency frequency){
+                                             long accuracy, GeoFrequency frequency) {
         this.publicKey = publicKey;
         this.actorType = actorType;
         this.alias = alias;
         this.image = image;
-        this.status= status;
+        this.status = status;
         this.country = country;
         this.state = state;
         this.city = city;
@@ -45,11 +45,11 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
 
     ChatActorCommunitySelectableIdentityImpl(final ChatIdentity chatIdentity) {
 
-        this.alias     = chatIdentity.getAlias()       ;
-        this.publicKey = chatIdentity.getPublicKey()   ;
-        this.actorType = Actors.CHAT         ;
-        this.image     = chatIdentity.getImage();
-        this.status    = chatIdentity.getConnectionState();
+        this.alias = chatIdentity.getAlias();
+        this.publicKey = chatIdentity.getPublicKey();
+        this.actorType = Actors.CHAT;
+        this.image = chatIdentity.getImage();
+        this.status = chatIdentity.getConnectionState();
         this.country = chatIdentity.getCountry();
         this.state = chatIdentity.getState();
         this.city = chatIdentity.getCity();
@@ -60,7 +60,8 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
 
 
     @Override
-    public void select() throws CantGetSelectedActorException {}
+    public void select() throws CantGetSelectedActorException {
+    }
 
     @Override
     public byte[] getProfileImage() {
@@ -118,17 +119,25 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
 
     @Override
     public String toString() {
-        return "ChatActorCommunitySelectableIdentityImpl{" +
-                "publicKey='" + publicKey + '\'' +
-                ", actorType=" + actorType +
-                ", alias='" + alias + '\'' +
-                ", image=" + (image != null) +
-                ", country='" + country + '\'' +
-                ", state='" + state + '\'' +
-                ", city='" + city + '\'' +
-                ", connectionState='" + connectionState + '\'' +
-                ", accuracy='" + accuracy + '\'' +
-                ", frequency='" + (frequency != null) +
-                '}';
+        return new StringBuilder()
+                .append("ChatActorCommunitySelectableIdentityImpl{")
+                .append("publicKey='").append(publicKey)
+                .append('\'')
+                .append(", actorType=").append(actorType)
+                .append(", alias='").append(alias)
+                .append('\'')
+                .append(", image=").append(image != null)
+                .append(", country='").append(country)
+                .append('\'')
+                .append(", state='").append(state)
+                .append('\'')
+                .append(", city='").append(city)
+                .append('\'')
+                .append(", connectionState='").append(connectionState)
+                .append('\'')
+                .append(", accuracy='").append(accuracy)
+                .append('\'')
+                .append(", frequency='").append(frequency != null)
+                .append('}').toString();
     }
 }

@@ -6,6 +6,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
  * The Class <code>package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.developer.chat.version_1.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatManagerException</code>
  * is thrown when an error occurs initializing database
  * <p/>
+ *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/02/16
  * @version 1.0
  */

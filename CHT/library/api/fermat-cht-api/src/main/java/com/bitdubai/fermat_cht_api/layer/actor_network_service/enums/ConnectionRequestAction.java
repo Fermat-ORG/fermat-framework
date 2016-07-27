@@ -11,12 +11,12 @@ public enum ConnectionRequestAction implements FermatEnum {
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
 
-    ACCEPT             ("ACC"), // accept a connection request.
-    CANCEL             ("CAN"), // cancel a connection request.
-    DENY               ("DEN"), // deny a connection request.
-    DISCONNECT         ("DIS"), // disconnect from a crypto broker.
-    NONE               ("NON"), // no action needed.
-    REQUEST            ("REQ"), // created the connection request.
+    ACCEPT("ACC"), // accept a connection request.
+    CANCEL("CAN"), // cancel a connection request.
+    DENY("DEN"), // deny a connection request.
+    DISCONNECT("DIS"), // disconnect from a crypto broker.
+    NONE("NON"), // no action needed.
+    REQUEST("REQ"), // created the connection request.
 
     ;
 
@@ -30,16 +30,22 @@ public enum ConnectionRequestAction implements FermatEnum {
 
         switch (code) {
 
-            case "ACC": return ACCEPT    ;
-            case "CAN": return CANCEL    ;
-            case "DEN": return DENY      ;
-            case "DIS": return DISCONNECT;
-            case "NON": return NONE      ;
-            case "REQ": return REQUEST   ;
+            case "ACC":
+                return ACCEPT;
+            case "CAN":
+                return CANCEL;
+            case "DEN":
+                return DENY;
+            case "DIS":
+                return DISCONNECT;
+            case "NON":
+                return NONE;
+            case "REQ":
+                return REQUEST;
 
             default:
                 throw new InvalidParameterException(
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "This code is not valid for the ConnectionRequestAction enum."
                 );
         }

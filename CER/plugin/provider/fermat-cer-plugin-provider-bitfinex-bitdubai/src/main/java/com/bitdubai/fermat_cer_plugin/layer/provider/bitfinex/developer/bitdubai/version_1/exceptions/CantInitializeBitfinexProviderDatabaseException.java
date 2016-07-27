@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_cer_plugin.layer.provider.bitfinex.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
+
 /**
  * The Class <code>package com.bitdubai.fermat_cer_plugin.layer.provider.bitfinex.developer.bitdubai.version_1.exceptions.CantInitializeBitfinexProviderDatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
- *
+ * <p/>
  * Created by Alejandro Bicelis - (abicelis@gmail.com) on 18/03/16.
  *
  * @version 1.0

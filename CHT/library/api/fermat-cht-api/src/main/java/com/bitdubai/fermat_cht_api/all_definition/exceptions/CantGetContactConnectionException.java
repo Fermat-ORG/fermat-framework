@@ -30,7 +30,7 @@ public class CantGetContactConnectionException extends CHTException {
      * @param possibleReason
      */
     public CantGetContactConnectionException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

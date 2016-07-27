@@ -27,7 +27,7 @@ public class IdentityListDrawerHolder extends FermatViewHolder {
         super(itemView);
 
         userIdentityImage = (ImageView) itemView.findViewById(R.id.imageView_avatar);
-        userIdentityName = (FermatTextView)itemView.findViewById(R.id.textView_identity);
+        userIdentityName = (FermatTextView) itemView.findViewById(R.id.textView_identity);
 
     }
 }

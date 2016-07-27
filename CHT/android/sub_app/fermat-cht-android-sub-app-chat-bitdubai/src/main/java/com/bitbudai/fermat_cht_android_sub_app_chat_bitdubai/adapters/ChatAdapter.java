@@ -36,7 +36,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 
     ArrayList<ChatMessage> filteredData;
     private String filterString;
-    private int filterSet =0;
+    private int filterSet = 0;
 
     public ChatAdapter(Context context) {
         super(context);
@@ -53,11 +53,17 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
     }
 
     @Override
-    protected int getCardViewResource() {return R.layout.chat_list_item;  }
+    protected int getCardViewResource() {
+        return R.layout.chat_list_item;
+    }
 
-    public void setFilterSetted(int filterSet) { this.filterSet=filterSet;  }
+    public void setFilterSetted(int filterSet) {
+        this.filterSet = filterSet;
+    }
 
-    public int getFilterSetted() {return this.filterSet;  }
+    public int getFilterSetted() {
+        return this.filterSet;
+    }
 
     @Override
     protected void bindHolder(ChatHolder holder, ChatMessage data, int position) {
@@ -70,16 +76,16 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
                 public boolean onLongClick(View v) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                         android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText("simple text",copiedMessage);
-                        clipboard.setPrimaryClip(clip);}
-                    else{
+                        ClipData clip = ClipData.newPlainText("simple text", copiedMessage);
+                        clipboard.setPrimaryClip(clip);
+                    } else {
                         android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                         clipboard.setText(copiedMessage);
                     }
-                    if(copiedMessage.length() <= 10){
-                        Toast.makeText(context, "Copied: " + copiedMessage, Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(context, "Copied: " + copiedMessage.substring(0,11) + "...", Toast.LENGTH_SHORT).show();
+                    if (copiedMessage.length() <= 10) {
+                        Toast.makeText(context, new StringBuilder().append("Copied: ").append(copiedMessage).toString(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, new StringBuilder().append("Copied: ").append(copiedMessage.substring(0, 11)).append("...").toString(), Toast.LENGTH_SHORT).show();
                     }
                     return true;
                 }
@@ -88,7 +94,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
     }
 
     public View getView() {
-        LayoutInflater vi = LayoutInflater.from(context) ;
+        LayoutInflater vi = LayoutInflater.from(context);
         View convertView = vi.inflate(R.layout.chat_list_item, null);
         return convertView;
     }
@@ -131,7 +137,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
             layoutParams.gravity = Gravity.RIGHT;
             holder.txtInfo.setLayoutParams(layoutParams);
             holder.tickstatusimage.setVisibility(View.VISIBLE);
-            if(data.getStatus() != null) {
+            if (data.getStatus() != null) {
                 if (data.getStatus().equals(MessageStatus.SEND.toString()) /*|| data.getStatus().equals(MessageStatus.CREATED.toString())*/)
                     holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
                 else if (data.getStatus().equals(MessageStatus.DELIVERED.toString()) || data.getStatus().equals(MessageStatus.RECEIVE.toString()))
@@ -166,7 +172,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 
     @Override
     public int getItemCount() {
-        if(filterString!=null)
+        if (filterString != null)
             return filteredData == null ? 0 : filteredData.size();
         else
             return chatMessages == null ? 0 : chatMessages.size();
@@ -174,9 +180,9 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 
     @Override
     public ChatMessage getItem(int position) {
-        if(filterString!=null)
+        if (filterString != null)
             return filteredData != null ? (!filteredData.isEmpty()
-                        && position < filteredData.size()) ? filteredData.get(position) : null : null;
+                    && position < filteredData.size()) ? filteredData.get(position) : null : null;
         else
             return chatMessages != null ? (!chatMessages.isEmpty()
                     && position < chatMessages.size()) ? chatMessages.get(position) : null : null;

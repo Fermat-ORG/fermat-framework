@@ -178,11 +178,11 @@ public class CustomerOfflinePaymentMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println("CUSTOMER_OFFLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("CUSTOMER_OFFLINE_PAYMENT - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
                     if (remoteBusinessTransaction != Plugins.CUSTOMER_OFFLINE_PAYMENT)
                         continue;
 
-                    System.out.println("CUSTOMER_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("CUSTOMER_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
 
                     if (customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
                         contractTransactionStatus = customerOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(contractHash);
@@ -225,11 +225,11 @@ public class CustomerOfflinePaymentMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println("CUSTOMER_OFFLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("CUSTOMER_OFFLINE_PAYMENT - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
                     if (remoteBusinessTransaction != Plugins.CUSTOMER_OFFLINE_PAYMENT)
                         continue;
 
-                    System.out.println("CUSTOMER_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    System.out.println(new StringBuilder().append("CUSTOMER_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
 
                     if (customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
                         customerOnlinePaymentRecord = customerOfflinePaymentBusinessTransactionDao.getCustomerOfflinePaymentRecord(contractHash);

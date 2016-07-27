@@ -18,7 +18,7 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
     public final String alias;
     public final byte[] image;
 
-    ChatActorCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias, byte[] image){
+    ChatActorCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias, byte[] image) {
         this.publicKey = publicKey;
         this.actorType = actorType;
         this.alias = alias;
@@ -27,15 +27,16 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
 
     ChatActorCommunitySelectableIdentityImpl(final ChatIdentity chatIdentity) {
 
-        this.alias     = chatIdentity.getAlias()       ;
-        this.publicKey = chatIdentity.getPublicKey()   ;
-        this.actorType = Actors.CHAT         ;
-        this.image     = chatIdentity.getImage();
+        this.alias = chatIdentity.getAlias();
+        this.publicKey = chatIdentity.getPublicKey();
+        this.actorType = Actors.CHAT;
+        this.image = chatIdentity.getImage();
     }
 
 
     @Override
-    public void select() throws CantGetSelectedActorException {}
+    public void select() throws CantGetSelectedActorException {
+    }
 
     @Override
     public byte[] getProfileImage() {
@@ -64,11 +65,14 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
 
     @Override
     public String toString() {
-        return "ChatActorCommunitySelectableIdentityImpl{" +
-                "publicKey='" + publicKey + '\'' +
-                ", actorType=" + actorType +
-                ", alias='" + alias + '\'' +
-                ", image=" + (image != null) +
-                '}';
+        return new StringBuilder()
+                .append("ChatActorCommunitySelectableIdentityImpl{")
+                .append("publicKey='").append(publicKey)
+                .append('\'')
+                .append(", actorType=").append(actorType)
+                .append(", alias='").append(alias)
+                .append('\'')
+                .append(", image=").append(image != null)
+                .append('}').toString();
     }
 }

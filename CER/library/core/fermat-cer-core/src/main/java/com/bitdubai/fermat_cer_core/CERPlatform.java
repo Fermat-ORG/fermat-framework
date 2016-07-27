@@ -21,8 +21,8 @@ public class CERPlatform extends AbstractPlatform {
     public void start() throws CantStartPlatformException {
 
         try {
-            registerLayer(new ProviderLayer()   );
-            registerLayer(new SearchLayer()     );
+            registerLayer(new ProviderLayer());
+            registerLayer(new SearchLayer());
         } catch (CantRegisterLayerException e) {
 
             throw new CantStartPlatformException(

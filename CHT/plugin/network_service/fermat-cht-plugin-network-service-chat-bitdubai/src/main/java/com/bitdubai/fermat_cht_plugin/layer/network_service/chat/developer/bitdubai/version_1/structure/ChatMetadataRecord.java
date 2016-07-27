@@ -11,8 +11,6 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.Distribution
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.google.gson.Gson;
 
-
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -20,7 +18,7 @@ import java.util.UUID;
 /**
  * Created by Gabriel Araujo on 06/01/16.
  */
-public class ChatMetadataRecord implements ChatMetadata{
+public class ChatMetadataRecord implements ChatMetadata {
 
     private UUID transactionId;
 
@@ -113,46 +111,47 @@ public class ChatMetadataRecord implements ChatMetadata{
 
     /**
      * This method checks if the ChatMetadataRecord if completed filled before sending.
+     *
      * @param isNewPluginRoot Recieves {@isNewPluginRoot} which indicates if this is an old version of the plugin.
      * @return
      */
-    public boolean isFilled(boolean isNewPluginRoot){
-        if(this.chatId == null)
+    public boolean isFilled(boolean isNewPluginRoot) {
+        if (this.chatId == null)
             return false;
-        if(this.transactionId == null)
+        if (this.transactionId == null)
             return false;
-        if(this.responseToNotification == null || this.responseToNotification.isEmpty())
+        if (this.responseToNotification == null || this.responseToNotification.isEmpty())
             return false;
-        if(this.objectId == null)
+        if (this.objectId == null)
             return false;
-        if(this.localActorType == null)
+        if (this.localActorType == null)
             return false;
-        if(this.localActorPublicKey == null || this.localActorPublicKey.isEmpty())
+        if (this.localActorPublicKey == null || this.localActorPublicKey.isEmpty())
             return false;
-        if(this.remoteActorType == null)
+        if (this.remoteActorType == null)
             return false;
-        if(this.remoteActorPublicKey == null || this.remoteActorPublicKey.isEmpty())
+        if (this.remoteActorPublicKey == null || this.remoteActorPublicKey.isEmpty())
             return false;
-        if(this.chatName == null || this.chatName.isEmpty())
+        if (this.chatName == null || this.chatName.isEmpty())
             return false;
-        if(this.chatMessageStatus == null)
+        if (this.chatMessageStatus == null)
             return false;
-        if(this.messageStatus == null)
+        if (this.messageStatus == null)
             return false;
-        if(this.date == null)
+        if (this.date == null)
             return false;
-        if(this.messageId == null)
+        if (this.messageId == null)
             return false;
-        if(this.message == null || message.isEmpty())
+        if (this.message == null || message.isEmpty())
             return false;
-        if(this.distributionStatus == null)
+        if (this.distributionStatus == null)
             return false;
-        if(this.processed == null || processed.isEmpty())
+        if (this.processed == null || processed.isEmpty())
             return false;
-        if(isNewPluginRoot){
-            if(this.chatProtocolState == null)
+        if (isNewPluginRoot) {
+            if (this.chatProtocolState == null)
                 return false;
-            if(this.sentDate == null)
+            if (this.sentDate == null)
                 return false;
         }
         return true;
@@ -160,45 +159,45 @@ public class ChatMetadataRecord implements ChatMetadata{
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == null)
+        if (obj == null)
             return false;
-        if(!(obj instanceof ChatMetadataRecord))
+        if (!(obj instanceof ChatMetadataRecord))
             return false;
-        if(this.chatId != ((ChatMetadataRecord) obj).getChatId())
+        if (this.chatId != ((ChatMetadataRecord) obj).getChatId())
             return false;
-        if(this.transactionId != ((ChatMetadataRecord) obj).getTransactionId())
+        if (this.transactionId != ((ChatMetadataRecord) obj).getTransactionId())
             return false;
-        if(!Objects.equals(this.responseToNotification, ((ChatMetadataRecord) obj).getResponseToNotification()))
+        if (!Objects.equals(this.responseToNotification, ((ChatMetadataRecord) obj).getResponseToNotification()))
             return false;
-        if(this.objectId != ((ChatMetadataRecord) obj).getObjectId())
+        if (this.objectId != ((ChatMetadataRecord) obj).getObjectId())
             return false;
-        if(this.localActorType != ((ChatMetadataRecord) obj).getLocalActorType())
+        if (this.localActorType != ((ChatMetadataRecord) obj).getLocalActorType())
             return false;
-        if(!Objects.equals(this.localActorPublicKey, ((ChatMetadataRecord) obj).getLocalActorPublicKey()))
+        if (!Objects.equals(this.localActorPublicKey, ((ChatMetadataRecord) obj).getLocalActorPublicKey()))
             return false;
-        if(this.remoteActorType != ((ChatMetadataRecord) obj).getRemoteActorType())
+        if (this.remoteActorType != ((ChatMetadataRecord) obj).getRemoteActorType())
             return false;
-        if(!Objects.equals(this.remoteActorPublicKey, ((ChatMetadataRecord) obj).getRemoteActorPublicKey()))
+        if (!Objects.equals(this.remoteActorPublicKey, ((ChatMetadataRecord) obj).getRemoteActorPublicKey()))
             return false;
-        if(!Objects.equals(this.chatName, ((ChatMetadataRecord) obj).getChatName()))
+        if (!Objects.equals(this.chatName, ((ChatMetadataRecord) obj).getChatName()))
             return false;
-        if(this.chatMessageStatus != ((ChatMetadataRecord) obj).getChatMessageStatus())
+        if (this.chatMessageStatus != ((ChatMetadataRecord) obj).getChatMessageStatus())
             return false;
-        if(this.messageStatus != ((ChatMetadataRecord) obj).getMessageStatus())
+        if (this.messageStatus != ((ChatMetadataRecord) obj).getMessageStatus())
             return false;
-        if(this.date != ((ChatMetadataRecord) obj).getDate())
+        if (this.date != ((ChatMetadataRecord) obj).getDate())
             return false;
-        if(this.messageId != ((ChatMetadataRecord) obj).getMessageId())
+        if (this.messageId != ((ChatMetadataRecord) obj).getMessageId())
             return false;
-        if(!Objects.equals(this.message, ((ChatMetadataRecord) obj).getMessage()))
+        if (!Objects.equals(this.message, ((ChatMetadataRecord) obj).getMessage()))
             return false;
-        if(this.distributionStatus != ((ChatMetadataRecord) obj).getDistributionStatus())
+        if (this.distributionStatus != ((ChatMetadataRecord) obj).getDistributionStatus())
             return false;
 
-        if(!Objects.equals(this.processed, ((ChatMetadataRecord) obj).getProcessed()))
+        if (!Objects.equals(this.processed, ((ChatMetadataRecord) obj).getProcessed()))
             return false;
         return true;
- }
+    }
 
     /**
      * Represent the value of PROCESSED
@@ -212,6 +211,7 @@ public class ChatMetadataRecord implements ChatMetadata{
 
     /**
      * Get the Processed
+     *
      * @return String
      */
     public String getProcessed() {
@@ -220,6 +220,7 @@ public class ChatMetadataRecord implements ChatMetadata{
 
     /**
      * Set the Processed
+     *
      * @param processed
      */
     public void setProcessed(String processed) {
@@ -227,7 +228,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     public String getResponseToNotification() {
@@ -235,7 +235,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param responseToNotification
      */
     public void setResponseToNotification(String responseToNotification) {
@@ -243,7 +242,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     public UUID getTransactionId() {
@@ -251,7 +249,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param transactionId
      */
     public void setTransactionId(UUID transactionId) {
@@ -259,7 +256,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -268,7 +264,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param chatId
      */
     public void setChatId(UUID chatId) {
@@ -276,7 +271,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -285,7 +279,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param messageStatus
      */
     public void setMessageStatus(MessageStatus messageStatus) {
@@ -293,7 +286,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -332,7 +324,6 @@ public class ChatMetadataRecord implements ChatMetadata{
 
 
     /**
-     *
      * @param distributionStatus
      */
     public void setDistributionStatus(DistributionStatus distributionStatus) {
@@ -346,7 +337,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -355,7 +345,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param localActorType
      */
     public void setLocalActorType(PlatformComponentType localActorType) {
@@ -363,7 +352,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -372,7 +360,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param localActorPublicKey
      */
     public void setLocalActorPublicKey(String localActorPublicKey) {
@@ -380,7 +367,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -389,7 +375,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param remoteActorType
      */
     public void setRemoteActorType(PlatformComponentType remoteActorType) {
@@ -397,7 +382,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -406,7 +390,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param remoteActorPublicKey
      */
     public void setRemoteActorPublicKey(String remoteActorPublicKey) {
@@ -414,7 +397,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -423,7 +405,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param chatName
      */
     public void setChatName(String chatName) {
@@ -431,7 +412,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -440,7 +420,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param chatMessageStatus
      */
     public void setChatMessageStatus(ChatMessageStatus chatMessageStatus) {
@@ -448,7 +427,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -457,7 +435,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param date
      */
     public void setDate(String date) {
@@ -465,7 +442,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -474,7 +450,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param message
      */
     public void setMessage(String message) {
@@ -483,7 +458,6 @@ public class ChatMetadataRecord implements ChatMetadata{
 
 
     /**
-     *
      * @return
      */
     @Override
@@ -492,7 +466,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param objectId
      */
     public void setObjectId(UUID objectId) {
@@ -500,7 +473,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -509,7 +481,6 @@ public class ChatMetadataRecord implements ChatMetadata{
     }
 
     /**
-     *
      * @param messageId
      */
     public void setMessageId(UUID messageId) {

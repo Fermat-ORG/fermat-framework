@@ -6,11 +6,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.View;
-import android.widget.Toast;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -21,8 +20,6 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
@@ -31,7 +28,6 @@ import com.bitdubai.sub_app.chat_community.filters.CommunityFilter;
 import com.bitdubai.sub_app.chat_community.holders.CommunityWorldHolder;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,8 +60,8 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                                 ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
                                 ChatActorCommunitySubAppModuleManager moduleManager) {
         super(context, dataSet);
-        this.appSession=appSession;
-        this.moduleManager=moduleManager;
+        this.appSession = appSession;
+        this.moduleManager = moduleManager;
     }
 
     @Override
@@ -78,8 +74,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         return R.layout.cht_comm_world_item;
     }
 
-    private void updateConnectionState(ConnectionState connectionState, CommunityWorldHolder holder)
-    {
+    private void updateConnectionState(ConnectionState connectionState, CommunityWorldHolder holder) {
         if (connectionState != null) {
             switch (connectionState) {
                 case CONNECTED:
@@ -211,7 +206,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                     holder.pendingButton.setVisibility(View.GONE);
                     break;
             }
-        }else {
+        } else {
             holder.add_contact_button.setVisibility(View.VISIBLE);
             holder.connection_text.setVisibility(View.GONE);
             holder.connectedButton.setVisibility(View.GONE);
@@ -230,27 +225,32 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
             Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
             bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
             holder.thumbnail.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
-        }else
+        } else
             holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
 
-        if(data.getLocation() != null){
+        if (data.getLocation() != null) {
             if (data.getState().equals("null") || data.getState().equals("")) stateAddress = "";
-            else stateAddress = data.getState() + " ";
+            else stateAddress = new StringBuilder().append(data.getState()).append(" ").toString();
             if (data.getCity().equals("null") || data.getCity().equals("")) cityAddress = "";
-            else cityAddress = data.getCity() + " ";
-            if (data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
+            else cityAddress = new StringBuilder().append(data.getCity()).append(" ").toString();
+            if (data.getCountry().equals("null") || data.getCountry().equals(""))
+                countryAddress = "";
             else countryAddress = data.getCountry();
-            if(stateAddress == "" && cityAddress == "" && countryAddress == ""){
+            if (stateAddress.equalsIgnoreCase("") && cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
                 holder.location_text.setText("Not Found");
-            }else
-                holder.location_text.setText(cityAddress + stateAddress + countryAddress);
+            } else
+                holder.location_text.setText(new StringBuilder().append(cityAddress).append(stateAddress).append(countryAddress).toString());
         } else
             holder.location_text.setText("Not Found");
 
-        if(data.getProfileStatus()!= ProfileStatus.ONLINE)
+        if (data.getProfileStatus() == ProfileStatus.ONLINE)
+            holder.location_text.setTextColor(Color.parseColor("#47BF73"));//Verde no brillante
+        else if (data.getProfileStatus() == ProfileStatus.OFFLINE)
             holder.location_text.setTextColor(Color.RED);
+        else if (data.getProfileStatus() == ProfileStatus.UNKNOWN)
+            holder.location_text.setTextColor(Color.BLACK);
 
-        final ChatActorCommunityInformation dat=data;
+        final ChatActorCommunityInformation dat = data;
         holder.add_contact_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -278,7 +278,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                         }
                     });
                     connectDialog.show();
-                } catch ( CantGetSelectedActorIdentityException
+                } catch (CantGetSelectedActorIdentityException
                         | ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }
@@ -297,7 +297,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                                     dat, moduleManager.getSelectedActorIdentity());
                     disconnectDialog.setTitle("Disconnect");
                     disconnectDialog.setDescription("Do you want to disconnect from");
-                    disconnectDialog.setUsername(dat.getAlias()+"?");
+                    disconnectDialog.setUsername(new StringBuilder().append(dat.getAlias()).append("?").toString());
                     disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
@@ -311,7 +311,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                         }
                     });
                     disconnectDialog.show();
-                } catch ( CantGetSelectedActorIdentityException
+                } catch (CantGetSelectedActorIdentityException
                         | ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }
@@ -346,7 +346,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                         }
                     });
                     connectDialog.show();
-                } catch ( CantGetSelectedActorIdentityException
+                } catch (CantGetSelectedActorIdentityException
                         | ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }
@@ -383,7 +383,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                     });
                     notificationAcceptDialog.show();
 
-                } catch ( CantGetSelectedActorIdentityException
+                } catch (CantGetSelectedActorIdentityException
                         | ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }

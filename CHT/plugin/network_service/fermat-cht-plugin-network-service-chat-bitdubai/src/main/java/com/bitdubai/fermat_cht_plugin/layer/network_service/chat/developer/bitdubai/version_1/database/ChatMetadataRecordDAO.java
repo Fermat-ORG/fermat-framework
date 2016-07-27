@@ -39,9 +39,9 @@ import java.util.UUID;
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/05/2016.
  *
- * @author  lnacosta
+ * @author lnacosta
  * @version 1.0
- * @since   Java JDK 1.7
+ * @since Java JDK 1.7
  */
 public class ChatMetadataRecordDAO implements DAO {
 
@@ -81,16 +81,15 @@ public class ChatMetadataRecordDAO implements DAO {
         List<DatabaseTableRecord> records = databaseTable.getRecords();
 
         List<ChatMetadataRecord> list = new ArrayList<>();
-        try{
-            if(!records.isEmpty() && records.size()>0){
+        try {
+            if (!records.isEmpty() && records.size() > 0) {
                 for (DatabaseTableRecord record : records) {
                     list.add(constructFrom(record));
                 }
             }
 
-        }
-        catch (Exception e){
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        } catch (Exception e) {
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
             throw cantReadRecordDataBaseException;
         }
         return list;
@@ -98,6 +97,7 @@ public class ChatMetadataRecordDAO implements DAO {
 
     /**
      * Returns a unique UUID to the transaction ID
+     *
      * @param id
      * @return
      * @throws CantReadRecordDataBaseException
@@ -116,7 +116,7 @@ public class ChatMetadataRecordDAO implements DAO {
              * 1 - load the data base to memory with filter
              */
 
-            DatabaseTable databaseTable =  getDatabaseTable();
+            DatabaseTable databaseTable = getDatabaseTable();
             databaseTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
 
@@ -130,10 +130,10 @@ public class ChatMetadataRecordDAO implements DAO {
              * 3 -Check if there is any record with the same UUUID and get new one until its done.
              */
 
-            while(records.size()>0){
+            while (records.size() > 0) {
 
-                id =UUID.randomUUID().toString();
-                databaseTable =  getDatabaseTable();
+                id = UUID.randomUUID().toString();
+                databaseTable = getDatabaseTable();
                 databaseTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
                 databaseTable.loadToMemory();
                 newUUID = UUID.fromString(id);
@@ -144,7 +144,7 @@ public class ChatMetadataRecordDAO implements DAO {
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
@@ -182,7 +182,7 @@ public class ChatMetadataRecordDAO implements DAO {
             /*
              * 2.- Create a new transaction and execute
              */
-            
+
             DatabaseTable databaseTable = getDatabaseTable();
             DatabaseTransaction transaction = getDatabase().newTransaction();
             transaction.addRecordToInsert(databaseTable, entityRecord);
@@ -192,19 +192,19 @@ public class ChatMetadataRecordDAO implements DAO {
 
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantInsertRecordDataBaseException;
 
-        }catch(Exception e){
+        } catch (Exception e) {
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
-            String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself\n"+e.getMessage();
+            String possibleCause = new StringBuilder().append("The Template Database triggered an unexpected problem that wasn't able to solve by itself\n").append(e.getMessage()).toString();
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(e.getMessage(), e, context, possibleCause);
             throw cantInsertRecordDataBaseException;
         }
@@ -230,7 +230,7 @@ public class ChatMetadataRecordDAO implements DAO {
             /*
              * 1 - load the data base to memory with filter
              */
-            DatabaseTable OUTGOINGMessageTable =  getDatabaseTable();
+            DatabaseTable OUTGOINGMessageTable = getDatabaseTable();
             OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
             OUTGOINGMessageTable.loadToMemory();
 
@@ -254,7 +254,7 @@ public class ChatMetadataRecordDAO implements DAO {
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
@@ -265,21 +265,20 @@ public class ChatMetadataRecordDAO implements DAO {
         return chatMetadaTransactionRecord;
     }
 
-    public ChatMetadataRecord getNotificationByChatAndMessageId(UUID chatId,UUID messageId) throws CantGetNotificationException, NotificationNotFoundException, CantReadRecordDataBaseException {
+    public ChatMetadataRecord getNotificationByChatAndMessageId(UUID chatId, UUID messageId) throws CantGetNotificationException, NotificationNotFoundException, CantReadRecordDataBaseException {
 
-        DatabaseTable OUTGOINGMessageTable =  getDatabaseTable();
+        DatabaseTable OUTGOINGMessageTable = getDatabaseTable();
         if (chatId == null) {
             OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDMENSAJE_COLUMN_NAME, messageId.toString(), DatabaseFilterType.EQUAL);
-        }
-        else if (messageId == null) {
+        } else if (messageId == null) {
             OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDCHAT_COLUMN_NAME, chatId.toString(), DatabaseFilterType.EQUAL);
-        }
-        else if(chatId != null && messageId != null){
+        } else if (chatId != null && messageId != null) {
             OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDMENSAJE_COLUMN_NAME, messageId.toString(), DatabaseFilterType.EQUAL);
             OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDCHAT_COLUMN_NAME, chatId.toString(), DatabaseFilterType.EQUAL);
         }
 
-        if(chatId == null && messageId == null) new IllegalArgumentException("The id is required, can not be null");
+        if (chatId == null && messageId == null)
+            new IllegalArgumentException("The id is required, can not be null");
 
         ChatMetadataRecord chatMetadaTransactionRecord = null;
 
@@ -306,7 +305,7 @@ public class ChatMetadataRecordDAO implements DAO {
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
@@ -316,6 +315,7 @@ public class ChatMetadataRecordDAO implements DAO {
 
         return chatMetadaTransactionRecord;
     }
+
     public String getNotificationResponseToByID(UUID transactionID) throws CantGetNotificationException, NotificationNotFoundException, CantReadRecordDataBaseException {
 
         if (transactionID == null) {
@@ -328,7 +328,7 @@ public class ChatMetadataRecordDAO implements DAO {
             /*
              * 1 - load the data base to memory with filter
              */
-            DatabaseTable OUTGOINGMessageTable =  getDatabaseTable();
+            DatabaseTable OUTGOINGMessageTable = getDatabaseTable();
             OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
             OUTGOINGMessageTable.loadToMemory();
 
@@ -354,7 +354,7 @@ public class ChatMetadataRecordDAO implements DAO {
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
@@ -378,7 +378,7 @@ public class ChatMetadataRecordDAO implements DAO {
             /*
              * 1 - load the data base to memory with filter
              */
-            DatabaseTable OUTGOINGMessageTable =  getDatabaseTable();
+            DatabaseTable OUTGOINGMessageTable = getDatabaseTable();
             OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_RESPONSE_TO_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
             OUTGOINGMessageTable.loadToMemory();
 
@@ -402,7 +402,7 @@ public class ChatMetadataRecordDAO implements DAO {
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
@@ -429,7 +429,7 @@ public class ChatMetadataRecordDAO implements DAO {
              * 1 - load the data base to memory with filter
              */
 
-            DatabaseTable OUTGOINGMessageTable =  getDatabaseTable();
+            DatabaseTable OUTGOINGMessageTable = getDatabaseTable();
             OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_LOCALACTORPUBKEY_COLUMN_NAME, senderPublicKey, DatabaseFilterType.EQUAL);
             OUTGOINGMessageTable.loadToMemory();
 
@@ -448,8 +448,7 @@ public class ChatMetadataRecordDAO implements DAO {
                  * 3.1 - Create and configure a  ChatMetadataRecord
                  */
                 chatMetadaTransactionRecord = constructFrom(record);
-                if(chatMetadaTransactionRecord != null)
-                {
+                if (chatMetadaTransactionRecord != null) {
                     chatMetadaTransactionRecord.setChatMessageStatus(chatMessageStatus);
                     update(chatMetadaTransactionRecord);
                 }
@@ -458,7 +457,7 @@ public class ChatMetadataRecordDAO implements DAO {
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
@@ -482,7 +481,7 @@ public class ChatMetadataRecordDAO implements DAO {
             /*
              * 1 - load the data base to memory with filter
              */
-            DatabaseTable OUTGOINGMessageTable =  getDatabaseTable();
+            DatabaseTable OUTGOINGMessageTable = getDatabaseTable();
             OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_LOCALACTORPUBKEY_COLUMN_NAME, senderPublicKey, DatabaseFilterType.EQUAL);
             OUTGOINGMessageTable.loadToMemory();
 
@@ -501,18 +500,17 @@ public class ChatMetadataRecordDAO implements DAO {
                  * 3.1 - Create and configure a  ChatMetadataRecord
                  */
                 chatMetadaTransactionRecord = constructFrom(record);
-                if(chatMetadaTransactionRecord != null)
-                {
+                if (chatMetadaTransactionRecord != null) {
                     chatMetadaTransactionRecord.setMessageStatus(messageStatus);
                     update(chatMetadaTransactionRecord);
                 }
 
             }
 
-        } catch (CantLoadTableToMemoryException  cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
@@ -531,7 +529,7 @@ public class ChatMetadataRecordDAO implements DAO {
             throw new IllegalArgumentException("The messageStatus is required, can not be null");
         }
         ChatMetadataRecord chatMetadataRecord = getNotificationById(requestId);
-        if(chatMetadataRecord != null){
+        if (chatMetadataRecord != null) {
             chatMetadataRecord.changeState(protocolState);
             update(chatMetadataRecord);
         }
@@ -540,8 +538,9 @@ public class ChatMetadataRecordDAO implements DAO {
 
     @Override
     public List<ChatMetadataRecord> listRequestsByChatProtocolStateAndDistributionStatus(ChatProtocolState chatProtocolState, DistributionStatus distributionStatus) throws CantReadRecordDataBaseException, CantLoadTableToMemoryException {
-        return findAllToSend(chatProtocolState,distributionStatus);
+        return findAllToSend(chatProtocolState, distributionStatus);
     }
+
     /**
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>ChatNetworkServiceDataBaseConstants</code>
@@ -602,7 +601,7 @@ public class ChatMetadataRecordDAO implements DAO {
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
@@ -615,10 +614,11 @@ public class ChatMetadataRecordDAO implements DAO {
          */
         return list;
     }
+
     @Override
     public List<ChatMetadata> listUnreadNotifications() throws CHTException {
         try {
-            DatabaseTable databaseTable =  getDatabaseTable();
+            DatabaseTable databaseTable = getDatabaseTable();
 
             databaseTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_SENT_COUNT_COLUMN_NAME, String.valueOf(false), DatabaseFilterType.EQUAL);
 
@@ -634,7 +634,7 @@ public class ChatMetadataRecordDAO implements DAO {
             return chatMetadatas;
 
         } catch (Exception e) {
-            CHTException chtException = new CHTException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            CHTException chtException = new CHTException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
             throw chtException;
         }
     }
@@ -650,20 +650,20 @@ public class ChatMetadataRecordDAO implements DAO {
             update(chatMetadataRecord);
 
         } catch (CantGetNotificationException e) {
-            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, "notificationId:"+transactionID, "Error trying to get the notification.");
+            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, new StringBuilder().append("notificationId: ").append(transactionID).toString(), "Error trying to get the notification.");
             throw cantConfirmNotificationException;
         } catch (NotificationNotFoundException e) {
-            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, "notificationId:"+transactionID, "Notification not found.");
+            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, new StringBuilder().append("notificationId: ").append(transactionID).toString(), "Notification not found.");
             throw cantConfirmNotificationException;
         } catch (CantUpdateRecordDataBaseException e) {
-            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, "notificationId:"+transactionID, "Error updating getDatabase().");
+            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, new StringBuilder().append("notificationId: ").append(transactionID).toString(), "Error updating getDatabase().");
             throw cantConfirmNotificationException;
         } catch (CantReadRecordDataBaseException e) {
-            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, "notificationId:"+transactionID, "Error reading getDatabase().");
+            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, new StringBuilder().append("notificationId: ").append(transactionID).toString(), "Error reading getDatabase().");
             throw cantConfirmNotificationException;
         }
     }
-    
+
     /**
      * Method that update an entity in the data base.
      *
@@ -690,10 +690,10 @@ public class ChatMetadataRecordDAO implements DAO {
             setValuesToRecord(record, entity);
             databaseTable.updateRecord(record);
 
-        } catch (CantUpdateRecordException | CantCreateDatabaseException | CantOpenDatabaseException | RecordsNotFoundException |CantLoadTableToMemoryException  databaseTransactionFailedException) {
+        } catch (CantUpdateRecordException | CantCreateDatabaseException | CantOpenDatabaseException | RecordsNotFoundException | CantLoadTableToMemoryException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
@@ -720,8 +720,8 @@ public class ChatMetadataRecordDAO implements DAO {
             /*
              * Create a new transaction and execute
              */
-            
-            DatabaseTable databaseTable =  getDatabaseTable();
+
+            DatabaseTable databaseTable = getDatabaseTable();
             DatabaseTableFilter filter = databaseTable.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(id.toString());
@@ -737,7 +737,7 @@ public class ChatMetadataRecordDAO implements DAO {
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
@@ -815,38 +815,37 @@ public class ChatMetadataRecordDAO implements DAO {
     }
 
     /**
-     *
      * @param chatMetadataRecord
      * @param entityRecord
      * @throws CantOpenDatabaseException
      * @throws CantCreateDatabaseException
      */
-    private void setValuesToRecord(DatabaseTableRecord entityRecord,ChatMetadataRecord chatMetadataRecord) throws CantOpenDatabaseException, CantCreateDatabaseException {
+    private void setValuesToRecord(DatabaseTableRecord entityRecord, ChatMetadataRecord chatMetadataRecord) throws CantOpenDatabaseException, CantCreateDatabaseException {
 
         /*
          * Set the entity values
          */
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME,                          chatMetadataRecord.getTransactionId().toString());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_RESPONSE_TO_COLUMN_NAME,                 chatMetadataRecord.getResponseToNotification());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDCHAT_COLUMN_NAME,                      chatMetadataRecord.getChatId().toString());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDOBJECTO_COLUMN_NAME,                   chatMetadataRecord.getObjectId().toString());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_LOCALACTORTYPE_COLUMN_NAME,              chatMetadataRecord.getLocalActorType().getCode());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_LOCALACTORPUBKEY_COLUMN_NAME,            chatMetadataRecord.getLocalActorPublicKey());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_REMOTEACTORTYPE_COLUMN_NAME,             chatMetadataRecord.getRemoteActorType().getCode());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_REMOTEACTORPUBKEY_COLUMN_NAME,           chatMetadataRecord.getRemoteActorPublicKey());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_CHATNAME_COLUMN_NAME,                    chatMetadataRecord.getChatName());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_CHATSTATUS_COLUMN_NAME,                  chatMetadataRecord.getChatMessageStatus().getCode());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_MESSAGE_STATUS_COLUMN_NAME,              chatMetadataRecord.getMessageStatus().getCode());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_DATE_COLUMN_NAME,                        chatMetadataRecord.getDate());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDMENSAJE_COLUMN_NAME,                   chatMetadataRecord.getMessageId().toString());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_MESSAGE_COLUMN_NAME,                     chatMetadataRecord.getMessage());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_DISTRIBUTIONSTATUS_COLUMN_NAME,          chatMetadataRecord.getDistributionStatus().getCode());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROCCES_STATUS_COLUMN_NAME,              chatMetadataRecord.getProcessed());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME,              chatMetadataRecord.getChatProtocolState().getCode());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_SENTDATE_COLUMN_NAME,                    chatMetadataRecord.getSentDate());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_READ_MARK_COLUMN_NAME,                   String.valueOf(chatMetadataRecord.isFlagReadead()));
-        entityRecord.setIntegerValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_SENT_COUNT_COLUMN_NAME,                 chatMetadataRecord.getSentCount());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_XML_MSG_REPRESENTATION,                  chatMetadataRecord.getMsgXML());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME, chatMetadataRecord.getTransactionId().toString());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_RESPONSE_TO_COLUMN_NAME, chatMetadataRecord.getResponseToNotification());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDCHAT_COLUMN_NAME, chatMetadataRecord.getChatId().toString());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDOBJECTO_COLUMN_NAME, chatMetadataRecord.getObjectId().toString());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_LOCALACTORTYPE_COLUMN_NAME, chatMetadataRecord.getLocalActorType().getCode());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_LOCALACTORPUBKEY_COLUMN_NAME, chatMetadataRecord.getLocalActorPublicKey());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_REMOTEACTORTYPE_COLUMN_NAME, chatMetadataRecord.getRemoteActorType().getCode());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_REMOTEACTORPUBKEY_COLUMN_NAME, chatMetadataRecord.getRemoteActorPublicKey());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_CHATNAME_COLUMN_NAME, chatMetadataRecord.getChatName());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_CHATSTATUS_COLUMN_NAME, chatMetadataRecord.getChatMessageStatus().getCode());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_MESSAGE_STATUS_COLUMN_NAME, chatMetadataRecord.getMessageStatus().getCode());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_DATE_COLUMN_NAME, chatMetadataRecord.getDate());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDMENSAJE_COLUMN_NAME, chatMetadataRecord.getMessageId().toString());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_MESSAGE_COLUMN_NAME, chatMetadataRecord.getMessage());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_DISTRIBUTIONSTATUS_COLUMN_NAME, chatMetadataRecord.getDistributionStatus().getCode());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROCCES_STATUS_COLUMN_NAME, chatMetadataRecord.getProcessed());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME, chatMetadataRecord.getChatProtocolState().getCode());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_SENTDATE_COLUMN_NAME, chatMetadataRecord.getSentDate());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_READ_MARK_COLUMN_NAME, String.valueOf(chatMetadataRecord.isFlagReadead()));
+        entityRecord.setIntegerValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_SENT_COUNT_COLUMN_NAME, chatMetadataRecord.getSentCount());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_XML_MSG_REPRESENTATION, chatMetadataRecord.getMsgXML());
 
     }
 
@@ -855,7 +854,7 @@ public class ChatMetadataRecordDAO implements DAO {
 
 
         try {
-            DatabaseTable databaseTable =  getDatabaseTable();
+            DatabaseTable databaseTable = getDatabaseTable();
 
             databaseTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME, ChatProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
             databaseTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME, ChatProtocolState.PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
@@ -866,13 +865,13 @@ public class ChatMetadataRecordDAO implements DAO {
             for (DatabaseTableRecord record : records) {
                 //update record
 
-                record.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME,  ChatProtocolState.PROCESSING_SEND.getCode());
+                record.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME, ChatProtocolState.PROCESSING_SEND.getCode());
                 update(constructFrom(record));
 
             }
         } catch (CantLoadTableToMemoryException e) {
 
-            CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
             throw cantUpdateRecordDataBaseException;
         }
     }
@@ -880,9 +879,8 @@ public class ChatMetadataRecordDAO implements DAO {
     public void changeStatusNotSentMessage(String receiveIdentityKey) throws CantUpdateRecordDataBaseException {
 
 
-
         try {
-            DatabaseTable databaseTable =  getDatabaseTable();
+            DatabaseTable databaseTable = getDatabaseTable();
 
             databaseTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME, ChatProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
             databaseTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME, ChatProtocolState.PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
@@ -898,14 +896,14 @@ public class ChatMetadataRecordDAO implements DAO {
 
                 //update record
 
-                record.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME,  ChatProtocolState.PROCESSING_SEND.getCode());
+                record.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME, ChatProtocolState.PROCESSING_SEND.getCode());
 
                 databaseTable.updateRecord(record);
             }
 
 
         } catch (CantLoadTableToMemoryException | CantUpdateRecordException e) {
-            CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+            CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
             throw cantUpdateRecordDataBaseException;
         }
     }
