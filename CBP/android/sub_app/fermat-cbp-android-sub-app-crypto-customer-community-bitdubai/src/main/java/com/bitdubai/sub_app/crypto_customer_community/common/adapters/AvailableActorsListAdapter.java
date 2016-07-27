@@ -94,8 +94,6 @@ public class AvailableActorsListAdapter extends FermatAdapter<CryptoCustomerComm
 
     public void setLoadingData(boolean loadingData) {
         this.loadingData = loadingData;
-        if(loadingMoreViewHolder!=null) {
-            loadingMoreViewHolder.progressBar.setVisibility(loadingData ? View.VISIBLE : View.GONE);
-        }
+
     }
 }
