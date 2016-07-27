@@ -255,12 +255,6 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>, 
             }
         });
         anrWatchDog.setIgnoreDebugger(false);
-//        anrWatchDog.setInterruptionListener(new ANRWatchDog.InterruptionListener() {
-//            @Override
-//            public void onInterrupted(InterruptedException exception) {
-//                exception.printStackTrace();
-//            }
-//        });
         anrWatchDog.start();
 
 
@@ -296,7 +290,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>, 
         int processId = android.os.Process.myPid();
 
         String myProcessName = application.getPackageName();
-        Log.i(TAG, new StringBuilder().append("context:").append(myProcessName).toString());
+        Log.i(TAG, "context:" + myProcessName);
 
     }
 
@@ -334,7 +328,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>, 
     }
 
     public synchronized void setFermatRunning(boolean fermatRunning) {
-        Log.i(TAG, new StringBuilder().append("Fermat running: ").append(fermatRunning).toString());
+        Log.i(TAG, "Fermat running: " + fermatRunning);
         this.fermatRunning = fermatRunning;
     }
 
