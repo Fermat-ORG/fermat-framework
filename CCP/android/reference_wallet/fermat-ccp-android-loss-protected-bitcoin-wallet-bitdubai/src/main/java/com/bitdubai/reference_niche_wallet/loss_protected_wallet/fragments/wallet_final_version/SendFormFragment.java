@@ -863,57 +863,17 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                                 }
 
-                               // long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
-                               // BigDecimal amountDecimal = new BigDecimal(newAmount);
+                                long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
+                                BigDecimal amountDecimal = new BigDecimal(newAmount);
 
                                 BigDecimal decimalFeed = new BigDecimal(newFee);
-                                BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
+                                //BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                                 BigDecimal operator = new BigDecimal(newAmount);
 
 
-                                if(operator.compareTo(minSatoshis) == 1 )
-                                {
-                                    //check amount + fee less than balance
-                                    long total = 0;
-                                    if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode()))
-                                        total =  operator.longValueExact() +  decimalFeed.longValueExact();
-                                    else
-                                        total =  operator.longValueExact() -  decimalFeed.longValueExact();
 
-                                    if(total < Balance)
-                                    {
-                                        ConfirmSendDialog_feeCase sendConfirmDialog = new ConfirmSendDialog_feeCase(getActivity(),
-                                                lossProtectedWalletManager,
-                                                operator.longValueExact(),
-                                                decimalFeed.longValueExact(),
-                                                total,
-                                                FeeOrigin.getByCode(feeOrigin),
-                                                validAddress,
-                                                notes,
-                                                lossProtectedWalletContact.getActorPublicKey(),
-                                                lossProtectedWalletContact.getActorType(),
-                                                blockchainNetworkType,
-                                                appSession);
 
-                                        sendConfirmDialog.show();
-                                        sendConfirmDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
-                                            @Override
-                                            public void onDismiss(DialogInterface dialog) {
-
-                                                onBack(null);
-                                            }
-                                        });
-                                    }
-                                    else{
-                                        Toast.makeText(getActivity(), "Insufficient funds.", Toast.LENGTH_LONG).show();
-                                    }
-
-                                }else{
-                                    Toast.makeText(getActivity(), "Invalid Amount, must be greater than " +msg, Toast.LENGTH_LONG).show();
-                                }
-
-                                /*
                                 if (amountDecimal.longValueExact() > minSatoshis) {
 
                                     long availableBalance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
@@ -951,7 +911,43 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     else{
                                         try {
 
-                                            lossProtectedWalletManager.send(
+                                            //check amount + fee less than balance
+                                            long total = 0;
+                                            if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode()))
+                                                total =  operator.longValueExact() +  decimalFeed.longValueExact();
+                                            else
+                                                total =  operator.longValueExact() -  decimalFeed.longValueExact();
+
+                                            if(total < Balance)
+                                            {
+                                                ConfirmSendDialog_feeCase sendConfirmDialog = new ConfirmSendDialog_feeCase(getActivity(),
+                                                        lossProtectedWalletManager,
+                                                        operator.longValueExact(),
+                                                        decimalFeed.longValueExact(),
+                                                        total,
+                                                        FeeOrigin.getByCode(feeOrigin),
+                                                        validAddress,
+                                                        notes,
+                                                        lossProtectedWalletContact.getActorPublicKey(),
+                                                        lossProtectedWalletContact.getActorType(),
+                                                        blockchainNetworkType,
+                                                        appSession);
+
+                                                sendConfirmDialog.show();
+                                                sendConfirmDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                                                    @Override
+                                                    public void onDismiss(DialogInterface dialog) {
+
+                                                        onBack(null);
+                                                    }
+                                                });
+                                            }
+                                            else{
+                                                Toast.makeText(getActivity(), "Insufficient funds.", Toast.LENGTH_LONG).show();
+                                            }
+
+                                            /*lossProtectedWalletManager.send(
                                                     amountDecimal.longValueExact(),
                                                     validAddress,
                                                     notes,
@@ -967,7 +963,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                                     FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT
                                             );
                                             Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
-                                            onBack(null);
+                                            onBack(null);*/
 
                                         } catch (LossProtectedInsufficientFundsException e) {
                                             e.printStackTrace();
@@ -978,7 +974,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 } else {
                                     Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
                                 }
-*/
+
 
                             } catch (Exception e) {
                                 appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);

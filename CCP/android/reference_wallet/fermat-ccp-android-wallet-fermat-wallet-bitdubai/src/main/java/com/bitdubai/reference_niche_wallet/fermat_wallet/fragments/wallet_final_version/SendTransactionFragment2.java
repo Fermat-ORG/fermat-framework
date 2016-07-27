@@ -113,7 +113,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
     private ExecutorService _executor;
     private BalanceType balanceType = BalanceType.AVAILABLE;
-    private ShowMoneyType typeAmountSelected = ShowMoneyType.BITCOIN;
+    private ShowMoneyType typeAmountSelected = ShowMoneyType.FRMT;
 
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
@@ -666,13 +666,13 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     }
 
     private void changeAmountType() {
-        ShowMoneyType showMoneyType = (typeAmountSelected.getCode()== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
+        ShowMoneyType showMoneyType = (typeAmountSelected.getCode()== ShowMoneyType.FRMT.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.FRMT;
         appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED,showMoneyType);
         typeAmountSelected = showMoneyType;
         String moneyTpe = "";
         switch (showMoneyType){
-            case BITCOIN:
-                moneyTpe = "btc";
+            case FRMT:
+                moneyTpe = "FRMT";
                 txt_balance_amount.setTextSize(28);
                 break;
             case BITS:
@@ -749,7 +749,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         try {
             if(runningDailyBalance!=null) {
                 for (Map.Entry<Long, Long> entry : runningDailyBalance.entrySet())
-                    balanceSum += Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(entry.getValue(), ShowMoneyType.BITCOIN.getCode()));
+                    balanceSum += Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(entry.getValue(), ShowMoneyType.FRMT.getCode()));
 
                 if (balanceSum > 0)
                     average = (int) ((Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(getBalanceValue(runningDailyBalance.size() - 1), ShowMoneyType.BITCOIN.getCode())) * 100) / balanceSum);
@@ -879,7 +879,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                     //update balance amount
                     final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(
                             moduleManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(),
-                                    blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
+                                    blockchainNetworkType),ShowMoneyType.FRMT.getCode());
 
                     changeBalanceType(txt_type_balance, txt_balance_amount);
 
