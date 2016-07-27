@@ -141,12 +141,18 @@ public class EditCryptoBrokerIdentityFragment
         //If we landed here from CryptoBrokerImageCropperFragment, save the cropped Image.
         if (appSession.getData(FragmentsCommons.CROPPED_IMAGE) != null) {
             identityImgByteArray = (byte[]) appSession.getData(FragmentsCommons.CROPPED_IMAGE);
+            appSession.setData(FragmentsCommons.IMAGE_BYTE_ARRAY, identityImgByteArray);
             cryptoBrokerBitmap = BitmapFactory.decodeByteArray(identityImgByteArray, 0, identityImgByteArray.length);
             appSession.removeData(FragmentsCommons.CROPPED_IMAGE);
 
         } else if (appSession.getData(FragmentsCommons.ORIGINAL_IMAGE) != null) {
             cryptoBrokerBitmap = (Bitmap) appSession.getData(FragmentsCommons.ORIGINAL_IMAGE);
             appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
+
+            if (appSession.getData(FragmentsCommons.IMAGE_BYTE_ARRAY) != null){
+                identityImgByteArray = (byte[]) appSession.getData(FragmentsCommons.IMAGE_BYTE_ARRAY);
+                appSession.removeData(FragmentsCommons.IMAGE_BYTE_ARRAY);
+            }
         }
 
         if (appSession.getData(FragmentsCommons.BROKER_NAME) != null) {
@@ -345,6 +351,7 @@ public class EditCryptoBrokerIdentityFragment
             appSession.setData(FragmentsCommons.BROKER_NAME, mBrokerName.getText().toString());
             appSession.setData(FragmentsCommons.ORIGINAL_IMAGE, cryptoBrokerBitmap);
             appSession.setData(FragmentsCommons.IDENTITY_INFO, identityInfo);
+            appSession.setData(FragmentsCommons.IMAGE_BYTE_ARRAY, identityImgByteArray);
 
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_EDIT_IDENTITY, appSession.getAppPublicKey());
         }
@@ -474,6 +481,12 @@ public class EditCryptoBrokerIdentityFragment
 
             FermatWorker fermatWorker = new CreateIdentityWorker(getActivity(), appSession.getModuleManager(), this,
                     brokerAlias, identityImgByteArray, accuracy, frequency);
+
+            /*FermatWorker fermatWorker = new CreateIdentityWorker(getActivity(), appSession.getModuleManager(), this,
+                    brokerAlias, identityImgByteArray, accuracy, frequency);*/
+
+
+
 
             //progressBar.setVisibility(View.VISIBLE);
             executor = fermatWorker.execute();
