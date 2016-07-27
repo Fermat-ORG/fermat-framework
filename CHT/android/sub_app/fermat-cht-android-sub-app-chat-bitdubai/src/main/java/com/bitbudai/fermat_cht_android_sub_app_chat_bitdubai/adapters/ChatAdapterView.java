@@ -179,11 +179,10 @@ public class ChatAdapterView extends LinearLayout {
             findValues((Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));
             if (appSession.getData("whocallme").equals("chatlist")) {
                 //if I choose a chat, this will retrieve the chatId
-                Chat chatData = (Chat)appSession.getData(ChatSessionReferenceApp.CHAT_DATA);
-                if(chatData!=null)
-                {
-                    if(chatData.getChatId()!=chatId)
-                        chatId= chatData.getChatId();
+                Chat chatData = (Chat) appSession.getData(ChatSessionReferenceApp.CHAT_DATA);
+                if (chatData != null) {
+                    if (chatData.getChatId() != chatId)
+                        chatId = chatData.getChatId();
                 }
                 chatWasCreate = true;
             } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
@@ -201,12 +200,12 @@ public class ChatAdapterView extends LinearLayout {
         String inorout;
         String estatus;
         ChatMessage msg;
-        int oldChatMessagesCount=0;
+        int oldChatMessagesCount = 0;
         try {
             if (chatHistory == null)
                 chatHistory = new ArrayList<ChatMessage>();
             else {
-                oldChatMessagesCount= chatHistory.size();
+                oldChatMessagesCount = chatHistory.size();
                 chatHistory.clear();
             }
 
@@ -261,10 +260,9 @@ public class ChatAdapterView extends LinearLayout {
                 if (adapter == null) {
                     adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                     messagesContainer.setAdapter(adapter);
-                }
-                else {
-                    adapter.notifyItemRangeChanged(0,adapter.getItemCount());
-                    if(oldChatMessagesCount < chatHistory.size() && !isScrollingUp)
+                } else {
+                    adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+                    if (oldChatMessagesCount < chatHistory.size() && !isScrollingUp)
                         scroll();
                 }
             }
@@ -398,12 +396,12 @@ public class ChatAdapterView extends LinearLayout {
                 }
 
                 if (Validate.isDateToday(new Date(date))) {
-                    fecha = "today at " + formattedTime;
+                    fecha = new StringBuilder().append("today at ").append(formattedTime).toString();
                 } else {
                     Date today = new Date();
                     long dias = (today.getTime() - new Date(date).getTime()) / (1000 * 60 * 60 * 24);
                     if (dias == 1) {
-                        fecha = "yesterday at " + formattedTime;
+                        fecha = new StringBuilder().append("yesterday at ").append(formattedTime).toString();
                     }
                 }
             } catch (Exception e) {
@@ -418,7 +416,7 @@ public class ChatAdapterView extends LinearLayout {
             case ConstantSubtitle.IS_OFFLINE:
 
                 if (date != null && !date.equals("no record")) {
-                    toolbar.setSubtitle(Html.fromHtml("<small><small>Last time "+setFormatLastTime(date)+"</small></small>"));
+                    toolbar.setSubtitle(Html.fromHtml(new StringBuilder().append("<small><small>Last time ").append(setFormatLastTime(date)).append("</small></small>").toString()));
                 } else {
 
                     Log.i("159753**LastTimeOnChat", "No show");
@@ -437,7 +435,7 @@ public class ChatAdapterView extends LinearLayout {
 
     public void initControls() {
         messagesContainer = (RecyclerView) findViewById(R.id.messagesContainer);
-        layoutManager= new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
+        layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
         messagesContainer.setLayoutManager(layoutManager);
         messagesContainer.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -642,7 +640,7 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setChatId(newChatId);
                         chat.setObjectId(UUID.randomUUID());
                         chat.setStatus(ChatStatus.VISSIBLE);
-                        chat.setChatName("Chat_" + newContact.getAlias());
+                        chat.setChatName(new StringBuilder().append("Chat_").append(newContact.getAlias()).toString());
                         chat.setDate(new Timestamp(dv));
                         chat.setLastMessageDate(new Timestamp(dv));
                         chat.setTypeChat(TypeChat.INDIVIDUAL);
@@ -698,7 +696,7 @@ public class ChatAdapterView extends LinearLayout {
                     chatMessage.setMe(true);
                     messageET.setText("");
                     displayMessage(chatMessage);
-                    System.out.println("*** 12345 case 1:send msg in android layer" + new Timestamp(System.currentTimeMillis()));
+                    System.out.println(new StringBuilder().append("*** 12345 case 1:send msg in android layer").append(new Timestamp(System.currentTimeMillis())).toString());
                 } catch (CantSaveMessageException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (CantSaveChatException e) {

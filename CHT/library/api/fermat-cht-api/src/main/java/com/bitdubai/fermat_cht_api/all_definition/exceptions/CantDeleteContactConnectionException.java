@@ -30,7 +30,7 @@ public class CantDeleteContactConnectionException extends CHTException {
      * @param possibleReason
      */
     public CantDeleteContactConnectionException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

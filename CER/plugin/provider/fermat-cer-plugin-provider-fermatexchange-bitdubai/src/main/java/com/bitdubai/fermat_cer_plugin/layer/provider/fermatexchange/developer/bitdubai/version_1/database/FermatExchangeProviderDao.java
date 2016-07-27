@@ -63,22 +63,22 @@ public class FermatExchangeProviderDao {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeFermatExchangeProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, "");
+                throw new CantInitializeFermatExchangeProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, new StringBuilder().append("Database Name: ").append(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).toString(), "");
             }
-        }catch (CantOpenDatabaseException cantOpenDatabaseException) {
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeFermatExchangeProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, "");
+            throw new CantInitializeFermatExchangeProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, new StringBuilder().append("Database Name: ").append(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).toString(), "");
         } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantInitializeFermatExchangeProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, "");
+            throw new CantInitializeFermatExchangeProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), new StringBuilder().append("Database Name: ").append(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).toString(), "");
         }
     }
 
     public void initializeProvider(String providerName) throws CantInitializeProviderInfoException {
         //Try to get info, if there's no info, populate.
-        try{
+        try {
             this.getProviderInfo();
-        }catch (CantGetProviderInfoException e){
+        } catch (CantGetProviderInfoException e) {
             this.populateProviderInfo(providerName);
         }
     }
@@ -94,7 +94,7 @@ public class FermatExchangeProviderDao {
         constructRecordFromExchangeRate(newRecord, exchangeRate);
         try {
             table.insertRecord(newRecord);
-        }catch (CantInsertRecordException e) {
+        } catch (CantInsertRecordException e) {
             throw new CantSaveExchangeRateException(e.getMessage(), e, "FermatExchange provider plugin", "Cant save new record in table");
         }
     }
@@ -112,7 +112,7 @@ public class FermatExchangeProviderDao {
                 DateHelper.getStandarizedTimestampFromTimestamp(e.getTimestamp()));
 
         //If it exists, return
-        if(this.dailyExchangeRateExists(e))
+        if (this.dailyExchangeRateExists(e))
             return;
 
         //Else, save it
@@ -121,13 +121,12 @@ public class FermatExchangeProviderDao {
         constructRecordFromExchangeRate(newRecord, e);
         try {
             table.insertRecord(newRecord);
-        }catch (CantInsertRecordException ex) {
+        } catch (CantInsertRecordException ex) {
             throw new CantSaveExchangeRateException(CantSaveExchangeRateException.DEFAULT_MESSAGE, ex, "FermatExchange provider plugin", "Cant save new record in DAILY_EXCHANGE_RATES_TABLE");
         }
     }
 
-    public void updateDailyExchangeRateTable(CurrencyPair currencyPair, List<ExchangeRate> exchangeRates) throws CantSaveExchangeRateException
-    {
+    public void updateDailyExchangeRateTable(CurrencyPair currencyPair, List<ExchangeRate> exchangeRates) throws CantSaveExchangeRateException {
         List<String> exchangeRateTimestampsInDatabase = new ArrayList<>();
 
         DatabaseTable table = this.database.getTable(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME);
@@ -142,21 +141,19 @@ public class FermatExchangeProviderDao {
                 exchangeRateTimestampsInDatabase.add(timestamp);
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantSaveExchangeRateException(CantSaveExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get ExchangeRates in database for CurrencyPair: " + currencyPair.toString(), "Couldn't load table to memory");
+            throw new CantSaveExchangeRateException(CantSaveExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get ExchangeRates in database for CurrencyPair: ").append(currencyPair.toString()).toString(), "Couldn't load table to memory");
         }
 
-        for(ExchangeRate e : exchangeRates)
-        {
+        for (ExchangeRate e : exchangeRates) {
             String currentTimestamp = String.valueOf(e.getTimestamp());
-            if(!exchangeRateTimestampsInDatabase.contains(currentTimestamp)) {
+            if (!exchangeRateTimestampsInDatabase.contains(currentTimestamp)) {
                 this.saveDailyExchangeRate(e);              //TODO: improve this.. saving one by one..
             }
         }
     }
 
-    public boolean dailyExchangeRateExists(ExchangeRate e)
-    {
-        try{
+    public boolean dailyExchangeRateExists(ExchangeRate e) {
+        try {
             getDailyExchangeRateFromDate(new CurrencyPairImpl(e.getFromCurrency(), e.getToCurrency()), e.getTimestamp());
             return true;
         } catch (CantGetExchangeRateException ex) {
@@ -164,8 +161,7 @@ public class FermatExchangeProviderDao {
         }
     }
 
-    public ExchangeRate getDailyExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws CantGetExchangeRateException
-    {
+    public ExchangeRate getDailyExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws CantGetExchangeRateException {
         DatabaseTable table = this.database.getTable(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME);
 
         table.addStringFilter(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME, currencyPair.getFrom().getCode(), DatabaseFilterType.EQUAL);
@@ -175,48 +171,47 @@ public class FermatExchangeProviderDao {
         try {
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
-            if (records.size() > 0){
+            if (records.size() > 0) {
                 DatabaseTableRecord record = records.get(0);
                 return constructExchangeRateFromRecord(record);
-            }
-            else {
-                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, null, "Failed to get daily exchange rate for timestamp: " + timestamp, "Exchange Rate not found in database");
+            } else {
+                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, null, new StringBuilder().append("Failed to get daily exchange rate for timestamp: ").append(timestamp).toString(), "Exchange Rate not found in database");
             }
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rate for timestamp: " + timestamp, "Couldn't load table to memory");
-        }catch (CantCreateExchangeRateException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rate for timestamp: " + timestamp, "Couldn't create ExchangeRate object");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get daily exchange rate for timestamp: ").append(timestamp).toString(), "Couldn't load table to memory");
+        } catch (CantCreateExchangeRateException e) {
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get daily exchange rate for timestamp: ").append(timestamp).toString(), "Couldn't create ExchangeRate object");
         }
     }
 
-    public List<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws CantGetExchangeRateException
-    {
+    public List<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws CantGetExchangeRateException {
         List<ExchangeRate> exchangeRates = new ArrayList<>();
 
 
-        String query = "SELECT * FROM " +
-                FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME +
-                " WHERE " +
-                FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME +
-                " = '" +
-                currencyPair.getFrom().getCode() +
-                "' AND " +
-                FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME +
-                " = '" +
-                currencyPair.getTo().getCode() +
-                "' " +
-                " AND " +
-                FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
-                " >= " +
-                startTimestamp +
-                " AND " +
-                FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
-                " <= " +
-                endTimestamp +
-                " ORDER BY " +
-                FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
-                " ASC ";
+        String query = new StringBuilder()
+                .append("SELECT * FROM ")
+                .append(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME)
+                .append(" WHERE ")
+                .append(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME)
+                .append(" = '")
+                .append(currencyPair.getFrom().getCode())
+                .append("' AND ")
+                .append(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME)
+                .append(" = '")
+                .append(currencyPair.getTo().getCode())
+                .append("' ")
+                .append(" AND ")
+                .append(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME)
+                .append(" >= ")
+                .append(startTimestamp)
+                .append(" AND ")
+                .append(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME)
+                .append(" <= ")
+                .append(endTimestamp)
+                .append(" ORDER BY ")
+                .append(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME)
+                .append(" ASC ").toString();
 
 
         DatabaseTable table = this.database.getTable(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME);
@@ -225,31 +220,20 @@ public class FermatExchangeProviderDao {
             for (DatabaseTableRecord record : table.customQuery(query, false))
                 exchangeRates.add(constructExchangeRateFromRecord(record));
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rates for period: " + startTimestamp + " to " + endTimestamp, "Couldn't load table to memory");
-        }catch (CantCreateExchangeRateException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rates for period: " + startTimestamp + " to " + endTimestamp, "Couldn't create ExchangeRate object");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get daily exchange rates for period: ").append(startTimestamp).append(" to ").append(endTimestamp).toString(), "Couldn't load table to memory");
+        } catch (CantCreateExchangeRateException e) {
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get daily exchange rates for period: ").append(startTimestamp).append(" to ").append(endTimestamp).toString(), "Couldn't create ExchangeRate object");
         }
 
         return exchangeRates;
     }
 
 
-
-
-
-
-
-
-
-
-
-
-    public List<ExchangeRate> getQueriedExchangeRateHistory(ExchangeRateType exchangeRateType, CurrencyPair currencyPair) throws CantGetExchangeRateException
-    {
+    public List<ExchangeRate> getQueriedExchangeRateHistory(ExchangeRateType exchangeRateType, CurrencyPair currencyPair) throws CantGetExchangeRateException {
         List<ExchangeRate> exchangeRateList = new ArrayList<>();
         DatabaseTable table = null;
 
-        switch(exchangeRateType) {
+        switch (exchangeRateType) {
             case CURRENT:
                 table = this.database.getTable(FermatExchangeProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME);
                 table.addStringFilter(FermatExchangeProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME, currencyPair.getFrom().getCode(), DatabaseFilterType.EQUAL);
@@ -270,9 +254,9 @@ public class FermatExchangeProviderDao {
                 exchangeRateList.add(exchangeRate);
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't load table to memory");
-        }catch (CantCreateExchangeRateException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't create ExchangeRate object");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get History for currencyPair: ").append(currencyPair.toString()).toString(), "Couldn't load table to memory");
+        } catch (CantCreateExchangeRateException e) {
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get History for currencyPair: ").append(currencyPair.toString()).toString(), "Couldn't create ExchangeRate object");
         }
 
         return exchangeRateList;
@@ -299,7 +283,7 @@ public class FermatExchangeProviderDao {
         List<DatabaseTableRecord> records;
         DatabaseTable table = this.database.getTable(FermatExchangeProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
 
-        try{
+        try {
             table.loadToMemory();
             records = table.getRecords();
         } catch (CantLoadTableToMemoryException e) {
@@ -307,10 +291,11 @@ public class FermatExchangeProviderDao {
         }
 
         if (records.size() != 1)
-            throw new CantGetProviderInfoException("Inconsistent number of fetched records (" + records.size() + "), should be 1.");
+            throw new CantGetProviderInfoException(new StringBuilder().append("Inconsistent number of fetched records (").append(records.size()).append("), should be 1.").toString());
 
         return records.get(0);
     }
+
     private void populateProviderInfo(String providerName) throws CantInitializeProviderInfoException {
         DatabaseTable table = this.database.getTable(FermatExchangeProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
         DatabaseTableRecord newRecord = table.getEmptyRecord();
@@ -320,21 +305,16 @@ public class FermatExchangeProviderDao {
 
         try {
             table.insertRecord(newRecord);
-        }catch (CantInsertRecordException e) {
+        } catch (CantInsertRecordException e) {
             throw new CantInitializeProviderInfoException(e.getMessage());
         }
     }
-
-
-
-
 
 
     /* INTERNAL HELPER FUNCTIONS */
     private DatabaseTableFilter getEmptyTableFilter() {
         return this.database.getTable(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).getEmptyTableFilter();
     }
-
 
 
     private List<DatabaseTableRecord> getRecordsByFilter(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
@@ -370,35 +350,32 @@ public class FermatExchangeProviderDao {
         try {
             String fromCurrencyStr = record.getStringValue(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME);
 
-            if(FiatCurrency.codeExists(fromCurrencyStr))
+            if (FiatCurrency.codeExists(fromCurrencyStr))
                 fromCurrency = FiatCurrency.getByCode(fromCurrencyStr);
-            else if(CryptoCurrency.codeExists(fromCurrencyStr))
+            else if (CryptoCurrency.codeExists(fromCurrencyStr))
                 fromCurrency = CryptoCurrency.getByCode(fromCurrencyStr);
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "FermatExchange provider plugin", "Invalid From Currency value stored in table"
-                    + FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "FermatExchange provider plugin", new StringBuilder().append("Invalid From Currency value stored in table").append(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).append(" for id ").append(id).toString());
         }
 
         Currency toCurrency;
         try {
             String toCurrencyStr = record.getStringValue(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME);
 
-            if(FiatCurrency.codeExists(toCurrencyStr))
+            if (FiatCurrency.codeExists(toCurrencyStr))
                 toCurrency = FiatCurrency.getByCode(toCurrencyStr);
-            else if(CryptoCurrency.codeExists(toCurrencyStr))
+            else if (CryptoCurrency.codeExists(toCurrencyStr))
                 toCurrency = CryptoCurrency.getByCode(toCurrencyStr);
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "FermatExchange provider plugin", "Invalid To Currency value stored in table"
-                    + FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "FermatExchange provider plugin", new StringBuilder().append("Invalid To Currency value stored in table").append(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).append(" for id ").append(id).toString());
         }
 
         return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);
     }
-
 
 
 }

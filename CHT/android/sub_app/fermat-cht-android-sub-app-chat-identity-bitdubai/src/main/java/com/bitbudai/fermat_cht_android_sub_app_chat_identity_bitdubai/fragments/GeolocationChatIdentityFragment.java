@@ -23,12 +23,11 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
@@ -48,7 +47,7 @@ import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.uti
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/06/16.
  */
 
-public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<ReferenceAppFermatSession<ChatIdentityModuleManager>, SubAppResourcesProviderManager> {
+public class GeolocationChatIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatIdentityModuleManager>, SubAppResourcesProviderManager> {
 
     ChatIdentityModuleManager moduleManager;
     ErrorManager errorManager;
@@ -74,7 +73,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
             chatIdentitySettings = null;
             try {
                 chatIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-            }catch(Exception e){
+            } catch (Exception e) {
                 chatIdentitySettings = null;
             }
             if (chatIdentitySettings == null) {
@@ -86,7 +85,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
             }
 
             checkIdentity();
-            
+
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
@@ -107,12 +106,12 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
         return rootLayout;
     }
 
-    private void checkIdentity(){
+    private void checkIdentity() {
         //Check if a default identity is configured
-        if(identity==null){
-            try{
+        if (identity == null) {
+            try {
                 identity = moduleManager.getIdentityChatUser();
-            }catch (Exception e){
+            } catch (Exception e) {
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             }
         }
@@ -173,9 +172,9 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public void saveAndGoBack(){
+    public void saveAndGoBack() {
         try {
-            if(ExistIdentity()){
+            if (ExistIdentity()) {
                 saveIdentityGeolocation("onBack");
             }
         } catch (CHTException e) {
@@ -184,7 +183,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         saveAndGoBack();
         //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
         //super.onBackPressed();
@@ -213,8 +212,8 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
                         break;
                 }
             }
-        }catch(Exception e){
-            if(errorManager != null)
+        } catch (Exception e) {
+            if (errorManager != null)
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
     }
@@ -234,8 +233,8 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
 
     public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<GeoFrequency> dataAdapter) throws CantGetChatIdentityException {
         checkIdentity();
-        if(identity!=null){
-            accuracy.setText(""+identity.getAccuracy());
+        if (identity != null) {
+            accuracy.setText(new StringBuilder().append("").append(identity.getAccuracy()).toString());
             if (!identity.getFrecuency().equals(null)) {
                 int spinnerPosition = dataAdapter.getPosition(identity.getFrecuency());
                 frequency.setSelection(spinnerPosition);

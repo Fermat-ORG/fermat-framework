@@ -11,10 +11,8 @@ public enum RequestType implements FermatEnum {
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
 
-    RECEIVED ("REC"),
-    SENT     ("SEN"),
-
-    ;
+    RECEIVED("REC"),
+    SENT("SEN"),;
 
     private final String code;
 
@@ -26,12 +24,14 @@ public enum RequestType implements FermatEnum {
 
         switch (code) {
 
-            case "REC": return RECEIVED;
-            case "SEN": return SENT    ;
+            case "REC":
+                return RECEIVED;
+            case "SEN":
+                return SENT;
 
             default:
                 throw new InvalidParameterException(
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "This code is not valid for the RequestType enum."
                 );
         }

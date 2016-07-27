@@ -15,7 +15,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
  * FERMAT-ORG
  * Developed by Lozadaa on 13/05/16.
  */
-public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickListener{
+public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickListener {
 
     /**
      * UI components
@@ -27,6 +27,7 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
     public int TOUCH_GALLERY = 1;
     public int TOUCH_CAM = 2;
     public int TOUCH_ROTATE = 3;
+
     public DialogSelectCamOrPic(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources) {
         super(activity, referenceAppFermatSession, resources);
     }
@@ -37,8 +38,8 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
         super.onCreate(savedInstanceState);
         galleryBtn = (ImageView) findViewById(R.id.img_gallery);
         camBtn = (ImageView) findViewById(R.id.img_cam);
-       // rotateBtn = (ImageView) findViewById(R.id.img_rotate);
-      //  rotateBtn.setOnClickListener(this);
+        // rotateBtn = (ImageView) findViewById(R.id.img_rotate);
+        //  rotateBtn.setOnClickListener(this);
         galleryBtn.setOnClickListener(this);
         camBtn.setOnClickListener(this);
         getWindow().setTitle("");
@@ -47,7 +48,6 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
     private void setButtonTouch(int touch) {
         BUTTON_TOUCH = touch;
     }
-
 
 
     @Override
@@ -60,7 +60,7 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
         return Window.FEATURE_NO_TITLE;
     }
 
-    public int getButtonTouch(){
+    public int getButtonTouch() {
         return BUTTON_TOUCH;
     }
 
@@ -71,7 +71,7 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
             setButtonTouch(TOUCH_GALLERY);
             dismiss();
         }
-        if(i == R.id.img_cam){
+        if (i == R.id.img_cam) {
             setButtonTouch(TOUCH_CAM);
             dismiss();
         }

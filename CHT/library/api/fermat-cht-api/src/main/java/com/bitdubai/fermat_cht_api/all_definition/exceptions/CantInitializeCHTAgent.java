@@ -30,7 +30,7 @@ public class CantInitializeCHTAgent extends CHTException {
      * @param possibleReason
      */
     public CantInitializeCHTAgent(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

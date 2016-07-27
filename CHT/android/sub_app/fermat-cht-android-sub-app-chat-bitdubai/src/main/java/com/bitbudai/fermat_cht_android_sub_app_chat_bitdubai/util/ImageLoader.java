@@ -22,7 +22,6 @@ import java.lang.ref.WeakReference;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 05/01/16
  * @version 1.0
- *
  */
 
 /**
@@ -131,7 +130,7 @@ public abstract class ImageLoader {
             bitmapWorkerTask.cancel(true);
             if (BuildConfig.DEBUG) {
                 final Object bitmapData = bitmapWorkerTask.data;
-                Log.d(TAG, "cancelWork - cancelled work for " + bitmapData);
+                Log.d(TAG, new StringBuilder().append("cancelWork - cancelled work for ").append(bitmapData).toString());
             }
         }
     }
@@ -150,7 +149,7 @@ public abstract class ImageLoader {
             if (bitmapData == null || !bitmapData.equals(data)) {
                 bitmapWorkerTask.cancel(true);
                 if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "cancelPotentialWork - cancelled work for " + data);
+                    Log.d(TAG, new StringBuilder().append("cancelPotentialWork - cancelled work for ").append(data).toString());
                 }
             } else {
                 // The same work is already in progress.
@@ -205,7 +204,8 @@ public abstract class ImageLoader {
                 while (mPauseWork && !isCancelled()) {
                     try {
                         mPauseWorkLock.wait();
-                    } catch (InterruptedException e) {}
+                    } catch (InterruptedException e) {
+                    }
                 }
             }
 
@@ -286,7 +286,7 @@ public abstract class ImageLoader {
         public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
             super(res, bitmap);
             bitmapWorkerTaskReference =
-                new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+                    new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
         }
 
         public BitmapWorkerTask getBitmapWorkerTask() {
@@ -304,7 +304,7 @@ public abstract class ImageLoader {
         if (mFadeInBitmap) {
             // Transition drawable to fade from loading bitmap to final bitmap
             final TransitionDrawable td =
-                    new TransitionDrawable(new Drawable[] {
+                    new TransitionDrawable(new Drawable[]{
                             new ColorDrawable(android.R.color.black),
                             new BitmapDrawable(mResources, bitmap)
                     });
@@ -377,7 +377,7 @@ public abstract class ImageLoader {
      * @return The value to be used for inSampleSize
      */
     public static int calculateInSampleSize(BitmapFactory.Options options,
-            int reqWidth, int reqHeight) {
+                                            int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;

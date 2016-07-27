@@ -23,13 +23,13 @@ public class CitiesImpl implements Cities, Serializable {
 
 
     //CONSTRUCTOR
-    public CitiesImpl (String name,
-                       String countryCode,
-                       double latitude,
-                       double longitude,
-                       String countryName,
-                       String countryShortName,
-                       GeoRectangle mGeoRectangle){
+    public CitiesImpl(String name,
+                      String countryCode,
+                      double latitude,
+                      double longitude,
+                      String countryName,
+                      String countryShortName,
+                      GeoRectangle mGeoRectangle) {
         this.name = name;
         this.countryCode = countryCode;
         this.latitude = latitude;
@@ -45,70 +45,73 @@ public class CitiesImpl implements Cities, Serializable {
     }
 
     @Override
-    public double getLatitude(){
+    public double getLatitude() {
         return latitude;
     }
 
     @Override
-    public double getLongitude(){
+    public double getLongitude() {
         return longitude;
     }
 
     @Override
-    public String getCountryCode(){
+    public String getCountryCode() {
         return countryCode;
     }
 
     @Override
-    public String getCountryName(){
+    public String getCountryName() {
         return countryName;
     }
 
     @Override
-    public String getCountryShortName(){
+    public String getCountryShortName() {
         return countryShortName;
     }
 
     @Override
-    public GeoRectangle getGeoRectangle(){
+    public GeoRectangle getGeoRectangle() {
         return mGeoRectangle;
     }
 
     @Override
     public String toString() {
-        return "CityRecord{" +
-                "name='" + name + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", countryCode='" + countryCode + '\'' +
-                '}';
+        return new StringBuilder()
+                .append("CityRecord{")
+                .append("name='").append(name)
+                .append('\'')
+                .append(", latitude=").append(latitude)
+                .append(", longitude=").append(longitude)
+                .append(", countryCode='").append(countryCode)
+                .append('\'')
+                .append('}').toString();
     }
 
-    public void setName (String newName){
+    public void setName(String newName) {
         newName = name;
     }
 
-    public void setLatitude (double newLatitude){
+    public void setLatitude(double newLatitude) {
         newLatitude = latitude;
     }
 
-    public void setLongitude (double newLongitude){
+    public void setLongitude(double newLongitude) {
         newLongitude = longitude;
     }
 
-    public void setCountryCode (String newCountryCode){
+    public void setCountryCode(String newCountryCode) {
         newCountryCode = countryCode;
     }
 
-    public void setCountryName (String newCountryName){
+    public void setCountryName(String newCountryName) {
         newCountryName = countryName;
     }
 
-    public void setCountryShortName (String newCountryShortName){
+    public void setCountryShortName(String newCountryShortName) {
         newCountryShortName = countryShortName;
     }
 
-    public void setGeoRectangle (GeoRectangle newGeoRectangle){
+    public void setGeoRectangle(GeoRectangle newGeoRectangle) {
         newGeoRectangle = mGeoRectangle;
     }
 }

@@ -8,10 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum MessageTypes implements FermatEnum {
 
-    CONNECTION_INFORMATION ("INF"),
-    CONNECTION_REQUEST     ("REQ"),
-
-            ;
+    CONNECTION_INFORMATION("INF"),
+    CONNECTION_REQUEST("REQ"),;
 
     private String code;
 
@@ -23,12 +21,14 @@ public enum MessageTypes implements FermatEnum {
 
         switch (code) {
 
-            case "INF": return CONNECTION_INFORMATION;
-            case "REQ": return CONNECTION_REQUEST    ;
+            case "INF":
+                return CONNECTION_INFORMATION;
+            case "REQ":
+                return CONNECTION_REQUEST;
 
             default:
                 throw new InvalidParameterException(
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "This code is not valid for the MessageTypes enum."
                 );
         }

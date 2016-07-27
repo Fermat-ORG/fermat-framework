@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.b
  * The Class <code>com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.database.FermatExchangeProviderDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Alejandro Bicelis - (abicelis@gmail.com) on 23/05/16.
  *
  * @version 1.0

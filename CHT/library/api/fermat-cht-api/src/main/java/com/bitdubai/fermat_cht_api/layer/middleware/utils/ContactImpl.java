@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_cht_api.all_definition.enums.ContactStatus;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 
 import java.util.UUID;
@@ -20,7 +19,8 @@ public class ContactImpl implements Contact {
     private byte[] image;
     private String contactStatus;
 
-    public ContactImpl(){}
+    public ContactImpl() {
+    }
 
     public ContactImpl(UUID contactId,
                        String remoteName,
@@ -29,16 +29,15 @@ public class ContactImpl implements Contact {
                        String remoteActorPublicKey,
                        long creationDate,
                        byte[] image,
-                       String contactStatus)
-    {
-        this.contactId            = contactId;
-        this.remoteName           = remoteName;
-        this.alias                = alias;
-        this.remoteActorType      = remoteActorType;
+                       String contactStatus) {
+        this.contactId = contactId;
+        this.remoteName = remoteName;
+        this.alias = alias;
+        this.remoteActorType = remoteActorType;
         this.remoteActorPublicKey = remoteActorPublicKey;
-        this.creationDate         = creationDate;
-        this.image                = image;
-        this.contactStatus        = contactStatus;
+        this.creationDate = creationDate;
+        this.image = image;
+        this.contactStatus = contactStatus;
     }
 
     @Override
@@ -123,14 +122,19 @@ public class ContactImpl implements Contact {
 
     @Override
     public String toString() {
-        return "ContactImpl{" +
-                "contactId=" + contactId +
-                ", remoteName='" + remoteName + '\'' +
-                ", alias='" + alias + '\'' +
-                ", remoteActorType=" + remoteActorType +
-                ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
-                ", creationDate=" + creationDate + '\'' +
-                ", contactStatus=" + contactStatus +
-                '}';
+        return new StringBuilder()
+                .append("ContactImpl{")
+                .append("contactId=").append(contactId)
+                .append(", remoteName='").append(remoteName)
+                .append('\'')
+                .append(", alias='").append(alias)
+                .append('\'')
+                .append(", remoteActorType=").append(remoteActorType)
+                .append(", remoteActorPublicKey='").append(remoteActorPublicKey)
+                .append('\'')
+                .append(", creationDate=").append(creationDate)
+                .append('\'')
+                .append(", contactStatus=").append(contactStatus)
+                .append('}').toString();
     }
 }

@@ -30,7 +30,7 @@ public class CantSaveMessageException extends CHTException {
      * @param possibleReason
      */
     public CantSaveMessageException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

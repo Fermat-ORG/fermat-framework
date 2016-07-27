@@ -48,7 +48,7 @@ public interface CurrencyExchangeProviderFilterManager extends FermatManager {
      * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair
      *
      * @return a Collection of provider reference pairs
-     * */
+     */
     Collection<CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderException;
 
 }

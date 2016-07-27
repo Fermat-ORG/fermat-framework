@@ -58,7 +58,7 @@ public class NetworkServiceMessage {
 
     }
 
-    public static NetworkServiceMessage fromJson(String jsonString){
+    public static NetworkServiceMessage fromJson(String jsonString) {
 
         Gson gson = new Gson();
         JsonParser jsonParser = new JsonParser();
@@ -69,8 +69,9 @@ public class NetworkServiceMessage {
 
     @Override
     public String toString() {
-        return "NetworkServiceMessage{" +
-                "messageType=" + messageType +
-                '}';
+        return new StringBuilder()
+                .append("NetworkServiceMessage{")
+                .append("messageType=").append(messageType)
+                .append('}').toString();
     }
 }

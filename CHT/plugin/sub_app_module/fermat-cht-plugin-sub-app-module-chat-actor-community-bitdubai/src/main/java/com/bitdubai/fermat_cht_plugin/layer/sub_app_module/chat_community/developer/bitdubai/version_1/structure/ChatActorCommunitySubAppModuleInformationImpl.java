@@ -18,13 +18,13 @@ import java.util.UUID;
 public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorCommunityInformation {
 
     private final String publicKey;
-    private final String alias    ;
-    private final byte[] image    ;
+    private final String alias;
+    private final byte[] image;
     private final ConnectionState connectionState;
     private final UUID connectionId;
-    private String country  ;
-    private String state    ;
-    private String city     ;
+    private String country;
+    private String state;
+    private String city;
     private final String status;
     private final Location location;
     private final ProfileStatus profileStatus;//online offline
@@ -41,25 +41,25 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
                                                          final Location location,
                                                          final ProfileStatus profileStatus) {
 
-        this.publicKey          = publicKey      ;
-        this.alias              = alias          ;
-        this.image              = image          ;
-        this.connectionState    = connectionState;
-        this.connectionId       = connectionId   ;
-        this.status             = status         ;
-        this.country             = country         ;
-        this.state             = state         ;
-        this.city             = city         ;
-        this.location             = location         ;
-        this.profileStatus             = profileStatus         ;
+        this.publicKey = publicKey;
+        this.alias = alias;
+        this.image = image;
+        this.connectionState = connectionState;
+        this.connectionId = connectionId;
+        this.status = status;
+        this.country = country;
+        this.state = state;
+        this.city = city;
+        this.location = location;
+        this.profileStatus = profileStatus;
     }
 
 
     public ChatActorCommunitySubAppModuleInformationImpl(final ChatActorConnection exposingData, Location location) {
 
         this.publicKey = exposingData.getPublicKey();
-        this.alias     = exposingData.getAlias()    ;
-        this.image     = exposingData.getImage()    ;
+        this.alias = exposingData.getAlias();
+        this.image = exposingData.getImage();
         this.connectionState = exposingData.getConnectionState();
         this.connectionId = exposingData.getConnectionId();
         this.status = exposingData.getStatus();
@@ -74,9 +74,9 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.publicKey = ced.getPublicKey();
         this.alias = ced.getAlias();
         this.image = ced.getImage();
-        this.connectionState= null;
-        this.connectionId=null;
-        this.status=ced.getStatus();
+        this.connectionState = null;
+        this.connectionId = null;
+        this.status = ced.getStatus();
         this.country = ced.getCountry();
         this.state = ced.getState();
         this.city = ced.getCity();
@@ -90,7 +90,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.image = record.getImage();
         this.connectionState = record.getConnectionState();
         this.connectionId = null;
-        this.status=record.getStatus();
+        this.status = record.getStatus();
         this.country = record.getCountry();
         this.state = record.getState();
         this.city = record.getCity();
@@ -112,7 +112,9 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     }
 
     @Override
-    public byte[] getImage() { return image; }
+    public byte[] getImage() {
+        return image;
+    }
 
     @Override
     public List listAlias() {
@@ -132,46 +134,64 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     public String getStatus() {
         return status;
     }
+
     public String getCity() {
         return city;
     }
+
     public String getCountry() {
         return country;
     }
+
     public String getState() {
         return state;
     }
+
     public Location getLocation() {
         return location;
     }
+
     public ProfileStatus getProfileStatus() {
         return profileStatus;
     }
 
     public void setCity(String city) {
-        this.city=city;
+        this.city = city;
     }
+
     public void setCountry(String country) {
-        this.country=country;
+        this.country = country;
     }
+
     public void setState(String state) {
-        this.state=state;
+        this.state = state;
     }
 
     @Override
     public String toString() {
-        return "ChatActorCommunitySubAppModuleInformationImpl{" +
-                "publicKey='" + publicKey + '\'' +
-                ", alias='" + alias + '\'' +
-                ", connectionState='" + connectionState + '\'' +
-                ", connectionId='" + connectionId + '\'' +
-                ", image=" + (image != null) + '\'' +
-                ", status=" + (status) + '\'' +
-                ", country=" + (country) + '\'' +
-                ", state=" + (state) + '\'' +
-                ", city=" + (city) + '\'' +
-                ", location=" + (location!=null) +
-                ", profileStatus=" + (profileStatus.getCode()) + '\'' +
-                '}';
+        return new StringBuilder()
+                .append("ChatActorCommunitySubAppModuleInformationImpl{")
+                .append("publicKey='").append(publicKey)
+                .append('\'')
+                .append(", alias='").append(alias)
+                .append('\'')
+                .append(", connectionState='").append(connectionState)
+                .append('\'')
+                .append(", connectionId='").append(connectionId)
+                .append('\'')
+                .append(", image=").append(image != null)
+                .append('\'')
+                .append(", status=").append(status)
+                .append('\'')
+                .append(", country=").append(country)
+                .append('\'')
+                .append(", state=").append(state)
+                .append('\'')
+                .append(", city=").append(city)
+                .append('\'')
+                .append(", location=").append(location != null)
+                .append(", profileStatus=").append(profileStatus.getCode())
+                .append('\'')
+                .append('}').toString();
     }
 }

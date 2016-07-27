@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -37,7 +38,6 @@ import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.btce.developer.bitdubai.version_1.database.BtceProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.btce.developer.bitdubai.version_1.database.BtceProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.btce.developer.bitdubai.version_1.exceptions.CantInitializeBtceProviderDatabaseException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -144,22 +144,19 @@ public class ProviderBtcePluginRoot extends AbstractPlugin implements DatabaseMa
     @Override
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
-        if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+        if (!isCurrencyPairSupported(currencyPair))
+            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
 
         //Determine cryptoCurrency base
         String exchangeFrom, exchangeTo;
         boolean invertExchange;
         boolean providerIsDown = false;
 
-        if(isAnInvertedCurrencyPair(currencyPair))
-        {
+        if (isAnInvertedCurrencyPair(currencyPair)) {
             exchangeFrom = currencyPair.getTo().getCode();
             exchangeTo = currencyPair.getFrom().getCode();
             invertExchange = true;
-        }
-        else
-        {
+        } else {
             exchangeFrom = currencyPair.getFrom().getCode();
             exchangeTo = currencyPair.getTo().getCode();
             invertExchange = false;
@@ -171,30 +168,30 @@ public class ProviderBtcePluginRoot extends AbstractPlugin implements DatabaseMa
         double purchasePrice = 0;
         double salePrice = 0;
 
-        try{
-            String currencyString = exchangeFrom.toLowerCase() + "_" + exchangeTo.toLowerCase();
-            json =  new JSONObject(HttpHelper.getHTTPContent("https://btc-e.com/api/3/ticker/" + currencyString));
-            json =  json.getJSONObject(currencyString);
+        try {
+            String currencyString = new StringBuilder().append(exchangeFrom.toLowerCase()).append("_").append(exchangeTo.toLowerCase()).toString();
+            json = new JSONObject(HttpHelper.getHTTPContent(new StringBuilder().append("https://btc-e.com/api/3/ticker/").append(currencyString).toString()));
+            json = json.getJSONObject(currencyString);
             purchasePrice = json.getDouble("buy");
             salePrice = json.getDouble("sell");
 
-        }catch (JSONException e) {
+        } catch (JSONException e) {
             purchasePrice = 0;
             salePrice = 0;
             invertExchange = false;
             providerIsDown = true;
-        //    errorManager.reportUnexpectedPluginException(Plugins.BTCE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        //    throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"Btce CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
+            //    errorManager.reportUnexpectedPluginException(Plugins.BTCE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            //    throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"Btce CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
         }
 
-        if(invertExchange){
+        if (invertExchange) {
             purchasePrice = 1 / purchasePrice;
             salePrice = 1 / salePrice;
         }
 
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), salePrice, purchasePrice, (new Date().getTime() / 1000));
-        if(!providerIsDown) {
+        if (!providerIsDown) {
             try {
                 dao.saveCurrentExchangeRate(exchangeRate);
             } catch (CantSaveExchangeRateException e) {
@@ -215,15 +212,13 @@ public class ProviderBtcePluginRoot extends AbstractPlugin implements DatabaseMa
     }
 
 
-
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
-        if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+        if (!isCurrencyPairSupported(currencyPair))
+            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }
-
 
 
     /*
@@ -257,8 +252,8 @@ public class ProviderBtcePluginRoot extends AbstractPlugin implements DatabaseMa
 
     /*Internal functions*/
     private boolean isAnInvertedCurrencyPair(CurrencyPair currencyPair) {
-        for(CurrencyPair cp : invertedCurrencyPairs){
-            if(cp.getFrom().equals(currencyPair.getFrom()) && cp.getTo().equals(currencyPair.getTo()))
+        for (CurrencyPair cp : invertedCurrencyPairs) {
+            if (cp.getFrom().equals(currencyPair.getFrom()) && cp.getTo().equals(currencyPair.getTo()))
                 return true;
         }
         return false;

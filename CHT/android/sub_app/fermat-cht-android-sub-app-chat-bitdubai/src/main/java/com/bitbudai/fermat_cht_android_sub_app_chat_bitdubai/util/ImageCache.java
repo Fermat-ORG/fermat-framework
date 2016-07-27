@@ -1,4 +1,3 @@
-
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util;
 
 import android.graphics.Bitmap;
@@ -16,7 +15,6 @@ import com.bitdubai.android_api.BuildConfig;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 09/01/16
  * @version 1.0
- *
  */
 
 /**
@@ -71,7 +69,7 @@ public class ImageCache {
 
         // Set up memory cache
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Memory cache created (size = " + memCacheSize + ")");
+            Log.d(TAG, new StringBuilder().append("Memory cache created (size = ").append(memCacheSize).append(")").toString());
         }
         mMemoryCache = new LruCache<String, Bitmap>(memCacheSize) {
             /**
@@ -146,8 +144,7 @@ public class ImageCache {
      */
     public static int calculateMemCacheSize(float percent) {
         if (percent < 0.05f || percent > 0.8f) {
-            throw new IllegalArgumentException("setMemCacheSizePercent - percent must be "
-                    + "between 0.05 and 0.8 (inclusive)");
+            throw new IllegalArgumentException(new StringBuilder().append("setMemCacheSizePercent - percent must be ").append("between 0.05 and 0.8 (inclusive)").toString());
         }
         return Math.round(percent * Runtime.getRuntime().maxMemory() / 1024);
     }
@@ -183,7 +180,8 @@ public class ImageCache {
         /**
          * Empty constructor as per the Fragment documentation
          */
-        public RetainFragment() {}
+        public RetainFragment() {
+        }
 
         @Override
         public void onCreate(Bundle savedInstanceState) {

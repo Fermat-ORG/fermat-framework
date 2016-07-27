@@ -11,11 +11,11 @@ import java.util.Arrays;
 public class ChatExposingData {
 
     private final String publicKey;
-    private final String alias    ;
-    private final byte[] image    ;
-    private final String country  ;
-    private final String state    ;
-    private final String city     ;
+    private final String alias;
+    private final byte[] image;
+    private final String country;
+    private final String state;
+    private final String city;
     private final String status;
     private final Location location;
     private final long refreshInterval;
@@ -24,11 +24,11 @@ public class ChatExposingData {
 
 
     public ChatExposingData(final String publicKey,
-                                    final String alias    ,
-                                    final byte[] image,
-                                    final String country,
-                                    final String state,
-                                    final String city,
+                            final String alias,
+                            final byte[] image,
+                            final String country,
+                            final String state,
+                            final String city,
                             final String status,
                             final Location location,
                             long refreshInterva,
@@ -36,11 +36,11 @@ public class ChatExposingData {
                             final ProfileStatus profileStatus) {
 
         this.publicKey = publicKey;
-        this.alias     = alias    ;
-        this.image     = image    ;
-        this.country   = country;
-        this.state     = state;
-        this.city      = city;
+        this.alias = alias;
+        this.image = image;
+        this.country = country;
+        this.state = state;
+        this.city = city;
         this.status = status;
         this.location = location;
         this.refreshInterval = refreshInterva;
@@ -103,10 +103,12 @@ public class ChatExposingData {
 
     @Override
     public String toString() {
-        return "ChatExposingData{" +
-                "publicKey='" + publicKey + '\'' +
-                ", alias='" + alias + '\'' +
-                ", image=" + Arrays.toString(image) +
-                '}';
+        return new StringBuilder().append("ChatExposingData{")
+                .append("publicKey='").append(publicKey)
+                .append('\'')
+                .append(", alias='").append(alias)
+                .append('\'')
+                .append(", image=").append(Arrays.toString(image))
+                .append('}').toString();
     }
 }

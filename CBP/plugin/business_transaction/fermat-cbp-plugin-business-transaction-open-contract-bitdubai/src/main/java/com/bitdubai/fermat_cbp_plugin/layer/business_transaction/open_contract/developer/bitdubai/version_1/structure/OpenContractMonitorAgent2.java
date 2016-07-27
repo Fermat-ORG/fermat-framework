@@ -861,15 +861,13 @@ public class OpenContractMonitorAgent2
 
             if (contractType.equals(ContractType.PURCHASE)) {
 
-                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL" +
-                        "\n - closeNegotiation - PURCHASE\n");
+                System.out.print(new StringBuilder().append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL").append("\n - closeNegotiation - PURCHASE\n").toString());
                 //CLOSE PURCHASE NEGOTIATION
                 customerBrokerPurchaseNegotiationManager.closeNegotiation(uuidNegotiationId);
 
             } else if (contractType.equals(ContractType.SALE)) {
 
-                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL" +
-                        "\n - closeNegotiation - SALE\n");
+                System.out.print(new StringBuilder().append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL").append("\n - closeNegotiation - SALE\n").toString());
                 //CLOSE SALE NEGOTIATION
                 customerBrokerSaleNegotiationManager.closeNegotiation(uuidNegotiationId);
 

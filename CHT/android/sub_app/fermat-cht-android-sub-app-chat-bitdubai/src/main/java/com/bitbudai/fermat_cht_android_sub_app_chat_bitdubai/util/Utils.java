@@ -39,7 +39,6 @@ import java.text.SimpleDateFormat;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 09/01/16
  * @version 1.0
- *
  */
 
 /**
@@ -51,14 +50,12 @@ public class Utils {
         return new SimpleDateFormat(type);
     }
 
-    public static boolean isNumeric(String str)
-    {
+    public static boolean isNumeric(String str) {
         return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
     }
 
-    public static String avoidingScientificNot(String str)
-    {
-        if(isNumeric(str)){
+    public static String avoidingScientificNot(String str) {
+        if (isNumeric(str)) {
             str = new BigDecimal(str).toPlainString();
         }
         return str;
@@ -68,7 +65,7 @@ public class Utils {
     public static int safeLongToInt(long l) {
         if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
             throw new IllegalArgumentException
-                    (l + " cannot be cast to int without changing its value.");
+                    (new StringBuilder().append(l).append(" cannot be cast to int without changing its value.").toString());
         }
         return (int) l;
     }
@@ -81,12 +78,12 @@ public class Utils {
             char[] iconText = new char[2];
             firstName.getChars(0, 1, iconText, 0);
             firstName.getChars(1, 2, iconText, 1);
-            return ("" + iconText[0] + iconText[1]).toUpperCase();
+            return (new StringBuilder().append("").append(iconText[0]).append(iconText[1]).toString()).toUpperCase();
         } else {
             char[] iconText = new char[2];
             firstName.getChars(0, 1, iconText, 0);
             lastName.getChars(0, 1, iconText, 1);
-            return ("" + iconText[0] + iconText[1]).toUpperCase();
+            return (new StringBuilder().append("").append(iconText[0]).append(iconText[1]).toString()).toUpperCase();
         }
     }
 
@@ -129,7 +126,7 @@ public class Utils {
         return output;
     }
 
-    public static Bitmap decodeFile(Context context,int resId) {
+    public static Bitmap decodeFile(Context context, int resId) {
 // decode image size
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
@@ -138,8 +135,7 @@ public class Utils {
         final int REQUIRED_SIZE = 50;
         int width_tmp = o.outWidth, height_tmp = o.outHeight;
         int scale = 1;
-        while (true)
-        {
+        while (true) {
             if (width_tmp / 2 < REQUIRED_SIZE
                     || height_tmp / 2 < REQUIRED_SIZE)
                 break;
@@ -153,12 +149,12 @@ public class Utils {
         return BitmapFactory.decodeResource(context.getResources(), resId, o2);
     }
 
-    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int width) {
         // TODO Auto-generated method stub
         int targetWidth = width;
         int targetHeight = width;
         Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
-                targetHeight,Bitmap.Config.ARGB_8888);
+                targetHeight, Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(targetBitmap);
         Path path = new Path();
@@ -326,33 +322,33 @@ public class Utils {
         return metrics.density;
     }
 
-   /* public static String getUserStatusString(TdApi.UserStatus status) {
-        Context context = DataHolder.getContext();
-        Locale.setDefault(Locale.US);
-        String lastSeenString = "";
-        switch (status.getConstructor()) {
-            case TdApi.UserStatusOnline.CONSTRUCTOR:
-                lastSeenString = context.getString(R.string.online);
-                break;
-            case TdApi.UserStatusOffline.CONSTRUCTOR:
-                int ago = ((TdApi.UserStatusOffline) status).wasOnline;
-                lastSeenString = context.getString(R.string.last_seen) + " " + DateUtils.getRelativeTimeSpanString((long) ago * 1000);
-                break;
-            case TdApi.UserStatusRecently.CONSTRUCTOR:
-                lastSeenString = context.getString(R.string.ls_recently);
-                break;
-            case TdApi.UserStatusLastWeek.CONSTRUCTOR:
-                lastSeenString = context.getString(R.string.ls_week_ago);
-                break;
-            case TdApi.UserStatusLastMonth.CONSTRUCTOR:
-                lastSeenString = context.getString(R.string.ls_month_ago);
-                break;
-            default:
-                break;
-        }
-        return lastSeenString;
-    }
-*/
+    /* public static String getUserStatusString(TdApi.UserStatus status) {
+         Context context = DataHolder.getContext();
+         Locale.setDefault(Locale.US);
+         String lastSeenString = "";
+         switch (status.getConstructor()) {
+             case TdApi.UserStatusOnline.CONSTRUCTOR:
+                 lastSeenString = context.getString(R.string.online);
+                 break;
+             case TdApi.UserStatusOffline.CONSTRUCTOR:
+                 int ago = ((TdApi.UserStatusOffline) status).wasOnline;
+                 lastSeenString = context.getString(R.string.last_seen) + " " + DateUtils.getRelativeTimeSpanString((long) ago * 1000);
+                 break;
+             case TdApi.UserStatusRecently.CONSTRUCTOR:
+                 lastSeenString = context.getString(R.string.ls_recently);
+                 break;
+             case TdApi.UserStatusLastWeek.CONSTRUCTOR:
+                 lastSeenString = context.getString(R.string.ls_week_ago);
+                 break;
+             case TdApi.UserStatusLastMonth.CONSTRUCTOR:
+                 lastSeenString = context.getString(R.string.ls_month_ago);
+                 break;
+             default:
+                 break;
+         }
+         return lastSeenString;
+     }
+ */
     public static String formatFileSize(long size) {
         String hrSize = null;
 
@@ -564,7 +560,7 @@ public class Utils {
             bitmap.recycle();
             bitmap = null;
         } catch (Exception e) {
-            Log.e("Tag", "rotateFileImage error " + e);
+            Log.e("Tag", new StringBuilder().append("rotateFileImage error ").append(e).toString());
         }
     }
 

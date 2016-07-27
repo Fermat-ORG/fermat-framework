@@ -11,20 +11,35 @@ import java.util.UUID;
  * Created by franklin on 08/01/16.
  */
 public interface Message extends Serializable {
-    UUID  getMessageId();
+    UUID getMessageId();
+
     void setMessageId(UUID messageId);
+
     UUID getChatId();
+
     void setChatId(UUID chatId);
+
     String getMessage();
+
     void setMessage(String message);
+
     MessageStatus getStatus();
+
     void setStatus(MessageStatus status);
+
     TypeMessage getType();
+
     void setType(TypeMessage type);
+
     Timestamp getMessageDate();
+
     void setMessageDate(Timestamp messageDate);
+
     UUID getContactId();
+
     void setContactId(UUID contactId);
+
     long getCount();
+
     void setCount(long count);
 }

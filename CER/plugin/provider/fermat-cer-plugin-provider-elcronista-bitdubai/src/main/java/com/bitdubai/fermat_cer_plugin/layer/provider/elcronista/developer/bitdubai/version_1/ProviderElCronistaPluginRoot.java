@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -34,7 +35,6 @@ import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.elcronista.developer.bitdubai.version_1.database.ElCronistaProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.elcronista.developer.bitdubai.version_1.database.ElCronistaProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.elcronista.developer.bitdubai.version_1.exceptions.CantInitializeElCronistaProviderDatabaseException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -131,7 +131,7 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
 
         String content, aux;
         JSONObject json;
@@ -139,11 +139,11 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
         double purchasePrice = 0;
         double salePrice = 0;
         boolean providerIsDown = false;
-        boolean invertExchange=true;
+        boolean invertExchange = true;
 
         try {
             content = HttpHelper.getHTTPContent("http://api.bluelytics.com.ar/json/last_price");
-            json = new JSONObject("{\"indexes\": " + content + "}");
+            json = new JSONObject(new StringBuilder().append("{\"indexes\": ").append(content).append("}").toString());
             jsonArr = json.getJSONArray("indexes");
 
             for (int i = 0; i < jsonArr.length(); ++i) {
@@ -157,8 +157,8 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
                 }
             }
         } catch (JSONException e) {
-         //   this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-         //   throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "ElCronista CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
+            //   this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            //   throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "ElCronista CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
             purchasePrice = 0;
             salePrice = 0;
             invertExchange = false;
@@ -173,7 +173,7 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
 
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), purchasePrice, salePrice, (new Date().getTime() / 1000));
-        if(!providerIsDown) {
+        if (!providerIsDown) {
             try {
                 dao.saveExchangeRate(exchangeRate);
             } catch (CantSaveExchangeRateException e) {

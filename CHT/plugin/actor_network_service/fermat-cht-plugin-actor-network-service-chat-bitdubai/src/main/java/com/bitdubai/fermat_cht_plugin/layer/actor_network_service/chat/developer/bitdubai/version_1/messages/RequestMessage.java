@@ -15,52 +15,52 @@ import java.util.UUID;
  */
 public class RequestMessage extends NetworkServiceMessage {
 
-    private final UUID requestId           ;
-    private final String                  senderPublicKey     ;
-    private final Actors senderActorType     ;
-    private final String                  senderAlias         ;
-    private final byte[]                  senderImage         ;
-    private final String                  destinationPublicKey;
-    private final ConnectionRequestAction requestAction       ;
-    private final long                    sentTime            ;
+    private final UUID requestId;
+    private final String senderPublicKey;
+    private final Actors senderActorType;
+    private final String senderAlias;
+    private final byte[] senderImage;
+    private final String destinationPublicKey;
+    private final ConnectionRequestAction requestAction;
+    private final long sentTime;
 
-    public RequestMessage(final UUID                    requestId           ,
-                          final String                  senderPublicKey     ,
-                          final Actors                  senderActorType     ,
-                          final String                  senderAlias         ,
-                          final byte[]                  senderImage         ,
-                          final String                  destinationPublicKey,
-                          final ConnectionRequestAction requestAction       ,
-                          final long                    sentTime            ) {
+    public RequestMessage(final UUID requestId,
+                          final String senderPublicKey,
+                          final Actors senderActorType,
+                          final String senderAlias,
+                          final byte[] senderImage,
+                          final String destinationPublicKey,
+                          final ConnectionRequestAction requestAction,
+                          final long sentTime) {
 
         super(MessageTypes.CONNECTION_REQUEST);
 
-        this.requestId            = requestId           ;
-        this.senderPublicKey      = senderPublicKey     ;
-        this.senderActorType      = senderActorType     ;
-        this.senderAlias          = senderAlias         ;
-        this.senderImage          = senderImage         ;
+        this.requestId = requestId;
+        this.senderPublicKey = senderPublicKey;
+        this.senderActorType = senderActorType;
+        this.senderAlias = senderAlias;
+        this.senderImage = senderImage;
         this.destinationPublicKey = destinationPublicKey;
-        this.requestAction        = requestAction       ;
-        this.sentTime             = sentTime            ;
+        this.requestAction = requestAction;
+        this.sentTime = sentTime;
     }
 
     private RequestMessage(JsonObject jsonObject, Gson gson) {
 
         super(MessageTypes.CONNECTION_REQUEST);
 
-        this.requestId            = UUID.fromString(jsonObject.get("requestId").getAsString());
-        this.senderPublicKey      = jsonObject.get("senderPublicKey").getAsString();
-        this.senderActorType      = gson.fromJson(jsonObject.get("senderActorType").getAsString(), Actors.class);
-        this.senderAlias          = jsonObject.get("senderAlias").getAsString();
-        this.senderImage          = Base64.decode(jsonObject.get("senderImage").getAsString(), Base64.DEFAULT);
+        this.requestId = UUID.fromString(jsonObject.get("requestId").getAsString());
+        this.senderPublicKey = jsonObject.get("senderPublicKey").getAsString();
+        this.senderActorType = gson.fromJson(jsonObject.get("senderActorType").getAsString(), Actors.class);
+        this.senderAlias = jsonObject.get("senderAlias").getAsString();
+        this.senderImage = Base64.decode(jsonObject.get("senderImage").getAsString(), Base64.DEFAULT);
         this.destinationPublicKey = jsonObject.get("destinationPublicKey").getAsString();
-        this.requestAction        = gson.fromJson(jsonObject.get("requestAction").getAsString(), ConnectionRequestAction.class);
-        this.sentTime             = jsonObject.get("sentTime").getAsLong();
+        this.requestAction = gson.fromJson(jsonObject.get("requestAction").getAsString(), ConnectionRequestAction.class);
+        this.sentTime = jsonObject.get("sentTime").getAsLong();
 
     }
 
-    public static RequestMessage fromJson(String jsonString){
+    public static RequestMessage fromJson(String jsonString) {
 
         Gson gson = new Gson();
         JsonParser jsonParser = new JsonParser();
@@ -74,15 +74,15 @@ public class RequestMessage extends NetworkServiceMessage {
         Gson gson = new Gson();
 
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("messageType",          getMessageType().toString());
-        jsonObject.addProperty("requestId",            requestId.toString());
-        jsonObject.addProperty("senderPublicKey",      senderPublicKey);
-        jsonObject.addProperty("senderActorType",      senderActorType.toString());
-        jsonObject.addProperty("senderAlias",          senderAlias);
-        jsonObject.addProperty("senderImage",          Base64.encodeToString(senderImage, Base64.DEFAULT));
+        jsonObject.addProperty("messageType", getMessageType().toString());
+        jsonObject.addProperty("requestId", requestId.toString());
+        jsonObject.addProperty("senderPublicKey", senderPublicKey);
+        jsonObject.addProperty("senderActorType", senderActorType.toString());
+        jsonObject.addProperty("senderAlias", senderAlias);
+        jsonObject.addProperty("senderImage", Base64.encodeToString(senderImage, Base64.DEFAULT));
         jsonObject.addProperty("destinationPublicKey", destinationPublicKey);
-        jsonObject.addProperty("requestAction",        requestAction.toString());
-        jsonObject.addProperty("sentTime",             sentTime);
+        jsonObject.addProperty("requestAction", requestAction.toString());
+        jsonObject.addProperty("sentTime", sentTime);
         return gson.toJson(jsonObject);
 
     }
@@ -145,15 +145,19 @@ public class RequestMessage extends NetworkServiceMessage {
 
     @Override
     public String toString() {
-        return "RequestMessage{" +
-                "requestId=" + requestId +
-                ", senderPublicKey='" + senderPublicKey + '\'' +
-                ", senderActorType=" + senderActorType +
-                ", senderAlias='" + senderAlias + '\'' +
-                ", senderImage=" + (senderImage != null) +
-                ", destinationPublicKey='" + destinationPublicKey + '\'' +
-                ", requestAction=" + requestAction +
-                ", sentTime=" + sentTime +
-                '}';
+        return new StringBuilder()
+                .append("RequestMessage{")
+                .append("requestId=").append(requestId)
+                .append(", senderPublicKey='").append(senderPublicKey)
+                .append('\'')
+                .append(", senderActorType=").append(senderActorType)
+                .append(", senderAlias='").append(senderAlias)
+                .append('\'')
+                .append(", senderImage=").append(senderImage != null)
+                .append(", destinationPublicKey='").append(destinationPublicKey)
+                .append('\'')
+                .append(", requestAction=").append(requestAction)
+                .append(", sentTime=").append(sentTime)
+                .append('}').toString();
     }
 }

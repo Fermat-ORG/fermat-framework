@@ -17,21 +17,21 @@ public enum NotificationDescriptor {
 
     private String code;
 
-    NotificationDescriptor(String code){
+    NotificationDescriptor(String code) {
 
-        this.code=code;
+        this.code = code;
 
     }
 
-    public String getCode(){
+    public String getCode() {
 
         return this.code;
 
     }
 
-    public static NotificationDescriptor getByCode(String code)throws InvalidParameterException{
+    public static NotificationDescriptor getByCode(String code) throws InvalidParameterException {
 
-        switch (code){
+        switch (code) {
 
             case "ASK":
                 return NotificationDescriptor.ASKFORACCEPTANCE;
@@ -48,7 +48,7 @@ public enum NotificationDescriptor {
             case "IUNF":
                 return NotificationDescriptor.INTRA_USER_NOT_FOUND;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the NotificationDescriptor enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the NotificationDescriptor enum");
 
 
         }

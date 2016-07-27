@@ -32,7 +32,7 @@ public class CantGetPendingActionListException extends CHTException {
      * @param possibleReason
      */
     public CantGetPendingActionListException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

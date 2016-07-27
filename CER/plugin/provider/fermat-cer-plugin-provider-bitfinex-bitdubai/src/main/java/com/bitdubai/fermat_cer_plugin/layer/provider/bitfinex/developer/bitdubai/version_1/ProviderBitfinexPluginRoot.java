@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -37,7 +38,6 @@ import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitfinex.developer.bitdubai.version_1.database.BitfinexProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitfinex.developer.bitdubai.version_1.database.BitfinexProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitfinex.developer.bitdubai.version_1.exceptions.CantInitializeBitfinexProviderDatabaseException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -148,7 +148,7 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
 
         //Determine cryptoCurrency base
         String exchangeFrom, exchangeTo;
@@ -174,7 +174,7 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
         double salePrice = 0;
 
         try {
-            json = new JSONObject(HttpHelper.getHTTPContent("https://api.bitfinex.com/v1/pubticker/" + exchangeFrom + exchangeTo));
+            json = new JSONObject(HttpHelper.getHTTPContent(new StringBuilder().append("https://api.bitfinex.com/v1/pubticker/").append(exchangeFrom).append(exchangeTo).toString()));
             purchasePrice = json.getDouble("bid");
             salePrice = json.getDouble("ask");
 
@@ -195,7 +195,7 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), salePrice, purchasePrice, (new Date().getTime() / 1000));
 
-        if (!providerIsDown){
+        if (!providerIsDown) {
             try {
                 dao.saveCurrentExchangeRate(exchangeRate);
             } catch (CantSaveExchangeRateException e) {
@@ -219,7 +219,7 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }
