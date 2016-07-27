@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -148,9 +149,9 @@ public class ReceiveFragmentDialog extends Dialog implements
                     Actors.EXTRA_USER,
                     Platforms.CRYPTO_CURRENCY_PLATFORM,
                     VaultType.CRYPTO_CURRENCY_VAULT,
-                    "BITV",
+                    CryptoCurrencyVault.FERMAT_VAULT.getCode(),
                     walletPublicKey,
-                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                    ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                     blockchainNetworkType
             );
             walletAddres = cryptoAddress.getAddress();

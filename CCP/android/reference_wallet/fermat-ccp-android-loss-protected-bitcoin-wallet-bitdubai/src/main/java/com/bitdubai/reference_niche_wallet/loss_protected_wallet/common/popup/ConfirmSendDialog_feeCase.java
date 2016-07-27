@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
+import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
@@ -28,7 +29,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
  * Created by Joaquin Carrasuquero on 11/04/16.
  */
 
-public class Confirm_send_dialog extends Dialog implements
+public class ConfirmSendDialog_feeCase extends Dialog implements
         View.OnClickListener {
 
 
@@ -66,47 +67,18 @@ public class Confirm_send_dialog extends Dialog implements
     Button accept_btn;
     FermatTextView confirmText;
 
-    public Confirm_send_dialog(Activity a,
-                               LossProtectedWallet lossProtectedWallet,//
-                               long cryptoAmount,//
-                               CryptoAddress destinationAddress,//
-                               String notes, String walletPublicKey,
-                               String deliveredByActorPublicKey,//
-                               Actors deliveredByActorType,//
-                               String deliveredToActorPublicKey,
-                               Actors deliveredToActorType,
-                               ReferenceWallet referenceWallet,
-                               BlockchainNetworkType blockchainNetworkType,
-                               ReferenceAppFermatSession<LossProtectedWallet> appSession) {
-        super(a);
-        this.activity = a;
-        this.lossProtectedWallet=lossProtectedWallet;
-        this.cryptoAmount = cryptoAmount;
-        this.destinationAddress = destinationAddress;
-        this.notes = notes;
-        this.walletPublicKey = walletPublicKey;
-        this.deliveredByActorPublicKey = deliveredByActorPublicKey;
-        this.deliveredByActorType = deliveredByActorType;
-        this.deliveredToActorPublicKey = deliveredToActorPublicKey;
-        this.deliveredToActorType = deliveredToActorType;
-        this.referenceWallet = referenceWallet;
-        this.blockchainNetworkType = blockchainNetworkType;
-        this.appSession = appSession;
-
-    }
-
-    public Confirm_send_dialog(Activity a,
-                             LossProtectedWallet lossProtectedWallet,
-                             long cryptoAmount,
-                             long fee,
-                             long total,
-                             FeeOrigin feeOrigin,
-                             CryptoAddress destinationAddress,
-                             String notes,
-                             String deliveredByActorPublicKey,
-                             Actors deliveredByActorType,
-                             BlockchainNetworkType blockchainNetworkType,
-                             ReferenceAppFermatSession<LossProtectedWallet> appSession) {
+    public ConfirmSendDialog_feeCase(Activity a,
+                                     LossProtectedWallet lossProtectedWallet,
+                                     long cryptoAmount,
+                                     long fee,
+                                     long total,
+                                     FeeOrigin feeOrigin,
+                                     CryptoAddress destinationAddress,
+                                     String notes,
+                                     String deliveredByActorPublicKey,
+                                     Actors deliveredByActorType,
+                                     BlockchainNetworkType blockchainNetworkType,
+                                     ReferenceAppFermatSession<LossProtectedWallet> appSession) {
         super(a);
         this.activity = a;
         this.lossProtectedWallet=lossProtectedWallet;
@@ -131,16 +103,23 @@ public class Confirm_send_dialog extends Dialog implements
     }
 
     private void setUpScreenComponents(){
+        BitcoinConverter bitcoinConverter = new BitcoinConverter();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.confirmation_window);
 
         accept_btn = (Button) findViewById(R.id.accept_btn);
         cancel_btn = (Button) findViewById(R.id.cancel_btn);
 
+        confirmText =  (FermatTextView) findViewById(R.id.description_msg);
+
         accept_btn.setOnClickListener(this);
         cancel_btn.setOnClickListener(this);
 
         getWindow().setBackgroundDrawable(new ColorDrawable(0));
+
+        String newAmount = bitcoinConverter.getBTC(String.valueOf(total));
+        confirmText.setText("You will sending " + newAmount +" btc. Confirm?");
+
 
     }
 
@@ -154,42 +133,34 @@ public class Confirm_send_dialog extends Dialog implements
         }else if( i == R.id.accept_btn){
             try {
 
-                //tengo que validar el balance real
-                long realBalance = lossProtectedWallet.getRealBalance(appSession.getAppPublicKey(), blockchainNetworkType);
-
-                if(cryptoAmount < realBalance) //Balance value is greater than send amount
-                {
-                    lossProtectedWallet.send(
-                            this.cryptoAmount,
-                            this.destinationAddress,
-                            notes,
-                            this.walletPublicKey,
-                            this.deliveredByActorPublicKey,
-                            this.deliveredByActorType,
-                            this.deliveredToActorPublicKey,
-                            this.deliveredToActorType,
-                            this.referenceWallet,
-                            blockchainNetworkType,
-                            CryptoCurrency.BITCOIN,
-                            0,
-                            FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT
-
-                    );
-                }
-                else
-                {
-                    Toast.makeText(this.activity, "Action not allowed, Insufficient Funds.", Toast.LENGTH_LONG).show();
-                }
-
+                lossProtectedWallet.send(
+                        cryptoAmount,
+                        destinationAddress,
+                        notes,
+                        appSession.getAppPublicKey(),
+                        lossProtectedWallet.getSelectedActorIdentity().getPublicKey(),
+                        Actors.INTRA_USER,
+                        deliveredByActorPublicKey,
+                        deliveredByActorType,
+                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                        blockchainNetworkType,
+                        CryptoCurrency.BITCOIN,
+                        fee,
+                        feeOrigin);
             } catch (CantSendLossProtectedCryptoException e) {
                 e.printStackTrace();
                 Toast.makeText(this.activity, "Unexpected error", Toast.LENGTH_SHORT).show();
             } catch (LossProtectedInsufficientFundsException e) {
                 e.printStackTrace();
                 Toast.makeText(this.activity, "Not enough funds to perform action", Toast.LENGTH_SHORT).show();
-            } catch (CantGetLossProtectedBalanceException e) {
+        /*    } catch (CantGetLossProtectedBalanceException e) {
                 Toast.makeText(this.activity, "Unexpected error", Toast.LENGTH_SHORT).show();
+        */    }
+             catch (Exception e) {
+                Toast.makeText(activity.getApplicationContext(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
+
             Toast.makeText(this.activity, "Sending...", Toast.LENGTH_SHORT).show();
             dismiss();
         }
