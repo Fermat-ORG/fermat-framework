@@ -146,13 +146,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
     }
 
     @Override
-    protected Runnable agentJob() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2.this.doTheMainTask();
-            }
-        };
+    protected void agentJob() {
+        UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2.this.doTheMainTask();
     }
 
     @Override

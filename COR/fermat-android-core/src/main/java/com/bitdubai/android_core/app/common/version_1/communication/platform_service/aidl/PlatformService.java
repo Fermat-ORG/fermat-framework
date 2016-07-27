@@ -196,7 +196,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
             if (data instanceof SettingsManager) {
                 Log.e(TAG, "ERROR: NO USAR getSettingsManager DEL MODULE");
             } else {
-                Log.e(TAG, new StringBuilder().append("ERROR: Class or fields of the class are not implementing Serializable, class name: ").append(data.getClass().getName()).toString());
+                Log.e(TAG, "ERROR: Class or fields of the class are not implementing Serializable, class name: " + data.getClass().getName());
                 if (data instanceof ArrayList || data instanceof List) {
                     //todo: this is not working
                     Log.e(TAG, "This error is caused by a Collection Class, please check the element the collection");
@@ -227,8 +227,8 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
 
 
         //test
-        Log.i(TAG, new StringBuilder().append("DATA CLass name: ").append(data.getClass().getName()).toString());
-        Log.i(TAG, new StringBuilder().append("DATA: ").append(data).toString());
+        Log.i(TAG, "DATA CLass name: " + data.getClass().getName());
+        Log.i(TAG, "DATA: " + data);
         sendLargeData(dataId, clientKey, data);
 
 
@@ -256,7 +256,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
                 localServerSocketSession.sendMessage(dataId, data);
                 Log.i(TAG, "Socket response sent");
             } else {
-                Log.e(TAG, new StringBuilder().append("Channel null, \n ExtraInfo: clientKey= ").append(clientKey).append(" \n clients set: ").append(socketsClients.keySet()).toString());
+                Log.e(TAG, "Channel null, \n ExtraInfo: clientKey= " + clientKey + " \n clients set: " + socketsClients.keySet());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -373,7 +373,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
                 } else {
                     if (!(returnModuleObject instanceof Serializable)) {
                         if (returnModuleObject != null) {
-                            NotSerializableException e = new NotSerializableException(new StringBuilder().append("Object returned: ").append(returnModuleObject.getClass().getName()).append(" from method ").append(method).append(" is not implementing serializable").toString());
+                            NotSerializableException e = new NotSerializableException("Object returned: " + returnModuleObject.getClass().getName() + " from method " + method + " is not implementing serializable");
                             return new FermatModuleObjectWrapper(dataId, null, true, e);
 
                         } else {
@@ -489,7 +489,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
                 } else {
                     if (!(returnModuleObject instanceof Serializable)) {
                         if (returnModuleObject != null) {
-                            NotSerializableException e = new NotSerializableException(new StringBuilder().append("Object returned: ").append(returnModuleObject.getClass().getName()).append(" from method ").append(method).append(" is not implementing serializable").toString());
+                            NotSerializableException e = new NotSerializableException("Object returned: " + returnModuleObject.getClass().getName() + " from method " + method + " is not implementing serializable");
                             return new FermatModuleObjectWrapper(dataId, null, true, e);
 
                         } else {
@@ -527,7 +527,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i(TAG, new StringBuilder().append("onBind:").append(intent.getAction()).toString());
+        Log.i(TAG, "onBind:" + intent.getAction());
         IBinder iBinder = null;
         try {
             switch (intent.getAction()) {
@@ -651,7 +651,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
                     moduleManager = ((AbstractModule) fermatManager).getModuleManager();
                     clazz = moduleManager.getClass();
                 } else {
-                    Log.e(TAG, new StringBuilder().append("Error: No extends AbstractModule class, Plugin: ").append(pluginVersionReference).toString());
+                    Log.e(TAG, "Error: No extends AbstractModule class, Plugin: " + pluginVersionReference);
                     clazz = fermatManager.getClass();
                 }
                 Method m = null;
@@ -705,18 +705,16 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
 
                             }
                         } else {
-                            Log.e(TAG, new StringBuilder().append("NOT FOUND ModuleManger for this pluginVersionRefence:").append(pluginVersionReference.toString()).toString());
+                            Log.e(TAG, "NOT FOUND ModuleManger for this pluginVersionRefence:" + pluginVersionReference.toString());
                         }
                     }
-
                     if (m != null) {
                         if (!m.getReturnType().equals(Void.TYPE) && returnedObject == null) {
-                            Log.i(TAG, new StringBuilder().append("Object returned null in method: ").append(method).append(" from plugin: ").append(pluginVersionReference.toString3()).append(" please check the module if this is not what you expected").toString());
+                            Log.i(TAG, "Object returned null in method: " + method + " from plugin: " + pluginVersionReference.toString3() + " please check the module if this is not what you expected");
                         }
                     }
-
                 } catch (NoSuchMethodException e) {
-                    Log.e(TAG, new StringBuilder().append("NoSuchMethodException:").append(method).append(" on class").append(clazz.getName()).toString());
+                    Log.e(TAG, "NoSuchMethodException:" + method + " on class" + clazz.getName());
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
                     return e.getTargetException();
