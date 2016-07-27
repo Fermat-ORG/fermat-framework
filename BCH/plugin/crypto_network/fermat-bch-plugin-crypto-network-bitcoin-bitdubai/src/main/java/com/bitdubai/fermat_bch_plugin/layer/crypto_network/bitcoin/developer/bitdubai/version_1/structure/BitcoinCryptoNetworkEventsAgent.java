@@ -1,16 +1,14 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.AbstractAgent;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_api.Agent;
-import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -49,32 +47,6 @@ public class BitcoinCryptoNetworkEventsAgent extends AbstractAgent{
         this.eventManager = eventManager;
         this.dao = bitcoinCryptoNetworkDatabaseDao;
     }
-
-    /**
-     * Class that executes the agent
-     */
-    private class NetworkAgent implements Runnable{
-        /**
-         * private class variables
-         */
-        final BitcoinCryptoNetworkDatabaseDao dao;
-
-        /**
-         * constructor
-         * @param bitcoinCryptoNetworkDatabaseDao
-         */
-        public NetworkAgent(BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao) {
-            this.dao = bitcoinCryptoNetworkDatabaseDao;
-        }
-
-        @Override
-        public void run() {
-            /**
-             * While isSupossedToBeRunning true, i will run this.
-             */
-            doTheMainTask();
-            }
-        }
 
         /**
          * performs the main task
@@ -261,8 +233,8 @@ public class BitcoinCryptoNetworkEventsAgent extends AbstractAgent{
 
 
     @Override
-    protected Runnable agentJob() {
-        return new NetworkAgent(this.dao);
+    protected void agentJob() {
+        doTheMainTask();
     }
 
     @Override

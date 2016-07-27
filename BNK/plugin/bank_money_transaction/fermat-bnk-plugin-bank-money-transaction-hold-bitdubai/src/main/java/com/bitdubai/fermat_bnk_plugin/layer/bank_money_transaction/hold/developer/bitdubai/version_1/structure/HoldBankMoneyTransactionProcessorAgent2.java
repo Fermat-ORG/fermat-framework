@@ -48,14 +48,8 @@ public class HoldBankMoneyTransactionProcessorAgent2 extends AbstractAgent {
     }
 
     @Override
-    protected Runnable agentJob() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                doTheMainTask();
-            }
-        };
-        return runnable;
+    protected void agentJob() {
+        doTheMainTask();
     }
 
     @Override

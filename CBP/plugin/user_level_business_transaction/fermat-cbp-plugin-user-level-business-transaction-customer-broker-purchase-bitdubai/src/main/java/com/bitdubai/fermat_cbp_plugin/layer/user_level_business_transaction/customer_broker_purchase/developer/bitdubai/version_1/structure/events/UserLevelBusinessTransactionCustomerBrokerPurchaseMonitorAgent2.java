@@ -130,13 +130,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
     }
 
     @Override
-    protected Runnable agentJob() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                doTheMainTask();
-            }
-        };
+    protected void agentJob() {
+        doTheMainTask();
     }
 
     @Override

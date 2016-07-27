@@ -52,14 +52,8 @@ public class CashMoneyTransactionUnHoldProcessorAgent2 extends AbstractAgent {
      * @return
      */
     @Override
-    protected Runnable agentJob() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                doTheMainTask();
-            }
-        };
-        return runnable;
+    protected void agentJob() {
+        doTheMainTask();
     }
 
     @Override
