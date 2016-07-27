@@ -965,9 +965,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                             Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                                             onBack(null);*/
 
-                                        } catch (LossProtectedInsufficientFundsException e) {
+                                        } catch (Exception e) {
                                             e.printStackTrace();
-                                            Toast.makeText(getActivity(), "Action not allowed, Insufficient Funds. ", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getActivity(), "Send Error. " + e.getMessage(), Toast.LENGTH_LONG).show();
                                         }
                                     }
 

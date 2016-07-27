@@ -752,7 +752,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                     balanceSum += Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(entry.getValue(), ShowMoneyType.FRMT.getCode()));
 
                 if (balanceSum > 0)
-                    average = (int) ((Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(getBalanceValue(runningDailyBalance.size() - 1), ShowMoneyType.BITCOIN.getCode())) * 100) / balanceSum);
+                    average = (int) ((Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(getBalanceValue(runningDailyBalance.size() - 1), ShowMoneyType.FRMT.getCode())) * 100) / balanceSum);
 
             }
         } catch (Exception e) {
