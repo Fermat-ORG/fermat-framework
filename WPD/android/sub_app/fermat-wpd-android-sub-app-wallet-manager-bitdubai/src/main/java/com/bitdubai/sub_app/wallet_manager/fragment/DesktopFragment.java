@@ -292,12 +292,12 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
 
 
-
+    @Override
     public boolean onQueryTextSubmit(String name) {
         return true;
     }
 
-
+    @Override
     public boolean onQueryTextChange(String s) {
         //Toast.makeText(getActivity(), "Probando busqueda completa", Toast.LENGTH_SHORT).show();
         return s.length() == 0 && isStartList;

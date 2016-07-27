@@ -245,7 +245,6 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
         list.add("FTMS");
-        list.add("BTC");
         list.add("Bits");
         list.add("Satoshis");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
@@ -273,20 +272,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                             }
 
                             break;
-                        case 1:
-                            text = "[btc]";
-                            if (txtType.equals("[bits]")) {
-                                newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
-                            } else if (txtType.equals("[satoshis]")) {
-                                newAmount = bitcoinConverter.getBTC(amount);
-                            } else {
-                                newAmount = amount;
-                            }
 
-                            break;
                         case 2:
                             text = "[bits]";
-                            if (txtType.equals("[btc]")) {
+                            if (txtType.equals("[ftms]")) {
                                 newAmount = bitcoinConverter.getBitsFromBTC(amount);
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = bitcoinConverter.getBits(amount);
@@ -299,7 +288,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                             text = "[satoshis]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                            } else if (txtType.equals("[btc]")) {
+                            } else if (txtType.equals("[ftms]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
                             } else {
                                 newAmount = amount;
@@ -621,14 +610,12 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                     if (txt_notes.getText().toString().length() != 0){
                       notes = txt_notes.getText().toString();
                     }
-                    if (txtType.equals("[btc]")) {
+                    if (txtType.equals("[ftms]")) {
                         newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
                     } else if (txtType.equals("[satoshis]")) {
                         newAmount = amount;
                     } else if (txtType.equals("[bits]")) {
                         newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                    }else if (txtType.equals("[ftms]")) {
-                        newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
                     }
 
 

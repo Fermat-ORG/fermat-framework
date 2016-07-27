@@ -280,17 +280,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         fee_high_btn  =(RadioButton)  rootView.findViewById(R.id.fee_High);
 
 
-        advances_btn.setOnClickListener(new View.OnClickListener()
-        {
+        advances_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if (layoutAdvances.getVisibility() == View.GONE)
-                {
+            public void onClick(View v) {
+                if (layoutAdvances.getVisibility() == View.GONE) {
                     layoutAdvances.setVisibility(View.VISIBLE);
-                }else
-                {
-                 layoutAdvances.setVisibility(View.GONE);
+                } else {
+                    layoutAdvances.setVisibility(View.GONE);
                 }
             }
         });
@@ -339,7 +335,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
         List<String> list = new ArrayList<String>();
         list.add("FTMS");
-        list.add("BTC");
         list.add("Bits");
         list.add("Satoshis");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
@@ -366,7 +361,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             }
 
                             break;
-                        case 1:
+                      /*  case 1:
                             text = "[btc]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
@@ -376,10 +371,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 newAmount = amount;
                             }
 
-                            break;
+                            break;*/
                         case 2:
                             text = "[bits]";
-                            if (txtType.equals("[btc]")) {
+                            if (txtType.equals("[ftms]")) {
                                 newAmount = bitcoinConverter.getBitsFromBTC(amount);
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = bitcoinConverter.getBits(amount);
@@ -392,7 +387,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             text = "[satoshis]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                            } else if (txtType.equals("[btc]")) {
+                            } else if (txtType.equals("[ftms]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
                             } else {
                                 newAmount = amount;
@@ -752,7 +747,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             String newAmount = "";
                             String msg = "";
 
-                            if (txtType.equals("[btc]")) {
+                            if (txtType.equals("[ftms]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
                                 msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
                             } else if (txtType.equals("[satoshis]")) {
@@ -762,10 +757,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
                                 msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                             }
-                            else if (txtType.equals("[ftms]")) {
-                                newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                                msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" FTMS.";
-                            }
+
 
                             BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                             BigDecimal operator = new BigDecimal(newAmount);

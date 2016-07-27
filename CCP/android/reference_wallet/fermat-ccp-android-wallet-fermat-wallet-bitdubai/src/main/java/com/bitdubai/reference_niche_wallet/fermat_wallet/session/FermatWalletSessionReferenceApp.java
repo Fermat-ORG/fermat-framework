@@ -53,7 +53,7 @@ public class FermatWalletSessionReferenceApp extends AbstractReferenceAppFermatS
 
     public static String typeBalanceSelected =BalanceType.AVAILABLE.getCode();
 
-    public static int typeAmountSelected= ShowMoneyType.BITCOIN.getCode();
+    public static int typeAmountSelected= ShowMoneyType.FRMT.getCode();
 
     private FermatWalletWalletContact lastContactSelected;
 
