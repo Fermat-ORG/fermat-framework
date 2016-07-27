@@ -170,11 +170,6 @@
         android:layout_alignRight="@+id/statusView"
         />
 
-
-
-
-
-
     <ProgressBar
         android:id="@+id/cbi_progress_bar"
         android:layout_width="150dp"
