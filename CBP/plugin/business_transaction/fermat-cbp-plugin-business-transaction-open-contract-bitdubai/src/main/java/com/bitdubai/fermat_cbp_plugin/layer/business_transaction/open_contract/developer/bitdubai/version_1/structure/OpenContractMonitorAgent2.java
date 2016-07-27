@@ -115,7 +115,7 @@ public class OpenContractMonitorAgent2
             ContractPurchaseRecord purchaseContract = new ContractPurchaseRecord();
             ContractSaleRecord saleContract = new ContractSaleRecord();
             ContractType contractType;
-            UUID transmissionId = UUID.randomUUID();
+            UUID transmissionId;
             UUID transactionContractId;
 
             // Check if exist in database new contracts to send
@@ -123,15 +123,19 @@ public class OpenContractMonitorAgent2
             if (!contractPendingToSubmitList.isEmpty()) {
                 for (String hashToSubmit : contractPendingToSubmitList) {
                     try {
-                        contractXML = openContractBusinessTransactionDao.getContractXML(hashToSubmit);
-                        contractType = openContractBusinessTransactionDao.getContractType(hashToSubmit);
-                        transactionContractId = openContractBusinessTransactionDao.getTransactionId(hashToSubmit);
+                        contractXML             = openContractBusinessTransactionDao.getContractXML(hashToSubmit);
+                        contractType            = openContractBusinessTransactionDao.getContractType(hashToSubmit);
+                        transactionContractId   = openContractBusinessTransactionDao.getTransactionId(hashToSubmit);
+                        transmissionId          = UUID.randomUUID();
 
                         System.out.println(new StringBuilder().append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - contractType: ").append(contractType).append("\n").toString());
 
                         switch (contractType) {
                             case PURCHASE:
-                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - PURCHASE\n");
+                                System.out.print(new StringBuilder()
+                                        .append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - PURCHASE\n")
+                                        .append("\n - contractHash: ").append(hashToSubmit));
+
                                 purchaseContract = (ContractPurchaseRecord) XMLParser.parseXML(contractXML, purchaseContract);
                                 transactionTransmissionManager.sendContractHash(
                                         transmissionId,
@@ -145,7 +149,10 @@ public class OpenContractMonitorAgent2
                                         PlatformComponentType.ACTOR_CRYPTO_BROKER);
                                 break;
                             case SALE:
-                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - SALE\n");
+                                System.out.print(new StringBuilder()
+                                        .append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - SALE\n")
+                                        .append("\n - contractHash: ").append(hashToSubmit));
+
                                 saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
                                 transactionTransmissionManager.sendContractHash(
                                         transmissionId,
@@ -160,7 +167,8 @@ public class OpenContractMonitorAgent2
                                 break;
                         }
                         //Update the ContractTransactionStatus
-                        openContractBusinessTransactionDao.updateContractTransactionStatus(transactionContractId, ContractTransactionStatus.CHECKING_HASH);
+                        openContractBusinessTransactionDao.updateContractTransactionStatus(hashToSubmit, ContractTransactionStatus.CHECKING_HASH);
+
                         transactionTransmissionManager.confirmReception(transmissionId);
                     } catch (Exception e) {
                         reportError(e);
