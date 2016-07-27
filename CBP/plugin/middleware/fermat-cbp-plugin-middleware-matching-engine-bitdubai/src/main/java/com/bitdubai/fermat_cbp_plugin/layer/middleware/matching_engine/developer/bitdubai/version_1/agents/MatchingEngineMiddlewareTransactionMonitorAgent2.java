@@ -58,14 +58,8 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent2 extends Abst
     }
 
     @Override
-    protected Runnable agentJob() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                doTheMainTask();
-            }
-        };
-        return runnable;
+    protected void agentJob() {
+        doTheMainTask();
     }
 
     @Override

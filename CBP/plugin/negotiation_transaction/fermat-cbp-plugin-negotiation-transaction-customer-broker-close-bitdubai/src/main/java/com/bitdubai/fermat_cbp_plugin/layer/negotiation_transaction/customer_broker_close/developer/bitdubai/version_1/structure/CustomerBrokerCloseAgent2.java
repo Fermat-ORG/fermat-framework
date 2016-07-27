@@ -94,23 +94,17 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
     }
 
     @Override
-    protected Runnable agentJob() {
-        return new Runnable() {
-            @Override
-            public void run() {
+    protected void agentJob() {
+        try {
 
-                try {
+            doTheMainTask();
 
-                    doTheMainTask();
-
-                } catch (
-                        CantSendCustomerBrokerCloseNegotiationTransactionException |
-                                CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException |
-                                CantUpdateRecordException e) {
-                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-            }
-        };
+        } catch (
+                CantSendCustomerBrokerCloseNegotiationTransactionException |
+                        CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException |
+                        CantUpdateRecordException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
 
     @Override

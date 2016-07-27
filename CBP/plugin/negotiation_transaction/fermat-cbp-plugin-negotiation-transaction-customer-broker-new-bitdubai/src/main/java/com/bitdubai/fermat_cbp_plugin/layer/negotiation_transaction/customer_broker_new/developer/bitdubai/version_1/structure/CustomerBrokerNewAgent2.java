@@ -118,23 +118,16 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
     }
 
     @Override
-    protected Runnable agentJob() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
+    protected void agentJob() {
+        try {
 
-                try {
+            doTheMainTask();
 
-                    doTheMainTask();
-
-                } catch (CantSendCustomerBrokerNewNegotiationTransactionException |
-                        CantSendCustomerBrokerNewConfirmationNegotiationTransactionException |
-                        CantUpdateRecordException e) {
-                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-            }
-        };
-        return runnable;
+        } catch (CantSendCustomerBrokerNewNegotiationTransactionException |
+                CantSendCustomerBrokerNewConfirmationNegotiationTransactionException |
+                CantUpdateRecordException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
 
     @Override

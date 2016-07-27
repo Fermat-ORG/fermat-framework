@@ -72,14 +72,8 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent2 extends AbstractAg
 
 
     @Override
-    protected Runnable agentJob() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                doTheMainTask();
-            }
-        };
-        return runnable;
+    protected void agentJob() {
+        doTheMainTask();
     }
 
     @Override
