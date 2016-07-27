@@ -267,7 +267,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      */
     public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
         try {
-            if (isContractHashInDatabase(eventId)) {
+            if (eventExists(eventId)) {
                 return;
             }
             DatabaseTable databaseTable = getDatabaseEventsTable();
