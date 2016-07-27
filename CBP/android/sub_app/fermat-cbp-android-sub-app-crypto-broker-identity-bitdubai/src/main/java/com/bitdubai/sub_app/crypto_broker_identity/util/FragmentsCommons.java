@@ -4,6 +4,7 @@ package com.bitdubai.sub_app.crypto_broker_identity.util;
  * Created by nelsonalfo on 13/06/16.
  */
 public class FragmentsCommons {
+    public static final String IMAGE_BYTE_ARRAY = "IMAGE_BYTE_ARRAY";
     public static final String IDENTITY_INFO = "CRYPTO_IDENTITY_INFO";
     public static final String ORIGINAL_IMAGE = "ORIGINAL_IMAGE";
     public static final String CROPPED_IMAGE = "CROPPED_IMAGE";
