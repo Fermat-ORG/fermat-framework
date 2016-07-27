@@ -8,7 +8,14 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
@@ -31,7 +38,11 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     FermatWallet cryptoWallet;
 
     ReferenceAppFermatSession<FermatWallet> referenceWalletSession;
+    private FermatWalletSettings fermatWalletSettings = null;
+    private String feeLevel = "NORMAL";
     Typeface tf;
+    BlockchainNetworkType blockchainNetworkType;
+
     protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
     }
@@ -45,6 +56,32 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         //this.mOnClickListener = onClickListener;
         this.onRefreshList = onRefresh;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+
+        try {
+            fermatWalletSettings = cryptoWallet.loadAndGetSettings(this.referenceWalletSession.getAppPublicKey());
+            if (fermatWalletSettings.getFeedLevel() == null)
+                fermatWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
+            else
+                feeLevel = fermatWalletSettings.getFeedLevel();
+
+            if (fermatWalletSettings.getBlockchainNetworkType() == null) {
+                fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            }
+            else
+                blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
+
+            this.cryptoWallet.persistSettings(referenceWalletSession.getAppPublicKey(), fermatWalletSettings);
+
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantPersistSettingsException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
@@ -186,12 +223,18 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                 @Override
                 public void onClick(View view) {
                     try {
-                        cryptoWallet.approveRequest(data.getRequestId()
-                                , referenceWalletSession.getModuleManager().getSelectedActorIdentity().getPublicKey());
-                        Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
-                        notifyDataSetChanged();
-//                        FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
-//                        FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
+                        //check amount + fee less than balance
+                        long availableBalance = cryptoWallet.getBalance(com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(), blockchainNetworkType);
+                        if(data.getAmount() < availableBalance)
+                        {
+                            cryptoWallet.approveRequest(data.getRequestId()
+                                    , referenceWalletSession.getModuleManager().getSelectedActorIdentity().getPublicKey());
+                            Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
+                            notifyDataSetChanged();
+                        }
+                        else
+                            showMessage(context, "Insufficient funds - Can't Accept Receive Payment" );
+
                         onRefreshList.onRefresh();
                     } catch (Exception e) {
                         showMessage(context, "Cant Accept Receive Payment Exception- " + e.getMessage());
