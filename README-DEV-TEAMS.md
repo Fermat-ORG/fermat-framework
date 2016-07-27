@@ -341,23 +341,11 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
       Skype:   josvilchezalmera
       Github:  https://github.com/JDVilchez  
 
-* **Richard Lozada [New Developer]**<br/>
----
-      Email:   richardalozada@hotmail.com
-      Skype:   richardalozada
-      Github:  https://github.com/Lozadaa 
-
 * **Rodrigo Guzman [New Developer]**<br/>
 ---
       Email:   roygufo@gmail.com
       Skype:   roy-epps
       Github:  https://github.com/RoyGF
-
-* **Orono Eleazar [New Part-Time Developer]**<br/>
----
-      Email:   eorono@gmail.com
-      Skype:   eorono
-      Github:  https://github.com/eorono
 
 We are also amateur philosophers, passionate about esoteric topics and video games.
 
