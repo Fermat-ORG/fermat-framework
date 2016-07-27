@@ -1,0 +1,109 @@
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp"
+    app:cardBackgroundColor="@color/color_white"
+    app:cardCornerRadius="1dp"
+    app:cardElevation="1dp"
+    app:cardPreventCornerOverlap="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/cbc_broker_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/cbc_comm_bg_circula_friend_list"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:id="@+id/cbc_status_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/cbc_broker_image"
+            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="-14dp"
+            android:src="@drawable/agregar_contacto"
+            android:visibility="gone"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbc_broker_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/cbc_broker_image"
+            android:layout_toEndOf="@+id/cbc_broker_image"
+            android:layout_toRightOf="@+id/cbc_broker_image"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="2"
+            android:textColor="@color/color_black_light"
+            android:textSize="16sp"
+            tools:text="Broker Name"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbc_merchandises"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cbc_broker_name"
+            android:layout_toEndOf="@+id/cbc_broker_image"
+            android:layout_toRightOf="@+id/cbc_broker_image"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="2"
+            android:textColor="@color/cbc_color_gray_light"
+            android:textSize="14sp"
+            android:visibility="visible"
+            tools:text="Merchandises: USD, BTC, VEF"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbc_location_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cbc_merchandises"
+            android:layout_marginTop="2dp"
+            android:layout_toEndOf="@+id/cbc_broker_image"
+            android:layout_toRightOf="@+id/cbc_broker_image"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="1"
+            android:text="Zulia / Parroquia Santa Lucia"
+            android:textColor="@color/cbc_location_text"
+            android:textSize="12sp"
+            tools:ignore="HardcodedText"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbc_connection_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/cbc_location_text"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/cbc_color_gray_light"
+            android:textSize="12sp"
+            android:visibility="visible"
+            tools:text="Is Connected with you"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
+

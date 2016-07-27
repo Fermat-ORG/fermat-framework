@@ -2,13 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="80dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/fab_material_white">
 
-    <ImageView
-        android:id="@+id/actorImage"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/img_asset_without_image"/>
+    <RelativeLayout
+        android:id="@+id/actorImageLayout"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:background="@drawable/bg_circular_user_list"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp">
+
+        <ImageView
+            android:id="@+id/actorImage"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
+
+    </RelativeLayout>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/memoText"
@@ -20,12 +34,12 @@
         android:fontFamily="regular"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/actorImage"/>
+        android:layout_toRightOf="@+id/actorImageLayout"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/actorImage"
+        android:layout_toRightOf="@+id/actorImageLayout"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="5dp">
@@ -110,7 +124,8 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dip"
-        android:background="@color/gray"
+        android:background="@color/dap_issuer_wallet_v3_transactions_line"
+        android:layout_marginLeft="85dp"
         android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

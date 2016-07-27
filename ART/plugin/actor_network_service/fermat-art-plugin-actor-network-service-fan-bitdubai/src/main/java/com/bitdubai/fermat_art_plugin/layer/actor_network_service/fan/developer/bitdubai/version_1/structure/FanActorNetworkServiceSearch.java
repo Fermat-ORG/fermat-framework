@@ -1,24 +1,18 @@
 package com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.structure;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExposingData;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.FanActorNetworkServicePluginRoot;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -29,145 +23,261 @@ import java.util.List;
  */
 public final class FanActorNetworkServiceSearch extends ActorSearch<FanExposingData> {
 
-    private final CommunicationsClientConnection communicationsClientConnection;
-    private final ErrorManager                   errorManager                  ;
-    private final PluginVersionReference         pluginVersionReference        ;
+    private final FanActorNetworkServicePluginRoot pluginRoot;
 
-    public FanActorNetworkServiceSearch(final CommunicationsClientConnection communicationsClientConnection,
-                                        final ErrorManager errorManager,
-                                        final PluginVersionReference pluginVersionReference) {
-
-        this.communicationsClientConnection = communicationsClientConnection;
-        this.errorManager = errorManager;
-        this.pluginVersionReference = pluginVersionReference;
+    public FanActorNetworkServiceSearch(FanActorNetworkServicePluginRoot fanActorNetworkServicePluginRoot) {
+        this.pluginRoot = fanActorNetworkServicePluginRoot;
     }
 
     @Override
-    public List<FanExposingData> getResult() throws CantListArtistsException {
+    public List<FanExposingData> getResult(Integer max, Integer offset) throws CantListArtistsException {
 
         try {
 
-            DiscoveryQueryParameters discoveryQueryParameters = communicationsClientConnection.constructDiscoveryQueryParamsFactory(
-                    PlatformComponentType.ART_FAN, // PlatformComponentType you want to find
-                    NetworkServiceType.UNDEFINED,           // NetworkServiceType you want to find
-                    null,                                      // alias
-                    null,                                      // identityPublicKey
-                    null,                                      // location
-                    null,                                      // distance
-                    null,                                      // name
-                    null,                                      // extraData
-                    null,                                      // offset
-                    null,                                      // max
-                    null,                                      // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                    null                                       // fromOtherNetworkServiceType, when use this filter apply the NetworkServiceType
+            com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters discoveryQueryParameters = new com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters(
+                    Actors.ART_FAN.getCode(),           // NetworkServiceType you want to find
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    max,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    offset,
+                    NetworkServiceType.FAN_ACTOR
             );
 
-            final List<PlatformComponentProfile> list = communicationsClientConnection.requestListComponentRegistered(discoveryQueryParameters);
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
-            final List<FanExposingData> fanExposingDatas = new ArrayList<>();
+            final List<FanExposingData> fanExposingDataArrayList = new ArrayList<>();
 
-            for (final PlatformComponentProfile platformComponentProfile : list) {
+            for (final ActorProfile actorProfile : list) {
 
-//                System.out.println("************** I'm a ART Artist searched: "+platformComponentProfile);
-//                System.out.println("************** Do I have profile image?: "+(platformComponentProfile.getExtraData() != null));
-
-                String extraDataString;
-
-                if (platformComponentProfile.getExtraData() != null)
-                    extraDataString = new String(
-                            Base64.decode(
-                                    platformComponentProfile.getExtraData(),
-                                    Base64.DEFAULT));
-                else{
-                    List dataList = new ArrayList();
-                    dataList.add(new byte[0]);
-                    dataList.add(new HashMap<ArtExternalPlatform,String>());
-                    extraDataString = XMLParser.parseObject(dataList);
-                }
-
-                fanExposingDatas.add(
+                fanExposingDataArrayList.add(
                         new FanExposingData(
-                                platformComponentProfile.getIdentityPublicKey(),
-                                platformComponentProfile.getAlias(),
-                                extraDataString));
+                                actorProfile.getIdentityPublicKey(),
+                                actorProfile.getAlias(),
+                                actorProfile.getExtraData(),
+                                actorProfile.getLocation()));
             }
 
-            return fanExposingDatas;
+            return fanExposingDataArrayList;
 
-        } catch (final CantRequestListException e) {
+        } catch (final CantRequestProfileListException e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListArtistsException(e, "", "Problem trying to request list of registered components in communication layer.");
 
         } catch (final Exception e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListArtistsException(e, "", "Unhandled error.");
         }
     }
 
     @Override
-    public List<FanExposingData> getResult(PlatformComponentType actorTypeToLookFor) throws CantListArtistsException {
+    public List<FanExposingData> getResult(
+            String publicKey,
+            DeviceLocation deviceLocation,
+            double distance,
+            String alias,
+            Integer max,
+            Integer offset) throws CantListArtistsException {
         try {
 
-            DiscoveryQueryParameters discoveryQueryParameters = communicationsClientConnection.constructDiscoveryQueryParamsFactory(
-                    actorTypeToLookFor, // PlatformComponentType you want to find
-                    NetworkServiceType   .UNDEFINED,           // NetworkServiceType you want to find
-                    null,                                      // alias
-                    null,                                      // identityPublicKey
-                    null,                                      // location
-                    null,                                      // distance
-                    null,                                      // name
-                    null,                                      // extraData
-                    null,                                      // offset
-                    null,                                      // max
-                    null,                                      // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                    null                                       // fromOtherNetworkServiceType, when use this filter apply the NetworkServiceType
+            com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters discoveryQueryParameters = new com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters(
+                    Actors.ART_FAN.getCode(),
+                    alias,
+                    distance,
+                    null,
+                    publicKey,
+                    deviceLocation,
+                    max,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    offset,
+                    NetworkServiceType.FAN_ACTOR
             );
 
-            final List<PlatformComponentProfile> list = communicationsClientConnection.requestListComponentRegistered(discoveryQueryParameters);
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
-            final List<FanExposingData> artistExposingDatas = new ArrayList<>();
+            final List<FanExposingData> fanExposingDataArrayList = new ArrayList<>();
 
-            for (final PlatformComponentProfile platformComponentProfile : list) {
+            for (final ActorProfile actorProfile : list) {
 
-                String extraDataString;
-
-                if (platformComponentProfile.getExtraData() != null)
-                    extraDataString = new String(
-                            Base64.decode(
-                                    platformComponentProfile.getExtraData(),
-                                    Base64.DEFAULT));
-                else{
-                    List dataList = new ArrayList();
-                    dataList.add(new byte[0]);
-                    dataList.add(new HashMap<ArtExternalPlatform,String>());
-                    extraDataString = XMLParser.parseObject(dataList);
-                }
-
-                artistExposingDatas.add(
+                fanExposingDataArrayList.add(
                         new FanExposingData(
-                                platformComponentProfile.getIdentityPublicKey(),
-                                platformComponentProfile.getAlias(),
-                                extraDataString));
+                                actorProfile.getIdentityPublicKey(),
+                                actorProfile.getAlias(),
+                                actorProfile.getExtraData(),
+                                actorProfile.getLocation()));
             }
 
-            return artistExposingDatas;
+            return fanExposingDataArrayList;
 
-        } catch (final CantRequestListException e) {
+        } catch (final CantRequestProfileListException e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListArtistsException(e, "", "Problem trying to request list of registered components in communication layer.");
 
         } catch (final Exception e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListArtistsException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
+    public List<FanExposingData> getResultLocation(
+            DeviceLocation deviceLocation,
+            Integer max,
+            Integer offset) throws CantListArtistsException {
+        try {
+
+            com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters discoveryQueryParameters = new com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters(
+                    Actors.ART_FAN.getCode(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    deviceLocation,
+                    max,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    offset,
+                    NetworkServiceType.FAN_ACTOR
+            );
+
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+
+            final List<FanExposingData> fanExposingDataArrayList = new ArrayList<>();
+
+            for (final ActorProfile actorProfile : list) {
+
+                fanExposingDataArrayList.add(
+                        new FanExposingData(
+                                actorProfile.getIdentityPublicKey(),
+                                actorProfile.getAlias(),
+                                actorProfile.getExtraData(),
+                                actorProfile.getLocation()));
+            }
+
+            return fanExposingDataArrayList;
+
+        } catch (final CantRequestProfileListException e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListArtistsException(e, "", "Problem trying to request list of registered components in communication layer.");
+
+        } catch (final Exception e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListArtistsException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
+    public List<FanExposingData> getResultDistance(
+            double distance,
+            Integer max,
+            Integer offset) throws CantListArtistsException {
+        try {
+
+            com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters discoveryQueryParameters = new com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters(
+                    Actors.ART_FAN.getCode(),
+                    null,
+                    distance,
+                    null,
+                    null,
+                    null,
+                    max,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    offset,
+                    NetworkServiceType.FAN_ACTOR
+            );
+
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+
+            final List<FanExposingData> fanExposingDataArrayList = new ArrayList<>();
+
+            for (final ActorProfile actorProfile : list) {
+
+                fanExposingDataArrayList.add(
+                        new FanExposingData(
+                                actorProfile.getIdentityPublicKey(),
+                                actorProfile.getAlias(),
+                                actorProfile.getExtraData(),
+                                actorProfile.getLocation()));
+            }
+
+            return fanExposingDataArrayList;
+
+        } catch (final CantRequestProfileListException e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListArtistsException(e, "", "Problem trying to request list of registered components in communication layer.");
+
+        } catch (final Exception e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListArtistsException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
+    public List<FanExposingData> getResultAlias(String alias, Integer max, Integer offset)
+            throws CantListArtistsException {
+        try {
+
+            com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters discoveryQueryParameters = new com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters(
+                    Actors.ART_FAN.getCode(),
+                    alias,
+                    null,
+                    null,
+                    null,
+                    null,
+                    max,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    offset,
+                    NetworkServiceType.FAN_ACTOR
+            );
+
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+
+            final List<FanExposingData> fanExposingDataArrayList = new ArrayList<>();
+
+            for (final ActorProfile actorProfile : list) {
+
+                fanExposingDataArrayList.add(
+                        new FanExposingData(
+                                actorProfile.getIdentityPublicKey(),
+                                actorProfile.getAlias(),
+                                actorProfile.getExtraData(),
+                                actorProfile.getLocation()));
+            }
+
+            return fanExposingDataArrayList;
+
+        } catch (final CantRequestProfileListException e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListArtistsException(e, "", "Problem trying to request list of registered components in communication layer.");
+
+        } catch (final Exception e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListArtistsException(e, "", "Unhandled error.");
         }
     }
 
     @Override
     public List<FanExposingData> getResult(final Integer max) throws CantListArtistsException {
+        /**
+         * TODO: to implement
+         */
         return null;
     }
 }

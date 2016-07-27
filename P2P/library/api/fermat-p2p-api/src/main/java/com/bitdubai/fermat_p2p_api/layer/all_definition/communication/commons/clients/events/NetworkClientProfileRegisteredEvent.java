@@ -16,10 +16,19 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
  */
 public class NetworkClientProfileRegisteredEvent extends AbstractEvent<P2pEventType> {
 
+    public enum STATUS{
+        SUCCESS,
+        FAILED
+    }
+
     /**
      * Represent the registered profile.
      */
     private String publicKey;
+    /**
+     * Represent the status
+     */
+    private STATUS status;
 
     /**
      * Constructor with parameters
@@ -34,6 +43,14 @@ public class NetworkClientProfileRegisteredEvent extends AbstractEvent<P2pEventT
         return publicKey;
     }
 
+    public STATUS getStatus() {
+        return status;
+    }
+
+    public void setStatus(STATUS status) {
+        this.status = status;
+    }
+
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
     }
@@ -42,6 +59,7 @@ public class NetworkClientProfileRegisteredEvent extends AbstractEvent<P2pEventT
     public String toString() {
         return "NetworkClientProfileRegisteredEvent{" +
                 "publicKey='" + publicKey + '\'' +
+                ", status=" + status +
                 '}';
     }
 }

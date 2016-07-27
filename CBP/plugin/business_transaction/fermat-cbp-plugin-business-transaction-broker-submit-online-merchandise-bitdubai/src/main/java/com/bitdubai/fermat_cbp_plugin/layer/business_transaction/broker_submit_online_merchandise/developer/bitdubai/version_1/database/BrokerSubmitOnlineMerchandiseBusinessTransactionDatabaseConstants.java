@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Manuel Perez - (darkpriestrelative@gmail.com) on 19/12/15.
  *
  * @version 1.0
@@ -36,8 +36,10 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants {
     public static final String SUBMIT_ONLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME = "reference_price";
     public static final String SUBMIT_ONLINE_MERCHANDISE_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME = "blockchain_type";
     public static final String SUBMIT_ONLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME = "completion_date";
+    public static final String SUBMIT_ONLINE_MERCHANDISE_ORIGIN_FEE_COLUMN_NAME = "origin_fee";
+    public static final String SUBMIT_ONLINE_MERCHANDISE_FEE_COLUMN_NAME = "fee";
 
-    public static final String SUBMIT_ONLINE_MERCHANDISE_FIRST_KEY_COLUMN = "transaction_id";
+    public static final String SUBMIT_ONLINE_MERCHANDISE_FIRST_KEY_COLUMN = "contract_hash";
 
     /**
      * Events recorded database table definition.

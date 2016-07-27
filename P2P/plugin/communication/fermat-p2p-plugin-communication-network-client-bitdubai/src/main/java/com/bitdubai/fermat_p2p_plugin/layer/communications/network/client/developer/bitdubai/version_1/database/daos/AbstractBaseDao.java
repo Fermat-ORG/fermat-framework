@@ -11,12 +11,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.entities.AbstractBaseEntity;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.RecordNotFoundException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.entities.AbstractBaseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,6 +114,36 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
         } catch (final InvalidParameterException e) {
 
             throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "Invalid parameter found, maybe the enum is wrong.");
+        }
+    }
+
+    /**
+     * Method that checks if an entity exists in database.
+     *
+     * @param id entity.
+     *
+     * @return a boolean value indicating if the entity exists.
+     *
+     * @throws CantReadRecordDataBaseException   if something goes wrong.
+     */
+    public final boolean exists(final String id) throws CantReadRecordDataBaseException {
+
+        if (id == null)
+            throw new IllegalArgumentException("The id is required, can not be null.");
+
+        try {
+
+            final DatabaseTable table = getDatabaseTable();
+            table.addStringFilter(idTableName, id, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
+
+            return !records.isEmpty();
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "The data no exist");
         }
     }
 
@@ -347,6 +377,10 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
             throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 
         }
+    }
+
+    public String getTableName() {
+        return tableName;
     }
 
     /**

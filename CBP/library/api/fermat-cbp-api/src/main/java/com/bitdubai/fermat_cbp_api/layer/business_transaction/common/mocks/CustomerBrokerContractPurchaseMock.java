@@ -7,7 +7,8 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import java.io.Serializable;
 import java.util.Collection;
 
-/** This mock is only for testing
+/**
+ * This mock is only for testing
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/01/16.
  */
 public class CustomerBrokerContractPurchaseMock implements CustomerBrokerContractPurchase, Serializable {
@@ -52,5 +53,7 @@ public class CustomerBrokerContractPurchaseMock implements CustomerBrokerContrac
     }
 
     @Override
-    public String getCancelReason(){ return "";}
+    public String getCancelReason() {
+        return "";
+    }
 }

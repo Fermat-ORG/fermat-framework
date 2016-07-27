@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -52,10 +53,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.dev
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.ReceivedMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure.AddressesConstants;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ import java.util.concurrent.Executors;
  */
 @PluginInfo(createdBy = "Joaquin Carrasquero", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_ADDRESSES)
 
-public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServiceBase implements
+public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkService implements
         CryptoAddressesManager,
         DatabaseManagerForDevelopers {
 
@@ -95,7 +94,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
      */
     CryptoAddressesNetworkServiceDeveloperDatabaseFactory cryptoAddressesNetworkServiceDatabaseFactory;
 
-    private long reprocessTimer =  300000; //five minutes
+    private long reprocessTimer = 300000; //five minutes
 
     private Timer timer = new Timer();
 
@@ -103,8 +102,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
      * cache identities to register
      */
 
-    private List<PlatformComponentProfile> actorsToRegisterCache;
-
+//    private List<PlatformComponentProfile> actorsToRegisterCache;
 
 
     public CryptoAddressNetworkServicePluginRoot() {
@@ -112,18 +110,15 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
         super(new PluginVersionReference(new Version()),
 
                 EventSource.NETWORK_SERVICE_CRYPTO_ADDRESSES,
-                PlatformComponentType.NETWORK_SERVICE,
-                NetworkServiceType.CRYPTO_ADDRESSES,
-                "Crypto Addresses Network Service",
-                "CryptoAddressesNetworkService"
+                NetworkServiceType.CRYPTO_ADDRESSES
         );
-        this.actorsToRegisterCache = new ArrayList<>();
+//        this.actorsToRegisterCache = new ArrayList<>();
 
     }
 
 
     @Override
-    protected void onStart() {
+    protected void onNetworkServiceStart() {
 
         /**
          * Initialize Developer Database Factory
@@ -133,7 +128,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
             executorService = Executors.newFixedThreadPool(1);
 
-            cryptoAddressesNetworkServiceDatabaseFactory = new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem,pluginId);
+            cryptoAddressesNetworkServiceDatabaseFactory = new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             try {
                 cryptoAddressesNetworkServiceDatabaseFactory.initializeDatabase();
             } catch (CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
@@ -150,20 +145,17 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
             }
 
 
-
             // change message state to process again first time
             reprocessPendingMessage();
 
             //declare a schedule to process waiting request message
             startTimer();
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
             System.out.println(" -- CRYPTO ADDRESS NS START ERROR " + e.getMessage());
             e.printStackTrace();
         }
-
-
 
 
     }
@@ -175,7 +167,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
     }
 
     @Override
-    public void onNewMessagesReceive(FermatMessage newFermatMessageReceive) {
+    public void onNewMessageReceived(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage newFermatMessageReceive) {
 
         try {
 
@@ -194,8 +186,8 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
 
                     //close connection - end message
-                  //  communicationNetworkServiceConnectionManager.closeConnection(acceptMessage.getActorDestination());
-                   // cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(acceptMessage.getActorDestination());
+                    //  communicationNetworkServiceConnectionManager.closeConnection(acceptMessage.getActorDestination());
+                    // cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(acceptMessage.getActorDestination());
 
                     break;
 
@@ -204,8 +196,8 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
                     receiveDenial(denyMessage);
 
                     //close connection - end message
-                  //  communicationNetworkServiceConnectionManager.closeConnection(denyMessage.getActorDestination());
-                  //  cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(denyMessage.getActorDestination());
+                    //  communicationNetworkServiceConnectionManager.closeConnection(denyMessage.getActorDestination());
+                    //  cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(denyMessage.getActorDestination());
                     break;
 
                 case REQUEST:
@@ -239,7 +231,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
     }
 
-    public void raiseEvents(){
+    public void raiseEvents() {
 
         try {
 
@@ -281,18 +273,18 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
     }
 
-        /**
-         * I indicate to the Agent the action that it must take:
-         * - Protocol State: PROCESSING_RECEIVE.
-         * - Action        : REQUEST           .
-         */
+    /**
+     * I indicate to the Agent the action that it must take:
+     * - Protocol State: PROCESSING_RECEIVE.
+     * - Action        : REQUEST           .
+     */
     private void receiveRequest(final RequestMessage requestMessage) throws CantReceiveRequestException {
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PENDING_ACTION    ;
-            RequestType type            = RequestType  .RECEIVED          ;
-            RequestAction action        = RequestAction.REQUEST           ;
+            ProtocolState protocolState = ProtocolState.PENDING_ACTION;
+            RequestType type = RequestType.RECEIVED;
+            RequestAction action = RequestAction.REQUEST;
 
             cryptoAddressesNetworkServiceDao.createAddressExchangeRequest(
                     requestMessage.getRequestId(),
@@ -313,11 +305,11 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
                     false
             );
 
-        } catch(CantCreateRequestException e) {
+        } catch (CantCreateRequestException e) {
             // i inform to error manager the error.
             reportUnexpectedException(e);
             throw new CantReceiveRequestException(e, "", "Error in Crypto Payment Request NS Dao.");
-        } catch(Exception e) {
+        } catch (Exception e) {
 
             reportUnexpectedException(e);
             throw new CantReceiveRequestException(e, "", "Unhandled Exception.");
@@ -342,40 +334,45 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
             );
 
             cryptoAddressesNetworkServiceDao.changeActionState(acceptMessage.getRequestId(), RequestAction.RECEIVED);
-            cryptoAddressesNetworkServiceDao.changeProtocolState(acceptMessage.getRequestId(),ProtocolState.WAITING_RESPONSE);
+            cryptoAddressesNetworkServiceDao.changeProtocolState(acceptMessage.getRequestId(), ProtocolState.WAITING_RESPONSE);
 
             final CryptoAddressRequest cryptoAddressRequest = cryptoAddressesNetworkServiceDao.getPendingRequest(acceptMessage.getRequestId());
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(
-                                        cryptoAddressRequest.getIdentityPublicKeyRequesting(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        cryptoAddressRequest.getIdentityPublicKeyResponding(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
-                                ),
-                                buildJsonReceivedMessage(cryptoAddressRequest));
-                    } catch (CantSendMessageException | InvalidParameterException e) {
-                        reportUnexpectedException(e);
-                    }
-                }
-            });
+            sendMessage(
+                    buildJsonReceivedMessage(cryptoAddressRequest),
+                    cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+                    cryptoAddressRequest.getIdentityTypeRequesting(),
+                    cryptoAddressRequest.getIdentityPublicKeyResponding(),
+                    cryptoAddressRequest.getIdentityTypeResponding()
+            );
 
+//            executorService.submit(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        sendNewMessage(
+//                                getProfileSenderToRequestConnection(
+//                                        cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+//                                        NetworkServiceType.UNDEFINED,
+//                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
+//                                ),
+//                                getProfileDestinationToRequestConnection(
+//                                        cryptoAddressRequest.getIdentityPublicKeyResponding(),
+//                                        NetworkServiceType.UNDEFINED,
+//                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
+//                                ),
+//                                buildJsonReceivedMessage(cryptoAddressRequest));
+//                    } catch (CantSendMessageException | InvalidParameterException e) {
+//                        reportUnexpectedException(e);
+//                    }
+//                }
+//            });
 
-
-
-        } catch (CantAcceptAddressExchangeRequestException | PendingRequestNotFoundException e){
+        } catch (CantAcceptAddressExchangeRequestException | PendingRequestNotFoundException e) {
             // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
             reportUnexpectedException(e);
             throw new CantReceiveAcceptanceException(e, "", "Error in crypto addresses DAO");
-        } catch (Exception e){
+        } catch (Exception e) {
 
             reportUnexpectedException(e);
             throw new CantReceiveAcceptanceException(FermatException.wrapException(e), null, "Unhandled Exception.");
@@ -418,11 +415,11 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
             cryptoAddressesNetworkServiceDao.changeActionState(denyMessage.getRequestId(), RequestAction.RECEIVED);
 
-        } catch (CantDenyAddressExchangeRequestException | PendingRequestNotFoundException e){
+        } catch (CantDenyAddressExchangeRequestException | PendingRequestNotFoundException e) {
             // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
             reportUnexpectedException(e);
             throw new CantReceiveDenialException(e, "", "Error in crypto addresses DAO");
-        } catch (Exception e){
+        } catch (Exception e) {
 
             reportUnexpectedException(e);
             throw new CantReceiveDenialException(FermatException.wrapException(e), null, "Unhandled Exception.");
@@ -433,12 +430,12 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
         try {
 
             cryptoAddressesNetworkServiceDao.changeActionState(receivedMessage.getRequestId(), RequestAction.NONE);
-            cryptoAddressesNetworkServiceDao.changeProtocolState(receivedMessage.getRequestId(),ProtocolState.DONE);
+            cryptoAddressesNetworkServiceDao.changeProtocolState(receivedMessage.getRequestId(), ProtocolState.DONE);
 
 //            communicationNetworkServiceConnectionManager.closeConnection(receivedMessage.getIdentitySender());
 //            //remove from the waiting pool
 //            cryptoAddressesExecutorAgent.connectionFailure(receivedMessage.getIdentitySender());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -450,7 +447,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
     }
 
     @Override
-    public void onSentMessage(FermatMessage messageSent) {
+    public void onSentMessage(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage messageSent) {
 
         try {
 
@@ -476,14 +473,14 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
                     cryptoAddressesNetworkServiceDao.changeProtocolState(networkServiceMessage.getRequestId(), ProtocolState.PENDING_ACTION);
                     break;
                 case RECEIVED:
-                    ReceivedMessage receivedMessage  =  gson.fromJson(jsonMessage, ReceivedMessage.class);
+                    ReceivedMessage receivedMessage = gson.fromJson(jsonMessage, ReceivedMessage.class);
                     cryptoAddressesNetworkServiceDao.changeProtocolState(receivedMessage.getRequestId(), ProtocolState.DONE);
-                    cryptoAddressesNetworkServiceDao.changeActionState(receivedMessage.getRequestId(),RequestAction.NONE);
+                    cryptoAddressesNetworkServiceDao.changeActionState(receivedMessage.getRequestId(), RequestAction.NONE);
                     //receivedMessage(receivedMessage);
                     break;
                 default:
                     throw new CantHandleNewMessagesException(
-                            "message type: " +networkServiceMessage.getMessageType().name(),
+                            "message type: " + networkServiceMessage.getMessageType().name(),
                             "Message type not handled."
                     );
             }
@@ -493,22 +490,22 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
     }
 
+//    @Override
+//    protected void onNetworkServiceRegistered() {
+//
+//        try {
+//            for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
+//                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType()).registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
+//                System.out.println("CryptoAddressNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//
+//    }
+
     @Override
-    protected void onNetworkServiceRegistered() {
-
-        try {
-            for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType()).registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
-                System.out.println("CryptoAddressNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
-    protected void onFailureComponentConnectionRequest(PlatformComponentProfile remoteParticipant) {
+    public void onActorUnreachable(ActorProfile remoteParticipant) {
         //I check my time trying to send the message
         System.out.println("************ Crypto Addresses -> FAILURE CONNECTION.");
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
@@ -518,71 +515,82 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
         switch (type) {
 
-            case INTRA_USER            : return PlatformComponentType.ACTOR_INTRA_USER          ;
-            case CCM_INTRA_WALLET_USER : return PlatformComponentType.ACTOR_INTRA_USER          ;
-            case CCP_INTRA_WALLET_USER : return PlatformComponentType.ACTOR_INTRA_USER          ;
-            case DAP_ASSET_ISSUER      : return PlatformComponentType.ACTOR_ASSET_ISSUER        ;
-            case DAP_ASSET_USER        : return PlatformComponentType.ACTOR_ASSET_USER          ;
-            case DAP_ASSET_REDEEM_POINT: return PlatformComponentType.ACTOR_ASSET_REDEEM_POINT  ;
+            case INTRA_USER:
+                return PlatformComponentType.ACTOR_INTRA_USER;
+            case CCM_INTRA_WALLET_USER:
+                return PlatformComponentType.ACTOR_INTRA_USER;
+            case CCP_INTRA_WALLET_USER:
+                return PlatformComponentType.ACTOR_INTRA_USER;
+            case DAP_ASSET_ISSUER:
+                return PlatformComponentType.ACTOR_ASSET_ISSUER;
+            case DAP_ASSET_USER:
+                return PlatformComponentType.ACTOR_ASSET_USER;
+            case DAP_ASSET_REDEEM_POINT:
+                return PlatformComponentType.ACTOR_ASSET_REDEEM_POINT;
 
-            default: throw new InvalidParameterException(
-                    " actor type: "+type.name()+"  type-code: "+type.getCode(),
-                    " type of actor not expected."
-            );
+            default:
+                throw new InvalidParameterException(
+                        " actor type: " + type.name() + "  type-code: " + type.getCode(),
+                        " type of actor not expected."
+                );
         }
     }
 
 
-    private void reprocessPendingMessage()
-    {
+    private void reprocessPendingMessage() {
         try {
 
             List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listUncompletedRequest();
 
-            for(CryptoAddressRequest record : cryptoAddressRequestList) {
+            for (CryptoAddressRequest record : cryptoAddressRequestList) {
 
-                cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.PROCESSING_SEND);
+                cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(), ProtocolState.PROCESSING_SEND);
 
-                final CryptoAddressRequest cryptoAddressRequest  = record;
+                final CryptoAddressRequest cryptoAddressRequest = record;
 
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            sendNewMessage(
-                                    getProfileSenderToRequestConnection(
-                                            cryptoAddressRequest.getIdentityPublicKeyRequesting(),
-                                            NetworkServiceType.UNDEFINED,
-                                            platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
-                                    ),
-                                    getProfileDestinationToRequestConnection(
-                                            cryptoAddressRequest.getIdentityPublicKeyResponding(),
-                                            NetworkServiceType.UNDEFINED,
-                                            platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
-                                    ),
-                                    buildJsonRequestMessage(cryptoAddressRequest));
-                        } catch (CantSendMessageException | InvalidParameterException e) {
-                            reportUnexpectedException(e);
-                        }
-                    }
-                });
+                sendMessage(
+                        buildJsonRequestMessage(cryptoAddressRequest),
+                        cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+                        cryptoAddressRequest.getIdentityTypeRequesting(),
+                        cryptoAddressRequest.getIdentityPublicKeyResponding(),
+                        cryptoAddressRequest.getIdentityTypeResponding()
+                );
+
+//                executorService.submit(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            sendNewMessage(
+//                                    getProfileSenderToRequestConnection(
+//                                            cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+//                                            NetworkServiceType.UNDEFINED,
+//                                            platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
+//                                    ),
+//                                    getProfileDestinationToRequestConnection(
+//                                            cryptoAddressRequest.getIdentityPublicKeyResponding(),
+//                                            NetworkServiceType.UNDEFINED,
+//                                            platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
+//                                    ),
+//                                    buildJsonRequestMessage(cryptoAddressRequest));
+//                        } catch (CantSendMessageException | InvalidParameterException e) {
+//                            reportUnexpectedException(e);
+//                        }
+//                    }
+//                });
 
             }
-        }
-        catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
-        {
+        } catch (CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException | PendingRequestNotFoundException e) {
             System.out.println("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
 
+        } catch (Exception e) {
+            System.out.println("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
         }
-        catch(Exception e)
-            {
-                System.out.println("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
-                e.printStackTrace();
-            }
     }
-    @Override
-    protected void reprocessMessages() {
+
+//    @Override
+//    protected void reprocessMessages() {
 
       /*  try {
 
@@ -616,10 +624,10 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
             e.printStackTrace();
         }*/
 
-    }
+//    }
 
-    @Override
-    protected void reprocessMessages(String identityPublicKey) {
+//    @Override
+//    protected void reprocessMessages(String identityPublicKey) {
 
      /*   try {
 
@@ -654,8 +662,8 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
             e.printStackTrace();
         }*/
 
-    }
-    
+//    }
+
     /**
      * I indicate to the Agent the action that it must take:
      * - Protocol State: PROCESSING_SEND.
@@ -671,9 +679,9 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
             UUID newId = UUID.randomUUID();
 
-            ProtocolState state  = ProtocolState.PROCESSING_SEND;
-            RequestType   type   = RequestType  .SENT           ;
-            RequestAction action = RequestAction.REQUEST        ;
+            ProtocolState state = ProtocolState.PROCESSING_SEND;
+            RequestType type = RequestType.SENT;
+            RequestAction action = RequestAction.REQUEST;
 
             cryptoAddressesNetworkServiceDao.createAddressExchangeRequest(
                     newId,
@@ -694,39 +702,45 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
                     false
             );
 
-            final CryptoAddressRequest cryptoAddressRequest  = cryptoAddressesNetworkServiceDao.getPendingRequest(newId);
+            final CryptoAddressRequest cryptoAddressRequest = cryptoAddressesNetworkServiceDao.getPendingRequest(newId);
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(
-                                        cryptoAddressRequest.getIdentityPublicKeyRequesting(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        cryptoAddressRequest.getIdentityPublicKeyResponding(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
-                                ),
-                                buildJsonRequestMessage(cryptoAddressRequest));
-                    } catch (CantSendMessageException | InvalidParameterException e) {
-                        reportUnexpectedException(e);
-                    }
-                }
-            });
+            sendMessage(
+                    buildJsonRequestMessage(cryptoAddressRequest),
+                    cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+                    cryptoAddressRequest.getIdentityTypeRequesting(),
+                    cryptoAddressRequest.getIdentityPublicKeyResponding(),
+                    cryptoAddressRequest.getIdentityTypeResponding()
+            );
 
-
+//            executorService.submit(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        sendNewMessage(
+//                                getProfileSenderToRequestConnection(
+//                                        cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+//                                        NetworkServiceType.UNDEFINED,
+//                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
+//                                ),
+//                                getProfileDestinationToRequestConnection(
+//                                        cryptoAddressRequest.getIdentityPublicKeyResponding(),
+//                                        NetworkServiceType.UNDEFINED,
+//                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
+//                                ),
+//                                buildJsonRequestMessage(cryptoAddressRequest));
+//                    } catch (CantSendMessageException | InvalidParameterException e) {
+//                        reportUnexpectedException(e);
+//                    }
+//                }
+//            });
 
             System.out.println("********* Crypto Addresses: Successful Address Exchange Request creation. ");
 
-        } catch (CantCreateRequestException e){
+        } catch (CantCreateRequestException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendAddressExchangeRequestException(e, null, "Error trying to create the request.");
-        } catch (Exception e){
+        } catch (Exception e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
@@ -751,37 +765,43 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
             final CryptoAddressRequest cryptoAddressRequest = cryptoAddressesNetworkServiceDao.getPendingRequest(requestId);
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        sendNewMessage(
-                                getProfileDestinationToRequestConnection(
-                                        cryptoAddressRequest.getIdentityPublicKeyResponding(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
-                                ),
-                                getProfileSenderToRequestConnection(
-                                        cryptoAddressRequest.getIdentityPublicKeyRequesting(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
-                                ),
-                                buildJsonAcceptMessage(cryptoAddressRequest));
-                    } catch (CantSendMessageException | InvalidParameterException e) {
-                        reportUnexpectedException(e);
-                    }
-                }
-            });
+            sendMessage(
+                    buildJsonAcceptMessage(cryptoAddressRequest),
+                    cryptoAddressRequest.getIdentityPublicKeyResponding(),
+                    cryptoAddressRequest.getIdentityTypeResponding(),
+                    cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+                    cryptoAddressRequest.getIdentityTypeRequesting()
+            );
 
-
+//            executorService.submit(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        sendNewMessage(
+//                                getProfileDestinationToRequestConnection(
+//                                        cryptoAddressRequest.getIdentityPublicKeyResponding(),
+//                                        NetworkServiceType.UNDEFINED,
+//                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
+//                                ),
+//                                getProfileSenderToRequestConnection(
+//                                        cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+//                                        NetworkServiceType.UNDEFINED,
+//                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
+//                                ),
+//                                buildJsonAcceptMessage(cryptoAddressRequest));
+//                    } catch (CantSendMessageException | InvalidParameterException e) {
+//                        reportUnexpectedException(e);
+//                    }
+//                }
+//            });
 
             System.out.println("************ Crypto Addresses -> i already execute the acceptance.");
 
-        } catch (CantAcceptAddressExchangeRequestException | PendingRequestNotFoundException e){
+        } catch (CantAcceptAddressExchangeRequestException | PendingRequestNotFoundException e) {
             // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (Exception e){
+        } catch (Exception e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAcceptAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
@@ -792,8 +812,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
      * we'll return to the actor all the pending requests pending a local action.
      * State : PENDING_ACTION.
      *
-     *
-     * @throws CantListPendingCryptoAddressRequestsException      if something goes wrong.
+     * @throws CantListPendingCryptoAddressRequestsException if something goes wrong.
      */
     @Override
     public List<CryptoAddressRequest> listAllPendingRequests() throws CantListPendingCryptoAddressRequestsException {
@@ -801,11 +820,11 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
             return cryptoAddressesNetworkServiceDao.listAllPendingRequests();
 
-        } catch (CantListPendingCryptoAddressRequestsException e){
+        } catch (CantListPendingCryptoAddressRequestsException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (Exception e){
+        } catch (Exception e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListPendingCryptoAddressRequestsException(FermatException.wrapException(e), null, "Unhandled Exception.");
@@ -817,7 +836,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
      * State : PENDING_ACTION.
      * Action: REQUEST.
      *
-     * @throws CantListPendingCryptoAddressRequestsException      if something goes wrong.
+     * @throws CantListPendingCryptoAddressRequestsException if something goes wrong.
      */
     @Override
     public List<CryptoAddressRequest> listPendingCryptoAddressRequests() throws CantListPendingCryptoAddressRequestsException {
@@ -825,11 +844,11 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
             return cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolStateAndAction(ProtocolState.PENDING_ACTION, RequestAction.REQUEST);
 
-        } catch (CantListPendingCryptoAddressRequestsException e){
+        } catch (CantListPendingCryptoAddressRequestsException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (Exception e){
+        } catch (Exception e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListPendingCryptoAddressRequestsException(FermatException.wrapException(e), null, "Unhandled Exception.");
@@ -843,14 +862,14 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
             return cryptoAddressesNetworkServiceDao.getPendingRequest(requestId);
 
-        } catch (PendingRequestNotFoundException e){
+        } catch (PendingRequestNotFoundException e) {
             // when i don't find it i only pass the exception (maybe another plugin confirm the pending request).
             throw e;
-        } catch (CantGetPendingAddressExchangeRequestException e){
+        } catch (CantGetPendingAddressExchangeRequestException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (Exception e){
+        } catch (Exception e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetPendingAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
@@ -863,9 +882,8 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
      * Action: NONE.
      *
      * @param requestId id of the address exchange request we want to confirm.
-     *
-     * @throws CantConfirmAddressExchangeRequestException   if something goes wrong.
-     * @throws PendingRequestNotFoundException              if i can't find the record.
+     * @throws CantConfirmAddressExchangeRequestException if something goes wrong.
+     * @throws PendingRequestNotFoundException            if i can't find the record.
      */
     @Override
     public void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException, PendingRequestNotFoundException {
@@ -875,14 +893,14 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
             //only the record you request the address
 
-            if(cryptoAddressesNetworkServiceDao.getPendingRequest(requestId).getMessageType().equals(AddressesConstants.OUTGOING_MESSAGE))
+            if (cryptoAddressesNetworkServiceDao.getPendingRequest(requestId).getMessageType().equals(AddressesConstants.OUTGOING_MESSAGE))
                 cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(requestId);
 
-        } catch (CantConfirmAddressExchangeRequestException | PendingRequestNotFoundException e){
+        } catch (CantConfirmAddressExchangeRequestException | PendingRequestNotFoundException e) {
             // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (Exception e){
+        } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConfirmAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
         }
@@ -894,9 +912,8 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
      * Action: DENY.
      *
      * @param requestId id of the address exchange request we want to confirm.
-     *
-     * @throws CantDenyAddressExchangeRequestException      if something goes wrong.
-     * @throws PendingRequestNotFoundException              if i can't find the record.
+     * @throws CantDenyAddressExchangeRequestException if something goes wrong.
+     * @throws PendingRequestNotFoundException         if i can't find the record.
      */
     @Override
     public void denyAddressExchangeRequest(UUID requestId) throws CantDenyAddressExchangeRequestException, PendingRequestNotFoundException {
@@ -907,35 +924,41 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
             final CryptoAddressRequest cryptoAddressRequest = cryptoAddressesNetworkServiceDao.getPendingRequest(requestId);
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        sendNewMessage(
-                                getProfileDestinationToRequestConnection(
-                                        cryptoAddressRequest.getIdentityPublicKeyResponding(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
-                                ),
-                                getProfileSenderToRequestConnection(
-                                        cryptoAddressRequest.getIdentityPublicKeyRequesting(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
-                                ),
-                                buildJsonDenyMessage(cryptoAddressRequest));
-                    } catch (CantSendMessageException | InvalidParameterException e) {
-                        reportUnexpectedException(e);
-                    }
-                }
-            });
+            sendMessage(
+                    buildJsonDenyMessage(cryptoAddressRequest),
+                    cryptoAddressRequest.getIdentityPublicKeyResponding(),
+                    cryptoAddressRequest.getIdentityTypeResponding(),
+                    cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+                    cryptoAddressRequest.getIdentityTypeRequesting()
+            );
+//            executorService.submit(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        sendNewMessage(
+//                                getProfileDestinationToRequestConnection(
+//                                        cryptoAddressRequest.getIdentityPublicKeyResponding(),
+//                                        NetworkServiceType.UNDEFINED,
+//                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
+//                                ),
+//                                getProfileSenderToRequestConnection(
+//                                        cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+//                                        NetworkServiceType.UNDEFINED,
+//                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
+//                                ),
+//                                buildJsonDenyMessage(cryptoAddressRequest));
+//                    } catch (CantSendMessageException | InvalidParameterException e) {
+//                        reportUnexpectedException(e);
+//                    }
+//                }
+//            });
 
 
-
-        } catch(PendingRequestNotFoundException |
-                CantDenyAddressExchangeRequestException e){
+        } catch (PendingRequestNotFoundException |
+                CantDenyAddressExchangeRequestException e) {
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (Exception e){
+        } catch (Exception e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDenyAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
@@ -948,49 +971,41 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
         try {
 
             //update message to read with destination, and update state to DONE, End Message
-            if(cryptoAddressesNetworkServiceDao.getPendingRequest(requestId).getMessageType().equals(AddressesConstants.INCOMING_MESSAGE)){
+            if (cryptoAddressesNetworkServiceDao.getPendingRequest(requestId).getMessageType().equals(AddressesConstants.INCOMING_MESSAGE)) {
                 cryptoAddressesNetworkServiceDao.markRead(requestId);
-            }else {
+            } else {
                 cryptoAddressesNetworkServiceDao.markReadAndDone(requestId);
             }
-        }catch (Exception e){
-            throw new CantConfirmAddressExchangeRequestException(e,"","No se pudo marcar como leido el request exchange de address");
+        } catch (Exception e) {
+            throw new CantConfirmAddressExchangeRequestException(e, "", "No se pudo marcar como leido el request exchange de address");
         }
     }
 
     /**
      * Private Methods
-     *
      */
-    private void checkFailedDeliveryTime(String destinationPublicKey)
-    {
-        try{
+    private void checkFailedDeliveryTime(String destinationPublicKey) {
+        try {
 
             List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listRequestsByActorPublicKey(destinationPublicKey);
 
             //if I try to send more than 5 times I put it on hold
             for (CryptoAddressRequest record : cryptoAddressRequestList) {
 
-                if(!record.getState().getCode().equals(ProtocolState.WAITING_RESPONSE.getCode()))
-                {
-                    if(record.getSentNumber() > 10)
-                    {
+                if (!record.getState().getCode().equals(ProtocolState.WAITING_RESPONSE.getCode())) {
+                    if (record.getSentNumber() > 10) {
                         //  if(record.getSentNumber() > 20)
                         // {
                         //reprocess at two hours
                         //     reprocessTimer =  2 * 3600 * 1000;
                         //}
                         //update state and process again later
-                        cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.WAITING_RESPONSE);
-                        cryptoAddressesNetworkServiceDao.changeSentNumber(record.getRequestId(),1);
+                        cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(), ProtocolState.WAITING_RESPONSE);
+                        cryptoAddressesNetworkServiceDao.changeSentNumber(record.getRequestId(), 1);
+                    } else {
+                        cryptoAddressesNetworkServiceDao.changeSentNumber(record.getRequestId(), record.getSentNumber() + 1);
                     }
-                    else
-                    {
-                        cryptoAddressesNetworkServiceDao.changeSentNumber(record.getRequestId(),record.getSentNumber() + 1);
-                    }
-                }
-                else
-                {
+                } else {
                     //I verify the number of days I'm around trying to send if it exceeds three days I delete record
 
                     long sentDate = record.getSentDate();
@@ -999,8 +1014,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
                     double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
 
-                    if((int) dias > 3)
-                    {
+                    if ((int) dias > 3) {
                         //notify the user does not exist to intra user actor plugin
 
                         cryptoAddressesNetworkServiceDao.delete(record.getRequestId());
@@ -1011,9 +1025,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
             }
 
 
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("EXCEPCION VERIFICANDO WAIT MESSAGE");
             e.printStackTrace();
         }
@@ -1072,7 +1084,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        if(developerDatabase.getName().equals("Crypto Addresses"))
+        if (developerDatabase.getName().equals("Crypto Addresses"))
             return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
         else
             return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
@@ -1082,7 +1094,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         try {
-            return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabase,developerDatabaseTable);
+            return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
         } catch (Exception e) {
             System.out.println(e);
             return new ArrayList<>();
@@ -1090,16 +1102,45 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
     }
 
     private void startTimer() {
-        if(timer!=null)
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // change message state to process retry later
-                reprocessPendingMessage();
-            }
-        }, 0,reprocessTimer);
-
-
+        if (timer != null)
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // change message state to process retry later
+                    reprocessPendingMessage();
+                }
+            }, 0, reprocessTimer);
     }
 
+    private void sendMessage(final String jsonMessage,
+                             final String identityPublicKey,
+                             final Actors identityType,
+                             final String actorPublicKey,
+                             final Actors actorType) {
+
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    ActorProfile sender = new ActorProfile();
+                    sender.setActorType(identityType.getCode());
+                    sender.setIdentityPublicKey(identityPublicKey);
+
+                    ActorProfile receiver = new ActorProfile();
+                    receiver.setActorType(actorType.getCode());
+                    receiver.setIdentityPublicKey(actorPublicKey);
+
+                    sendNewMessage(
+                            sender,
+                            receiver,
+                            jsonMessage
+                    );
+                } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
+//                    this.reportUnexpectedError(e);
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 }

@@ -16,7 +16,8 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -59,7 +60,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
     private MonitorAgent agent;
     private IssuerRedemptionDao issuerRedemptionDao;
     private AssetIssuerWalletManager assetIssuerWalletManager;
-    private BitcoinNetworkManager bitcoinNetworkManager;
+    private BlockchainManager bitcoinNetworkManager;
     private CryptoAddressBookManager cryptoAddressBookManager;
     private AssetVaultManager assetVaultManager;
     private IssuerAppropriationManager issuerAppropriationManager;
@@ -76,7 +77,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
 
     public IssuerRedemptionMonitorAgent(AssetIssuerWalletManager assetIssuerWalletManager,
                                         ActorAssetIssuerManager actorAssetIssuerManager,
-                                        BitcoinNetworkManager bitcoinNetworkManager,
+                                        BlockchainManager bitcoinNetworkManager,
                                         CryptoAddressBookManager cryptoAddressBookManager,
                                         IssuerRedemptionDigitalAssetTransactionPluginRoot issuerRedemptionDigitalAssetTransactionPluginRoot,
                                         UUID pluginId,

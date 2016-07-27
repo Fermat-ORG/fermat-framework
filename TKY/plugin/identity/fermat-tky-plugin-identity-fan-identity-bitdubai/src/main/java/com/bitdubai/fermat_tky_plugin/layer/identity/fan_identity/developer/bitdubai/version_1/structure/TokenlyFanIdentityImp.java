@@ -332,7 +332,10 @@ public class TokenlyFanIdentityImp implements
         if(this.artistsConnectedList==null){
             this.artistsConnectedList = new ArrayList<>();
         }
-        this.artistsConnectedList.add(userName);
+        //We try to include unique artist user names
+        if(!artistsConnectedList.contains(userName)){
+            this.artistsConnectedList.add(userName);
+        }
     }
 
     /**

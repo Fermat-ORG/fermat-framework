@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum VaultType implements FermatEnum {
 
     CRYPTO_ASSET_VAULT("ASVA"),
-    CRYPTO_CURRENCY_VAULT("CCVA"),
+    CRYPTO_CURRENCY_VAULT("CCV"),
     WATCH_ONLY_VAULT("WOV");
 
     private String code;
@@ -29,6 +29,6 @@ public enum VaultType implements FermatEnum {
             if (vault.getCode().equals(code))
                 return vault;
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code is not valid for the VaultType enum.");
+        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This code is not valid for the VaultType enum.");
     }
 }

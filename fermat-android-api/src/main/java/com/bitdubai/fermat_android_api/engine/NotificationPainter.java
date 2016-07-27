@@ -2,33 +2,55 @@ package com.bitdubai.fermat_android_api.engine;
 
 import android.widget.RemoteViews;
 
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+
 import java.io.Serializable;
 
 /**
  * Created by Matias Furszyfer on 2016.02.05..
  */
-public interface NotificationPainter extends Serializable{
+public class NotificationPainter implements Serializable {
 
-    RemoteViews getNotificationView(String code);
+    public RemoteViews getNotificationView(String code) {
+        return null;
+    }
 
-    String getNotificationTitle();
+    public RemoteViews getNotificationView(FermatBundle fermatBundle) {
+        return null;
+    }
 
-    String getNotificationImageText();
+    public String getNotificationTitle() {
+        return null;
+    }
 
-    String getNotificationTextBody();
+    public String getNotificationImageText() {
+        return null;
+    }
 
-    int getIcon();
+    public String getNotificationTextBody() {
+        return null;
+    }
+
+    public int getIcon() {
+        return 0;
+    }
 
     /**
      * Set Activity code to open when click notification, code from Activities enum
+     *
      * @return string code activity
      */
-    String getActivityCodeResult();
+    public String getActivityCodeResult() {
+        return null;
+    }
 
     /**
      * set enabled notification property, to show or not show
+     *
      * @return
      */
-    boolean showNotification();
+    public boolean showNotification() {
+        return false;
+    }
 
 }

@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 public class SetBrokerPublicKeyTest {
 
     @Test
-    public void setBrokerPublicKey(){
+    public void setBrokerPublicKey() {
         CryptoBrokerWalletBalanceRecordImpl cryptoBrokerWalletBalanceRecord = mock(CryptoBrokerWalletBalanceRecordImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoBrokerWalletBalanceRecord).setBrokerPublicKey(Mockito.any(String.class));
     }

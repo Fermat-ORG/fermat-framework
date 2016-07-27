@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/white"
-                android:text="Buy"/>
+                android:text="Sell"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbw_sell_price"
@@ -69,13 +69,14 @@
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbw_provider_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:textAllCaps="true"
+                android:gravity="center"
                 android:textColor="@color/market_rate_text"
                 android:textSize="@dimen/cbw_market_exchange_rate_text_size"
-                tools:text="Bitcoin Venezuela"/>
+                tools:text="Bitcoin Venezuela"
+                android:autoText="false" />
         </LinearLayout>
 
         <LinearLayout
@@ -89,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/white"
-                android:text="Sell"/>
+                android:text="Buy"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbw_buy_price"
@@ -110,7 +111,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:paddingBottom="8dp"
-        tools:background="@drawable/cbw_action_bar_gradient_colors">
+        tools:background="@drawable/cbw_action_bar_gradient_colors"
+        android:visibility="gone">
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/cbw_market_rate_line_chart"

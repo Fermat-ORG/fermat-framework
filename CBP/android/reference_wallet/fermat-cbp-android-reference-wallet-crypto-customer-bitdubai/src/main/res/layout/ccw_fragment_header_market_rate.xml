@@ -11,7 +11,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingStart="16dp"
-    android:paddingTop="30dp"
+    android:paddingTop="15dp"
     android:visibility="visible"
     tools:background="@drawable/ccw_header_gradient_background">
 
@@ -24,19 +24,19 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@color/withe"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
             android:text="Sell"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/ccw_sell_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/withe"
-            tools:text="800,00 USD"/>
+            android:textColor="@color/white"
+            tools:text="345,800.00 VEF"/>
     </LinearLayout>
 
     <LinearLayout
@@ -51,25 +51,23 @@
             android:id="@+id/ccw_currencies"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:textColor="@color/withe"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
             tools:text="BTC / USD"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/ccw_market_exchange_rate_market_exchange_rate"
+            android:text="@string/market_exchange_rate"
             android:textColor="@color/market_rate_text"
             android:textSize="@dimen/ccw_market_exchange_rate_text_size"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/ccw_provider_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:gravity="center"
             android:textAllCaps="true"
             android:textColor="@color/market_rate_text"
             android:textSize="@dimen/ccw_market_exchange_rate_text_size"
@@ -85,19 +83,20 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@color/withe"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
             android:text="Buy"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/ccw_buy_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center"
             android:ellipsize="end"
+            android:gravity="end"
             android:singleLine="true"
-            android:textColor="@color/withe"
-            tools:text="840,25 USD"/>
+            android:textColor="@color/white"
+            tools:text="350,840.25 VEF"/>
     </LinearLayout>
 
 </LinearLayout>

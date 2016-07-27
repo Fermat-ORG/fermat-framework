@@ -17,10 +17,10 @@
         tools:ignore="UselessParent">
 
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <!--<android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent">-->
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/my_recycler_view"
@@ -28,7 +28,7 @@
                 android:layout_height="match_parent"
                 tools:listitem="@layout/cht_comm_connection_list_item"
                 android:divider="@drawable/cht_list_divider" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+        <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
         <!--Empty view-->
         <LinearLayout
@@ -51,15 +51,23 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No connections"
+                android:text="No Contacts"
                 android:id="@+id/nodatalabel"
-                android:textColor="#D1D3D4"
+                android:textColor="#BCBEC0"
                 android:textStyle="normal"
                 android:textSize="12pt"
                 android:layout_below="@+id/nodata"
                 android:layout_centerHorizontal="true" />
 
         </LinearLayout>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/progressBar"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 

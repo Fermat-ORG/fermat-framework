@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDaoTest;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -7,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,15 +39,17 @@ public class getEventTypeTest {
     @Mock
     DatabaseTableRecord databaseTableRecord;
     private UUID testId;
+
     @Before
-    public void setup()throws Exception{
+    public void setup() throws Exception {
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
-                pluginDatabaseSystem,testId,mockDatabase,errorManager);
+                pluginDatabaseSystem, testId, mockDatabase, errorManager);
         setupGeneralMockitoRules();
     }
-    public void setupGeneralMockitoRules()throws Exception{
+
+    public void setupGeneralMockitoRules() throws Exception {
         doNothing().when(databaseTable).loadToMemory();
         when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(databaseTableRecordList.get(0)).thenReturn(databaseTableRecord);
@@ -55,16 +57,17 @@ public class getEventTypeTest {
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME
         )).thenReturn("Test");
     }
+
     @Test
-    public void getEventTypeTest_Should_Equal_Test()throws Exception{
+    public void getEventTypeTest_Should_Equal_Test() throws Exception {
         when(mockDatabase.getTable(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME
         )).thenReturn(databaseTable);
-        assertEquals("Test",customerOnlinePaymentBusinessTransactionDao.getEventType("eventId"));
+        assertEquals("Test", customerOnlinePaymentBusinessTransactionDao.getEventType("eventId"));
     }
 
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getEventTypeTest_Should_Throw_Exception()throws Exception{
+    public void getEventTypeTest_Should_Throw_Exception() throws Exception {
         customerOnlinePaymentBusinessTransactionDao.getEventType("eventId");
     }
 }

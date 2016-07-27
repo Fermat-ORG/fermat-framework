@@ -18,7 +18,7 @@ public class ConstructionTest {
     private NegotiationTransmissionMessage testObj1;
 
     @Before
-    public void setUp(){
+    public void setUp() {
 
         testObj1 = new NegotiationTransmissionMessage();
     }

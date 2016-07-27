@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.google.gson.JsonObject;
 
 /**
  * The Class <code>ActorProfile</code>
@@ -51,7 +54,7 @@ public class ActorProfile extends Profile {
      * Constructor
      */
     public ActorProfile(){
-        super();
+        super(ProfileTypes.ACTOR);
     }
 
     /**
@@ -178,6 +181,77 @@ public class ActorProfile extends Profile {
      */
     public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
         this.clientIdentityPublicKey = clientIdentityPublicKey;
+    }
+
+    public static Profile deserialize(final JsonObject jsonObject) {
+
+        ActorProfile actorProfile = new ActorProfile();
+
+        Double latitude = 0.0;
+        Double longitude = 0.0;
+
+        if (jsonObject.get("ipk") != null)
+            actorProfile.setIdentityPublicKey(jsonObject.get("ipk").getAsString());
+
+        if (jsonObject.get("lat") != null)
+            latitude = jsonObject.get("lat").getAsDouble();
+
+        if (jsonObject.get("lng") != null)
+            longitude = jsonObject.get("lng").getAsDouble();
+
+        if (jsonObject.get("act") != null)
+            actorProfile.setActorType(jsonObject.get("act").getAsString());
+
+        if (jsonObject.get("ali") != null)
+            actorProfile.setAlias(jsonObject.get("ali").getAsString());
+
+        if (jsonObject.get("nam") != null)
+            actorProfile.setName(jsonObject.get("nam").getAsString());
+
+        if (jsonObject.get("exd") != null)
+            actorProfile.setExtraData(jsonObject.get("exd").getAsString());
+
+        if (jsonObject.get("nspk") != null)
+        actorProfile.setNsIdentityPublicKey(jsonObject.get("nspk").getAsString());
+
+        if (jsonObject.get("clpk") != null)
+            actorProfile.setClientIdentityPublicKey(jsonObject.get("clpk").getAsString());
+
+        if (jsonObject.get("photo") != null)
+            actorProfile.setPhoto(Base64.decode(jsonObject.get("photo").getAsString(), Base64.DEFAULT));
+
+        actorProfile.setLocation(latitude, longitude);
+
+        return actorProfile;
+    }
+
+    @Override
+    public JsonObject serialize() {
+
+        JsonObject jsonObject = super.serialize();
+
+        if (actorType != null)
+            jsonObject.addProperty("act", actorType);
+
+        if (alias != null)
+            jsonObject.addProperty("ali", alias);
+
+        if (name != null)
+            jsonObject.addProperty("nam", name);
+
+        if (extraData != null)
+            jsonObject.addProperty("exd", extraData);
+
+        if (nsIdentityPublicKey != null)
+            jsonObject.addProperty("nspk", nsIdentityPublicKey);
+
+        if (clientIdentityPublicKey != null)
+            jsonObject.addProperty("clpk", clientIdentityPublicKey);
+
+        if (photo != null)
+            jsonObject.addProperty("photo", Base64.encodeToString(photo, Base64.DEFAULT));
+
+        return jsonObject;
     }
 
     /**

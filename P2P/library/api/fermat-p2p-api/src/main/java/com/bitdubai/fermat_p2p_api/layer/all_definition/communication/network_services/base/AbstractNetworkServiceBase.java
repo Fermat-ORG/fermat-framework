@@ -10,6 +10,9 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -49,8 +52,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Fai
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.agents.CommunicationRegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.agents.CommunicationSupervisorPendingMessagesAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDeveloperDatabaseFactory;
@@ -74,9 +75,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -173,14 +171,9 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
     private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
     /**
-     * Represent the communicationRegistrationProcessNetworkServiceAgent
-     */
-    private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
-
-    /**
      * Represent the communicationSupervisorPendingMessagesAgent
      */
-    private CommunicationSupervisorPendingMessagesAgent communicationSupervisorPendingMessagesAgent;
+//    private CommunicationSupervisorPendingMessagesAgent communicationSupervisorPendingMessagesAgent;
 
     /**
      * Represent the dataBase
@@ -281,11 +274,9 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                         /*
                          * Initialize the agents and start
                          */
-                        this.communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this);
-                        this.communicationRegistrationProcessNetworkServiceAgent.start();
 
-                        this.communicationSupervisorPendingMessagesAgent = new CommunicationSupervisorPendingMessagesAgent(this);
-                        this.communicationSupervisorPendingMessagesAgent.start();
+//                        this.communicationSupervisorPendingMessagesAgent = new CommunicationSupervisorPendingMessagesAgent(this);
+//                        this.communicationSupervisorPendingMessagesAgent.start();
                     }
                     else {
 
@@ -614,10 +605,10 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     event.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT &&
                     !this.register){
 
-                if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
-                    communicationRegistrationProcessNetworkServiceAgent.stop();
-                    communicationRegistrationProcessNetworkServiceAgent = null;
-                }
+//                if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
+//                    communicationRegistrationProcessNetworkServiceAgent.stop();
+//                    communicationRegistrationProcessNetworkServiceAgent = null;
+//                }
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(networkServiceType).registerComponentForCommunication(this.getNetworkServiceProfile().getNetworkServiceType(), this.getNetworkServiceProfile());
             }
 
@@ -661,7 +652,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     communicationNetworkServiceConnectionManager.stop();
                 }
 
-                communicationSupervisorPendingMessagesAgent.removeAllConnectionWaitingForResponse();
+//                communicationSupervisorPendingMessagesAgent.removeAllConnectionWaitingForResponse();
 
                 onClientConnectionClose();
 
@@ -741,7 +732,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
              * Tell the manager to handler the new connection established
              */
             communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(event.getRemoteComponent());
-            communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(event.getRemoteComponent().getIdentityPublicKey());
+//            communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(event.getRemoteComponent().getIdentityPublicKey());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -791,7 +782,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
             System.out.println("Executing handleFailureComponentConnectionRequest ");
             communicationNetworkServiceConnectionManager.removeRequestedConnection(event.getRemoteParticipant().getIdentityPublicKey());
-            communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(event.getRemoteParticipant().getIdentityPublicKey());
+//            communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(event.getRemoteParticipant().getIdentityPublicKey());
             checkFailedSendMessage(event.getRemoteParticipant().getIdentityPublicKey());
             onFailureComponentConnectionRequest(event.getRemoteParticipant());
 
@@ -831,7 +822,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
                 }
 
-                communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(remotePublicKey);
+//                communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(remotePublicKey);
 
                 reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
 
@@ -858,7 +849,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
                 }
 
-                communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(remotePublicKey);
+//                communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(remotePublicKey);
 
                 reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
 

@@ -1,11 +1,13 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -21,6 +23,8 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -33,9 +37,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.onRefreshList;
-
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
-
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -47,18 +49,19 @@ import static android.widget.Toast.makeText;
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>,onRefreshList {
+public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession<FermatWallet>,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>,onRefreshList {
 
     /**
      * Session
      */
-    FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+    ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp;
 
-    String walletPublicKey = "reference_wallet";
+    String walletPublicKey = "fermat_wallet";
     /**
      * MANAGERS
      */
     private FermatWallet cryptoWallet;
+    private ErrorManager errorManager;
     /**
      * DATA
      */
@@ -91,8 +94,8 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        fermatWalletSessionReferenceApp = (FermatWalletSessionReferenceApp)appSession;
 
+        fermatWalletSessionReferenceApp = appSession;
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
         try {
@@ -100,7 +103,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
             //lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
-            getExecutor().execute(new Runnable() {
+          /*  getExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -118,7 +121,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                     }
                 }
             });
-
+*/
 
 
 
@@ -135,7 +138,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error:onCreate", Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -148,12 +151,39 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
-            setUp();
+            //setUp();
             return rootView;
         }catch (Exception e){
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error:onCreateView", Toast.LENGTH_SHORT).show();
         }
         return container;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+            if(id == 2){
+                changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
+                return true;
+            }else {
+                //setUpPresentation();
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
     private void setUp(){
         FrameLayout frameLayout = new FrameLayout(getActivity());
@@ -169,7 +199,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY);
+                changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_ACTIVITY);
             }
         };
         View view = new View(getActivity());
@@ -211,32 +241,23 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             super.onActivityCreated(savedInstanceState);
             lstPaymentRequest = new ArrayList<PaymentRequest>();
         } catch (Exception e){
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), "Oooops! recovering from system error:onActivityCreated", Toast.LENGTH_SHORT).show();
             fermatWalletSessionReferenceApp.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
 
-    @Override
-    public void onDrawerOpen() {
-        actionButton.setVisibility(View.GONE);
 
-    }
-
-    @Override
-    public void onDrawerClose() {
-        FermatAnimationsUtils.showEmpty(getActivity(), true, actionMenu.getActivityContentView());
-        actionButton.setVisibility(View.VISIBLE);
-
-    }
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_transaction_main;
+
+        return R.layout.fermat_wallet_fragment_transaction_main;
+
     }
 
     @Override
@@ -284,18 +305,16 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             if(refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
             lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, this.blockchainNetworkType ,10,offset);
-            offset+=MAX_TRANSACTIONS;
+            offset+=1;
         } catch (Exception e) {
             fermatWalletSessionReferenceApp.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
            e.printStackTrace();
        }
 
-        if(lstPaymentRequest!=null){
+
             return lstPaymentRequest;
-        }else{
-            return  new ArrayList<>();
-        }
+
     }
 
     @Override
@@ -349,7 +368,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
     }
 
-   /* @Override
+  /* @Override
    public void onClick(View v) {
         try {
             PaymentRequest paymentRequest = selectedItem;

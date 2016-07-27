@@ -33,8 +33,8 @@ import javax.crypto.spec.SecretKeySpec;
  * The Plugin File System is the implementation of the file system that is handled to external plugins. It differs
  * from the Platform File System in that this one requires the plug in to identify itself.
  * That PlugIn manage text files.
- *
- *  Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
+ * <p/>
+ * Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
  */
 
 public class LinuxPluginTextFile implements PluginTextFile {
@@ -54,17 +54,17 @@ public class LinuxPluginTextFile implements PluginTextFile {
     /**
      * <p>PlugIn implementation constructor
      *
-     * @param ownerId PlugIn Id
+     * @param ownerId       PlugIn Id
      * @param directoryName name of the directory where the files are saved
-     * @param fileName name of file
-     * @param privacyLevel level of privacy for the file, if it is public or private
-     * @param lifeSpan lifetime of the file, whether it is permanent or temporary
+     * @param fileName      name of file
+     * @param privacyLevel  level of privacy for the file, if it is public or private
+     * @param lifeSpan      lifetime of the file, whether it is permanent or temporary
      */
-    public LinuxPluginTextFile(final UUID         ownerId      ,
-                               final String       directoryName,
-                               final String       fileName     ,
-                               final FilePrivacy  privacyLevel ,
-                               final FileLifeSpan lifeSpan     ){
+    public LinuxPluginTextFile(final UUID ownerId,
+                               final String directoryName,
+                               final String fileName,
+                               final FilePrivacy privacyLevel,
+                               final FileLifeSpan lifeSpan) {
 
         this.ownerId = ownerId;
         this.fileName = fileName;
@@ -95,17 +95,17 @@ public class LinuxPluginTextFile implements PluginTextFile {
 
 
     /**
-     *<p>This method returns the contents of a file in string.
+     * <p>This method returns the contents of a file in string.
      *
      * @return String file content
      */
     @Override
-    public String getContent()  {
+    public String getContent() {
         return this.content;
     }
 
     /**
-     *<p>This method sets the contents of a file in string.
+     * <p>This method sets the contents of a file in string.
      *
      * @param content file content
      */
@@ -117,7 +117,7 @@ public class LinuxPluginTextFile implements PluginTextFile {
     private String buildPath() {
 
         String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
+        if (privacyLevel == FilePrivacy.PUBLIC)
             path += EnvironmentVariables.getExternalStorageDirectory().toString();
         else
             path += EnvironmentVariables.getInternalStorageDirectory().toString();
@@ -134,7 +134,7 @@ public class LinuxPluginTextFile implements PluginTextFile {
      */
     @Override
     public void persistToMedia() throws CantPersistFileException {
-        
+
         try {
 
             /**
@@ -145,10 +145,10 @@ public class LinuxPluginTextFile implements PluginTextFile {
             /**
              * If the directory does not exist, we create it here.
              */
-            
+
             File storagePath = new File(path);
             if (!storagePath.exists() && !storagePath.mkdirs())
-                throw new CantPersistFileException("path: "+path+" - fileName: "+fileName, "Can't create the path to the file.");
+                throw new CantPersistFileException("path: " + path + " - fileName: " + fileName, "Can't create the path to the file.");
 
             /**
              * Then we create the file.
@@ -165,7 +165,7 @@ public class LinuxPluginTextFile implements PluginTextFile {
             /**
              * We write the encrypted content into the file.
              */
-            outputStream =  new BufferedOutputStream(new FileOutputStream(file));
+            outputStream = new BufferedOutputStream(new FileOutputStream(file));
             outputStream.write(encryptedContent.getBytes(Charset.forName("UTF-8")));
             outputStream.close();
 
@@ -183,7 +183,7 @@ public class LinuxPluginTextFile implements PluginTextFile {
     @Override
     public void loadFromMedia() throws CantLoadFileException {
 
-    	BufferedReader bufferedReader = null;
+        BufferedReader bufferedReader = null;
         try {
             /**
              *  Evaluate privacyLevel to determine the location of directory - external or internal
@@ -195,8 +195,8 @@ public class LinuxPluginTextFile implements PluginTextFile {
              */
             File file = new File(path, fileName);
 
-            InputStream inputStream ;
-            inputStream =  new BufferedInputStream(new FileInputStream(file));
+            InputStream inputStream;
+            inputStream = new BufferedInputStream(new FileInputStream(file));
 
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
 
@@ -208,7 +208,7 @@ public class LinuxPluginTextFile implements PluginTextFile {
                 stringBuilder.append(line);
             }
             inputStream.close();
-            
+
             /**
              * Now we decrypt it and I load it into memory.
              */
@@ -217,21 +217,21 @@ public class LinuxPluginTextFile implements PluginTextFile {
 
             } catch (CantDecryptException e) {
                 e.printStackTrace();
-                throw new CantLoadFileException("Error trying to decrypt file: " +this.fileName);
+                throw new CantLoadFileException("Error trying to decrypt file: " + this.fileName);
             }
-            
+
         } catch (Exception e) {
             throw new CantLoadFileException(e.getMessage());
         } finally {
-        	try {
+            try {
 
-                if (bufferedReader != null){
+                if (bufferedReader != null) {
                     bufferedReader.close();
                 }
 
-        	} catch (Exception e) {
-        		e.printStackTrace();
-        	}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -251,7 +251,7 @@ public class LinuxPluginTextFile implements PluginTextFile {
      * Private Encrypting Method.
      */
 
-    private  String encrypt(final String text) throws CantEncryptException {
+    private String encrypt(final String text) throws CantEncryptException {
 
         try {
 
@@ -281,7 +281,7 @@ public class LinuxPluginTextFile implements PluginTextFile {
             context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
             context += "Charset: " + CHARSET_NAME;
             String possibleReason = "This is most likely to happen due to a bad Secret Key passing";
-            throw  new CantEncryptException(message, cause, context, possibleReason);
+            throw new CantEncryptException(message, cause, context, possibleReason);
         }
     }
 
@@ -290,7 +290,7 @@ public class LinuxPluginTextFile implements PluginTextFile {
      * Private Decrypting Method.
      */
 
-    private  String decrypt(final String encryptedText) throws CantDecryptException {
+    private String decrypt(final String encryptedText) throws CantDecryptException {
 
         try {
 
@@ -319,7 +319,7 @@ public class LinuxPluginTextFile implements PluginTextFile {
             context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
             context += "Charset: " + CHARSET_NAME;
             String possibleReason = "This is most likely to happen due to a bad Secret Key passing";
-            throw  new CantDecryptException(message, cause, context, possibleReason);
+            throw new CantDecryptException(message, cause, context, possibleReason);
 
         }
     }

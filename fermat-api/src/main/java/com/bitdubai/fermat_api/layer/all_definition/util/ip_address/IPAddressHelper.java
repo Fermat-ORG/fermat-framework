@@ -20,7 +20,12 @@ public final class IPAddressHelper {
 
     private static final String PUBLIC_ADDRESS_URL = "http://ipinfo.io/ip";
 
+    private static String ipAddress;
+
     public static String getCurrentIPAddress() throws CantGetCurrentIPAddressException {
+
+        if (ipAddress != null)
+            return ipAddress;
 
         HttpURLConnection conn = null;
         try {
@@ -29,9 +34,10 @@ public final class IPAddressHelper {
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String response = reader.readLine();
 
-            if (conn.getResponseCode() == 200)
-                return response.trim();
-            else
+            if (conn.getResponseCode() == 200) {
+                ipAddress = response.trim();
+                return ipAddress;
+            } else
                 throw new CantGetCurrentIPAddressException(
                         null,
                         "",
@@ -44,7 +50,7 @@ public final class IPAddressHelper {
             throw new CantGetCurrentIPAddressException(
                     ioException,
                     "",
-                    "There was an error trying to get the ip address from the site: "+PUBLIC_ADDRESS_URL
+                    new StringBuilder().append("There was an error trying to get the ip address from the site: ").append(PUBLIC_ADDRESS_URL).toString()
             );
         } finally {
 

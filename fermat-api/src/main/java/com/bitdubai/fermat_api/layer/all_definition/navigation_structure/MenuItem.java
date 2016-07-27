@@ -3,12 +3,13 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatMenuItem;
 
+import java.io.Serializable;
 
 
 /**
  * Created by Matias Furszyfer on 2015.07.17..
  */
-public class MenuItem implements FermatMenuItem {
+public class MenuItem implements FermatMenuItem, Serializable {
 
     /**
      * MenuItem class member variables
@@ -20,7 +21,7 @@ public class MenuItem implements FermatMenuItem {
     Activities linkToActivity;
     private String appLinkPublicKey;
 
-    boolean selected=false;
+    boolean selected = false;
     private int notifications;
     private int id;
 
@@ -33,6 +34,11 @@ public class MenuItem implements FermatMenuItem {
     private String selectedTextColor;
 
     /**
+     * Visibility
+     */
+    private boolean visibility = true;
+
+    /**
      * SideMenu class constructors
      */
     public MenuItem(int id) {
@@ -42,7 +48,7 @@ public class MenuItem implements FermatMenuItem {
     public MenuItem() {
     }
 
-    public MenuItem(String label, String icon, Activities linkToActivity,String appLinkPublicKey) {
+    public MenuItem(String label, String icon, Activities linkToActivity, String appLinkPublicKey) {
         this.label = label;
         this.icon = icon;
         this.linkToActivity = linkToActivity;
@@ -140,5 +146,13 @@ public class MenuItem implements FermatMenuItem {
 
     public void setSelectedTextColor(String selectedTextColor) {
         this.selectedTextColor = selectedTextColor;
+    }
+
+    public boolean isVisible() {
+        return visibility;
+    }
+
+    public void setVisibility(boolean visibility) {
+        this.visibility = visibility;
     }
 }

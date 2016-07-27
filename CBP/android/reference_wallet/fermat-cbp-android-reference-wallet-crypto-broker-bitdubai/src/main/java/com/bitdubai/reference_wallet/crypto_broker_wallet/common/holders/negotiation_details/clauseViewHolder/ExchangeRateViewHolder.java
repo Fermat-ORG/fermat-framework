@@ -13,9 +13,9 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -38,13 +38,14 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private Quote suggestedRate;
     private float spread;
     private boolean suggestedRateLoaded;
-    private NumberFormat formatter;
-
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
+    private View separatorLineUp;
+    private View separatorLineMiddle;
+    private View separatorLineDown;
 
 
     public ExchangeRateViewHolder(View itemView, int holderType) {
         super(itemView, holderType);
-
 
 
         exchangeRateReferenceText = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_reference_text);
@@ -55,11 +56,14 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateValueLeftSide = (FermatTextView) itemView.findViewById(R.id.cbw_your_exchange_rate_value_left_side);
         yourExchangeRateValueRightSide = (FermatTextView) itemView.findViewById(R.id.cbw_your_exchange_rate_value_right_side);
         yourExchangeRateValue = (FermatButton) itemView.findViewById(R.id.cbw_your_exchange_rate_value);
+        separatorLineDown = itemView.findViewById(R.id.cbw_line_down);
+        separatorLineMiddle = itemView.findViewById(R.id.cbw_line_middle);
+        separatorLineUp = itemView.findViewById(R.id.cbw_line_up);
         yourExchangeRateValue.setOnClickListener(this);
 
-        formatter = DecimalFormat.getInstance();
-        formatter.setMaximumFractionDigits(2);
-        formatter.setRoundingMode(RoundingMode.DOWN);
+
+        //change lostwood
+        //   formatter.setRoundingMode(RoundingMode.DOWN);
     }
 
     @Override
@@ -70,15 +74,15 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
-
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy.getValue()));
-        yourExchangeRateValue.setText(clause.getValue());
+        yourExchangeRateValue.setText(fixFormat(clause.getValue()));
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay.getValue()));
 
         BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
 
-        String marketExchangeRateStr = formatter.format(marketRateReferenceValue.doubleValue());
-        String suggestedMaxExchangeRateStr = formatter.format(marketRateReferenceValue.doubleValue() * (1+(spread/100)));
+
+        String marketExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue()));
+        String suggestedMaxExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue() * (1 + (spread / 100))));
 
         String suggestedRateCurrencyStr = "";
         if (suggestedRate != null)
@@ -89,8 +93,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
                     currencyToBuy.getValue(), marketExchangeRateStr, currencyToPay.getValue()));
             exchangeRateReferenceValue.setText(String.format("Min: %1$s %3$s    Max: %2$s %3$s",
                     marketExchangeRateStr, suggestedMaxExchangeRateStr, suggestedRateCurrencyStr));
-        }
-        else {
+        } else {
             markerRateReference.setText("Can't get Market Exchange Rate");
             exchangeRateReferenceValue.setText("Can't get suggested Exchange Rate");
         }
@@ -151,6 +154,9 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_accepted));
         yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.description_text_status_accepted));
         yourExchangeRateValueRightSide.setTextColor(getColor(R.color.description_text_status_accepted));
+        separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
+        separatorLineMiddle.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
+        separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
     }
 
     @Override
@@ -162,6 +168,9 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_changed));
         yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.description_text_status_changed));
         yourExchangeRateValueRightSide.setTextColor(getColor(R.color.description_text_status_changed));
+        separatorLineDown.setBackgroundColor(getColor(R.color.description_text_status_changed));
+        separatorLineMiddle.setBackgroundColor(getColor(R.color.description_text_status_changed));
+        separatorLineUp.setBackgroundColor(getColor(R.color.description_text_status_changed));
     }
 
     @Override
@@ -192,7 +201,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
             currencyQuotation = getExchangeRate(currencyUnder, currencyOver);
             if (currencyQuotation != null) {
                 exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
-                exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
+//                exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
             }
         } else {
             exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
@@ -215,5 +224,38 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
 
         return null;
     }
+
+
+    private String fixFormat(String value) {
+
+        try {
+            if (compareLessThan1(value)) {
+                numberFormat.setMaximumFractionDigits(8);
+            } else {
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
+        try {
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
+    }
+
 
 }

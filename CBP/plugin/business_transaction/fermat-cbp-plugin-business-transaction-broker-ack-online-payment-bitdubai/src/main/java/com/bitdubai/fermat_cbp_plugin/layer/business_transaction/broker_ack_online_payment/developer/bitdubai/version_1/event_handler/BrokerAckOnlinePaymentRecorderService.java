@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.event_handler;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -16,9 +18,7 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmissio
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.BrokerAckOnlinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database.BrokerAckOnlinePaymentBusinessTransactionDao;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
             throw new CantStartServiceException(exception,
                     "Cannot set the broker ack online payment database handler",
                     "The database handler is null");
-        }catch (Exception exception){
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
@@ -67,10 +67,10 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
 
     private void setDatabaseDao(BrokerAckOnlinePaymentBusinessTransactionDao brokerAckOnlinePaymentBusinessTransactionDao)
             throws CantSetObjectException {
-        if(brokerAckOnlinePaymentBusinessTransactionDao==null){
+        if (brokerAckOnlinePaymentBusinessTransactionDao == null) {
             throw new CantSetObjectException("The BrokerAckOnlinePaymentBusinessTransactionDao is null");
         }
-        this.brokerAckOnlinePaymentBusinessTransactionDao =brokerAckOnlinePaymentBusinessTransactionDao;
+        this.brokerAckOnlinePaymentBusinessTransactionDao = brokerAckOnlinePaymentBusinessTransactionDao;
     }
 
     public void setEventManager(EventManager eventManager) {
@@ -78,77 +78,77 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
     }
 
     public void incomingNewContractStatusUpdateEventHandler(IncomingNewContractStatusUpdate event) throws CantSaveEventException {
-        try{
+        try {
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_ACK_ONLINE_PAYMENT.getCode())) {
+            if (event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_ACK_ONLINE_PAYMENT.getCode())) {
                 this.brokerAckOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
-        }catch (CantSaveEventException exception){
+        } catch (CantSaveEventException exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming new Contract Status Update Event Handler CantSaveException","");
-        }catch(Exception exception){
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, "incoming new Contract Status Update Event Handler CantSaveException", "");
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception,
                     "Unexpected error",
                     "Check the cause");
         }
     }
 
     public void incomingConfirmBusinessTransactionResponseEventHandler(IncomingConfirmBusinessTransactionResponse event) throws CantSaveEventException {
-        try{
+        try {
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_ACK_ONLINE_PAYMENT.getCode())) {
+            if (event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_ACK_ONLINE_PAYMENT.getCode())) {
                 this.brokerAckOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
-        }catch(CantSaveEventException exception){
+        } catch (CantSaveEventException exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming Confirm Business Transaction Response CantSaveException","");
-        }catch (Exception exception){
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, "incoming Confirm Business Transaction Response CantSaveException", "");
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception,
                     "Unexpected error",
                     "Check the cause");
         }
     }
 
     public void incomingMoneyNotification(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
-        try{
+        try {
             Logger LOG = Logger.getGlobal();
-            LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getActorType().getCode().equals(Actors.CBP_CRYPTO_BROKER.getCode())){
+            LOG.info(new StringBuilder().append("EVENT TEST, I GOT AN EVENT:\n").append(event).toString());
+            if (event.getActorType().getCode().equals(Actors.CBP_CRYPTO_BROKER.getCode())) {
                 this.brokerAckOnlinePaymentBusinessTransactionDao.saveIncomingMoneyEvent(event);
             }
 
             LOG.info("CHECK THE DATABASE");
-        }catch(CantSaveEventException exception){
+        } catch (CantSaveEventException exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming Money Notification CantSaveException","");
-        }catch (Exception exception){
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, "incoming Money Notification CantSaveException", "");
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception,
                     "Unexpected error",
                     "Check the cause");
         }
     }
 
-    public void newContractOpenedEvenHandler(NewContractOpened event)throws CantSaveEventException {
-        try{
+    public void newContractOpenedEvenHandler(NewContractOpened event) throws CantSaveEventException {
+        try {
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
             this.brokerAckOnlinePaymentBusinessTransactionDao.saveNewEvent(
@@ -156,16 +156,16 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
                     event.getSource().getCode(),
                     event.getContractHash());
             //LOG.info("CHECK THE DATABASE");
-        }catch(CantSaveEventException exception){
+        } catch (CantSaveEventException exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"new Contract Opened Event Handler CantSaveException","");
-        }catch (Exception exception){
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, "new Contract Opened Event Handler CantSaveException", "");
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -210,7 +210,7 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
             listenersAdded.add(fermatEventListener);
 
             this.serviceStatus = ServiceStatus.STARTED;
-        } catch (CantSetObjectException exception){
+        } catch (CantSetObjectException exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
@@ -218,11 +218,11 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
                     exception,
                     "Starting the BrokerAckOnlinePaymentRecorderService",
                     "The BrokerAckOnlinePaymentRecorderService is probably null");
-        }catch(Exception exception){
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE,exception,
+            throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE, exception,
                     "Starting the BrokerAckOnlinePaymentRecorderService",
                     "Unexpected error");
         }
@@ -231,17 +231,17 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
 
     @Override
     public void stop() {
-        try{
+        try {
             removeRegisteredListeners();
             this.serviceStatus = ServiceStatus.STOPPED;
-        }catch (Exception exception){
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }
     }
 
-    private void removeRegisteredListeners(){
+    private void removeRegisteredListeners() {
         for (FermatEventListener fermatEventListener : listenersAdded) {
             eventManager.removeListener(fermatEventListener);
         }

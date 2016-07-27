@@ -9,7 +9,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -44,10 +43,11 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
     private Database database;
 
+    //    public CustomerBrokerNewNegotiationTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId) {
     public CustomerBrokerNewNegotiationTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final Database database) {
-        this.pluginDatabaseSystem   = pluginDatabaseSystem;
-        this.pluginId               = pluginId;
-        this.database               = database;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginId = pluginId;
+        this.database = database;
     }
 
     /*INITIALIZE DATABASE*/
@@ -77,7 +77,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     /**
      * Create send new negotiation transaction
      *
-     * @param transactionId the id negotiation transaction
+     * @param transactionId     the id negotiation transaction
      * @param negotiation
      * @param negotiationType
      * @param statusTransaction
@@ -85,8 +85,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
      * @throws CantRegisterCustomerBrokerNewNegotiationTransactionException
      */
     public void createCustomerBrokerNewNegotiationTransaction(UUID transactionId, Negotiation negotiation, NegotiationType negotiationType, NegotiationTransactionStatus statusTransaction)
-            throws CantRegisterCustomerBrokerNewNegotiationTransactionException
-    {
+            throws CantRegisterCustomerBrokerNewNegotiationTransactionException {
         try {
 
             Date time = new Date();
@@ -109,16 +108,16 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
             table.insertRecord(record);
 
-            if(statusTransaction.getCode() == NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode()) {
-                System.out.print("\n\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
-            }else{
-                System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + "transactionId: " + transactionId + " ****\n");
+            if (statusTransaction.getCode() == NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode()) {
+                System.out.print(new StringBuilder().append("\n\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - DAO. CONFIRM negotiationType: ").append(negotiationType.getCode()).append(" transactionId: ").append(transactionId).append(" ****\n").toString());
+            } else {
+                System.out.print(new StringBuilder().append("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - DAO. NEGOTIATION negotiationType: ").append(negotiationType.getCode()).append("transactionId: ").append(transactionId).append(" ****\n").toString());
             }
 
-        } catch (CantInsertRecordException e){
-            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException (e.getMessage(), e, "Customer Broker New Negotiation Transaction", "Cant create new Customer Broker New Negotiation Transaction, insert database problems.");
+        } catch (CantInsertRecordException e) {
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), e, "Customer Broker New Negotiation Transaction", "Cant create new Customer Broker New Negotiation Transaction, insert database problems.");
         } catch (Exception e) {
-            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException (e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction", "Cant create new Customer Broker New Negotiation Transaction, unknown failure.");
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction", "Cant create new Customer Broker New Negotiation Transaction, unknown failure.");
         }
 
     }
@@ -127,11 +126,11 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     /**
      * Update status of an negotiation transaction
      *
-     * @param transactionId the id negotiation transaction
+     * @param transactionId     the id negotiation transaction
      * @param statusTransaction
      * @throws CantRegisterCustomerBrokerNewNegotiationTransactionException
      */
-    public void updateStatusRegisterCustomerBrokerNewNegotiationTranasction(UUID transactionId, NegotiationTransactionStatus statusTransaction) throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
+    public void updateStatusRegisterCustomerBrokerNewNegotiationTranasction(UUID transactionId, NegotiationTransactionStatus statusTransaction) throws CantRegisterCustomerBrokerNewNegotiationTransactionException {
         try {
             if (!transactionExists(transactionId))
                 throw new CantRegisterCustomerBrokerNewNegotiationTransactionException("Cant Update Status Customer Broker New Negotiation Transaction, not exists.", "Customer Broker New Negotiation Transaction, Update State", "Cant Update State Customer Broker New Negotiation Transaction, not exists");
@@ -156,7 +155,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
      * @return the CustomerBrokerNew
      * @throws CantRegisterCustomerBrokerNewNegotiationTransactionException
      */
-    public CustomerBrokerNew getRegisterCustomerBrokerNewNegotiationTranasction(UUID transactionId) throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
+    public CustomerBrokerNew getRegisterCustomerBrokerNewNegotiationTranasction(UUID transactionId) throws CantRegisterCustomerBrokerNewNegotiationTransactionException {
 
         try {
             CustomerBrokerNew getTransaction = null;
@@ -179,7 +178,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             return getTransaction;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", "Cant load " + CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction not return register", "unknown failure.");
         }
@@ -192,7 +191,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
      * @return the CustomerBrokerNew
      * @throws CantRegisterCustomerBrokerNewNegotiationTransactionException
      */
-    public CustomerBrokerNew getRegisterCustomerBrokerNewNegotiationTranasctionFromNegotiationId(UUID negotiationId) throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
+    public CustomerBrokerNew getRegisterCustomerBrokerNewNegotiationTranasctionFromNegotiationId(UUID negotiationId) throws CantRegisterCustomerBrokerNewNegotiationTransactionException {
 
         try {
             CustomerBrokerNew getTransaction = null;
@@ -215,7 +214,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             return getTransaction;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", "Cant load " + CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction not return register", "unknown failure.");
         }
@@ -227,7 +226,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
      * @return List of All CustomerBrokerNew register
      * @throws CantRegisterCustomerBrokerNewNegotiationTransactionException
      */
-    public List<CustomerBrokerNew> getAllRegisterCustomerBrokerNewNegotiationTranasction() throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
+    public List<CustomerBrokerNew> getAllRegisterCustomerBrokerNewNegotiationTranasction() throws CantRegisterCustomerBrokerNewNegotiationTransactionException {
 
         try {
             List<CustomerBrokerNew> getTransactions = new ArrayList<>();
@@ -249,7 +248,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             return getTransactions;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", "Cant load " + CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction not return register", "unknown failure.");
         }
@@ -284,7 +283,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             return getTransactions;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", "Cant load " + CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME + " table in memory.");
+            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction not return register", "unknown failure.");
         }
@@ -319,7 +318,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             return getTransactions;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", "Cant load " + CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME + " table in memory.");
+            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction not return register", "unknown failure.");
         }
@@ -354,7 +353,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             return getTransactions;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", "Cant load " + CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME + " table in memory.");
+            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction not return register", "unknown failure.");
         }
@@ -380,7 +379,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
         } catch (CantUpdateRecordException e) {
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), e, "Customer Broker New Negotiation Transaction, Update Confirm Transaction", "Cant Update Confirm Transaction Customer Broker New Negotiation Transaction, update database problems.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Negotiation Transaction, Customer Broker New", "Cant confirm Transaction, unknown failure.");
         }
     }
@@ -405,7 +404,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
         } catch (CantUpdateRecordException e) {
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), e, "Customer Broker New Negotiation Transaction, Update Confirm Transaction", "Cant Update Confirm Transaction Customer Broker New Negotiation Transaction, update database problems.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Negotiation Transaction, Customer Broker New", "Cant confirm Transaction, unknown failure.");
         }
     }
@@ -423,18 +422,18 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
      */
     public List<UUID> getPendingEvents() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
 
-        try{
+        try {
 
             DatabaseTable table = getDatabaseEventTable();
-            List<UUID> eventTypeList=new ArrayList<>();
+            List<UUID> eventTypeList = new ArrayList<>();
             UUID eventId;
             table.addStringFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
-            if(records.isEmpty())
+            if (records.isEmpty())
                 return eventTypeList;
-            for(DatabaseTableRecord databaseTableRecord : records){
-                eventId=databaseTableRecord.getUUIDValue(
+            for (DatabaseTableRecord databaseTableRecord : records) {
+                eventId = databaseTableRecord.getUUIDValue(
                         CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME);
                 eventTypeList.add(eventId);
             }
@@ -442,7 +441,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             return eventTypeList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE,e,"Getting events in EventStatus.PENDING","Cannot load the table into memory");
+            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE, e, "Getting events in EventStatus.PENDING", "Cannot load the table into memory");
         }
 
     }
@@ -456,19 +455,19 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
      */
     public String getEventType(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
-        try{
+        try {
 
             DatabaseTable table = getDatabaseEventTable();
             table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
             checkDatabaseRecords(records);
-            String value=records.get(0).getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME);
+            String value = records.get(0).getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME);
 
             return value;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new UnexpectedResultReturnedFromDatabaseException(e,"Getting value from database","Cannot load the database table");
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting value from database", "Cannot load the database table");
         }
 
     }
@@ -482,19 +481,19 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
      */
     public String getEventStatus(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
-        try{
+        try {
 
             DatabaseTable table = getDatabaseEventTable();
             table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
             checkDatabaseRecords(records);
-            String value=records.get(0).getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME);
+            String value = records.get(0).getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME);
 
             return value;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new UnexpectedResultReturnedFromDatabaseException(e,"Getting value from database","Cannot load the database table");
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting value from database", "Cannot load the database table");
         }
 
     }
@@ -529,7 +528,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
         } catch (CantInsertRecordException exception) {
             throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
-        } catch(Exception exception){
+        } catch (Exception exception) {
             throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
         }
 
@@ -544,7 +543,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
      * @throws CantUpdateRecordException
      */
     public void updateEventTansactionStatus(UUID eventId, EventStatus eventStatus) throws CantRegisterCustomerBrokerNewEventException, CantUpdateRecordException {
-        try{
+        try {
 
             if (!eventExists(eventId))
                 throw new CantRegisterCustomerBrokerNewEventException("Cant Update Status Customer Broker New Negotiation Transaction, Event Id not exists.", "Customer Broker New Negotiation Transaction, Update Event State", "Cant Update Event State Customer Broker New Negotiation Transaction, Id not exists");
@@ -559,12 +558,12 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
 //            System.out.print("\n\n**** 19.1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT ****\n");
 
-        }  catch (CantLoadTableToMemoryException e) {
+        } catch (CantLoadTableToMemoryException e) {
             throw new CantRegisterCustomerBrokerNewEventException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "Customer Broker New Negotiation Transaction Update Event Status Not Found", "unknown failure");
         }
     }
     /*END EVENT*/
-    
+
     /*PRIVATE METHOD*/
     private Database getDataBase() {
         return database;
@@ -577,7 +576,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     private DatabaseTable getDatabaseEventTable() {
         return getDataBase().getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME);
     }
-    
+
     private boolean eventExists(UUID eventId) throws CantRegisterCustomerBrokerNewEventException {
 
         try {
@@ -591,7 +590,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             return table.getRecords().size() > 0;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerNewEventException(em.getMessage(), em, "Customer Broker New Negotiation Transaction Event Id Not Exists", "Cant load " + CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerNewEventException(em.getMessage(), em, "Customer Broker New Negotiation Transaction Event Id Not Exists", new StringBuilder().append("Cant load ").append(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerNewEventException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction Event Id Not Exists", "unknown failure.");
         }
@@ -611,36 +610,36 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             return table.getRecords().size() > 0;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(em.getMessage(), em, "Customer Broker New Negotiation Transaction Id Not Exists", "Cant load " + CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(em.getMessage(), em, "Customer Broker New Negotiation Transaction Id Not Exists", new StringBuilder().append("Cant load ").append(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction Id Not Exists", "unknown failure.");
         }
 
     }
 
-    private CustomerBrokerNew getCustomerBrokerNewFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
+    private CustomerBrokerNew getCustomerBrokerNewFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
-        UUID                            transactionId       = record.getUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TRANSACTION_ID_COLUMN_NAME);
-        UUID                            negotiationId       = record.getUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME);
-        String                          publicKeyBroker     = record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_BROKER_COLUMN_NAME);
-        String                          publicKeyCustomer   = record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
-        NegotiationTransactionStatus    status              = NegotiationTransactionStatus.getByCode(record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_TRANSACTION_COLUMN_NAME));
-        NegotiationType                 negotiationType     = NegotiationType.getByCode(record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_TYPE_COLUMN_NAME));
-        String                          negotiationXML      = record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_XML_COLUMN_NAME);
-        long                            timestamp           = record.getLongValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TIMESTAMP_COLUMN_NAME);
+        UUID transactionId = record.getUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TRANSACTION_ID_COLUMN_NAME);
+        UUID negotiationId = record.getUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME);
+        String publicKeyBroker = record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_BROKER_COLUMN_NAME);
+        String publicKeyCustomer = record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
+        NegotiationTransactionStatus status = NegotiationTransactionStatus.getByCode(record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_TRANSACTION_COLUMN_NAME));
+        NegotiationType negotiationType = NegotiationType.getByCode(record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_TYPE_COLUMN_NAME));
+        String negotiationXML = record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_XML_COLUMN_NAME);
+        long timestamp = record.getLongValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TIMESTAMP_COLUMN_NAME);
 
-        return new CustomerBrokerNewImpl(transactionId,negotiationId,publicKeyBroker,publicKeyCustomer,status,negotiationType,negotiationXML,timestamp);
+        return new CustomerBrokerNewImpl(transactionId, negotiationId, publicKeyBroker, publicKeyCustomer, status, negotiationType, negotiationXML, timestamp);
     }
 
-    private String getValue(String key,String keyColumn,String valueColumn) throws UnexpectedResultReturnedFromDatabaseException {
-        try{
+    private String getValue(String key, String keyColumn, String valueColumn) throws UnexpectedResultReturnedFromDatabaseException {
+        try {
 
             DatabaseTable table = getDatabaseTransactionTable();
             table.addStringFilter(keyColumn, key, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
             checkDatabaseRecords(records);
-            String value=records.get(0).getStringValue(valueColumn);
+            String value = records.get(0).getStringValue(valueColumn);
 
             return value;
 
@@ -652,24 +651,24 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
     }
 
-    private List<String> getStringList(String key,String keyColumn,String valueColumn) throws CantGetNegotiationTransactionListException {
-        try{
+    private List<String> getStringList(String key, String keyColumn, String valueColumn) throws CantGetNegotiationTransactionListException {
+        try {
 
             DatabaseTable table = getDatabaseTransactionTable();
             if (table == null)
-                throw new CantGetUserDeveloperIdentitiesException ("CANT GET NEGOTIATION TRANSACTION LISt. TABLE NO FOUNT.", "NEGOTIATION TRANSACTION CUSTOMER BROKER NEW", "CANT GET NEGOTIATION TRANSACTION LIST, TABLE NO FOUNT.");
+                throw new CantGetUserDeveloperIdentitiesException("CANT GET NEGOTIATION TRANSACTION LISt. TABLE NO FOUNT.", "NEGOTIATION TRANSACTION CUSTOMER BROKER NEW", "CANT GET NEGOTIATION TRANSACTION LIST, TABLE NO FOUNT.");
 
-            List<String> negotiationList=new ArrayList<>();
+            List<String> negotiationList = new ArrayList<>();
             String negotiation;
-            table.addStringFilter(keyColumn,key,DatabaseFilterType.EQUAL);
+            table.addStringFilter(keyColumn, key, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 //There is no records in database, I'll return an empty list.
                 return negotiationList;
             }
 
-            for(DatabaseTableRecord databaseTableRecord : records){
+            for (DatabaseTableRecord databaseTableRecord : records) {
                 negotiation = databaseTableRecord.getStringValue(valueColumn);
                 negotiationList.add(negotiation);
             }
@@ -677,9 +676,9 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             return negotiationList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE,e,"Getting "+valueColumn+" based on "+key,"Cannot load the table into memory");
-        } catch (Exception e){
-            throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e),"Getting "+valueColumn+" based on "+key,"Cannot load the table into memory");
+            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE, e, new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(), "Cannot load the table into memory");
+        } catch (Exception e) {
+            throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(), "Cannot load the table into memory");
         }
     }
 
@@ -687,10 +686,12 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         //Represents the maximum number of records in records
         int validResultsNumber = 1;
         int recordsSize;
-        if(records.isEmpty()){ return; }
+        if (records.isEmpty()) {
+            return;
+        }
         recordsSize = records.size();
-        if(recordsSize > validResultsNumber){
-            throw new UnexpectedResultReturnedFromDatabaseException("I excepted "+validResultsNumber+", but I got "+recordsSize);
+        if (recordsSize > validResultsNumber) {
+            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(validResultsNumber).append(", but I got ").append(recordsSize).toString());
         }
     }
 }

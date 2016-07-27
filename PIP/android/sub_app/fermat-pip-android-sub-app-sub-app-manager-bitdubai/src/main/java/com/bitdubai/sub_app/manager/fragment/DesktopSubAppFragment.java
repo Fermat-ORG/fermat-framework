@@ -298,30 +298,30 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
             Item[] arrItemsWithoutIcon = new Item[12];
 
 
-            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_FACTORY, null, null, "wallet_factory", "Wallet Factory", SubAppsPublicKeys.CWP_FACTORY.getCode(), "wallet_factory", new Version(1, 0, 0));
-            installedSubApp.setAppStatus(AppsStatus.DEV);
+//            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_FACTORY, null, null, "wallet_factory", "Wallet Factory", SubAppsPublicKeys.CWP_FACTORY.getCode(), "wallet_factory", new Version(1, 0, 0));
+//            installedSubApp.setAppStatus(AppsStatus.DEV);
+//            Item item = new Item(installedSubApp);
+//            item.setIconResource(R.drawable.wallet_factory);
+//            item.setPosition(0);
+//            installedSubApp.setPlatforms(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
+//            lstItemsWithIcon.add(item);
+//            installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER, null, null, "wallet_publisher", "Wallet Publisher", SubAppsPublicKeys.CWP_PUBLISHER.getCode(), "wallet_publisher", new Version(1, 0, 0));
+//            installedSubApp.setAppStatus(AppsStatus.DEV);
+//            item = new Item(installedSubApp);
+//            item.setIconResource(R.drawable.wallet_publisher);
+//            item.setPosition(1);
+//            installedSubApp.setPlatforms(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
+//            lstItemsWithIcon.add(item);
+//            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_FACTORY, null, null, "sub-app-asset-factory", "Asset Factory", SubAppsPublicKeys.DAP_FACTORY.getCode(), "sub-app-asset-factory", new Version(1, 0, 0));
+//            installedSubApp.setAppStatus(AppsStatus.ALPHA);
+//            item = new Item(installedSubApp);
+//            item.setIconResource(R.drawable.asset_factory);
+//            item.setPosition(2);
+//            installedSubApp.setPlatforms(Platforms.DIGITAL_ASSET_PLATFORM);
+//            lstItemsWithIcon.add(item);
+            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP, null, null, "developer_sub_app", "Developer Tools", SubAppsPublicKeys.PIP_DEVELOPER.getCode(), "developer_sub_app", new Version(1, 0, 0));
+            installedSubApp.setAppStatus(AppsStatus.ALPHA);
             Item item = new Item(installedSubApp);
-            item.setIconResource(R.drawable.wallet_factory);
-            item.setPosition(0);
-            installedSubApp.setPlatforms(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
-            lstItemsWithIcon.add(item);
-            installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER, null, null, "wallet_publisher", "Wallet Publisher", SubAppsPublicKeys.CWP_PUBLISHER.getCode(), "wallet_publisher", new Version(1, 0, 0));
-            installedSubApp.setAppStatus(AppsStatus.DEV);
-            item = new Item(installedSubApp);
-            item.setIconResource(R.drawable.wallet_publisher);
-            item.setPosition(1);
-            installedSubApp.setPlatforms(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
-            lstItemsWithIcon.add(item);
-            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_FACTORY, null, null, "sub-app-asset-factory", "Asset Factory", SubAppsPublicKeys.DAP_FACTORY.getCode(), "sub-app-asset-factory", new Version(1, 0, 0));
-            installedSubApp.setAppStatus(AppsStatus.ALPHA);
-            item = new Item(installedSubApp);
-            item.setIconResource(R.drawable.asset_factory);
-            item.setPosition(2);
-            installedSubApp.setPlatforms(Platforms.DIGITAL_ASSET_PLATFORM);
-            lstItemsWithIcon.add(item);
-            installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP, null, null, "developer_sub_app", "Developer Tools", SubAppsPublicKeys.PIP_DEVELOPER.getCode(), "developer_sub_app", new Version(1, 0, 0));
-            installedSubApp.setAppStatus(AppsStatus.ALPHA);
-            item = new Item(installedSubApp);
             item.setIconResource(R.drawable.developer);
             item.setPosition(3);
             installedSubApp.setPlatforms(Platforms.PLUG_INS_PLATFORM);
@@ -441,20 +441,24 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
 
     @Override
     public void onUpdateViewOnUIThread(String code) {
-        AppsStatus appsStatus = AppsStatus.getByCode(code);
-        switch (appsStatus) {
-            case RELEASE:
-                break;
-            case BETA:
-                break;
-            case ALPHA:
-                break;
-            case DEV:
-                break;
-        }
+        try {
+            AppsStatus appsStatus = AppsStatus.getByCode(code);
+            switch (appsStatus) {
+                case RELEASE:
+                    return;
+                case BETA:
+                    return;
+                case ALPHA:
+                    break;
+                case DEV:
+                    break;
+            }
 
-        select(appsStatus);
-        super.onUpdateViewOnUIThread(code);
+            select(appsStatus);
+            super.onUpdateViewOnUIThread(code);
+        }catch (Exception e){
+            Log.e(TAG,"Desktop. No olvidar borrar esto, furszy");
+        }
     }
 }
 

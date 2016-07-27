@@ -1,11 +1,9 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.clients;
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageDecoder;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageEncoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.ClientNodeChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
@@ -17,10 +15,10 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.reponds.UpdateNodeInCatalogRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConstantAttNames;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.PackageDecoder;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.PackageEncoder;
 
 import org.apache.commons.lang.ClassUtils;
-import org.glassfish.tyrus.client.ClientManager;
-import org.glassfish.tyrus.client.ClientProperties;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -35,6 +33,9 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
+
+//import org.glassfish.tyrus.client.ClientManager;
+//import org.glassfish.tyrus.client.ClientProperties;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.FermatWebSocketClientNodeChannel.FermatWebSocketClientNodeChannel</code>
@@ -104,14 +105,14 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
             URI endpointURI = new URI("ws://"+ip+":"+port+"/fermat/ws/node-channel");
             LOG.info("Trying to connect to "+endpointURI.toString());
 
-           ClientManager webSocketContainer = ClientManager.createClient();
+           //ClientManager webSocketContainer = ClientManager.createClient();
 
 
             /*
              * Create a ReconnectHandler
              * it intents only three times
              */
-           ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
+          /* ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
                int i = 0;
 
                @Override
@@ -152,14 +153,14 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
 
                }
 
-           };
+           };*/
 
 
            /*
             * Register the ReconnectHandler
             */
-           webSocketContainer.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
-
+           //webSocketContainer.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
+           WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
            clientConnection = webSocketContainer.connectToServer(this, endpointURI);
 
         } catch (Exception e) {
@@ -217,7 +218,7 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
     public void newPackageReceived(Package packageReceived, Session session) {
 
         LOG.info("New message Received");
-        LOG.info("Session: " + session.getId() + " packageReceived = " + packageReceived + "");
+        LOG.info("Session: " + session.getId() + " packageReceived = " + packageReceived.getPackageType() + "");
 
         try {
 

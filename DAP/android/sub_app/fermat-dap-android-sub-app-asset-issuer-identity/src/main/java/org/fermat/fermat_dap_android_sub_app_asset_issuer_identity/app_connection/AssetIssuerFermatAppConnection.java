@@ -2,6 +2,7 @@ package org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.app_connecti
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.fragmentFactory.IssuerIdentityFragmentFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.IssuerIdentitySubAppSessionReferenceApp;
@@ -64,5 +66,10 @@ public class AssetIssuerFermatAppConnection extends AppConnections<ReferenceAppF
     @Override
     public FooterViewPainter getFooterViewPainter() {
         return null;
+    }
+
+    @Override
+    public ResourceSearcher getResourceSearcher() {
+        return new AssetIssuerSearcher();
     }
 }

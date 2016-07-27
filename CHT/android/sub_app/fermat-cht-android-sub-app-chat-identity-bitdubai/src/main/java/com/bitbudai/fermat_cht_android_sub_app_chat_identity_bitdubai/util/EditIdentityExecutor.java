@@ -4,13 +4,14 @@ import android.util.Log;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySessionReferenceApp;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantUpdateChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 /**
- * Created by franklin 23/04/2016.
+ * Created by Lozadaa 23/04/2016.
  */
 
 public class EditIdentityExecutor {
@@ -57,9 +58,7 @@ public class EditIdentityExecutor {
             return INVALID_ENTRY_DATA;
 
         try {
-            //TODO: Buscar la manera de que esta informacion venga desde android puede ser por la geolocalizacion
-            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, "country", "state", "city", identityConnectionState);
-
+            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, "country", "state", "city", identityConnectionState, 0, GeoFrequency.NONE);
         } catch (CantUpdateChatIdentityException e) {
             e.printStackTrace();
         } catch (Exception e) {

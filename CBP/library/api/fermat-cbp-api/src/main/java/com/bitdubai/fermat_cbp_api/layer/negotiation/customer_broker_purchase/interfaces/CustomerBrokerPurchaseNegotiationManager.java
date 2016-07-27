@@ -31,21 +31,18 @@ import java.util.UUID;
 
 public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager {
     /**
-     *
      * @param negotiation
      * @throws CantCreateCustomerBrokerPurchaseNegotiationException
      */
     void createCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException;
 
     /**
-     *
      * @param negotiation
      * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
      */
     void updateCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
 
     /**
-     *
      * @param negotiationId
      * @param status
      * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
@@ -53,14 +50,12 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
     void updateNegotiationNearExpirationDatetime(UUID negotiationId, Boolean status) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
 
     /**
-     *
      * @param negotiation
      * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
      */
-    void    cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
+    void cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
 
     /**
-     *
      * @param negotiation
      * @return
      * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
@@ -68,35 +63,43 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
     boolean closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
 
     /**
-     *
+     * @param negotiationId
+     * @return
+     * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
+     */
+    boolean closeNegotiation(UUID negotiationId) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
+
+    /**
      * @param negotiation
      * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
      */
     void sendToBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
 
     /**
-     *
      * @param negotiation
      * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
      */
     void waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
 
     /**
-     *
      * @param negotiation
      * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
      */
     void waitForCustomer(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
 
     /**
-     *
+     * @param negotiation
+     * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
+     */
+    void waitForClosing(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
+
+    /**
      * @return
      * @throws CantGetListPurchaseNegotiationsException
      */
     Collection<CustomerBrokerPurchaseNegotiation> getNegotiations() throws CantGetListPurchaseNegotiationsException;
 
     /**
-     *
      * @param negotiationId
      * @return
      * @throws CantGetListPurchaseNegotiationsException
@@ -104,7 +107,6 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
     CustomerBrokerPurchaseNegotiation getNegotiationsByNegotiationId(UUID negotiationId) throws CantGetListPurchaseNegotiationsException;
 
     /**
-     *
      * @param status
      * @return
      * @throws CantGetListPurchaseNegotiationsException
@@ -112,7 +114,6 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
     Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsByStatus(NegotiationStatus status) throws CantGetListPurchaseNegotiationsException;
 
     /**
-     *
      * @param actorType
      * @return
      * @throws CantGetListPurchaseNegotiationsException
@@ -120,7 +121,6 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
     Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsBySendAndWaiting(ActorType actorType) throws CantGetListPurchaseNegotiationsException;
 
     /**
-     *
      * @param type
      * @return
      * @throws CantGetNextClauseTypeException
@@ -128,7 +128,6 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
     ClauseType getNextClauseType(ClauseType type) throws CantGetNextClauseTypeException;
 
     /**
-     *
      * @param paymentMethod
      * @return
      * @throws CantGetNextClauseTypeException
@@ -136,7 +135,6 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
     ClauseType getNextClauseTypeByCurrencyType(MoneyType paymentMethod) throws CantGetNextClauseTypeException;
 
     /**
-     *
      * @param location
      * @param uri
      * @throws CantCreateLocationPurchaseException
@@ -144,56 +142,48 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
     void createNewLocation(String location, String uri) throws CantCreateLocationPurchaseException;
 
     /**
-     *
      * @param location
      * @throws CantUpdateLocationPurchaseException
      */
     void updateLocation(NegotiationLocations location) throws CantUpdateLocationPurchaseException;
 
     /**
-     *
      * @param location
      * @throws CantDeleteLocationPurchaseException
      */
     void deleteLocation(NegotiationLocations location) throws CantDeleteLocationPurchaseException;
 
     /**
-     *
      * @return Collection<NegotiationLocations>
      * @throws CantGetListLocationsPurchaseException
      */
     Collection<NegotiationLocations> getAllLocations() throws CantGetListLocationsPurchaseException;
 
     /**
-     *
      * @param bankAccount
      * @throws CantCreateBankAccountPurchaseException
      */
     void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountPurchaseException;
 
     /**
-     *
      * @param bankAccount
      * @throws CantUpdateBankAccountPurchaseException
      */
     void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountPurchaseException;
 
     /**
-     *
      * @param bankAccount
      * @throws CantDeleteBankAccountPurchaseException
      */
     void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException;
 
     /**
-     *
      * @return a collection with all the NegotiationBankAccount
      * @throws CantGetListBankAccountsPurchaseException
      */
     Collection<NegotiationBankAccount> getAllBankAccount() throws CantGetListBankAccountsPurchaseException;
 
     /**
-     *
      * @param currency
      * @return Collection<NegotiationBankAccount>
      * @throws CantGetListBankAccountsPurchaseException
@@ -201,7 +191,6 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
     Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsPurchaseException;
 
     /**
-     *
      * @return Collection<FiatCurrency> with the currencies available in the Bank Wallet
      * @throws CantGetListBankAccountsPurchaseException
      */

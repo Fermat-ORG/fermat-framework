@@ -8,13 +8,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionNew;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NegotiationTransmissionNetworkServicePluginRoot;
 
 /**
  * Created by Yordin Alayn on 16.09.15.
  */
 
-public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor  {
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
     public DeveloperBitDubai() {
         super(new PluginDeveloperReference(Developers.BITDUBAI));
@@ -23,7 +23,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     @Override
     public void start() throws CantStartPluginDeveloperException {
         try {
-            this.registerVersion(new NetworkServiceNegotiationTransmissionNew());
+            this.registerVersion(new NegotiationTransmissionNetworkServicePluginRoot());
         } catch (CantRegisterVersionException e) {
             throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
         }

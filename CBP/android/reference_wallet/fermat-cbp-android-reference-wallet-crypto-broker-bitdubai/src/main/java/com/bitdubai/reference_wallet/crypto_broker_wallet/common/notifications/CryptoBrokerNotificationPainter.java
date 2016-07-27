@@ -7,23 +7,23 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 /**
  * Created by guillermo on 04/03/16.
  */
-public class CryptoBrokerNotificationPainter implements NotificationPainter {
+public class CryptoBrokerNotificationPainter extends NotificationPainter {
 
     private RemoteViews remoteViews;
     private String title;
     private String image;
     private String textBody;
-    private int    icon;
+    private int icon;
 
 
-    public CryptoBrokerNotificationPainter( String title,  String textBody, String image, int icon) {
+    public CryptoBrokerNotificationPainter(String title, String textBody, String image, int icon) {
         this.title = title;
         this.image = image;
         this.textBody = textBody;
         this.icon = icon;
     }
 
-    public CryptoBrokerNotificationPainter( String title,  String textBody, String image) {
+    public CryptoBrokerNotificationPainter(String title, String textBody, String image) {
         this(title, textBody, image, 0);
     }
 

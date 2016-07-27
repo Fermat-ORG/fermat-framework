@@ -21,10 +21,6 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.BitmapWorkerTask;
-
-
-
-
 import com.squareup.picasso.Picasso;
 
 /**
@@ -34,7 +30,7 @@ public class FragmentsCommons {
 
         public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
 
-            View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
+            View view = inflater.inflate(R.layout.fermat_wallet_navigation_view_row_first, null, true);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             try {
                ActiveActorIdentityInformation identityInformation= fermatWalletSessionReferenceApp.getModuleManager().getSelectedActorIdentity();

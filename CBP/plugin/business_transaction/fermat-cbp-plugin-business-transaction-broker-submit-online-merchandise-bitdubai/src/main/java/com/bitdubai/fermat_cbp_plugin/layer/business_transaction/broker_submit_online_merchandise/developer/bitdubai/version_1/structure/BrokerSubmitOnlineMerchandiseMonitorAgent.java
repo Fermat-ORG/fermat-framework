@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -77,7 +78,6 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -268,7 +268,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                  */
                 try {
 
-                    logManager.log(BrokerSubmitOnlineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(BrokerSubmitOnlineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
                     doTheMainTask();
                 } catch (Exception e) {
                     pluginRoot.reportError(
@@ -320,6 +320,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
             try {
                 dao = new BrokerSubmitOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, pluginRoot);
                 String contractHash;
+                ContractTransactionStatus contractTransactionStatus;
 
                 /**
                  * Check if there is some transaction to crypto De-stock
@@ -340,7 +341,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             cryptoMoneyDeStockRecord.getPriceReference(),
                             cryptoMoneyDeStockRecord.getOriginTransaction(),
                             pendingToDeStockTransaction.getContractHash(),
-                            cryptoMoneyDeStockRecord.getBlockchainNetworkType()); //TODO de Manuel: crear un setting para configuar esto
+                            cryptoMoneyDeStockRecord.getBlockchainNetworkType(),
+                            cryptoMoneyDeStockRecord.getFee(),
+                            cryptoMoneyDeStockRecord.getFeeOrigin()); //TODO de Manuel: crear un setting para configuar esto
 
                     pendingToDeStockTransaction.setContractTransactionStatus(PENDING_SUBMIT_ONLINE_MERCHANDISE);
                     dao.updateBusinessTransactionRecord(pendingToDeStockTransaction);
@@ -353,6 +356,18 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                 for (String pendingContractHash : pendingToSubmitCrypto) {
                     BusinessTransactionRecord businessTransactionRecord = dao.getBrokerBusinessTransactionRecord(pendingContractHash);
 
+                    //I'll check if the merchandise was sent in a previous loop
+                    contractTransactionStatus = businessTransactionRecord
+                            .getContractTransactionStatus();
+                    if (contractTransactionStatus != ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE) {
+                        /**
+                         * If the contractTransactionStatus is different to PENDING_SUBMIT_ONLINE_MERCHANDISE means
+                         * that the merchandise submit through the Crypto* Wallet was done.
+                         * We don't want to send multiple payments, we will ignore this transaction.
+                         */
+                        continue;
+                    }
+
                     ArrayList<IntraWalletUserIdentity> intraUsers = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
                     IntraWalletUserIdentity intraUser = intraUsers.get(0);
 
@@ -363,14 +378,16 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             businessTransactionRecord.getExternalWalletPublicKey(),
                             businessTransactionRecord.getCryptoAddress(),
                             businessTransactionRecord.getCryptoAmount(),
-                            "Payment from Crypto Customer contract " + pendingContractHash,
+                            "Merchandise sent from a Broker",
                             intraUser.getPublicKey(),
                             businessTransactionRecord.getActorPublicKey(),
                             Actors.CBP_CRYPTO_BROKER,
                             Actors.INTRA_USER,
                             getReferenceWallet(businessTransactionRecord.getCryptoCurrency()),
                             businessTransactionRecord.getBlockchainNetworkType(), //TODO de Manuel: crear un setting para configuar esto
-                            businessTransactionRecord.getCryptoCurrency());
+                            businessTransactionRecord.getCryptoCurrency(),
+                            businessTransactionRecord.getFee(),
+                            businessTransactionRecord.getFeeOrigin());
 
                     //Updating the business transaction record
                     businessTransactionRecord.setTransactionId(outgoingCryptoTransactionId.toString());
@@ -518,8 +535,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
          * @param record the Business Transaction record associated with the crypto transaction
          */
         private void raiseIncomingMoneyNotificationEvent(BusinessTransactionRecord record) {
-            System.out.println("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoCurrency() = " + record.getCryptoCurrency());
-            System.out.println("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoAmount() = " + record.getCryptoAmount());
+            System.out.println(new StringBuilder().append("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoCurrency() = ").append(record.getCryptoCurrency()).toString());
+            System.out.println(new StringBuilder().append("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoAmount() = ").append(record.getCryptoAmount()).toString());
 
             FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_MONEY_NOTIFICATION);
             IncomingMoneyNotificationEvent event = (IncomingMoneyNotificationEvent) fermatEvent;
@@ -540,7 +557,6 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
          * check the status of the crypto transaction and update the Business Transaction accordingly
          *
          * @param businessTransactionRecord the business transaction record associated with the crypto transaction
-         *
          * @throws CantUpdateRecordException
          */
         private void checkPendingTransaction(BusinessTransactionRecord businessTransactionRecord) throws CantUpdateRecordException {
@@ -571,7 +587,6 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
          * Check the pending Business Transaction events and act accordingly
          *
          * @param eventId the event ID
-         *
          * @throws UnexpectedResultReturnedFromDatabaseException
          */
         private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
@@ -679,7 +694,6 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
          *
          * @param cryptoAmountString the crypto amount in String
          * @param currencyCode       the crypto currency code
-         *
          * @return the crypto amount in satoshi
          */
         private long getCryptoAmount(String cryptoAmountString, String currencyCode) {
@@ -701,7 +715,6 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
          * Return the reference wallet associated with the crypto currency
          *
          * @param cryptoCurrency the crypto currency
-         *
          * @return the reference wallet or null
          */
         private ReferenceWallet getReferenceWallet(CryptoCurrency cryptoCurrency) {

@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -59,17 +60,22 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                                  String receptorPublicKey, Actors senderActorType,
                                  Actors receptorActorType,ReferenceWallet referenceWallet,
                                  BlockchainNetworkType blockchainNetworkType,
-                                 CryptoCurrency cryptoCurrency) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
+                                 CryptoCurrency cryptoCurrency,
+                                 long fee, FeeOrigin feeOrigin ) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
 
         try {
             long funds = 0;
-
+            CryptoWalletWallet cryptoWalletWallet;
             switch (referenceWallet) {
+
                 case BASIC_WALLET_BITCOIN_WALLET:
-                    CryptoWalletWallet cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
                     funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
-                //TODO: el disponible es en base al exchange rate del momento
+                case BASIC_WALLET_FERMAT_WALLET:
+                   cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    break;
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     BitcoinLossProtectedWallet lossProtectedWalletWallet = this.bitcoinLossProtectedWalletManager.loadWallet(walletPublicKey);
                     funds = lossProtectedWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
@@ -87,7 +93,9 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             dao.registerNewTransaction(transactionId, requestId, walletPublicKey,
                     destinationAddress, cryptoAmount, null, description, senderPublicKey,
                     senderActorType, receptorPublicKey, receptorActorType, referenceWallet, false, blockchainNetworkType,
-                    cryptoCurrency);
+                    cryptoCurrency,
+                    fee,
+                    feeOrigin);
 
         } catch (OutgoingIntraActorInsufficientFundsException e) {
             throw e;
@@ -125,7 +133,9 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                            Actors          receptorActorType,
                            ReferenceWallet referenceWallet,
                            BlockchainNetworkType blockchainNetworkType,
-                           CryptoCurrency cryptoCurrency) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
+                           CryptoCurrency cryptoCurrency,
+                           long fee,
+                           FeeOrigin feeOrigin) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
         try {
 
             long funds = 0;
@@ -154,7 +164,9 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             dao.registerNewTransaction(transactionId, null, walletPublicKey, destinationAddress, cryptoAmount, null,
                     description, senderPublicKey, senderActorType, receptorPublicKey,
                     receptorActorType, referenceWallet, false,blockchainNetworkType,
-                    cryptoCurrency);
+                    cryptoCurrency,
+                     fee,
+                    feeOrigin);
 
             return transactionId;
         } catch (OutgoingIntraActorInsufficientFundsException e) {
@@ -181,7 +193,8 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                            ReferenceWallet referenceWallet,
                            boolean sendFromSameDevice,
                            BlockchainNetworkType blockchainNetworkType,
-                           CryptoCurrency cryptoCurrency) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
+                           CryptoCurrency cryptoCurrency,
+                           long fee,FeeOrigin feeOrigin) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
 
         CryptoWalletWallet cryptoWalletWallet = null;
         try {
@@ -211,7 +224,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
         try {
             UUID transactionId = UUID.randomUUID();
             dao.initialize(this.pluginId);
-            dao.registerNewTransaction(transactionId, null, walletPublicKey, destinationAddress, cryptoAmount, op_Return, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet, sendFromSameDevice, blockchainNetworkType,cryptoCurrency);
+            dao.registerNewTransaction(transactionId, null, walletPublicKey, destinationAddress, cryptoAmount, op_Return, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet, sendFromSameDevice, blockchainNetworkType, cryptoCurrency, fee, feeOrigin);
             return transactionId;
         } catch (CantInitializeOutgoingIntraActorDaoException | OutgoingIntraActorCantInsertRecordException e) {
             throw new OutgoingIntraActorCantSendFundsExceptions("An exception happened",e,"","");

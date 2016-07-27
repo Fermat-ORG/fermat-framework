@@ -16,15 +16,15 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {
 
-    FermatEnum   merchandise = new FermatEnum() {
+    FermatEnum merchandise = new FermatEnum() {
         @Override
         public String getCode() {
             return null;
         }
     };
     FiatCurrency fiatCurrency = FiatCurrency.ARGENTINE_PESO;
-    float        priceReference = 1f;
-    float        quantity = 1f;
+    float priceReference = 1f;
+    float quantity = 1f;
 
     @Test
     public void Construction_ValidParameters_NewObjectCreated() {

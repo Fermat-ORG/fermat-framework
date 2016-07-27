@@ -60,9 +60,24 @@ public class ConfigurationManager {
     public static final String LAST_REGISTER_NODE_PROFILE = "last_register_node_profile";
 
     /**
-     * Represent the value of IP
+     * Represent the value of INTERNAL_IP
      */
-    public static final String IP = "ip";
+    public static final String INTERNAL_IP = "internal_ip";
+
+    /**
+     * Represent the value of INTERNAL_IP
+     */
+    public static final String PUBLIC_IP = "public_ip";
+
+    /**
+     * Represent the value of LATITUDE
+     */
+    public static final String LATITUDE = "latitude";
+
+    /**
+     * Represent the value of LONGITUDE
+     */
+    public static final String LONGITUDE = "longitude";
 
     /**
      * Represent the value of PORT
@@ -159,11 +174,18 @@ public class ConfigurationManager {
         newConfigurationFile.getLayout().setComment(NODE_NAME, "\n# * NODE NAME");
         newConfigurationFile.addProperty(NODE_NAME, "Fermat Node (" + InetAddress.getLocalHost().getHostName() + ")");
 
-        newConfigurationFile.getLayout().setComment(IP, "\n# * SERVER IP (Configure 0.0.0.0 to server listen to all network interfaces)");
-        newConfigurationFile.addProperty(IP, FermatEmbeddedNodeServer.DEFAULT_IP);
+        newConfigurationFile.getLayout().setComment(INTERNAL_IP, "\n# * SERVER INTERNAL IP (Configure 0.0.0.0 to server listen to all network interfaces)");
+        newConfigurationFile.addProperty(INTERNAL_IP, FermatEmbeddedNodeServer.DEFAULT_IP);
+
+        newConfigurationFile.getLayout().setComment(PUBLIC_IP, "\n# * SERVER PUBLIC IP (Configure 0.0.0.0 by default)");
+        newConfigurationFile.addProperty(PUBLIC_IP, FermatEmbeddedNodeServer.DEFAULT_IP);
 
         newConfigurationFile.getLayout().setComment(PORT, "\n# * SERVER PORT");
         newConfigurationFile.addProperty(PORT, FermatEmbeddedNodeServer.DEFAULT_PORT);
+
+        newConfigurationFile.getLayout().setComment(LATITUDE, "\n# * SERVER LOCATION");
+        newConfigurationFile.addProperty(LATITUDE,  "0.0");
+        newConfigurationFile.addProperty(LONGITUDE, "0.0");
 
         newConfigurationFile.getLayout().setComment(REGISTERED_IN_CATALOG, "\n# * IS THE NODE REGISTER IN THE CATALOG");
         newConfigurationFile.addProperty(REGISTERED_IN_CATALOG, Boolean.FALSE);

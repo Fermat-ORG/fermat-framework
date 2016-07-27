@@ -7,193 +7,160 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+
+
+
     <LinearLayout
         android:id="@+id/settings_my_location"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="@color/white">
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp">
 
-        <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp">
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:text="My Locations"
-                android:textSize="20sp"
-                android:textColor="#949494"/>
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/cbw_right_hand_arrow"
-                android:layout_gravity="center_vertical"
-                tools:ignore="contentDescription"/>
-        </LinearLayout>
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="7"
+            android:text="My Locations"
+            android:textSize="20sp"
+            android:textColor="#949494"/>
 
         <ImageView
-            android:layout_width="350dp"
-            android:layout_height="1dp"
-            android:layout_gravity="center_horizontal"
-            android:background="#CCCCCC"/>
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@drawable/cbw_right_hand_arrow"
+            tools:ignore="contentDescription"/>
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"/>
+
+
+
 
 
     <LinearLayout
         android:id="@+id/settings_bank_account"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="@color/white">
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp">
 
-        <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp">
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:text="Bank Accounts"
-                android:textSize="20sp"
-                android:textColor="#949494"/>
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/cbw_right_hand_arrow"
-                android:layout_gravity="center_vertical"
-                tools:ignore="contentDescription"/>
-        </LinearLayout>
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="7"
+            android:text="Bank Accounts"
+            android:textSize="20sp"
+            android:textColor="#949494"/>
 
         <ImageView
-            android:layout_width="350dp"
-            android:layout_height="1dp"
-            android:layout_gravity="center_horizontal"
-            android:background="#CCCCCC"/>
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@drawable/cbw_right_hand_arrow"
+            tools:ignore="contentDescription"/>
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"/>
+
+
+
+
 
 
     <LinearLayout
         android:id="@+id/settings_stock_managment"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="@color/white">
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp">
 
-        <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp">
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:text="Stock Management"
-                android:textSize="20sp"
-                android:textColor="#949494"/>
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/cbw_right_hand_arrow"
-                android:layout_gravity="center_vertical"
-                tools:ignore="contentDescription"/>
-        </LinearLayout>
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="7"
+            android:text="Stock Management"
+            android:textSize="20sp"
+            android:textColor="#949494"/>
 
         <ImageView
-            android:layout_width="350dp"
-            android:layout_height="1dp"
-            android:layout_gravity="center_horizontal"
-            android:background="#CCCCCC"/>
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@drawable/cbw_right_hand_arrow"
+            tools:ignore="contentDescription"/>
 
     </LinearLayout>
-
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"/>
     <LinearLayout
-        android:id="@+id/settings_public_information"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
+        android:id="@+id/settings_fee_management"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="@color/white"
-        android:visibility="gone">
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp">
 
-        <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp">
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:text="Stock Management"
-                android:textSize="20sp"
-                android:textColor="#949494"/>
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/cbw_right_hand_arrow"
-                android:layout_gravity="center_vertical"
-                tools:ignore="contentDescription"/>
-        </LinearLayout>
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="7"
+            android:text="Fee Management"
+            android:textSize="20sp"
+            android:textColor="#949494"/>
 
         <ImageView
-            android:layout_width="350dp"
-            android:layout_height="1dp"
-            android:layout_gravity="center_horizontal"
-            android:background="#CCCCCC"/>
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@drawable/cbw_right_hand_arrow"
+            tools:ignore="contentDescription"/>
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"/>
+
+
+
+
 
 
 </LinearLayout>

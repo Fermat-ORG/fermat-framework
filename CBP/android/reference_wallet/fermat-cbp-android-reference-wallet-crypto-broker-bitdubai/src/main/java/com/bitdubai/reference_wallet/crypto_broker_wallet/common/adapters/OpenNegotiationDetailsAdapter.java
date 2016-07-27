@@ -123,9 +123,13 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView, TYPE_FOOTER);
                 footerViewHolder.setListener(footerListener);
 
-                if(negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.SENT_TO_CUSTOMER || negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.WAITING_FOR_CUSTOMER){
+                if (negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.SENT_TO_CUSTOMER || negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.WAITING_FOR_CUSTOMER || negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.WAITING_FOR_CLOSING) {
                     footerViewHolder.HideButtons();
                 }
+
+//                if(negotiationWrapper.isWalletUser() == false){
+//                    footerViewHolder.HideButtonsWalletUser();
+//                }
 
                 return footerViewHolder;
             default:
@@ -216,7 +220,8 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
 
         setViewResources(clause.getType(), position, clauseViewHolder);
 
-        if(negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.SENT_TO_CUSTOMER || negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.WAITING_FOR_CUSTOMER){
+        if (negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.SENT_TO_CUSTOMER || negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.WAITING_FOR_CUSTOMER || negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.WAITING_FOR_CLOSING) {
+//            if(negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.SENT_TO_CUSTOMER || negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.WAITING_FOR_CUSTOMER || negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.WAITING_FOR_CLOSING || (negotiationWrapper.isWalletUser() == false)){
             clauseViewHolder.confirmButton.setVisibility(View.INVISIBLE);
         }
     }

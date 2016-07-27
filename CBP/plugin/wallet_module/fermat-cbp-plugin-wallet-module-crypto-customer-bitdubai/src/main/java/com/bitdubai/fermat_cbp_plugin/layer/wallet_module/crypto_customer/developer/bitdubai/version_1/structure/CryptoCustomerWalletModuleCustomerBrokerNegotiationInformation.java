@@ -12,6 +12,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,6 +39,7 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
     private String note;
     private String cancelReason;
     private long expirationDatetime;
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
 
 
     public CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
@@ -50,22 +53,25 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
             long expirationDatetime,
             String cancelReason
     ) {
-        this.customerIdentity   = customerIdentity;
-        this.brokerIdentity     = brokerIdentity;
+        numberFormat.setMaximumFractionDigits(8);
 
-        String currencyQty      = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()));
-        String exchangeRate     = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue()));
-        String merchandise      = "";
-        String paymentMethod    = "";
-        String paymentCurrency  = "";
 
-        if(clauses.get(ClauseType.CUSTOMER_CURRENCY) != null)
+        this.customerIdentity = customerIdentity;
+        this.brokerIdentity = brokerIdentity;
+
+        String currencyQty = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()));
+        String exchangeRate = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue()));
+        String merchandise = "";
+        String paymentMethod = "";
+        String paymentCurrency = "";
+
+        if (clauses.get(ClauseType.CUSTOMER_CURRENCY) != null)
             merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
 
-        if(clauses.get(ClauseType.BROKER_PAYMENT_METHOD) != null)
+        if (clauses.get(ClauseType.BROKER_PAYMENT_METHOD) != null)
             paymentMethod = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
 
-        if(clauses.get(ClauseType.BROKER_CURRENCY) != null)
+        if (clauses.get(ClauseType.BROKER_CURRENCY) != null)
             paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
 
         summary = new HashMap<>();
@@ -75,39 +81,39 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         summary.put(ClauseType.BROKER_CURRENCY, paymentCurrency);
         summary.put(ClauseType.BROKER_PAYMENT_METHOD, paymentMethod);
 
-        this.negotiationId  = negotiationId;
-        this.status         = status;
-        this.clauses        = clauses;
-        this.note           = note;
+        this.negotiationId = negotiationId;
+        this.status = status;
+        this.clauses = clauses;
+        this.note = note;
         this.lastUpdateDate = lastUpdateDate;
-        this.cancelReason   = cancelReason;
+        this.cancelReason = cancelReason;
         this.expirationDatetime = expirationDatetime;
 
     }
 
     public CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
             CustomerBrokerNegotiationInformation negotiationInformation, String cancelReason
-    ){
+    ) {
 
         Map<ClauseType, ClauseInformation> clauses;
 
         clauses = negotiationInformation.getClauses();
-        this.customerIdentity   = negotiationInformation.getCustomer();
-        this.brokerIdentity     = negotiationInformation.getBroker();
+        this.customerIdentity = negotiationInformation.getCustomer();
+        this.brokerIdentity = negotiationInformation.getBroker();
 
-        String currencyQty      = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()));
-        String exchangeRate     = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue()));
-        String merchandise      = "";
-        String paymentMethod    = "";
-        String paymentCurrency  = "";
+        String currencyQty = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()));
+        String exchangeRate = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue()));
+        String merchandise = "";
+        String paymentMethod = "";
+        String paymentCurrency = "";
 
-        if(clauses.get(ClauseType.CUSTOMER_CURRENCY) != null)
+        if (clauses.get(ClauseType.CUSTOMER_CURRENCY) != null)
             merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
 
-        if(clauses.get(ClauseType.BROKER_PAYMENT_METHOD) != null)
+        if (clauses.get(ClauseType.BROKER_PAYMENT_METHOD) != null)
             paymentMethod = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
 
-        if(clauses.get(ClauseType.BROKER_CURRENCY) != null)
+        if (clauses.get(ClauseType.BROKER_CURRENCY) != null)
             paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
 
         summary = new HashMap<>();
@@ -117,12 +123,12 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         summary.put(ClauseType.BROKER_CURRENCY, paymentCurrency);
         summary.put(ClauseType.BROKER_PAYMENT_METHOD, paymentMethod);
 
-        this.negotiationId  = negotiationInformation.getNegotiationId();
-        this.status         = negotiationInformation.getStatus();
-        this.clauses        = clauses;
-        this.note           = negotiationInformation.getMemo();
+        this.negotiationId = negotiationInformation.getNegotiationId();
+        this.status = negotiationInformation.getStatus();
+        this.clauses = clauses;
+        this.note = negotiationInformation.getMemo();
         this.lastUpdateDate = negotiationInformation.getLastNegotiationUpdateDate();
-        this.cancelReason   = cancelReason;
+        this.cancelReason = cancelReason;
         this.expirationDatetime = negotiationInformation.getNegotiationExpirationDate();
     }
 
@@ -146,8 +152,8 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
             saleNegotiationClauses = new ArrayList<>();
         }
 
-        for(Clause clause : saleNegotiationClauses){
-            clauses.put(clause.getType(), new CryptoCustomerWalletModuleClauseInformation(clause));
+        for (Clause clause : saleNegotiationClauses) {
+            clauses.put(clause.getType(), new com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.classes.CryptoCustomerWalletModuleClauseInformation(clause));
         }
     }
 
@@ -192,7 +198,9 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
     }
 
     @Override
-    public void setLastNegotiationUpdateDate(Long lastUpdateDate) { this.lastUpdateDate = lastUpdateDate; }
+    public void setLastNegotiationUpdateDate(Long lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
+    }
 
     @Override
     public long getNegotiationExpirationDate() {
@@ -205,7 +213,9 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
     }
 
     @Override
-    public UUID getNegotiationId() { return negotiationId; }
+    public UUID getNegotiationId() {
+        return negotiationId;
+    }
 
     @Override
     public void setCancelReason(String cancelReason) {
@@ -213,13 +223,23 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
     }
 
     @Override
-    public String getCancelReason() { return cancelReason; }
-
-    private BigDecimal getBigDecimal(String value){
-        return new BigDecimal(value.replace(",", ""));
+    public String getCancelReason() {
+        return cancelReason;
     }
 
-    private String getDecimalFormat(BigDecimal value){
-        return DecimalFormat.getInstance().format(value.doubleValue());
+    private BigDecimal getBigDecimal(String value) {
+
+        try {
+            return new BigDecimal(numberFormat.parse(value).toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new BigDecimal(0);
+        }
+        // change lostwood
+        // return new BigDecimal(value.replace(",", ""));
+    }
+
+    private String getDecimalFormat(BigDecimal value) {
+        return numberFormat.format(value.doubleValue());
     }
 }

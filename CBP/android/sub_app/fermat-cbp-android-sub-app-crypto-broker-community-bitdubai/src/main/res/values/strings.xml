@@ -18,4 +18,11 @@
     <string name="cbp_cbc_launch_action_creation_dialog_footer">To begin, choose an avatar below.\nYou may change it later.</string>
     <string name="cbp_cbc_launch_action_creation_name_left">Customer</string>
     <string name="cbp_cbc_launch_action_creation_name_right">Broker</string>
+    <string name="notifications">Notifications</string>
+    <string name="connection_request">Connection Request</string>
+    <string name="add_contact">Add Contact</string>
+    <string name="no_contacts">No Contacts</string>
+    <string name="cbc_connection_state_connected">Is connected with you</string>
+    <string name="cbc_connection_state_pending_acceptance">Request sent</string>
+    <string name="no_data_available">No data available</string>
 </resources>

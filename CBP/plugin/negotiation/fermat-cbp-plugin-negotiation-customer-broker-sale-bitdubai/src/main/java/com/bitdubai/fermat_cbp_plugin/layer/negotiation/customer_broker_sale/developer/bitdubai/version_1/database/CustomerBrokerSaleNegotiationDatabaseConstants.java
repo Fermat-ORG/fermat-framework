@@ -4,13 +4,15 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.de
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Angel Veloz - (vlzangel91@gmail.com) on 30/01/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
 public class CustomerBrokerSaleNegotiationDatabaseConstants {
+
+    public static final String DATABASE_NAME = "negotiation_customer_broker_sale";
 
     /**
      * Negotiations Sale database table definition.

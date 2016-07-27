@@ -3,6 +3,8 @@ package com.bitdubai.fermat_api.layer.all_definition.enums;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 
+import java.io.Serializable;
+
 /**
  * The enum <code>com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency</code>
  * Contains the different CryptoCurrencies available on Fermat.
@@ -11,18 +13,16 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
  * Modified by Manuel Perez on 03/08/2015
  * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
  */
-public enum CryptoCurrency implements Currency {
+public enum CryptoCurrency implements Currency, Serializable {
 
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    BITCOIN     ("BTC", "Bitcoin"),
-    FERMAT     ("FRM", "Fermat"),
-    DOGECOIN    ("DOGE", "Dogecoin"),
-    ETHEREUM    ("ETH", "Ethereum"),
-    LITECOIN    ("LTC", "Litecoin")
-
-    ;
+    BITCOIN("BTC", "Bitcoin"),
+    FERMAT("FRM", "Fermat"),
+    DOGECOIN("DOGE", "Dogecoin"),
+    ETHEREUM("ETH", "Ethereum"),
+    LITECOIN("LTC", "Litecoin");
 
     private final String code;
     private final String friendlyName;
@@ -39,14 +39,19 @@ public enum CryptoCurrency implements Currency {
     public static CryptoCurrency getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "BTC": return CryptoCurrency.BITCOIN;
-            case "DOGE": return CryptoCurrency.DOGECOIN;
-            case "ETH": return CryptoCurrency.ETHEREUM;
-            case "LTC": return CryptoCurrency.LITECOIN;
-            case "FRM": return CryptoCurrency.FERMAT;
+            case "BTC":
+                return CryptoCurrency.BITCOIN;
+            case "DOGE":
+                return CryptoCurrency.DOGECOIN;
+            case "ETH":
+                return CryptoCurrency.ETHEREUM;
+            case "LTC":
+                return CryptoCurrency.LITECOIN;
+            case "FRM":
+                return CryptoCurrency.FERMAT;
             default:
                 throw new InvalidParameterException(
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "This Code Is Not Valid for the CryptoCurrency enum"
                 );
         }
@@ -56,7 +61,7 @@ public enum CryptoCurrency implements Currency {
         try {
             getByCode(code);
             return true;
-        } catch(InvalidParameterException e) {
+        } catch (InvalidParameterException e) {
             return false;
         }
     }

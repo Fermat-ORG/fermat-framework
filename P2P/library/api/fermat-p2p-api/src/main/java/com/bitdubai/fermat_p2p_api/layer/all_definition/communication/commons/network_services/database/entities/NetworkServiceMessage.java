@@ -2,7 +2,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.n
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.JsonDateAdapter;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.TimestampAdapter;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication</code> is
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage</code> is
  * the implementation of the message<p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 13/05/2016.
  *
@@ -21,7 +21,7 @@ import java.util.UUID;
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public class NetworkServiceMessage extends PackageContent implements Serializable {
+public class NetworkServiceMessage extends PackageContent implements AbstractBaseEntity, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,9 +32,9 @@ public class NetworkServiceMessage extends PackageContent implements Serializabl
     private           String                   receiverPublicKey      ;
 
     private           Timestamp                shippingTimestamp      ;
-    private           Timestamp                deliveryTimestamp      ;
+    private transient Timestamp                deliveryTimestamp      ;
 
-    private           Boolean                  isBetweenActors        ;
+    private transient Boolean                  isBetweenActors        ;
     private transient FermatMessagesStatus     fermatMessagesStatus   ;
 
     private           String                   signature              ;
@@ -138,20 +138,21 @@ public class NetworkServiceMessage extends PackageContent implements Serializabl
 
     public String toJson() {
 
-        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new JsonDateAdapter()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new TimestampAdapter()).create();
         return gson.toJson(this);
     }
 
     public static NetworkServiceMessage parseContent(String content) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new JsonDateAdapter()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new TimestampAdapter()).create();
         return gson.fromJson(content, NetworkServiceMessage.class);
     }
 
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof NetworkServiceMessage)) return false;
-        NetworkServiceMessage that = (NetworkServiceMessage) o;
-        return Objects.equals(getId(), that.getId());
+        return this.toJson().equals(((NetworkServiceMessage) o).toJson());
+//        NetworkServiceMessage that = (NetworkServiceMessage) o;
+//        return Objects.equals(getId(), that.getId());
     }
 
     @Override

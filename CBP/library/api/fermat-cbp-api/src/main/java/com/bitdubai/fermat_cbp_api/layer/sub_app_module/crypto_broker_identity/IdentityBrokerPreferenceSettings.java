@@ -18,6 +18,15 @@ import java.util.UUID;
 public class IdentityBrokerPreferenceSettings implements SubAppSettings, Serializable {
 
     private boolean isHomeTutorialDialogEnabled;
+    private boolean isGpsDialogEnabled = true;
+
+    public boolean isGpsDialogEnabled() {
+        return isGpsDialogEnabled;
+    }
+
+    public void setGpsDialogEnabled(boolean isGpsDialogEnabled) {
+        this.isGpsDialogEnabled = isGpsDialogEnabled;
+    }
 
     public boolean isHomeTutorialDialogEnabled() {
         return isHomeTutorialDialogEnabled;

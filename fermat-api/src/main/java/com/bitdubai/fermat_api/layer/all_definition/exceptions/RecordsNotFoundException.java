@@ -22,19 +22,19 @@ public class RecordsNotFoundException extends FermatException {
     }
 
     public RecordsNotFoundException(String message, Exception cause) {
-        super(message, cause,"","");
+        super(message, cause, "", "");
     }
 
     public RecordsNotFoundException(String message) {
-        super(message,null,"","");
+        super(message, null, "", "");
     }
 
     public RecordsNotFoundException() {
-        super(DEFAULT_MESSAGE,null,"",null);
+        super(DEFAULT_MESSAGE, null, "", null);
     }
 
     public RecordsNotFoundException(Exception exception) {
-        super(DEFAULT_MESSAGE, exception,"","");
+        super(DEFAULT_MESSAGE, exception, "", "");
     }
 
     //PUBLIC METHODS

@@ -2,9 +2,13 @@ package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityExtraData;
 
 import java.io.Serializable;
 
@@ -23,16 +27,45 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
     private final KeyPair keyPair;
     private byte[] profileImage;
     private ExposureLevel exposureLevel;
+    private long accuracy;
+    private GeoFrequency frequency;
+    private CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
 
-    public CryptoBrokerIdentityImpl(final String        alias        ,
-                                    final KeyPair       keyPair      ,
-                                    final byte[]        profileImage ,
-                                    final ExposureLevel exposureLevel){
+    public CryptoBrokerIdentityImpl(final String alias,
+                                    final KeyPair keyPair,
+                                    final byte[] profileImage,
+                                    final ExposureLevel exposureLevel,
+                                    final long accuracy,
+                                    final GeoFrequency frequency) {
 
-        this.alias         = alias        ;
-        this.keyPair       = keyPair      ;
-        this.profileImage  = profileImage ;
+        this.alias = alias;
+        this.keyPair = keyPair;
+        this.profileImage = profileImage;
         this.exposureLevel = exposureLevel;
+        this.accuracy = accuracy;
+        this.frequency = frequency;
+        //Default CryptoBrokerIdentityExtraData
+        this.cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
+                CryptoCurrency.BITCOIN,
+                FiatCurrency.US_DOLLAR,
+                "Selling Bitcoin");
+    }
+
+    public CryptoBrokerIdentityImpl(
+            final String alias,
+            final KeyPair keyPair,
+            final byte[] profileImage,
+            final ExposureLevel exposureLevel,
+            final long accuracy,
+            final GeoFrequency frequency,
+            final CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData) {
+        this.alias = alias;
+        this.keyPair = keyPair;
+        this.profileImage = profileImage;
+        this.exposureLevel = exposureLevel;
+        this.accuracy = accuracy;
+        this.frequency = frequency;
+        this.cryptoBrokerIdentityExtraData = cryptoBrokerIdentityExtraData;
     }
 
     @Override
@@ -56,7 +89,9 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
     }
 
     @Override
-    public boolean isPublished(){ return this.exposureLevel.equals(ExposureLevel.PUBLISH); }
+    public boolean isPublished() {
+        return this.exposureLevel.equals(ExposureLevel.PUBLISH);
+    }
 
     @Override
     public ExposureLevel getExposureLevel() {
@@ -64,27 +99,41 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
     }
 
     @Override
-    public String createMessageSignature(String message) throws CantCreateMessageSignatureException{
-        try{
+    public String createMessageSignature(String message) throws CantCreateMessageSignatureException {
+        try {
             return AsymmetricCryptography.createMessageSignature(message, this.keyPair.getPrivateKey());
-        } catch(Exception ex){
-            throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, "Message: "+ message, "The message could be invalid");
+        } catch (Exception ex) {
+            throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, new StringBuilder().append("Message: ").append(message).toString(), "The message could be invalid");
         }
     }
 
-    public boolean equals(Object o){
-        if(!(o instanceof CryptoBrokerIdentity))
+    @Override
+    public long getAccuracy() {
+        return this.accuracy;
+    }
+
+    @Override
+    public GeoFrequency getFrequency() {
+        return this.frequency;
+    }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof CryptoBrokerIdentity))
             return false;
         CryptoBrokerIdentity compare = (CryptoBrokerIdentity) o;
         return alias.equals(compare.getAlias()) && keyPair.getPublicKey().equals(compare.getPublicKey());
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int c = 0;
         c += alias.hashCode();
         c += keyPair.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    }
+
+    public CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData() {
+        return cryptoBrokerIdentityExtraData;
     }
 
 }

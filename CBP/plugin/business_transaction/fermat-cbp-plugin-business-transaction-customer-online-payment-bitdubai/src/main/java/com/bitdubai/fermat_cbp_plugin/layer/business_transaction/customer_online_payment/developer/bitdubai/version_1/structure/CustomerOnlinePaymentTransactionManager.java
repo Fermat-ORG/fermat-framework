@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
@@ -59,12 +60,29 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
     }
 
     @Override
-    public void sendPayment(String walletPublicKey, String contractHash, CryptoCurrency paymentCurrency) throws CantSendPaymentException {
-        sendPayment(walletPublicKey, contractHash, paymentCurrency, BlockchainNetworkType.getDefaultBlockchainNetworkType());
+    public void sendPayment(
+            String walletPublicKey,
+            String contractHash,
+            CryptoCurrency paymentCurrency,
+            FeeOrigin feeOrigin,
+            long fee) throws CantSendPaymentException {
+        sendPayment(
+                walletPublicKey,
+                contractHash,
+                paymentCurrency,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType(),
+                feeOrigin,
+                fee);
     }
 
     @Override
-    public void sendPayment(String walletPublicKey, String contractHash, CryptoCurrency paymentCurrency, BlockchainNetworkType blockchainNetworkType)
+    public void sendPayment(
+            String walletPublicKey,
+            String contractHash,
+            CryptoCurrency paymentCurrency,
+            BlockchainNetworkType blockchainNetworkType,
+            FeeOrigin feeOrigin,
+            long fee)
             throws CantSendPaymentException {
 
         try {
@@ -84,6 +102,9 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
 
             long cryptoAmount = getCryptoAmount(purchaseNegotiation, paymentCurrency);
 
+//            TODO: Manuel revisar esto para el issue
+//            if(dao.isContractHashInDatabase(contractHash)) throw new CantSendPaymentException();
+
             dao.persistContractInDatabase(
                     contractPurchase,
                     address,
@@ -91,7 +112,9 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
                     cryptoAmount,
                     paymentCurrency,
                     blockchainNetworkType,
-                    intraActorPK);
+                    intraActorPK,
+                    feeOrigin,
+                    fee);
 
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, e);
@@ -154,9 +177,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
      *
      * @param stringValue the value
      * @param currency    the crypto currency which is going to be parsed to Satoshi
-     *
      * @return the value in long representation
-     *
      * @throws InvalidParameterException
      */
     public long parseToCryptoAmountFormat(String stringValue, CryptoCurrency currency) throws InvalidParameterException {
@@ -180,7 +201,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
         } catch (Exception exception) {
             pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
-                    "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
+                    "Parsing String object to long", new StringBuilder().append("Cannot parse ").append(stringValue).append(" string value to long").toString());
         }
     }
 
@@ -188,7 +209,6 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
      * This method returns a CustomerBrokerPurchaseNegotiation by negotiationId.
      *
      * @param negotiationId the negotiation ID
-     *
      * @return the purchase negotiation object
      */
     private CustomerBrokerPurchaseNegotiation getCustomerBrokerPurchaseNegotiation(String negotiationId)
@@ -202,9 +222,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
      * This method returns the crypto address from a CustomerBrokerPurchaseNegotiation
      *
      * @param purchaseNegotiation the purchase negotiation
-     *
      * @return the crypto address
-     *
      * @throws CantGetCryptoAddressException
      */
     private String getBrokerCryptoAddressString(CustomerBrokerPurchaseNegotiation purchaseNegotiation) throws CantGetCryptoAddressException {

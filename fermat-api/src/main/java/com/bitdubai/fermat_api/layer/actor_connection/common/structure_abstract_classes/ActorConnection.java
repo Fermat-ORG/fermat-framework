@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * The interface <code>ActorConnection</code>
  * represents a Connection with an Actor of the Fermat System.
- *
+ * <p/>
  * An Actor Connection contains all the basic information of the connection.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
@@ -20,39 +20,39 @@ import java.util.UUID;
  */
 public abstract class ActorConnection<T extends LinkedActorIdentity> {
 
-    private final UUID            connectionId   ;
-    private final T               linkedIdentity ;
-    private final String          publicKey      ;
-    private final String          alias          ;
-    private final byte[]          image          ;
-    private       ConnectionState connectionState;
-    private final long            creationTime   ;
-    private final long            updateTime     ;
+    private final UUID connectionId;
+    private final T linkedIdentity;
+    private final String publicKey;
+    private final String alias;
+    private final byte[] image;
+    private ConnectionState connectionState;
+    private final long creationTime;
+    private final long updateTime;
 
-    protected ActorConnection(final UUID            connectionId   ,
-                              final T               linkedIdentity ,
-                              final String          publicKey      ,
-                              final String          alias          ,
-                              final byte[]          image          ,
+    protected ActorConnection(final UUID connectionId,
+                              final T linkedIdentity,
+                              final String publicKey,
+                              final String alias,
+                              final byte[] image,
                               final ConnectionState connectionState,
-                              final long            creationTime   ,
-                              final long            updateTime     ) {
+                              final long creationTime,
+                              final long updateTime) {
 
-        Validate.notNull(connectionId   , "The Connection ID can't be null."   );
-        Validate.notNull(linkedIdentity , "The Linked Identity can't be null." );
-        Validate.notNull(publicKey      , "The Public Key can't be null."      );
-        Validate.notNull(alias          , "The Alias can't be null."           );
-        Validate.notNull(image          , "The Image can't be null."           );
+        Validate.notNull(connectionId, "The Connection ID can't be null.");
+        Validate.notNull(linkedIdentity, "The Linked Identity can't be null.");
+        Validate.notNull(publicKey, "The Public Key can't be null.");
+        Validate.notNull(alias, "The Alias can't be null.");
+        //Validate.notNull(image          , "The Image can't be null."           );
         Validate.notNull(connectionState, "The Connection State can't be null.");
-        Validate.notNull(creationTime   , "The Creation Time can't be null."   );
+        Validate.notNull(creationTime, "The Creation Time can't be null.");
 
-        this.connectionId    = connectionId   ;
-        this.linkedIdentity  = linkedIdentity ;
-        this.publicKey       = publicKey      ;
-        this.alias           = alias          ;
-        this.image           = image          ;
+        this.connectionId = connectionId;
+        this.linkedIdentity = linkedIdentity;
+        this.publicKey = publicKey;
+        this.alias = alias;
+        this.image = image;
         this.connectionState = connectionState;
-        this.creationTime    = creationTime   ;
+        this.creationTime = creationTime;
 
         // if the update time is 0 we'll assign like last update time the creation time.
         this.updateTime = updateTime != 0 ? updateTime : creationTime;
@@ -116,15 +116,18 @@ public abstract class ActorConnection<T extends LinkedActorIdentity> {
 
     @Override
     public String toString() {
-        return "ActorConnection{" +
-                "connectionId=" + connectionId +
-                ", linkedIdentity=" + linkedIdentity +
-                ", publicKey='" + publicKey + '\'' +
-                ", alias='" + alias + '\'' +
-                ", image=" + (image != null) +
-                ", connectionState=" + connectionState +
-                ", creationTime=" + creationTime +
-                ", updateTime=" + updateTime +
-                '}';
+        return new StringBuilder()
+                .append("ActorConnection{")
+                .append("connectionId=").append(connectionId)
+                .append(", linkedIdentity=").append(linkedIdentity)
+                .append(", publicKey='").append(publicKey)
+                .append('\'')
+                .append(", alias='").append(alias)
+                .append('\'')
+                .append(", image=").append(image != null)
+                .append(", connectionState=").append(connectionState)
+                .append(", creationTime=").append(creationTime)
+                .append(", updateTime=").append(updateTime)
+                .append('}').toString();
     }
 }

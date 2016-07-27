@@ -3,7 +3,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.n
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.ActorFoundEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorFoundEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
 
 /**
@@ -14,7 +14,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public class NetworkClientActorFoundEventHandler implements FermatEventHandler<ActorFoundEvent> {
+public class NetworkClientActorFoundEventHandler implements FermatEventHandler<NetworkClientActorFoundEvent> {
 
     /**
      * Represent the networkService
@@ -35,17 +35,17 @@ public class NetworkClientActorFoundEventHandler implements FermatEventHandler<A
      *
      * @see FermatEventHandler#handleEvent(FermatEvent)
      *
-     * @param fermatEvent instance of ActorFoundEvent
+     * @param fermatEvent instance of NetworkClientActorFoundEvent
      *
      * @throws FermatException if something goes wrong.
      */
     @Override
-    public void handleEvent(ActorFoundEvent fermatEvent) throws FermatException {
+    public void handleEvent(NetworkClientActorFoundEvent fermatEvent) throws FermatException {
 
         if (this.networkService.isStarted() &&
                 this.networkService.getProfile().getNetworkServiceType() == fermatEvent.getNetworkServiceTypeIntermediate()) {
 
-            this.networkService.handleActorFoundEvent(fermatEvent.getUriToNode(), fermatEvent.getActorProfile());
+            this.networkService.handleActorFoundEvent(fermatEvent.getActorProfile());
         }
 
     }

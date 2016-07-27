@@ -1,7 +1,7 @@
 angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interval', '$filter', '$window', '$location',  function($scope, $http, $interval, $filter, $window, $location) {
 
       $scope.labels = [];
-      $scope.series = ['Client Connections', 'Actives VPN'];
+      $scope.series = ['Client Connections', 'Identities'];
       $scope.charData = [[],[]];
       $scope.monitInfo = [];
 
@@ -27,14 +27,13 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
 
             $http({
                     method: 'GET',
-                    url: '/fermat/api/admin/monitoring/current/data'
+                    url: '/fermat/rest/api/v1/admin/monitoring/current/data'
               }).then(function successCallback(response) {
 
                       var data = response.data;
                       $scope.monitoringData = data;
                       $scope.registeredNetworkServiceDetail = angular.fromJson(data.registeredNetworkServiceDetail);
-                      $scope.registerOtherComponentDetail   = angular.fromJson(data.registerOtherComponentDetail);
-                      $scope.vpnByNetworkServiceDetails     = angular.fromJson(data.vpnByNetworkServiceDetails);
+                      $scope.registerActorsDetail   = angular.fromJson(data.registerActorsDetail);
                       $scope.labels.push($filter('date')(new Date(), 'HH:mm:ss'));
 
                       if($scope.charData[0].length > 20){
@@ -44,14 +43,14 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
                       }
 
                       $scope.charData[0].push(data.registeredClientConnection);
-                      $scope.charData[1].push(data.vpnTotal);
+                      $scope.charData[1].push($scope.registerActorsDetail);
 
            }, function errorCallback(response) {
                 var message = "";
                 if(response.status === -1){message = "Server no available";}
                 if(response.status === 401){message = "You must authenticate again";}
-                alert(response.status+" - Service error: "+response.statusText+" "+message);
-                $window.location.href = '../index.html';
+                alert(response.status+" - Monitoring Service error 1: "+response.statusText+" "+message);
+                 $window.location.href = '../index.html';
            });
 
       };
@@ -61,7 +60,7 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
 
               $http({
                       method: 'GET',
-                      url: '/fermat/api/admin/monitoring/system/data'
+                      url: '/fermat/rest/api/v1/admin/monitoring/system/data'
                 }).then(function successCallback(response) {
                         var respond = angular.fromJson(response.data);
                         var success = respond.success;
@@ -83,7 +82,7 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
                   var message = "";
                   if(response.status === -1){message = "Server no available";}
                   if(response.status === 401){message = "You must authenticate again";}
-                  alert(response.status+" - Service error: "+response.statusText+" "+message);
+                  alert(response.status+" - Monitoring Service error 2: "+response.statusText+" "+message);
                   $window.location.href = '../index.html';
              });
 

@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.chat_community.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.chat_community.R;
@@ -30,7 +32,8 @@ import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenc
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 13/04/16.
  * @version 1.0
  */
-public class ChatCommunityFermatAppConnection extends AppConnections<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>> {
+public class ChatCommunityFermatAppConnection
+        extends AppConnections<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>> {
 
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ChatActorCommunitySelectableIdentity activeIdentity;
@@ -79,18 +82,12 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ReferenceAp
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(String code){
-        return CommunityNotificationPainterBuilder.getNotification(code);
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle){
+        return CommunityNotificationPainterBuilder.getNotification(fermatBundle);
     }
 
     @Override
-    public int getResource(String id) {
-        int resId = 0;
-        switch (id){
-            case "ic_welcome_dialog":
-                resId = R.drawable.cht_help_icon;
-                break;
-        }
-        return resId;
+    public ResourceSearcher getResourceSearcher() {
+        return new ChatCommunityResourceSearcher();
     }
 }

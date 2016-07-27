@@ -8,9 +8,14 @@ public interface Index<C extends Currency> {
     //Note: T is a generic which may only be a FiatCurrency or a CryptoCurrency.
 
     C getCurrency();
+
     C getReferenceCurrency();
+
     double getSalePrice();
+
     double getPurchasePrice();
+
     long getTimestamp();
+
     String getProviderDescription();
 }

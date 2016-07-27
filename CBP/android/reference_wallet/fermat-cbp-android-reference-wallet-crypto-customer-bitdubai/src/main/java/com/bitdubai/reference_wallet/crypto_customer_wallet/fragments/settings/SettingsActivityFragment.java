@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
@@ -35,7 +35,7 @@ public class SettingsActivityFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
 
         try {
             errorManager = appSession.getErrorManager();
@@ -61,11 +61,11 @@ public class SettingsActivityFragment extends AbstractFermatFragment {
             }
         });
 
-        View settingsBankAccountsBtn= layout.findViewById(R.id.settings_bank_account);
+        View settingsBankAccountsBtn = layout.findViewById(R.id.settings_bank_account);
         settingsBankAccountsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS,appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS, appSession.getAppPublicKey());
             }
         });
 
@@ -76,6 +76,15 @@ public class SettingsActivityFragment extends AbstractFermatFragment {
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS, appSession.getAppPublicKey());
             }
         });
+
+        View settingsManagementFee = layout.findViewById(R.id.settings_management_fee);
+        settingsManagementFee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MANAGEMENT_FEE, appSession.getAppPublicKey());
+            }
+        });
+
 
         return layout;
     }

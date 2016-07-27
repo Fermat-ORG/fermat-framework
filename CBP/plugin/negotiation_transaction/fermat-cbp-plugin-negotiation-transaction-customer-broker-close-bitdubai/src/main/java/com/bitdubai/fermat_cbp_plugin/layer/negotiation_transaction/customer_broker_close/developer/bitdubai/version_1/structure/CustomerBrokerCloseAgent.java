@@ -3,6 +3,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -17,7 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
@@ -35,8 +37,8 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerClose;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendConfirmToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendConfirmToCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendConfirmToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendNegotiationToCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendNegotiationToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
@@ -49,11 +51,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.HashMap;
@@ -64,90 +62,90 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 22.12.15.
  */
-public class CustomerBrokerCloseAgent  implements
+public class CustomerBrokerCloseAgent implements
         CBPTransactionAgent,
         DealsWithLogger,
         DealsWithEvents,
         DealsWithPluginDatabaseSystem,
-        DealsWithPluginIdentity{
+        DealsWithPluginIdentity {
 
-    private Database                                                database;
+    private Database database;
 
-    private Thread                                                  agentThread;
+    private Thread agentThread;
 
-    private LogManager                                              logManager;
+    private LogManager logManager;
 
-    private EventManager                                            eventManager;
-    
-    private NegotiationTransactionCustomerBrokerClosePluginRoot     pluginRoot;
+    private EventManager eventManager;
 
-    private PluginDatabaseSystem                                    pluginDatabaseSystem;
+    private NegotiationTransactionCustomerBrokerClosePluginRoot pluginRoot;
 
-    private UUID                                                    pluginId;
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    private UUID pluginId;
 
     /*Represent the Network Service*/
-    private NegotiationTransmissionManager                          negotiationTransmissionManager;
+    private NegotiationTransmissionManager negotiationTransmissionManager;
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiation                       customerBrokerPurchaseNegotiation;
+    private CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation;
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager;
+    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiation                           customerBrokerSaleNegotiation;
+    private CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation;
 
     /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiationManager                    customerBrokerSaleNegotiationManager;
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     /*Represent the Monitor Agent*/
-    private MonitorAgentTransaction                                 monitorAgentTransaction;
+    private MonitorAgentTransaction monitorAgentTransaction;
 
     /*Represent Address Book Manager*/
-    private CryptoAddressBookManager                                cryptoAddressBookManager;
+    private CryptoAddressBookManager cryptoAddressBookManager;
 
     /*Represent Vault Manager*/
-    private CryptoVaultManager                                      cryptoVaultManager;
+    private CryptoVaultManager cryptoVaultManager;
 
     /*Represent Wallet Manager*/
-    private WalletManagerManager                                    walletManagerManager;
+    private WalletManagerManager walletManagerManager;
 
     /*Represent the Plugins Version*/
-    private PluginVersionReference                                  pluginVersionReference;
+    private PluginVersionReference pluginVersionReference;
 
-    private IntraWalletUserIdentityManager                          intraWalletUserIdentityManager;
+    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     public CustomerBrokerCloseAgent(
-        PluginDatabaseSystem                                    pluginDatabaseSystem,
-        LogManager                                              logManager,
-        NegotiationTransactionCustomerBrokerClosePluginRoot     pluginRoot,
-        EventManager                                            eventManager,
-        UUID                                                    pluginId,
-        NegotiationTransmissionManager                          negotiationTransmissionManager,
-        CustomerBrokerPurchaseNegotiation                       customerBrokerPurchaseNegotiation,
-        CustomerBrokerSaleNegotiation                           customerBrokerSaleNegotiation,
-        CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager,
-        CustomerBrokerSaleNegotiationManager                    customerBrokerSaleNegotiationManager,
-        CryptoAddressBookManager                                cryptoAddressBookManager,
-        CryptoVaultManager                                      cryptoVaultManager,
-        WalletManagerManager                                    walletManagerManager,
-        IntraWalletUserIdentityManager                          intraWalletUserIdentityManager
-    ){
-        this.pluginDatabaseSystem                       = pluginDatabaseSystem;
-        this.logManager                                 = logManager;
-        this.pluginRoot                                 = pluginRoot;
-        this.eventManager                               = eventManager;
-        this.pluginId                                   = pluginId;
-        this.negotiationTransmissionManager             = negotiationTransmissionManager;
-        this.customerBrokerPurchaseNegotiation          = customerBrokerPurchaseNegotiation;
-        this.customerBrokerSaleNegotiation              = customerBrokerSaleNegotiation;
-        this.customerBrokerPurchaseNegotiationManager   = customerBrokerPurchaseNegotiationManager;
-        this.customerBrokerSaleNegotiationManager       = customerBrokerSaleNegotiationManager;
-        this.cryptoAddressBookManager                   = cryptoAddressBookManager;
-        this.cryptoVaultManager                         = cryptoVaultManager;
-        this.walletManagerManager                       = walletManagerManager;
-        this.pluginVersionReference                     = pluginVersionReference;
-        this.intraWalletUserIdentityManager             = intraWalletUserIdentityManager;
+            PluginDatabaseSystem pluginDatabaseSystem,
+            LogManager logManager,
+            NegotiationTransactionCustomerBrokerClosePluginRoot pluginRoot,
+            EventManager eventManager,
+            UUID pluginId,
+            NegotiationTransmissionManager negotiationTransmissionManager,
+            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
+            CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
+            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+            CryptoAddressBookManager cryptoAddressBookManager,
+            CryptoVaultManager cryptoVaultManager,
+            WalletManagerManager walletManagerManager,
+            IntraWalletUserIdentityManager intraWalletUserIdentityManager
+    ) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.logManager = logManager;
+        this.pluginRoot = pluginRoot;
+        this.eventManager = eventManager;
+        this.pluginId = pluginId;
+        this.negotiationTransmissionManager = negotiationTransmissionManager;
+        this.customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiation;
+        this.customerBrokerSaleNegotiation = customerBrokerSaleNegotiation;
+        this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
+        this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
+        this.cryptoAddressBookManager = cryptoAddressBookManager;
+        this.cryptoVaultManager = cryptoVaultManager;
+        this.walletManagerManager = walletManagerManager;
+        this.pluginVersionReference = pluginVersionReference;
+        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
     }
 
     /*IMPLEMENTATION CBPTransactionAgent*/
@@ -163,7 +161,7 @@ public class CustomerBrokerCloseAgent  implements
         try {
             this.monitorAgentTransaction.Initialize();
         } catch (Exception exception) {
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
 
         this.agentThread = new Thread(monitorAgentTransaction);
@@ -172,65 +170,71 @@ public class CustomerBrokerCloseAgent  implements
     }
 
     @Override
-    public void stop() { this.agentThread.interrupt(); }
-    
+    public void stop() {
+        this.agentThread.interrupt();
+    }
+
     /*IMPLEMENTATION DealsWithEvents*/
     @Override
     public void setEventManager(EventManager eventManager) {
-        this.eventManager=eventManager;
+        this.eventManager = eventManager;
     }
 
     /*IMPLEMENTATION DealsWithLogger*/
     @Override
     public void setLogManager(LogManager logManager) {
-        this.logManager=logManager;
+        this.logManager = logManager;
     }
 
     /*IMPLEMENTATION DealsWithPluginDatabaseSystem*/
     @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) { this.pluginDatabaseSystem=pluginDatabaseSystem; }
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
 
     /*IMPLEMENTATION DealsWithPluginIdentity*/
     @Override
     public void setPluginId(UUID pluginId) {
-        this.pluginId=pluginId;
+        this.pluginId = pluginId;
     }
 
     /*INNER CLASSES*/
     private class MonitorAgentTransaction implements DealsWithPluginDatabaseSystem, Runnable {
 
-        private CustomerBrokerCloseSaleNegotiationTransaction       customerBrokerCloseSaleNegotiationTransaction;
+        private CustomerBrokerCloseSaleNegotiationTransaction customerBrokerCloseSaleNegotiationTransaction;
 
-        private CustomerBrokerClosePurchaseNegotiationTransaction   customerBrokerClosePurchaseNegotiationTransaction;
+        private CustomerBrokerClosePurchaseNegotiationTransaction customerBrokerClosePurchaseNegotiationTransaction;
 
-        private volatile boolean                                    agentRunning;
+        private volatile boolean agentRunning;
 
-        PluginDatabaseSystem                                        pluginDatabaseSystem;
+        PluginDatabaseSystem pluginDatabaseSystem;
 
-        CustomerBrokerCloseNegotiationTransactionDatabaseDao        customerBrokerCloseNegotiationTransactionDatabaseDao;
+        CustomerBrokerCloseNegotiationTransactionDatabaseDao customerBrokerCloseNegotiationTransactionDatabaseDao;
 
-        boolean                                                     threadWorking;
+        boolean threadWorking;
 
-        public final int                                            SLEEP_TIME = 5000;
+        public final int SLEEP_TIME = 5000;
 
-        int                                                         iterationNumber = 0;
+        int iterationNumber = 0;
 
-        int                                                         iterationConfirmSend = 0;
+        int iterationConfirmSend = 0;
 
-        Map<UUID,Integer>                                           transactionSend = new HashMap<>();
+        Map<UUID, Integer> transactionSend = new HashMap<>();
 
         /*IMPLEMENTATION DealsWithPluginIdentity*/
         @Override
-        public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) { this.pluginDatabaseSystem=pluginDatabaseSystem; }
+        public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+            this.pluginDatabaseSystem = pluginDatabaseSystem;
+        }
 
         /*IMPLEMENTATION Runnable*/
         @Override
         public void run() {
 
-            threadWorking=true;
-            logManager.log(NegotiationTransactionCustomerBrokerClosePluginRoot.getLogLevelByClass(this.getClass().getName()),"Customer Broker Close Monitor Agent: running...", null, null);
+            threadWorking = true;
+            logManager.log(NegotiationTransactionCustomerBrokerClosePluginRoot.getLogLevelByClass(this.getClass().getName()), "Customer Broker Close Monitor Agent: running...", null, null);
 
-            while(threadWorking){
+            while (threadWorking) {
                 //Increase the iteration counter
                 iterationNumber++;
                 iterationConfirmSend++;
@@ -245,7 +249,7 @@ public class CustomerBrokerCloseAgent  implements
                 //now I will check if there are pending transactions to raise the event
                 try {
 
-                    logManager.log(NegotiationTransactionCustomerBrokerClosePluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(NegotiationTransactionCustomerBrokerClosePluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
                     doTheMainTask();
 
                 } catch (CantSendCustomerBrokerCloseNegotiationTransactionException | CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException | CantUpdateRecordException e) {
@@ -261,82 +265,84 @@ public class CustomerBrokerCloseAgent  implements
 
                 database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME);
 
-            }
-            catch (DatabaseNotFoundException databaseNotFoundException) {
+            } catch (DatabaseNotFoundException databaseNotFoundException) {
 
                 try {
                     CustomerBrokerCloseNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerCloseNegotiationTransactionDatabaseFactory(this.pluginDatabaseSystem);
-                    database = databaseFactory.createDatabase(pluginId,CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME);
+                    database = databaseFactory.createDatabase(pluginId, CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                     pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                    throw new CantInitializeCBPAgent(cantCreateDatabaseException,"Customer Broker Close Initialize Monitor Agent - trying to create the plugin database","Please, check the cause");
+                    throw new CantInitializeCBPAgent(cantCreateDatabaseException, "Customer Broker Close Initialize Monitor Agent - trying to create the plugin database", "Please, check the cause");
                 }
 
             } catch (CantOpenDatabaseException exception) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                throw new CantInitializeCBPAgent(exception,"Customer Broker Close Initialize Monitor Agent - trying to open the plugin database","Please, check the cause");
+                throw new CantInitializeCBPAgent(exception, "Customer Broker Close Initialize Monitor Agent - trying to open the plugin database", "Please, check the cause");
             }
 
         }
 
-        public void stopAgent() { agentRunning = false; }
+        public void stopAgent() {
+            agentRunning = false;
+        }
 
-        public void startAgent() { agentRunning = true; }
+        public void startAgent() {
+            agentRunning = true;
+        }
 
-        public boolean isAgentRunning() { return agentRunning; }
+        public boolean isAgentRunning() {
+            return agentRunning;
+        }
         /*END INNER CLASS PUBLIC METHOD*/
 
         /*INNER CLASS PRIVATE METHOD*/
         private void doTheMainTask() throws
-            CantSendCustomerBrokerCloseNegotiationTransactionException,
-            CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException,
-            CantUpdateRecordException
-        {
+                CantSendCustomerBrokerCloseNegotiationTransactionException,
+                CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException,
+                CantUpdateRecordException {
 
             try {
 
                 customerBrokerCloseNegotiationTransactionDatabaseDao = new CustomerBrokerCloseNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
 
-                String                              negotiationXML;
-                NegotiationType                     negotiationType;
-                UUID                                transactionId;
-                List<CustomerBrokerClose>           negotiationPendingToSubmitList;
-                CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
-                CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
-                int                                 timeConfirmSend     = 20;
+                String negotiationXML;
+                NegotiationType negotiationType;
+                UUID transactionId;
+                List<CustomerBrokerClose> negotiationPendingToSubmitList;
+                CustomerBrokerPurchaseNegotiation purchaseNegotiation = new NegotiationPurchaseRecord();
+                CustomerBrokerSaleNegotiation saleNegotiation = new NegotiationSaleRecord();
+                int timeConfirmSend = 20;
 
                 //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
                 negotiationPendingToSubmitList = customerBrokerCloseNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
-                if(!negotiationPendingToSubmitList.isEmpty()){
-                    for(CustomerBrokerClose negotiationTransaction: negotiationPendingToSubmitList){
+                if (!negotiationPendingToSubmitList.isEmpty()) {
+                    for (CustomerBrokerClose negotiationTransaction : negotiationPendingToSubmitList) {
 
-                        System.out.print("\n\n**** 5) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - NEGOTIATION FOR SEND transactionId: " + negotiationTransaction.getTransactionId() + " ****\n");
+                        System.out.print(new StringBuilder().append("\n\n**** 5) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - NEGOTIATION FOR SEND transactionId: ").append(negotiationTransaction.getTransactionId()).append(" ****\n").toString());
 
-                        negotiationXML  = negotiationTransaction.getNegotiationXML();
+                        negotiationXML = negotiationTransaction.getNegotiationXML();
                         negotiationType = negotiationTransaction.getNegotiationType();
-                        transactionId   = negotiationTransaction.getTransactionId();
+                        transactionId = negotiationTransaction.getTransactionId();
 
-                        switch (negotiationType){
+                        switch (negotiationType) {
                             case PURCHASE:
-                                purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML,purchaseNegotiation);
-                                System.out.print("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n" +
-                                        "\n - Status :" + purchaseNegotiation.getStatus().getCode());
+                                purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                System.out.print(new StringBuilder().append("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): ").append(purchaseNegotiation.getNegotiationId()).append(" ****\n").append("\n - Status :").append(purchaseNegotiation.getStatus().getCode()).toString());
                                 //SEND NEGOTIATION TO BROKER
-                                negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
+                                negotiationTransmissionManager.sendNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
 
                                 break;
                             case SALE:
-                                saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML,saleNegotiation);
-                                System.out.print("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - SALE NEGOTIATION SEND negotiationId(XML): " + saleNegotiation.getNegotiationId() + " ****\n" +
-                                        "\n - Status :" + saleNegotiation.getStatus().getCode());
+                                saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+                                System.out.print(new StringBuilder().append("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - SALE NEGOTIATION SEND negotiationId(XML): ").append(saleNegotiation.getNegotiationId()).append(" ****\n").append("\n - Status :").append(saleNegotiation.getStatus().getCode()).toString());
                                 //SEND NEGOTIATION TO CUSTOMER
-                                negotiationTransmissionManager.sendNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
+                                negotiationTransmissionManager.sendNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
 
                                 break;
                         }
 
                         //Update the Negotiation Transaction
-                        System.out.print("\n\n**** 7) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
+                        System.out.print(new StringBuilder().append("\n\n**** 7) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : ").append(NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode()).append(" ****\n").toString());
                         customerBrokerCloseNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(
                                 transactionId,
                                 NegotiationTransactionStatus.SENDING_NEGOTIATION);
@@ -346,28 +352,28 @@ public class CustomerBrokerCloseAgent  implements
 
                 //SEND CONFIRM PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_CONFIRMATION)
                 negotiationPendingToSubmitList = customerBrokerCloseNegotiationTransactionDatabaseDao.getPendingToConfirmtNegotiation();
-                if(!negotiationPendingToSubmitList.isEmpty()){
-                    for(CustomerBrokerClose negotiationTransaction: negotiationPendingToSubmitList){
+                if (!negotiationPendingToSubmitList.isEmpty()) {
+                    for (CustomerBrokerClose negotiationTransaction : negotiationPendingToSubmitList) {
 
-                        transactionId   = negotiationTransaction.getTransactionId();
+                        transactionId = negotiationTransaction.getTransactionId();
                         negotiationType = negotiationTransaction.getNegotiationType();
 
-                        System.out.print("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE CONFIRM STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
+                        System.out.print(new StringBuilder().append("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE CONFIRM STATUS SALE NEGOTIATION STATUS : ").append(NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode()).append(" ****\n").toString());
 
                         switch (negotiationType) {
                             case PURCHASE:
-                                System.out.print("\n\n**** 24) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - PURCHASE NEGOTIATION SEND CONFIRM negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n");
+                                System.out.print(new StringBuilder().append("\n\n**** 24) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - PURCHASE NEGOTIATION SEND CONFIRM negotiationId(XML): ").append(purchaseNegotiation.getNegotiationId()).append(" ****\n").toString());
                                 //SEND CONFIRM NEGOTIATION TO BROKER
-                                negotiationTransmissionManager.sendConfirmNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
+                                negotiationTransmissionManager.sendConfirmNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                                 break;
                             case SALE:
-                                System.out.print("\n\n**** 24) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - SALE NEGOTIATION SEND CONFIRM negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n");
+                                System.out.print(new StringBuilder().append("\n\n**** 24) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - SALE NEGOTIATION SEND CONFIRM negotiationId(XML): ").append(purchaseNegotiation.getNegotiationId()).append(" ****\n").toString());
                                 //SEND NEGOTIATION TO CUSTOMER
-                                negotiationTransmissionManager.sendConfirmNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
+                                negotiationTransmissionManager.sendConfirmNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                                 break;
                         }
 
-                        System.out.print("\n\n**** 25) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode() + " ****\n");
+                        System.out.print(new StringBuilder().append("\n\n**** 25) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : ").append(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode()).append(" ****\n").toString());
                         //Update the Negotiation Transaction
                         customerBrokerCloseNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(
                                 transactionId,
@@ -379,13 +385,13 @@ public class CustomerBrokerCloseAgent  implements
                 }
 
                 //PROCES PENDING EVENT
-                List<UUID> pendingEventsIdList=customerBrokerCloseNegotiationTransactionDatabaseDao.getPendingEvents();
-                for(UUID eventId : pendingEventsIdList){
+                List<UUID> pendingEventsIdList = customerBrokerCloseNegotiationTransactionDatabaseDao.getPendingEvents();
+                for (UUID eventId : pendingEventsIdList) {
                     checkPendingEvent(eventId);
                 }
 
                 //SEND TRNSACTION AGAIN IF NOT IS CONFIRM
-                if(timeConfirmSend == iterationConfirmSend){
+                if (timeConfirmSend == iterationConfirmSend) {
                     CustomerBrokerCloseForwardTransaction forwardTransaction = new CustomerBrokerCloseForwardTransaction(
                             customerBrokerCloseNegotiationTransactionDatabaseDao,
                             pluginRoot,
@@ -400,22 +406,22 @@ public class CustomerBrokerCloseAgent  implements
 
             } catch (CantSendNegotiationToCryptoBrokerException e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantSendCustomerBrokerCloseNegotiationTransactionException(CantSendCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Purchase Negotiation","Error in Negotiation Transmission Network Service");
+                throw new CantSendCustomerBrokerCloseNegotiationTransactionException(CantSendCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Purchase Negotiation", "Error in Negotiation Transmission Network Service");
             } catch (CantSendNegotiationToCryptoCustomerException e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantSendCustomerBrokerCloseNegotiationTransactionException(CantSendCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Sale Negotiation","Error in Negotiation Transmission Network Service");
+                throw new CantSendCustomerBrokerCloseNegotiationTransactionException(CantSendCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Sale Negotiation", "Error in Negotiation Transmission Network Service");
             } catch (CantSendConfirmToCryptoBrokerException e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException(CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Confirm Purchase Negotiation", "Error in Negotiation Transmission Network Service");
-            } catch (CantSendConfirmToCryptoCustomerException e){
+            } catch (CantSendConfirmToCryptoCustomerException e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException(CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Confirm Sale Negotiation", "Error in Negotiation Transmission Network Service");
             } catch (CantGetNegotiationTransactionListException e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantSendCustomerBrokerCloseNegotiationTransactionException(CantSendCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE, e,"Sending Negotiation","Cannot get the Negotiation list from database");
+                throw new CantSendCustomerBrokerCloseNegotiationTransactionException(CantSendCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Negotiation", "Cannot get the Negotiation list from database");
             } catch (Exception e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantSendCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
+                throw new CantSendCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Sending Negotiation", "UNKNOWN FAILURE.");
             }
         }
 
@@ -423,14 +429,14 @@ public class CustomerBrokerCloseAgent  implements
         private void checkPendingEvent(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
             try {
-                UUID                                transactionId;
-                UUID                                transmissionId;
-                NegotiationTransmission             negotiationTransmission;
-                NegotiationTransaction              negotiationTransaction;
-                NegotiationType                     negotiationType;
-                String                              negotiationXML;
-                CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
-                CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
+                UUID transactionId;
+                UUID transmissionId;
+                NegotiationTransmission negotiationTransmission;
+                NegotiationTransaction negotiationTransaction;
+                NegotiationType negotiationType;
+                String negotiationXML;
+                CustomerBrokerPurchaseNegotiation purchaseNegotiation = new NegotiationPurchaseRecord();
+                CustomerBrokerSaleNegotiation saleNegotiation = new NegotiationSaleRecord();
 
                 String eventTypeCode = customerBrokerCloseNegotiationTransactionDatabaseDao.getEventType(eventId);
 
@@ -440,19 +446,19 @@ public class CustomerBrokerCloseAgent  implements
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                         negotiationTransmission = record.getInformation();
-                        negotiationXML          = negotiationTransmission.getNegotiationXML();
-                        transmissionId          = negotiationTransmission.getTransmissionId();
-                        transactionId           = negotiationTransmission.getTransactionId();
-                        negotiationType         = negotiationTransmission.getNegotiationType();
+                        negotiationXML = negotiationTransmission.getNegotiationXML();
+                        transmissionId = negotiationTransmission.getTransmissionId();
+                        transactionId = negotiationTransmission.getTransactionId();
+                        negotiationType = negotiationTransmission.getNegotiationType();
 
                         System.out.print("\n\n**** 20.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE TRANSACTION  ****\n");
                         if (negotiationXML != null) {
 
                             negotiationTransaction = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
 
-                            if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_NEGOTIATION)) {
+                            if (negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_NEGOTIATION)) {
 
-                                if(negotiationTransaction == null) {
+                                if (negotiationTransaction == null) {
                                     switch (negotiationType) {
                                         case PURCHASE:
                                             System.out.print("\n\n**** 20.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE TRANSACTION PURCHASE ****\n");
@@ -495,9 +501,9 @@ public class CustomerBrokerCloseAgent  implements
 
                                 }
 
-                            } else if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
+                            } else if (negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
 
-                                if(!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
+                                if (!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
 
                                     switch (negotiationType) {
                                         case PURCHASE:

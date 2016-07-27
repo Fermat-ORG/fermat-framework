@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.CantGetCurrentIPAddressException;
+import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.exceptions.CantAcquireLocationException;
-import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.CantGetCurrentIPAddressException;
 import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.model.DeviceLocation;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -31,7 +32,7 @@ public final class LocationProvider {
 
         try {
 
-            String ipAddress = com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper.getCurrentIPAddress();
+            String ipAddress = IPAddressHelper.getCurrentIPAddress();
 
             return acquireLocationThroughIP(ipAddress);
 
@@ -54,7 +55,7 @@ public final class LocationProvider {
 
         try {
 
-            conn = (HttpURLConnection)new URL(GEOIP_NEKUDO_URL+ipAddress).openConnection();
+            conn = (HttpURLConnection) new URL(GEOIP_NEKUDO_URL + ipAddress).openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String response = reader.readLine();
 
@@ -65,22 +66,22 @@ public final class LocationProvider {
 
                 JsonObject location = (JsonObject) jsonObject.get("location");
 
-                double latitude  = location.get("latitude" ).getAsDouble();
+                double latitude = location.get("latitude").getAsDouble();
                 double longitude = location.get("longitude").getAsDouble();
 
                 return new DeviceLocation(
-                        latitude ,
+                        latitude,
                         longitude,
-                        null     ,
-                        null     ,
-                        null     ,
+                        null,
+                        -1,
+                        null,
                         System.currentTimeMillis(),
                         LocationSource.IP_CALCULATED
                 );
             } else {
                 throw new CantAcquireLocationException(
                         null,
-                        "ipAddress: "+ipAddress,
+                        "ipAddress: " + ipAddress,
                         "We couldn't find out the coordinates for the given ip address."
                 );
             }
@@ -88,7 +89,7 @@ public final class LocationProvider {
 
             throw new CantAcquireLocationException(
                     e,
-                    "ipAddress: "+ipAddress,
+                    "ipAddress: " + ipAddress,
                     "There was a problem trying to get the coordinates for the given ip address."
             );
         } finally {

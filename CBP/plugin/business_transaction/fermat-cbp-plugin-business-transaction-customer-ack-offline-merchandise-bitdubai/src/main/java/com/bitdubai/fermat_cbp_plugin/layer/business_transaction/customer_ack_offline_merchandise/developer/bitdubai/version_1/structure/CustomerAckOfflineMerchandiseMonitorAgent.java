@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_o
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -61,7 +62,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_of
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.database.CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.database.CustomerAckOfflineMerchandiseBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.Collection;
 import java.util.Date;
@@ -99,16 +99,16 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
             UUID pluginId,
             TransactionTransmissionManager transactionTransmissionManager,
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-            CustomerBrokerContractSaleManager customerBrokerContractSaleManager,CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager)  {
+            CustomerBrokerContractSaleManager customerBrokerContractSaleManager, CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager) {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginRoot = pluginRoot;
         this.pluginId = pluginId;
-        this.logManager=logManager;
-        this.transactionTransmissionManager=transactionTransmissionManager;
-        this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
-        this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
-        this.customerBrokerPurchaseNegotiationManager= customerBrokerPurchaseNegotiationManager;
+        this.logManager = logManager;
+        this.transactionTransmissionManager = transactionTransmissionManager;
+        this.customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
+        this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
+        this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
     }
 
     @Override
@@ -126,25 +126,25 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
             pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }
 
-        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
+        this.agentThread = new Thread(monitorAgent, this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
 
     @Override
     public void stop() {
-        try{
+        try {
             this.agentThread.interrupt();
-        }catch(Exception exception){
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }
@@ -152,29 +152,29 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
 
     @Override
     public void setEventManager(EventManager eventManager) {
-        this.eventManager=eventManager;
+        this.eventManager = eventManager;
     }
 
     @Override
     public void setLogManager(LogManager logManager) {
-        this.logManager=logManager;
+        this.logManager = logManager;
     }
 
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem=pluginDatabaseSystem;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
     @Override
     public void setPluginId(UUID pluginId) {
-        this.pluginId=pluginId;
+        this.pluginId = pluginId;
     }
 
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, Runnable{
+    private class MonitorAgent implements DealsWithPluginDatabaseSystem, Runnable {
 
         CustomerAckOfflineMerchandisePluginRoot pluginRoot;
         PluginDatabaseSystem pluginDatabaseSystem;
@@ -192,13 +192,14 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
         public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
             this.pluginDatabaseSystem = pluginDatabaseSystem;
         }
+
         @Override
         public void run() {
 
-            threadWorking=true;
+            threadWorking = true;
             logManager.log(CustomerAckOfflineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()),
                     "Customer Ack Offline Merchandise Monitor Agent: running...", null, null);
-            while(threadWorking){
+            while (threadWorking) {
                 /**
                  * Increase the iteration counter
                  */
@@ -214,11 +215,11 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                  */
                 try {
 
-                    logManager.log(CustomerAckOfflineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(CustomerAckOfflineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
                     doTheMainTask();
                 } catch (CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
                     pluginRoot.reportError(
-                            
+
                             UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                             e);
                 }
@@ -226,24 +227,24 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
             }
 
         }
+
         public void Initialize() throws CantInitializeCBPAgent {
             try {
 
                 database = this.pluginDatabaseSystem.openDatabase(pluginId,
                         CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
-            }
-            catch (DatabaseNotFoundException databaseNotFoundException) {
+            } catch (DatabaseNotFoundException databaseNotFoundException) {
 
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("Database in Open Contract monitor agent doesn't exists");
-                CustomerAckOfflineMerchandiseBusinessTransactionDatabaseFactory customerAckOfflineMerchandiseBusinessTransactionDatabaseFactory=
+                CustomerAckOfflineMerchandiseBusinessTransactionDatabaseFactory customerAckOfflineMerchandiseBusinessTransactionDatabaseFactory =
                         new CustomerAckOfflineMerchandiseBusinessTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 try {
                     database = customerAckOfflineMerchandiseBusinessTransactionDatabaseFactory.createDatabase(pluginId,
                             CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                     pluginRoot.reportError(
-                            
+
                             UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                             cantCreateDatabaseException);
                     throw new CantInitializeCBPAgent(cantCreateDatabaseException,
@@ -252,7 +253,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                 }
             } catch (CantOpenDatabaseException exception) {
                 pluginRoot.reportError(
-                        
+
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         exception);
                 throw new CantInitializeCBPAgent(exception,
@@ -266,8 +267,8 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                 CantUpdateRecordException,
                 CantSendContractNewStatusNotificationException {
 
-            try{
-                customerAckOfflineMerchandiseBusinessTransactionDao =new CustomerAckOfflineMerchandiseBusinessTransactionDao(
+            try {
+                customerAckOfflineMerchandiseBusinessTransactionDao = new CustomerAckOfflineMerchandiseBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
                         database,
@@ -281,11 +282,11 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                  * acknowledge by the customer.
                  */
                 List<BusinessTransactionRecord> pendingToSubmitNotificationList = customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
-                for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
+                for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
 
-                    contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
+                    contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
 
-                    System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): " +contractHash+"\n");
+                    System.out.println(new StringBuilder().append("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): ").append(contractHash).append("\n").toString());
 
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
@@ -305,10 +306,10 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                  * Check pending notifications - Broker side
                  */
                 List<BusinessTransactionRecord> pendingToSubmitConfirmationList = customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitConfirmList();
-                for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
+                for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
 
                     System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList()\n");
-                    contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
+                    contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
                     transactionTransmissionManager.confirmNotificationReception(
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
@@ -325,8 +326,8 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                 /**
                  * Check if pending events
                  */
-                List<String> pendingEventsIdList= customerAckOfflineMerchandiseBusinessTransactionDao.getPendingEvents();
-                for(String eventId : pendingEventsIdList){
+                List<String> pendingEventsIdList = customerAckOfflineMerchandiseBusinessTransactionDao.getPendingEvents();
+                for (String eventId : pendingEventsIdList) {
                     checkPendingEvent(eventId);
                 }
 
@@ -362,7 +363,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
 
         }
 
-        private void raiseAckConfirmationEvent(String contractHash){
+        private void raiseAckConfirmationEvent(String contractHash) {
             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.CUSTOMER_ACK_MERCHANDISE_CONFIRMED);
             CustomerAckMerchandiseConfirmed customerAckMerchandiseConfirmed = (CustomerAckMerchandiseConfirmed) fermatEvent;
             customerAckMerchandiseConfirmed.setSource(EventSource.CUSTOMER_ACK_OFFLINE_MERCHANDISE);
@@ -372,10 +373,10 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
         }
 
 
-        private void checkPendingEvent(String eventId) throws  UnexpectedResultReturnedFromDatabaseException {
+        private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
-            try{
-                String eventTypeCode= customerAckOfflineMerchandiseBusinessTransactionDao.getEventType(eventId);
+            try {
+                String eventTypeCode = customerAckOfflineMerchandiseBusinessTransactionDao.getEventType(eventId);
                 String contractHash;
                 BusinessTransactionMetadata businessTransactionMetadata;
                 ContractTransactionStatus contractTransactionStatus;
@@ -450,7 +451,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
 //                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.COMPLETED);
                                 Date date = new Date();
                                 customerAckOfflineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
-                                customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash,ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
+                                customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
                                 raiseAckConfirmationEvent(contractHash);
 
                             }
@@ -478,7 +479,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                     Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
                     String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.BROKER_PAYMENT_METHOD);
 
-                    if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
+                    if (!MoneyType.CRYPTO.getCode().equals(clauseValue)) {
                         customerAckOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
                     }
                 }

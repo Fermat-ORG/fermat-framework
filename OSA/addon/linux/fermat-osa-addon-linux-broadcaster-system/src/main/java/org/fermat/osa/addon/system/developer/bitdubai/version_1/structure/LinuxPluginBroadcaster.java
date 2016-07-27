@@ -7,9 +7,9 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/05/2016.
  *
- * @author  lnacosta
+ * @author lnacosta
  * @version 1.0
- * @since   Java JDK 1.7
+ * @since Java JDK 1.7
  */
 public class LinuxPluginBroadcaster implements Broadcaster {
 
@@ -33,8 +33,7 @@ public class LinuxPluginBroadcaster implements Broadcaster {
     }
 
     @Override
-    public int publish(BroadcasterType broadcasterType, FermatBundle bundle) {
+    public int publish(BroadcasterType broadcasterType, FermatBundle bundle, String channelReceiversCode) {
         return 0;
     }
-
 }

@@ -8,14 +8,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.mati.fermat_navigator.drawer.FermatNavigationViewPainter;
-
 import com.squareup.picasso.Picasso;
-import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 
 /**
  * Created by natalia on 29/02/16.
@@ -34,7 +33,7 @@ public class FermatWalletNavigationView extends FermatNavigationViewPainter {
 
     @Override
     protected View setUpHeaderScreen(LayoutInflater inflater, Activity activity, ActiveActorIdentityInformation intraUserLoginIdentity) {
-        View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
+        View view = inflater.inflate(R.layout.fermat_wallet_navigation_view_row_first, null, true);
         FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
         try {
 
@@ -79,7 +78,7 @@ public class FermatWalletNavigationView extends FermatNavigationViewPainter {
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.drawable.bg_drawer_body,options);
+                    activity.getResources(), R.drawable.background_navigation_drawer,options);
             //drawable = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.bg_drawer_body);
         }catch (OutOfMemoryError error){
             error.printStackTrace();

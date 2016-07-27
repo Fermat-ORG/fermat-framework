@@ -22,4 +22,45 @@
     <color name="dap_asset_factory_view_color">#1d1d25</color>
 
     <color name="text_color_hint">#0072bd</color>
+
+    <!-- v3 -->
+    <color name="redeem_home_bar_color">#3f5b77</color>
+    <color name="card_toolbar">#1371A7</color>
+    <color name="card_toolbar_trans">#aa1371a7</color>
+    <color name="bg_circular_redeem_color">#CC1371A7</color>
+    <color name="card_top">#0C6089</color>
+    <color name="card_text_top_primary">#ffffff</color>
+    <color name="card_text_top_secondary">#BDBDBD</color>
+    <color name="card_text_highlight">#0C6089</color>
+    <color name="card_text">#4B5E75</color>
+    <color name="card_title_text">#394859</color>
+    <color name="card_background">#FAFAFA</color>
+    <color name="card_background_back">#ECECEC</color>
+    <color name="card_line">#BDBDBD</color>
+
+
+
+    <color name="bg_asset_factory_v3">#CEE3F4</color>
+    <color name="card_header_text">#FFFAFA</color>
+    <color name="wizard_background">#D6E7F4</color>
+    <color name="wizard_top_line_on">#479BC2</color>
+    <color name="wizard_top_line_off">#B3BCCB</color>
+    <color name="wizard_label_1">#4E627A</color>
+    <color name="wizard_label_2">#95A8BA</color>
+    <color name="wizard_label_3">#4B5E75</color>
+    <color name="wizard_multimedia_button_1">#1C1C1C</color>
+    <color name="wizard_multimedia_button_2">#4B5E74</color>
+    <color name="wizard_multimedia_button_text">#FFFFFF</color>
+    <color name="wizard_multimedia_wiz_button_1">#479CC3</color>
+    <color name="wizard_multimedia_wiz_button_2">#2585BA</color>
+    <color name="wizard_properties_edit_background">#48479CC3</color>
+    <color name="wizard_properties_edit_text">#4B5E75</color>
+    <color name="wizard_crypto_value_spinner">#48479CC3</color>
+    <!--<color name="wizard_crypto_value_spinner">#BCC8D7</color>-->
+    <color name="wizard_crypto_line">#ABBDCD</color>
+    <color name="wizard_verify_background">#C9DFEF</color>
+    <color name="wizard_verify_image_top">#1C1C1C</color>
+    <color name="wizard_verify_image_text">#FFFFFF</color>
+    <color name="wizard_verify_image_background">#FFFFFF</color>
+    <!-- -->
 </resources>

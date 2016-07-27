@@ -12,7 +12,7 @@
         android:orientation="horizontal"
         android:paddingBottom="10dp"
         android:paddingTop="15dp"
-        >
+        android:baselineAligned="false">
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -49,20 +49,21 @@
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
+                android:layout_width="155dp"
                 android:layout_height="match_parent"
                 android:id="@+id/txt_notes"
-                tools:text="Conference ticket"
-                android:textSize="12dp"
+                tools:text="Conference ticket hghjghjghj jhjghjgjhghj jhghjghjgjh"
+                android:textSize="12sp"
                 android:textColor="#80ffffff"
                 android:fontFamily="roboto"
                 android:layout_gravity="left"
-                android:gravity="center"/>
+                android:maxLines="1"
+                android:ellipsize="end"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
             android:paddingRight="20dp"
@@ -76,19 +77,24 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_amount"
                 tools:text="1.4 BTC"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:textColor="#ffffff"
                 android:fontFamily="roboto"
+                android:textIsSelectable="false"
+               android:gravity="end"
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_time"
-                tools:text="03 Feb 2014"
-                android:textSize="11dp"
+                tools:text="JUL 15 2014 9:30 pm"
+                android:textSize="12sp"
                 android:textColor="#80ffffff"
-                android:fontFamily="roboto"/>
+                android:fontFamily="roboto"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="right" />
         </LinearLayout>
     </LinearLayout>
 
@@ -109,12 +115,13 @@
             android:id="@+id/txt_state"
             android:text="@string/accepted_text"
             android:textColor="#e6ffffff"
-            android:textSize="13dp"
+            android:textSize="13sp"
             android:background="@drawable/bullet"
             android:layout_marginRight="10dp"
             android:padding="5dp"
             android:paddingRight="7dp"
-            android:paddingLeft="7dp"/>
+            android:paddingLeft="7dp"
+            android:textIsSelectable="true" />
     </LinearLayout>
 
     <LinearLayout

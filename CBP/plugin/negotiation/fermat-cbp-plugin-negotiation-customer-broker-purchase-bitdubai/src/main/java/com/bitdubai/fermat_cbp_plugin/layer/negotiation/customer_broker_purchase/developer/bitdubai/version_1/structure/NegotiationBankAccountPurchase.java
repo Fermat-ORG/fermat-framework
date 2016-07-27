@@ -14,7 +14,7 @@ public class NegotiationBankAccountPurchase implements NegotiationBankAccount {
     private final String bankAccount;
     private final FiatCurrency typeBankAccount;
 
-    public NegotiationBankAccountPurchase(UUID bankAccountId, String bankAccount,  FiatCurrency typeBankAccount){
+    public NegotiationBankAccountPurchase(UUID bankAccountId, String bankAccount, FiatCurrency typeBankAccount) {
         this.bankAccountId = bankAccountId;
         this.bankAccount = bankAccount;
         this.typeBankAccount = typeBankAccount;

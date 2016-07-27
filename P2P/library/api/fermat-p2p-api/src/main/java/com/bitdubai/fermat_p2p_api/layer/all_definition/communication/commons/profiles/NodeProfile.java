@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.google.gson.JsonObject;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile</code>
@@ -31,7 +33,7 @@ public class NodeProfile extends Profile {
      * Constructor
      */
     public NodeProfile(){
-        super();
+        super(ProfileTypes.NODE);
     }
 
     /**
@@ -86,6 +88,35 @@ public class NodeProfile extends Profile {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public static Profile deserialize(final JsonObject jsonObject) {
+
+        NodeProfile profile = new NodeProfile();
+
+        profile.setIdentityPublicKey(jsonObject.get("ipk").getAsString());
+        Double latitude = jsonObject.get("lat").getAsDouble();
+        Double longitude = jsonObject.get("lng").getAsDouble();
+
+        profile.setDefaultPort(jsonObject.get("dp").getAsInt());
+        profile.setIp(jsonObject.get("ip").getAsString());
+        profile.setName(jsonObject.get("na").getAsString());
+
+        profile.setLocation(latitude, longitude);
+
+        return profile;
+    }
+
+    @Override
+    public JsonObject serialize() {
+
+        JsonObject jsonObject = super.serialize();
+
+        jsonObject.addProperty("dp", defaultPort);
+        jsonObject.addProperty("ip", ip);
+        jsonObject.addProperty("na", name);
+
+        return jsonObject;
     }
 
     /**

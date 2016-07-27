@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
@@ -12,9 +15,13 @@ import java.util.UUID;
 /**
  * Created by Franklin Marcano on 21/01/16.
  */
-public class CryptoBrokerWalletPreferenceSettings implements WalletSettings,Serializable {
+public class CryptoBrokerWalletPreferenceSettings implements WalletSettings, Serializable {
 
     private boolean isHomeTutorialDialogEnabled;
+    private boolean isWizardStartActivity = true;
+    private BitcoinFee bitcoinFee = BitcoinFee.NORMAL;
+    private FeeOrigin feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+    private BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
     public boolean isHomeTutorialDialogEnabled() {
         return isHomeTutorialDialogEnabled;
@@ -23,6 +30,7 @@ public class CryptoBrokerWalletPreferenceSettings implements WalletSettings,Seri
     public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {
         this.isHomeTutorialDialogEnabled = isHomeTutorialDialogEnabled;
     }
+
     /**
      * This method let us know the default language of a wallet
      *
@@ -69,6 +77,38 @@ public class CryptoBrokerWalletPreferenceSettings implements WalletSettings,Seri
 
     @Override
     public void setIsPresentationHelpEnabled(boolean b) {
-        isHomeTutorialDialogEnabled=b;
+        isHomeTutorialDialogEnabled = b;
+    }
+
+    public void setIsWizardStartActivity(boolean isWizardStartActivity) {
+        this.isWizardStartActivity = isWizardStartActivity;
+    }
+
+    public boolean isWizardStartActivity() {
+        return isWizardStartActivity;
+    }
+
+    public BitcoinFee getBitcoinFee() {
+        return bitcoinFee;
+    }
+
+    public void setBitcoinFee(BitcoinFee bitcoinFee) {
+        this.bitcoinFee = bitcoinFee;
+    }
+
+    public FeeOrigin getFeeOrigin() {
+        return feeOrigin;
+    }
+
+    public void setFeeOrigin(FeeOrigin feeOrigin) {
+        this.feeOrigin = feeOrigin;
+    }
+
+    public BlockchainNetworkType getBlockchainNetworkType() {
+        return blockchainNetworkType;
+    }
+
+    public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
+        this.blockchainNetworkType = blockchainNetworkType;
     }
 }

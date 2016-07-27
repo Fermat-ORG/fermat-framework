@@ -62,9 +62,9 @@ android {
 }
 dependencies {
     // Fermat
-    compile project(':fermat-api')
+    //compile project(':fermat-api')
     compile project(':fermat-art-api')
-    compile project(':fermat-pip-api')
+    //compile project(':fermat-pip-api')
     compile project(':fermat-android-api')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // Android
@@ -75,7 +75,7 @@ dependencies {
     compile 'com.android.support:support-v13:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.getbase:floatingactionbutton:1.10.1'
-    compile project(':fermat-art-android-sub-app-fan-identity-bitdubai')
+    //compile project(':fermat-art-android-sub-app-fan-identity-bitdubai')
 }
 
 

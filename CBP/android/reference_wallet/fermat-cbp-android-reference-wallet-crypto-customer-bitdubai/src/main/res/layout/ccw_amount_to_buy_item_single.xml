@@ -45,7 +45,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#1271A7"/>
+                android:background="#1271A7"
+                android:id="@+id/ccw_line_up" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -91,6 +92,8 @@
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="BTC"/>
 
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -102,7 +105,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#1271A7"/>
+                    android:background="#1271A7"
+                    android:id="@+id/ccw_line_down" />
 
                 <Button
                     android:id="@+id/ccw_confirm_button"

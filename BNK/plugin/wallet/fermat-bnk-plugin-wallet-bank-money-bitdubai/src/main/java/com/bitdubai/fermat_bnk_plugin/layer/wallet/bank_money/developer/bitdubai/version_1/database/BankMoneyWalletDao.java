@@ -27,7 +27,7 @@ import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetCurrentBalanceException;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyWalletDatabaseException;
-import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.BankAccountNumberImpl;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.classes.BankAccountNumberImpl;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.BankMoneyTransactionRecordImpl;
 
 import java.math.BigDecimal;
@@ -275,7 +275,7 @@ public class BankMoneyWalletDao {
         BigDecimal heldFunds = new BigDecimal(0);
         try {
             for (BankMoneyTransactionRecord record : getTransactions(TransactionType.HOLD, account)) {
-                heldFunds.add(record.getRunningAvailableBalance());
+                heldFunds = heldFunds.add(record.getRunningAvailableBalance());
             }
         } catch (CantGetTransactionsException e) {
             pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -514,11 +514,12 @@ public class BankMoneyWalletDao {
         table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_PUBLIC_KEY_COLUMN, publicKey, DatabaseFilterType.EQUAL);
         table.loadToMemory();
         try {
-            return table.getRecords().get(0).getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN);
+            if(table.getRecords().size() > 0)
+                return table.getRecords().get(0).getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN);
         }catch (Exception e){
-            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            return null;
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
+        return null;
     }
 
 }

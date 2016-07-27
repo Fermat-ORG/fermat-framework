@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
@@ -51,8 +52,8 @@ public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implem
 
     public CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation(String customerAlias, NegotiationStatus status) {
 
-        this.customerIdentity = new CryptoBrokerWalletActorIdentity(customerAlias, new byte[0]);
-        this.brokerIdentity = new CryptoBrokerWalletActorIdentity("BrokerAlias", new byte[0]);
+        this.customerIdentity = new CryptoBrokerWalletActorIdentity(customerAlias, new byte[0], 0, GeoFrequency.NONE);
+        this.brokerIdentity = new CryptoBrokerWalletActorIdentity("BrokerAlias", new byte[0], 0, GeoFrequency.NONE);
         this.status = status;
 
         negotiationId = UUID.randomUUID();
@@ -82,8 +83,8 @@ public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implem
             saleNegotiationClauses = new ArrayList<>();
         }
 
-        for(Clause clause : saleNegotiationClauses){
-            clauses.put(clause.getType(), new CryptoBrokerWalletModuleClauseInformation(clause));
+        for (Clause clause : saleNegotiationClauses) {
+            clauses.put(clause.getType(), new com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.classes.CryptoBrokerWalletModuleClauseInformation(clause));
         }
     }
 

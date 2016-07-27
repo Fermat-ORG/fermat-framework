@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * The class <code>com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoCustomerLinkedActorIdentity</code>
  * represents a crypto customer actor identity.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
  */
 public final class CryptoCustomerLinkedActorIdentity extends LinkedActorIdentity implements Serializable {

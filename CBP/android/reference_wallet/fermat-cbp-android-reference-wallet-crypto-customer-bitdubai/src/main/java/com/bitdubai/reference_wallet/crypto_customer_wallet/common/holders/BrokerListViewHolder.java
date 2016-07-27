@@ -1,12 +1,8 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -18,8 +14,6 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerExchangeRatesAdapter;
-
-import java.io.ByteArrayInputStream;
 
 /**
  * View Holder for the {@link com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerListAdapter}
@@ -37,7 +31,6 @@ public class BrokerListViewHolder extends FermatViewHolder {
     public FermatTextView merchandiseToSell;
     public RecyclerView exchangeRates;
 
-
     /**
      * Create a view holder for the {@link com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerListAdapter}
      *
@@ -51,6 +44,7 @@ public class BrokerListViewHolder extends FermatViewHolder {
         brokerName = (FermatTextView) itemView.findViewById(R.id.ccw_broker_name);
         merchandiseToSell = (FermatTextView) itemView.findViewById(R.id.ccw_merchandise_to_sell);
         exchangeRates = (RecyclerView) itemView.findViewById(R.id.ccw_broker_exchange_rates);
+
 
         final Context context = itemView.getContext();
         quotesAdapter = new BrokerExchangeRatesAdapter(context);
@@ -67,13 +61,9 @@ public class BrokerListViewHolder extends FermatViewHolder {
 
         final byte[] profileImage = data.getProfileImage();
 
-        if( profileImage != null && profileImage.length > 0 ){
-            ByteArrayInputStream bytes = new ByteArrayInputStream(profileImage);
-            BitmapDrawable bmd = new BitmapDrawable(bytes);
-            brokerImage.setImageBitmap(bmd.getBitmap());
-        }else{
-            brokerImage.setImageResource(R.drawable.ic_profile_male);
-        }
+        Drawable brokerImg = getImgDrawable(profileImage);
+
+        brokerImage.setImageDrawable(brokerImg);
 
         loadDataInAdapter(data);
     }

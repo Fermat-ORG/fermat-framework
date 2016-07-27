@@ -12,24 +12,27 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
+
 
 /**
  * Created by Yordin Alayn on 29.01.16.
  */
-public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<CryptoCustomerWalletSessionReferenceApp, ResourceProviderManager>{
+public class OpenNegotiationAddNoteFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager> {
 
     private CustomerBrokerNegotiationInformation negotiationInfo;
 
-    public OpenNegotiationAddNoteFragment(){
+    public OpenNegotiationAddNoteFragment() {
 
     }
 
-    public static OpenNegotiationAddNoteFragment newInstance(){
+    public static OpenNegotiationAddNoteFragment newInstance() {
         return new OpenNegotiationAddNoteFragment();
     }
 
@@ -62,14 +65,14 @@ public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<Cryp
 
     private void bindData() {
 
-        negotiationInfo = (CustomerBrokerNegotiationInformation) appSession.getData(CryptoCustomerWalletSessionReferenceApp.NEGOTIATION_DATA);
+        negotiationInfo = (CustomerBrokerNegotiationInformation) appSession.getData(FragmentsCommons.NEGOTIATION_DATA);
 
     }
 
-    private void initViews(View layout){
+    private void initViews(View layout) {
 
         final EditText noteEditText = (EditText) layout.findViewById(R.id.ccw_open_negotiation_text_note);
-        if(negotiationInfo.getMemo() != null) noteEditText.setText(negotiationInfo.getMemo());
+        if (negotiationInfo.getMemo() != null) noteEditText.setText(negotiationInfo.getMemo());
 
         Button cancelNoteButton = (Button) layout.findViewById(R.id.ccw_open_negotiation_cancel_note);
         cancelNoteButton.setOnClickListener(new View.OnClickListener() {

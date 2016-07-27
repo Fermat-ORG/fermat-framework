@@ -6,8 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -26,8 +24,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Contrac
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ContractHistoryAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +43,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.
  * @version 1.0
  * @since 18/11/2015
  */
-public class ContractsHistoryActivityFragment extends FermatWalletListFragment<ContractBasicInformation,ReferenceAppFermatSession,ResourceProviderManager>
+public class ContractsHistoryActivityFragment extends FermatWalletListFragment<ContractBasicInformation, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<ContractBasicInformation> {
 
     // Constants
@@ -71,7 +69,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerWalletSessionReferenceApp) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             contractHistoryList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -98,28 +96,22 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.cbw_contract_history_menu, menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.cbw_action_no_filter) {
+        if (item.getItemId() == FragmentsCommons.NO_FILTER_OPTION_MENU_ID) {
             filterContractStatus = null;
             swipeRefreshLayout.setRefreshing(true);
             onRefresh();
             return true;
         }
 
-        if (item.getItemId() == R.id.cbw_action_filter_succeed) {
+        if (item.getItemId() == FragmentsCommons.SUCCEEDED_FILTER_OPTION_MENU_ID) {
             filterContractStatus = ContractStatus.COMPLETED;
             swipeRefreshLayout.setRefreshing(true);
             onRefresh();
             return true;
         }
 
-        if (item.getItemId() == R.id.cbw_action_filter_cancel) {
+        if (item.getItemId() == FragmentsCommons.CANCELED_FILTER_OPTION_MENU_ID) {
             filterContractStatus = ContractStatus.CANCELLED;
             swipeRefreshLayout.setRefreshing(true);
             onRefresh();
@@ -192,7 +184,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
-        appSession.setData(CryptoBrokerWalletSessionReferenceApp.CONTRACT_DATA, data);
+        appSession.setData(FragmentsCommons.CONTRACT_DATA, data);
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 

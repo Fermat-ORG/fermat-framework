@@ -2,24 +2,25 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatSideMenu;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 /**
  * Created by Matias Furszyfer on 2015.07.17..
  */
 
-public class SideMenu implements FermatSideMenu {
+public class SideMenu implements FermatSideMenu, Serializable {
 
     /**
      * SideMenu class member variables
      */
     List<MenuItem> menuItems = new ArrayList<>();
     private String backgroundColor;
+    private FermatDrawable backgroundDrawable;
     private String navigationIconColor;
-    private boolean hasFooter=false;
+    private boolean hasFooter = false;
 
     /**
      * SideMenu class constructors
@@ -31,7 +32,7 @@ public class SideMenu implements FermatSideMenu {
         this.menuItems = menuItems;
     }
 
-    public void addMenuItem (MenuItem menuItem){
+    public void addMenuItem(MenuItem menuItem) {
         menuItems.add(menuItem);
     }
 
@@ -39,14 +40,14 @@ public class SideMenu implements FermatSideMenu {
      * SideMenu class getters
      */
 
-    public List<MenuItem> getMenuItems () {
+    public List<MenuItem> getMenuItems() {
         return menuItems;
     }
 
     /**
      * SideMenu class setters
      */
-    public void setMenuItems (List<MenuItem> menuItems) {
+    public void setMenuItems(List<MenuItem> menuItems) {
         this.menuItems = menuItems;
     }
 
@@ -69,7 +70,7 @@ public class SideMenu implements FermatSideMenu {
 
     @Override
     public void clearSelected() {
-        for(MenuItem item : menuItems){
+        for (MenuItem item : menuItems) {
             item.setSelected(false);
         }
     }
@@ -88,9 +89,16 @@ public class SideMenu implements FermatSideMenu {
                 for (int i = 0; i < menuItems.size(); i++) {
                     menuItems.get(i).setNotifications(notifications[i]);
                 }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public FermatDrawable getBackgroundDrawable() {
+        return backgroundDrawable;
+    }
+
+    public void setBackgroundDrawable(FermatDrawable backgroundDrawable) {
+        this.backgroundDrawable = backgroundDrawable;
+    }
 }

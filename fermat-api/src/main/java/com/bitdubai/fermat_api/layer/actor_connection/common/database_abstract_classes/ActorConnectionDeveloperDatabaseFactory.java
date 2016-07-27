@@ -24,8 +24,9 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_api.layer.actor_connection.actor_connection.developer.bitdubai.version_1.database.ActorConnectionActorConnectionDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 04/12/15.
+ * Updated by Manuel Perez on 07/05/2016
  *
  * @author lnacosta
  * @version 1.0
@@ -35,7 +36,7 @@ import java.util.UUID;
 public abstract class ActorConnectionDeveloperDatabaseFactory {
 
     protected final PluginDatabaseSystem pluginDatabaseSystem;
-    private   final UUID                 pluginId            ;
+    private final UUID pluginId;
 
     protected Database database;
 
@@ -46,10 +47,10 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
      * @param pluginId             of the actor connection plug-in.
      */
     public ActorConnectionDeveloperDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem,
-                                                   final UUID                 pluginId            ) {
+                                                   final UUID pluginId) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
+        this.pluginId = pluginId;
     }
 
     /**
@@ -70,7 +71,7 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
 
             throw new CantInitializeActorConnectionDatabaseException(
                     cantOpenDatabaseException,
-                    "databaseName: "+ ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
+                    new StringBuilder().append("databaseName: ").append(ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME).toString(),
                     "There was an error trying to open database."
             );
 
@@ -89,7 +90,7 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
 
                 throw new CantInitializeActorConnectionDatabaseException(
                         cantCreateDatabaseException,
-                        "databaseName: "+ ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
+                        new StringBuilder().append("databaseName: ").append(ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME).toString(),
                         "There was an error trying to create database."
                 );
             }
@@ -108,8 +109,8 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
         List<DeveloperDatabase> databases = new ArrayList<>();
         databases.add(
                 developerObjectFactory.getNewDeveloperDatabase(
-                    ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
-                    this.pluginId.toString()
+                        ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
+                        this.pluginId.toString()
                 )
         );
         return databases;
@@ -125,14 +126,21 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
          */
         List<String> actorConnectionsColumns = new ArrayList<>();
 
-        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME);
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME);
-        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                );
-        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     );
-        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          );
-        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             );
-        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME);
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME);
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME);
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME);
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME);
+        //Location fields
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LATITUDE);
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LONGITUDE);
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACCURACY);
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TIME);
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALTITUDE);
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LOCATION_SOURCE);
 
         /**
          * Table Actor Connections addition.
@@ -161,7 +169,7 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
 
             List<String> developerRow;
 
-            for (final DatabaseTableRecord row: records){
+            for (final DatabaseTableRecord row : records) {
 
                 developerRow = new ArrayList<>();
 
@@ -173,14 +181,14 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
 
             return returnedRecords;
 
-        } catch (final CantLoadTableToMemoryException                 |
-                       CantInitializeActorConnectionDatabaseException e) {
+        } catch (final CantLoadTableToMemoryException |
+                CantInitializeActorConnectionDatabaseException e) {
 
             System.err.println(e);
 
             return new ArrayList<>();
 
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             return new ArrayList<>();
         }

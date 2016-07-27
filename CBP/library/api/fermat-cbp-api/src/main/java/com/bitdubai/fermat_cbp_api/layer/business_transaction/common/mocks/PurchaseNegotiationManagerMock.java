@@ -36,7 +36,7 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
 
     @Override
     public void updateCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
-        System.out.println("Mock method updateCustomerBrokerPurchaseNegotiation: "+negotiation);
+        System.out.println(new StringBuilder().append("Mock method updateCustomerBrokerPurchaseNegotiation: ").append(negotiation).toString());
     }
 
     @Override
@@ -55,6 +55,11 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
     }
 
     @Override
+    public boolean closeNegotiation(UUID negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+        return false;
+    }
+
+    @Override
     public void sendToBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         //Not implemented in this mock
     }
@@ -66,6 +71,11 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
 
     @Override
     public void waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+        //Not implemented in this mock
+    }
+
+    @Override
+    public void waitForClosing(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         //Not implemented in this mock
     }
 
@@ -148,7 +158,7 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
     }
 
     @Override
-    public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsPurchaseException{
+    public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsPurchaseException {
         return null;
     }
 }

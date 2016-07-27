@@ -15,35 +15,36 @@ public class DeviceLocation implements Location {
 
     private Double latitude;
     private Double longitude;
+    private long accuracy;
     private Long time;
     private Double altitude;
     private LocationSource provider;
 
     // Public constructor declarations.
-    public DeviceLocation(){
-        this.latitude  = null;
+    public DeviceLocation() {
+        this.latitude = null;
         this.longitude = null;
-        this.time      = null;
-        this.altitude  = null;
-        this.provider  = null;
+        this.time = null;
+        this.altitude = null;
+        this.provider = null;
     }
 
     /**
      * <p>DeviceLocation implementation constructor
      *
-     * @param latitude Double actual device latitude
+     * @param latitude  Double actual device latitude
      * @param longitude Double actual device longitude
-     * @param time Long actual device location time
-     * @param altitude Double actual device  altitude
-     * @param provider enum LocationSource actual location provider network
+     * @param time      Long actual device location time
+     * @param altitude  Double actual device  altitude
+     * @param provider  enum LocationSource actual location provider network
      */
-   public DeviceLocation(Double latitude, Double longitude, Long time, Double altitude, LocationSource provider){
-       this.latitude = latitude;
-       this.longitude = longitude;
-       this.time = time;
-       this.altitude = altitude;
-       this.provider = provider;
-   }
+    public DeviceLocation(Double latitude, Double longitude, Long time, Double altitude, LocationSource provider) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.time = time;
+        this.altitude = altitude;
+        this.provider = provider;
+    }
 
 
     /**
@@ -51,7 +52,7 @@ public class DeviceLocation implements Location {
      */
 
     /**
-     *<p>This method gets de actual device altitude
+     * <p>This method gets de actual device altitude
      *
      * @return double altitude
      */
@@ -62,6 +63,7 @@ public class DeviceLocation implements Location {
 
     /**
      * Set the Altitude
+     *
      * @param altitude
      */
     public void setAltitude(Double altitude) {
@@ -69,7 +71,7 @@ public class DeviceLocation implements Location {
     }
 
     /**
-     *<p>This method gets de actual device latitude
+     * <p>This method gets de actual device latitude
      *
      * @return double latitude
      */
@@ -80,6 +82,7 @@ public class DeviceLocation implements Location {
 
     /**
      * Set the Latitude
+     *
      * @param latitude
      */
     public void setLatitude(Double latitude) {
@@ -87,7 +90,7 @@ public class DeviceLocation implements Location {
     }
 
     /**
-     *<p>This method gets de actual device longitude
+     * <p>This method gets de actual device longitude
      *
      * @return double longitude
      */
@@ -98,14 +101,20 @@ public class DeviceLocation implements Location {
 
     /**
      * Set the Longitude
+     *
      * @param longitude
      */
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
+    @Override
+    public void setAccuracy(long accuracy) {
+        this.accuracy = accuracy;
+    }
+
     /**
-     *<p>This method gets de actual location network provider
+     * <p>This method gets de actual location network provider
      *
      * @return LocationSource enum
      */
@@ -115,8 +124,8 @@ public class DeviceLocation implements Location {
     }
 
     @Override
-    public Double getAccuracy() {
-        return 0.0;
+    public long getAccuracy() {
+        return accuracy;
     }
 
     @Override
@@ -126,6 +135,7 @@ public class DeviceLocation implements Location {
 
     /**
      * Set the Provider
+     *
      * @param provider
      */
     public void setProvider(LocationSource provider) {
@@ -133,7 +143,7 @@ public class DeviceLocation implements Location {
     }
 
     /**
-     *<p>This method gets de actual device location time
+     * <p>This method gets de actual device location time
      *
      * @return long time
      */
@@ -144,6 +154,7 @@ public class DeviceLocation implements Location {
 
     /**
      * Set the Time
+     *
      * @param time
      */
     public void setTime(Long time) {

@@ -1,5 +1,16 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services.Actors;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services.AvailableNodes;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services.ConfigurationService;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services.DeveloperDatabaseResource;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services.HelloResource;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services.Monitoring;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services.NetworkData;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services.Nodes;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services.OnlineComponents;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services.Profiles;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services.UserAuth;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Set;
@@ -35,10 +46,16 @@ public class JaxRsActivator extends Application {
 
     private static final ImmutableSet services = ImmutableSet.of(
             AvailableNodes.class,
-            DeveloperDatabaseResource.class,
             HelloResource.class,
             OnlineComponents.class,
-            Profiles.class
+            Profiles.class,
+            Nodes.class,
+            NetworkData.class,
+            Monitoring.class,
+            UserAuth.class,
+            ConfigurationService.class,
+            com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services.Databases.class,
+            Actors.class
     );
 
     @Override

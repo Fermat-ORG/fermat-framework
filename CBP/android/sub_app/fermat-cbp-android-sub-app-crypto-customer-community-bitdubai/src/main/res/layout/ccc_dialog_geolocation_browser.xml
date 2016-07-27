@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#f9f9f9"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ccc_close_geolocation_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="13dp"
+            android:layout_marginStart="13dp"
+            android:background="#F9F9F9"
+            android:src="@drawable/ccc_close_icon_gray"/>
+
+        <EditText
+            android:id="@+id/ccc_geolocation_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:background="#F9F9F9"
+            android:hint="@string/description_search"
+            android:textColor="@color/color_black"
+            android:textColorHint="#848484"
+            android:textSize="14sp"
+            />
+
+        <ImageView
+            android:id="@+id/lupita_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="13dp"
+            android:layout_marginRight="13dp"
+            android:background="#f9f9f9"
+            android:src="@drawable/ccc_search_icon_gray"
+            />
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:visibility="invisible"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/ccc_geolocation_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            tools:listitem="@layout/ccc_dialog_geolocation_browser_results_item"/>
+
+        <TextView
+            android:id="@+id/ccc_no_data_geo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/ccc_no_data_available"
+            android:textColor="#BCBEC0"
+            android:textSize="24sp"
+            android:visibility="gone"/>
+
+        <ProgressBar
+            android:id="@+id/ccc_geolocation_progress_bar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:indeterminate="true"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+
+</LinearLayout>

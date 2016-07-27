@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 public class SetMoneyTypeTest {
 
     @Test
-    public void setCurrencyType(){
+    public void setCurrencyType() {
         CryptoBrokerWalletBalanceRecordImpl cryptoBrokerWalletBalanceRecord = mock(CryptoBrokerWalletBalanceRecordImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoBrokerWalletBalanceRecord).setMoneyType(Mockito.any(MoneyType.class));
     }

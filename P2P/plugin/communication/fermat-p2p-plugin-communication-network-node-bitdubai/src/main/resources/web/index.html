@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="serverApp">
 <head>
+    <base href="/">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="Cloud Server Home Page">
+    <meta name="description" content="Network Node Home Page">
     <meta name="author" content="Fermat.org">
     <!-- <link rel="icon" href="http://getbootstrap.com/favicon.ico"> -->
 
-    <title>Fermat - Cloud Server</title>
+    <title>Fermat - Network Node</title>
 
     <!-- Bootstrap core CSS -->
     <link href="./css/bootstrap.min.css" rel="stylesheet">
@@ -44,7 +45,7 @@
               <nav>
                 <ul class="nav masthead-nav">
                   <li class="active"><a href="index.html">Home</a></li>
-                  <li><a href="#" data-toggle="modal" data-target="#loginModal" >Monitoring</a></li>
+                  <li><a data-toggle="modal" data-target="#loginModal" >Monitoring</a></li>
                   <li><a href="https://github.com/Fermat-ORG/fermat/blob/master/README-DEV-TEAMS.md#team-members-1" target="_blank" >Contact</a></li>
                 </ul>
               </nav>
@@ -53,8 +54,8 @@
 
           <div class="inner cover">
               <img src="https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png" class="img-responsive" alt="Fermat.org" />
-              <h1 class="cover-heading"><span class="glyphicon glyphicon-thumbs-up"></span> Cloud Server.</h1>
-            <p class="lead">If you're seeing this page, it means that your Cloud Serve is running and ready for use ... :)</p>
+              <h1 class="cover-heading"><span class="glyphicon glyphicon-thumbs-up"></span> Network Node.</h1>
+            <p class="lead">If you're seeing this page, it means that your Network Node is running and ready for use ... :)</p>
             <p class="lead">
               <a href="https://github.com/Fermat-ORG/fermat/blob/master/FERMAT-WHITE-PAPER.md" target="_blank" class="btn btn-lg btn-info">Learn more</a>
             </p>
@@ -113,10 +114,12 @@
     <script src="./js/bootstrap.min.js"></script>
     <script src="./js/sha256.js"></script>
     <script src="./js/angular.min.js"></script>
+    <script src="./js/angular-route.min.js"></script>
     <script src="./js/app.js"></script>
     <script src="./js/userController.js"></script>
     <script src="./js/Chart.min.js"></script>
     <script src="./js/angular-chart.min.js"></script>
+    <script src="./js/ng-map.min.js"></script>
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="./js/ie10-viewport-bug-workaround.js"></script>

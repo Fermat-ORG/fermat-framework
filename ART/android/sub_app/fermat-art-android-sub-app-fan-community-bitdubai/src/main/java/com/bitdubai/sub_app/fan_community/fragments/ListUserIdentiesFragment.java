@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.fan_community.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -31,7 +33,7 @@ import java.util.List;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 17/05/16.
  */
-public class ListUserIdentiesFragment extends AbstractFermatFragment<FanCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<FanCommunitySelectableIdentity> {
+public class ListUserIdentiesFragment extends AbstractFermatFragment<ReferenceAppFermatSession<FanCommunityModuleManager>, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<FanCommunitySelectableIdentity> {
 
     public static final String ACTOR_SELECTED = "actor_selected";
     private static final int MAX = 20;
@@ -66,6 +68,7 @@ public class ListUserIdentiesFragment extends AbstractFermatFragment<FanCommunit
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             rootView = inflater.inflate(R.layout.afc_fragment_list_identities, container, false);
+            rootView.setBackgroundColor(Color.parseColor("#F1F2F2"));
             try {
                 fanCommunitySelectableIdentities = moduleManager.listSelectableIdentities();
             } catch (final CantListIdentitiesToSelectException cantListIdentitiesToSelectException) {

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatBottomNavigation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWizard;
 
@@ -14,28 +15,28 @@ import java.util.Map;
 
 
 /**
- * Created by rodrigo on 2015.07.17.
+ * Created by Matias Furszyfer on 2015.07.17.
  */
 
-public class Activity implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity,Serializable {
+public class Activity implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity, Serializable {
     /**
      * Activity class member variables
-     *
+     * <p/>
      * TODO:  se debe cambiar y empezar a usar el String de activity type de abajo cuando esté hecho el activity factory
      */
     @Deprecated
     Activities type;
 
     /**
-     *  Activity type in String format
+     * Activity type in String format
      */
     String activityType;
 
     /**
-     *  the String is the fragments enum value corresponding to each plugin
+     * the String is the fragments enum value corresponding to each plugin
      */
 
-    Map<String, Fragment> fragments = new HashMap<String, Fragment>();
+    Map<String, FermatFragment> fragments = new HashMap<String, FermatFragment>();
 
     String lastFragment;
 
@@ -47,7 +48,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     Footer footer;
 
-    OptionsMenu optionsMenu;
+    com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu optionsMenu;
 
     TabStrip tabStrip;
 
@@ -85,7 +86,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.type = type;
     }
 
-    public void addFragment(String fragmentsType, Fragment fragment) {
+    public void addFragment(String fragmentsType, FermatFragment fragment) {
         fragments.put(fragmentsType, fragment);
     }
 
@@ -97,7 +98,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.sideMenu = sideMenu;
     }
 
-    public void setOptionsMenu(OptionsMenu optionsMenu) {
+    public void setOptionsMenu(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu optionsMenu) {
         this.optionsMenu = optionsMenu;
     }
 
@@ -118,8 +119,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.startFragment = startFragment;
     }
 
-    public void setBackActivity(Activities activity){
-        this.backActivity=activity;
+    public void setBackActivity(Activities activity) {
+        this.backActivity = activity;
     }
 
     public void setBackPublicKey(String backPublicKey) {
@@ -153,7 +154,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     }
 
     @Override
-    public OptionsMenu getOptionsMenu() {
+    public com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu getOptionsMenu() {
         return optionsMenu;
     }
 
@@ -193,7 +194,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     }
 
     @Override
-    public void changeBackActivity(String appPublicKeyback,String activityCode) throws InvalidParameterException {
+    public void changeBackActivity(String appPublicKeyback, String activityCode) throws InvalidParameterException {
         this.backPublicKey = appPublicKeyback;
         this.backActivity = Activities.getValueFromString(activityCode);
     }
@@ -205,24 +206,24 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     // TODO VER COMO HACER ESTO
     @Override
-    public Map<String, Fragment> getFragments() {
+    public Map<String, FermatFragment> getFragments() {
         return fragments;
     }
 
     @Override
-    public Fragment getLastFragment() {
-        if(lastFragment==null){
+    public FermatFragment getLastFragment() {
+        if (lastFragment == null) {
             lastFragment = startFragment;
         }
         return fragments.get(lastFragment);
     }
 
     @Override
-    public Fragment getFragment(String fragment) {
-        Iterator<Map.Entry<String, Fragment>> eSubApp = fragments.entrySet().iterator();
+    public FermatFragment getFragment(String fragment) {
+        Iterator<Map.Entry<String, FermatFragment>> eSubApp = fragments.entrySet().iterator();
         while (eSubApp.hasNext()) {
-            Map.Entry<String, Fragment> fragmentEntryEntry = eSubApp.next();
-            Fragment subApp = fragmentEntryEntry.getValue();
+            Map.Entry<String, FermatFragment> fragmentEntryEntry = eSubApp.next();
+            FermatFragment subApp = fragmentEntryEntry.getValue();
             if (subApp.getType().equals(fragment)) {
                 lastFragment = fragment;
                 return subApp;
@@ -236,7 +237,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
      * Add runtime Wizard to this Activity
      *
      * @param wizardTypeCode WizardType enumerable
-     * @param wizard     runtime wizard object to attach to this activity
+     * @param wizard         runtime wizard object to attach to this activity
      */
     public void addWizard(String wizardTypeCode, Wizard wizard) {
         if (wizards == null)
@@ -283,6 +284,23 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setBottomNavigationMenu(FermatBottomNavigation bottomNavigationMenu) {
         this.bottomNavigationMenu = bottomNavigationMenu;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("Activity{")
+                .append("activityType='").append(activityType)
+                .append('\'')
+                .append(", fragments=").append(fragments)
+                .append(", lastFragment='").append(lastFragment)
+                .append('\'')
+                .append(", startFragment='").append(startFragment)
+                .append('\'')
+                .append(", backPublicKey='").append(backPublicKey)
+                .append('\'')
+                .append(", backActivity=").append(backActivity)
+                .append('}').toString();
     }
 }
 

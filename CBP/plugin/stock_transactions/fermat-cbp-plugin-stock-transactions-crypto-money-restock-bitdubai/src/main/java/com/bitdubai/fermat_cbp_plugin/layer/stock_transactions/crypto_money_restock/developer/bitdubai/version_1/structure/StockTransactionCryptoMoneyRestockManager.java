@@ -1,10 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.exceptions.CantCreateCryptoMoneyRestockException;
@@ -12,7 +13,6 @@ import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.StockTransactionsCryptoMoneyRestockPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.MissingCryptoMoneyRestockDataException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * The Class <code>StockTransactionCryptoMoneyDestockManager</code>
  * contains all the business logic of Bank Money Transaction
- *
+ * <p/>
  * Created by franklin on 17/11/15.
  */
 public class StockTransactionCryptoMoneyRestockManager implements
@@ -34,19 +34,31 @@ public class StockTransactionCryptoMoneyRestockManager implements
     /**
      * Constructor with params.
      *
-     * @param pluginDatabaseSystem  database system reference.
-     * @param pluginId              of this module.
+     * @param pluginDatabaseSystem database system reference.
+     * @param pluginId             of this module.
      */
     public StockTransactionCryptoMoneyRestockManager(PluginDatabaseSystem pluginDatabaseSystem,
                                                      UUID pluginId,
                                                      StockTransactionsCryptoMoneyRestockPluginRoot pluginRoot) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
+        this.pluginId = pluginId;
         this.pluginRoot = pluginRoot;
     }
 
     @Override
-    public void createTransactionRestock(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey,  BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction, String originTransactionId, BlockchainNetworkType blockchainNetworkType) throws CantCreateCryptoMoneyRestockException {
+    public void createTransactionRestock(
+            String publicKeyActor,
+            CryptoCurrency cryptoCurrency,
+            String cbpWalletPublicKey,
+            String cryWalletPublicKey,
+            BigDecimal amount,
+            String memo,
+            BigDecimal priceReference,
+            OriginTransaction originTransaction,
+            String originTransactionId,
+            BlockchainNetworkType blockchainNetworkType,
+            long fee,
+            FeeOrigin feeOrigin) throws CantCreateCryptoMoneyRestockException {
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         CryptoMoneyRestockTransactionImpl cryptoMoneyRestockTransaction = new CryptoMoneyRestockTransactionImpl(
@@ -63,7 +75,9 @@ public class StockTransactionCryptoMoneyRestockManager implements
                 priceReference,
                 originTransaction,
                 originTransactionId,
-                blockchainNetworkType);
+                blockchainNetworkType,
+                fee,
+                feeOrigin);
 
         try {
             StockTransactionCryptoMoneyRestockFactory stockTransactionCryptoMoneyRestockFactory = new StockTransactionCryptoMoneyRestockFactory(pluginDatabaseSystem, pluginId);

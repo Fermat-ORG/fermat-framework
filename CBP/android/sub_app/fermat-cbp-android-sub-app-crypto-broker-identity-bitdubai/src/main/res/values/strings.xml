@@ -21,5 +21,9 @@
 
     <string name="cbp_broker_identity_welcome_subTitle">Welcome to the Broker Identity.</string>
     <string name="cbp_broker_identity_welcome_body">From here you will be able to create an Broker type identity.\n\nThis Identity, will identify you in the system as an broker, and give you access to all tasks and applications you need.\n\nOther broker or customer will be able to request connection to you by finding you with the information you provide here.</string>
+    <string name="cbp_broker_identity_gps">Please, turn on your GPS to register your location, then others can find you and you can find peers near to you.</string>
+    <string name="cbi_accuracy_km">Accuracy (Km)</string>
+    <string name="cbi_accuracy_hint">0 - 1000</string>
+    <string name="cbi_frequency">Frequency</string>
 
 </resources>

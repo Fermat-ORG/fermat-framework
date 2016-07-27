@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantListFrequentCustomersException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T LIST BROKER'S FREQUENT CUSTOMERS";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

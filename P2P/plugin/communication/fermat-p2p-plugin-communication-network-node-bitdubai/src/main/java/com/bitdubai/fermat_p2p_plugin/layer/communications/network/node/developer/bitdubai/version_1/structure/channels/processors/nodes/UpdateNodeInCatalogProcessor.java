@@ -1,9 +1,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
@@ -14,8 +11,10 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.AddNodeToCatalogMsgRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.AddNodeToCatalogMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.UpdateNodeInCatalogMsjRespond;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -30,7 +29,7 @@ import javax.websocket.Session;
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/04/16.
  *
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public class UpdateNodeInCatalogProcessor extends PackageProcessor {
 
@@ -53,7 +52,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
      * @see PackageProcessor#processingPackage(Session, Package)
      */
     @Override
-    public void processingPackage(Session session, Package packageReceived) {
+    public synchronized void processingPackage(Session session, Package packageReceived) {
 
         LOG.info("Processing new package received");
 
@@ -81,7 +80,6 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
                  */
                 nodeProfile = messageContent.getNodeProfile();
 
-
                 if (!getDaoFactory().getNodesCatalogDao().exists(nodeProfile.getIdentityPublicKey())){
 
                     LOG.info("The node profile to update no exist");
@@ -91,43 +89,53 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
                      */
                     updateNodeInCatalogMsjRespond = new UpdateNodeInCatalogMsjRespond(UpdateNodeInCatalogMsjRespond.STATUS.FAIL, "The node profile to update no exist", nodeProfile, Boolean.FALSE);
 
-                }else {
+                } else {
 
                     LOG.info("Updating ...");
+
+                    // create transaction for
+                    DatabaseTransaction databaseTransaction = getDaoFactory().getNodesCatalogDao().getNewTransaction();
+                    DatabaseTransactionStatementPair pair;
 
                     /*
                      * Insert NodesCatalog into data base
                      */
-                    updateNodesCatalog(nodeProfile);
+                    pair = updateNodesCatalog(nodeProfile);
+                    databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
+
+                    NodesCatalogTransaction transaction = createNodesCatalogTransaction(nodeProfile);
 
                     /*
                      * Insert NodesCatalogTransaction into data base
                      */
-                    NodesCatalogTransaction transaction = insertNodesCatalogTransaction(nodeProfile);
+                    pair = insertNodesCatalogTransaction(transaction);
+                    databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
 
                     /*
                      * Insert NodesCatalogTransactionsPendingForPropagation into data base
                      */
-                    insertNodesCatalogTransactionsPendingForPropagation(transaction);
+                    pair = insertNodesCatalogTransactionsPendingForPropagation(transaction);
+                    databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+                    databaseTransaction.execute();
 
                     /*
                      * If all ok, respond whit success message
                      */
                     updateNodeInCatalogMsjRespond = new UpdateNodeInCatalogMsjRespond(UpdateNodeInCatalogMsjRespond.STATUS.SUCCESS, UpdateNodeInCatalogMsjRespond.STATUS.SUCCESS.toString(), nodeProfile, Boolean.TRUE);
-
                 }
 
-                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.UPDATE_NODE_IN_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.UPDATE_NODE_IN_CATALOG_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
                  */
                 session.getAsyncRemote().sendObject(packageRespond);
 
-            }else {
+            } else {
 
                 updateNodeInCatalogMsjRespond = new UpdateNodeInCatalogMsjRespond(UpdateNodeInCatalogMsjRespond.STATUS.FAIL, "Invalid content type: "+messageContent.getMessageContentType(), nodeProfile, Boolean.FALSE);
-                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ADD_NODE_TO_CATALOG_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -149,7 +157,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
                  * Respond whit fail message
                  */
                 updateNodeInCatalogMsjRespond = new UpdateNodeInCatalogMsjRespond(AddNodeToCatalogMsjRespond.STATUS.EXCEPTION, exception.getLocalizedMessage(), nodeProfile, Boolean.FALSE);
-                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.UPDATE_NODE_IN_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.UPDATE_NODE_IN_CATALOG_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -164,14 +172,14 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
 
     }
 
-
     /**
      * Update a row into the data base
      *
      * @param nodeProfile
-     * @throws CantInsertRecordDataBaseException
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
-    private void updateNodesCatalog(NodeProfile nodeProfile) throws CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
+    private DatabaseTransactionStatementPair updateNodesCatalog(NodeProfile nodeProfile) throws CantCreateTransactionStatementPairException {
 
         /*
          * Create the NodesCatalog
@@ -183,27 +191,36 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
         nodeCatalog.setName(nodeProfile.getName());
         nodeCatalog.setOfflineCounter(0);
         nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-
-
-        //Validate if location are available
-        if (nodeProfile.getLocation() != null){
-            nodeCatalog.setLastLatitude(nodeProfile.getLocation().getLatitude());
-            nodeCatalog.setLastLongitude(nodeProfile.getLocation().getLongitude());
-        }
+        nodeCatalog.setLastLocation(nodeProfile.getLocation());
 
         /*
-         * Save into the data base
+         * Create statement.
          */
-        getDaoFactory().getNodesCatalogDao().update(nodeCatalog);
+        return getDaoFactory().getNodesCatalogDao().createUpdateTransactionStatementPair(nodeCatalog);
+    }
+
+    /**
+     * Create a new row into the data base
+     *
+     * @param nodesCatalogTransaction
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
+     */
+    private DatabaseTransactionStatementPair insertNodesCatalogTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantCreateTransactionStatementPairException {
+
+        /*
+         * Create statement.
+         */
+        return getDaoFactory().getNodesCatalogTransactionDao().createInsertTransactionStatementPair(nodesCatalogTransaction);
+
     }
 
     /**
      * Create a new row into the data base
      *
      * @param nodeProfile
-     * @throws CantInsertRecordDataBaseException
      */
-    private NodesCatalogTransaction insertNodesCatalogTransaction(NodeProfile nodeProfile) throws CantInsertRecordDataBaseException {
+    private NodesCatalogTransaction createNodesCatalogTransaction(NodeProfile nodeProfile) {
 
         /*
          * Create the NodesCatalog
@@ -213,22 +230,14 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
         transaction.setDefaultPort(nodeProfile.getDefaultPort());
         transaction.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
         transaction.setName(nodeProfile.getName());
-        transaction.setTransactionType(NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE);
+        transaction.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
         transaction.setHashId(transaction.getHashId());
         transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-
-
-        //Validate if location are available
-        if (nodeProfile.getLocation() != null){
-            transaction.setLastLatitude(nodeProfile.getLocation().getLatitude());
-            transaction.setLastLongitude(nodeProfile.getLocation().getLongitude());
-        }
+        transaction.setLastLocation(nodeProfile.getLocation());
 
         /*
-         * Save into the data base
+         * return NodesCatalogTransaction
          */
-        getDaoFactory().getNodesCatalogTransactionDao().create(transaction);
-
         return transaction;
     }
 
@@ -236,13 +245,14 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
      * Create a new row into the data base
      *
      * @param transaction
-     * @throws CantInsertRecordDataBaseException
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
-    private void insertNodesCatalogTransactionsPendingForPropagation(NodesCatalogTransaction transaction) throws CantInsertRecordDataBaseException {
+    private DatabaseTransactionStatementPair insertNodesCatalogTransactionsPendingForPropagation(NodesCatalogTransaction transaction) throws CantCreateTransactionStatementPairException {
 
         /*
-         * Save into the data base
+         * Create statement.
          */
-        getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().create(transaction);
+        return getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().createInsertTransactionStatementPair(transaction);
     }
 }

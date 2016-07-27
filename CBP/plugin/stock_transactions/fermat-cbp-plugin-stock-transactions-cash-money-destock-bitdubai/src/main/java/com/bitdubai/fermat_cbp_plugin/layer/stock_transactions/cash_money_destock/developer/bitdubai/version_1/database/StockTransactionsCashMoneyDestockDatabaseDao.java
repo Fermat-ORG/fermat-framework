@@ -71,7 +71,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
     }
 
     private DatabaseTableRecord getCashMoneyDestockRecord(CashMoneyTransaction cashMoneyTransaction
-                                                          ) throws DatabaseOperationException {
+    ) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -134,8 +134,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
 
     public void saveCashMoneyDestockTransactionData(CashMoneyTransaction cashMoneyTransaction) throws DatabaseOperationException, MissingCashMoneyDestockDataException {
 
-        try
-        {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -160,7 +159,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Bank Money Restock Transaction in the database.", null);
@@ -175,14 +174,15 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
             final List<DatabaseTableRecord> cashMoneyDestockData = getCashMoneyDestockData(filter);
             for (DatabaseTableRecord cashMoneyRestockRecord : cashMoneyDestockData) {
                 final CashMoneyTransaction cashMoneyTransaction = getCashMoneyDestockTransaction(cashMoneyRestockRecord);
-                cashMoneyTransactions.add(cashMoneyTransaction);
+
+                if (!cashMoneyTransaction.getTransactionStatus().equals(TransactionStatusRestockDestock.COMPLETED))
+                    cashMoneyTransactions.add(cashMoneyTransaction);
             }
 
             return cashMoneyTransactions;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e,
-                    "error trying to get Bank Money Restock Transaction from the database with filter: " + filter.toString(), null);
+                    new StringBuilder().append("error trying to get Bank Money Restock Transaction from the database with filter: ").append(filter.toString()).toString(), null);
         }
     }
 }

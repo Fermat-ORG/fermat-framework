@@ -15,6 +15,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CryptoMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
@@ -72,7 +74,7 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
     }
 
     private DatabaseTableRecord getBankMoneyRestockRecord(CryptoMoneyTransaction cryptoMoneyTransaction
-                                                          ) throws DatabaseOperationException {
+    ) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -90,6 +92,10 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cryptoMoneyTransaction.getOriginTransaction().getCode());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME, cryptoMoneyTransaction.getOriginTransactionId());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME, cryptoMoneyTransaction.getBlockchainNetworkType().getCode());
+        //Fee values
+        record.setLongValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_FEE_COLUMN_NAME, cryptoMoneyTransaction.getFee());
+        record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_FEE_ORIGIN_COLUMN_NAME, cryptoMoneyTransaction.getFeeOrigin().getCode());
+
         return record;
     }
 
@@ -128,13 +134,32 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         cryptoMoneyRestockTransaction.setOriginTransaction(OriginTransaction.getByCode(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
         cryptoMoneyRestockTransaction.setOriginTransactionId(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME));
         cryptoMoneyRestockTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME)));
+        //Fee values
+        long fee = cryptoMoneyRestockTransactionRecord.getLongValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_FEE_COLUMN_NAME);
+        long minimalFee = BitcoinFee.SLOW.getFee();
+        if (fee < minimalFee) {
+            fee = minimalFee;
+        }
+        String feeOriginString = cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_FEE_ORIGIN_COLUMN_NAME);
+        FeeOrigin feeOrigin;
+        if (feeOriginString == null || feeOriginString.isEmpty()) {
+            feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+        } else {
+            try {
+                feeOrigin = FeeOrigin.getByCode(feeOriginString);
+            } catch (InvalidParameterException ex) {
+                feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+            }
+        }
+        cryptoMoneyRestockTransaction.setFee(fee);
+        cryptoMoneyRestockTransaction.setFeeOrigin(feeOrigin);
+
         return cryptoMoneyRestockTransaction;
     }
 
     public void saveCryptoMoneyRestockTransactionData(CryptoMoneyTransaction cryptoMoneyTransaction) throws DatabaseOperationException, MissingCryptoMoneyRestockDataException {
 
-        try
-        {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -158,15 +183,14 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Bank Money Restock Transaction in the database.", null);
         }
     }
 
-    public List<CryptoMoneyTransaction> getCryptoMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException
-    {
+    public List<CryptoMoneyTransaction> getCryptoMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException {
         Database database = null;
         try {
             database = openDatabase();
@@ -175,17 +199,17 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
             for (DatabaseTableRecord cryptoMoneyRestockRecord : getCryptoMoneyRestockData(filter)) {
                 final CryptoMoneyTransaction cryptoMoneyTransaction = getCryptoMoneyRestockTransaction(cryptoMoneyRestockRecord);
 
-                cryptoMoneyTransactions.add(cryptoMoneyTransaction);
+                if (!cryptoMoneyTransaction.getTransactionStatus().equals(TransactionStatusRestockDestock.COMPLETED))
+                    cryptoMoneyTransactions.add(cryptoMoneyTransaction);
             }
 
             database.closeDatabase();
 
             return cryptoMoneyTransactions;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Bank Money Restock Transaction from the database with filter: " + filter.toString(), null);
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, new StringBuilder().append("error trying to get Bank Money Restock Transaction from the database with filter: ").append(filter.toString()).toString(), null);
         }
     }
 }

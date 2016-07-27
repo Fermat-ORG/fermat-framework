@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantPublishCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
@@ -27,14 +30,13 @@ public interface CryptoCustomerIdentityModuleManager extends ModuleManager<Ident
      * The method <code>createCryptoCustomerIdentity</code> is used to create a new crypto Customer identity
      *
      * @param cryptoBrokerName the name of the crypto Customer to create
-     * @param profileImage  the profile image of the crypto Customer to create
+     * @param profileImage     the profile image of the crypto Customer to create
      * @return the crypto Customer identity generated.
      * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException
      */
-    CryptoCustomerIdentityInformation createCryptoCustomerIdentity(String cryptoBrokerName, byte[] profileImage) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException;
+    CryptoCustomerIdentityInformation createCryptoCustomerIdentity(String cryptoBrokerName, byte[] profileImage, long accuracy, GeoFrequency frequency) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException;
 
     /**
-     *
      * @param cryptoBrokerIdentity
      */
     void updateCryptoCustomerIdentity(CryptoCustomerIdentityInformation cryptoBrokerIdentity) throws CantUpdateCustomerIdentityException;
@@ -44,7 +46,6 @@ public interface CryptoCustomerIdentityModuleManager extends ModuleManager<Ident
      * The method <code>publishIdentity</code> is used to publish a Broker identity
      *
      * @param cryptoCustomerPublicKey the public key of the crypto Broker to publish
-     *
      * @throws CantPublishCryptoBrokerException
      */
     void publishCryptoCustomerIdentity(String cryptoCustomerPublicKey) throws CouldNotPublishCryptoCustomerException;
@@ -53,7 +54,6 @@ public interface CryptoCustomerIdentityModuleManager extends ModuleManager<Ident
      * The method <code>publishIdentity</code> is used to publish a Broker identity
      *
      * @param cryptoCustomerPublicKey the public key of the crypto Broker to publish
-     *
      * @throws CantPublishCryptoBrokerException
      */
     void unPublishCryptoCustomerIdentity(String cryptoCustomerPublicKey) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotUnPublishCryptoCustomerException;
@@ -66,4 +66,10 @@ public interface CryptoCustomerIdentityModuleManager extends ModuleManager<Ident
      */
     List<CryptoCustomerIdentityInformation> getAllCryptoCustomersIdentities(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CantGetCryptoCustomerListException;
 
+    /**
+     * The method <code>getLocation</code> get location coordinates of the user
+     *
+     * @throws CantGetDeviceLocationException
+     */
+    Location getLocation() throws CantGetDeviceLocationException;
 }

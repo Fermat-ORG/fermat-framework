@@ -14,8 +14,8 @@ public class LinkedCryptoCustomerIdentityImpl implements LinkedCryptoCustomerIde
 
     private final UUID connectionId;
     private final String publicKey;
-    private final String alias    ;
-    private final byte[] image    ;
+    private final String alias;
+    private final byte[] image;
 
     public LinkedCryptoCustomerIdentityImpl(final UUID connectionId,
                                             final String publicKey,
@@ -24,16 +24,16 @@ public class LinkedCryptoCustomerIdentityImpl implements LinkedCryptoCustomerIde
 
         this.connectionId = connectionId;
         this.publicKey = publicKey;
-        this.alias     = alias    ;
-        this.image     = image    ;
+        this.alias = alias;
+        this.image = image;
     }
 
     public LinkedCryptoCustomerIdentityImpl(final CryptoCustomerActorConnection actorConnection) {
 
         this.connectionId = actorConnection.getConnectionId();
         this.publicKey = actorConnection.getPublicKey();
-        this.alias     = actorConnection.getAlias()    ;
-        this.image     = actorConnection.getImage()    ;
+        this.alias = actorConnection.getAlias();
+        this.image = actorConnection.getImage();
     }
 
     @Override
@@ -59,5 +59,24 @@ public class LinkedCryptoCustomerIdentityImpl implements LinkedCryptoCustomerIde
     @Override
     public List listCryptoCustomerWallets() {
         return null;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+
+        if (!LinkedCryptoCustomerIdentity.class.isAssignableFrom(obj.getClass())) return false;
+
+        final LinkedCryptoCustomerIdentityImpl other = (LinkedCryptoCustomerIdentityImpl) obj;
+
+        return !((this.publicKey == null) ? (other.publicKey != null) : !this.publicKey.equals(other.publicKey));
+
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.publicKey != null ? this.publicKey.hashCode() : 0);
+        return hash;
     }
 }

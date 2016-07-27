@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -75,6 +76,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
         OnStartDragListener,
         DesktopHolderClickCallback<Item> {
 
+    private static final String TAG = "DesktopFragment";
     private ItemTouchHelper mItemTouchHelper;
 
     /**
@@ -104,6 +106,8 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
     SettingsManager<AppManagerSettings> settingsSettingsManager;
     AppManagerSettings appManagerSettings;
     private Handler handler;
+
+    FolderDialog folderDialog = null;
 
     /**
      * Create a new instance of this fragment
@@ -212,7 +216,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
     }
 
 
-    @Override
+
     public void onRefresh() {
         if(!started) {
             FermatWorker worker = new FermatWorker() {
@@ -288,12 +292,12 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
 
 
-    @Override
+
     public boolean onQueryTextSubmit(String name) {
         return true;
     }
 
-    @Override
+
     public boolean onQueryTextChange(String s) {
         //Toast.makeText(getActivity(), "Probando busqueda completa", Toast.LENGTH_SHORT).show();
         return s.length() == 0 && isStartList;
@@ -316,9 +320,14 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
         try {
             lstItems = new ArrayList<>();
 
-            lstInstalledWallet = appSession.getModuleManager().getInstalledWallets();
+//TODO: Matias en este punto sa error de null point al arrancar y no muestra las wallets
+           lstInstalledWallet = appSession.getModuleManager().getInstalledWallets();
             lstItemsWithIcon = new ArrayList<>();
             Item[] arrItemsWithoutIcon = new Item[12];
+
+//TODO: Matias en este punto sa error de null point al arrancar y no muestra las wallets
+            // Object arrived null in method: getInstalledWallets, this happen when an error occur in the module or if you activate the timeout, please check your module and contact furszy if the error persist.
+
 
 
             for(InstalledWallet installedWallet: lstInstalledWallet) {
@@ -331,6 +340,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
                     }
 
+
                 if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode())) {
                     Item item = new Item(installedWallet);
                     item.setIconResource(R.drawable.icon_loss_protected);
@@ -339,13 +349,16 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
                     lstItemsWithIcon.add(item);
                 }
 
-                if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode())) {
-                    Item item = new Item(installedWallet);
-                    item.setIconResource(R.drawable.fermat_wallet_icon);
-                    item.setPosition(10);
-                    installedWallet.setAppStatus(AppsStatus.DEV);
-                    lstItemsWithIcon.add(item);
-                }
+
+
+               if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode())) {
+                   Item item = new Item(installedWallet);
+                   item.setIconResource(R.drawable.fermat_wallet_icon);
+                   item.setPosition(10);
+
+                   installedWallet.setAppStatus(AppsStatus.DEV);
+                   lstItemsWithIcon.add(item);
+               }
             }
 
             InstalledWallet installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(
@@ -383,53 +396,53 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
             lstItemsWithIcon.add(item);
 
             // Harcoded para testear el circuito más arriba
-            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
-                    WalletType.REFERENCE,
-                    new ArrayList<InstalledSkin>(),
-                    new ArrayList<InstalledLanguage>(),
-                    "asset_issuer",
-                    "Asset Issuer",
-                    WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(),
-                    "wallet_platform_identifier",
-                    new Version(1,0,0),
-                    AppsStatus.ALPHA);
-            lstInstalledWallet.add(installedWallet);
-            item = new Item(installedWallet);
-            item.setIconResource(R.drawable.asset_issuer);
-            item.setPosition(3);
-            lstItemsWithIcon.add(item);
-
-            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
-                    WalletType.REFERENCE,
-                    new ArrayList<InstalledSkin>(),
-                    new ArrayList<InstalledLanguage>(),
-                    "asset_user",
-                    "Asset User",
-                    WalletsPublicKeys.DAP_USER_WALLET.getCode(),
-                    "wallet_platform_identifier",
-                    new Version(1,0,0),
-                    AppsStatus.ALPHA);
-            lstInstalledWallet.add(installedWallet);
-            item = new Item(installedWallet);
-            item.setIconResource(R.drawable.asset_user_wallet);
-            item.setPosition(4);
-            lstItemsWithIcon.add(item);
-
-            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
-                    WalletType.REFERENCE,
-                    new ArrayList<InstalledSkin>(),
-                    new ArrayList<InstalledLanguage>(),
-                    "redeem_point",
-                    "Redeem Point",
-                    WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(),
-                    "wallet_platform_identifier",
-                    new Version(1,0,0),
-                    AppsStatus.ALPHA);
-            lstInstalledWallet.add(installedWallet);
-            item = new Item(installedWallet);
-            item.setIconResource(R.drawable.redeem_point);
-            item.setPosition(5);
-            lstItemsWithIcon.add(item);
+//            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+//                    WalletType.REFERENCE,
+//                    new ArrayList<InstalledSkin>(),
+//                    new ArrayList<InstalledLanguage>(),
+//                    "asset_issuer",
+//                    "Asset Issuer",
+//                    WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(),
+//                    "wallet_platform_identifier",
+//                    new Version(1,0,0),
+//                    AppsStatus.ALPHA);
+//            lstInstalledWallet.add(installedWallet);
+//            item = new Item(installedWallet);
+//            item.setIconResource(R.drawable.asset_issuer);
+//            item.setPosition(3);
+//            lstItemsWithIcon.add(item);
+//
+//            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+//                    WalletType.REFERENCE,
+//                    new ArrayList<InstalledSkin>(),
+//                    new ArrayList<InstalledLanguage>(),
+//                    "asset_user",
+//                    "Asset User",
+//                    WalletsPublicKeys.DAP_USER_WALLET.getCode(),
+//                    "wallet_platform_identifier",
+//                    new Version(1,0,0),
+//                    AppsStatus.ALPHA);
+//            lstInstalledWallet.add(installedWallet);
+//            item = new Item(installedWallet);
+//            item.setIconResource(R.drawable.asset_user_wallet);
+//            item.setPosition(4);
+//            lstItemsWithIcon.add(item);
+//
+//            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+//                    WalletType.REFERENCE,
+//                    new ArrayList<InstalledSkin>(),
+//                    new ArrayList<InstalledLanguage>(),
+//                    "redeem_point",
+//                    "Redeem Point",
+//                    WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(),
+//                    "wallet_platform_identifier",
+//                    new Version(1,0,0),
+//                    AppsStatus.ALPHA);
+//            lstInstalledWallet.add(installedWallet);
+//            item = new Item(installedWallet);
+//            item.setIconResource(R.drawable.redeem_point);
+//            item.setPosition(5);
+//            lstItemsWithIcon.add(item);
 
             //Banking Wallet
             installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
@@ -467,21 +480,21 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
 
             //TKY Fan Wallet
-            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
-                    WalletType.REFERENCE,
-                    new ArrayList<InstalledSkin>(),
-                    new ArrayList<InstalledLanguage>(),
-                    "fan_wallet",
-                    "Fan Wallet",
-                    WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
-                    "wallet_fan_platform_identifier",
-                    new Version(1,0,0),
-                    AppsStatus.DEV);
-            lstInstalledWallet.add(installedWallet);
-            item = new Item(installedWallet);
-            item.setIconResource(R.drawable.subapp_fan_wallet_icon);
-            item.setPosition(9);
-            lstItemsWithIcon.add(item);
+//            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+//                    WalletType.REFERENCE,
+//                    new ArrayList<InstalledSkin>(),
+//                    new ArrayList<InstalledLanguage>(),
+//                    "fan_wallet",
+//                    "Fan Wallet",
+//                    WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
+//                    "wallet_fan_platform_identifier",
+//                    new Version(1,0,0),
+//                    AppsStatus.DEV);
+//            lstInstalledWallet.add(installedWallet);
+//            item = new Item(installedWallet);
+//            item.setIconResource(R.drawable.subapp_fan_wallet_icon);
+//            item.setPosition(9);
+//            lstItemsWithIcon.add(item);
 
 
 
@@ -544,7 +557,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
     }
 
     @Override
-    public void onHolderItemClickListener(Item data, int position) {
+    public void onHolderItemClickListener(final Item data, int position) {
         try {
             switch (data.getType()) {
                 case SUB_APP:
@@ -563,15 +576,24 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
                     if(data.getInterfaceObject().getName().equals("Communities")){
                         changeActivity(Activities.DESKTOP_COMMUNITY_ACTIVITY);
                     }else {
-                        FolderDialog folderDialog = null;
-                        if(Build.VERSION.SDK_INT>Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                            folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), this,((FermatActivityManager)getActivity()).getAppStatus(),getScreenSize());
-                            folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                        }else{
-                            folderDialog = new FolderDialog(getActivity(), appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), this,((FermatActivityManager)getActivity()).getAppStatus(),getScreenSize());
-
-                        }
-                        folderDialog.show();
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    if(folderDialog==null) {
+                                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                            folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), DesktopFragment.this, ((FermatActivityManager) getActivity()).getAppStatus(), getScreenSize());
+                                            folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                        } else {
+                                            folderDialog = new FolderDialog(getActivity(), appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), DesktopFragment.this, ((FermatActivityManager) getActivity()).getAppStatus(), getScreenSize());
+                                        }
+                                    }
+                                    folderDialog.show();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
                     }
                     break;
                 default:
@@ -611,7 +633,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
     @Override
     public void onDestroy() {
-
+        if(folderDialog!=null) folderDialog.dismiss();
         adapter = null;
         mItemTouchHelper = null;
         super.onDestroy();
@@ -619,20 +641,24 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
     @Override
     public void onUpdateViewOnUIThread(String code) {
-        AppsStatus appsStatus = AppsStatus.getByCode(code);
-        switch (appsStatus){
-            case RELEASE:
-                break;
-            case BETA:
-                break;
-            case ALPHA:
-                break;
-            case DEV:
-                break;
-        }
+        try {
+            AppsStatus appsStatus = AppsStatus.getByCode(code);
+            switch (appsStatus) {
+                case RELEASE:
+                    return;
+                case BETA:
+                    return;
+                case ALPHA:
+                    break;
+                case DEV:
+                    break;
+            }
 
-        select(appsStatus);
-        super.onUpdateViewOnUIThread(code);
+            select(appsStatus);
+            super.onUpdateViewOnUIThread(code);
+        }catch (Exception e){
+            Log.e(TAG,"Desktop. No olvidar mejorar esto. furszy ");
+        }
     }
 }
 

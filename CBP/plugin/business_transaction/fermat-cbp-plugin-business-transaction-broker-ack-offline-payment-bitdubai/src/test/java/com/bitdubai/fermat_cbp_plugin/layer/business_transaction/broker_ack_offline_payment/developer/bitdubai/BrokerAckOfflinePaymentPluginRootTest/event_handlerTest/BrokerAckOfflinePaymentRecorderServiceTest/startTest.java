@@ -1,13 +1,12 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.BrokerAckOfflinePaymentPluginRootTest.event_handlerTest.BrokerAckOfflinePaymentRecorderServiceTest;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.event_handler.BrokerAckOfflinePaymentRecorderService;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +29,7 @@ public class startTest {
     BrokerAckOfflinePaymentRecorderService brokerAckOfflinePaymentRecorderService;
 
     @Before
-    public void setup()throws Exception{
+    public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
         brokerAckOfflinePaymentRecorderService = new BrokerAckOfflinePaymentRecorderService(brokerAckOfflinePaymentBusinessTransactionDao, eventManager);
 
@@ -39,16 +38,13 @@ public class startTest {
 
     }
 
-    public void setUpGeneralMockitoRules()throws Exception{
+    public void setUpGeneralMockitoRules() throws Exception {
         when(eventManager.getNewListener(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE)).thenReturn(fermatEventListener);
         when(eventManager.getNewListener(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE)).thenReturn(fermatEventListener);
         when(eventManager.getNewListener(EventType.NEW_CONTRACT_OPENED)).thenReturn(fermatEventListener);
 
 
     }
-
-
-
 
 
     @Test
@@ -60,7 +56,7 @@ public class startTest {
 
     }
 
-    @Test (expected = CantStartServiceException.class)
+    @Test(expected = CantStartServiceException.class)
     public void Should_throw_CantStartServiceException() throws Exception {
         brokerAckOfflinePaymentRecorderService = new BrokerAckOfflinePaymentRecorderService(null, eventManager);
         brokerAckOfflinePaymentRecorderService.start();
@@ -71,7 +67,7 @@ public class startTest {
 
     @Test
     public void testStop_Should_Return_Stop() throws Exception {
-        brokerAckOfflinePaymentRecorderService = new BrokerAckOfflinePaymentRecorderService(brokerAckOfflinePaymentBusinessTransactionDao,eventManager);
+        brokerAckOfflinePaymentRecorderService = new BrokerAckOfflinePaymentRecorderService(brokerAckOfflinePaymentBusinessTransactionDao, eventManager);
         brokerAckOfflinePaymentRecorderService.setEventManager(eventManager);
         brokerAckOfflinePaymentRecorderService.start();
         brokerAckOfflinePaymentRecorderService.stop();

@@ -1,10 +1,14 @@
-<android.support.v4.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/swipeRefreshLayout"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="#f3e4c4" android:gravity="center" android:orientation="vertical"
-    android:paddingBottom="7dip" android:paddingLeft="7dip" android:paddingRight="7dip"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f3e4c4"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="7dip"
+    android:paddingLeft="7dip"
+    android:paddingRight="7dip"
     android:paddingTop="7dip">
 
     <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
@@ -12,7 +16,7 @@
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
             android:background="#f3e4c4" android:orientation="vertical"
-            tools:context="com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BlankFragment">
+            tools:context="com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.BlankFragment">
 
             <!-- TODO: Update blank fragment layout -->
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"

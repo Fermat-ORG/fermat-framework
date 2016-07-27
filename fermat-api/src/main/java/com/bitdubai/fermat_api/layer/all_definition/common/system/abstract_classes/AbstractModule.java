@@ -16,6 +16,6 @@ public abstract class AbstractModule<S extends FermatSettings, I extends ActiveA
         super(pluginVersionReference);
     }
 
-    public abstract ModuleManager<S,I> getModuleManager() throws CantGetModuleManagerException;
+    public abstract ModuleManager<S, I> getModuleManager() throws CantGetModuleManagerException;
 
 }

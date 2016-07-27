@@ -48,6 +48,7 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
     private Button cancelBtn;
     private Toolbar toolbar;
     private String textToCopy;
+    private  FermatWorker worker;
 
     public static WalletErrorReportFragment newInstance() { return new WalletErrorReportFragment(); }
 
@@ -114,12 +115,12 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
         okBtn = (Button) layout.findViewById(R.id.okButton);
         cancelBtn = (Button) layout.findViewById(R.id.cancelButton);
         copyEdit.setText("");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        /*toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
             }
-        });
+        });*/
 
 
         copyEdit.setOnLongClickListener(new View.OnLongClickListener() {
@@ -131,7 +132,7 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
                         progressDialog.setMessage("Please wait");
                         progressDialog.setCancelable(false);
                         progressDialog.show();
-                        FermatWorker worker = new FermatWorker() {
+                        worker = new FermatWorker() {
                             @Override
                             protected Object doInBackground() throws Exception {
                                 return getMoreData();
@@ -205,7 +206,7 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
             @Override
             public void onClick(View v) {
                 try {
-                    changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
+                    changeActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY, appSession.getAppPublicKey());
                 } catch (Exception e) {
                     errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, e);
                 }

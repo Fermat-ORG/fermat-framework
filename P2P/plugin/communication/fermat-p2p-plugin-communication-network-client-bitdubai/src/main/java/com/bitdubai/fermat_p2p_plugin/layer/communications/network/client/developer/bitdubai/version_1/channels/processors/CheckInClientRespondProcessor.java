@@ -2,20 +2,28 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionSuccessEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientRegisteredEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.daos.NodeConnectionHistoryDao;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.entities.NodeConnectionHistory;
+
+import java.sql.Timestamp;
 
 import javax.websocket.Session;
 
 /**
  * The Class <code>CheckInClientRespondProcessor</code>
- * process all packages received the type <code>PackageType.CHECK_IN_CLIENT_RESPOND</code><p/>
+ * process all packages received the type <code>PackageType.CHECK_IN_CLIENT_RESPONSE</code><p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 07/04/2016.
  *
@@ -25,16 +33,22 @@ import javax.websocket.Session;
  */
 public class CheckInClientRespondProcessor extends PackageProcessor {
 
+    /*
+     *
+     */
+    private NodeConnectionHistoryDao nodeConnectionHistoryDao;
+
     /**
      * Constructor whit parameter
      *
-     * @param communicationsNetworkClientChannel register
+     * @param networkClientCommunicationChannel register
      */
-    public CheckInClientRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public CheckInClientRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
-                communicationsNetworkClientChannel,
-                PackageType.CHECK_IN_CLIENT_RESPOND
+                networkClientCommunicationChannel,
+                PackageType.CHECK_IN_CLIENT_RESPONSE
         );
+        nodeConnectionHistoryDao = new NodeConnectionHistoryDao((Database) ClientContext.get(ClientContextItem.DATABASE));
     }
 
     /**
@@ -45,7 +59,7 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
     public void processingPackage(final Session session        ,
                                   final Package packageReceived) {
 
-        System.out.println("Processing new package received, packageType: "+packageReceived.getPackageType());
+        System.out.println("Processing new package received, packageType: " + packageReceived.getPackageType());
         CheckInProfileMsjRespond checkInProfileMsjRespond = CheckInProfileMsjRespond.parseContent(packageReceived.getContent());
 
         if(checkInProfileMsjRespond.getStatus() == CheckInProfileMsjRespond.STATUS.SUCCESS){
@@ -87,6 +101,14 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
 
             }else{
 
+                /*
+                 * save the NodeProfile into the table NodeConnectionHistory
+                 * if nodeProfile is null then it is connected in the the Seed Node
+                 * else save in the table
+                 */
+                if(getChannel().getConnection().getNodeProfile() != null)
+                    saveNodeProfileInHistoryConnection(getChannel().getConnection().getNodeProfile());
+
             /*
              * Create a raise a new event whit the platformComponentProfile registered
              */
@@ -104,6 +126,29 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
 
         } else {
             //there is some wrong
+        }
+
+    }
+
+    private void saveNodeProfileInHistoryConnection(NodeProfile nodeProfile){
+
+        NodeConnectionHistory nodeConnectionHistory = new NodeConnectionHistory(
+                nodeProfile.getIdentityPublicKey(),
+                nodeProfile.getIp(),
+                nodeProfile.getDefaultPort(),
+                nodeProfile.getLocation().getLatitude(),
+                nodeProfile.getLocation().getLongitude(),
+                new Timestamp(System.currentTimeMillis()));
+
+        try {
+
+            if(!nodeConnectionHistoryDao.exists(nodeProfile.getIdentityPublicKey()))
+                nodeConnectionHistoryDao.create(nodeConnectionHistory);
+            else
+                nodeConnectionHistoryDao.update(nodeConnectionHistory);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

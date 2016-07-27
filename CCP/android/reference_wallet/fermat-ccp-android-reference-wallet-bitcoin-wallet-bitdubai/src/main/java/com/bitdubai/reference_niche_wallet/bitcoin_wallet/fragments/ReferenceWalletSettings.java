@@ -1,11 +1,13 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -20,6 +22,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
@@ -47,8 +51,10 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
     private ReferenceAppFermatSession<CryptoWallet> referenceWalletSession;
     private BitcoinWalletSettings bitcoinWalletSettings = null;
     private String previousSelectedItem = "RegTest";
+    private String previousSelectedFee = "NORMAL";
+    private CryptoWallet moduleManager;
 
-    private CryptoWalletWalletContact cryptoWalletWalletContact;
+
     private BlockchainNetworkType blockchainNetworkType;
 
     public static ReferenceWalletSettings newInstance() {
@@ -60,7 +66,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
         super.onCreate(savedInstanceState);
         referenceWalletSession = appSession;
         try {
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             //noinspection unchecked
         } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -70,12 +76,12 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
     protected List<PreferenceSettingsItem> setSettingsItems() {
-        BlockchainNetworkType blockchainNetworkType = null;
+
         List<PreferenceSettingsItem> list = new ArrayList<>();
 
         //noinspection TryWithIdenticalCatches
@@ -101,24 +107,45 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
 
             }
 
+            if (bitcoinWalletSettings.getFeedLevel() != null)
+                previousSelectedFee = bitcoinWalletSettings.getFeedLevel();
 
-            final Bundle dataDialog = new Bundle();
-            dataDialog.putInt("items", R.array.items);
-            dataDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
-            dataDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
-            dataDialog.putString("title", getResources().getString(R.string.title_label));
-            dataDialog.putString("mode", "single_option");
-            dataDialog.putString("previous_selected_item", previousSelectedItem);
-            list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", dataDialog));
+
+            final Bundle networkDialog = new Bundle();
+            String items[] = new String[]{"MainNet", "TestNet"};
+            networkDialog.putStringArray("items_array", items);
+            networkDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
+            networkDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
+            networkDialog.putString("title", getResources().getString(R.string.title_label));
+            networkDialog.putString("mode", "single_option");
+            networkDialog.putString("previous_selected_item", previousSelectedItem);
+            list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", networkDialog));
+
+            //feed level options
+
+            String feedLevel[] = new String[BitcoinFee.values().length];
+
+            feedLevel[0] = BitcoinFee.SLOW.toString();
+            feedLevel[1] = BitcoinFee.NORMAL.toString();
+            feedLevel[2] = BitcoinFee.FAST.toString();
+
+            final Bundle dataDialogFeed = new Bundle();
+            dataDialogFeed.putStringArray("items_array", feedLevel);
+            dataDialogFeed.putString("positive_button_text", getResources().getString(R.string.ok_label));
+            dataDialogFeed.putString("negative_button_text", getResources().getString(R.string.cancel_label));
+            dataDialogFeed.putString("title", getResources().getString(R.string.title_Fee));
+            dataDialogFeed.putString("mode", "single_option");
+            dataDialogFeed.putString("previous_selected_item", previousSelectedFee);
+            list.add(new PreferenceSettingsOpenDialogText(13, "Feed Level", dataDialogFeed));
 
 
             list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.GRAY));
 
-            list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
+            //list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 
-            list.add(new PreferenceSettingsLinkText(11, "Send Bitcoins To Loss Protected Wallet", "",15,Color.GRAY));
+           // list.add(new PreferenceSettingsLinkText(11, "Send Bitcoins To Loss Protected Wallet", "",15,Color.GRAY));
 
-            list.add(new PreferenceSettingsLinkText(12, "Import Mnemonic code", "",15,Color.GRAY));
+           // list.add(new PreferenceSettingsLinkText(12, "Import Mnemonic code", "",15,Color.GRAY));
 
 
         } catch (CantGetSettingsException e) {
@@ -216,8 +243,10 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
                     @Override
                     public void run() {
                         try {
-                            appSession.getModuleManager().importMnemonicCode(tempList,date,BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
+                            appSession.getModuleManager().importMnemonicCode(tempList,date, blockchainNetworkType);
+                            showMessage(getActivity(), "Import Mnemonic code OK ");
+                        } catch (CantImportSeedException cantLoadExistingVaultSeed) {
+                            showMessage(getActivity(), "Import Mnemonic code ERROR " + cantLoadExistingVaultSeed.getMessage());
                             cantLoadExistingVaultSeed.printStackTrace();
                         }
                     }
@@ -236,7 +265,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
         builder.show();
     }
 
-    private void sendCrypto() {
+   /* private void sendCrypto() {
         try {
             if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
                 CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(),appSession.getModuleManager(),blockchainNetworkType);
@@ -247,7 +276,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
         }catch (Exception e){
 
         }
-    }
+    }*/
 
     @Override
     public void onSettingsTouched(String item, int position) {
@@ -304,7 +333,9 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
     @Override
     public void dialogOptionSelected(String item, int position) {
 
-        BlockchainNetworkType blockchainNetworkType;
+        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+
+        String feedLevel = "SLOW";
 
         switch (item) {
 
@@ -322,12 +353,12 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
                 break;
 
             default:
-                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                feedLevel = item;
+                bitcoinWalletSettings.setFeedLevel(feedLevel);
                 break;
 
         }
 
-        System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
 
         if (blockchainNetworkType == null) {
             if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {

@@ -32,7 +32,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 @SuppressWarnings({"unchecked", "FieldCanBeLocal"})
-public class IdentityListFragment extends FermatListFragment<RedeemPointIdentity,ReferenceAppFermatSession>
+public class IdentityListFragment extends FermatListFragment<RedeemPointIdentity, ReferenceAppFermatSession>
         implements FermatListItemListeners<RedeemPointIdentity> {
 
 
@@ -99,7 +99,7 @@ public class IdentityListFragment extends FermatListFragment<RedeemPointIdentity
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

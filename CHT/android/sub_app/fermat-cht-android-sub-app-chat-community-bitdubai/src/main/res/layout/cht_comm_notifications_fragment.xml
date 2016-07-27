@@ -16,19 +16,20 @@
         tools:ignore="UselessParent">
 
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <!--android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"-->
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/my_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:padding="20dp"
                 android:scrollbars="vertical"
                 android:divider="@drawable/cht_list_divider"
                 tools:listitem="@layout/cht_comm_notification_item" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+        <!--/android.support.v4.widget.SwipeRefreshLayout-->
 
         <!--Empty view-->
         <LinearLayout
@@ -51,15 +52,23 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No notifications"
+                android:text="No Notifications"
                 android:id="@+id/nodatalabel"
-                android:textColor="#D1D3D4"
+                android:textColor="#BCBEC0"
                 android:textStyle="normal"
                 android:textSize="12pt"
                 android:layout_below="@+id/nodata"
                 android:layout_centerHorizontal="true" />
 
         </LinearLayout>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/progressBar"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 

@@ -18,10 +18,10 @@ public class Layout {
     }
 
 
-    public Layout(UUID id, String filename,String name) {
+    public Layout(UUID id, String filename, String name) {
         this.id = id;
         this.filename = filename;
-        this.name=name;
+        this.name = name;
     }
 
 

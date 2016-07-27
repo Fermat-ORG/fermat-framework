@@ -2,6 +2,7 @@ package org.fermat.fermat_dap_android_wallet_redeem_point.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_redeem_point.common.header.WalletRedeemPointHeaderPainter;
 import org.fermat.fermat_dap_android_wallet_redeem_point.factory.WalletRedeemPointFragmentFactory;
@@ -112,5 +114,11 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections<Referen
             e.printStackTrace();
         }
         return notification;
+    }
+
+
+    @Override
+    public ResourceSearcher getResourceSearcher() {
+        return new WalletRedeemPointSearcher();
     }
 }

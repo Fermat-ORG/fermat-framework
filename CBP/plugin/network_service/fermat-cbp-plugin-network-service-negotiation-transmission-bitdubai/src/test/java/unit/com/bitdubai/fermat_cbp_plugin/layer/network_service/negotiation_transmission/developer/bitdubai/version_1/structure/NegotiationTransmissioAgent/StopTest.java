@@ -1,6 +1,8 @@
 package unit.com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissioAgent;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -12,8 +14,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionAgent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,11 +31,11 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class StopTest {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.ERROR_MANAGER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     @Mock
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.EVENT_MANAGER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     @Mock
     private EventManager eventManager;
 
@@ -59,7 +59,7 @@ public class StopTest {
     private NegotiationTransmissionAgent testMonitorAgent;
 
     @Test
-    public void Stop_AgentStops_TheThreadIsStoppedInmediately() throws Exception{
+    public void Stop_AgentStops_TheThreadIsStoppedInmediately() throws Exception {
         ECCKeyPair identity = new ECCKeyPair();
         testMonitorAgent = new NegotiationTransmissionAgent(
                 pluginRoot,
@@ -77,12 +77,12 @@ public class StopTest {
         testMonitorAgent.start();
         Thread.sleep(100);
         int i = 0;
-        while(testMonitorAgent.isRunning()){
+        while (testMonitorAgent.isRunning()) {
             ++i;
-            if(i>5)
+            if (i > 5)
                 testMonitorAgent.stop();
             Thread.sleep(100);
-            if(i>200)
+            if (i > 200)
                 break;
         }
         assertThat(i).isLessThan(200);

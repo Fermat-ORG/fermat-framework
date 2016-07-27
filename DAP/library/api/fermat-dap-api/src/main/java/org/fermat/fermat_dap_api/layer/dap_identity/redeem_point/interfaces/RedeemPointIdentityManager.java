@@ -6,6 +6,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 
 import java.io.Serializable;
 import java.util.List;
@@ -40,12 +41,15 @@ public interface RedeemPointIdentityManager extends FermatManager, Serializable 
      * @return the intra user created
      * @throws CantCreateNewRedeemPointException if something goes wrong.
      */
-    RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage) throws CantCreateNewRedeemPointException;
+    RedeemPointIdentity createNewRedeemPoint(String alias,
+                                             byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantCreateNewRedeemPointException;
 
 
     RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage,
                                              String contactInformation, String countryName, String provinceName, String cityName,
-                                             String postalCode, String streetName, String houseNumber) throws CantCreateNewRedeemPointException;
+                                             String postalCode, String streetName, String houseNumber,
+                                             int accuracy,
+                                             GeoFrequency frequency) throws CantCreateNewRedeemPointException;
 
     /**
      * The method <code>updateIdentityAssetIssuer</code> change a identity information data
@@ -57,7 +61,9 @@ public interface RedeemPointIdentityManager extends FermatManager, Serializable 
      */
     void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage,
                                    String contactInformation, String countryName, String provinceName, String cityName,
-                                   String postalCode, String streetName, String houseNumber) throws CantUpdateIdentityRedeemPointException;
+                                   String postalCode, String streetName, String houseNumber,
+                                   int accuracy,
+                                   GeoFrequency frequency) throws CantUpdateIdentityRedeemPointException;
 
     /**
      * The method <code>hasAssetUserIdentity</code> returns if has a intra user identity created
@@ -71,4 +77,8 @@ public interface RedeemPointIdentityManager extends FermatManager, Serializable 
 //    void createIdentity(String name, byte[] profile_img,
 //                        String contactInformation, String countryName, String provinceName, String cityName,
 //                        String postalCode, String streetName, String houseNumber) throws Exception;
+
+    int getAccuracyDataDefault();
+
+    GeoFrequency getFrequencyDataDefault();
 }

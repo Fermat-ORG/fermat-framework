@@ -9,13 +9,12 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageDeliveredEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageTransmitEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.*;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageFailedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MessageTransmitRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
 
 import javax.websocket.Session;
 
@@ -32,12 +31,12 @@ public class MessageTransmitRespondProcessor extends PackageProcessor{
     /**
      * Constructor whit parameter
      *
-     * @param communicationsNetworkClientChannel register
+     * @param networkClientCommunicationChannel register
      */
-    public MessageTransmitRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public MessageTransmitRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
-                communicationsNetworkClientChannel,
-                PackageType.MESSAGE_TRANSMIT_RESPOND
+                networkClientCommunicationChannel,
+                PackageType.MESSAGE_TRANSMIT_RESPONSE
         );
     }
 
@@ -55,6 +54,7 @@ public class MessageTransmitRespondProcessor extends PackageProcessor{
             /*
              * Create a raise a new event whit NETWORK_CLIENT_SENT_MESSAGE_DELIVERED
              */
+//            System.out.println("12345P2P MENSAJE CONFIRMADO");
             FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_SENT_MESSAGE_DELIVERED);
             event.setSource(EventSource.NETWORK_CLIENT);
 
@@ -69,8 +69,22 @@ public class MessageTransmitRespondProcessor extends PackageProcessor{
 
 
         }else{
+            //TODO: cambiar a pending to send y al límite de intentos, cambiar a fallido
+             /*
+             * Create a raise a new event whit NETWORK_CLIENT_SENT_MESSAGE_FAILED
+             */
+//            System.out.println("12345P2P MENSAJE FALLIDO");
+            FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_SENT_MESSAGE_FAILED);
+            event.setSource(EventSource.NETWORK_CLIENT);
 
+            ((NetworkClientNewMessageFailedEvent) event).setId(messageTransmitRespond.getMessageId().toString());
+            ((NetworkClientNewMessageFailedEvent) event).setNetworkServiceTypeSource(packageReceived.getNetworkServiceTypeSource());
 
+            /*
+             * Raise the event
+             */
+            System.out.println("MessageTransmitRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_SENT_MESSAGE_DELIVERED");
+            getEventManager().raiseEvent(event);
         }
 
     }

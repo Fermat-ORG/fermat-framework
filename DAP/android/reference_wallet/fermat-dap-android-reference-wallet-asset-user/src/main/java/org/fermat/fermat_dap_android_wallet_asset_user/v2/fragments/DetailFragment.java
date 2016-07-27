@@ -148,7 +148,7 @@ public class DetailFragment extends AbstractFermatFragment<AssetUserSessionRefer
                 .setIcon(R.drawable.ic_transfer)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, IC_ACTION_USER_ASSET_APPROPRIATE, 0, res.getString(R.string.dap_user_wallet_action_appropriate))
-                .setIcon(R.drawable.ic_appropriate)
+                .setIcon(R.drawable.ic_appropriate_user_wallet)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, IC_ACTION_USER_ITEM_SELL, 0, res.getString(R.string.dap_user_wallet_action_sell))
                 .setIcon(R.drawable.ic_sell)

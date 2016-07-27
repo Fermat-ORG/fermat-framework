@@ -25,13 +25,14 @@ public class SubmitMerchandiseOverloadTest {
     /**
      * This test method not implement all the interfaces needed for a correct behavior, is only for
      * test the way how this method search the wallet public key from wallet settings.
+     *
      * @throws Exception
      */
     @Test
-    public void submitMerchandiseOverloadMethodWithValidArguments() throws Exception{
+    public void submitMerchandiseOverloadMethodWithValidArguments() throws Exception {
         //This test is only to check the overload method.
         thrown.expect(Exception.class);
-        CryptoBrokerWalletManager cryptoBrokerWalletManagerMock=new CryptoBrokerWalletManager() {
+        CryptoBrokerWalletManager cryptoBrokerWalletManagerMock = new CryptoBrokerWalletManager() {
             @Override
             public void createCryptoBrokerWallet(String walletPublicKey) throws CantCreateCryptoBrokerWalletException {
                 //Not implemented
@@ -42,10 +43,10 @@ public class SubmitMerchandiseOverloadTest {
                 return new CryptoBrokerWalletMock();
             }
         };
-        BrokerSubmitOfflineMerchandiseTransactionManager brokerSubmitOfflineMerchandiseTransactionManager=
-                new BrokerSubmitOfflineMerchandiseTransactionManager(null,null,null,cryptoBrokerWalletManagerMock,null);
-        BigDecimal referencePrice=BigDecimal.TEN;
-        brokerSubmitOfflineMerchandiseTransactionManager.submitMerchandise(referencePrice,"CBPWalletPublicKey","ContractHash");
+        BrokerSubmitOfflineMerchandiseTransactionManager brokerSubmitOfflineMerchandiseTransactionManager =
+                new BrokerSubmitOfflineMerchandiseTransactionManager(null, null, null, cryptoBrokerWalletManagerMock, null);
+        BigDecimal referencePrice = BigDecimal.TEN;
+        brokerSubmitOfflineMerchandiseTransactionManager.submitMerchandise(referencePrice, "CBPWalletPublicKey", "ContractHash");
 
     }
 

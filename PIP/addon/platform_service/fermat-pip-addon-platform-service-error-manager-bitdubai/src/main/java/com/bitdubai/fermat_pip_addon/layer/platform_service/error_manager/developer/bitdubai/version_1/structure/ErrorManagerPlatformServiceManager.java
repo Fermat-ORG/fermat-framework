@@ -20,7 +20,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.hardware.HardwareManager;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
-import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.util.GMailSender;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -38,7 +37,7 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
 
 
     private final HardwareManager hardwareManager;
-    GMailSender gMailSender = new GMailSender("fermatmatiasreport@gmail.com", "fermat123");
+//    GMailSender gMailSender = new GMailSender("fermatmatiasreport@gmail.com", "fermat123");
 
     private boolean isErrorReport;
 
@@ -136,6 +135,12 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
         this.isErrorReport = isErrorReportEnabled;
     }
 
+    @Override
+    public void reportUnexpectedPluginException(Plugins plugin, Platforms platform, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception, String[] mailTo, String extraData) {
+        String msgException = processException(plugin.toString(), unexpectedPluginExceptionSeverity.toString()+",ExtraData: "+extraData, exception);
+        if (isErrorReport) sendReport(mailTo, msgException);
+    }
+
     private String processException(final String source, final String severity, final Exception exception) {
         return printErrorReport(source, severity, FermatException.wrapException(exception));
     }
@@ -150,21 +155,21 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
 
 
     private void sendReport(String[] mailTo, String body) {
-        try {
-            StringBuilder strToSend = new StringBuilder();
-            strToSend.append("Error report\n");
-            if (hardwareManager != null) {
-                strToSend.append("Device info:").append("\n")
-                        .append("OS: " + hardwareManager.getOperativeSystem().toString()).append("\n")
-                        .append("Device: " + hardwareManager.getDevice()).append("\n")
-                        .append("Model: " + hardwareManager.getModel()).append("\n")
-                        .append("OS Version: " + hardwareManager.getOSVersion()).append("\n");
-            }
-            strToSend.append("Execption: \n\n" + body);
-            gMailSender.sendMail("error report", strToSend.toString(), "fermatmatiasreport@gmail.com", mailTo);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            StringBuilder strToSend = new StringBuilder();
+//            strToSend.append("Error report\n");
+//            if (hardwareManager != null) {
+//                strToSend.append("Device info:").append("\n")
+//                        .append("OS: " + hardwareManager.getOperativeSystem().toString()).append("\n")
+//                        .append("Device: " + hardwareManager.getDevice()).append("\n")
+//                        .append("Model: " + hardwareManager.getModel()).append("\n")
+//                        .append("OS Version: " + hardwareManager.getOSVersion()).append("\n");
+//            }
+//            strToSend.append("Execption: \n\n" + body);
+//            gMailSender.sendMail("error report", strToSend.toString(), "fermatmatiasreport@gmail.com", mailTo);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void saveToFile(String report) {

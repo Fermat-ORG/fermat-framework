@@ -7,16 +7,15 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers;
 
 
-import org.bouncycastle.crypto.AsymmetricBlockCipher;
-import org.bouncycastle.crypto.encodings.PKCS1Encoding;
-import org.bouncycastle.crypto.engines.RSAEngine;
-import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
-import org.bouncycastle.crypto.util.PrivateKeyFactory;
-import org.bouncycastle.crypto.util.PublicKeyFactory;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.util.encoders.Base64;
+//import org.bouncycastle.crypto.AsymmetricBlockCipher;
+//import org.bouncycastle.crypto.encodings.PKCS1Encoding;
+//import org.bouncycastle.crypto.engines.RSAEngine;
+//import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
+//import org.bouncycastle.crypto.util.PrivateKeyFactory;
+//import org.bouncycastle.crypto.util.PublicKeyFactory;
+//import org.bouncycastle.jce.provider.BouncyCastleProvider;
+//import org.bouncycastle.util.encoders.Base64;
 
-import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
@@ -28,7 +27,6 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPrivateKeySpec;
@@ -44,11 +42,13 @@ import java.security.spec.X509EncodedKeySpec;
  * @version 1.0
  * @since Java JDK 1.7
  */
+//todo: mover a otra api
+
 public class FermatBouncyCastleCipher implements FermatCipher {
 
     static {
-        Security.addProvider(new BouncyCastleProvider());
-        Security.insertProviderAt(new BouncyCastleProvider(), 1);
+//        Security.addProvider(new BouncyCastleProvider());
+//        Security.insertProviderAt(new BouncyCastleProvider(), 1);
     }
 
     /**
@@ -63,17 +63,19 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * Constructor
+     *
      * @throws NoSuchProviderException
      * @throws NoSuchAlgorithmException
      */
     public FermatBouncyCastleCipher() throws NoSuchProviderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-        keyFactory       = KeyFactory.getInstance(ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
-        keyPairGenerator = KeyPairGenerator.getInstance(ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
+//        keyFactory       = KeyFactory.getInstance(ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
+//        keyPairGenerator = KeyPairGenerator.getInstance(ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
         keyPairGenerator.initialize(KEY_SIZE, SecureRandom.getInstance(DIGEST_SHA1PRNG));
     }
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#generateKeyPair()
      */
     @Override
@@ -85,6 +87,7 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#readPublicKey(String)
      */
     @Override
@@ -96,6 +99,7 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#readPrivateKey(String)
      */
     @Override
@@ -108,6 +112,7 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#createPublicKeyFromPrivateKey(PrivateKey)
      */
     @Override
@@ -129,61 +134,64 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#encrypt(String, String)
      */
     @Override
-    public String encrypt(String pubKey, String plaintTex) throws Exception{
+    public String encrypt(String pubKey, String plaintTex) throws Exception {
 
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byteArrayOutputStream.reset();
-        AsymmetricKeyParameter publicKey = PublicKeyFactory.createKey(decode(pubKey));
-        AsymmetricBlockCipher asymmetricBlockCipher = new RSAEngine();
-        asymmetricBlockCipher = new PKCS1Encoding(asymmetricBlockCipher);
-        asymmetricBlockCipher.init(true, publicKey);
+//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//        byteArrayOutputStream.reset();
+//        AsymmetricKeyParameter publicKey = PublicKeyFactory.createKey(decode(pubKey));
+//        AsymmetricBlockCipher asymmetricBlockCipher = new RSAEngine();
+//        asymmetricBlockCipher = new PKCS1Encoding(asymmetricBlockCipher);
+//        asymmetricBlockCipher.init(true, publicKey);
+//
+//        byte[] messageBytes = plaintTex.getBytes(UTF8_CHARSET);
+//
+//        int i = 0;
+//        int blockSize = asymmetricBlockCipher.getInputBlockSize();
+//        while (i < messageBytes.length){
+//
+//            if (i + blockSize > messageBytes.length) {
+//                blockSize = messageBytes.length - i;
+//            }
+//
+//            byteArrayOutputStream.write( asymmetricBlockCipher.processBlock(messageBytes, i, blockSize));
+//            i += asymmetricBlockCipher.getInputBlockSize();
+//        }
 
-        byte[] messageBytes = plaintTex.getBytes(UTF8_CHARSET);
-
-        int i = 0;
-        int blockSize = asymmetricBlockCipher.getInputBlockSize();
-        while (i < messageBytes.length){
-
-            if (i + blockSize > messageBytes.length) {
-                blockSize = messageBytes.length - i;
-            }
-
-            byteArrayOutputStream.write( asymmetricBlockCipher.processBlock(messageBytes, i, blockSize));
-            i += asymmetricBlockCipher.getInputBlockSize();
-        }
-
-        return encode(byteArrayOutputStream.toByteArray());
+//        return encode(byteArrayOutputStream.toByteArray());
+        return null;
     }
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#decrypt(String, String)
      */
     @Override
-    public String decrypt(String privateKey, String encryptedTex) throws Exception{
+    public String decrypt(String privateKey, String encryptedTex) throws Exception {
 
         StringBuilder decryptedMsj = new StringBuilder();
 
-        AsymmetricKeyParameter privateKeyParameter = PrivateKeyFactory.createKey(decode(privateKey));
-        AsymmetricBlockCipher asymmetricBlockCipher = new RSAEngine();
-        asymmetricBlockCipher = new PKCS1Encoding(asymmetricBlockCipher);
-        asymmetricBlockCipher.init(false, privateKeyParameter);
-
-        byte[] messageBytes = decode(encryptedTex);
-
-        int i = 0;
-        int blockSize = asymmetricBlockCipher.getInputBlockSize();
-        while (i < messageBytes.length) {
-            if (i + blockSize > messageBytes.length) {
-                blockSize = messageBytes.length - i;
-            }
-            byte[] hexEncodedCipher = asymmetricBlockCipher.processBlock(messageBytes, i, blockSize);
-            decryptedMsj.append(new String(hexEncodedCipher));
-            i += asymmetricBlockCipher.getInputBlockSize();
-        }
+//        AsymmetricKeyParameter privateKeyParameter = PrivateKeyFactory.createKey(decode(privateKey));
+//        AsymmetricBlockCipher asymmetricBlockCipher = new RSAEngine();
+//        asymmetricBlockCipher = new PKCS1Encoding(asymmetricBlockCipher);
+//        asymmetricBlockCipher.init(false, privateKeyParameter);
+//
+//        byte[] messageBytes = decode(encryptedTex);
+//
+//        int i = 0;
+//        int blockSize = asymmetricBlockCipher.getInputBlockSize();
+//        while (i < messageBytes.length) {
+//            if (i + blockSize > messageBytes.length) {
+//                blockSize = messageBytes.length - i;
+//            }
+//            byte[] hexEncodedCipher = asymmetricBlockCipher.processBlock(messageBytes, i, blockSize);
+//            decryptedMsj.append(new String(hexEncodedCipher));
+//            i += asymmetricBlockCipher.getInputBlockSize();
+//        }
 
         return new String(decryptedMsj.toString().getBytes(), UTF8_CHARSET);
 
@@ -191,19 +199,23 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#encode(byte[])
      */
-    public String encode(byte[] data){
+    public String encode(byte[] data) {
 
-        return Base64.toBase64String(data);
+//        return Base64.toBase64String(data);
+        return null;
     }
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#decode(String)
      */
     public byte[] decode(String data) throws UnsupportedEncodingException {
-        return Base64.decode(data.getBytes(UTF8_CHARSET));
+//        return Base64.decode(data.getBytes(UTF8_CHARSET));
+        return null;
     }
 
 }

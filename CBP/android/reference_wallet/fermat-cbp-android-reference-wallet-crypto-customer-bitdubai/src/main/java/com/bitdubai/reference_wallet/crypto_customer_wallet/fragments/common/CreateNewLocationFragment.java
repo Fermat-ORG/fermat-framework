@@ -15,20 +15,24 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Country;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class CreateNewLocationFragment extends AbstractFermatFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class CreateNewLocationFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
+        implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     // Data
     private Country[] countries;
@@ -49,24 +53,48 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
     private CryptoCustomerWalletModuleManager moduleManager;
 
     private final TextWatcher cityTextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {cityTextCount.setText(String.valueOf(MAX_LENGHT_CITY - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            cityTextCount.setText(String.valueOf(MAX_LENGHT_CITY - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
     private final TextWatcher stateTextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {stateTextCount.setText(String.valueOf(MAX_LENGHT_STATE - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            stateTextCount.setText(String.valueOf(MAX_LENGHT_STATE - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
     private final TextWatcher address1TextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {address1TextCount.setText(String.valueOf(MAX_LENGHT_ADDRESS - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            address1TextCount.setText(String.valueOf(MAX_LENGHT_ADDRESS - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
     private final TextWatcher address2TextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {address2TextCount.setText(String.valueOf(MAX_LENGHT_ADDRESS - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            address2TextCount.setText(String.valueOf(MAX_LENGHT_ADDRESS - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
 
 
@@ -116,12 +144,9 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
         address2TextCount.setText(String.valueOf(MAX_LENGHT_ADDRESS));
 
 
-
-
-
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
 
-        moduleManager = ((CryptoCustomerWalletSessionReferenceApp) appSession).getModuleManager();
+        moduleManager = appSession.getModuleManager();
 
         configureToolbar();
 
@@ -173,28 +198,30 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
             location.append(selectedCountry.getCountry()).append(".");
 
         if (location.length() > 0) {
-            List<String> locations = (List<String>) appSession.getData(CryptoCustomerWalletSessionReferenceApp.LOCATION_LIST);
-            int pos = locations.size()-1;
-            if(locations.get(pos).equals("settings")){
+            List<String> locations = (List<String>) appSession.getData(FragmentsCommons.LOCATION_LIST);
+            int pos = locations.size() - 1;
+            if (locations.get(pos).equals("settings")) {
                 locations.remove(pos);
                 locations.add(location.toString());
 
                 for (String loc : locations) {
                     try {
                         moduleManager.createNewLocation(loc, appSession.getAppPublicKey());
-                    } catch (CantCreateLocationPurchaseException e) {}
+                    } catch (CantCreateLocationPurchaseException e) {
+                    }
                 }
 
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
             }
-            if(locations.get(pos).equals("wizard")){
+            if (locations.get(pos).equals("wizard")) {
                 locations.remove(pos);
                 locations.add(location.toString());
 
                 for (String loc : locations) {
                     try {
                         moduleManager.createNewLocation(loc, appSession.getAppPublicKey());
-                    } catch (CantCreateLocationPurchaseException e) {}
+                    } catch (CantCreateLocationPurchaseException e) {
+                    }
                 }
 
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
@@ -208,7 +235,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
         List<String> data = new ArrayList<>();
 
         for (int i = 0; i < countries.length; i++)
-            if(countries[i] != Country.NONE)
+            if (countries[i] != Country.NONE)
                 data.add(countries[i].getCountry());
 
         return data;

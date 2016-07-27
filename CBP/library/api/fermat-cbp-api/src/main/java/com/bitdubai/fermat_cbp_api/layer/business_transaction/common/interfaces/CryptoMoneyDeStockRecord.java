@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 
 import java.math.BigDecimal;
@@ -19,6 +20,10 @@ public class CryptoMoneyDeStockRecord extends AbstractDeStockRecord {
 
     private BlockchainNetworkType blockchainNetworkType;
 
+    private long fee;
+
+    private FeeOrigin feeOrigin;
+
     public CryptoMoneyDeStockRecord(
             BusinessTransactionRecord businessTransactionRecord) {
 
@@ -31,6 +36,8 @@ public class CryptoMoneyDeStockRecord extends AbstractDeStockRecord {
         this.priceReference = businessTransactionRecord.getPriceReference();
         this.originTransaction = OriginTransaction.SALE;
         this.blockchainNetworkType = businessTransactionRecord.getBlockchainNetworkType();
+        this.fee = businessTransactionRecord.getFee();
+        this.feeOrigin = businessTransactionRecord.getFeeOrigin();
 
     }
 
@@ -59,12 +66,32 @@ public class CryptoMoneyDeStockRecord extends AbstractDeStockRecord {
         this.blockchainNetworkType = blockchainNetworkType;
     }
 
+    public long getFee() {
+        return fee;
+    }
+
+    public void setFee(long fee) {
+        this.fee = fee;
+    }
+
+    public FeeOrigin getFeeOrigin() {
+        return feeOrigin;
+    }
+
+    public void setFeeOrigin(FeeOrigin feeOrigin) {
+        this.feeOrigin = feeOrigin;
+    }
+
     @Override
     public String toString() {
-        return "CryptoMoneyDeStockRecord{" +
-                "cryptoCurrency=" + cryptoCurrency +
-                ", cryptoWalletPublicKey='" + cryptoWalletPublicKey + '\'' +
-                ", blockchainNetworkType=" + blockchainNetworkType +
-                '}';
+        return new StringBuilder()
+                .append("CryptoMoneyDeStockRecord{")
+                .append("cryptoCurrency=").append(cryptoCurrency)
+                .append(", cryptoWalletPublicKey='").append(cryptoWalletPublicKey)
+                .append('\'')
+                .append(", blockchainNetworkType=").append(blockchainNetworkType)
+                .append(", fee=").append(fee)
+                .append(", feeOrigin=").append(feeOrigin)
+                .append('}').toString();
     }
 }

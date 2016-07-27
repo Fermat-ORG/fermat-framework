@@ -3,7 +3,11 @@ package com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantDeleteIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantGetIntraUserIdentityException;
@@ -30,6 +34,7 @@ public interface IntraUserIdentityModuleManager extends ModuleManager<IntraUserI
      */
     ArrayList<IntraUserModuleIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListIntraUsersIdentityException;
 
+    IntraWalletUserIdentity getIntraWalletUsers() throws CantListIntraUsersIdentityException;
     /**
      * The method <code>createNewIntraWalletUser</code> creates a new intra wallet user Identity for the logged in Device User and returns the
      * associated public key
@@ -42,8 +47,8 @@ public interface IntraUserIdentityModuleManager extends ModuleManager<IntraUserI
      *
      * @throws CantCreateNewIntraUserIdentityException if something goes wrong.
      */
-    IntraUserModuleIdentity createNewIntraWalletUser(String alias ,String phrase      ,
-                                                     byte[] profileImage) throws CantCreateNewIntraUserIdentityException;
+    IntraUserModuleIdentity createNewIntraWalletUser(String alias ,String phrase,
+                                                     byte[] profileImage, long accuracy, Frequency frequency, Location location) throws CantCreateNewIntraUserIdentityException;
 
 
     /**
@@ -54,7 +59,7 @@ public interface IntraUserIdentityModuleManager extends ModuleManager<IntraUserI
      * @throws CantCreateNewIntraUserIdentityException
      */
     IntraUserModuleIdentity createNewIntraWalletUser(String alias ,
-                                                     byte[] profileImage) throws CantCreateNewIntraUserIdentityException;
+                                                     byte[] profileImage, long accuracy, Frequency frequency, Location location) throws CantCreateNewIntraUserIdentityException;
 
 
     /**
@@ -74,7 +79,7 @@ public interface IntraUserIdentityModuleManager extends ModuleManager<IntraUserI
      * @param profileImage
      * @throws CantUpdateIntraUserIdentityException
      */
-    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase,byte[] profileImage) throws CantUpdateIntraUserIdentityException;
+    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase,byte[] profileImage, long accuracy, Frequency frequency,Location location) throws CantUpdateIntraUserIdentityException;
 
     /**
      *The method <code>deleteIntraUserIdentity</code> change identity status to inactive
@@ -82,6 +87,8 @@ public interface IntraUserIdentityModuleManager extends ModuleManager<IntraUserI
      * @throws CantDeleteIntraUserIdentityException
      */
     void  deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIntraUserIdentityException;
+
+    Location getLocationManager() throws CantGetDeviceLocationException;
 
 
 

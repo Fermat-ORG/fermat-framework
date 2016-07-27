@@ -82,6 +82,7 @@ public final class FanActorNetworkServiceDatabaseFactory {
             table.addColumn(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_SENT_COUNT_COLUMN_NAME    , DatabaseDataType.INTEGER     ,  10, Boolean.FALSE);
             table.addColumn(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
 
             table.addIndex (FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_FIRST_KEY_COLUMN);

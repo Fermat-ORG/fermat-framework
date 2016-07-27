@@ -1,6 +1,8 @@
 package structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -21,8 +23,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.structure.events.UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,11 +39,11 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.ERROR_MANAGER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     @Mock
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.EVENT_MANAGER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent testMonitorAgent;
 
     @Mock
@@ -69,14 +69,14 @@ public class ConstructionTest {
     private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
     private CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private CryptoMoneyRestockManager cryptoMoneyRestockManager;
-    private BankMoneyRestockManager  bankMoneyRestockManager;
+    private BankMoneyRestockManager bankMoneyRestockManager;
     private CashMoneyRestockManager cashMoneyRestockManager;
 
     @Test
     public void Construction_ValidParameters_NewObjectCreated() {
         ECCKeyPair identity = new ECCKeyPair();
         testMonitorAgent = new UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(
-            errorManager,
+                errorManager,
                 customerBrokerSaleNegotiationManager,
                 pluginDatabaseSystem,
                 UUID.randomUUID(),

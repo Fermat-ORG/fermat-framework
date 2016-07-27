@@ -1,11 +1,11 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional;
 
-
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -16,7 +16,7 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.asset_distribution.except
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.AssetDistributionDigitalAssetTransactionPluginRoot;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.exceptions.CantGetActorAssetIssuerException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantGetActorAssetIssuerException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao;
 
 import java.util.HashMap;
@@ -41,7 +41,7 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
                                                UUID pluginId,
                                                PluginDatabaseSystem pluginDatabaseSystem,
                                                PluginFileSystem pluginFileSystem,
-                                               BitcoinNetworkManager bitcoinNetworkManager,
+                                               BlockchainManager bitcoinNetworkManager,
                                                DigitalAssetDistributionVault digitalAssetDistributionVault,
                                                AssetDistributionDao assetDistributionDao,
                                                AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager,
@@ -82,7 +82,7 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         this.digitalAssetDistributor.setDigitalAssetDistributionVault(digitalAssetDistributionVault);
     }
 
-    public void setBitcoinManager(BitcoinNetworkManager bitcoinNetworkManager) {
+    public void setBitcoinManager(BlockchainManager bitcoinNetworkManager) {
         this.digitalAssetDistributor.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
     }
 

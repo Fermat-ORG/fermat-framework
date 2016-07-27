@@ -3,12 +3,13 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantExtractEarningsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantMarkEarningTransactionAsExtractedException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningTransactionNotFoundException;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractorManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractor;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractorManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
@@ -49,7 +50,7 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
     }
 
     @Override
-    public boolean extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException {
+    public boolean extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions, long fee, FeeOrigin feeOrigin) throws CantExtractEarningsException {
 
         if (earningsPair == null)
             throw new CantExtractEarningsException("Verifying parameters", "The earningsPair parameter cannot be null");
@@ -82,7 +83,7 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
                 markEarningTransactionsAsExtracted(earningTransactions, earningCurrency);
 
                 final EarningExtractor earningExtractor = earningExtractors.get(earningWalletPlatform);
-                earningExtractor.applyEarningExtraction(earningsPair, earningsAmount, earningWalletPublicKey, BROKER_WALLET_PUBLIC_KEY);
+                earningExtractor.applyEarningExtraction(earningsPair, earningsAmount, earningWalletPublicKey, BROKER_WALLET_PUBLIC_KEY, fee, feeOrigin);
 
                 return true;
             }
@@ -121,7 +122,7 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
     private void markEarningTransactionsAsExtracted(List<EarningTransaction> earningTransactions, Currency earningCurrency) throws CantExtractEarningsException {
         try {
             for (EarningTransaction earningTransaction : earningTransactions)
-                if (earningTransaction.getEarningCurrency() == earningCurrency){
+                if (earningTransaction.getEarningCurrency() == earningCurrency) {
                     dao.markEarningTransactionAsExtracted(earningTransaction.getId());
                     earningTransaction.markAsExtracted();
                 }

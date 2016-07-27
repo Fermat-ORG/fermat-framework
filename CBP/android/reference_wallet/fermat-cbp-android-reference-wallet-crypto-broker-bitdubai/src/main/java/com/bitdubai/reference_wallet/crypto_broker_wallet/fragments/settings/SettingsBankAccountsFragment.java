@@ -15,7 +15,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -25,15 +28,12 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.BankAccountsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/12/15.
  */
-public class SettingsBankAccountsFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager> implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<BankAccountNumber> {
+public class SettingsBankAccountsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager> implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<BankAccountNumber> {
 
     // Constants
     private static final String TAG = "WizardPageSetBank";
@@ -76,12 +76,12 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment<CryptoB
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            List<CryptoBrokerWalletAssociatedSetting> associatedSettings= moduleManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
+            List<CryptoBrokerWalletAssociatedSetting> associatedSettings = moduleManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
             List<BankAccountNumber> bankAccountNumbers = moduleManager.getAccounts(WalletsPublicKeys.BNK_BANKING_WALLET.getCode());//"banking_wallet");
-            for (final CryptoBrokerWalletAssociatedSetting aux: associatedSettings){
-                for (BankAccountNumber bankAccountNumber: bankAccountNumbers){
-                    if (aux.getPlatform()==Platforms.BANKING_PLATFORM){
-                        if (aux.getBankAccount().equals(bankAccountNumber.getAccount())){
+            for (final CryptoBrokerWalletAssociatedSetting aux : associatedSettings) {
+                for (BankAccountNumber bankAccountNumber : bankAccountNumbers) {
+                    if (aux.getPlatform() == Platforms.BANKING_PLATFORM) {
+                        if (aux.getBankAccount().equals(bankAccountNumber.getAccount())) {
                             accountsStrings.add(bankAccountNumber.getAccount());
                             accounts.add(bankAccountNumber);
                         }
@@ -154,8 +154,8 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment<CryptoB
         builder.setPositiveButton(R.string.cbw_delete_caps, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                accounts.remove(i);
-                accountsStrings.remove(i);
+                accounts.remove(position);
+                accountsStrings.remove(position);
                 adapter.changeDataSet(accounts);
                 saveSetting();
                 showOrHideRecyclerView();
@@ -261,7 +261,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment<CryptoB
 
     private void showBankAccountsDialog(List<InstalledWallet> installedWallets) {
         try {
-            if (viewAccounts.size()>0){
+            if (viewAccounts.size() > 0) {
                 viewAccounts.clear();
             }
             for (InstalledWallet wallet : installedWallets) {
@@ -273,12 +273,12 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment<CryptoB
             accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
                 @Override
                 public void onItemSelected(BankAccountNumber selectedAccount) {
-                    if( !accountsStrings.contains(selectedAccount.getAccount()) ){
+                    if (!accountsStrings.contains(selectedAccount.getAccount())) {
                         accountsStrings.add(selectedAccount.getAccount());
                         accounts.add(selectedAccount);
                         adapter.changeDataSet(accounts);
                         showOrHideRecyclerView();
-                    }else{
+                    } else {
                         Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), "Account already exists", Toast.LENGTH_SHORT).show();
                     }
                 }

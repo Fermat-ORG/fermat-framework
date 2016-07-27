@@ -11,26 +11,28 @@ import java.io.Serializable;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
-public class PluginReference implements Serializable{
+public class PluginReference implements Serializable {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
-    private static final int HASH_PRIME_NUMBER_ADD     = 2819;
+    private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
-    private       LayerReference    layerReference;
-    private final FermatPluginsEnum plugin        ;
+    private LayerReference layerReference;
+    private FermatPluginsEnum plugin;
 
     public PluginReference(final Plugins plugin) {
 
         this.plugin = plugin;
     }
 
-    public PluginReference(final LayerReference    layerReference,
-                           final FermatPluginsEnum plugin        ) {
+    public PluginReference(final LayerReference layerReference,
+                           final FermatPluginsEnum plugin) {
 
         this.layerReference = layerReference;
-        this.plugin         = plugin        ;
+        this.plugin = plugin;
     }
 
+    public PluginReference() {
+    }
 
     public final FermatPluginsEnum getPlugin() {
         return plugin;
@@ -45,8 +47,8 @@ public class PluginReference implements Serializable{
     }
 
     @Override
-    public final boolean equals(Object o){
-        if(!(o instanceof PluginReference))
+    public final boolean equals(Object o) {
+        if (!(o instanceof PluginReference))
             return false;
         PluginReference compare = (PluginReference) o;
 
@@ -57,19 +59,20 @@ public class PluginReference implements Serializable{
     @Override
     public final int hashCode() {
         int c = 0;
-
-        c += plugin .hashCode();
+        if (plugin != null)
+            c += plugin.hashCode();
         if (layerReference != null)
             c += layerReference.hashCode();
 
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override
     public final String toString() {
-        return "PluginReference{" +
-                "layerReference=" + layerReference +
-                ", plugin=" + plugin +
-                '}';
+        return new StringBuilder()
+                .append("PluginReference{")
+                .append("layerReference=").append(layerReference)
+                .append(", plugin=").append(plugin)
+                .append('}').toString();
     }
 }

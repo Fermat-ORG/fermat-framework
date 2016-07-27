@@ -17,7 +17,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.CantInitializeCryptoMoneyRestockDatabaseException;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,12 +25,13 @@ import java.util.UUID;
  * The Class <code>BusinessTransactionBankMoneyDestockDeveloperFactory.java
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Franklin Marcano - (franklinmarcano970@gmail.com) on 16/11/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
- */public class StockTransactionsCryptoMoneyRestockDeveloperFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+ */
+public class StockTransactionsCryptoMoneyRestockDeveloperFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -66,8 +66,7 @@ import java.util.UUID;
         this.pluginId = pluginId;
     }
 
-    public void initializeDatabase() throws CantInitializeCryptoMoneyRestockDatabaseException
-    {
+    public void initializeDatabase() throws CantInitializeCryptoMoneyRestockDatabaseException {
         try {
 
              /*
@@ -76,14 +75,14 @@ import java.util.UUID;
             database = this.pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_DATABASE_NAME);
             database.closeDatabase();
 
-        }catch (CantOpenDatabaseException cantOpenDatabaseException) {
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
             throw new CantInitializeCryptoMoneyRestockDatabaseException(cantOpenDatabaseException.getMessage());
 
-        }catch (DatabaseNotFoundException e) {
+        } catch (DatabaseNotFoundException e) {
 
              /*
               * The database no exist may be the first time the plugin is running on this device,
@@ -97,8 +96,7 @@ import java.util.UUID;
                    */
                 database = stockTransactionsCryptoMoneyRestockDatabaseFactory.createDatabase(pluginId, StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_DATABASE_NAME);
                 database.closeDatabase();
-            }
-            catch(CantCreateDatabaseException cantCreateDatabaseException) {
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
@@ -126,7 +124,7 @@ import java.util.UUID;
         List<String> projectColumns = new ArrayList<String>();
 
         /**
-         * Table Trnsactions addition.
+         * Table Transactions addition.
          */
         projectColumns.add(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TRANSACTION_ID_COLUMN_NAME);
         projectColumns.add(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PUBLIC_KEY_ACTOR_COLUMN_NAME);
@@ -143,6 +141,8 @@ import java.util.UUID;
         projectColumns.add(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME);
         projectColumns.add(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
         projectColumns.add(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME);
+        projectColumns.add(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_FEE_COLUMN_NAME);
+        projectColumns.add(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_FEE_ORIGIN_COLUMN_NAME);
         DeveloperDatabaseTable bankMoneyRestockTable = developerObjectFactory.getNewDeveloperDatabaseTable(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TABLE_NAME, projectColumns);
         tables.add(bankMoneyRestockTable);
 
@@ -161,12 +161,12 @@ import java.util.UUID;
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -186,7 +186,7 @@ import java.util.UUID;
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }

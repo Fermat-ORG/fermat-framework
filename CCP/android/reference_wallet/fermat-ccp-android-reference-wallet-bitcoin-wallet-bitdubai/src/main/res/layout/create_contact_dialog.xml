@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
+    android:gravity="center"
     android:background="#FFFFFF"
     >
 
@@ -29,7 +30,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="3dip"
@@ -102,7 +103,7 @@
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/set_address_text"
+        android:text="Type address"
         android:textColor="#12aca1"
         android:paddingLeft="24dp"
         android:layout_alignParentTop="true"
@@ -110,13 +111,10 @@
         app:typeface="ROBOTO_REGULAR"
         />
 
-    <RelativeLayout
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        >
+
 
         <LinearLayout
-            android:layout_width="380dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="#FFFFFF"
@@ -148,20 +146,23 @@
 
             <ImageView
                 android:id="@+id/paste_from_clipboard_btn"
-                android:layout_width="28dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_copy"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="5dip"
+                android:src="@drawable/copy_icon"
                 android:layout_marginLeft="20dp"/>
 
             <ImageView
                 android:id="@+id/scan_qr"
-                android:layout_width="28dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_qr"
-                android:layout_marginLeft="12dp"/>
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="5dip"
+                android:src="@drawable/qr_icon"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="15dp"
+                />
         </LinearLayout>
 
-    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
@@ -171,13 +172,11 @@
 
     <LinearLayout
         android:id="@+id/linear_create_contact"
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:paddingBottom="3dip"
-        android:layout_marginTop="20dp"
         android:background="#FFFFFF"
-        android:paddingRight="50dp"
         >
 
         <Button

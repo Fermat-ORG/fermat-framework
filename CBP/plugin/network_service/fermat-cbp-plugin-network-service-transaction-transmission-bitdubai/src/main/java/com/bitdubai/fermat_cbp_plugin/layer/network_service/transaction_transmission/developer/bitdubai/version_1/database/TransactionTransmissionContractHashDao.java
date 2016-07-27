@@ -43,16 +43,16 @@ import java.util.UUID;
 public class TransactionTransmissionContractHashDao {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final UUID pluginId            ;
+    private final UUID pluginId;
 
     private Database database;
 
     public TransactionTransmissionContractHashDao(final PluginDatabaseSystem pluginDatabaseSystem,
-                                                  final UUID                 pluginId            ,
-                                                  final Database             database            ) {
+                                                  final UUID pluginId,
+                                                  final Database database) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
+        this.pluginId = pluginId;
         this.database = database;
     }
 
@@ -122,13 +122,13 @@ public class TransactionTransmissionContractHashDao {
 
         } catch (CantInsertRecordException e) {
 
-            throw new CantInsertRecordDataBaseException(CantInsertRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and I cannot insert the record.","");
-        } catch (Exception e){
-            throw new CantInsertRecordDataBaseException(CantInsertRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and I cannot insert the record.","");
+            throw new CantInsertRecordDataBaseException(CantInsertRecordException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and I cannot insert the record.", "");
+        } catch (Exception e) {
+            throw new CantInsertRecordDataBaseException(CantInsertRecordException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and I cannot insert the record.", "");
         }
     }
 
-    public void saveBusinessTransmissionRecord(BusinessTransactionMetadata businessTransactionMetadata,UUID transmissionId) throws CantInsertRecordDataBaseException {
+    public void saveBusinessTransmissionRecord(BusinessTransactionMetadata businessTransactionMetadata, UUID transmissionId) throws CantInsertRecordDataBaseException {
 
         try {
 
@@ -141,9 +141,9 @@ public class TransactionTransmissionContractHashDao {
 
         } catch (CantInsertRecordException e) {
 
-            throw new CantInsertRecordDataBaseException(CantInsertRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and I cannot insert the record.","");
-        } catch (Exception e){
-            throw new CantInsertRecordDataBaseException(CantInsertRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and I cannot insert the record.","");
+            throw new CantInsertRecordDataBaseException(CantInsertRecordException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and I cannot insert the record.", "");
+        } catch (Exception e) {
+            throw new CantInsertRecordDataBaseException(CantInsertRecordException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and I cannot insert the record.", "");
         }
     }
 
@@ -155,7 +155,7 @@ public class TransactionTransmissionContractHashDao {
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME, businessTransactionMetadata.getContractHash());
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME, businessTransactionMetadata.getContractTransactionStatus().getCode());
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_ID_COLUMN_NAME, businessTransactionMetadata.getContractId());
-        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME , businessTransactionMetadata.getSenderId());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME, businessTransactionMetadata.getSenderId());
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_TYPE_COLUMN_NAME, businessTransactionMetadata.getSenderType().getCode());
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_PUBLIC_KEY_COLUMN_NAME, businessTransactionMetadata.getReceiverId());
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_TYPE_COLUMN_NAME, businessTransactionMetadata.getReceiverType().getCode());
@@ -178,7 +178,7 @@ public class TransactionTransmissionContractHashDao {
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME, businessTransactionMetadata.getContractHash());
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME, businessTransactionMetadata.getContractTransactionStatus().getCode());
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_ID_COLUMN_NAME, businessTransactionMetadata.getContractId());
-        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME , businessTransactionMetadata.getSenderId());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME, businessTransactionMetadata.getSenderId());
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_TYPE_COLUMN_NAME, businessTransactionMetadata.getSenderType().getCode());
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_PUBLIC_KEY_COLUMN_NAME, businessTransactionMetadata.getReceiverId());
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_TYPE_COLUMN_NAME, businessTransactionMetadata.getReceiverType().getCode());
@@ -205,7 +205,15 @@ public class TransactionTransmissionContractHashDao {
 
         try {
 
-            BusinessTransactionMetadata businessTransactionMetadata = getMetadata(transaction_id);
+            BusinessTransactionMetadata businessTransactionMetadata;
+
+            try {
+                businessTransactionMetadata = getMetadata(transaction_id);
+            } catch (Exception e) {
+                System.out.println(new StringBuilder().append("Cannot find ").append(transaction_id).toString());
+                return;
+            }
+
             businessTransactionMetadata.setState(transactionTransmissionStates);
 
 
@@ -225,21 +233,21 @@ public class TransactionTransmissionContractHashDao {
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Table Name: " + TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
+            StringBuilder contextBuilder = new StringBuilder();
+            contextBuilder.append("Table Name: ").append(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
 
-            String context = contextBuffer.toString();
+            String context = contextBuilder.toString();
             String possibleCause = "The record do not exist";
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
 
-        } catch (PendingRequestNotFoundException e) {
+        } /*catch (PendingRequestNotFoundException e) {
             e.printStackTrace();
         } catch (CantGetTransactionTransmissionException e) {
             e.printStackTrace();
-        } catch (Exception e){
+        }*/ catch (Exception e) {
             e.printStackTrace();
-            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and I cannot update the record.","");
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and I cannot update the record.", "");
         }
 
     }
@@ -248,7 +256,7 @@ public class TransactionTransmissionContractHashDao {
             PendingRequestNotFoundException {
 
         if (transmissionId == null)
-            throw new CantGetTransactionTransmissionException("",null, "requestId, can not be null","");
+            throw new CantGetTransactionTransmissionException("", null, "requestId, can not be null", "");
 
         try {
 
@@ -264,18 +272,18 @@ public class TransactionTransmissionContractHashDao {
             if (!records.isEmpty())
                 return buildBusinessTransactionRecord(records.get(0));
             else
-                throw new PendingRequestNotFoundException(null, "RequestID: "+transmissionId, "Cannot find an address exchange request with the given request id.");
+                throw new PendingRequestNotFoundException(null, new StringBuilder().append("RequestID: ").append(transmissionId).toString(), "Cannot find an address exchange request with the given request id.");
 
 
         } catch (CantLoadTableToMemoryException exception) {
 
-            throw new CantGetTransactionTransmissionException("",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            throw new CantGetTransactionTransmissionException("", exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         } catch (InvalidParameterException exception) {
 
-            throw new CantGetTransactionTransmissionException("",exception, "Check the cause.","");
-        }catch (Exception e){
+            throw new CantGetTransactionTransmissionException("", exception, "Check the cause.", "");
+        } catch (Exception e) {
 
-            throw new CantGetTransactionTransmissionException(CantGetTransactionTransmissionException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            throw new CantGetTransactionTransmissionException(CantGetTransactionTransmissionException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         }
     }
 
@@ -292,24 +300,24 @@ public class TransactionTransmissionContractHashDao {
         String negotiationId = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_NEGOTIATION_ID_COLUMN_NAME);
         String type = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME);
         long timestamp = record.getLongValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME);
-        String state= record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME);
+        String state = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME);
 
-        ContractTransactionStatus recordContractStatus=ContractTransactionStatus.getByCode(contractStatus);
-        PlatformComponentType recordReceiverType=PlatformComponentType.getByCode(receiverType);
-        PlatformComponentType recordSenderType=PlatformComponentType.getByCode(senderType);
-        BusinessTransactionTransactionType recordTransactionType=BusinessTransactionTransactionType.getByCode(type);
-        TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.getByCode(state);
+        ContractTransactionStatus recordContractStatus = ContractTransactionStatus.getByCode(contractStatus);
+        PlatformComponentType recordReceiverType = PlatformComponentType.getByCode(receiverType);
+        PlatformComponentType recordSenderType = PlatformComponentType.getByCode(senderType);
+        BusinessTransactionTransactionType recordTransactionType = BusinessTransactionTransactionType.getByCode(type);
+        TransactionTransmissionStates transactionTransmissionStates = TransactionTransmissionStates.getByCode(state);
         Plugins remoteBusinessTransaction;
-        String pluginCode=record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_REMOTE_BUSINESS_TRANSACTION);
-        if(pluginCode==null||pluginCode.isEmpty()){
+        String pluginCode = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_REMOTE_BUSINESS_TRANSACTION);
+        if (pluginCode == null || pluginCode.isEmpty()) {
             //For now, I'll put transaction transmission
-            remoteBusinessTransaction=Plugins.TRANSACTION_TRANSMISSION;
-        }else{
-            try{
-                remoteBusinessTransaction=Plugins.getByCode(pluginCode);
-            } catch (InvalidParameterException exception){
+            remoteBusinessTransaction = Plugins.TRANSACTION_TRANSMISSION;
+        } else {
+            try {
+                remoteBusinessTransaction = Plugins.getByCode(pluginCode);
+            } catch (InvalidParameterException exception) {
                 //If the code is invalid, I''l set the Default.
-                remoteBusinessTransaction=Plugins.TRANSACTION_TRANSMISSION;
+                remoteBusinessTransaction = Plugins.TRANSACTION_TRANSMISSION;
             }
         }
 
@@ -328,13 +336,13 @@ public class TransactionTransmissionContractHashDao {
                 transactionId,
                 transactionTransmissionStates,
                 remoteBusinessTransaction
-                );
+        );
 
     }
 
     public void confirmReception(UUID transactionID) throws CantUpdateRecordDataBaseException, PendingRequestNotFoundException, CantGetTransactionTransmissionException {
         try {
-            System.out.print("\n2)transactionId: "+ transactionID+"\n");
+            System.out.print(new StringBuilder().append("\n2)transactionId: ").append(transactionID).append("\n").toString());
             BusinessTransactionMetadata businessTransactionMetadata = getMetadata(transactionID);
 
             businessTransactionMetadata.confirmRead();
@@ -342,22 +350,22 @@ public class TransactionTransmissionContractHashDao {
             update(businessTransactionMetadata);
 
         } catch (PendingRequestNotFoundException e) {
-            throw new PendingRequestNotFoundException(null, "RequestID: "+transactionID.toString(), "Can not find an address exchange request with the given request id.");
+            throw new PendingRequestNotFoundException(null, new StringBuilder().append("RequestID: ").append(transactionID.toString()).toString(), "Can not find an address exchange request with the given request id.");
         } catch (CantUpdateRecordDataBaseException e) {
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + TransactionTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Database Name: ").append(TransactionTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
-            String context = contextBuffer.toString();
+            String context = stringBuilder.toString();
             String possibleCause = "The record do not exist";
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
 
-        }catch(CantGetTransactionTransmissionException e){
+        } catch (CantGetTransactionTransmissionException e) {
             CantGetTransactionTransmissionException cantGetTransactionTransmissionException = new CantGetTransactionTransmissionException(CantGetTransactionTransmissionException.DEFAULT_MESSAGE, e, "", "Exception that the plugin was unable to handle");
             throw cantGetTransactionTransmissionException;
-        }catch (Exception e){
+        } catch (Exception e) {
 
-            throw new CantGetTransactionTransmissionException(CantGetTransactionTransmissionException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            throw new CantGetTransactionTransmissionException(CantGetTransactionTransmissionException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         }
     }
 
@@ -401,17 +409,17 @@ public class TransactionTransmissionContractHashDao {
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + TransactionTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            StringBuilder contextBuilder = new StringBuilder();
+            contextBuilder.append("Database Name: ").append(TransactionTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
-            String context = contextBuffer.toString();
+            String context = contextBuilder.toString();
             String possibleCause = "The record do not exist";
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
 
-        } catch (Exception e){
+        } catch (Exception e) {
 
-            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         }
 
     }
@@ -468,19 +476,19 @@ public class TransactionTransmissionContractHashDao {
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Table Name: " + TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
+            StringBuilder contextBuilder = new StringBuilder();
+            contextBuilder.append("Table Name: ").append(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
 
-            String context = contextBuffer.toString();
+            String context = contextBuilder.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
         } catch (InvalidParameterException e) {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "", "invalid parameter");
             throw cantReadRecordDataBaseException;
-        } catch (Exception e){
+        } catch (Exception e) {
 
-            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         }
 
         return list;
@@ -536,19 +544,19 @@ public class TransactionTransmissionContractHashDao {
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Table Name: " + TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Table Name: ").append(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
 
-            String context = contextBuffer.toString();
+            String context = stringBuilder.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
         } catch (InvalidParameterException e) {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "", "invalid parameter");
             throw cantReadRecordDataBaseException;
-        } catch (Exception e){
+        } catch (Exception e) {
 
-            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         }
 
         return list;
@@ -578,17 +586,17 @@ public class TransactionTransmissionContractHashDao {
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Table Name: " + TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
+            StringBuilder contextBuilder = new StringBuilder();
+            contextBuilder.append("Table Name: ").append(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
 
-            String context = contextBuffer.toString();
+            String context = contextBuilder.toString();
             String possibleCause = "The record do not exist";
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
 
-        } catch (Exception e){
+        } catch (Exception e) {
 
-            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         }
 
     }

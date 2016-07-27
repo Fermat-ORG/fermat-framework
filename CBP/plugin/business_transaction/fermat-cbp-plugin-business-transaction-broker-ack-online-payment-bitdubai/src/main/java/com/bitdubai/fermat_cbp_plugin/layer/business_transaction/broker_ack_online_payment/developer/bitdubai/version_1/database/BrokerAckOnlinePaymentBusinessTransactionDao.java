@@ -132,9 +132,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * This method returns the contract transaction status
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return the Contract Transaction Status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws
@@ -164,7 +162,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * This method returns the recorded Incoming Money pending events
      *
      * @return the recorded pending event IDs
-     *
      * @throws CantGetContractListException
      */
     public List<String> getPendingIncomingMoneyEvents() throws CantGetContractListException {
@@ -185,7 +182,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * This method returns the recorded pending events
      *
      * @return the recorded pending event IDs
-     *
      * @throws CantGetContractListException
      */
     public List<String> getPendingEvents() throws CantGetContractListException {
@@ -211,9 +207,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * This method returns the event type by event Id
      *
      * @param eventId the event ID
-     *
      * @return the event type code
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public String getEventType(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
@@ -240,7 +234,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * This method return a list of Business Transaction records with Contract Transaction Status PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION
      *
      * @return list of Business Transaction records
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -268,7 +261,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * This method return a list of Business Transaction records with Contract Transaction Status PENDING_ACK_ONLINE_PAYMENT_CONFIRMATION
      *
      * @return list of Business Transaction records
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -296,9 +288,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * check if the a business transaction with the given contract Hash is in database
      *
      * @param contractHash the contract Hash/ID to check
-     *
      * @return <code>true</code> if the business transaction is database. <code>false</code> otherwise
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public boolean isContractHashInDatabase(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
@@ -321,13 +311,16 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      *
      * @param contractSale    the sale contract object with the information to persist
      * @param paymentCurrency the payment crypto currency
-     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(CustomerBrokerContractSale contractSale,
                                           long cryptoAmount,
                                           CryptoCurrency paymentCurrency) throws CantInsertRecordException {
         try {
+            if (isContractHashInDatabase(contractSale.getContractId())) {
+                System.out.println(new StringBuilder().append("The contract ").append(contractSale).append(" exists in database").toString());
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
 
@@ -350,11 +343,14 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
      *
      * @param contractPurchase the purchase contract object with the information to persist
-     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(CustomerBrokerContractPurchase contractPurchase) throws CantInsertRecordException {
         try {
+            if (isContractHashInDatabase(contractPurchase.getContractId())) {
+                System.out.println(new StringBuilder().append("The contract ").append(contractPurchase).append(" exists in database").toString());
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
             databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, contractPurchase);
@@ -375,9 +371,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * Return a IncomingMoneyEventWrapper object with the information about the registered Incoming Money event
      *
      * @param eventId the Incoming Money event ID
-     *
      * @return the IncomingMoneyEventWrapper object
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public IncomingMoneyEventWrapper getIncomingMoneyEventWrapper(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
@@ -415,9 +409,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * Return the Business Transaction record associated to the contract Hash
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return the associated Business Transaction record
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public BusinessTransactionRecord getBusinessTransactionRecordByContractHash(String contractHash)
@@ -473,7 +465,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * Update in database the information of a Business Transaction record
      *
      * @param businessTransactionRecord the Business Transaction record with the updated information
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -509,7 +500,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      *
      * @param contractHash the contract Hash/ID
      * @param newStatus    the new status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -545,7 +535,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      *
      * @param eventId     the event ID
      * @param eventStatus the new event status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -566,7 +555,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         } catch (CantLoadTableToMemoryException exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                    "Updating parameter " + ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
+                    new StringBuilder().append("Updating parameter ").append(ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
 
         } catch (Exception exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
@@ -579,7 +568,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      *
      * @param eventId     the Incoming Money event ID
      * @param eventStatus the new event status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -601,7 +589,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         } catch (CantLoadTableToMemoryException exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                    "Updating parameter " + ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME, "");
+                    new StringBuilder().append("Updating parameter ").append(ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME).toString(), "");
 
         } catch (Exception exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
@@ -615,7 +603,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * @param eventType   the event type code
      * @param eventSource the event source code
      * @param eventId     the event ID
-     *
      * @throws CantSaveEventException
      */
     public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
@@ -647,7 +634,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      *
      * @param eventType   the event type code
      * @param eventSource the event source code
-     *
      * @throws CantSaveEventException
      */
     public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
@@ -665,7 +651,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * This method save an incoming money event in database. You can set the event Id with this method
      *
      * @param event the IncomingMoneyNotificationEvent object with the information to persist
-     *
      * @throws CantSaveEventException
      */
     public void saveIncomingMoneyEvent(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
@@ -693,9 +678,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * This method returns the completion date from database.
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return the completion date in millis
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public long getCompletionDateByContractHash(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
@@ -720,7 +703,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      *
      * @param contractHash   contract Hash/ID
      * @param completionDate the completion date in millis
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public void setCompletionDateByContractHash(String contractHash, long completionDate)
@@ -789,7 +771,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * @param record          the database record to fill
      * @param contractSale    the contract sale object with the information to persist
      * @param paymentCurrency the payment crypto currency
-     *
      * @return the filled database record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record,
@@ -816,7 +797,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      *
      * @param record           the database table record to fill
      * @param contractPurchase the purchase contract with the information to persist
-     *
      * @return the filled database table record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, CustomerBrokerContractPurchase contractPurchase) {
@@ -836,7 +816,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      *
      * @param record                    the database record to fill
      * @param businessTransactionRecord the Business Transaction record with the information to fill
-     *
      * @return the filled database record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, BusinessTransactionRecord businessTransactionRecord) {
@@ -871,7 +850,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      *
      * @param record             the database record to fill
      * @param incomingMoneyEvent Incoming Money event wrapper object with the information to fill the database record
-     *
      * @return the filled database record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, IncomingMoneyEventWrapper incomingMoneyEvent) {
@@ -895,7 +873,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * This method check the database record result.
      *
      * @param records a list of database records
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private void checkDatabaseRecords(List<DatabaseTableRecord> records) throws UnexpectedResultReturnedFromDatabaseException {
@@ -908,7 +885,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
         int recordsSize = records.size();
         if (recordsSize > VALID_RESULTS_NUMBER)
-            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
+            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(VALID_RESULTS_NUMBER).append(", but I got ").append(recordsSize).toString());
     }
 
     /**
@@ -917,9 +894,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * @param key         String with the search key.
      * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
-     *
      * @return the String value
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private String getValue(String key, String keyColumn, String valueColumn) throws UnexpectedResultReturnedFromDatabaseException {
@@ -948,9 +923,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * @param databaseTable the database table
      * @param statusColumn  status column
      * @param idColumn      the id column
-     *
      * @return the recorded pending event IDs
-     *
      * @throws CantGetContractListException
      */
     private List<String> getPendingGenericsEvents(DatabaseTable databaseTable, String statusColumn, String idColumn) throws CantGetContractListException {
@@ -972,7 +945,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             return eventTypeList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetContractListException(e, "Getting events in EventStatus.PENDING in table " + databaseTable.getTableName(),
+            throw new CantGetContractListException(e, new StringBuilder().append("Getting events in EventStatus.PENDING in table ").append(databaseTable.getTableName()).toString(),
                     "Cannot load the table into memory");
         }
     }
@@ -983,9 +956,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * @param key         String with the search key.
      * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
-     *
      * @return a list of Business Transaction records
-     *
      * @throws CantGetContractListException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
@@ -1008,7 +979,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * @param key         String with the search key.
      * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
-     *
      * @return list of String values
      */
     private List<String> getStringList(String key, String keyColumn, String valueColumn) throws CantGetContractListException {
@@ -1031,7 +1001,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             return contractHashList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetContractListException(e, "Getting " + valueColumn + " based on " + key, "Cannot load the table into memory");
+            throw new CantGetContractListException(e, new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(), "Cannot load the table into memory");
         }
     }
 
@@ -1046,7 +1016,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
         } catch (CantLoadTableToMemoryException ex) {
             throw new CantSaveEventException(ex.getMessage(), ex, "Broker Ack Online Payment Transaction Event Id Not Exists",
-                    "Cant load " + ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME + " table in memory.");
+                    new StringBuilder().append("Cant load ").append(ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME).append(" table in memory.").toString());
 
         } catch (Exception ex) {
             throw new CantSaveEventException(ex.getMessage(), FermatException.wrapException(ex),

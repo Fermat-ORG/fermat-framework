@@ -1,6 +1,5 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
@@ -9,10 +8,6 @@ import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.mati.fermat_navigator.drawer.FermatNavigatorDrawerAdapter;
-
-import com.mati.fermat_navigator.drawer.holders.NavigationItemMenuViewHolder;
-
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -69,8 +64,9 @@ public class FermatWalletNavigationViewAdapter extends FermatAdapter<MenuItem, c
             holder.getLabel().setText(data.getLabel());
 
             //holder.getRow_container().setBackgroundColor(Color.parseColor("#80000000"));
+            holder.getNavigation_row_divider().setBackgroundResource(R.drawable.devider_gradient_drawer);
             if(data.isSelected())
-                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+                holder.getRow_container().setBackgroundResource(R.color.btn_drawer_overlay);
 
             switch (position) {
                 case 0:

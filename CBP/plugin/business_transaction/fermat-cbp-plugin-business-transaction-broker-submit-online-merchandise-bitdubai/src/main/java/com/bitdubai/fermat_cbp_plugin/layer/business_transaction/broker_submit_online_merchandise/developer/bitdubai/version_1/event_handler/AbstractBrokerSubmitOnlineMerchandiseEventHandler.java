@@ -13,7 +13,7 @@ public abstract class AbstractBrokerSubmitOnlineMerchandiseEventHandler implemen
     public void setBrokerSubmitOnlineMerchandiseRecorderService(
             BrokerSubmitOnlineMerchandiseRecorderService brokerSubmitOnlineMerchandiseRecorderService) throws
             CantSetObjectException {
-        if(brokerSubmitOnlineMerchandiseRecorderService ==null){
+        if (brokerSubmitOnlineMerchandiseRecorderService == null) {
             throw new CantSetObjectException("brokerSubmitOnlineMerchandiseRecorderService is null");
         }
         this.brokerSubmitOnlineMerchandiseRecorderService = brokerSubmitOnlineMerchandiseRecorderService;

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
@@ -14,6 +15,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.excepti
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferenceApp;
@@ -23,7 +25,7 @@ import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferen
  * Created by Gabriel Araujo 29/04/2016.
  *
  */
-public class CancelDialog extends FermatDialog<ArtistSubAppSessionReferenceApp, SubAppResourcesProviderManager>
+public class CancelDialog extends FermatDialog<ReferenceAppFermatSession<ArtistCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -44,7 +46,7 @@ public class CancelDialog extends FermatDialog<ArtistSubAppSessionReferenceApp, 
 
 
     public CancelDialog(Activity a,
-                        ArtistSubAppSessionReferenceApp artistSubAppSession,
+                        ReferenceAppFermatSession artistSubAppSession,
                         SubAppResourcesProviderManager subAppResources,
                         ArtistCommunityInformation artistCommunityInformation,
                         ArtistCommunitySelectableIdentity identity) {
@@ -67,8 +69,8 @@ public class CancelDialog extends FermatDialog<ArtistSubAppSessionReferenceApp, 
         positiveBtn = (FermatButton) findViewById(R.id.aac_positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.aac_negative_button);
         mTitle.setText("Cancel");
-        mDescription.setText("Want to cancel connection with");
-        mUsername.setText(artistCommunityInformation.getAlias());
+        mDescription.setText("Do you want to cancel connection with");
+        mUsername.setText(artistCommunityInformation.getAlias()+"?");
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 

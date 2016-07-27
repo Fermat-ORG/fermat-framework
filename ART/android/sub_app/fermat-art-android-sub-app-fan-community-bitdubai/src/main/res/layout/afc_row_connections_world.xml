@@ -39,11 +39,9 @@
             android:src="@drawable/afc_profile_image"/>
 
         <View
-            android:id="@+id/warning_cirlcle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:background="@drawable/white_circle"
+            android:background="@drawable/afc_image_circle"
             />
 
         <ImageView
@@ -58,7 +56,7 @@
 
 
         <LinearLayout
-            android:paddingTop="20dp"
+            android:paddingTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -67,7 +65,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/afc_community_name"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="13dp"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -78,7 +76,6 @@
                 android:text="Anna"
                 android:textColor="#6D6F71"
                 android:textSize="16sp"
-                app:typeface="ROBOTO_REGULAR"
                 tools:ignore="HardcodedText"
 
                 android:layout_centerVertical="true"

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/ccw_header_layout_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:layout_marginTop="74dp"
+    android:background="@drawable/ccw_header_gradient_background"
+    android:paddingTop="4dp">
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_no_market_rate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/ccw_market_exchange_rate_no_market_exchange_rates_to_show"
+        android:textColor="@color/withe"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+    <FrameLayout
+        android:id="@+id/ccw_market_rate_view_pager_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/ccw_exchange_rate_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <com.viewpagerindicator.LinePageIndicator
+            android:id="@+id/ccw_exchange_rate_view_pager_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ccw_market_exchange_rate_indicator_height"
+            android:padding="5dp"
+            app:lineWidth="25dp"
+            app:selectedColor="#2abff1"
+            app:strokeWidth="4dp"
+            app:unselectedColor="#220c2b"/>
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/ccw_header_progress_bar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateTint="#d16afc"/>
+
+</FrameLayout>

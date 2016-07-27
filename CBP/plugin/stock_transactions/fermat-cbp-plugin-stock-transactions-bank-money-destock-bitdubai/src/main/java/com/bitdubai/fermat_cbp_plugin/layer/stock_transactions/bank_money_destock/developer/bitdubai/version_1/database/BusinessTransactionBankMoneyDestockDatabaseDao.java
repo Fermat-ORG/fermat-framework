@@ -37,10 +37,14 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
 
     UUID pluginId;
 
-    /** DealsWithPluginDatabaseSystem interface variable and implementation */
+    /**
+     * DealsWithPluginDatabaseSystem interface variable and implementation
+     */
     PluginDatabaseSystem pluginDatabaseSystem;
 
-    /** Constructor */
+    /**
+     * Constructor
+     */
     public BusinessTransactionBankMoneyDestockDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
@@ -63,7 +67,7 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
     }
 
     private DatabaseTableRecord getBankMoneyDestockRecord(BankMoneyTransaction bankMoneyTransaction
-                                                          ) throws DatabaseOperationException {
+    ) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -102,7 +106,7 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
         return table.getRecords();
     }
 
-    private BankMoneyTransaction getBankMoneyDestockTransaction(final DatabaseTableRecord bankMoneyRestockTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException{
+    private BankMoneyTransaction getBankMoneyDestockTransaction(final DatabaseTableRecord bankMoneyRestockTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
 
         BankMoneyDestockTransactionImpl bankMoneyDestockTransaction = new BankMoneyDestockTransactionImpl();
 
@@ -126,8 +130,7 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
 
     public void saveBankMoneyDestockTransactionData(BankMoneyTransaction bankMoneyTransaction) throws DatabaseOperationException, MissingBankMoneyDestockDataException {
 
-        try
-        {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -147,13 +150,12 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
 
             database.executeTransaction(transaction);
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Bank Money Restock Transaction in the database.", null);
         }
     }
 
-    public List<BankMoneyTransaction> getBankMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException
-    {
+    public List<BankMoneyTransaction> getBankMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException {
         try {
             database = openDatabase();
 
@@ -162,13 +164,14 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
 
             for (DatabaseTableRecord bankMoneyRestockRecord : bankMoneyRestockData) {
                 final BankMoneyTransaction bankMoneyTransaction = getBankMoneyDestockTransaction(bankMoneyRestockRecord);
-                bankMoneyTransactions.add(bankMoneyTransaction);
+
+                if (!bankMoneyTransaction.getTransactionStatus().equals(TransactionStatusRestockDestock.COMPLETED))
+                    bankMoneyTransactions.add(bankMoneyTransaction);
             }
 
             return bankMoneyTransactions;
-        }
-        catch (Exception e) {
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Bank Money Restock Transaction from the database with filter: " + filter.toString(), null);
+        } catch (Exception e) {
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, new StringBuilder().append("error trying to get Bank Money Restock Transaction from the database with filter: ").append(filter.toString()).toString(), null);
         }
     }
 }

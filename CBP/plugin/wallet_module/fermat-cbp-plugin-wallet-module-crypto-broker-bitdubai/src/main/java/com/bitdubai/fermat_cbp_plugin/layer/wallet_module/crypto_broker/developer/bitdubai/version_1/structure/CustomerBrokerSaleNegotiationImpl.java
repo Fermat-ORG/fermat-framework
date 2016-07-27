@@ -10,7 +10,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.UUID;
 
 
@@ -148,7 +147,6 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
 
     /**
      * @return the clauses that conform this negotiation
-     *
      * @throws CantGetListClauseException
      */
     @Override
@@ -196,10 +194,10 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
 
     public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo) {
 
-        dataHasChanged = dataHasChanged || !Objects.equals(cancelReason, negotiationInfo.getCancelReason());
+        dataHasChanged = dataHasChanged || !negotiationInfo.getCancelReason().equals(cancelReason);
         cancelReason = negotiationInfo.getCancelReason();
 
-        dataHasChanged = dataHasChanged || !Objects.equals(memo, negotiationInfo.getMemo());
+        dataHasChanged = dataHasChanged || !negotiationInfo.getMemo().equals(memo);
         memo = negotiationInfo.getMemo();
 
         Collection<ClauseInformation> values = negotiationInfo.getClauses().values();
@@ -211,7 +209,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
             clauses.add(new ClauseImpl(value, brokerPublicKey));
         }
 
-        this.status = NegotiationStatus.SENT_TO_CUSTOMER;
+        this.status = dataHasChanged ? NegotiationStatus.SENT_TO_CUSTOMER : NegotiationStatus.WAITING_FOR_CLOSING;
     }
 
     public boolean dataHasChanged() {

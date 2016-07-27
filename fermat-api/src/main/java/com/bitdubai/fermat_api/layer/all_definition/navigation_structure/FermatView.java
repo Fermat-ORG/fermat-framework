@@ -2,36 +2,22 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 
+import java.io.Serializable;
+
 /**
  * Created by mati on 2016.06.07..
  */
-public class FermatView {
-
-    private int id;
-    private SourceLocation sourceLocation;
-
+public class FermatView extends Artifact implements Serializable {
 
     public FermatView() {
     }
 
     public FermatView(int id, SourceLocation sourceLocation) {
-        this.id = id;
-        this.sourceLocation = sourceLocation;
+        super(id, null, sourceLocation);
     }
 
-    public int getId() {
-        return id;
+    public FermatView(int id, Owner owner, SourceLocation sourceLocation) {
+        super(id, owner, sourceLocation);
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public SourceLocation getSourceLocation() {
-        return sourceLocation;
-    }
-
-    public void setSourceLocation(SourceLocation sourceLocation) {
-        this.sourceLocation = sourceLocation;
-    }
 }

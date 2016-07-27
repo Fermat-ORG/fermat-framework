@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -25,9 +25,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.google.gson.Gson;
 
 import java.sql.Timestamp;
@@ -47,18 +45,15 @@ import java.util.concurrent.Executors;
 public class TransactionTransmissionNetworkServiceManager implements TransactionTransmissionManager {
 
     private final TransactionTransmissionNetworkServicePluginRoot pluginRoot;
-    private final ErrorManager errorManager;
     private final TransactionTransmissionContractHashDao transactionTransmissionContractHashDao;
     private final Gson gson;
 
     private final ExecutorService executorService;
 
     public TransactionTransmissionNetworkServiceManager(final TransactionTransmissionNetworkServicePluginRoot pluginRoot,
-                                                        final ErrorManager errorManager,
                                                         final TransactionTransmissionContractHashDao transactionTransmissionContractHashDao) {
 
         this.pluginRoot = pluginRoot;
-        this.errorManager = errorManager;
         this.transactionTransmissionContractHashDao = transactionTransmissionContractHashDao;
         this.gson = new Gson();
 
@@ -68,6 +63,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     @Override
     public void sendContractHash(
             UUID transactionId,
+            UUID transactionContractId,
             String cryptoBrokerActorSenderPublicKey,
             String cryptoCustomerActorReceiverPublicKey,
             String transactionHash,
@@ -91,6 +87,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 BusinessTransactionTransactionType.TRANSACTION_HASH,
                 timestamp.getTime(),
                 transactionId,
+                transactionContractId,
                 TransactionTransmissionStates.PRE_PROCESSING_SEND,
                 remoteBusinessTransaction
         );
@@ -143,7 +140,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 remoteBusinessTransaction);
 
         try {
-            System.out.print("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - sendContractStatusNotification()" +remoteBusinessTransaction+"\n");
+            System.out.print(new StringBuilder().append("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - sendContractStatusNotification()").append(remoteBusinessTransaction).append("\n").toString());
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);
@@ -208,7 +205,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                     "Cannot persists the contract hash in table",
                     "database corrupted");
         } catch (Exception e) {
-                throw new CantConfirmNotificationReceptionException(
+            throw new CantConfirmNotificationReceptionException(
                     CantConfirmNotificationReceptionException.DEFAULT_MESSAGE,
                     e,
                     "Cannot persists the contract hash in table",
@@ -216,12 +213,66 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         }
     }
 
+    @Override
+    public void confirmNotificationReception(
+            String senderPublicKey,
+            String receiverPublicKey,
+            String contractHash,
+            String transactionId,
+            UUID transactionContractId,
+            Plugins remoteBusinessTransaction,
+            PlatformComponentType senderComponent,
+            PlatformComponentType receiverComponent) throws CantConfirmNotificationReceptionException {
+
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+        UUID uuidTransactionId = UUID.fromString(transactionId);
+
+        //TODO: verificar los parametros del businessTransactionMetadata
+        BusinessTransactionMetadata businessTransactionMetadata = new BusinessTransactionMetadataRecord(
+                contractHash,
+                ContractTransactionStatus.NOTIFICATION_CONFIRMED,
+                senderPublicKey,
+                receiverComponent,
+                receiverPublicKey,
+                senderComponent,
+                null,
+                null,
+                BusinessTransactionTransactionType.CONFIRM_MESSAGE,
+                timestamp.getTime(),
+                uuidTransactionId,
+                transactionContractId,
+                TransactionTransmissionStates.PRE_PROCESSING_SEND,
+                remoteBusinessTransaction
+        );
+
+        try {
+            System.out.print("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - confirmNotificationReception()\n");
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
+
+            sendMessage(businessTransactionMetadata);
+
+        } catch (CantInsertRecordDataBaseException e) {
+            throw new CantConfirmNotificationReceptionException(
+                    CantConfirmNotificationReceptionException.DEFAULT_MESSAGE,
+                    e,
+                    "Cannot persists the contract hash in table",
+                    "database corrupted");
+        } catch (Exception e) {
+            throw new CantConfirmNotificationReceptionException(
+                    CantConfirmNotificationReceptionException.DEFAULT_MESSAGE,
+                    e,
+                    "Cannot persists the contract hash in table",
+                    "Unhandled Exception.");
+        }
+    }
 
     public void ackConfirmNotificationReception(
             String cryptoBrokerActorSenderPublicKey,
             String cryptoCustomerActorReceiverPublicKey,
             String contractHash,
             String transactionId,
+            UUID transactionContractId,
             Plugins remoteBusinessTransaction,
             PlatformComponentType senderComponent,
             PlatformComponentType receiverComponent) throws CantConfirmNotificationReceptionException {
@@ -243,6 +294,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 BusinessTransactionTransactionType.ACK_CONFIRM_MESSAGE,
                 timestamp.getTime(),
                 uuidTransactionId,
+                transactionContractId,
                 TransactionTransmissionStates.PRE_PROCESSING_SEND,
                 remoteBusinessTransaction
         );
@@ -271,7 +323,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     @Override
     public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
         try {
-            System.out.print("\n1)transactionId: "+ transactionID+"\n");
+            System.out.print(new StringBuilder().append("\n1)transactionId: ").append(transactionID).append("\n").toString());
             this.transactionTransmissionContractHashDao.confirmReception(transactionID);
 
         } catch (CantUpdateRecordDataBaseException e) {
@@ -284,7 +336,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             throw new CantConfirmTransactionException(
                     PendingRequestNotFoundException.DEFAULT_MESSAGE,
                     e, "Confirm reception",
-                    "Cannot find the transaction id in database\n" + transactionID);
+                    new StringBuilder().append("Cannot find the transaction id in database\n").append(transactionID).toString());
         } catch (CantGetTransactionTransmissionException e) {
             throw new CantConfirmTransactionException(
                     CantGetTransactionTransmissionException.DEFAULT_MESSAGE,
@@ -342,22 +394,40 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
 
     public void sendMessage(final BusinessTransactionMetadata metadata) {
 
-        final PlatformComponentProfile senderProfile = pluginRoot.getProfileSenderToRequestConnection(metadata.getSenderId(),
-                NetworkServiceType.TRANSACTION_TRANSMISSION, metadata.getSenderType());
+        final ActorProfile sender = new ActorProfile();
+        sender.setActorType(getActorByPlatformComponentType(metadata.getSenderType()).getCode());
+        sender.setIdentityPublicKey(metadata.getSenderId());
 
-        final PlatformComponentProfile destinationProfile = pluginRoot.getProfileDestinationToRequestConnection(metadata.getReceiverId(),
-                NetworkServiceType.TRANSACTION_TRANSMISSION, metadata.getReceiverType());
+        final ActorProfile receiver = new ActorProfile();
+        receiver.setActorType(getActorByPlatformComponentType(metadata.getReceiverType()).getCode());
+        receiver.setIdentityPublicKey(metadata.getReceiverId());
 
         executorService.submit(new Runnable() {
             @Override
             public void run() {
                 try {
-                    pluginRoot.sendNewMessage(senderProfile, destinationProfile, gson.toJson(metadata));
-                } catch (CantSendMessageException e) {
-                    errorManager.reportUnexpectedPluginException(pluginRoot.getPluginVersionReference(),
-                            UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    pluginRoot.sendNewMessage(
+                            sender,
+                            receiver,
+                            gson.toJson(metadata)
+                    );
+                } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
         });
+    }
+
+    Actors getActorByPlatformComponentType(PlatformComponentType type) {
+
+        switch (type) {
+
+            case ACTOR_CRYPTO_BROKER:
+                return Actors.CBP_CRYPTO_BROKER;
+            case ACTOR_CRYPTO_CUSTOMER:
+                return Actors.CBP_CRYPTO_CUSTOMER;
+            default:
+                return null;
+        }
     }
 }

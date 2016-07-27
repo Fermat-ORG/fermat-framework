@@ -5,17 +5,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 
 
 /**
+ * <p>The abstract class <code>PlatformTextFile</code> is a interface
+ * that define the methods to get, set and save text file content.
  *
- *  <p>The abstract class <code>PlatformTextFile</code> is a interface
- *     that define the methods to get, set and save text file content.
- *
- *
- *  @author  Luis
- *  @version 1.0.0
- *  @since   01/02/15.
- * */
+ * @author Luis
+ * @version 1.0.0
+ * @since 01/02/15.
+ */
 
- public interface PlatformTextFile {
+public interface PlatformTextFile {
 
     String getContent();
 
@@ -24,5 +22,5 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
     void persistToMedia() throws CantPersistFileException;
 
     void loadFromMedia() throws CantLoadFileException;
-    
+
 }

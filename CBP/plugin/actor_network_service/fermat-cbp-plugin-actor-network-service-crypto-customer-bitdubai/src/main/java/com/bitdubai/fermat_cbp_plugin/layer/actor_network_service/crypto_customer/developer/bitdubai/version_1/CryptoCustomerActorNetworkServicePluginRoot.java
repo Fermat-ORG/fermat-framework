@@ -1,9 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -18,8 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorNetworkServiceManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractActorNetworkService;
 
 import java.util.List;
 
@@ -34,7 +31,7 @@ import java.util.List;
  * @since Java JDK 1.7
  */
 @PluginInfo(createdBy = "lnacosta", maintainerMail = "laion.cj91@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_CUSTOMER)
-public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetworkServiceBase implements DatabaseManagerForDevelopers {
+public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractActorNetworkService implements DatabaseManagerForDevelopers {
 
     /**
      * Constructor of the Network Service.
@@ -44,40 +41,23 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
         super(
                 new PluginVersionReference(new Version()),
                 EventSource.ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER,
-                PlatformComponentType.NETWORK_SERVICE,
-                NetworkServiceType.CRYPTO_CUSTOMER,
-                "Crypto Customer Actor Network Service",
-                null
+                NetworkServiceType.CRYPTO_CUSTOMER
         );
-    }
-
-    /**
-     * Service Interface implementation
-     */
-    @Override
-    public void onStart() throws CantStartPluginException {
-
-        final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType());
-
-        fermatManager = new CryptoCustomerActorNetworkServiceManager(
-                communicationsClientConnection         ,
-                this
-        );
-
     }
 
     private CryptoCustomerActorNetworkServiceManager fermatManager;
 
     @Override
-    public FermatManager getManager() {
-        return fermatManager;
+    protected void onActorNetworkServiceStart() {
+
+        fermatManager = new CryptoCustomerActorNetworkServiceManager(
+                this
+        );
     }
 
     @Override
-    protected void onNetworkServiceRegistered() {
-
-        fermatManager.setPlatformComponentProfile(this.getNetworkServiceProfile());
-
+    public FermatManager getManager() {
+        return fermatManager;
     }
 
     @Override

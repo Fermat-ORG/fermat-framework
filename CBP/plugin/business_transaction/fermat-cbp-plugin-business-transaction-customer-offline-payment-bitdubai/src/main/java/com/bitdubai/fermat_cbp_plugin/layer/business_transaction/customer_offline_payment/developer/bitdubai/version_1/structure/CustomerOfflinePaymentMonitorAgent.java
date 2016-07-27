@@ -3,6 +3,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offli
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -56,9 +58,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offlin
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseFactory;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.Collection;
 import java.util.Date;
@@ -97,7 +97,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
             UUID pluginId,
             TransactionTransmissionManager transactionTransmissionManager,
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-            CustomerBrokerContractSaleManager customerBrokerContractSaleManager,CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager) {
+            CustomerBrokerContractSaleManager customerBrokerContractSaleManager, CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager) {
 
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -178,7 +178,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
         boolean threadWorking;
 
         public MonitorAgent(CustomerOfflinePaymentPluginRoot pluginRoot) {
-         this.pluginRoot = pluginRoot;   
+            this.pluginRoot = pluginRoot;
         }
 
         @Override
@@ -203,7 +203,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
 
                 // now I will check if there are pending transactions to raise the event
                 try {
-                    logManager.log(logLevel, "Iteration number " + iterationNumber, null, null);
+                    logManager.log(logLevel, new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
 
                     doTheMainTask();
 
@@ -330,7 +330,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
                                     getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
                             Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
                             String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
-                            if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
+                            if (!MoneyType.CRYPTO.getCode().equals(clauseValue)) {
                                 customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(saleContract);
                                 customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
                                 customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());

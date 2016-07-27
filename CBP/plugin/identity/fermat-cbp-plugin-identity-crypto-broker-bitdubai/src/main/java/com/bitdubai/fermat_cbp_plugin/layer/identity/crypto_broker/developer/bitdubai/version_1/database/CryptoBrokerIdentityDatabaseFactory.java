@@ -1,4 +1,4 @@
-package   com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -12,10 +12,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.Crypto BrokerIdentityDatabaseFactory</code>
+ * The Class  <code>com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.Crypto BrokerIdentityDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
- *
+ * <p/>
  * Created by Jorge Gonzalez - (jorgeejgonzalez@gmail.com) on 28/09/15.
  * Updated by lnacosta (laion.cj91@gmail.com) on 25/11/2015.
  *
@@ -42,7 +42,7 @@ public final class CryptoBrokerIdentityDatabaseFactory {
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(final UUID   ownerId     ,
+    protected Database createDatabase(final UUID ownerId,
                                       final String databaseName) throws CantCreateDatabaseException {
 
         try {
@@ -57,10 +57,15 @@ public final class CryptoBrokerIdentityDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
 
-            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME            , DatabaseDataType.TEXT, 130, Boolean.TRUE );
-            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME                 , DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 130, Boolean.TRUE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
             table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 130, Boolean.FALSE);
-            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME        , DatabaseDataType.TEXT,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME, DatabaseDataType.TEXT, 10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PAYMENT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_MERCHANDISE_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXTRA_TEXT_COLUMN_NAME, DatabaseDataType.STRING, 40, Boolean.FALSE);
 
             table.addIndex(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FIRST_KEY_COLUMN);
 

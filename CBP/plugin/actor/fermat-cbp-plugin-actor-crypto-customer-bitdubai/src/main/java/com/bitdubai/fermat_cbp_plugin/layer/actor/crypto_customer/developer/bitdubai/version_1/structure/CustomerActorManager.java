@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantClearAssociatedCustomerIdentityWalletRelationshipException;
@@ -16,12 +19,19 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.Relati
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraDataManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionSearch;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.CryptoCustomerActorPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDao;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantCheckIfExistsException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantGetBrokersConnectedException;
 
 import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -33,14 +43,17 @@ public final class CustomerActorManager implements ActorExtraDataManager {
 
     private final CryptoCustomerActorDao dao;
     private final CryptoBrokerManager cryptoBrokerANSManager;
+    private final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
     private final CryptoCustomerActorPluginRoot pluginRoot;
 
     public CustomerActorManager(final CryptoCustomerActorDao dao,
                                 final CryptoBrokerManager cryptoBrokerANSManager,
+                                final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager,
                                 final CryptoCustomerActorPluginRoot pluginRoot) {
 
         this.dao = dao;
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
+        this.cryptoBrokerActorConnectionManager = cryptoBrokerActorConnectionManager;
         this.pluginRoot = pluginRoot;
     }
 
@@ -65,7 +78,7 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantCreateNewCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), "identity: " + identity + " - walletPublicKey: " + walletPublicKey, "Unhandled error.");
+            throw new CantCreateNewCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), new StringBuilder().append("identity: ").append(identity).append(" - walletPublicKey: ").append(walletPublicKey).toString(), "Unhandled error.");
         }
     }
 
@@ -106,7 +119,7 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), "publicKey: " + publicKey, "Unhandled error.");
+            throw new CantGetCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), new StringBuilder().append("publicKey: ").append(publicKey).toString(), "Unhandled error.");
         }
     }
 
@@ -125,7 +138,7 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), "walletPublicKey: " + walletPublicKey, "Unhandled error.");
+            throw new CantGetCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), new StringBuilder().append("walletPublicKey: ").append(walletPublicKey).toString(), "Unhandled error.");
         }
     }
 
@@ -149,7 +162,7 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantCreateNewActorExtraDataException(FermatException.wrapException(e), "actorExtraData: " + actorExtraData, "Unhandled error.");
+            throw new CantCreateNewActorExtraDataException(FermatException.wrapException(e), new StringBuilder().append("actorExtraData: ").append(actorExtraData).toString(), "Unhandled error.");
         }
     }
 
@@ -167,7 +180,7 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantUpdateActorExtraDataException(FermatException.wrapException(e), "actorExtraData: " + actorExtraData, "Unhandled error.");
+            throw new CantUpdateActorExtraDataException(FermatException.wrapException(e), new StringBuilder().append("actorExtraData: ").append(actorExtraData).toString(), "Unhandled error.");
         }
     }
 
@@ -222,7 +235,7 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetListActorExtraDataException(FermatException.wrapException(e), "brokerPublicKey: " + brokerPublicKey + " - customerPublicKey: " + customerPublicKey, "Unhandled error.");
+            throw new CantGetListActorExtraDataException(FermatException.wrapException(e), new StringBuilder().append("brokerPublicKey: ").append(brokerPublicKey).append(" - customerPublicKey: ").append(customerPublicKey).toString(), "Unhandled error.");
         }
     }
 
@@ -240,31 +253,76 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetListActorExtraDataException(FermatException.wrapException(e), "publicKeyBroker: " + publicKeyBroker, "Unhandled error.");
+            throw new CantGetListActorExtraDataException(FermatException.wrapException(e), new StringBuilder().append("publicKeyBroker: ").append(publicKeyBroker).toString(), "Unhandled error.");
         }
     }
 
     @Override
-    public void requestBrokerExtraData(final ActorExtraData actorExtraData) throws CantRequestBrokerExtraDataException {
+    public void requestBrokerExtraData() throws CantRequestBrokerExtraDataException {
 
         try {
 
-            this.createCustomerExtraData(actorExtraData);
+            Collection<CustomerIdentityWalletRelationship> relationships = dao.getAllCustomerIdentityWalletRelationship();
 
-            this.cryptoBrokerANSManager.requestQuotes(actorExtraData.getCustomerPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, actorExtraData.getBrokerIdentity().getPublicKey());
+            for (CustomerIdentityWalletRelationship relationship : relationships) {
 
+                List<CryptoBrokerActorConnection> connections = getBrokersConnected(relationship);
+
+                for (CryptoBrokerActorConnection broker : connections) {
+
+                    if (!this.dao.existBrokerExtraData(relationship.getCryptoCustomer(), broker.getPublicKey())) {
+
+                        if (!this.dao.existBrokerExtraData(broker.getPublicKey(), relationship.getCryptoCustomer())) {
+
+                            ActorIdentity brokerIdentity = new ActorExtraDataIdentity(broker.getAlias(), broker.getPublicKey(), broker.getImage(), 0, GeoFrequency.NONE);
+
+                            this.dao.createCustomerExtraData(new ActorExtraDataInformation(relationship.getCryptoCustomer(), brokerIdentity, null, null));
+                        }
+
+                        this.cryptoBrokerANSManager.requestQuotes(relationship.getCryptoCustomer(), Actors.CBP_CRYPTO_CUSTOMER, broker.getPublicKey());
+                    }
+                }
+            }
+
+        } catch (CantGetCustomerIdentityWalletRelationshipException e) {
+
+            throw new CantRequestBrokerExtraDataException(e, "", "Error trying to get the list of customer-wallet relationships.");
+        } catch (CantGetBrokersConnectedException e) {
+
+            throw new CantRequestBrokerExtraDataException(e, "", "Error trying to get the list of brokers connected to that customer.");
+        } catch (CantCheckIfExistsException e) {
+
+            throw new CantRequestBrokerExtraDataException(e, "", "Error in DAO trying to check if the extra data for the broker exists.");
         } catch (CantCreateNewActorExtraDataException e) {
 
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantRequestBrokerExtraDataException(e, "actorExtraData: " + actorExtraData, "Error In Customer Actor DAO.");
+            throw new CantRequestBrokerExtraDataException(e, "", "Error trying to create a new actor extra data for requesting the quotes.");
         } catch (CantRequestQuotesException e) {
 
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantRequestBrokerExtraDataException(e, "actorExtraData: " + actorExtraData, "Error in Broker Actor Network Service.");
+            throw new CantRequestBrokerExtraDataException(e, "", "Cant request quotes through the network service.");
         } catch (Exception e) {
 
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantRequestBrokerExtraDataException(FermatException.wrapException(e), "actorExtraData: " + actorExtraData, "Unhandled error.");
+            throw new CantRequestBrokerExtraDataException(e, "", "Unhandled error.");
+        }
+
+    }
+
+    private List<CryptoBrokerActorConnection> getBrokersConnected(CustomerIdentityWalletRelationship relationship) throws CantGetBrokersConnectedException {
+
+        try {
+
+            CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(
+                    relationship.getCryptoCustomer(),
+                    Actors.CBP_CRYPTO_CUSTOMER
+            );
+
+            final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
+            search.addConnectionState(ConnectionState.CONNECTED);
+
+            return search.getResult();
+
+        } catch (CantListActorConnectionsException e) {
+
+            throw new CantGetBrokersConnectedException(e, "", "Error trying to list the broker connections of the customer.");
         }
     }
 

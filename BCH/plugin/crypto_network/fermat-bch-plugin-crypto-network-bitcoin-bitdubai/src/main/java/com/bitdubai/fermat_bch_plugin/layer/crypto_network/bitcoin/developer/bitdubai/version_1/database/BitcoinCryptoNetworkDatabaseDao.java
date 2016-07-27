@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
@@ -29,8 +28,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinTransactionConverter;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
@@ -39,6 +39,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinBlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
 
 import org.apache.commons.lang.StringUtils;
@@ -234,19 +235,19 @@ public class BitcoinCryptoNetworkDatabaseDao {
         switch (cryptoTransaction.getCryptoStatus()){
             case ON_BLOCKCHAIN:
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingCryptoTransaction = CryptoTransaction.copyCryptoTransaction(cryptoTransaction);
+                    CryptoTransaction missingCryptoTransaction = BitcoinTransactionConverter.copyCryptoTransaction(cryptoTransaction);
                     missingCryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                     saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
                 }
                 break;
             case IRREVERSIBLE:
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingCryptoTransaction = CryptoTransaction.copyCryptoTransaction(cryptoTransaction);
+                    CryptoTransaction missingCryptoTransaction = BitcoinTransactionConverter.copyCryptoTransaction(cryptoTransaction);
                     missingCryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                     saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
                 }
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_BLOCKCHAIN, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingOBCCryptoTransaction = CryptoTransaction.copyCryptoTransaction(cryptoTransaction);
+                    CryptoTransaction missingOBCCryptoTransaction = BitcoinTransactionConverter.copyCryptoTransaction(cryptoTransaction);
                     missingOBCCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
                     saveNewTransaction(missingOBCCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingOBCCryptoTransaction));
                 }
@@ -868,7 +869,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
             /**
              * I will form the address from the public key and the network so I can insert it.
              */
-            NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+            NetworkParameters networkParameters = BitcoinBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
             Address address = null;
             try {
                 address = new Address(networkParameters, key.toAddress(networkParameters).toString());
@@ -1476,5 +1477,47 @@ public class BitcoinCryptoNetworkDatabaseDao {
             return ProtocolStatus.NO_ACTION_REQUIRED;
         // for every other case, we are returning TO_BE_NOTIFIED
         return ProtocolStatus.TO_BE_NOTIFIED;
+    }
+
+    /**
+     * returns a list of keys from imported seeds, meaning from a vault code IMS.
+     * @param blockchainNetworkType
+     * @return
+     */
+    public List<String> getImportedAddresses(BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_NETWORK_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME, CryptoVaults.IMPORTED_SEED.getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        List<String> addressList = new ArrayList<>();
+
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            addressList.add(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_MONITORED_ADDRESSES_COLUMN_NAME));
+        }
+
+        return addressList;
+    }
+
+
+    /**
+     * true if the network is active by existing in the database, false if not.
+     * @param blockchainNetworkType
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public boolean isNetworkActive(BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException {
+        for (BlockchainNetworkType activeBlockchainNetworkType : this.getActiveBlockchainNetworkTypes()){
+            if (activeBlockchainNetworkType.getCode().equals(blockchainNetworkType.getCode()))
+                return true;
+        }
+
+        return false;
+
     }
 }

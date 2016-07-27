@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_res
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CryptoMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
@@ -14,22 +16,25 @@ import java.util.UUID;
  * Created by franklin on 17/11/15.
  */
 public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction {
-    UUID                            transactionId;
-    String                          actorPublicKey;
-    CryptoCurrency                  cryptoCurrency;
-    String                          cbpWalletPublicKey;
-    String                          cryWalletPublicKey;
-    String                          memo;
-    String                          concept;
-    BigDecimal                      amount;
-    Timestamp                       timeStamp;
+    UUID transactionId;
+    String actorPublicKey;
+    CryptoCurrency cryptoCurrency;
+    String cbpWalletPublicKey;
+    String cryWalletPublicKey;
+    String memo;
+    String concept;
+    BigDecimal amount;
+    Timestamp timeStamp;
     TransactionStatusRestockDestock transactionStatus;
-    BigDecimal                      priceReference;
-    OriginTransaction               originTransaction;
-    String                          originTransactionId;
-    BlockchainNetworkType          blockchainNetworkType;
+    BigDecimal priceReference;
+    OriginTransaction originTransaction;
+    String originTransactionId;
+    BlockchainNetworkType blockchainNetworkType;
+    //fee values
+    private long fee;
+    private FeeOrigin feeOrigin;
 
-    public CryptoMoneyRestockTransactionImpl(){
+    public CryptoMoneyRestockTransactionImpl() {
 
     }
 
@@ -46,23 +51,26 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
                                              BigDecimal priceReference,
                                              OriginTransaction originTransaction,
                                              String originTransactionId,
-                                             BlockchainNetworkType blockchainNetworkType){
-        this.transactionId        = transactionId;
-        this.actorPublicKey       = actorPublicKey;
-        this.cryptoCurrency       = cryptoCurrency;
-        this.cbpWalletPublicKey   = cbpWalletPublicKey;
-        this.cryWalletPublicKey   = cryWalletPublicKey;
-        this.memo                 = memo;
-        this.concept              = concept;
-        this.amount               = amount;
-        this.timeStamp            = timeStamp;
-        this.transactionStatus    = transactionStatus;
-        this.priceReference       = priceReference;
-        this.originTransaction    = originTransaction;
-        this.originTransactionId  = originTransactionId;
-        this.blockchainNetworkType= blockchainNetworkType;
+                                             BlockchainNetworkType blockchainNetworkType,
+                                             long fee,
+                                             FeeOrigin feeOrigin) {
+        this.transactionId = transactionId;
+        this.actorPublicKey = actorPublicKey;
+        this.cryptoCurrency = cryptoCurrency;
+        this.cbpWalletPublicKey = cbpWalletPublicKey;
+        this.cryWalletPublicKey = cryWalletPublicKey;
+        this.memo = memo;
+        this.concept = concept;
+        this.amount = amount;
+        this.timeStamp = timeStamp;
+        this.transactionStatus = transactionStatus;
+        this.priceReference = priceReference;
+        this.originTransaction = originTransaction;
+        this.originTransactionId = originTransactionId;
+        this.blockchainNetworkType = blockchainNetworkType;
+        this.fee = fee;
+        this.feeOrigin = feeOrigin;
     }
-
 
 
     @Override
@@ -213,5 +221,30 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
     @Override
     public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
         this.blockchainNetworkType = blockchainNetworkType;
+    }
+
+    @Override
+    public long getFee() {
+        return fee;
+    }
+
+    @Override
+    public void setFee(long fee) {
+        this.fee = fee;
+    }
+
+    @Override
+    public void setFee(BitcoinFee bitcoinFee) {
+        this.fee = bitcoinFee.getFee();
+    }
+
+    @Override
+    public FeeOrigin getFeeOrigin() {
+        return feeOrigin;
+    }
+
+    @Override
+    public void setFeeOrigin(FeeOrigin feeOrigin) {
+        this.feeOrigin = feeOrigin;
     }
 }

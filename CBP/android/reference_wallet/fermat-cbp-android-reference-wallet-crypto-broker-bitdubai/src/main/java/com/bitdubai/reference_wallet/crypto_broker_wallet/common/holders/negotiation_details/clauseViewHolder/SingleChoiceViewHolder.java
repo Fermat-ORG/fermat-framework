@@ -22,12 +22,16 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
 
     private Button buttonValue;
     private TextView descriptionTextView;
+    private View separatorLineUp;
+    private View separatorLineDown;
 
     public SingleChoiceViewHolder(View itemView, int holderType) {
         super(itemView, holderType);
 
         descriptionTextView = (TextView) itemView.findViewById(R.id.cbw_description_text);
         buttonValue = (Button) itemView.findViewById(R.id.cbw_single_choice_value);
+        separatorLineDown = itemView.findViewById(R.id.cbw_line_down);
+        separatorLineUp = itemView.findViewById(R.id.cbw_line_up);
         buttonValue.setOnClickListener(this);
     }
 
@@ -69,11 +73,15 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     protected void onAcceptedStatus() {
         descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
+        separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
+        separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
     }
 
     @Override
     protected void setChangedStatus() {
         descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
+        separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_changed));
+        separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_changed));
     }
 
     @Override
@@ -83,20 +91,19 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
 
     /**
      * @param clause the clause with the value
-     *
      * @return A friendly reading value for the clause or the clause's value itself
      */
     private String getFriendlyValue(ClauseInformation clause) {
         final String clauseValue = clause.getValue();
         String friendlyValue = clauseValue;
-
+        StringBuilder stringBuilder = new StringBuilder();
         final ClauseType type = clause.getType();
         try {
             if (type == ClauseType.CUSTOMER_CURRENCY || type == ClauseType.BROKER_CURRENCY) {
                 if (FiatCurrency.codeExists(clauseValue))
-                    friendlyValue = FiatCurrency.getByCode(clauseValue).getFriendlyName() + "(" + clauseValue + ")";
+                    friendlyValue = stringBuilder.append(FiatCurrency.getByCode(clauseValue).getFriendlyName()).append("(").append(clauseValue).append(")").toString();
                 else if (CryptoCurrency.codeExists(clauseValue))
-                    friendlyValue = CryptoCurrency.getByCode(clauseValue).getFriendlyName() + "(" + clauseValue + ")";
+                    friendlyValue = stringBuilder.append(CryptoCurrency.getByCode(clauseValue).getFriendlyName()).append("(").append(clauseValue).append(")").toString();
 
             } else if (type == ClauseType.CUSTOMER_PAYMENT_METHOD || type == ClauseType.BROKER_PAYMENT_METHOD) {
                 friendlyValue = MoneyType.getByCode(clauseValue).getFriendlyName();
@@ -105,7 +112,7 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
                 friendlyValue = clauseValue.isEmpty() ? "No Bank Account" : clauseValue;
 
             } else if (type == ClauseType.BROKER_PLACE_TO_DELIVER || type == ClauseType.CUSTOMER_PLACE_TO_DELIVER) {
-                friendlyValue = clauseValue.isEmpty() ? "No Locations": clauseValue;
+                friendlyValue = clauseValue.isEmpty() ? "No Locations" : clauseValue;
             }
 
         } catch (FermatException ignore) {

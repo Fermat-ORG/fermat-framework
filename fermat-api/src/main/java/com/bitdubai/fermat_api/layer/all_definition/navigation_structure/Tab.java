@@ -1,24 +1,33 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTab;
 
+import java.io.Serializable;
 
 
 /**
  * Created by Furszyfer Matias on 2015.07.17..
  */
-public class Tab implements FermatTab {
+public class Tab implements FermatTab, Serializable {
 
     /**
      * Tab class member variables
      */
-    String label;
+    private String label;
 
-    byte[] icon;
+    private byte[] icon;
 
-    Fragments fragment;
+    private FermatFragment fragment;
+
+    private FermatDrawable drawable;
+
+    /**
+     * Custom View for the tab
+     * eg: you can use frameworks view or your custom view
+     */
+    private FermatView fermatView;
 
     /**
      * Tab class constructors
@@ -26,7 +35,7 @@ public class Tab implements FermatTab {
     public Tab() {
     }
 
-    public Tab(String label, Fragments fragment) {
+    public Tab(String label, FermatRuntimeFragment fragment) {
         this.label = label;
         this.fragment = fragment;
     }
@@ -35,13 +44,19 @@ public class Tab implements FermatTab {
      * Tab class getters
      */
 
-    public String getLabel(){
+    public String getLabel() {
         return this.label;
     }
 
+    @Override
+    public void setFragment(FermatFragment fragment) {
+        this.fragment = fragment;
 
-    public Fragments getFragment(){
-        return this.fragment;
+    }
+
+
+    public FermatFragment getFragment() {
+        return fragment;
     }
 
     public byte[] getIcon() {
@@ -51,15 +66,33 @@ public class Tab implements FermatTab {
     /**
      * Tab class setters
      */
-    public void setLabel(String texto){
+    public void setLabel(String texto) {
         this.label = texto;
-    }
-
-    public void setFragment(Fragments fragment){
-        this.fragment = fragment;
     }
 
     public void setIcon(byte[] icon) {
         this.icon = icon;
     }
+
+    public FermatDrawable getDrawable() {
+        return drawable;
+    }
+
+    public FermatView getFermatView() {
+        return fermatView;
+    }
+
+    public void setFermatView(FermatView fermatView) {
+        this.fermatView = fermatView;
+    }
+
+    public boolean hasCustomView() {
+        return fermatView != null;
+    }
+
+    @Override
+    public void setFermatDrawable(FermatDrawable fermatDrawable) {
+        this.drawable = fermatDrawable;
+    }
+
 }

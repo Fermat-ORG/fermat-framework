@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -27,7 +29,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsDetailData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.lang.ref.WeakReference;
@@ -49,13 +50,15 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     private static final String TAG = "BrokerNavigationView";
 
     private CryptoBrokerWalletModuleManager moduleManager;
-    private CryptoBrokerWalletSessionReferenceApp session;
+    private ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session;
     private CryptoBrokerIdentity actorIdentity;
     private WeakReference<Context> activity;
     private ErrorManager errorManager;
     private NumberFormat numberFormat;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
 
-    public CryptoBrokerNavigationViewPainter(Context activity, CryptoBrokerWalletSessionReferenceApp session) {
+    public CryptoBrokerNavigationViewPainter(Context activity, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session,
+                                             FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference<>(activity);
         this.session = session;
 
@@ -64,6 +67,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
         try {
             moduleManager = session.getModuleManager();
             actorIdentity = this.moduleManager.getAssociatedIdentity(session.getAppPublicKey());
+            this.applicationsHelper = new WeakReference<>(applicationsHelper);
 
         } catch (FermatException ex) {
             if (errorManager == null)
@@ -78,7 +82,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentity);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentity, applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -93,7 +97,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
 
             final CryptoBrokerNavigationViewAdapter adapter = new CryptoBrokerNavigationViewAdapter(activity.get(), stockData, earningsData);
             adapter.setStockTitle("Current Stock");
-            adapter.setStockTitle("Daily Earnings");
+            adapter.setEarningsTitle("Daily Earnings");
 
             return adapter;
         } catch (Exception e) {
@@ -143,20 +147,30 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
 
     private List<NavViewFooterItem> getStockData() {
         List<NavViewFooterItem> stockItems = new ArrayList<>();
+        List<Currency> merchandises = new ArrayList<>();
 
         try {
-            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = moduleManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
             numberFormat = DecimalFormat.getInstance();
 
-            for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
-                Currency currency = associatedWallet.getMerchandise();
-                double balance = moduleManager.getAvailableBalance(currency, session.getAppPublicKey());
 
-                String currencyCode = currency.getCode();
-                if(currency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(currencyCode))
+            //Get a list of merchandises
+            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = moduleManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
+            for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
+
+                if (!merchandises.contains(associatedWallet.getMerchandise()))
+                    merchandises.add(associatedWallet.getMerchandise());
+            }
+
+
+            //Iterate through them and get their balances and friendly names
+            for (Currency merchandise : merchandises) {
+                double balance = moduleManager.getAvailableBalance(merchandise, session.getAppPublicKey());
+
+                //If Bitcoin, convert to satoshi
+                if (CurrencyTypes.CRYPTO.equals(merchandise.getType()) && CryptoCurrency.BITCOIN.equals(merchandise))
                     balance = BitcoinConverter.convert(balance, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
-                stockItems.add(new NavViewFooterItem(currency.getFriendlyName(), numberFormat.format(balance)));
+                stockItems.add(new NavViewFooterItem(merchandise.getFriendlyName(), numberFormat.format(balance)));
             }
 
         } catch (Exception ex) {
@@ -181,7 +195,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
                 final Currency earningCurrency = earningsPair.getEarningCurrency();
                 final String earningCurrencyCode = earningCurrency.getCode();
 
-                String currencies = linkedCurrencyCode + " / " + earningCurrencyCode;
+                String currencies = new StringBuilder().append(linkedCurrencyCode).append(" / ").append(earningCurrencyCode).toString();
                 String value = "0.0";
 
                 final List<EarningTransaction> earnings = moduleManager.searchEarnings(earningsPair);
@@ -189,7 +203,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
                 if (!earningsDetails.isEmpty()) {
                     double amount = earningsDetails.get(0).getAmount();
 
-                    if(earningCurrency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(earningCurrencyCode))
+                    if (earningCurrency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(earningCurrencyCode))
                         amount = BitcoinConverter.convert(amount, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
                     value = numberFormat.format(amount);

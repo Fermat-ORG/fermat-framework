@@ -27,13 +27,15 @@ public class CryptoCustomerWalletModuleIndexInfoSummary implements IndexInfoSumm
     public CryptoCustomerWalletModuleIndexInfoSummary(FermatEnum currency, FermatEnum referenceCurrency, double purchasePrice, double salePrice) {
         providerName = "Provider Name";
 
-        currencyAndReferenceCurrency = currency.getCode() + " / " + referenceCurrency.getCode();
+        currencyAndReferenceCurrency = new StringBuilder().append(currency.getCode()).append(" / ").append(referenceCurrency.getCode()).toString();
 
         NumberFormat numberFormat = DecimalFormat.getInstance();
-        purchasePriceAndCurrency = currency.getCode() + " " + numberFormat.format(purchasePrice);
+        numberFormat.setMaximumFractionDigits(8);
+        purchasePriceAndCurrency = new StringBuilder().append(currency.getCode()).append(" ").append(numberFormat.format(purchasePrice)).toString();
 
         numberFormat = DecimalFormat.getInstance();
-        salePriceAndCurrency = currency.getCode() + " " + numberFormat.format(salePrice);
+        numberFormat.setMaximumFractionDigits(8);
+        salePriceAndCurrency = new StringBuilder().append(currency.getCode()).append(" ").append(numberFormat.format(salePrice)).toString();
     }
 
     public CryptoCustomerWalletModuleIndexInfoSummary(ExchangeRate exchangeRate, CurrencyExchangeRateProviderManager provider) {
@@ -52,13 +54,15 @@ public class CryptoCustomerWalletModuleIndexInfoSummary implements IndexInfoSumm
         this.exchangeRateData = exchangeRate;
 
         Currency toCurrency = exchangeRate.getToCurrency();
-        currencyAndReferenceCurrency = exchangeRate.getFromCurrency().getCode() + " / " + toCurrency.getCode();
+        currencyAndReferenceCurrency = new StringBuilder().append(exchangeRate.getFromCurrency().getCode()).append(" / ").append(toCurrency.getCode()).toString();
 
         NumberFormat numberFormat = DecimalFormat.getInstance();
-        purchasePriceAndCurrency = toCurrency.getCode() + " " + numberFormat.format(exchangeRate.getPurchasePrice());
+        numberFormat.setMaximumFractionDigits(8);
+        purchasePriceAndCurrency = new StringBuilder().append(toCurrency.getCode()).append(" ").append(numberFormat.format(exchangeRate.getPurchasePrice())).toString();
 
         numberFormat = DecimalFormat.getInstance();
-        salePriceAndCurrency = toCurrency.getCode() + " " + numberFormat.format(exchangeRate.getSalePrice());
+        numberFormat.setMaximumFractionDigits(8);
+        salePriceAndCurrency = new StringBuilder().append(toCurrency.getCode()).append(" ").append(numberFormat.format(exchangeRate.getSalePrice())).toString();
     }
 
     @Override

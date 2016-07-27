@@ -3,8 +3,10 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_off
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -43,6 +45,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetBankTransactionParametersRecordException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetCashTransactionParameterException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BankTransactionParametersRecord;
@@ -61,7 +64,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.except
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetBankTransactionParametersRecordException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
@@ -81,10 +83,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exce
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -246,7 +245,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                  */
                 try {
 
-                    logManager.log(BrokerAckOfflinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(BrokerAckOfflinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
                     doTheMainTask();
                 } catch (CantCreateDepositTransactionException | CantMakeDepositTransactionException | CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
                     pluginRoot.reportError(
@@ -509,7 +508,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                     Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
                     String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
-                    if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
+                    if (!MoneyType.CRYPTO.getCode().equals(clauseValue)) {
                         brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
                                 customerBrokerContractSale,
                                 paymentType,
@@ -553,7 +552,6 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
          * This method returns a CashTransactionParametersRecord from a given ContractHash/Id
          *
          * @param contractHash
-         *
          * @return
          */
         private CashTransactionParametersRecord getCashDepositParametersFromContractId(String contractHash, String cryptoBrokerWalletPublicKey, MoneyType paymentType, String customerAlias) throws CantGetCashTransactionParameterException {
@@ -563,10 +561,10 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                 String negotiationId = customerBrokerContractSale.getNegotiatiotId();
                 String brokerPublicKey = customerBrokerContractSale.getPublicKeyBroker();
-                ObjectChecker.checkArgument(negotiationId, "The negotiationId for contractHash " + contractHash + " is null");
+                ObjectChecker.checkArgument(negotiationId, new StringBuilder().append("The negotiationId for contractHash ").append(contractHash).append(" is null").toString());
 
                 CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-                ObjectChecker.checkArgument(customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation by Id" + negotiationId + " is null");
+                ObjectChecker.checkArgument(customerBrokerSaleNegotiation, new StringBuilder().append("The customerBrokerSaleNegotiation by Id").append(negotiationId).append(" is null").toString());
 
                 Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
                 ClauseType clauseType;
@@ -608,11 +606,11 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         pluginId.toString(),
                         brokerAmount,
                         brokerCurrency,
-                        "Payment from Customer " + customerAlias,
+                        new StringBuilder().append("Payment from Customer ").append(customerAlias).toString(),
                         TransactionType.CREDIT);
 
             } catch (CantGetListCustomerBrokerContractSaleException e) {
-                throw new CantGetCashTransactionParameterException(e, "Getting the CashTransactionParametersRecord", "Cannot get the CustomerBrokerContractSale by contractHash/Id:\n" + contractHash);
+                throw new CantGetCashTransactionParameterException(e, "Getting the CashTransactionParametersRecord", new StringBuilder().append("Cannot get the CustomerBrokerContractSale by contractHash/Id:\n").append(contractHash).toString());
             } catch (ObjectNotSetException e) {
                 throw new CantGetCashTransactionParameterException(e, "Getting the CashTransactionParametersRecord", "An object to set is null");
             } catch (CantGetListSaleNegotiationsException e) {
@@ -635,7 +633,6 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
          * This method returns a BankTransactionParametersRecord from a given ContractHash/Id
          *
          * @param contractHash
-         *
          * @return
          */
         private BankTransactionParametersRecord getBankDepositParametersFromContractId(String contractHash, String cryptoBrokerWalletPublicKey, String customerAlias) throws CantGetBankTransactionParametersRecordException {
@@ -645,10 +642,10 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                 String negotiationId = customerBrokerContractSale.getNegotiatiotId();
                 String actorPublicKey = customerBrokerContractSale.getPublicKeyBroker();
-                ObjectChecker.checkArgument(negotiationId, "The negotiationId for contractHash " + contractHash + " is null");
+                ObjectChecker.checkArgument(negotiationId, new StringBuilder().append("The negotiationId for contractHash ").append(contractHash).append(" is null").toString());
 
                 CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-                ObjectChecker.checkArgument(customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation by Id " + negotiationId + " is null");
+                ObjectChecker.checkArgument(customerBrokerSaleNegotiation, new StringBuilder().append("The customerBrokerSaleNegotiation by Id ").append(negotiationId).append(" is null").toString());
 
                 Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
                 ClauseType clauseType;
@@ -695,10 +692,10 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         brokerAmount,
                         account,
                         brokerCurrency,
-                        "Payment from Customer " + customerAlias);
+                        new StringBuilder().append("Payment from Customer ").append(customerAlias).toString());
 
             } catch (CantGetListCustomerBrokerContractSaleException e) {
-                throw new CantGetBankTransactionParametersRecordException(e, "Getting the BankTransactionParametersRecord", "Cannot get the CustomerBrokerContractSale by contractHash/Id:\n" + contractHash);
+                throw new CantGetBankTransactionParametersRecordException(e, "Getting the BankTransactionParametersRecord", new StringBuilder().append("Cannot get the CustomerBrokerContractSale by contractHash/Id:\n").append(contractHash).toString());
             } catch (ObjectNotSetException e) {
                 throw new CantGetBankTransactionParametersRecordException(e, "Getting the BankTransactionParametersRecord", "An object to set is null");
             } catch (CantGetListSaleNegotiationsException e) {
@@ -720,9 +717,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
          * This method parse a String object to a long object
          *
          * @param stringValue
-         *
          * @return
-         *
          * @throws InvalidParameterException
          */
         public double parseToDouble(String stringValue) throws InvalidParameterException {
@@ -733,7 +728,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     return NumberFormat.getInstance().parse(stringValue).doubleValue();
                 } catch (Exception exception) {
                     throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
-                            "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
+                            "Parsing String object to long", new StringBuilder().append("Cannot parse ").append(stringValue).append(" string value to long").toString());
                 }
             }
         }
@@ -742,9 +737,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
          * This method returns the currency type from a contract
          *
          * @param contractSale
-         *
          * @return
-         *
          * @throws CantGetListSaleNegotiationsException
          */
         private FiatCurrency getCurrencyTypeFromContract(CustomerBrokerContractSale contractSale) throws CantGetListSaleNegotiationsException {
@@ -759,9 +752,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 for (Clause clause : clauses) {
                     clauseType = clause.getType();
                     if (clauseType.getCode().equals(ClauseType.BROKER_CURRENCY.getCode())) {
-                        if(FiatCurrency.codeExists(clause.getValue())){
+                        if (FiatCurrency.codeExists(clause.getValue())) {
                             return FiatCurrency.getByCode(clause.getValue());
-                        }else {
+                        } else {
                             return FiatCurrency.US_DOLLAR;
                         }
 
@@ -783,9 +776,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
          * This method returns the currency type from a contract
          *
          * @param contractSale
-         *
          * @return
-         *
          * @throws CantGetListSaleNegotiationsException
          */
         private MoneyType getMoneyTypeFromContract(CustomerBrokerContractSale contractSale) throws CantGetListSaleNegotiationsException {

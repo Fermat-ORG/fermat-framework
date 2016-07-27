@@ -3,10 +3,18 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -47,22 +55,19 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerUpdateNegotiationTransactionException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType.NOTIFICATION_SERVICE;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType.UPDATE_VIEW;
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CANCEL_NEGOTIATION_NOTIFICATION;
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW;
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_WAITING_FOR_BROKER_NOTIFICATION;
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW;
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_WAITING_FOR_CUSTOMER_NOTIFICATION;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_ACTIVITY_TO_OPEN_CODE;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_TO_OPEN_PUBLIC_KEY;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 
 
 /**
@@ -75,65 +80,54 @@ public class CustomerBrokerUpdateAgent implements
         DealsWithPluginDatabaseSystem,
         DealsWithPluginIdentity {
 
-    private Database                                                database;
+    private Database database;
 
-    private Thread                                                  agentThread;
+    private Thread agentThread;
 
-    private LogManager                                              logManager;
+    private LogManager logManager;
 
-    private EventManager                                            eventManager;
+    private EventManager eventManager;
 
-    private NegotiationTransactionCustomerBrokerUpdatePluginRoot    pluginRoot;
+    private NegotiationTransactionCustomerBrokerUpdatePluginRoot pluginRoot;
 
-    private PluginDatabaseSystem                                    pluginDatabaseSystem;
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
-    private UUID                                                    pluginId;
+    private UUID pluginId;
 
     /*Represent the Network Service*/
-    private NegotiationTransmissionManager                          negotiationTransmissionManager;
+    private NegotiationTransmissionManager negotiationTransmissionManager;
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiation                       customerBrokerPurchaseNegotiation;
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager;
+    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiation                           customerBrokerSaleNegotiation;
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
-    /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiationManager                    customerBrokerSaleNegotiationManager;
-
-    /*Represent the Monitor Agent*/
-    private MonitorAgentTransaction                                 monitorAgentTransaction;
-
-    /** Let me send a fire a broadcast to show a notification or update a view */
-    private Broadcaster                                             broadcaster;
+    /**
+     * Let me send a fire a broadcast to show a notification or update a view
+     */
+    private Broadcaster broadcaster;
 
     public CustomerBrokerUpdateAgent(
-            PluginDatabaseSystem                                    pluginDatabaseSystem,
-            LogManager                                              logManager,
-            NegotiationTransactionCustomerBrokerUpdatePluginRoot    pluginRoot,
-            EventManager                                            eventManager,
-            UUID                                                    pluginId,
-            NegotiationTransmissionManager                          negotiationTransmissionManager,
-            CustomerBrokerPurchaseNegotiation                       customerBrokerPurchaseNegotiation,
-            CustomerBrokerSaleNegotiation                           customerBrokerSaleNegotiation,
-            CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager,
-            CustomerBrokerSaleNegotiationManager                    customerBrokerSaleNegotiationManager,
-            Broadcaster                                             broadcaster
+            PluginDatabaseSystem pluginDatabaseSystem,
+            LogManager logManager,
+            NegotiationTransactionCustomerBrokerUpdatePluginRoot pluginRoot,
+            UUID pluginId,
+            NegotiationTransmissionManager negotiationTransmissionManager,
+            CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
+            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+            Broadcaster broadcaster
 
     ) {
-        this.pluginDatabaseSystem                       = pluginDatabaseSystem;
-        this.logManager                                 = logManager;
-        this.pluginRoot                                 = pluginRoot;
-        this.eventManager                               = eventManager;
-        this.pluginId                                   = pluginId;
-        this.negotiationTransmissionManager             = negotiationTransmissionManager;
-        this.customerBrokerPurchaseNegotiation          = customerBrokerPurchaseNegotiation;
-        this.customerBrokerSaleNegotiation              = customerBrokerSaleNegotiation;
-        this.customerBrokerPurchaseNegotiationManager   = customerBrokerPurchaseNegotiationManager;
-        this.customerBrokerSaleNegotiationManager       = customerBrokerSaleNegotiationManager;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.logManager = logManager;
+        this.pluginRoot = pluginRoot;
+        this.pluginId = pluginId;
+        this.negotiationTransmissionManager = negotiationTransmissionManager;
+        this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
+        this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
         this.broadcaster = broadcaster;
     }
 
@@ -143,12 +137,12 @@ public class CustomerBrokerUpdateAgent implements
 
 //        Logger LOG = Logger.getGlobal();
 //        LOG.info("CUSTMER BROKER NEW AGENT STARTING...");
-        monitorAgentTransaction = new MonitorAgentTransaction();
+        MonitorAgentTransaction monitorAgentTransaction = new MonitorAgentTransaction();
 
-        this.monitorAgentTransaction.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        monitorAgentTransaction.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
         try {
-            this.monitorAgentTransaction.Initialize();
+            monitorAgentTransaction.Initialize();
         } catch (Exception exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
@@ -159,8 +153,10 @@ public class CustomerBrokerUpdateAgent implements
     }
 
     @Override
-    public void stop() { this.agentThread.interrupt(); }
-    
+    public void stop() {
+        this.agentThread.interrupt();
+    }
+
     /*IMPLEMENTATION DealsWithEvents*/
     @Override
     public void setEventManager(EventManager eventManager) {
@@ -188,25 +184,23 @@ public class CustomerBrokerUpdateAgent implements
     /*INNER CLASS*/
     private class MonitorAgentTransaction implements DealsWithPluginDatabaseSystem, Runnable {
 
-        private CustomerBrokerUpdateSaleNegotiationTransaction      customerBrokerUpdateSaleNegotiationTransaction;
+        private CustomerBrokerUpdateSaleNegotiationTransaction customerBrokerUpdateSaleNegotiationTransaction;
 
-        private CustomerBrokerUpdatePurchaseNegotiationTransaction  customerBrokerUpdatePurchaseNegotiationTransaction;
+        private CustomerBrokerUpdatePurchaseNegotiationTransaction customerBrokerUpdatePurchaseNegotiationTransaction;
 
-        private volatile boolean                                    agentRunning;
+        PluginDatabaseSystem pluginDatabaseSystem;
 
-        PluginDatabaseSystem                                        pluginDatabaseSystem;
+        CustomerBrokerUpdateNegotiationTransactionDatabaseDao customerBrokerUpdateNegotiationTransactionDatabaseDao;
 
-        CustomerBrokerUpdateNegotiationTransactionDatabaseDao       customerBrokerUpdateNegotiationTransactionDatabaseDao;
+        boolean threadWorking;
 
-        boolean                                                     threadWorking;
+        public final int SLEEP_TIME = 5000;
 
-        public final int                                            SLEEP_TIME = 5000;
+        int iterationNumber = 0;
 
-        int                                                         iterationNumber = 0;
+        int iterationConfirmSend = 0;
 
-        int                                                         iterationConfirmSend = 0;
-
-        Map<UUID,Integer>                                           transactionSend = new HashMap<>();
+        Map<UUID, Integer> transactionSend = new HashMap<>();
 
         /*IMPLEMENTATION DealsWithPluginIdentity*/
         @Override
@@ -236,7 +230,7 @@ public class CustomerBrokerUpdateAgent implements
                 //now I will check if there are pending transactions to raise the event
                 try {
 
-                    logManager.log(NegotiationTransactionCustomerBrokerUpdatePluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(NegotiationTransactionCustomerBrokerUpdatePluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
                     doTheMainTask();
 
                 } catch (CantSendCustomerBrokerUpdateNegotiationTransactionException | CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException | CantUpdateRecordException e) {
@@ -269,19 +263,6 @@ public class CustomerBrokerUpdateAgent implements
 
         }
 
-        public void stopAgent() {
-            agentRunning = false;
-        }
-
-        public void startAgent() {
-            agentRunning = true;
-        }
-
-        public boolean isAgentRunning() {
-            return agentRunning;
-        }
-        /*END INNER CLASS PUBLIC METHOD*/
-
         /*INNER CLASS PRIVATE METHOD*/
         private void doTheMainTask() throws
                 CantSendCustomerBrokerUpdateNegotiationTransactionException,
@@ -292,23 +273,20 @@ public class CustomerBrokerUpdateAgent implements
 
                 customerBrokerUpdateNegotiationTransactionDatabaseDao = new CustomerBrokerUpdateNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
 
-                String                              negotiationXML;
-                NegotiationType                     negotiationType;
-                UUID                                transactionId;
-                List<CustomerBrokerUpdate>          negotiationPendingToSubmitList;
-                CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
-                CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
-                int                                 timeConfirmSend     = 20;
+                String negotiationXML;
+                NegotiationType negotiationType;
+                UUID transactionId;
+                List<CustomerBrokerUpdate> negotiationPendingToSubmitList;
+                CustomerBrokerPurchaseNegotiation purchaseNegotiation = new NegotiationPurchaseRecord();
+                CustomerBrokerSaleNegotiation saleNegotiation = new NegotiationSaleRecord();
+                int timeConfirmSend = 20;
 
                 //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
                 negotiationPendingToSubmitList = customerBrokerUpdateNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
                 if (!negotiationPendingToSubmitList.isEmpty()) {
                     for (CustomerBrokerUpdate negotiationTransaction : negotiationPendingToSubmitList) {
 
-                        System.out.print("\n\n**** 5) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - NEGOTIATION FOR SEND " +
-                                "\n - TransactionId: " + negotiationTransaction.getTransactionId() +
-                                "\n - Status: " + negotiationTransaction.getStatusTransaction() +
-                                " ****\n");
+                        System.out.print(new StringBuilder().append("\n\n**** 5) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - NEGOTIATION FOR SEND ").append("\n - TransactionId: ").append(negotiationTransaction.getTransactionId()).append("\n - Status: ").append(negotiationTransaction.getStatusTransaction()).append(" ****\n").toString());
 
                         negotiationXML = negotiationTransaction.getNegotiationXML();
                         negotiationType = negotiationTransaction.getNegotiationType();
@@ -317,19 +295,17 @@ public class CustomerBrokerUpdateAgent implements
                         switch (negotiationType) {
                             case PURCHASE:
                                 purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
-                                System.out.print("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n" +
-                                        "\n - Status :" + purchaseNegotiation.getStatus().getCode());
+                                System.out.print(new StringBuilder().append("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): ").append(purchaseNegotiation.getNegotiationId()).append(" ****\n").append("\n - Status :").append(purchaseNegotiation.getStatus().getCode()).toString());
                                 //SEND NEGOTIATION TO BROKER
-                                negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
+                                negotiationTransmissionManager.sendNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
 
                                 break;
 
                             case SALE:
                                 saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
-                                System.out.print("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - SALE NEGOTIATION SEND negotiationId(XML): " + saleNegotiation.getNegotiationId() + " ****\n" +
-                                        "\n - Status :" + saleNegotiation.getStatus().getCode());
+                                System.out.print(new StringBuilder().append("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - SALE NEGOTIATION SEND negotiationId(XML): ").append(saleNegotiation.getNegotiationId()).append(" ****\n").append("\n - Status :").append(saleNegotiation.getStatus().getCode()).toString());
                                 //SEND NEGOTIATION TO CUSTOMER
-                                negotiationTransmissionManager.sendNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
+                                negotiationTransmissionManager.sendNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
 
                                 break;
                         }
@@ -338,7 +314,7 @@ public class CustomerBrokerUpdateAgent implements
 //                        System.out.print("\n\n**** 7) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
                         customerBrokerUpdateNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId, NegotiationTransactionStatus.SENDING_NEGOTIATION);
                         CustomerBrokerUpdate transactionDao = customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId);
-                        System.out.print("\n\n**** 6.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - STATUS TRANSACTION: " + transactionDao.getStatusTransaction().getCode() + " ****\n");
+                        System.out.print(new StringBuilder().append("\n\n**** 6.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - STATUS TRANSACTION: ").append(transactionDao.getStatusTransaction().getCode()).append(" ****\n").toString());
 
                     }
                 }
@@ -355,14 +331,14 @@ public class CustomerBrokerUpdateAgent implements
 
                         switch (negotiationType) {
                             case PURCHASE:
-                                System.out.print("\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND PURCHASE NEGOTIATION negotiationId(XML): " + negotiationTransaction.getTransactionId() + " ****\n");
+                                System.out.print(new StringBuilder().append("\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND PURCHASE NEGOTIATION negotiationId(XML): ").append(negotiationTransaction.getTransactionId()).append(" ****\n").toString());
                                 //SEND CONFIRM NEGOTIATION TO BROKER
-                                negotiationTransmissionManager.sendConfirmNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
+                                negotiationTransmissionManager.sendConfirmNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
                                 break;
                             case SALE:
-                                System.out.print("\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND SALE NEGOTIATION negotiationId(XML): " + negotiationTransaction.getTransactionId() + " ****\n");
+                                System.out.print(new StringBuilder().append("\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND SALE NEGOTIATION negotiationId(XML): ").append(negotiationTransaction.getTransactionId()).append(" ****\n").toString());
                                 //SEND NEGOTIATION TO CUSTOMER
-                                negotiationTransmissionManager.sendConfirmNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
+                                negotiationTransmissionManager.sendConfirmNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
                                 break;
                         }
 
@@ -382,7 +358,7 @@ public class CustomerBrokerUpdateAgent implements
                 }
 
                 //SEND TRNSACTION AGAIN IF NOT IS CONFIRM
-                if(timeConfirmSend == iterationConfirmSend){
+                if (timeConfirmSend == iterationConfirmSend) {
 
                     CustomerBrokerUpdateForwardTransaction forwardTransaction = new CustomerBrokerUpdateForwardTransaction(
                             customerBrokerUpdateNegotiationTransactionDatabaseDao,
@@ -432,7 +408,6 @@ public class CustomerBrokerUpdateAgent implements
                 CustomerBrokerSaleNegotiation saleNegotiation = new NegotiationSaleRecord();
 
                 String eventTypeCode = customerBrokerUpdateNegotiationTransactionDatabaseDao.getEventType(eventId);
-                String eventStatus = customerBrokerUpdateNegotiationTransactionDatabaseDao.getEventStatus(eventId);
 
                 //EVENT - RECEIVE NEGOTIATION
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE.getCode())) {
@@ -455,7 +430,7 @@ public class CustomerBrokerUpdateAgent implements
 
                                 if (negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_NEGOTIATION)) {
 
-                                    if(negotiationTransaction == null) {
+                                    if (negotiationTransaction == null) {
 
                                         switch (negotiationType) {
                                             case PURCHASE:
@@ -471,23 +446,43 @@ public class CustomerBrokerUpdateAgent implements
                                                 );
 
                                                 final String purchaseCancelReason = purchaseNegotiation.getCancelReason();
-                                                System.out.println("CancelReason: " + purchaseCancelReason);
+                                                System.out.println(new StringBuilder().append("CancelReason: ").append(purchaseCancelReason).toString());
 
-                                                final String customerWalletPublicKey = "crypto_customer_wallet"; // TODO: Esto es provisorio. Hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
                                                 if (purchaseCancelReason != null && !purchaseCancelReason.isEmpty() && !purchaseCancelReason.equalsIgnoreCase("null")) {
                                                     System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CANCEL PURCHASE NEGOTIATION TRANSACTION  ****\n");
                                                     //CANCEL NEGOTIATION
                                                     customerBrokerUpdatePurchaseNegotiationTransaction.receiveCancelPurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
 
-                                                    broadcaster.publish(NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CANCEL_NEGOTIATION_NOTIFICATION);
-                                                    broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
+                                                    FermatBundle fermatBundle = new FermatBundle();
+                                                    fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_UPDATE.getCode());
+                                                    fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode()));
+                                                    fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                    fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_CANCEL_NEGOTIATION_NOTIFICATION);
+                                                    fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY.getCode());
+
+                                                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
+                                                    fermatBundle = new FermatBundle();
+                                                    fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW);
+                                                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                                                 } else {
                                                     System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE PURCHASE NEGOTIATION TRANSACTION  ****\n");
                                                     //UPDATE NEGOTIATION
                                                     customerBrokerUpdatePurchaseNegotiationTransaction.receivePurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
 
-                                                    broadcaster.publish(NOTIFICATION_SERVICE, customerWalletPublicKey, CCW_WAITING_FOR_CUSTOMER_NOTIFICATION);
-                                                    broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
+                                                    FermatBundle fermatBundle = new FermatBundle();
+                                                    fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_UPDATE.getCode());
+                                                    fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode()));
+                                                    fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                    fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_WAITING_FOR_CUSTOMER_NOTIFICATION);
+                                                    fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
+                                                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
+                                                    fermatBundle = new FermatBundle();
+                                                    fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW);
+                                                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                                                 }
 
                                                 break;
@@ -505,23 +500,43 @@ public class CustomerBrokerUpdateAgent implements
                                                 );
 
                                                 final String saleCancelReason = saleNegotiation.getCancelReason();
-                                                System.out.println("CancelReason: " + saleCancelReason);
+                                                System.out.println(new StringBuilder().append("CancelReason: ").append(saleCancelReason).toString());
 
-                                                final String brokerWalletPublicKey = "crypto_broker_wallet"; // TODO: Esto es provisorio. Hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
                                                 if (saleCancelReason != null && !saleCancelReason.isEmpty() && !saleCancelReason.equalsIgnoreCase("null")) {
                                                     System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CANCEL SALE NEGOTIATION TRANSACTION  ****\n");
                                                     //CANCEL NEGOTIATION
                                                     customerBrokerUpdateSaleNegotiationTransaction.receiveCancelSaleNegotiationTranasction(transactionId, saleNegotiation);
 
-                                                    broadcaster.publish(NOTIFICATION_SERVICE, brokerWalletPublicKey, CBW_CANCEL_NEGOTIATION_NOTIFICATION);
-                                                    broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
+                                                    FermatBundle fermatBundle = new FermatBundle();
+                                                    fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_UPDATE.getCode());
+                                                    fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
+                                                    fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+                                                    fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBW_CANCEL_NEGOTIATION_NOTIFICATION);
+                                                    fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getCode());
+
+                                                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
+                                                    fermatBundle = new FermatBundle();
+                                                    fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+                                                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW);
+                                                    broadcaster.publish(UPDATE_VIEW, fermatBundle);
                                                 } else {
                                                     System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE SALE NEGOTIATION TRANSACTION  ****\n");
                                                     //UPDATE NEGOTIATION
                                                     customerBrokerUpdateSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
 
-                                                    broadcaster.publish(NOTIFICATION_SERVICE, brokerWalletPublicKey, CBW_WAITING_FOR_BROKER_NOTIFICATION);
-                                                    broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
+                                                    FermatBundle fermatBundle = new FermatBundle();
+                                                    fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_UPDATE.getCode());
+                                                    fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
+                                                    fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+                                                    fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBW_WAITING_FOR_BROKER_NOTIFICATION);
+                                                    fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
+                                                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
+                                                    fermatBundle = new FermatBundle();
+                                                    fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+                                                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW);
+                                                    broadcaster.publish(UPDATE_VIEW, fermatBundle);
                                                 }
 
                                                 break;
@@ -542,7 +557,8 @@ public class CustomerBrokerUpdateAgent implements
 
                                     System.out.print("\n**** 25.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE NEGOTIATION TRANSACTION CONFIRM ****\n");
 
-                                    if(!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
+                                    if (!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
+                                        FermatBundle fermatBundle;
 
                                         switch (negotiationType) {
                                             case PURCHASE:
@@ -553,7 +569,10 @@ public class CustomerBrokerUpdateAgent implements
                                                 if (purchaseCancelReason == null || purchaseCancelReason.isEmpty() || purchaseCancelReason.equalsIgnoreCase("null"))
                                                     customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
 
-                                                broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
+                                                fermatBundle = new FermatBundle();
+                                                fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW);
+                                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
 
                                                 break;
                                             case SALE:
@@ -564,7 +583,10 @@ public class CustomerBrokerUpdateAgent implements
                                                 if (saleCancelReason == null || saleCancelReason.isEmpty() || saleCancelReason.equalsIgnoreCase("null"))
                                                     customerBrokerSaleNegotiationManager.waitForCustomer(saleNegotiation);
 
-                                                broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
+                                                fermatBundle = new FermatBundle();
+                                                fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+                                                fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW);
+                                                broadcaster.publish(UPDATE_VIEW, fermatBundle);
 
                                                 break;
                                         }

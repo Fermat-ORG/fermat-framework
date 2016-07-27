@@ -45,7 +45,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#1271A7"/>
+                android:background="#1271A7"
+                android:id="@+id/ccw_line_up" />
 
             <RelativeLayout
                 android:id="@+id/ccw_market_rate_container"
@@ -58,6 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
                     android:text="@string/market_exchange_rate"
                     android:textColor="@color/description_text_status_confirm"
                     android:textSize="14sp"/>
@@ -68,6 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/ccw_market_rate_text"
                     android:layout_toEndOf="@+id/ccw_market_rate_text"
+                    android:layout_toRightOf="@+id/ccw_market_rate_text"
                     android:textColor="@color/text_value_status_confirm"
                     android:textSize="14sp"
                     tools:text="1 BTC / 210 USD"/>
@@ -83,8 +86,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
                     android:text="@string/ccw_your_exchange_rate_title"
                     android:textColor="@color/description_text_status_confirm"
                     android:textSize="14sp"/>
@@ -96,7 +101,9 @@
                     android:layout_alignTop="@+id/ccw_exchange_rate_text"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_toEndOf="@+id/ccw_exchange_rate_text"
+                    android:layout_toRightOf="@+id/ccw_exchange_rate_text"
                     android:textColor="@color/text_value_status_confirm"
                     android:textSize="14sp"
                     tools:text="1 USD / "/>
@@ -107,7 +114,9 @@
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_toEndOf="@+id/ccw_exchange_rate_value_left_side"
+                    android:layout_toRightOf="@+id/ccw_exchange_rate_value_left_side"
                     android:background="#ccdddddd"
                     android:inputType="numberDecimal"
                     android:maxWidth="150dp"
@@ -127,7 +136,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_toEndOf="@+id/ccw_exchange_rate_value"
+                    android:layout_toRightOf="@+id/ccw_exchange_rate_value"
                     android:textColor="@color/text_value_status_confirm"
                     android:textSize="14sp"
                     tools:text="BTC"/>
@@ -137,7 +148,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#1271A7"/>
+                android:background="#1271A7"
+                android:id="@+id/ccw_line_down" />
 
             <LinearLayout
                 android:layout_width="match_parent"

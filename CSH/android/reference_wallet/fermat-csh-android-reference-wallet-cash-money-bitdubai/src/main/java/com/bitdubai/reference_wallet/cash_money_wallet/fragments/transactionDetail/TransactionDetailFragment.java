@@ -10,12 +10,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
@@ -25,7 +28,6 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyW
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.CashTransactionParametersImpl;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
-import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSessionReferenceApp;
 
 import java.text.DecimalFormat;
 import java.util.UUID;
@@ -33,14 +35,12 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 12/18/2015.
  */
-public class TransactionDetailFragment extends AbstractFermatFragment implements View.OnClickListener, DialogInterface.OnDismissListener {
+public class TransactionDetailFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CashMoneyWalletModuleManager>, ResourceProviderManager> implements View.OnClickListener, DialogInterface.OnDismissListener {
 
     // Fermat Managers
-    private CashMoneyWalletSessionReferenceApp walletSession;
     private CashMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
     private static final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
-
 
     //Data
     private CashMoneyWalletTransaction transaction;
@@ -55,18 +55,19 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
     FermatTextView transactionType;
     CreateTransactionFragmentDialog transactionFragmentDialog;
 
+    public TransactionDetailFragment() {
+    }
 
-    public TransactionDetailFragment() {}
-    public static TransactionDetailFragment newInstance() {return new TransactionDetailFragment();}
-
+    public static TransactionDetailFragment newInstance() {
+        return new TransactionDetailFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         try {
-            walletSession = ((CashMoneyWalletSessionReferenceApp) appSession);
-            moduleManager = walletSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception e) {
@@ -75,26 +76,22 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         }
 
         //Get Transaction from session
-        transaction = (CashMoneyWalletTransaction)appSession.getData("transaction");
+        transaction = (CashMoneyWalletTransaction) appSession.getData("transaction");
 
         //Check if transaction needs to be verified if it is committed into wallet or not
-        if((boolean)appSession.getData("checkIfTransactionHasBeenCommitted"))
-        {
+        if ((boolean) appSession.getData("checkIfTransactionHasBeenCommitted")) {
             try {
-                transaction = moduleManager.getTransaction(walletSession.getAppPublicKey(), transaction.getTransactionId());
+                transaction = moduleManager.getTransaction(appSession.getAppPublicKey(), transaction.getTransactionId());
 
                 //Transaction is committed, disallow edition and deletion
                 transactionIsEditable = false;
 
-            } catch (CantGetCashMoneyWalletTransactionsException e){
+            } catch (CantGetCashMoneyWalletTransactionsException e) {
                 //Transaction hasn't been committed, allow edition and deletion.
                 transactionIsEditable = true;
             }
-        }
-        else    //Transaction is commited into wallet, cannot allow edition.
+        } else    //Transaction is commited into wallet, cannot allow edition.
             transactionIsEditable = false;
-
-
     }
 
     @Override
@@ -102,7 +99,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
 
         //If transaction is editable, was stopped before completing and user pressed the device's back button
         //Create and apply the same transaction again.
-        if(transactionIsEditable)
+        if (transactionIsEditable)
             reapplyTransaction();
     }
 
@@ -119,12 +116,12 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         date = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_date);
         transactionType = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_transaction_type);
 
-        if(transactionIsEditable)
+        if (transactionIsEditable)
             buttonContainer.setVisibility(View.VISIBLE);
 
         amount.setText(moneyFormat.format(transaction.getAmount()));
         memo.setText(transaction.getMemo());
-        date.setText(DateHelper.getDateStringFromTimestamp(transaction.getTimestamp()) + " - " + getPrettyTime(transaction.getTimestamp()));
+        date.setText(String.format("%s - %s", DateHelper.getDateStringFromTimestamp(transaction.getTimestamp()), getPrettyTime(transaction.getTimestamp())));
         transactionType.setText(getTransactionTypeText(transaction.getTransactionType()));
 
         layout.findViewById(R.id.csh_transaction_detail_back_btn).setOnClickListener(this);
@@ -138,13 +135,14 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
     public void onClick(View view) {
         int i = view.getId();
         if (i == R.id.csh_transaction_detail_back_btn) {
-            if(transactionIsEditable)
+            if (transactionIsEditable)
                 reapplyTransaction();
             this.changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
-        }if (i == R.id.csh_transaction_detail_delete_btn) {
+        }
+        if (i == R.id.csh_transaction_detail_delete_btn) {
             this.changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
-        }else if(i == R.id.csh_transaction_detail_update_btn) {
-            transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSessionReferenceApp) appSession, getResources(), transaction.getTransactionType(), transaction.getAmount(), transaction.getMemo());
+        } else if (i == R.id.csh_transaction_detail_update_btn) {
+            transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), appSession, getResources(), transaction.getTransactionType(), transaction.getAmount(), transaction.getMemo());
             transactionFragmentDialog.setOnDismissListener(this);
             transactionFragmentDialog.show();
         }
@@ -155,15 +153,13 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         this.changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
     }
 
-
     /* HELPER FUNCTIONS */
-    private void reapplyTransaction(){
-        CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", transaction.getAmount(), FiatCurrency.US_DOLLAR, transaction.getMemo(), transaction.getTransactionType());
+    private void reapplyTransaction() {
+        CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), WalletsPublicKeys.CSH_MONEY_WALLET.getCode(), "pkeyActorRefWallet", "pkeyPluginRefWallet", transaction.getAmount(), FiatCurrency.US_DOLLAR, transaction.getMemo(), transaction.getTransactionType());
         moduleManager.createAsyncCashTransaction(t);
     }
 
-    private String getPrettyTime(long timestamp)
-    {
+    private String getPrettyTime(long timestamp) {
         return DateUtils.getRelativeTimeSpanString(timestamp * 1000).toString();
         //return DateFormat.format("dd MMM yyyy h:mm:ss aa", (timestamp * 1000)).toString();
     }

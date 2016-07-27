@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="280dp"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    >
+
+    <ImageView
+        android:id="@+id/profile_image_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/cht_center_profile_icon_center"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="#000000"
+            android:alpha="0.9"
+            />
+
+        <TextView
+            android:id="@+id/contact_name_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="John Doe"
+            android:textSize="@dimen/chat_list_icon_text_size"
+            android:layout_centerVertical="true"
+            android:textColor="@color/color_white"
+            android:gravity="center_horizontal"
+            />
+
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@+id/profile_image_dialog"
+        android:background="#f9f9f9"
+        >
+
+        <ImageView
+            android:id="@+id/chatContactButton"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/cht_send_message_contact_icon"
+            />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

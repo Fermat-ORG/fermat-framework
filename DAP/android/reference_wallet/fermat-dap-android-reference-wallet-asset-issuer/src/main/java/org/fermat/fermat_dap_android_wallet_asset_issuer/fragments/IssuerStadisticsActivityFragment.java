@@ -1,6 +1,5 @@
 package org.fermat.fermat_dap_android_wallet_asset_issuer.fragments;
 
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -199,7 +198,7 @@ public class IssuerStadisticsActivityFragment extends FermatWalletListFragment<D
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

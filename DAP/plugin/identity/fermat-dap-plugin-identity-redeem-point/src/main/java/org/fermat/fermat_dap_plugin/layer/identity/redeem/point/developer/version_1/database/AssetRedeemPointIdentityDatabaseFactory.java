@@ -62,6 +62,8 @@ public class AssetRedeemPointIdentityDatabaseFactory implements DealsWithPluginD
             table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_POSTAL_CODE_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
             table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_STREET_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
             table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_HOUSE_NUMBER_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
+            table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ACCURACY_KEY_COLUMN, DatabaseDataType.INTEGER, 20, false);
+            table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_FREQUENCY_KEY_COLUMN, DatabaseDataType.STRING, 20, false);
 
 
             table.addIndex(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_FIRST_KEY_COLUMN);

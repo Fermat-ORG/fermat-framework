@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:layout_width="match_parent"
-             android:layout_height="250dp"
-             android:layout_marginTop="?attr/actionBarSize"
-             android:background="@drawable/cbw_header_gradient_background">
+<FrameLayout
+    android:id="@+id/cbw_header_layout_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:background="@drawable/cbw_header_gradient_background">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/cbw_no_market_rate"
@@ -26,9 +28,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/cbw_market_exchange_rate_layout_height"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -54,9 +58,9 @@
 
     <ProgressBar
         android:id="@+id/cbw_header_progress_bar"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:indeterminate="true"
-        android:layout_gravity="center"/>
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"/>
 
 </FrameLayout>

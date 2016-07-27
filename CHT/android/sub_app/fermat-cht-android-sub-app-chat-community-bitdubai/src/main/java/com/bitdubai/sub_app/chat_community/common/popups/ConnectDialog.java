@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.chat_community.common.popups;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -56,7 +57,7 @@ public class ConnectDialog
     private final ChatActorCommunitySelectableIdentity identity;
 
 
-    public ConnectDialog(final Activity a,
+    public ConnectDialog(final Context a,
                          final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
                          final SubAppResourcesProviderManager subAppResources,
                          final ChatActorCommunityInformation chatUserInformation,
@@ -76,16 +77,16 @@ public class ConnectDialog
 
         mDescription = (FermatTextView) findViewById(R.id.description);
         mUsername = (FermatTextView) findViewById(R.id.user_name);
-        mSecondDescription = (FermatTextView) findViewById(R.id.second_description);
+//        mSecondDescription = (FermatTextView) findViewById(R.id.second_description);
         mTitle = (FermatTextView) findViewById(R.id.title);
         positiveBtn = (FermatButton) findViewById(R.id.positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.negative_button);
-        mSecondDescription.setVisibility(View.VISIBLE);
+//        mSecondDescription.setVisibility(View.GONE);
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
-        mSecondDescription.setText(secondDescription != null ? secondDescription : "");
+//        mSecondDescription.setText(secondDescription != null ? secondDescription : "");
         mDescription.setText(description != null ? description : "");
-        mUsername.setText(username != null ? username : "");
+//        mUsername.setText(username != null ? username : "");
         mTitle.setText(title != null ? title : "");
     }
 
@@ -125,8 +126,6 @@ public class ConnectDialog
                 if (chatUserInformation != null && identity != null) {
                     getSession().getModuleManager()
                             .requestConnectionToChatActor(identity, chatUserInformation);
-//                            .askIntraUserForAcceptance(chatUserInformation.getName(),
-
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);

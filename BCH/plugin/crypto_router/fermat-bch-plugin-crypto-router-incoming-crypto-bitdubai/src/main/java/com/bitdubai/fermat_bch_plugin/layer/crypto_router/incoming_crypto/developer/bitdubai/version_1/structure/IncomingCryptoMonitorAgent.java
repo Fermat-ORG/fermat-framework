@@ -6,25 +6,25 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.devel
  */
 
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantIdentifyEventSourceException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantReadEvent;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SourceAdministrator;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -47,15 +47,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class IncomingCryptoMonitorAgent implements DealsWithRegistry, TransactionAgent {
 
-    private final BitcoinNetworkManager bitcoinNetworkManager;
+    private final TransactionSender<CryptoTransaction> bitcoinNetworkManager;
+    private final TransactionSender<CryptoTransaction> fermatNetworkManager;
     private final CryptoVaultManager cryptoVaultManager   ;
     private final ErrorManager          errorManager         ;
 
-    public IncomingCryptoMonitorAgent(final BitcoinNetworkManager bitcoinNetworkManager,
+    public IncomingCryptoMonitorAgent(final TransactionSender<CryptoTransaction> bitcoinNetworkManager,
+                                      final TransactionSender<CryptoTransaction> fermatNetworkManager,
                                       final CryptoVaultManager cryptoVaultManager   ,
                                       final ErrorManager          errorManager         ) {
 
         this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.fermatNetworkManager = fermatNetworkManager;
         this.cryptoVaultManager    = cryptoVaultManager   ;
         this.errorManager          = errorManager         ;
     }
@@ -89,7 +92,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithRegistry, Transactio
 
 
 
-        this.monitorAgent = new MonitorAgent (bitcoinNetworkManager, cryptoVaultManager, errorManager);
+        this.monitorAgent = new MonitorAgent (bitcoinNetworkManager, fermatNetworkManager, cryptoVaultManager, errorManager);
         try {
             this.monitorAgent.setRegistry(this.registry);
             this.monitorAgent.initialize();
@@ -143,15 +146,18 @@ public class IncomingCryptoMonitorAgent implements DealsWithRegistry, Transactio
 
         private static final int SLEEP_TIME = 5000;
 
-        private final BitcoinNetworkManager bitcoinNetworkManager;
+        private final TransactionSender<CryptoTransaction> bitcoinNetworkManager;
+        private final TransactionSender<CryptoTransaction> fermatNetworkManager;
         private final CryptoVaultManager cryptoVaultManager   ;
         private final ErrorManager          errorManager         ;
 
-        public MonitorAgent(final BitcoinNetworkManager bitcoinNetworkManager,
+        public MonitorAgent(final TransactionSender<CryptoTransaction> bitcoinNetworkManager,
+                            final TransactionSender<CryptoTransaction> fermatNetworkManager,
                                           final CryptoVaultManager cryptoVaultManager   ,
                                           final ErrorManager          errorManager         ) {
 
             this.bitcoinNetworkManager = bitcoinNetworkManager;
+            this.fermatNetworkManager = fermatNetworkManager;
             this.cryptoVaultManager    = cryptoVaultManager   ;
             this.errorManager          = errorManager         ;
         }
@@ -170,6 +176,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithRegistry, Transactio
         private void initialize () {
             this.sourceAdministrator = new SourceAdministrator(
                     this.bitcoinNetworkManager,
+                    this.fermatNetworkManager,
                     this.cryptoVaultManager
             );
         }

@@ -2,6 +2,7 @@ package org.fermat.fermat_dap_android_wallet_asset_issuer.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -113,5 +114,10 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections<Referen
             e.printStackTrace();
         }
         return notification;
+    }
+
+    @Override
+    public ResourceSearcher getResourceSearcher() {
+        return new WalletAssetIssuerSearcher();
     }
 }

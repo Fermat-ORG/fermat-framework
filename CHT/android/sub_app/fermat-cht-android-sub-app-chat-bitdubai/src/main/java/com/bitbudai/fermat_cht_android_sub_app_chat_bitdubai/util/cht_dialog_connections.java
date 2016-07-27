@@ -42,7 +42,8 @@ import java.util.UUID;
  * Created by Lozadaa on 05/03/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
-public class cht_dialog_connections extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class cht_dialog_connections extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager>
+        implements View.OnClickListener {
 
     private final Activity activity;
     private static final String TAG = "cht_dialog_connections";
@@ -322,12 +323,12 @@ public class cht_dialog_connections extends FermatDialog<ReferenceAppFermatSessi
 //        Animation anim = AnimationUtils.loadAnimation(getActivity(),
 //                show ? android.R.anim.fade_in : android.R.anim.fade_out);
 //        if (show &&
-//                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+//                (emptyView.getShowAsAction() == View.GONE || emptyView.getShowAsAction() == View.INVISIBLE)) {
 //            emptyView.setAnimation(anim);
 //            emptyView.setVisibility(View.VISIBLE);
 //            if (adapter != null)
 //                adapter.refreshEvents(null, null, null);
-//        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+//        } else if (!show && emptyView.getShowAsAction() == View.VISIBLE) {
 //            emptyView.setAnimation(anim);
 //            emptyView.setVisibility(View.GONE);
 //        }

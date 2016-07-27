@@ -2,14 +2,16 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 
+import java.io.Serializable;
+
 /**
  * Created by Matias Furszyfer on 2015.10.01..
  */
-public class Header implements FermatHeader{
+public class Header implements FermatHeader, Serializable {
 
     String label;
     boolean isExpandable = false;
-    boolean removeHeaderScroll=false;
+    boolean removeHeaderScroll = false;
     boolean startCollapsed;
 
     public Header() {
@@ -33,11 +35,19 @@ public class Header implements FermatHeader{
         this.label = label;
     }
 
-    public void setRemoveHeaderScroll(boolean removeHeaderScroll){this.removeHeaderScroll=removeHeaderScroll;}
+    public void setRemoveHeaderScroll(boolean removeHeaderScroll) {
+        this.removeHeaderScroll = removeHeaderScroll;
+    }
 
-    public boolean getRemoveHeaderScroll(){return this.removeHeaderScroll;    }
+    public boolean getRemoveHeaderScroll() {
+        return this.removeHeaderScroll;
+    }
 
-    public void setStartCollapsed(boolean startCollapsed){this.startCollapsed = startCollapsed;}
+    public void setStartCollapsed(boolean startCollapsed) {
+        this.startCollapsed = startCollapsed;
+    }
 
-    public boolean getStartCollapsed(){return this.startCollapsed;}
+    public boolean getStartCollapsed() {
+        return this.startCollapsed;
+    }
 }

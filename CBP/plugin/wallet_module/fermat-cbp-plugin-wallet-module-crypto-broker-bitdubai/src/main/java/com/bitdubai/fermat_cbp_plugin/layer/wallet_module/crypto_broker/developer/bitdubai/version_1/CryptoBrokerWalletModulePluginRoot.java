@@ -1,12 +1,10 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
@@ -17,13 +15,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
@@ -59,6 +55,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.develope
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleCryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletProviderSettingImpl;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -70,7 +67,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 
 /**
@@ -82,11 +78,6 @@ import java.util.regex.Pattern;
  */
 @PluginInfo(createdBy = "nelsonalfo", maintainerMail = "nelsonalfo@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_BROKER)
 public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBrokerWalletPreferenceSettings, ActiveActorIdentityInformation> implements LogManagerForDevelopers {
-
-    private CryptoBrokerWalletModuleManager moduleManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    LogManager logManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     PluginFileSystem pluginFileSystem;
@@ -173,40 +164,27 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     CustomerBrokerCloseManager customerBrokerCloseManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION, plugin = Plugins.CRYPTO_CUSTOMER)
-    private CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
+    CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
+    IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+
+    /**
+     * Logging level for this plugin
+     */
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
+
+    private CryptoBrokerWalletModuleManager moduleManager;
+
 
     public CryptoBrokerWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
-    /** Logging level for this plugin */
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
-
-    private SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager;
-
-
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
         returnedClasses.add("CryptoBrokerWalletModulePluginRoot");
-//        returnedClasses.add("SingleValueStepImp");
-//        returnedClasses.add("NegotiationBankAccountImpl");
-//        returnedClasses.add("ExchangeRateStepImp");
-//        returnedClasses.add("CustomerBrokerSaleNegotiationImpl");
-//        returnedClasses.add("CurrencyPairImpl");
-//        returnedClasses.add("CryptoBrokerWalletSettingSpreadImpl");
-//        returnedClasses.add("CryptoBrokerWalletProviderSettingImpl");
-//        returnedClasses.add("CryptoBrokerWalletModuleIndexInfoSummary");
-//        returnedClasses.add("CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation");
-//        returnedClasses.add("CryptoBrokerWalletModuleCryptoBrokerWalletManager");
-//        returnedClasses.add("CryptoBrokerWalletModuleContractBasicInformation");
-//        returnedClasses.add("CryptoBrokerWalletModuleClauseInformation");
-//        returnedClasses.add("CryptoBrokerWalletAssociatedSettingImpl");
-//        returnedClasses.add("CryptoBrokerWalletActorIdentity");
-//        returnedClasses.add("ClauseImpl");
-//        returnedClasses.add("CBPInstalledWalletImpl");
-//        returnedClasses.add("BankAccountNumberImpl");
-//        returnedClasses.add("AmountToSellStepImp");
 
         return returnedClasses;
     }
@@ -227,33 +205,9 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
         }
     }
 
-    /**
-     * Static method to get the logging level from any class under root.
-     *
-     * @param className the class name
-     *
-     * @return the log level for this class
-     */
-    public static LogLevel getLogLevelByClass(String className) {
-        try {
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split(Pattern.quote("$"));
-            return CryptoBrokerWalletModulePluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e) {
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
-        }
-    }
-
     @Override
     public void start() throws CantStartPluginException {
         super.start();
-        //preConfigureWallet();
     }
 
     @Override
@@ -284,15 +238,18 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                     brokerAckOnlinePaymentManager,
                     brokerSubmitOfflineMerchandiseManager,
                     brokerSubmitOnlineMerchandiseManager,
+                    intraWalletUserIdentityManager,
                     matchingEngineManager,
                     customerBrokerCloseManager,
                     cryptoCustomerActorConnectionManager,
                     pluginFileSystem,
-                    pluginId);
+                    pluginId
+            );
 
         return moduleManager;
     }
 
+    @SuppressWarnings("unused")
     private void preConfigureWallet() {
         try {
             final String brokerWalletPublicKey = "crypto_broker_wallet";
@@ -439,4 +396,21 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
         }
         return null;
     }
+
+    /*private void universalTimeTest(){
+        try{
+            Date date=UniversalTime.getLocatedUniversalTime();
+            System.out.println("UNIVERSAL TIME - local: "+date);
+            date=UniversalTime.getUTC();
+            System.out.println("UNIVERSAL TIME - UTC: "+date);
+            String stringDate = UniversalTime.getUTCDateStringFromExternalURL();
+            System.out.println("UNIVERSAL TIME - String: "+stringDate);
+            date = UniversalTime.getLocalDateFromUTCDateString(stringDate);
+            System.out.println("UNIVERSAL TIME - Local String parse: "+date);
+            date = UniversalTime.getUTCDateFromUTCDateString(stringDate);
+            System.out.println("UNIVERSAL TIME - UTC String parse: "+date);
+        } catch (Exception e){
+            System.out.println("UNIVERSAL TIME: "+e);
+        }
+    }*/
 }

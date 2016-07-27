@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -31,7 +32,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdub
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerActorDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure.ActorBrokerExtraDataEventActions;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure.BrokerActorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
@@ -49,18 +49,18 @@ public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements Datab
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM  , layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_BROKER         )
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_BROKER)
     private CryptoBrokerManager cryptoBrokerANSManager;
 
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_BROKER_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,           layer = Layers.PLATFORM_SERVICE,    addon = Addons.EVENT_MANAGER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
     private CryptoBrokerActorDao cryptoBrokerActorDao;
-    private List<FermatEventListener> listenersAdded  = new ArrayList<>();
+    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     public CryptoBrokerActorPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -70,76 +70,76 @@ public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements Datab
             Plugin Interface implementation.
         */
 
-            @Override
-            public void start() throws CantStartPluginException {
-                try {
-                    this.cryptoBrokerActorDao = new CryptoBrokerActorDao(pluginDatabaseSystem, pluginId);
-                    this.cryptoBrokerActorDao.initializeDatabase();
+    @Override
+    public void start() throws CantStartPluginException {
+        try {
+            this.cryptoBrokerActorDao = new CryptoBrokerActorDao(pluginDatabaseSystem, pluginId);
+            this.cryptoBrokerActorDao.initializeDatabase();
 
-                        FermatEventListener fermatEventListener;
-                        FermatEventHandler fermatEventHandler;
-                        ActorBrokerExtraDataEventActions handlerAction = new ActorBrokerExtraDataEventActions(
-                            cryptoBrokerANSManager,
-                            cryptoBrokerWalletManager,
-                            cryptoBrokerActorDao,
-                            this,
-                            this.getPluginVersionReference()
-                        );
-                        fermatEventListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_QUOTES_REQUEST_NEWS);
-                        fermatEventHandler = new CryptoBrokerExtraDataEventHandler(handlerAction, this);
-                        fermatEventListener.setEventHandler(fermatEventHandler);
-                        eventManager.addListener(fermatEventListener);
-                        listenersAdded.add(fermatEventListener);
-
-                    this.serviceStatus = ServiceStatus.STARTED;
-                } catch (CantInitializeCryptoBrokerActorDatabaseException e) {
-                    reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                    throw new CantStartPluginException(e, this.getPluginVersionReference());
-                }
-            }
-
-            @Override
-            public void stop() {
-                for (FermatEventListener fermatEventListener : listenersAdded) {
-                    eventManager.removeListener(fermatEventListener);
-                }
-                listenersAdded.clear();
-            }
-
-            @Override
-            public FermatManager getManager() {
-                return new BrokerActorManager(
-                    this.cryptoBrokerActorDao,
+            FermatEventListener fermatEventListener;
+            FermatEventHandler fermatEventHandler;
+            ActorBrokerExtraDataEventActions handlerAction = new ActorBrokerExtraDataEventActions(
+                    cryptoBrokerANSManager,
+                    cryptoBrokerWalletManager,
+                    cryptoBrokerActorDao,
                     this,
                     this.getPluginVersionReference()
-                );
-            }
+            );
+            fermatEventListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_QUOTES_REQUEST_NEWS);
+            fermatEventHandler = new CryptoBrokerExtraDataEventHandler(handlerAction, this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
+            this.serviceStatus = ServiceStatus.STARTED;
+        } catch (CantInitializeCryptoBrokerActorDatabaseException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, this.getPluginVersionReference());
+        }
+    }
+
+    @Override
+    public void stop() {
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
+        }
+        listenersAdded.clear();
+    }
+
+    @Override
+    public FermatManager getManager() {
+        return new BrokerActorManager(
+                this.cryptoBrokerActorDao,
+                this,
+                this.getPluginVersionReference()
+        );
+    }
 
         /*
             DatabaseManagerForDevelopers Interface implementation.
         */
 
-            @Override
-            public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-                CryptoBrokerActorDeveloperDatabaseFactory dbFactory = new CryptoBrokerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-                return dbFactory.getDatabaseList(developerObjectFactory);
-            }
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        CryptoBrokerActorDeveloperDatabaseFactory dbFactory = new CryptoBrokerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+    }
 
-            @Override
-            public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-                CryptoBrokerActorDeveloperDatabaseFactory dbFactory = new CryptoBrokerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-                return dbFactory.getDatabaseTableList(developerObjectFactory);
-            }
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        CryptoBrokerActorDeveloperDatabaseFactory dbFactory = new CryptoBrokerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
 
-            @Override
-            public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-                try {
-                    CryptoBrokerActorDeveloperDatabaseFactory dbFactory = new CryptoBrokerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-                    dbFactory.initializeDatabase();
-                    return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-                } catch (CantInitializeCryptoBrokerActorDatabaseException e) {
-                    reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-                return new ArrayList<>();
-            }
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        try {
+            CryptoBrokerActorDeveloperDatabaseFactory dbFactory = new CryptoBrokerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            dbFactory.initializeDatabase();
+            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (CantInitializeCryptoBrokerActorDatabaseException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        return new ArrayList<>();
+    }
 }

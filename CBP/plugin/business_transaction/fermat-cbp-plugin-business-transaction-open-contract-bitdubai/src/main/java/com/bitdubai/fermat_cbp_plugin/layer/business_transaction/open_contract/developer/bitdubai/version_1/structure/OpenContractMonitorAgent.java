@@ -3,6 +3,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -52,9 +54,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.d
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseFactory;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -195,7 +195,7 @@ public class OpenContractMonitorAgent implements
                  */
                 try {
 
-                    logManager.log(OpenContractPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(OpenContractPluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
                     doTheMainTask();
                 } catch (CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
                     pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -250,13 +250,14 @@ public class OpenContractMonitorAgent implements
                         contractXML = openContractBusinessTransactionDao.getContractXML(hashToSubmit);
                         contractType = openContractBusinessTransactionDao.getContractType(hashToSubmit);
 
-                        System.out.println("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - contractType: "+contractType+"\n");
+                        System.out.println(new StringBuilder().append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - contractType: ").append(contractType).append("\n").toString());
 
                         switch (contractType) {
                             case PURCHASE:
                                 System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - PURCHASE\n");
                                 purchaseContract = (ContractPurchaseRecord) XMLParser.parseXML(contractXML, purchaseContract);
                                 transactionTransmissionManager.sendContractHash(
+                                        transmissionId,
                                         transmissionId,
                                         purchaseContract.getPublicKeyCustomer(),
                                         purchaseContract.getPublicKeyBroker(),
@@ -270,6 +271,7 @@ public class OpenContractMonitorAgent implements
                                 System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - SALE\n");
                                 saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
                                 transactionTransmissionManager.sendContractHash(
+                                        transmissionId,
                                         transmissionId,
                                         saleContract.getPublicKeyBroker(),
                                         saleContract.getPublicKeyCustomer(),
@@ -424,7 +426,7 @@ public class OpenContractMonitorAgent implements
 
                     if (businessTransactionMetadata.getRemoteBusinessTransaction().getCode().equals(Plugins.OPEN_CONTRACT.getCode())) {
 
-                        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - EVENT - TYPE: " + eventTypeCode + "\n");
+                        System.out.print(new StringBuilder().append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - EVENT - TYPE: ").append(eventTypeCode).append("\n").toString());
 
                         //EVENT FOR CONTRACT HASH
                         if (eventTypeCode.equals(EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH.getCode())) {
@@ -479,6 +481,7 @@ public class OpenContractMonitorAgent implements
                                         businessTransactionMetadata.getSenderId(),
                                         contractHash,
                                         transmissionId.toString(),
+                                        transmissionId,
                                         Plugins.OPEN_CONTRACT,
                                         businessTransactionMetadata.getReceiverType(),
                                         businessTransactionMetadata.getSenderType()
@@ -512,14 +515,14 @@ public class OpenContractMonitorAgent implements
                                 switch (contractType) {
                                     case PURCHASE:
                                         CustomerBrokerContractPurchase contractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
-                                        if(!contractPurchase.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode())) {
+                                        if (!contractPurchase.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode())) {
                                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash,
                                                     ContractStatus.PENDING_PAYMENT);
                                         }
                                         break;
                                     case SALE:
                                         CustomerBrokerContractSale contractSale = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
-                                        if(!contractSale.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode())) {
+                                        if (!contractSale.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode())) {
                                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash,
                                                     ContractStatus.PENDING_PAYMENT);
                                         }
@@ -557,7 +560,7 @@ public class OpenContractMonitorAgent implements
                         e,
                         "Checking pending transactions",
                         "Cannot update the purchase contract");
-            } catch (CantGetListCustomerBrokerContractPurchaseException e){
+            } catch (CantGetListCustomerBrokerContractPurchaseException e) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         e,
                         "Checking pending transactions",
@@ -572,7 +575,7 @@ public class OpenContractMonitorAgent implements
                         e,
                         "Checking pending transactions",
                         "Cannot update the sale contract");
-            } catch (CantGetListCustomerBrokerContractSaleException e){
+            } catch (CantGetListCustomerBrokerContractSaleException e) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         e,
                         "Checking pending transactions",

@@ -1,11 +1,14 @@
 package com.bitdubai.fermat_core;
 
+import com.bitdubai.fermat_api.FermatContext;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.AbstractPluginInterface;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -18,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.MfClassUtils;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantGetPluginIdException;
@@ -40,9 +44,10 @@ import java.util.List;
 public final class FermatPluginManager {
 
     private final FermatSystemContext systemContext;
-    private final FermatAddonManager  addonManager ;
+    private final FermatAddonManager addonManager;
 
-    private       FermatPluginIdsManager  pluginIdsManager;
+    private FermatPluginIdsManager pluginIdsManager;
+    private FermatContext fermatContext;
 
     // todo temporal
     private DealsWithDatabaseManagers dealsWithDatabaseManagers;
@@ -51,14 +56,16 @@ public final class FermatPluginManager {
     /**
      * Constructor with params:
      *
-     * @param systemContext  fermat system context to get the plugin references.
-     * @param addonManager   fermat addon manager instance to start and get the addon references.
+     * @param systemContext fermat system context to get the plugin references.
+     * @param addonManager  fermat addon manager instance to start and get the addon references.
      */
     public FermatPluginManager(final FermatSystemContext systemContext,
-                               final FermatAddonManager  addonManager ) {
+                               final FermatAddonManager addonManager,
+                               FermatContext fermatContext) {
 
-        this.addonManager  = addonManager ;
+        this.addonManager = addonManager;
         this.systemContext = systemContext;
+        this.fermatContext = fermatContext;
     }
 
     /**
@@ -66,7 +73,6 @@ public final class FermatPluginManager {
      * Its necessary to have an OSA Platform with the File System Addon in it to work with it.
      *
      * @return an instance of a fermat plugin ids manager.
-     *
      * @throws CantStartPluginIdsManagerException if something goes wrong.
      */
     private FermatPluginIdsManager getPluginIdsManager() throws CantStartPluginIdsManagerException {
@@ -79,10 +85,10 @@ public final class FermatPluginManager {
             try {
 
                 final AddonVersionReference platformFileSystemReference = new AddonVersionReference(
-                        Platforms .OPERATIVE_SYSTEM_API,
-                        Layers    .SYSTEM              ,
-                        Addons    .PLATFORM_FILE_SYSTEM,
-                        Developers.BITDUBAI            ,
+                        Platforms.OPERATIVE_SYSTEM_API,
+                        Layers.SYSTEM,
+                        Addons.PLATFORM_FILE_SYSTEM,
+                        Developers.BITDUBAI,
                         new Version()
                 );
 
@@ -90,10 +96,10 @@ public final class FermatPluginManager {
 
                 this.pluginIdsManager = new FermatPluginIdsManager(platformFileSystem);
 
-                return  this.pluginIdsManager;
+                return this.pluginIdsManager;
 
-            } catch (final CantStartAddonException  |
-                           VersionNotFoundException e) {
+            } catch (final CantStartAddonException |
+                    VersionNotFoundException e) {
 
                 throw new CantStartPluginIdsManagerException(e, "Problem trying to get a platform file system addon.", "Platform not initialized?");
             }
@@ -117,8 +123,8 @@ public final class FermatPluginManager {
         }
     }
 
-    public final FermatManager startPluginAndReferences(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
-                                                                                                                    VersionNotFoundException {
+    public final FermatManager startPluginAndReferences(final PluginVersionReference pluginVersionReference) throws CantStartPluginException,
+            VersionNotFoundException {
 
         try {
 
@@ -127,7 +133,7 @@ public final class FermatPluginManager {
             // todo temporal
             initDeveloperTools();
 
-            final AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
+            final AbstractPluginInterface abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
 
             if (abstractPlugin.isStarted()) {
                 if (abstractPlugin.getManager() != null)
@@ -136,14 +142,37 @@ public final class FermatPluginManager {
                     return (FermatManager) abstractPlugin;
             }
 
-            for (final AddonVersionReference avr : abstractPlugin.getNeededAddons()) {
+            if (pluginVersionReference.getPlugins().getCode().equals(Plugins.FERMAT_NETWORK.getCode())) {
+                System.out.print("\n");
+            }
+            List<AddonVersionReference> list = abstractPlugin.getNeededAddons();
+            for (final AddonVersionReference avr : list) {
                 FermatManager reference = addonManager.startAddonAndReferences(avr);
-                abstractPlugin.assignAddonReference(avr, reference);
+                if (pluginVersionReference.getPlugins().getCode().equals(Plugins.FERMAT_NETWORK.getCode())) {
+                    ClassLoader classLoader = fermatContext.getExternalLoader("bch");
+                    Class<?>[] interfaces = MfClassUtils.getTypes(reference.getClass().getInterfaces(), classLoader);
+                    Object addonReference = fermatContext.objectToProxyfactory(
+                            reference,
+                            classLoader,
+                            interfaces,
+                            FermatManager.class
+                    );
+                    abstractPlugin.assignAddonReferenceMati(
+                            avr.getPlatform().getCode(),
+                            avr.getLayers().getCode(),
+                            avr.getAddon().getCode(),
+                            avr.getDeveloper().getCode(),
+                            avr.getVersion().toString(),
+                            addonReference
+                    );
+                } else {
+                    abstractPlugin.assignAddonReference(avr, reference);
+                }
             }
 
             for (final PluginVersionReference pvr : abstractPlugin.getNeededPlugins()) {
 
-                AbstractPlugin reference = systemContext.getPluginVersion(pvr);
+                AbstractPluginInterface reference = systemContext.getPluginVersion(pvr);
 
                 compareReferences(pluginVersionReference, pvr, reference.getNeededPlugins());
 
@@ -157,7 +186,7 @@ public final class FermatPluginManager {
 
             for (final PluginVersionReference pvr : abstractPlugin.getNeededIndirectPlugins()) {
 
-                AbstractPlugin reference = systemContext.getPluginVersion(pvr);
+                AbstractPluginInterface reference = systemContext.getPluginVersion(pvr);
 
                 compareReferences(pluginVersionReference, pvr, reference.getNeededPlugins());
 
@@ -167,12 +196,12 @@ public final class FermatPluginManager {
             abstractPlugin.setId(pluginIdsManager.getPluginId(pluginVersionReference));
 
             // todo temporal
-            if(abstractPlugin instanceof DatabaseManagerForDevelopers)
+            if (abstractPlugin instanceof DatabaseManagerForDevelopers)
                 dealsWithDatabaseManagers.addDatabaseManager(abstractPlugin.getPluginVersionReference(), abstractPlugin);
 
             // todo temporal
-            if(abstractPlugin instanceof LogManagerForDevelopers)
-                dealsWithLogManagers.addLogManager(abstractPlugin.getPluginVersionReference(), abstractPlugin);
+            if (abstractPlugin instanceof LogManagerForDevelopers)
+                dealsWithLogManagers.addLogManager(abstractPlugin.getPluginVersionReference(), (Plugin) abstractPlugin);
 
             startPlugin(abstractPlugin);
 
@@ -184,15 +213,15 @@ public final class FermatPluginManager {
         } catch (final CantListNeededReferencesException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error listing references for the plugin.");
-        } catch(CantAssignReferenceException   |
+        } catch (CantAssignReferenceException |
                 IncompatibleReferenceException |
-                CantStartAddonException        e) {
+                CantStartAddonException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error assigning references for the plugin.");
-        } catch(final CantStartPluginIdsManagerException e) {
+        } catch (final CantStartPluginIdsManagerException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to get the pluginIdsManager.");
-        } catch(final CantGetPluginIdException e) {
+        } catch (final CantGetPluginIdException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to set the plugin id.");
         } catch (final CyclicalRelationshipFoundException e) {
@@ -208,22 +237,21 @@ public final class FermatPluginManager {
         }
     }
 
-    public final FermatManager getPlugin(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
+    public final FermatManager getPlugin(final PluginVersionReference pluginVersionReference) throws CantStartPluginException,
             VersionNotFoundException {
 
         try {
 
-            final AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
+            final AbstractPluginInterface abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
 
             if (abstractPlugin.isStarted()) {
                 if (abstractPlugin.getManager() != null)
                     return abstractPlugin.getManager();
                 else
                     return abstractPlugin;
-            }else {
+            } else {
                 return abstractPlugin;
             }
-
 
 
         } catch (final Exception e) {
@@ -253,7 +281,7 @@ public final class FermatPluginManager {
 
                 for (final PluginVersionReference pvr : abstractPlugin.getNeededPlugins()) {
 
-                    AbstractPlugin reference = systemContext.getPluginVersion(pvr);
+                    AbstractPluginInterface reference = systemContext.getPluginVersion(pvr);
 
                     compareReferences(pluginVersionReference, pvr, reference.getNeededPlugins());
 
@@ -267,7 +295,7 @@ public final class FermatPluginManager {
 
                 for (final PluginVersionReference pvr : abstractPlugin.getNeededIndirectPlugins()) {
 
-                    AbstractPlugin reference = systemContext.getPluginVersion(pvr);
+                    AbstractPluginInterface reference = systemContext.getPluginVersion(pvr);
 
                     compareReferences(pluginVersionReference, pvr, reference.getNeededPlugins());
 
@@ -282,30 +310,30 @@ public final class FermatPluginManager {
         } catch (CantListNeededReferencesException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error listing references for the plugin.");
-        } catch(CantAssignReferenceException   |
+        } catch (CantAssignReferenceException |
                 IncompatibleReferenceException |
-                CantStartAddonException        e) {
+                CantStartAddonException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error assigning references for the plugin.");
-        } catch(final CantStartPluginIdsManagerException e) {
+        } catch (final CantStartPluginIdsManagerException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to get the pluginIdsManager.");
-        } catch(final CantGetPluginIdException e) {
+        } catch (final CantGetPluginIdException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to set the plugin id.");
         } catch (final CyclicalRelationshipFoundException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Cyclical References found for the plugin.");
-        } catch(VersionNotFoundException e) {
+        } catch (VersionNotFoundException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error trying to find a reference for the plugin.");
         }
     }
 
-    public final void startPlugin(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
-                                                                                              VersionNotFoundException {
+    public final void startPlugin(final PluginVersionReference pluginVersionReference) throws CantStartPluginException,
+            VersionNotFoundException {
 
-        final AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
+        final AbstractPluginInterface abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
 
         startPlugin(abstractPlugin);
 
@@ -316,11 +344,10 @@ public final class FermatPluginManager {
      * If the plugin is started it will return the instance of it.
      * If not, it will try to start it.
      *
-     * @param abstractPlugin  instance of the plugin to start.
-     *
+     * @param abstractPlugin instance of the plugin to start.
      * @throws CantStartPluginException if something goes wrong.
      */
-    public final void startPlugin(final AbstractPlugin abstractPlugin) throws CantStartPluginException {
+    public final void startPlugin(final AbstractPluginInterface abstractPlugin) throws CantStartPluginException {
 
         if (abstractPlugin.isStarted())
             return;
@@ -328,39 +355,49 @@ public final class FermatPluginManager {
         try {
             abstractPlugin.startPlugin();
         } catch (com.bitdubai.fermat_api.CantStartPluginException e) {
-
+            String s = null;
+            try {
+                s = abstractPlugin.getPluginVersionReference().toString3();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
             throw new CantStartPluginException(
                     e,
-                    abstractPlugin.getPluginVersionReference().toString3(),
+                    s,
                     "There was a captured problem during the plugin start."
             );
         } catch (Exception e) {
-
+            String s = null;
+            try {
+                s = abstractPlugin.getPluginVersionReference().toString3();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
             throw new CantStartPluginException(
                     e,
-                    abstractPlugin.getPluginVersionReference().toString3(),
+                    s,
                     "Unhandled exception trying to start the plugin."
             );
         }
 
     }
 
-    public final void stopPlugin(final PluginVersionReference pluginVersionReference) throws CantStopPluginException          ,
-                                                                                             VersionNotFoundException         ,
-                                                                                             UnexpectedServiceStatusException {
+    public final void stopPlugin(final PluginVersionReference pluginVersionReference) throws CantStopPluginException,
+            VersionNotFoundException,
+            UnexpectedServiceStatusException {
 
-        AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
+        AbstractPluginInterface abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
 
         stopPlugin(abstractPlugin);
 
     }
 
-    public final void stopPlugin(final AbstractPlugin abstractPlugin) throws CantStopPluginException          ,
-                                                                             UnexpectedServiceStatusException {
+    public final void stopPlugin(final AbstractPluginInterface abstractPlugin) throws CantStopPluginException,
+            UnexpectedServiceStatusException {
 
         if (!abstractPlugin.isStarted()) {
             throw new UnexpectedServiceStatusException(
-                    "Service Status: "+abstractPlugin.getStatus()+" || "+abstractPlugin.getPluginVersionReference().toString(),
+                    new StringBuilder().append("Service Status: ").append(abstractPlugin.getStatus()).append(" || ").append(abstractPlugin.getPluginVersionReference().toString()).toString(),
                     "The plugin cannot be stopped because is not started."
             );
         }
@@ -374,22 +411,22 @@ public final class FermatPluginManager {
         }
     }
 
-    public final void pausePlugin(final PluginVersionReference pluginVersionReference) throws CantPausePluginException         ,
-                                                                                              VersionNotFoundException         ,
-                                                                                              UnexpectedServiceStatusException {
+    public final void pausePlugin(final PluginVersionReference pluginVersionReference) throws CantPausePluginException,
+            VersionNotFoundException,
+            UnexpectedServiceStatusException {
 
-        AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
+        AbstractPluginInterface abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
 
         pausePlugin(abstractPlugin);
 
     }
 
-    public final void pausePlugin(final AbstractPlugin abstractPlugin) throws CantPausePluginException         ,
-                                                                              UnexpectedServiceStatusException {
+    public final void pausePlugin(final AbstractPluginInterface abstractPlugin) throws CantPausePluginException,
+            UnexpectedServiceStatusException {
 
         if (!abstractPlugin.isStarted()) {
             throw new UnexpectedServiceStatusException(
-                    "Service Status: "+abstractPlugin.getStatus()+" || "+abstractPlugin.getPluginVersionReference().toString(),
+                    new StringBuilder().append("Service Status: ").append(abstractPlugin.getStatus()).append(" || ").append(abstractPlugin.getPluginVersionReference().toString()).toString(),
                     "The plugin cannot be paused because is not started."
             );
         }
@@ -403,22 +440,22 @@ public final class FermatPluginManager {
         }
     }
 
-    public final void resumePlugin(final PluginVersionReference pluginVersionReference) throws CantResumePluginException        ,
-                                                                                               VersionNotFoundException         ,
-                                                                                               UnexpectedServiceStatusException {
+    public final void resumePlugin(final PluginVersionReference pluginVersionReference) throws CantResumePluginException,
+            VersionNotFoundException,
+            UnexpectedServiceStatusException {
 
-        AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
+        AbstractPluginInterface abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
 
         resumePlugin(abstractPlugin);
 
     }
 
-    public final void resumePlugin(final AbstractPlugin abstractPlugin) throws CantResumePluginException         ,
+    public final void resumePlugin(final AbstractPluginInterface abstractPlugin) throws CantResumePluginException,
             UnexpectedServiceStatusException {
 
         if (!abstractPlugin.isPaused()) {
             throw new UnexpectedServiceStatusException(
-                    "Service Status: "+abstractPlugin.getStatus()+" || "+abstractPlugin.getPluginVersionReference().toString(),
+                    new StringBuilder().append("Service Status: ").append(abstractPlugin.getStatus()).append(" || ").append(abstractPlugin.getPluginVersionReference().toString()).toString(),
                     "The plugin cannot be resumed because is not paused."
             );
         }
@@ -435,25 +472,26 @@ public final class FermatPluginManager {
     /**
      * Throw the method <code>compareReferences</code> you can check if there is a cyclical relationship between a plugin version and its references.
      *
-     * @param referenceAnalyzing       reference that we're watching.
-     * @param subReferenceAnalyzed     reference of the reference that we're watching.
-     * @param subReferenceReferences   sub-references of that reference.
-     *
+     * @param referenceAnalyzing     reference that we're watching.
+     * @param subReferenceAnalyzed   reference of the reference that we're watching.
+     * @param subReferenceReferences sub-references of that reference.
      * @return boolean indicating if its all ok, only false is shown. if there is a cyclical relationship found is thrown an exception.
-     *
      * @throws CyclicalRelationshipFoundException if exists a cyclical redundancy.
      */
-    private boolean compareReferences(final PluginVersionReference       referenceAnalyzing    ,
-                                      final PluginVersionReference       subReferenceAnalyzed  ,
+    private boolean compareReferences(final PluginVersionReference referenceAnalyzing,
+                                      final PluginVersionReference subReferenceAnalyzed,
                                       final List<PluginVersionReference> subReferenceReferences) throws CyclicalRelationshipFoundException {
 
-
-        for (final PluginVersionReference ref2 : subReferenceReferences) {
-            if (referenceAnalyzing.equals(ref2))
-                throw new CyclicalRelationshipFoundException(
-                        "Comparing: " + referenceAnalyzing.toString3() + "\n with: " + subReferenceAnalyzed.toString3(),
-                        "Cyclical relationship found."
-                );
+        if (subReferenceReferences != null) {
+            for (final PluginVersionReference ref2 : subReferenceReferences) {
+                if (referenceAnalyzing.equals(ref2))
+                    throw new CyclicalRelationshipFoundException(
+                            new StringBuilder().append("Comparing: ").append(referenceAnalyzing.toString3()).append("\n with: ").append(subReferenceAnalyzed.toString3()).toString(),
+                            "Cyclical relationship found."
+                    );
+            }
+        } else {
+            System.err.println("FermatPluginManager, method: compareReferences, subReferenceReferences = null");
         }
 
         return false;

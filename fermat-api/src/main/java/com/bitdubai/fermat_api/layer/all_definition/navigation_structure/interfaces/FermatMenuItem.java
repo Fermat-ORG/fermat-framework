@@ -7,13 +7,13 @@ import java.io.Serializable;
 /**
  * Created by rodrigo on 2015.07.20..
  */
-public interface FermatMenuItem  extends Serializable {
+public interface FermatMenuItem extends Serializable {
 
-    String getLabel() ;
+    String getLabel();
 
-    String getIcon() ;
+    String getIcon();
 
-    Activities getLinkToActivity() ;
+    Activities getLinkToActivity();
 
     String getAppLinkPublicKey();
 }

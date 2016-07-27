@@ -18,16 +18,17 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
@@ -37,17 +38,18 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ContractDetailAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.ContractDetail;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,7 +61,7 @@ import java.util.Locale;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/02/16.
  */
-public class ContractDetailActivityFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager> {
+public class ContractDetailActivityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager> {
 
     private static final String TAG = "ContractDetailFrag";
 
@@ -67,17 +69,16 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     private ErrorManager errorManager;
     private List<ContractDetail> contractInformation;
     private ContractBasicInformation data;
-    private ArrayList<String> paymentMethods; // test data
-    private ArrayList<Currency> currencies; // test data
 
     private ImageView customerImage;
     private FermatTextView sellingSummary;
     private FermatTextView detailDate;
     private FermatTextView detailRate;
     private FermatTextView brokerName;
-    private FermatButton negotiationButton;
+    private View negotiationButton;
     private RecyclerView recyclerView;
     private ContractDetailAdapter adapter;
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
 
     public static ContractDetailActivityFragment newInstance() {
         return new ContractDetailActivityFragment();
@@ -126,7 +127,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         sellingSummary = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_selling_summary);
         detailDate = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_date);
         detailRate = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_rate);
-        negotiationButton = (FermatButton) rootView.findViewById(R.id.cbw_contract_details_negotiation_details);
+        negotiationButton = rootView.findViewById(R.id.cbw_contract_details_negotiation_details);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.cbw_contract_details_contract_steps_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -152,7 +153,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 CustomerBrokerNegotiationInformation negotiationInfo;
                 try {
                     negotiationInfo = walletModuleManager.getNegotiationInformation(data.getNegotiationId());
-                    appSession.setData(CryptoBrokerWalletSessionReferenceApp.NEGOTIATION_DATA, negotiationInfo);
+                    appSession.setData(FragmentsCommons.NEGOTIATION_DATA, negotiationInfo);
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT, appSession.getAppPublicKey());
 
                 } catch (FermatException ex) {
@@ -164,7 +165,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
                     // TODO Just for testing. Add a Toast later
                     negotiationInfo = TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_BROKER).get(0);
-                    appSession.setData(CryptoBrokerWalletSessionReferenceApp.NEGOTIATION_DATA, negotiationInfo);
+                    appSession.setData(FragmentsCommons.NEGOTIATION_DATA, negotiationInfo);
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT, appSession.getAppPublicKey());
                 }
             }
@@ -173,7 +174,9 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         final SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy", Locale.getDefault());
         final String paymentCurrency = data.getPaymentCurrency();
         final String merchandise = data.getMerchandise();
-        double exchangeRateAmount = getFormattedNumber(data.getExchangeRateAmount());
+
+
+        String exchangeRateAmount = fixFormat(String.valueOf(data.getExchangeRateAmount()));
         final Date lastUpdate = new Date(data.getLastUpdate());
 
         brokerName.setText(data.getCryptoCustomerAlias());
@@ -349,7 +352,6 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
      * This method is for testing
      *
      * @param image
-     *
      * @return
      */
     private byte[] getByteArrayFromImageView(ImageView image) {
@@ -362,5 +364,38 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     public void goToWalletHome() {
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
     }
+
+    private String fixFormat(String value) {
+
+        try {
+            if (compareLessThan1(value)) {
+                numberFormat.setMaximumFractionDigits(8);
+            } else {
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
+        try {
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
+    }
+
+
 }
 

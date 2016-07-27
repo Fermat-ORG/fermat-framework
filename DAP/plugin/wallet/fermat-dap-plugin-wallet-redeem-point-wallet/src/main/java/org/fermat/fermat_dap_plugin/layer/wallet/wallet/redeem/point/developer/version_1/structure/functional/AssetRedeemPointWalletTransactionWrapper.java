@@ -5,10 +5,12 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 
+import java.io.Serializable;
+
 /**
  * Created by franklin on 15/10/15.
  */
-public class AssetRedeemPointWalletTransactionWrapper implements AssetRedeemPointWalletTransaction {
+public class AssetRedeemPointWalletTransactionWrapper implements AssetRedeemPointWalletTransaction, Serializable {
 
     private final String transactionId;
     private final String transactionHash;

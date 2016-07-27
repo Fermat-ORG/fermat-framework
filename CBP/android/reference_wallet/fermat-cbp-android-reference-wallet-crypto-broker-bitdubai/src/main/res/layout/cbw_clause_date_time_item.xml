@@ -45,26 +45,35 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#1271A7"/>
+                android:background="#1271A7"
+                android:id="@+id/cbw_line_up" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp">
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                >
 
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                <TextView
                     android:id="@+id/cbw_date_time_description_text"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_height="30dp"
+                    android:layout_alignBottom="@+id/cbw_date_value"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center_vertical"
                     android:textColor="@color/description_text_status_confirm"
-                    tools:text="Expiration Date:"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    tools:text="Expiration Date:"/>
 
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                <Button
                     android:id="@+id/cbw_date_value"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
@@ -80,31 +89,73 @@
                     android:textSize="14sp"
                     tools:text="04/12/2015"/>
 
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                <Button
                     android:id="@+id/cbw_time_value"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_toEndOf="@+id/cbw_date_value"
                     android:layout_toRightOf="@+id/cbw_date_value"
                     android:background="#DDD"
+                    android:paddingEnd="8dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
+                    android:paddingStart="8dp"
                     android:textAllCaps="false"
                     android:textColor="#222"
                     android:textSize="14sp"
-                    tools:text="15:30 pm"/>
+                    tools:text="3:30 pm"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cbw_text_you_time_zone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="16dp"
+                    android:layout_alignLeft="@+id/cbw_date_value"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignStart="@+id/cbw_date_value"
+                    android:layout_below="@id/cbw_date_value"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:maxLines="1"
+                    android:textColor="#969696"
+                    android:textSize="11sp"
+                    android:visibility="invisible"
+                    tools:ignore="SmallSp"
+                    tools:text="Time Zone: America/Caracas"/>
 
             </RelativeLayout>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_text_other_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:textColor="#5a6a7c"
+                android:textSize="11sp"
+                android:visibility="gone"
+                tools:ignore="SmallSp"
+                tools:text="Customer Date: 04/12/2015 02:00 PM (America/Chicago)"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:minHeight="34dp">
+                android:minHeight="34dp"
+                android:orientation="vertical">
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#1271A7"/>
+                    android:background="#1271A7"
+                    android:id="@+id/cbw_line_down" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/cbw_confirm_button"

@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
@@ -10,6 +9,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.GetActorCatalogTransactionsMsjRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.GetActorCatalogTransactionsMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -24,7 +24,7 @@ import javax.websocket.Session;
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/04/16.
  *
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
 
@@ -79,7 +79,7 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 getActorCatalogTransactionsMsjRespond = new GetActorCatalogTransactionsMsjRespond(GetActorCatalogTransactionsMsjRespond.STATUS.SUCCESS, GetActorCatalogTransactionsMsjRespond.STATUS.SUCCESS.toString(), actorsCatalogTransactionList, count);
-                Package packageRespond = Package.createInstance(getActorCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(getActorCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -88,10 +88,10 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
 
             }
 
-
         } catch (Exception exception){
 
             try {
+                exception.printStackTrace();
 
                 LOG.error(exception.getMessage());
 
@@ -99,7 +99,7 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
                  * Respond whit fail message
                  */
                 getActorCatalogTransactionsMsjRespond = new GetActorCatalogTransactionsMsjRespond(GetActorCatalogTransactionsMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), actorsCatalogTransactionList, new Long(0));
-                Package packageRespond = Package.createInstance(getActorCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(getActorCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -107,11 +107,10 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
                 session.getAsyncRemote().sendObject(packageRespond);
 
             } catch (Exception e) {
+                e.printStackTrace();
                 LOG.error(e.getMessage());
             }
-
         }
-
     }
 
     /**
@@ -119,7 +118,10 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
      *
      * @param offset
      * @param max
-     * @return List<NodeProfile>
+     *
+     * @return List<ActorsCatalogTransaction>
+     *
+     * @throws CantReadRecordDataBaseException if something goes wrong.
      */
     public List<ActorsCatalogTransaction> loadData(Integer offset, Integer max) throws CantReadRecordDataBaseException {
 
@@ -128,17 +130,15 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
 
         List<ActorsCatalogTransaction> transactionList = null;
 
-        if (offset > 0 && max > 0){
+        if (offset >= 0 && max > 0){
 
             transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll(offset, max);
 
-        }else {
+        } else {
 
-            transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll();
-
+            transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll(0, 20);
         }
 
         return transactionList;
-
     }
 }

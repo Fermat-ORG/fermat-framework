@@ -34,6 +34,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerWalletModuleCryptoCustomerWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
@@ -102,12 +103,14 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractModule<CryptoC
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.BUSINESS_TRANSACTION, plugin = Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE)
     BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CRYPTO_BROKER     )
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION, plugin = Plugins.CRYPTO_BROKER)
     CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
     CryptoWalletManager cryptoWalletManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
+    IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     private CryptoCustomerWalletModuleManager walletManager;
 
@@ -141,6 +144,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractModule<CryptoC
                     brokerAckOfflinePaymentManager,
                     brokerSubmitOnlineMerchandiseManager,
                     brokerSubmitOfflineMerchandiseManager,
+                    intraWalletUserIdentityManager,
                     cryptoWalletManager,
                     this,
                     pluginFileSystem,

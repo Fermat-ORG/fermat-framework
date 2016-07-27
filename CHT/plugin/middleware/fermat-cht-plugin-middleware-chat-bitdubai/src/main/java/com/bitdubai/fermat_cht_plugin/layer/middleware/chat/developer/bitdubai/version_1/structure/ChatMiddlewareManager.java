@@ -6,9 +6,11 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantList
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteGroupMemberException;
@@ -30,6 +32,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificatio
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
+import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
@@ -860,7 +863,24 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
         return null;
     }
+    public void purifyMessage(Message message){
+//        String text = message.getMessage();
+//        char a = 39;
+//        char b = 182;
+//        text = text.replace(a,b);
+//        message.setMessage(text);
+        message.setMessage(message.getMessage().replace("'","@alt+39#"));
+    }
 
+    public void despurifyMessage(Message message){
+//        String text = message.getMessage();
+//        char a = 39;
+//        char b = 182;
+//        text = text.replace(b,a);
+//        message.setMessage(text);
+        //code to decode apostrophe
+        message.setMessage(message.getMessage().replace("@alt+39#","'"));
+    }
 
     /**
      * This method sends the message through the Chat Network Service
@@ -899,7 +919,13 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                 createdMessage.setStatus(MessageStatus.CANNOT_SEND);
             }
             chatMiddlewareDatabaseDao.saveMessage(createdMessage);
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+
+            FermatBundle fermatBundle2 = new FermatBundle();
+            fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+            fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
+
+//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
         } catch (DatabaseOperationException e) {
             throw new CantSendChatMessageException(
                     e,
@@ -960,6 +986,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             Chat chat,
             Message message) {
         ChatMetadata chatMetadata;
+        purifyMessage(message);
         Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
         String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(timestamp);
         chatMetadata = new ChatMetadataRecord(

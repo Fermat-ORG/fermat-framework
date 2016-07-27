@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.event_handler;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
@@ -14,8 +16,6 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmissio
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class CustomerOfflinePaymentRecorderService implements CBPService {
             throw new CantStartServiceException(exception,
                     "Cannot set the Customer Offline Payment database handler",
                     "The database handler is null");
-        }catch (Exception exception){
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
@@ -63,16 +63,16 @@ public class CustomerOfflinePaymentRecorderService implements CBPService {
 
     private void setDatabaseDao(CustomerOfflinePaymentBusinessTransactionDao closeContractBusinessTransactionDao)
             throws CantSetObjectException {
-        if(closeContractBusinessTransactionDao==null){
+        if (closeContractBusinessTransactionDao == null) {
             throw new CantSetObjectException("The CustomerOfflinePaymentBusinessTransactionDao is null");
         }
-        this.customerOfflinePaymentBusinessTransactionDao =closeContractBusinessTransactionDao;
+        this.customerOfflinePaymentBusinessTransactionDao = closeContractBusinessTransactionDao;
     }
 
     public void setEventManager(EventManager eventManager) {
-        try{
+        try {
             this.eventManager = eventManager;
-        }catch (Exception exception){
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
@@ -80,18 +80,18 @@ public class CustomerOfflinePaymentRecorderService implements CBPService {
     }
 
     public void incomingNewContractStatusUpdateEventHandler(IncomingNewContractStatusUpdate event) throws CantSaveEventException {
-        try{
+        try {
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.CUSTOMER_OFFLINE_PAYMENT.getCode())) {
+            if (event.getRemoteBusinessTransaction().getCode().equals(Plugins.CUSTOMER_OFFLINE_PAYMENT.getCode())) {
                 this.customerOfflinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
-        }catch(Exception exception){
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -99,18 +99,18 @@ public class CustomerOfflinePaymentRecorderService implements CBPService {
     }
 
     public void incomingConfirmBusinessTransactionResponse(IncomingConfirmBusinessTransactionResponse event) throws CantSaveEventException {
-        try{
+        try {
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.CUSTOMER_OFFLINE_PAYMENT.getCode())) {
+            if (event.getRemoteBusinessTransaction().getCode().equals(Plugins.CUSTOMER_OFFLINE_PAYMENT.getCode())) {
                 this.customerOfflinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
-        }catch(Exception exception){
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -140,7 +140,7 @@ public class CustomerOfflinePaymentRecorderService implements CBPService {
             listenersAdded.add(fermatEventListener);
 
             this.serviceStatus = ServiceStatus.STARTED;
-        } catch (CantSetObjectException exception){
+        } catch (CantSetObjectException exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
@@ -148,11 +148,11 @@ public class CustomerOfflinePaymentRecorderService implements CBPService {
                     exception,
                     "Starting the CustomerOfflinePaymentRecorderService",
                     "The CustomerOfflinePaymentRecorderService is probably null");
-        }catch(Exception exception){
+        } catch (Exception exception) {
             this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE,exception,
+            throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE, exception,
                     "Starting the CustomerOfflinePaymentRecorderService",
                     "Unexpected error");
         }
@@ -161,15 +161,15 @@ public class CustomerOfflinePaymentRecorderService implements CBPService {
 
     @Override
     public void stop() {
-        try{
+        try {
             removeRegisteredListeners();
             this.serviceStatus = ServiceStatus.STOPPED;
-        }catch (Exception exception){
-            this.pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
-    private void removeRegisteredListeners(){
+    private void removeRegisteredListeners() {
         for (FermatEventListener fermatEventListener : listenersAdded) {
             eventManager.removeListener(fermatEventListener);
         }

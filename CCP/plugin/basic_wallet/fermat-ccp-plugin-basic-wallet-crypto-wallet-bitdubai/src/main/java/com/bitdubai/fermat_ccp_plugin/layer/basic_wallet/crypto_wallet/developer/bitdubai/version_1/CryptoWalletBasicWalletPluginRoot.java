@@ -38,6 +38,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.C
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantGetExchangeProviderIdException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantSaveExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.developer.bitdubai.version_1.developerUtils.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletBasicWallet;
@@ -181,7 +183,15 @@ public class CryptoWalletBasicWalletPluginRoot extends AbstractPlugin implements
         }
     }
 
+    @Override
+    public UUID getExchangeProviderId() throws CantGetExchangeProviderIdException {
+        return null;
+    }
 
+    @Override
+    public void saveExchangeProviderIdFile(UUID providerId) throws CantSaveExchangeProviderIdException {
+
+    }
 
 
     private void loadWalletIdsMap() throws CantStartPluginException {

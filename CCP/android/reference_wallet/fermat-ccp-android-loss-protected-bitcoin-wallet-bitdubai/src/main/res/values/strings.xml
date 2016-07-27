@@ -32,8 +32,8 @@
     <string name="no_id_Users_of_other_text_wallets_outside">Users of other wallets outside Fermat: You need to exchange addresses manually</string>
     <string name="no_id_Select_below_which_text">Select below which type of contact you want to add:</string>
     <string name="no_id_dont_show_this_again_text">Don\'t show this again</string>
-    <string name="add_fermat_user_text">Add Fermat Contact</string>no_id_Users_of_other_text_Fermat_wallets
-    <string name="add_extra_user_text">Add External Contact</string>
+    <string name="add_fermat_user_text">Fermat Contact</string>
+    <string name="add_extra_user_text">External Contact</string>
     <!-- loss_create_contact_dialog.xml -->
     <string name="create_external_contact_text">Create External Contact</string>
     <string name="set_name_text">Type name</string>
@@ -107,6 +107,13 @@
     <string name="btc_text">[btc]</string>
     <string name="balance_amount_0_text">0</string>
     <string name="amount_text">Amount</string>
+    <string name="fee_amount_text">Fee</string>
+    <string name="fee_option_text">Substract Fee from Amount</string>
+    <string name="fee_advances_text">Advanced configuration</string>
+    <string name="title_Fee">Fee Level Settings</string>
+    <string name="fee_low">Slow</string>
+    <string name="fee_Medium">Normal</string>
+    <string name="fee_High">Fast</string>
     <!-- setting_base.xml -->
     <string name="empty_transactions_text">Empty transactions</string>
     <!-- wallet_manager_transaction_view.xml -->

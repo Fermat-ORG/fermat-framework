@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
@@ -11,9 +12,10 @@ import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
@@ -22,7 +24,11 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantApproveCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantRejectCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CryptoPaymentRequestNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetBasicWalletExchangeProviderException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeProviderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSetBasicWalletExchangeProviderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantApproveRequestPaymentException;
@@ -50,6 +56,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.RequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.TransactionNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.WalletContactNotFoundException;
+import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
@@ -66,6 +74,35 @@ import java.util.UUID;
  * @version 1.0
  */
 public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSettings,ActiveActorIdentityInformation>,ModuleSettingsImpl<FermatWalletSettings> {
+
+    UUID getExchangeProvider() throws CantGetBasicWalletExchangeProviderException;
+
+    void setExchangeProvider(UUID idProvider) throws CantSetBasicWalletExchangeProviderException;
+
+
+    /**
+     * Through the method <code>getCurrencyExchange</code> you can get the actual currency exchange rate by provider and fiat currency
+     * @return
+     * @throws CantGetMnemonicTextException
+     */
+    ExchangeRate getCurrencyExchange(UUID rateProviderManagerId,FiatCurrency fiatCurrency) throws CantGetCurrencyExchangeException;
+
+    /**
+
+
+     * Through the method <code>getExchangeRateProviders</code> you can get the list of exchange rate providers
+     * @return
+     * @throws CantGetCurrencyExchangeProviderException
+     */
+    List<ExchangeRateProvider> getExchangeRateProviders() throws CantGetCurrencyExchangeProviderException;
+
+    /**
+
+     * Through the method <code>getExchangeRateProviders</code> you can get the list of exchange rate providers by fiat currency to fermat
+     * @return
+     * @throws CantGetCurrencyExchangeProviderException
+     */
+    List<ExchangeRateProvider> getExchangeRateProviderManagers(FiatCurrency fiatCurrency) throws CantGetCurrencyExchangeProviderException;
 
     /**
      * List all wallet contact related to an specific wallet.
@@ -284,9 +321,10 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * Throw the method <code>isValidAddress</code> you can validate in the specific vault if a specific crypto address is valid.
      *
      * @param cryptoAddress to validate
+     * @param blockchainNetworkType to validate
      * @return boolean value, true if positive, false if negative.
      */
-    boolean isValidAddress(CryptoAddress cryptoAddress);
+    boolean isValidAddress(CryptoAddress cryptoAddress,BlockchainNetworkType blockchainNetworkType);
     // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
 
@@ -320,7 +358,9 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
               Actors deliveredToActorType,
               ReferenceWallet referenceWallet,
               BlockchainNetworkType blockchainNetworkType,
-              CryptoCurrency cryptoCurrency) throws CantSendFermatException, InsufficientFundsException;
+              CryptoCurrency cryptoCurrency,
+              long fee,
+              FeeOrigin feeOrigin) throws CantSendFermatException, InsufficientFundsException;
 
 
     /**

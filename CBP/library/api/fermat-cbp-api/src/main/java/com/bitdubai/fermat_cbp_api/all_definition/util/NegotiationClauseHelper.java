@@ -42,7 +42,6 @@ public final class NegotiationClauseHelper {
      *
      * @param negotiationClauses the list of clauses
      * @param clauseType         the clause to find
-     *
      * @return the clause value or <code>null</code>
      */
     public static String getNegotiationClauseValue(Collection<Clause> negotiationClauses, ClauseType clauseType) {

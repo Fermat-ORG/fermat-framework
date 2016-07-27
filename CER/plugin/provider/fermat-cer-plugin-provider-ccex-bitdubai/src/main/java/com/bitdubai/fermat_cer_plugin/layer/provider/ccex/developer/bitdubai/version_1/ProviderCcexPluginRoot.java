@@ -34,11 +34,11 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRat
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.ccex.developer.bitdubai.version_1.database.CcexProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.ccex.developer.bitdubai.version_1.database.CcexProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.ccex.developer.bitdubai.version_1.exceptions.CantInitializeCcexProviderDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -152,11 +152,12 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException();
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         //Determine cryptoCurrency base
         String exchangeFrom, exchangeTo;
         boolean invertExchange;
+        boolean providerIsDown = false;
 
         if(CryptoCurrency.codeExists(currencyPair.getFrom().getCode()))
         {
@@ -179,14 +180,18 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
 
         try{
             String currencyString = exchangeFrom.toLowerCase() + "-" + exchangeTo.toLowerCase();
-            json =  new JSONObject(HttpReader.getHTTPContent("https://c-cex.com/t/" + currencyString + ".json"));
+            json =  new JSONObject(HttpHelper.getHTTPContent("https://c-cex.com/t/" + currencyString + ".json"));
             json = json.getJSONObject("ticker");
             purchasePrice = json.getDouble("buy");
             salePrice = json.getDouble("sell");
 
         }catch (JSONException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CCEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"Ccex CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
+        //    errorManager.reportUnexpectedPluginException(Plugins.CCEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        //    throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"Ccex CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
+            purchasePrice = 0;
+            salePrice = 0;
+            invertExchange = false;
+            providerIsDown = true;
         }
 
         if(invertExchange){
@@ -195,11 +200,12 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
         }
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), salePrice, purchasePrice, (new Date().getTime() / 1000));
-
-        try {
-            dao.saveCurrentExchangeRate(exchangeRate);
-        }catch (CantSaveExchangeRateException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CCEX, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        if(!providerIsDown) {
+            try {
+                dao.saveCurrentExchangeRate(exchangeRate);
+            } catch (CantSaveExchangeRateException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.CCEX, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }
         }
         return exchangeRate;
     }
@@ -211,7 +217,7 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
         if(DateHelper.timestampIsInTheFuture(timestamp))
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided timestamp is in the future");
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException();
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         //Determine if from-to currencies need to be inverted to query API
         boolean invertCurrencies;
@@ -255,7 +261,7 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
         if(DateHelper.timestampIsInTheFuture(startTimestamp))
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided startTimestamp is in the future");
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException();
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
 
         //Determine if from-to currencies need to be inverted to query API
@@ -278,7 +284,7 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException();
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }
@@ -295,7 +301,7 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
                                                   currencyFrom.getCode().toLowerCase() + "-" + currencyTo.getCode().toLowerCase());
 
         try {
-            json = new JSONObject(HttpReader.getHTTPContent("https://c-cex.com/t/s.html?a=tradehistory&d1=" + dateFrom + "&d2=" + dateTo + "&pair=" + currencyPair));
+            json = new JSONObject(HttpHelper.getHTTPContent("https://c-cex.com/t/s.html?a=tradehistory&d1=" + dateFrom + "&d2=" + dateTo + "&pair=" + currencyPair));
             JSONArray jsonArray = json.getJSONArray("return");
 
 

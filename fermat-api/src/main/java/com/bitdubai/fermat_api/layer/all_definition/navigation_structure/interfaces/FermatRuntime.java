@@ -13,14 +13,16 @@ public interface FermatRuntime {
      * @param appBackPublicKey
      * @param activityCode
      */
-    void changeActivityBack(String appBackPublicKey,String activityCode);
+    void changeActivityBack(String appBackPublicKey, String activityCode);
 
     /**
-     *  Change start activity of an app,
+     * Change start activity of an app,
      *
-     * @param activityCode  is the position added in the runtime
+     * @param activityCode is the position added in the runtime
      * @return
      */
 
-    void changeStartActivity(String activityCode);
+    void changeStartActivity(String appPublicKey, String activityCode);
+
+    void changeTabNumber(String appPublicKey, String appActivityCode, int number);
 }

@@ -18,7 +18,7 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:text="My Locations"
             android:textAllCaps="false"
             android:textColor="@color/white"
@@ -104,10 +104,10 @@
     <LinearLayout
         android:id="@+id/ccw_next_step_button"
         android:layout_width="200dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
-        android:background="#E5007E"
+        android:background="@color/ccw_wizard_wallet_button_color"
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"

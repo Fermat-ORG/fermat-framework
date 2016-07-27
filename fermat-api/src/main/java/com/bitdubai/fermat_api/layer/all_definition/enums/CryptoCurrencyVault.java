@@ -15,9 +15,8 @@ public enum CryptoCurrencyVault implements FermatVaultEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    BITCOIN_VAULT   ("BITV", CryptoCurrency.BITCOIN)
-
-    ;
+    BITCOIN_VAULT("BITV", CryptoCurrency.BITCOIN),
+    FERMAT_VAULT("FERV", CryptoCurrency.FERMAT);
 
     private final String code;
 
@@ -35,7 +34,7 @@ public enum CryptoCurrencyVault implements FermatVaultEnum {
                 return vault;
         }
         throw new InvalidParameterException(
-                "Code Received: " + code,
+                new StringBuilder().append("Code Received: ").append(code).toString(),
                 "This code is not valid for the CryptoCurrencyVault enum."
         );
     }
@@ -47,7 +46,7 @@ public enum CryptoCurrencyVault implements FermatVaultEnum {
                 return vault;
         }
         throw new InvalidParameterException(
-                "CryptoCurrency Received: " + cryptoCurrency,
+                new StringBuilder().append("CryptoCurrency Received: ").append(cryptoCurrency).toString(),
                 "This CryptoCurrency is not valid for the CryptoCurrencyVault enum."
         );
     }

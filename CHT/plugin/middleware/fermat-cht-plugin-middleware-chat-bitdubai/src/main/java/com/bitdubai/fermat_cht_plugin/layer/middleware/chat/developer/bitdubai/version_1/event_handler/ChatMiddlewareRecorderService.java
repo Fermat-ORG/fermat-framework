@@ -12,13 +12,13 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectExcept
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewOnlineStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     private ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
     private ChatMiddlewarePluginRoot chatMiddlewarePluginRoot;
-    private ChatMiddlewareMonitorAgent chatMiddlewareMonitorAgent;
+    private ChatMiddlewareMonitorAgent2 chatMiddlewareMonitorAgent;
     /**
      * TransactionService Interface member variables.
      */
@@ -44,7 +44,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao,
             EventManager eventManager,
             ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
-            ChatMiddlewareMonitorAgent chatMiddlewareMonitorAgent) throws CantStartServiceException {
+            ChatMiddlewareMonitorAgent2 chatMiddlewareMonitorAgent) throws CantStartServiceException {
         try {
             this.chatMiddlewareMonitorAgent = chatMiddlewareMonitorAgent;
             setDatabaseDao(chatMiddlewareDatabaseDao);

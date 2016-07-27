@@ -7,13 +7,13 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 /**
  * Created by guillermo on 04/03/16.
  */
-public class CryptoCustomerNotificationPainter implements NotificationPainter {
+public class CryptoCustomerNotificationPainter extends NotificationPainter {
 
     private RemoteViews remoteViews;
     private String title;
     private String image;
     private String textBody;
-    private int    icon;
+    private int icon;
 
 
     public CryptoCustomerNotificationPainter(String title, String textBody, String image, int icon) {
@@ -24,7 +24,7 @@ public class CryptoCustomerNotificationPainter implements NotificationPainter {
     }
 
     public CryptoCustomerNotificationPainter(String title, String textBody, String image) {
-       this(title, textBody, image, 0);
+        this(title, textBody, image, 0);
     }
 
     @Override

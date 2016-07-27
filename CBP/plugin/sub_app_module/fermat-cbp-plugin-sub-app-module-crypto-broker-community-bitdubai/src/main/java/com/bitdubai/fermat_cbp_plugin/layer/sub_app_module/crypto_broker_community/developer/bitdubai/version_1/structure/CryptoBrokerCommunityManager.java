@@ -12,17 +12,24 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Connecti
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
@@ -31,6 +38,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.Can
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantAcceptRequestException;
@@ -48,13 +56,30 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.CryptoBrokerCommunitySubAppModulePluginRoot;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCountryDependenciesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+
 
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunityManager</code>
@@ -66,46 +91,47 @@ public class CryptoBrokerCommunityManager
         extends ModuleManagerImpl<CryptoBrokerCommunitySettings>
         implements CryptoBrokerCommunitySubAppModuleManager, Serializable {
 
-    private final CryptoBrokerIdentityManager        cryptoBrokerIdentityManager           ;
-    private final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager    ;
-    private final CryptoBrokerManager                cryptoBrokerActorNetworkServiceManager;
-    private final CryptoCustomerIdentityManager      cryptoCustomerIdentityManager         ;
-    private final PluginFileSystem                   pluginFileSystem                      ;
-    private final UUID                               pluginId                              ;
+    private final CryptoBrokerIdentityManager cryptoBrokerIdentityManager;
+    private final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
+    private final CryptoBrokerManager cryptoBrokerActorNetworkServiceManager;
+    private final CryptoCustomerIdentityManager cryptoCustomerIdentityManager;
+    private final GeolocationManager geolocationManager;
+    private final LocationManager locationManager;
 
-    private       String                             subAppPublicKey                       ;
+    private String subAppPublicKey;
 
-    private final CryptoBrokerCommunitySubAppModulePluginRoot pluginRoot                   ;
+    private final CryptoBrokerCommunitySubAppModulePluginRoot pluginRoot;
 
-    public CryptoBrokerCommunityManager(final CryptoBrokerIdentityManager        cryptoBrokerIdentityManager           ,
-                                        final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager    ,
-                                        final CryptoBrokerManager                cryptoBrokerActorNetworkServiceManager,
-                                        final CryptoCustomerIdentityManager      cryptoCustomerIdentityManager         ,
-                                        final CryptoBrokerCommunitySubAppModulePluginRoot pluginRoot                   ,
-                                        final PluginFileSystem                   pluginFileSystem                      ,
-                                        final UUID                               pluginId) {
+    public CryptoBrokerCommunityManager(final CryptoBrokerIdentityManager cryptoBrokerIdentityManager,
+                                        final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager,
+                                        final CryptoBrokerManager cryptoBrokerActorNetworkServiceManager,
+                                        final CryptoCustomerIdentityManager cryptoCustomerIdentityManager,
+                                        final CryptoBrokerCommunitySubAppModulePluginRoot pluginRoot,
+                                        final PluginFileSystem pluginFileSystem,
+                                        final UUID pluginId,
+                                        final GeolocationManager geolocationManager,
+                                        LocationManager locationManager) {
 
         super(pluginFileSystem, pluginId);
 
-        this.cryptoBrokerIdentityManager            = cryptoBrokerIdentityManager           ;
-        this.cryptoBrokerActorConnectionManager     = cryptoBrokerActorConnectionManager    ;
+        this.cryptoBrokerIdentityManager = cryptoBrokerIdentityManager;
+        this.cryptoBrokerActorConnectionManager = cryptoBrokerActorConnectionManager;
         this.cryptoBrokerActorNetworkServiceManager = cryptoBrokerActorNetworkServiceManager;
-        this.cryptoCustomerIdentityManager          = cryptoCustomerIdentityManager         ;
-        this.pluginRoot                             = pluginRoot                          ;
-        this.pluginFileSystem                       = pluginFileSystem                      ;
-        this.pluginId                               = pluginId                              ;
+        this.cryptoCustomerIdentityManager = cryptoCustomerIdentityManager;
+        this.pluginRoot = pluginRoot;
+        this.geolocationManager = geolocationManager;
+        this.locationManager = locationManager;
     }
 
 
-
     @Override
-    public List<CryptoBrokerCommunityInformation> listWorldCryptoBrokers(CryptoBrokerCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListCryptoBrokersException {
+    public List<CryptoBrokerCommunityInformation> listWorldCryptoBrokers(CryptoBrokerCommunitySelectableIdentity selectedIdentity, DeviceLocation deviceLocation, double distance, String alias, int max, int offset) throws CantListCryptoBrokersException {
 
         List<CryptoBrokerCommunityInformation> worldBrokerList;
         List<CryptoBrokerActorConnection> actorConnections;
 
-        try{
-            worldBrokerList = getCryptoBrokerSearch().getResult();
+        try {
+            worldBrokerList = getCryptoBrokerSearch().getResult(selectedIdentity.getPublicKey(), deviceLocation, distance, alias, max, offset);
         } catch (CantGetCryptoBrokerSearchResult e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Error in listWorldCryptoBrokers trying to list world brokers");
@@ -116,26 +142,48 @@ public class CryptoBrokerCommunityManager
 
             final CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
             final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
-            //search.addConnectionState(ConnectionState.CONNECTED);
-            //search.addConnectionState(ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
 
-            actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+            actorConnections = search.getResult(1000, 0);  //actorConnections = search.getResult(max, offset);
 
         } catch (final CantListActorConnectionsException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Error trying to list actor connections.");
         }
 
-        CryptoBrokerCommunityInformation worldBroker;
-        for(int i = 0; i < worldBrokerList.size(); i++)
-        {
-            worldBroker = worldBrokerList.get(i);
-            for(CryptoBrokerActorConnection connectedBroker : actorConnections)
-            {
-                if(worldBroker.getPublicKey().equals(connectedBroker.getPublicKey()))
-                    worldBrokerList.set(i, new CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), connectedBroker.getConnectionState(), connectedBroker.getConnectionId()));
+        for (int i = 0; i < worldBrokerList.size(); i++) {
+            CryptoBrokerCommunityInformation worldBroker = worldBrokerList.get(i);
+            for (CryptoBrokerActorConnection connectedBroker : actorConnections) {
+                if (worldBroker.getPublicKey().equals(connectedBroker.getPublicKey()))
+                    worldBrokerList.set(i, new CryptoBrokerCommunitySubAppModuleInformation(
+                            worldBroker.getPublicKey(),
+                            worldBroker.getAlias(),
+                            worldBroker.getImage(),
+                            connectedBroker.getConnectionState(),
+                            connectedBroker.getConnectionId(),
+                            worldBroker.getLocation(),
+                            worldBroker.getProfileStatus(),
+                            worldBroker.getCryptoBrokerIdentityExtraData()));
             }
         }
+
+        for (int i = 0; i < worldBrokerList.size(); i++) {
+            String country = "--", place = "--";
+            CryptoBrokerCommunitySubAppModuleInformation brokerActor = (CryptoBrokerCommunitySubAppModuleInformation) worldBrokerList.get(i);
+
+            final Location location = brokerActor.getLocation();
+            try {
+                final Address address = geolocationManager.getAddressByCoordinate(location.getLatitude(), location.getLongitude());
+                country = address.getCountry();
+                place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
+            } catch (CantCreateAddressException ignore) {
+            }
+
+            brokerActor.setCountry(country);
+            brokerActor.setPlace(place);
+
+            System.out.println(new StringBuilder().append("************** Actor Broker Register: ").append(brokerActor.getAlias()).append(" - ").append(brokerActor.getProfileStatus()).append(" - ").append(brokerActor.getConnectionState()).toString());
+        }
+
         return worldBrokerList;
     }
 
@@ -179,19 +227,20 @@ public class CryptoBrokerCommunityManager
         CryptoBrokerCommunitySettings appSettings;
         try {
             appSettings = loadAndGetSettings(this.subAppPublicKey);
-        }catch (Exception e){ appSettings = null; }
+        } catch (Exception e) {
+            appSettings = new CryptoBrokerCommunitySettings();
+        }
 
-        //If appSettings exist, save identity
-        if(appSettings != null){
-            if(identity.getPublicKey() != null)
-                appSettings.setLastSelectedIdentityPublicKey(identity.getPublicKey());
-            if(identity.getActorType() != null)
-                appSettings.setLastSelectedActorType(identity.getActorType());
-            try {
-                persistSettings(this.subAppPublicKey, appSettings);
-            }catch (CantPersistSettingsException e){
-                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
+        if (identity.getPublicKey() != null)
+            appSettings.setLastSelectedIdentityPublicKey(identity.getPublicKey());
+
+        if (identity.getActorType() != null)
+            appSettings.setLastSelectedActorType(identity.getActorType());
+
+        try {
+            persistSettings(this.subAppPublicKey, appSettings);
+        } catch (CantPersistSettingsException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 
@@ -206,30 +255,33 @@ public class CryptoBrokerCommunityManager
     }
 
     @Override
-    public void requestConnectionToCryptoBroker(final CryptoBrokerCommunitySelectableIdentity selectedIdentity     ,
-                                                final CryptoBrokerCommunityInformation        cryptoBrokerToContact) throws CantRequestConnectionException          ,
+    public void requestConnectionToCryptoBroker(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
+                                                final CryptoBrokerCommunityInformation cryptoBrokerToContact) throws CantRequestConnectionException,
             ActorConnectionAlreadyRequestedException,
-            ActorTypeNotSupportedException          {
+            ActorTypeNotSupportedException {
 
         try {
 
             final ActorIdentityInformation actorSending = new ActorIdentityInformation(
-                    selectedIdentity.getPublicKey()   ,
-                    selectedIdentity.getActorType()   ,
-                    selectedIdentity.getAlias()       ,
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType(),
+                    selectedIdentity.getAlias(),
                     selectedIdentity.getImage()
             );
 
             final ActorIdentityInformation actorReceiving = new ActorIdentityInformation(
-                    cryptoBrokerToContact.getPublicKey()   ,
-                    Actors.CBP_CRYPTO_BROKER               ,
-                    cryptoBrokerToContact.getAlias()       ,
+                    cryptoBrokerToContact.getPublicKey(),
+                    Actors.CBP_CRYPTO_BROKER,
+                    cryptoBrokerToContact.getAlias(),
                     cryptoBrokerToContact.getImage()
             );
 
+            final Location location = cryptoBrokerToContact.getLocation();
+
             cryptoBrokerActorConnectionManager.requestConnection(
                     actorSending,
-                    actorReceiving
+                    actorReceiving,
+                    location
             );
 
         } catch (final CantRequestActorConnectionException e) {
@@ -259,7 +311,7 @@ public class CryptoBrokerCommunityManager
             cryptoBrokerActorConnectionManager.acceptConnection(requestId);
 
         } catch (final CantAcceptActorConnectionRequestException |
-                UnexpectedConnectionStateException        e) {
+                UnexpectedConnectionStateException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAcceptRequestException(e, "", "Error trying to accept the actor connection.");
@@ -276,14 +328,14 @@ public class CryptoBrokerCommunityManager
 
     @Override
     public void denyConnection(final UUID requestId) throws CryptoBrokerConnectionDenialFailedException,
-            ConnectionRequestNotFoundException         {
+            ConnectionRequestNotFoundException {
 
         try {
 
             cryptoBrokerActorConnectionManager.denyConnection(requestId);
 
         } catch (final CantDenyActorConnectionRequestException |
-                UnexpectedConnectionStateException      e) {
+                UnexpectedConnectionStateException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CryptoBrokerConnectionDenialFailedException(e, "", "Error trying to deny the actor connection.");
@@ -300,13 +352,13 @@ public class CryptoBrokerCommunityManager
 
     @Override
     public void disconnectCryptoBroker(final UUID requestId) throws CryptoBrokerDisconnectingFailedException,
-            ConnectionRequestNotFoundException      {
+            ConnectionRequestNotFoundException {
 
         try {
 
             cryptoBrokerActorConnectionManager.disconnect(requestId);
 
-        } catch (final CantDisconnectFromActorException   |
+        } catch (final CantDisconnectFromActorException |
                 UnexpectedConnectionStateException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -347,8 +399,8 @@ public class CryptoBrokerCommunityManager
 
     @Override
     public List<CryptoBrokerCommunityInformation> listAllConnectedCryptoBrokers(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
-                                                                                final int                                     max             ,
-                                                                                final int                                     offset          ) throws CantListCryptoBrokersException {
+                                                                                final int max,
+                                                                                final int offset) throws CantListCryptoBrokersException {
 
         try {
 
@@ -357,18 +409,43 @@ public class CryptoBrokerCommunityManager
                     selectedIdentity.getActorType()
             );
 
+
             final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
 
             search.addConnectionState(ConnectionState.CONNECTED);
 
-            final List<CryptoBrokerActorConnection> actorConnections = search.getResult(max, offset);
+            final List<CryptoBrokerActorConnection> connectedActors = search.getResult(max, offset);
 
-            final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
+            final Set<CryptoBrokerCommunityInformation> filteredConnectedActors = new LinkedHashSet<>();
 
-            for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac));
+            CryptoBrokerExposingData cryptoBrokerExposingData;
+            CryptoBrokerCommunitySubAppModuleInformation cryptoBrokerCommunitySubAppModuleInformation;
 
-            return cryptoBrokerCommunityInformationList;
+            for (CryptoBrokerActorConnection connectedActor : connectedActors) {
+                cryptoBrokerExposingData = getCryptoBrokerSearch().getResult(connectedActor.getPublicKey());
+                if (cryptoBrokerExposingData != null) {
+
+                    cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData);
+                } else {
+                    cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, connectedActor.getLocation());
+                }
+
+                Location actorLocation = cryptoBrokerCommunitySubAppModuleInformation.getLocation();
+
+                try {
+                    final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
+                    cryptoBrokerCommunitySubAppModuleInformation.setCountry(address.getCountry());
+                    cryptoBrokerCommunitySubAppModuleInformation.setPlace(address.getCity().equals("null") ? address.getCounty() : address.getCity());
+
+                } catch (CantCreateAddressException ex) {
+                    cryptoBrokerCommunitySubAppModuleInformation.setCountry("");
+                    cryptoBrokerCommunitySubAppModuleInformation.setPlace("");
+                }
+
+                filteredConnectedActors.add(cryptoBrokerCommunitySubAppModuleInformation);
+            }
+
+            return new ArrayList<>(filteredConnectedActors);
 
         } catch (final CantListActorConnectionsException e) {
 
@@ -436,8 +513,8 @@ public class CryptoBrokerCommunityManager
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
-            for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac));
+            for (CryptoBrokerActorConnection actorConnection : actorConnections)
+                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(actorConnection));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -461,25 +538,69 @@ public class CryptoBrokerCommunityManager
     public ConnectionState getActorConnectionState(String publicKey) throws CantValidateConnectionStateException {
 
         try {
-            CryptoBrokerCommunitySelectableIdentity selectedIdentity  =  getSelectedActorIdentity();
+            CryptoBrokerCommunitySelectableIdentity selectedIdentity = getSelectedActorIdentity();
             final CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
             final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
             final List<CryptoBrokerActorConnection> actorConnections = search.getResult(Integer.MAX_VALUE, 0);
 
-            for(CryptoBrokerActorConnection connection : actorConnections){
-                if(publicKey.equals(connection.getPublicKey()))
+            for (CryptoBrokerActorConnection connection : actorConnections) {
+                if (publicKey.equals(connection.getPublicKey()))
                     return connection.getConnectionState();
             }
 
         } catch (final CantListActorConnectionsException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantValidateConnectionStateException(e, "", "Error trying to list actor connections.");
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         return ConnectionState.DISCONNECTED_LOCALLY;
     }
 
+    @Override
+    public HashMap<String, Country> getCountryList() throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException {
+        return geolocationManager.getCountryList();
+    }
 
+    @Override
+    public List<CountryDependency> getCountryDependencies(String countryCode) throws CantGetCountryDependenciesListException, CantConnectWithExternalAPIException, CantCreateBackupFileException {
+        return geolocationManager.getCountryDependencies(countryCode);
+    }
+
+    @Override
+    public List<City> getCitiesByCountryCode(String countryCode) throws CantGetCitiesListException {
+        return geolocationManager.getCitiesByCountryCode(countryCode);
+    }
+
+    @Override
+    public List<City> getCitiesByCountryCodeAndDependencyName(String countryName, String dependencyName) throws CantGetCitiesListException, CantCreateCountriesListException {
+        return getCitiesByCountryCodeAndDependencyName(countryName, dependencyName);
+    }
+
+    @Override
+    public GeoRectangle getGeoRectangleByLocation(String location) throws CantCreateGeoRectangleException {
+        return geolocationManager.getGeoRectangleByLocation(location);
+    }
+
+    @Override
+    public Address getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException {
+        return geolocationManager.getAddressByCoordinate(latitude, longitude);
+    }
+
+    @Override
+    public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
+        return geolocationManager.getRandomGeoLocation();
+    }
+
+    @Override
+    public List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException {
+        return geolocationManager.getExtendedCitiesByFilter(filter);
+    }
+
+    @Override
+    public Location getLocation() throws CantGetDeviceLocationException {
+        return locationManager.getLocation();
+    }
 
 
     @Override
@@ -489,95 +610,90 @@ public class CryptoBrokerCommunityManager
         CryptoBrokerCommunitySettings appSettings;
         try {
             appSettings = loadAndGetSettings(this.subAppPublicKey);
-        }catch (Exception e){ return null; }
-
+        } catch (Exception e) {
+            return null;
+        }
 
         //Get all customer identities on local device
         List<CryptoCustomerIdentity> customerIdentitiesInDevice = new ArrayList<>();
-        try{
+        try {
             customerIdentitiesInDevice = cryptoCustomerIdentityManager.listAllCryptoCustomerFromCurrentDeviceUser();
-        } catch(CantListCryptoCustomerIdentityException e) { /*Do nothing*/ }
+        } catch (CantListCryptoCustomerIdentityException e) { /*Do nothing*/ }
 
 
         //Get all broker identities on local device
         List<CryptoBrokerIdentity> brokerIdentitiesInDevice = new ArrayList<>();
-        try{
+        try {
             brokerIdentitiesInDevice = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
-        } catch(CantListCryptoBrokerIdentitiesException e) { /*Do nothing*/ }
+        } catch (CantListCryptoBrokerIdentitiesException e) { /*Do nothing*/ }
 
         //No registered users in device
-        if(customerIdentitiesInDevice.size() + brokerIdentitiesInDevice.size() == 0)
-            throw new CantGetSelectedActorIdentityException("", null, "", "");
-
-
+        if (customerIdentitiesInDevice.isEmpty() && brokerIdentitiesInDevice.isEmpty())
+            return null;
 
         //If appSettings exists, get its selectedActorIdentityPublicKey property
-        if(appSettings != null)
-        {
-            String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
-            Actors lastSelectedActorType = appSettings.getLastSelectedActorType();
+        String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
+        Actors lastSelectedActorType = appSettings.getLastSelectedActorType();
 
-            if (lastSelectedIdentityPublicKey != null && lastSelectedActorType != null) {
+        if (lastSelectedIdentityPublicKey != null && lastSelectedActorType != null) {
 
-                CryptoBrokerCommunitySelectableIdentityImpl selectedIdentity = null;
+            CryptoBrokerCommunitySelectableIdentityImpl selectedIdentity = null;
 
-                if(lastSelectedActorType == Actors.CBP_CRYPTO_BROKER)
-                {
-                    for(CryptoBrokerIdentity i : brokerIdentitiesInDevice) {
-                        if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_BROKER, i.getAlias(), i.getProfileImage());
-                    }
-                }
-                else if( lastSelectedActorType == Actors.CBP_CRYPTO_CUSTOMER)
-                {
-                    for(CryptoCustomerIdentity i : customerIdentitiesInDevice) {
-                        if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, i.getAlias(), i.getProfileImage());
+            if (lastSelectedActorType == Actors.CBP_CRYPTO_BROKER) {
+                for (CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
+                    if (identity.getPublicKey().equals(lastSelectedIdentityPublicKey)) {
+                        selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(identity);
+                        break;
                     }
                 }
 
-
-                if(selectedIdentity == null)
-                    throw new ActorIdentityNotSelectedException("", null, "", "");
-
-                return selectedIdentity;
+            } else if (lastSelectedActorType == Actors.CBP_CRYPTO_CUSTOMER) {
+                for (CryptoCustomerIdentity identity : customerIdentitiesInDevice) {
+                    if (identity.getPublicKey().equals(lastSelectedIdentityPublicKey)) {
+                        selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(identity);
+                        break;
+                    }
+                }
             }
-            else
+
+            if (selectedIdentity == null)
                 throw new ActorIdentityNotSelectedException("", null, "", "");
+
+            return selectedIdentity;
         }
 
         return null;
     }
+
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
 
         String createdPublicKey = null;
 
-        if(name.equals("Customer"))
-        {
-            try{
-                final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img);
+        if (name.equals("Customer")) {
+            try {
+                final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 10, GeoFrequency.NORMAL);
                 createdPublicKey = createdIdentity.getPublicKey();
+
                 new Thread() {
                     @Override
                     public void run() {
                         try {
                             cryptoCustomerIdentityManager.publishIdentity(createdIdentity.getPublicKey());
-                        } catch(CantPublishIdentityException | IdentityNotFoundException e) {
+                        } catch (CantPublishIdentityException | IdentityNotFoundException e) {
                             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                         }
                     }
                 }.start();
-            }catch(Exception e) {
+
+            } catch (Exception e) {
                 this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 return;
             }
-        }
-        else if( name.equals("Broker"))
-        {
-            try{
-                final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img);
+        } else if (name.equals("Broker")) {
+            try {
+                final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, GeoFrequency.NONE);
                 createdPublicKey = createdIdentity.getPublicKey();
 
                 new Thread() {
@@ -585,40 +701,39 @@ public class CryptoBrokerCommunityManager
                     public void run() {
                         try {
                             cryptoBrokerIdentityManager.publishIdentity(createdIdentity.getPublicKey());
-                        } catch(Exception e) {
+                        } catch (Exception e) {
                             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                         }
                     }
                 }.start();
-            }catch(Exception e) {
+            } catch (Exception e) {
                 this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 return;
             }
         }
 
 
-
         //Try to get appSettings
         CryptoBrokerCommunitySettings appSettings;
         try {
             appSettings = loadAndGetSettings(this.subAppPublicKey);
-        }catch (Exception e){ appSettings = null; }
+        } catch (Exception e) {
+            appSettings = new CryptoBrokerCommunitySettings();
+        }
 
+        if (createdPublicKey != null)
+            appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
 
-        //If appSettings exist
-        if(appSettings != null){
-            if(createdPublicKey != null)
-                appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
-            if(name.equals("Customer"))
-                appSettings.setLastSelectedActorType(Actors.CBP_CRYPTO_CUSTOMER);
-            else if(name.equals("Broker"))
-                appSettings.setLastSelectedActorType(Actors.CBP_CRYPTO_BROKER);
+        if (name.equals("Customer"))
+            appSettings.setLastSelectedActorType(Actors.CBP_CRYPTO_CUSTOMER);
 
-            try {
-                persistSettings(this.subAppPublicKey, appSettings);
-            } catch (CantPersistSettingsException e) {
-                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
+        else if (name.equals("Broker"))
+            appSettings.setLastSelectedActorType(Actors.CBP_CRYPTO_BROKER);
+
+        try {
+            persistSettings(this.subAppPublicKey, appSettings);
+        } catch (CantPersistSettingsException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 

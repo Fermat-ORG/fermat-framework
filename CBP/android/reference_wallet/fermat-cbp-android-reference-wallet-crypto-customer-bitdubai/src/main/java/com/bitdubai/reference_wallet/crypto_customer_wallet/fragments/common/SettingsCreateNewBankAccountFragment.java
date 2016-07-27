@@ -3,6 +3,10 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +16,22 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BankAccountData;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +40,17 @@ import java.util.List;
 /**
  * Created by guillermo on 17/02/16.
  */
-public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class SettingsCreateNewBankAccountFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
+        implements AdapterView.OnItemSelectedListener, View.OnClickListener {
     // Data
     private FiatCurrency[] currencies;
     private FiatCurrency selectedCurrency;
+    private static int MAX_LENGHT_BANK_NAME = 15;
+    private static int MAX_LENGHT_BANK_ALIAS = 10;
+    private static int MAX_LENGHT_BANK_ACCOUNT = 25;
+    private String lastActivity = "";
+    private boolean isFromNegDetail = false;
 
     private BankAccountType[] accountTypes;
     private BankAccountType selectedAccountType;
@@ -42,8 +59,44 @@ public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment
     private FermatEditText bankNameEditText;
     private FermatEditText accountNumberEditText;
     private FermatEditText accountAliasEditText;
+    FermatTextView bankNameCount, accountNumberCount, accountAliasCount;
 
     private CryptoCustomerWalletModuleManager moduleManager;
+    private ErrorManager errorManager;
+
+    private final TextWatcher bankNameTextWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+    };
+    private final TextWatcher accountNumberTextWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+    };
+    private final TextWatcher accountAliasTextWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+    };
 
     public static SettingsCreateNewBankAccountFragment newInstance() {
         return new SettingsCreateNewBankAccountFragment();
@@ -72,14 +125,41 @@ public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment
         accountTypesSpinner.setAdapter(adapter);
 
         bankNameEditText = (FermatEditText) layout.findViewById(R.id.ccw_bank_name_edit_text);
-
         accountNumberEditText = (FermatEditText) layout.findViewById(R.id.ccw_account_number_edit_text);
         accountAliasEditText = (FermatEditText) layout.findViewById(R.id.ccw_account_alias_edit_text);
+        bankNameCount = (FermatTextView) layout.findViewById(R.id.ccw_bank_name_edit_text_count);
+        accountAliasCount = (FermatTextView) layout.findViewById(R.id.ccw_account_alias_edit_text_count);
+        accountNumberCount = (FermatTextView) layout.findViewById(R.id.ccw_account_number_edit_text_count);
+
+        bankNameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_NAME)});
+        bankNameEditText.addTextChangedListener(bankNameTextWatcher);
+
+        accountNumberEditText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+        accountNumberEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_ACCOUNT)});
+        accountNumberEditText.addTextChangedListener(accountNumberTextWatcher);
+
+        accountAliasEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_ALIAS)});
+        accountAliasEditText.addTextChangedListener(accountAliasTextWatcher);
+
+        bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME));
+        accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT));
+        accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS));
 
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
-
-        moduleManager = ((CryptoCustomerWalletSessionReferenceApp) appSession).getModuleManager();
-
+        try {
+            moduleManager = appSession.getModuleManager();
+            errorManager = appSession.getErrorManager();
+            lastActivity = (String) appSession.getData(FragmentsCommons.LAST_ACTIVITY);
+            setChangeBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS);
+            if (lastActivity.equals(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode())) {
+                setChangeBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS);
+                isFromNegDetail = true;
+            }
+            appSession.setData(FragmentsCommons.LAST_ACTIVITY, "");
+        } catch (Exception e) {
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+        }
         configureToolbar();
 
         return layout;
@@ -120,39 +200,41 @@ public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment
                 accountNumberEditText.getText().toString(),
                 accountAliasEditText.getText().toString(), "");
 
-        if (data.isAllDataFilled()) {
-            List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(CryptoCustomerWalletSessionReferenceApp.BANK_ACCOUNT_LIST);
-            bankAccounts.add(data);
+        if (data.isAllDataFilled() && moduleManager != null) {
 
-            if (moduleManager != null) {
-                for (BankAccountNumber bankAccount : bankAccounts) {
-                    try {
-                        moduleManager.createNewBankAccount(bankAccount.getAccount(), bankAccount.getCurrencyType());
-                    } catch (CantCreateBankAccountPurchaseException ignore) {
-                    }
-                }
+
+            //Try to save the bank account
+            try {
+                moduleManager.createNewBankAccount(data.toString(), data.getCurrencyType());
+
+                //Add new bank account to session
+                List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
+                bankAccounts.add(data);
+
+            } catch (CantCreateBankAccountPurchaseException ignore) {
             }
+            if (isFromNegDetail)
+                getActivity().onBackPressed();
+            else
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS, appSession.getAppPublicKey());
+        } else
+            Toast.makeText(getActivity(), "Please fill all the fields", Toast.LENGTH_LONG).show();
 
-            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS, appSession.getAppPublicKey());
-
-        } else {
-            Toast.makeText(getActivity(), "Need to set the fields", Toast.LENGTH_LONG).show();
-        }
     }
 
     private List<String> getListOfCurrenciesNames(FiatCurrency[] countries) {
         List<String> data = new ArrayList<>();
 
         for (FiatCurrency country : countries)
-            data.add(country.getFriendlyName() + " (" + country.getCode() + ")");
+            data.add(new StringBuilder().append(country.getFriendlyName()).append(" (").append(country.getCode()).append(")").toString());
 
         return data;
     }
 
     private List<String> getListOfAccountTypeNames() {
         List<String> data = new ArrayList<>();
-        data.add("Saving (" + BankAccountType.SAVINGS.getCode() + ")");
-        data.add("Current (" + BankAccountType.CHECKING.getCode() + ")");
+        data.add(new StringBuilder().append("Saving (").append(BankAccountType.SAVINGS.getCode()).append(")").toString());
+        data.add(new StringBuilder().append("Current (").append(BankAccountType.CHECKING.getCode()).append(")").toString());
 
         return data;
     }

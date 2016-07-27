@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -44,11 +46,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_ACCURACY_COLUMN_NAME;
 import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME;
 import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME;
 import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME;
 import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME;
 import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_TABLE_NAME;
+
 
 /**
  * Created by Yordin Alayn on 09.10.15.
@@ -72,11 +77,11 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
     /*INITIALIZE DATABASE*/
     public void initialize() throws CantInitializeCryptoCustomerIdentityDatabaseException {
         try {
-            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, CryptoCustomerIdentityDatabaseConstants.DATABASE_NAME);
         } catch (DatabaseNotFoundException e) {
             try {
                 CryptoCustomerIdentityDatabaseFactory databaseFactory = new CryptoCustomerIdentityDatabaseFactory(pluginDatabaseSystem);
-                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = databaseFactory.createDatabase(pluginId, CryptoCustomerIdentityDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeCryptoCustomerIdentityDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             } catch (Exception z) {
@@ -90,13 +95,15 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
     }
 
     /*CREATE NEW IDENTITY*/
-    public void createNewCryptoCustomerIdentity (final CryptoCustomerIdentity cryptoCustomer,
-                                                 final String                 privateKey    ,
-                                                 final DeviceUser             deviceUser    ) throws CantCreateNewDeveloperException {
+    public void createNewCryptoCustomerIdentity(final CryptoCustomerIdentity cryptoCustomer,
+                                                final String privateKey,
+                                                final DeviceUser deviceUser,
+                                                long accuracy,
+                                                GeoFrequency frequency) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists(cryptoCustomer.getAlias()))
-                throw new CantCreateNewDeveloperException ("Cant create new Crypto Customer Identity, alias exists.", "Crypto Customer Identity", "Cant create new Crypto Customer Identity, alias exists.");
+                throw new CantCreateNewDeveloperException("Cant create new Crypto Customer Identity, alias exists.", "Crypto Customer Identity", "Cant create new Crypto Customer Identity, alias exists.");
 
             persistNewCryptoCustomerIdentityPrivateKeysFile(cryptoCustomer.getPublicKey(), privateKey);
 
@@ -104,30 +111,36 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
 
             DatabaseTableRecord record = table.getEmptyRecord();
 
-            record.setStringValue(CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME            , cryptoCustomer.getPublicKey());
-            record.setStringValue(CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME                 , cryptoCustomer.getAlias());
+            record.setStringValue(CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, cryptoCustomer.getPublicKey());
+            record.setStringValue(CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME, cryptoCustomer.getAlias());
             record.setStringValue(CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
-            record.setStringValue(CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME          , Boolean.toString(cryptoCustomer.isPublished()));
+            record.setStringValue(CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME, Boolean.toString(cryptoCustomer.isPublished()));
+            record.setLongValue(CRYPTO_CUSTOMER_ACCURACY_COLUMN_NAME, accuracy);
+            record.setFermatEnum(CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME, frequency);
 
             table.insertRecord(record);
 
             persistNewCryptoCustomerIdentityProfileImage(cryptoCustomer.getPublicKey(), cryptoCustomer.getProfileImage());
 
-        } catch (CantInsertRecordException e){
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Customer Identity", "Cant create new Crypto Customer Identity, insert database problems.");
-        } catch (CantPersistPrivateKeyException e){
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Customer Identity", "Cant create new Crypto Customer Identity,persist private key error.");
+        } catch (CantInsertRecordException e) {
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Crypto Customer Identity", "Cant create new Crypto Customer Identity, insert database problems.");
+        } catch (CantPersistPrivateKeyException e) {
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Crypto Customer Identity", "Cant create new Crypto Customer Identity,persist private key error.");
         } catch (Exception e) {
-            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Identity", "Cant create new Crypto Customer Identity, unknown failure.");
+            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Identity", "Cant create new Crypto Customer Identity, unknown failure.");
         }
     }
 
-    public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile) throws CantUpdateCustomerIdentityException {
+    public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile,
+                                             long accuracy,
+                                             GeoFrequency frequency) throws CantUpdateCustomerIdentityException {
         try {
             DatabaseTable table = this.database.getTable(CRYPTO_CUSTOMER_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
             table.addStringFilter(CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             record.setStringValue(CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME, alias);
+            record.setLongValue(CRYPTO_CUSTOMER_ACCURACY_COLUMN_NAME, accuracy);
+            record.setFermatEnum(CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME, frequency);
             table.updateRecord(record);
 
             updateCryptoCustomerIdentityProfileImage(publicKey, imageProfile);
@@ -140,22 +153,22 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
     }
 
     /*GENERATE LIST IDENTITY*/
-    public List<CryptoCustomerIdentity> getAllCryptoCustomerIdentitiesFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListCryptoCustomerIdentitiesException {
+    public List<CryptoCustomerIdentity> getAllCryptoCustomerIdentitiesFromCurrentDeviceUser(DeviceUser deviceUser) throws CantListCryptoCustomerIdentitiesException {
         List<CryptoCustomerIdentity> list = new ArrayList<CryptoCustomerIdentity>();
         DatabaseTable table;
         try {
-            table = this.database.getTable (CRYPTO_CUSTOMER_TABLE_NAME);
+            table = this.database.getTable(CRYPTO_CUSTOMER_TABLE_NAME);
             if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException ("Cant get Crypto Customer Identity list, table not found.", "Crypto Customer Identity", "Cant get Crypto Customer Identity list, table not found.");
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Crypto Customer Identity list, table not found.", "Crypto Customer Identity", "Cant get Crypto Customer Identity list, table not found.");
             }
             table.addStringFilter(CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
-            for (DatabaseTableRecord record : table.getRecords ()) {
+            for (DatabaseTableRecord record : table.getRecords()) {
                 list.add(getIdentityFromRecord(record));
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListCryptoCustomerIdentitiesException(e.getMessage(), e, "Crypto Customer Identity", "Cant load " + CRYPTO_CUSTOMER_TABLE_NAME + " table in memory.");
+            throw new CantListCryptoCustomerIdentitiesException(e.getMessage(), e, "Crypto Customer Identity", new StringBuilder().append("Cant load ").append(CRYPTO_CUSTOMER_TABLE_NAME).append(" table in memory.").toString());
         } catch (CantGetCryptoCustomerIdentityPrivateKeyException e) {
             throw new CantListCryptoCustomerIdentitiesException(e.getMessage(), e, "Crypto Customer Identity", "Can't get private key.");
         } catch (Exception e) {
@@ -164,12 +177,12 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
         return list;
     }
 
-    public final void changeExposureLevel(final String        publicKey    ,
-                                          final boolean       exposureLevel) throws CantChangeExposureLevelException, IdentityNotFoundException {
+    public final void changeExposureLevel(final String publicKey,
+                                          final boolean exposureLevel) throws CantChangeExposureLevelException, IdentityNotFoundException {
 
         try {
 
-            final DatabaseTable table = this.database.getTable (CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_TABLE_NAME);
+            final DatabaseTable table = this.database.getTable(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_TABLE_NAME);
 
             table.addStringFilter(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
@@ -183,7 +196,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
                 table.updateRecord(record);
 
             } else
-                throw new IdentityNotFoundException("publicKey: "+publicKey, "Cannot find an Identity with that publicKey.");
+                throw new IdentityNotFoundException(new StringBuilder().append("publicKey: ").append(publicKey).toString(), "Cannot find an Identity with that publicKey.");
 
         } catch (final CantUpdateRecordException e) {
 
@@ -198,7 +211,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
 
         try {
 
-            final DatabaseTable table = this.database.getTable (CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_TABLE_NAME);
+            final DatabaseTable table = this.database.getTable(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_TABLE_NAME);
 
             table.addStringFilter(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
@@ -207,8 +220,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
             if (!records.isEmpty())
                 return getIdentityFromRecord(records.get(0));
             else
-                return null;
-//                throw new IdentityNotFoundException("publicKey: "+publicKey, "Cannot find an Identity with that publicKey.");
+                throw new IdentityNotFoundException(new StringBuilder().append("publicKey: ").append(publicKey).toString(), "Cannot find a Customer Identity with that publicKey.");
 
         } catch (final CantGetCryptoCustomerIdentityProfileImageException |
                 CantGetCryptoCustomerIdentityPrivateKeyException e) {
@@ -227,7 +239,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    new StringBuilder().append(CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -235,14 +247,14 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
             profileImage = file.getContent();
         } catch (CantLoadFileException e) {
             throw new CantGetCryptoCustomerIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
-        } catch (FileNotFoundException |CantCreateFileException e) {
+        } catch (FileNotFoundException | CantCreateFileException e) {
             throw new CantGetCryptoCustomerIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
         } catch (Exception e) {
-            throw  new CantGetCryptoCustomerIdentityProfileImageException("CAN'T GET IMAGE PROFILE ",FermatException.wrapException(e),"", "");
+            throw new CantGetCryptoCustomerIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", FermatException.wrapException(e), "", "");
         }
         return profileImage;
     }
-    
+
     /*INTERFACE IMPLEMENTATION*/
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
@@ -250,11 +262,11 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
     }
 
     /*CREATE FILE THE PRIVATE KEY*/
-    private void  persistNewCryptoCustomerIdentityPrivateKeysFile(String publicKey,String privateKey) throws CantPersistPrivateKeyException {
+    private void persistNewCryptoCustomerIdentityPrivateKeysFile(String publicKey, String privateKey) throws CantPersistPrivateKeyException {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    new StringBuilder().append(CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PRIVATE_KEYS_FILE_NAME).append("_").append(publicKey).toString(),
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -265,16 +277,16 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
         } catch (CantCreateFileException e) {
             throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
         } catch (Exception e) {
-            throw  new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ",FermatException.wrapException(e),"", "");
+            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", FermatException.wrapException(e), "", "");
         }
     }
 
     /*CREATE FILE THE PROFILE IMEAGE*/
-    private void  persistNewCryptoCustomerIdentityProfileImage(String publicKey,byte[] profileImage) throws CantPersistProfileImageException {
+    private void persistNewCryptoCustomerIdentityProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    new StringBuilder().append(CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -285,7 +297,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
         } catch (CantCreateFileException e) {
             throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
         } catch (Exception e) {
-            throw  new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ",FermatException.wrapException(e),"", "");
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -295,7 +307,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    new StringBuilder().append(CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PRIVATE_KEYS_FILE_NAME).append("_").append(publicKey).toString(),
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -303,39 +315,48 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
             privateKey = file.getContent();
         } catch (CantLoadFileException e) {
             throw new CantGetCryptoCustomerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
-        } catch (FileNotFoundException |CantCreateFileException e) {
+        } catch (FileNotFoundException | CantCreateFileException e) {
             throw new CantGetCryptoCustomerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
         } catch (Exception e) {
-            throw  new CantGetCryptoCustomerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ",FermatException.wrapException(e),"", "");
+            throw new CantGetCryptoCustomerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", FermatException.wrapException(e), "", "");
         }
         return privateKey;
     }
 
     /*GET ALIAS IDENTITY*/
-    private boolean aliasExists (String alias) throws CantCreateNewDeveloperException {
+    private boolean aliasExists(String alias) throws CantCreateNewDeveloperException {
         DatabaseTable table;
         try {
-            table = this.database.getTable (CRYPTO_CUSTOMER_TABLE_NAME);
+            table = this.database.getTable(CRYPTO_CUSTOMER_TABLE_NAME);
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists", "Crypto Customer Identity", "");
             }
             table.addStringFilter(CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
             table.loadToMemory();
-            return table.getRecords ().size () > 0;
+            return table.getRecords().size() > 0;
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantCreateNewDeveloperException (em.getMessage(), em, "Crypto Customer Identity", "Cant load " + CRYPTO_CUSTOMER_TABLE_NAME + " table in memory.");
+            throw new CantCreateNewDeveloperException(em.getMessage(), em, "Crypto Customer Identity", new StringBuilder().append("Cant load ").append(CRYPTO_CUSTOMER_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
-            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Identity", "unknown failure.");
+            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Identity", "unknown failure.");
         }
     }
 
     private CryptoCustomerIdentity getIdentityFromRecord(final DatabaseTableRecord record) throws CantGetCryptoCustomerIdentityProfileImageException, CantGetCryptoCustomerIdentityPrivateKeyException {
 
-        String  publicKey    = record.getStringValue (CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-        String  alias        = record.getStringValue (CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME     );
-        boolean published    = Boolean.parseBoolean(record.getStringValue(CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME));
+        String publicKey = record.getStringValue(CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+        String alias = record.getStringValue(CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME);
+        boolean published = Boolean.parseBoolean(record.getStringValue(CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME));
+        long accuracy = record.getLongValue(CRYPTO_CUSTOMER_ACCURACY_COLUMN_NAME);
+        GeoFrequency frequency = GeoFrequency.NONE;
+        try {
 
-        String privateKey   = getCryptoCustomerIdentityPrivateKey(publicKey);
+            frequency = GeoFrequency.getByCode(record.getStringValue(CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME));
+
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
+
+        String privateKey = getCryptoCustomerIdentityPrivateKey(publicKey);
         byte[] profileImage = getCryptoCustomerIdentityProfileImagePrivateKey(publicKey);
 
         return new CryptoCustomerIdentityImpl(
@@ -343,23 +364,25 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
                 privateKey,
                 publicKey,
                 profileImage,
-                published
+                published,
+                accuracy,
+                frequency
         );
     }
 
     private void updateCryptoCustomerIdentityProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
         try {
             this.pluginFileSystem.deleteBinaryFile(pluginId,
-                DeviceDirectory.LOCAL_USERS.getName(),
-                CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
-                FilePrivacy.PRIVATE,
-                FileLifeSpan.PERMANENT);
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    new StringBuilder().append(CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT);
 
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
-                DeviceDirectory.LOCAL_USERS.getName(),
-                CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
-                FilePrivacy.PRIVATE,
-                FileLifeSpan.PERMANENT
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    new StringBuilder().append(CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
             );
             file.setContent(profileImage);
             file.persistToMedia();

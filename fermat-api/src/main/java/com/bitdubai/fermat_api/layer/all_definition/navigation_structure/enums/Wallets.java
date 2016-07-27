@@ -19,6 +19,8 @@ public enum Wallets {
     CWP_WALLET_RUNTIME_WALLET_AGE_TEEN_ALL_BITDUBAI("TEENS"),
     CWP_WALLET_RUNTIME_WALLET_AGE_YOUNG_ALL_BITDUBAI("YOUNG"),
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI("BASIC"),
+    CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI("FERMAT"),
+
     DAP_ASSET_ISSUER_WALLET("dap_asset_issuer_wallet"),
     DAP_ASSET_USER_WALLET("dap_asset_user_wallet"),
     DAP_REDEEM_POINT_WALLET("dap_redeem_point_wallet"),
@@ -43,6 +45,8 @@ public enum Wallets {
                 return Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_YOUNG_ALL_BITDUBAI;
             case "ADULTS":
                 return Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI;
+            case "FERMAT":
+                return Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI;
             case "TEENS":
                 return Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_TEEN_ALL_BITDUBAI;
             case "KIDS":
@@ -67,7 +71,7 @@ public enum Wallets {
                 throw new InvalidParameterException(
                         InvalidParameterException.DEFAULT_MESSAGE,
                         null,
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "This Code Is Not Valid for the Wallets enum");
         }
 

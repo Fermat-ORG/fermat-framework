@@ -3,22 +3,23 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.ActorFoundEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorFoundEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionSuccessEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileListMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientConnectionsManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientConnectionsManager;
 
 import javax.websocket.Session;
 
 /**
  * The Class <code>CheckInProfileDiscoveryQueryRespondProcessor</code>
- * process all packages received the type <code>PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND</code><p/>
+ * process all packages received the type <code>PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPONSE</code><p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/04/2016.
  *
@@ -36,12 +37,12 @@ public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcess
     /**
      * Constructor whit parameter
      *
-     * @param communicationsNetworkClientChannel register
+     * @param networkClientCommunicationChannel register
      */
-    public CheckInProfileDiscoveryQueryRespondProcessor(final com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public CheckInProfileDiscoveryQueryRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
-                communicationsNetworkClientChannel,
-                PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND
+                networkClientCommunicationChannel,
+                PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPONSE
         );
         this.networkClientConnectionsManager =  (NetworkClientConnectionsManager) ClientContext.get(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER);
     }
@@ -84,17 +85,17 @@ public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcess
                 /*
                  * this is to filter the networkservice intermediate
                  */
-                ((ActorFoundEvent) event).setNetworkServiceTypeIntermediate(checkInProfileListMsgRespond.getDiscoveryQueryParameters().getNetworkServiceTypeIntermediate());
+                ((NetworkClientActorFoundEvent) event).setNetworkServiceTypeIntermediate(checkInProfileListMsgRespond.getDiscoveryQueryParameters().getNetworkServiceTypeIntermediate());
 
                 /*
                  * this is to know who is the nodeprofile to send message
                  */
-                ((ActorFoundEvent) event).setActorProfile((ActorProfile)checkInProfileListMsgRespond.getProfileList().get(0));
+                ((NetworkClientActorFoundEvent) event).setActorProfile((ActorProfile)checkInProfileListMsgRespond.getProfileList().get(0));
 
                 /*
                  * this is to filter when the client is checkin in other node
                  */
-                ((ActorFoundEvent) event).setUriToNode(uriToNode);
+                ((NetworkClientActorFoundEvent) event).setUriToNode(uriToNode);
 
                 /*
                  * Raise the event

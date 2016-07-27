@@ -17,12 +17,13 @@ public class testSetLoggingLevelPerClass {
     private CustomerOfflinePaymentPluginRoot customerOfflinePaymentPluginRoot = new CustomerOfflinePaymentPluginRoot();
     static final LogLevel logLevel = LogLevel.AGGRESSIVE_LOGGING;
     static final String classToTest = "Test";
+
     @Test
-    public void TestSetLogLevelPerClass(){
-        Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>() ;
+    public void TestSetLogLevelPerClass() {
+        Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
         newLoggingLevel.put(classToTest, logLevel);
         customerOfflinePaymentPluginRoot.setLoggingLevelPerClass(newLoggingLevel);
-        assertEquals(CustomerOfflinePaymentPluginRoot.getLogLevelByClass(classToTest), logLevel );
+        assertEquals(CustomerOfflinePaymentPluginRoot.getLogLevelByClass(classToTest), logLevel);
         LogLevel newLogLevel = LogLevel.MINIMAL_LOGGING;
         newLoggingLevel.clear();
         newLoggingLevel.put(classToTest, newLogLevel);
@@ -31,17 +32,18 @@ public class testSetLoggingLevelPerClass {
     }
 
     @Test(expected = Exception.class)
-    public void TestSetLogLevelPerClass_Should_Return_Exception() throws Exception{
-        Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>() ;
+    public void TestSetLogLevelPerClass_Should_Return_Exception() throws Exception {
+        Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
         newLoggingLevel.put(classToTest, logLevel);
         customerOfflinePaymentPluginRoot.setLoggingLevelPerClass(null);
     }
+
     @Test
-    public void TestGetLogLevelPerClass_Should_Return_Default_Log_Level() throws Exception{
-        Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>() ;
+    public void TestGetLogLevelPerClass_Should_Return_Default_Log_Level() throws Exception {
+        Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
         newLoggingLevel.put(classToTest, logLevel);
         customerOfflinePaymentPluginRoot.setLoggingLevelPerClass(newLoggingLevel);
-        assertEquals(customerOfflinePaymentPluginRoot.getLogLevelByClass(null),logLevel.MINIMAL_LOGGING);
+        assertEquals(customerOfflinePaymentPluginRoot.getLogLevelByClass(null), logLevel.MINIMAL_LOGGING);
     }
 
 

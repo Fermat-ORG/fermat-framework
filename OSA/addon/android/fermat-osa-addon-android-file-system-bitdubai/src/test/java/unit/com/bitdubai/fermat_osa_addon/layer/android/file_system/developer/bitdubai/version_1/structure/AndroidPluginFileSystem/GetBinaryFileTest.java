@@ -1,13 +1,11 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.AndroidPluginFileSystem;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.AndroidPluginFileSystem;
 
 import org.junit.Before;
@@ -44,7 +42,7 @@ public class GetBinaryFileTest {
     private FileLifeSpan testLifeSpan;
 
     @Before
-    public void setUpValues(){
+    public void setUpValues() {
         testId = UUID.randomUUID();
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
         testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
@@ -56,9 +54,9 @@ public class GetBinaryFileTest {
     }
 
     @Test
-    public void GetTextFile_FileExists_TheFileIsLoaded() throws Exception{
+    public void GetTextFile_FileExists_TheFileIsLoaded() throws Exception {
         testFileSystem = new AndroidPluginFileSystem(testContext);
-        testFile1 = testFileSystem.createBinaryFile(testId,testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
+        testFile1 = testFileSystem.createBinaryFile(testId, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         testFile1.setContent("TESTCONTENT".getBytes("UTF-8"));
         testFile1.persistToMedia();
 
@@ -68,7 +66,7 @@ public class GetBinaryFileTest {
     }
 
     @Test
-    public void GetTextFile_FileDoesntExists_ThrowsException() throws Exception{
+    public void GetTextFile_FileDoesntExists_ThrowsException() throws Exception {
         testFileSystem = new AndroidPluginFileSystem(testContext);
         catchException(testFileSystem).getTextFile(testId, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(caughtException()).isNotNull();
@@ -76,7 +74,7 @@ public class GetBinaryFileTest {
     }
 
     @Test
-    public void GetTextFile_NoContext_ThrowsException() throws Exception{
+    public void GetTextFile_NoContext_ThrowsException() throws Exception {
         testFileSystem = new AndroidPluginFileSystem(null);
         catchException(testFileSystem).getTextFile(testId, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(caughtException()).isNotNull();

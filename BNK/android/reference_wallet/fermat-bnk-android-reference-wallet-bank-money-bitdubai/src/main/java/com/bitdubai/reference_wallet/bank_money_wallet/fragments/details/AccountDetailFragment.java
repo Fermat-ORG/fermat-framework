@@ -34,7 +34,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.TransactionListAdapter;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
-import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
@@ -46,8 +45,10 @@ import java.util.List;
 /**
  * Created by memo on 08/12/15.
  */
-public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTransactionRecord,ReferenceAppFermatSession,ResourceProviderManager> implements FermatListItemListeners<BankMoneyTransactionRecord>, DialogInterface.OnDismissListener {
+public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTransactionRecord,ReferenceAppFermatSession<BankMoneyWalletModuleManager>,ResourceProviderManager> implements FermatListItemListeners<BankMoneyTransactionRecord>, DialogInterface.OnDismissListener {
 
+    private Thread refresherThread;
+    private boolean threadIsRunning = false;
 
     private BankMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -94,7 +95,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         imageAccount = (int) appSession.getData("account_image");
         try {
 
-            moduleManager = ((BankMoneyWalletSessionReferenceApp) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -104,7 +105,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         }
         System.out.println("DATA =" + data.getAccount());
         bankAccountNumber = data;
-        transactionList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        onRefresh();
     }
 
     @Override
@@ -128,6 +129,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
                 .setTitle("prueba Title")
                 .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)
                 .setTextFooter(R.string.bnk_bank_money_wallet_account_footer).setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setVIewColor(R.color.bnk_gradient_end_background)
+                .setIsCheckEnabled(true)
                 .build();
         List<BankAccountNumber> tempList = new ArrayList<>();
         tempList.add(bankAccountNumber);
@@ -154,13 +157,12 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         availableText = (FermatTextView) layout.findViewById(R.id.available_text);
         bookText = (FermatTextView) layout.findViewById(R.id.book_text);
         updateBalance();
-        showOrHideNoTransactionsView(transactionList.isEmpty());
         handleWidhtrawalFabVisibilityAccordingToBalance();
 
     }
 
     private void launchCreateTransactionDialog(TransactionType transactionType) {
-        dialog = new CreateTransactionFragmentDialog( errorManager,getActivity(), (BankMoneyWalletSessionReferenceApp) appSession, getResources(), transactionType, bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), null, null);
+        dialog = new CreateTransactionFragmentDialog( errorManager,getActivity(), appSession, getResources(), transactionType, bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), null, null);
         dialog.setOnDismissListener(this);
         dialog.show();
     }
@@ -170,8 +172,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         accountText.setText(bankAccountNumber.getAccount());
         aliasText.setText(bankAccountNumber.getAlias());
 
-        availableTextView.setText(moneyFormat.format(moduleManager.getAvailableBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
-        bookTextView.setText(moneyFormat.format(moduleManager.getBookBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
+        availableTextView.setText(String.format("%s %s", moneyFormat.format(moduleManager.getAvailableBalance(bankAccountNumber.getAccount())), bankAccountNumber.getCurrencyType().getCode()));
+        bookTextView.setText(String.format("%s %s", moneyFormat.format(moduleManager.getBookBalance(bankAccountNumber.getAccount())), bankAccountNumber.getCurrencyType().getCode()));
         balanceText.setTextColor(getResources().getColor(R.color.text_color_soft_blue));
         if (availableTextView.getText().equals(bookTextView.getText())) {
             bookTextView.setVisibility(View.GONE);
@@ -197,23 +199,9 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, ReferenceWalletConstants.EDIT_ACCOUNT_ACTION, 0, "Edit Account").setIcon(R.drawable.bw_ic_action_edit)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(0, ReferenceWalletConstants.HELP_ACTION, 0, "Help").setIcon(R.drawable.bw_help_icon_action_bar)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int selectedItemId = item.getItemId();
-        if (selectedItemId == ReferenceWalletConstants.EDIT_ACCOUNT_ACTION) {
-
-            changeActivity(Activities.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT, appSession.getAppPublicKey());
-            return true;
-        }
-        else if (selectedItemId == ReferenceWalletConstants.HELP_ACTION) {
+        if (selectedItemId == ReferenceWalletConstants.HELP_ACTION) {
             presentationDialog.show();
             return true;
         }
@@ -249,14 +237,15 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
                 transactionList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(transactionList);
-                showOrHideNoTransactionsView(transactionList.isEmpty());
-                updateBalance();
             }
         }
+
+        showOrHideNoTransactionsView(transactionList);
+        updateBalance();
     }
 
-    private void showOrHideNoTransactionsView(boolean show) {
-        if (show) {
+    private void showOrHideNoTransactionsView(ArrayList<BankMoneyTransactionRecord> transactions) {
+        if (transactions == null || transactions.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emtyView.setVisibility(View.VISIBLE);
         } else {
@@ -316,7 +305,14 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         List<BankMoneyTransactionRecord> data = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                data.addAll(moduleManager.getPendingTransactions());
+
+                List<BankMoneyTransactionRecord> pendingTransactions = moduleManager.getPendingTransactions(bankAccountNumber.getAccount());
+                if(!pendingTransactions.isEmpty())
+                    startRefresh();
+                else
+                    stopRefresh();
+
+                data.addAll(pendingTransactions);
                 data.addAll(moduleManager.getTransactions(bankAccountNumber.getAccount()));
 
             } catch (Exception ex) {
@@ -343,9 +339,9 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     @Override
     public void onUpdateViewOnUIThread(String code) {
         switch (code) {
-            case BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW:
-                onRefresh();
-                break;
+            //case BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW:
+            //    onRefresh();
+            //    break;
             case BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_ERROR:
                 Toast.makeText(getActivity(), "An error ocurred while applying the transaction, please try again later", Toast.LENGTH_SHORT).show();
                 onRefresh();
@@ -361,4 +357,50 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
             moduleManager.cancelAsyncBankTransaction(data);
         }
     }
+
+
+    /* Refresher thread code */
+    public final void startRefresh() {
+        if(!threadIsRunning) {
+            try { Thread.sleep(500); } catch (InterruptedException interruptedException) {}
+
+            this.refresherThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (threadIsRunning)
+                        doRefresh();
+                }
+            });
+            threadIsRunning = true;
+            this.refresherThread.start();
+        }
+    }
+
+    public final void stopRefresh() {
+
+        if (threadIsRunning)
+            this.refresherThread.interrupt();
+        threadIsRunning = false;
+    }
+
+    private void doRefresh() {
+
+        while (threadIsRunning) {
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException interruptedException) {
+                threadIsRunning = false;
+                return;
+            }
+
+            if (refresherThread.isInterrupted()) {
+                threadIsRunning = false;
+                return;
+            }
+
+            onRefresh();
+        }
+    }
+
 }

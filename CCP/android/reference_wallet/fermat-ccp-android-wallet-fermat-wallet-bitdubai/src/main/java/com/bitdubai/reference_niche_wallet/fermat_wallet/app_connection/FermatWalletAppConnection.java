@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -19,7 +20,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.header.FermatWalletHeaderPainter;
-
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.FermatWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragment_factory.ReferenceWalletFragmentFactory;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
@@ -66,7 +66,7 @@ public class FermatWalletAppConnection extends AppConnections<ReferenceAppFermat
 
         //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
 
-        return new FermatWalletNavigationViewPainter(getContext(),this.getFullyLoadedSession(),getApplicationManager()); //getApplicationManager()
+        return new FermatWalletNavigationViewPainter(getContext(),this.getFullyLoadedSession(),getApplicationManager());
 
     }
 
@@ -107,5 +107,10 @@ public class FermatWalletAppConnection extends AppConnections<ReferenceAppFermat
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public ResourceSearcher getResourceSearcher() {
+        return new FermatWalletSearcher();
     }
 }

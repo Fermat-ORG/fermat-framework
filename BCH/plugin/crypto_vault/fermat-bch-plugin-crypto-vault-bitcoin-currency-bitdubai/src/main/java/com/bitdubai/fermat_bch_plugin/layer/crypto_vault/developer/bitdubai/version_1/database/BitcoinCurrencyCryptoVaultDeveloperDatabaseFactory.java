@@ -202,6 +202,24 @@ public class BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory {//implements De
 
 
 
+        /**
+         * Table Imported_Seeds columns.
+         */
+        List<String> imported_seedColumns = new ArrayList<String>();
+
+        imported_seedColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_DATE_COLUMN_NAME);
+        imported_seedColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_NETWORK_TYPE_COLUMN_NAME);
+        imported_seedColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_WALLET_ADDRESS_COLUMN_NAME);
+        imported_seedColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_BALANCE_COLUMN_NAME);
+        imported_seedColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_STATUS_COLUMN_NAME);
+        /**
+         * Table Imported_Seeds addition.
+         */
+        DeveloperDatabaseTable imported_SeedTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_TABLE_NAME, imported_seedColumns);
+        tables.add(imported_SeedTable);
+
+
+
         return tables;
     }
 

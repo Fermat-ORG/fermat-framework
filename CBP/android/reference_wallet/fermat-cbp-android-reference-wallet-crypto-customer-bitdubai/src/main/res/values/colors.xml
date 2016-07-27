@@ -36,6 +36,7 @@
     <color name="waiting_for_text">#6b7378</color>
     <color name="waiting_for_broker_list_item_background">#f3f3f3</color>
     <color name="waiting_for_customer_list_item_background">#ffffff</color>
+    <color name="waiting_for_closing_list_item_background">#acdef9</color>
     <color name="light_grey">#EEE</color>
     <color name="withe">#FFFFFF</color>
     <color name="black">#000000</color>
@@ -55,6 +56,7 @@
     <color name="card_background_status_inactive">#a4a4a4</color>
     <color name="note_card_background">#363636</color>
     <color name="ccw_negotiation_details_background">#222</color>
+    <color name="ccw_provider_is_down">#CC0000</color>
 
     <color name="note_card_separator_background">#b5009dff</color>
     <color name="description_text_status_changed">#ffffff</color>
@@ -69,5 +71,7 @@
 
     <color name="ccw_contract_status_normal">#6b7378</color>
     <color name="ccw_contract_status_about_to_expire">#B93B3C</color>
+
+    <color name="ccw_wizard_wallet_button_color">#E5007E</color>
 
 </resources>

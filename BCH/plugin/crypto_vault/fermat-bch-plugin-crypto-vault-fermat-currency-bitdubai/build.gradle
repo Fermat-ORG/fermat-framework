@@ -1,0 +1,39 @@
+apply plugin: 'java'
+apply plugin:  'maven'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.7
+group = "com.bitdubai.bch.vault"
+version = '2'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'bch-vault',
+                'Implementation-Version': '2'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':fermat-bch-api')
+    compile project(':fermat-pip-api')
+    compile files('src/main/java/com/bitdubai/fermat_bch_plugin/layer/crypto_vault/fermat/developer/bitdubai/bitdubai/version_1/fermatj-core-0.13.6.jar')
+}
+
+
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            // telling gradle to publish project's jar archive (2)
+            from components.java
+
+        }
+    }
+    // telling gradle to publish artifact to local directory (3)
+    repositories {
+        maven {
+//            url "file:/${project.projectDir}/artifacts"
+            url "file:/${System.properties['user.home']}/artifacts"
+        }
+    }
+}

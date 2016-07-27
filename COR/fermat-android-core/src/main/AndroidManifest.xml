@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.bitdubai.fermat">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_LOGS"/>
+    <!-- to get location using GPS -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <!-- Permission to boot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="23" />
+
+    <application
+        android:name="com.bitdubai.android_core.app.FermatApplication"
+        android:allowBackup="true"
+        android:largeHeap="true"
+        android:icon="@mipmap/ic_launcher"
+        >
+
+
+        <activity
+            android:name="com.bitdubai.android_core.app.StartActivity"
+
+            android:icon="@mipmap/ic_launcher"
+            android:theme="@style/AppTheme.NoActionBarStart"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <!--
+        <receiver android:name="com.bitdubai.android_core.app.BootupReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        -->
+
+        <!-- Falta darle el permiso a alguien para que pueda o no apagar el servicio este -->
+
+
+
+        <activity
+            android:name="com.bitdubai.android_core.app.AppActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.android_core.app.StartActivity"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait"/>
+        </activity>
+
+        <activity
+            android:name="com.bitdubai.android_core.app.DesktopActivity"
+            android:theme="@style/AppThemeDesktop"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+
+        <activity
+            android:name="com.bitdubai.android_core.app.common.version_1.test.ScrollingActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+
+
+        </activity>
+
+        <service android:name="com.bitdubai.android_core.app.common.version_1.notifications.NotificationService">
+
+            <intent-filter>
+                <action android:name="org.fermat.NOTIFICATION" />
+            </intent-filter>
+
+        </service>
+
+
+        <activity
+            android:name="com.bitdubai.android_core.app.WizardActivity"
+            android:label="Wizard"
+            android:theme="@style/AppTheme.NoNavigation"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            />
+
+        <activity android:name="org.acra.CrashReportDialog"
+            android:theme="@style/Theme.Dialog"
+            android:process=":error_report"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true" />
+
+
+        <activity android:name="com.bitdubai.android_core.app.common.version_1.recents.RecentsActivity"
+            android:process=":recents"
+            android:theme="@style/AppThemeDesktop"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:launchMode="singleInstance"
+            android:hardwareAccelerated="true"
+            />
+
+        <receiver android:name="com.bitdubai.android_core.app.common.version_1.receivers.AppLauncherReceiver">
+
+            <intent-filter>
+                <action android:name="org.fermat.APP_LAUNCHER">
+                </action>
+            </intent-filter>
+
+        </receiver>
+
+        <receiver android:name="com.bitdubai.android_core.app.common.version_1.receivers.FermatSystemRunningReceiver">
+
+            <intent-filter>
+                <action android:name="org.fermat.SYSTEM_RUNNING">
+                </action>
+            </intent-filter>
+
+        </receiver>
+
+
+
+        <!--<service android:name="com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationService"-->
+            <!--android:label="CommService"-->
+            <!--android:exported="true"-->
+            <!-->-->
+            <!--<intent-filter>-->
+                <!--&lt;!&ndash;<action android:name="android.intent.action.MAIN" />&ndash;&gt;-->
+                <!--&lt;!&ndash;<category android:name="android.intent.category.LAUNCHER" />&ndash;&gt;-->
+                <!--&lt;!&ndash; Service name &ndash;&gt;-->
+                <!--<action android:name="org.fermat.COMM_SERVICE" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
+
+        <activity android:name="com.bitdubai.android_core.app.LoadingScreenActivity"
+            android:theme="@style/AppThemeDesktop"
+            />
+
+        <service android:name="com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService"/>
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerServiceAIDL"/>
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.platform_service.aidl.PlatformService"
+            android:process=":commerverSerice"
+            android:exported="true">
+            <intent-filter>
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+                <!-- Service name -->
+                <action android:name="org.fermat.COMM_SERVICE" />
+            </intent-filter>
+
+        </service>
+
+    </application>
+</manifest>

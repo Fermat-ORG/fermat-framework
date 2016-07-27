@@ -1,21 +1,57 @@
 apply plugin: 'java'
 apply plugin: 'jacoco'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.7
+group = "com.bitdubai.pip.desktop.runtime"
 version = '1.0'
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'desktop.runtime',
+                'Implementation-Version': '1'
+    }
+}
 
-    compile project(':fermat-api')
+dependencies {
     compile project(':fermat-pip-api')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
     testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
+}
+
+task engineDesktopFatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version,
+                'Main-Class': 'com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bitdubai.DeveloperBitDubai'
+    }
+    baseName = project.name + '-all'
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            // telling gradle to publish project's jar archive (2)
+            from components.java
+        }
+    }
+    // telling gradle to publish artifact to local directory (3)
+    repositories {
+        maven {
+            //url "file:/${project.projectDir}/artifacts",
+            url "file:/${System.properties['user.home']}/artifacts"
+        }
+    }
 }
 
 def jacocoHtmlReport = ""

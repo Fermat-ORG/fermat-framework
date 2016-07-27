@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,7 +55,6 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.A
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -83,6 +82,8 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
     private long bitcoinWalletBalanceSatoshis;
 
     private ExecutorService _executor;
+
+    private int menuItemSize;
 
     public static HomeCardFragment newInstance() {
         return new HomeCardFragment();
@@ -186,12 +187,14 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
                 int position = 0;
                 settings = new AssetUserSettings();
                 settings.setIsContactsHelpEnabled(true);
+                settings.setNotificationEnabled(true);
                 settings.setIsPresentationHelpEnabled(true);
                 settings.setNotificationEnabled(true);
+                settings.setAssetNotificationEnabled(true);
 
                 settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
                 for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
-                    if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    if (networkType.getCode().equals(BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
                         settings.setBlockchainNetworkPosition(position);
                         break;
                     } else {
@@ -235,7 +238,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_user_wallet)
                     .setIconRes(R.drawable.asset_user_wallet)
-                    .setImageLeft(R.drawable.asset_user_identity)
+                    .setImageLeft(R.drawable.profile_actor)
                     .setVIewColor(R.color.card_toolbar)
                     .setTitleTextColor(R.color.card_toolbar)
                     .setTextNameLeft(R.string.dap_user_wallet_welcome_name_left)
@@ -275,26 +278,29 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.dap_wallet_asset_user_home_menu, menu);
-        searchView = (SearchView) menu.findItem(R.id.action_wallet_user_search).getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.dap_user_wallet_search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    ((HomeCardAdapterFilter) ((HomeCardAdapter) getAdapter()).getFilter()).filter(s);
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
+            searchView = (SearchView) menu.findItem(2).getActionView();
+//        searchView = (SearchView) menu.findItem(R.id.action_wallet_user_search).getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.dap_user_wallet_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
-            }
-        });
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_PRESENTATION, 2, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        ((HomeCardAdapterFilter) ((HomeCardAdapter) getAdapter()).getFilter()).filter(s);
+                    }
+                    return false;
+                }
+            });
+        }
     }
 
     @Override
@@ -302,10 +308,16 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_PRESENTATION) {
-                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+            switch (id) {
+                case 1://IC_ACTION_USER_HELP_PRESENTATION
+                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
+
+//            if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_PRESENTATION) {
+//                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -322,7 +334,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

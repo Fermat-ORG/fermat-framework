@@ -34,9 +34,9 @@ public class CryptoCustomerIdentityInfoAdapter
     }
 
     @Override
-    protected void bindHolder(final CryptoCustomerIdentityInfoViewHolder holder  ,
-                              final CryptoCustomerIdentityInformation    data    ,
-                              final int                                  position) {
+    protected void bindHolder(final CryptoCustomerIdentityInfoViewHolder holder,
+                              final CryptoCustomerIdentityInformation data,
+                              final int position) {
 
         filter = getFilter();
 
@@ -52,7 +52,7 @@ public class CryptoCustomerIdentityInfoAdapter
         Bitmap imageBitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
 
         RoundedBitmapDrawable roundedDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), imageBitmap);
-        roundedDrawable.setCornerRadius(95);
+        roundedDrawable.setCornerRadius(150);
         holder.getImage().setImageDrawable(roundedDrawable);
 
 

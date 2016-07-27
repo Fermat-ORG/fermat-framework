@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -37,7 +38,6 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.UserVi
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Group;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupMemberRecord;
@@ -59,8 +59,6 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment<Referenc
     private AssetUserCommunitySubAppModuleManager moduleManager;
     AssetUserSettings settings = null;
 
-    private static final int MAX = 20;
-
     private List<Actor> actors;
     ErrorManager errorManager;
     private Group group;
@@ -72,7 +70,6 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment<Referenc
     private UserCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
-    private int offset = 0;
     private MenuItem menuItemAdd;
     private Menu menu;
 
@@ -80,6 +77,9 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment<Referenc
      * Flags
      */
     private boolean isRefreshing = false;
+    private static final int MAX = 10;
+    private int offset = 0;
+    private int menuItemSize;
 
     public static UserCommuinityUsersFragment newInstance() {
         return new UserCommuinityUsersFragment();
@@ -130,10 +130,16 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment<Referenc
                     }
                 }
 
-                if (someSelected) {
-                    menuItemAdd.setVisible(true);
-                } else {
-                    menuItemAdd.setVisible(false);
+                try {
+                    if (someSelected) {
+                        changeOptionMenuVisibility(menuItemAdd.getItemId(), true, true);
+//                    menuItemAdd.setVisible(true);
+                    } else {
+//                    menuItemAdd.setVisible(false);
+                        changeOptionMenuVisibility(menuItemAdd.getItemId(), false, true);
+                    }
+                } catch (InvalidParameterException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -175,18 +181,6 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment<Referenc
         return rootView;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS, 0, "Add to group")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_USERS, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menuItemAdd = menu.getItem(0);
-        menuItemAdd.setVisible(false);
-    }
-
     private void setUpPresentation(boolean checkButton) {
 
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
@@ -201,7 +195,6 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment<Referenc
                 .build();
 
         presentationDialog.show();
-
     }
 
 
@@ -294,7 +287,7 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment<Referenc
         if (moduleManager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
 
-        result = moduleManager.getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(group.getGroupId());
+        result = moduleManager.getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(group.getGroupId(), MAX, offset);
 
         if (result != null && result.size() > 0) {
             for (AssetUserActorRecord record : result) {
@@ -305,54 +298,123 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment<Referenc
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+//        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS, 0, "Add to group")
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_USERS, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menuItemAdd = menu.getItem(0);
+//        menuItemAdd.setVisible(false);
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
+
+            try {
+                menuItemAdd = menu.findItem(1);
+                changeOptionMenuVisibility(menuItemAdd.getItemId(), false, true);
+//            menuItemDelete.setVisible(false);
+            } catch (InvalidParameterException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         try {
-            if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_USERS) {
-                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
-            } else if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS) {
-                final ProgressDialog dialog = new ProgressDialog(getActivity());
-                dialog.setMessage("Adding users to group...");
-                dialog.setCancelable(false);
-                dialog.show();
-                FermatWorker worker = new FermatWorker() {
-                    @Override
-                    protected Object doInBackground() throws Exception {
+            switch (id) {
+                case 1://IC_ACTION_USER_COMMUNITY_ADD_USERS
+                    final ProgressDialog dialog = new ProgressDialog(getActivity());
+                    dialog.setMessage("Adding users to group...");
+                    dialog.setCancelable(false);
+                    dialog.show();
+                    FermatWorker worker = new FermatWorker() {
+                        @Override
+                        protected Object doInBackground() throws Exception {
 
-                        for (Actor actor : actors) {
-                            if (actor.selected) {
-                                AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
-                                actorGroup.setGroupId(group.getGroupId());
-                                actorGroup.setActorPublicKey(actor.getActorPublicKey());
-                                moduleManager.addActorAssetUserToGroup(actorGroup);
+                            for (Actor actor : actors) {
+                                if (actor.selected) {
+                                    AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
+                                    actorGroup.setGroupId(group.getGroupId());
+                                    actorGroup.setActorPublicKey(actor.getActorPublicKey());
+                                    moduleManager.addActorAssetUserToGroup(actorGroup);
+                                }
                             }
+
+                            return true;
+                        }
+                    };
+                    worker.setContext(getActivity());
+                    worker.setCallBack(new FermatWorkerCallBack() {
+                        @Override
+                        public void onPostExecute(Object... result) {
+                            dialog.dismiss();
+                            Toast.makeText(getActivity(), "Selected users added to the group", Toast.LENGTH_SHORT).show();
+                            appSession.setData("group_selected", group);
+                            changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
                         }
 
-                        return true;
-                    }
-                };
-                worker.setContext(getActivity());
-                worker.setCallBack(new FermatWorkerCallBack() {
-                    @Override
-                    public void onPostExecute(Object... result) {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(), "Selected users added to the group", Toast.LENGTH_SHORT).show();
-                        appSession.setData("group_selected", group);
-                        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
-                    }
-
-                    @Override
-                    public void onErrorOccurred(Exception ex) {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    }
-                });
-                worker.execute();
-                return false;
+                        @Override
+                        public void onErrorOccurred(Exception ex) {
+                            dialog.dismiss();
+                            Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                            ex.printStackTrace();
+                        }
+                    });
+                    worker.execute();
+                    return false;
+                case 2://IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE
+                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
+
+//            if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_USERS) {
+//                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            } else if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS) {
+//                final ProgressDialog dialog = new ProgressDialog(getActivity());
+//                dialog.setMessage("Adding users to group...");
+//                dialog.setCancelable(false);
+//                dialog.show();
+//                FermatWorker worker = new FermatWorker() {
+//                    @Override
+//                    protected Object doInBackground() throws Exception {
+//
+//                        for (Actor actor : actors) {
+//                            if (actor.selected) {
+//                                AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
+//                                actorGroup.setGroupId(group.getGroupId());
+//                                actorGroup.setActorPublicKey(actor.getActorPublicKey());
+//                                moduleManager.addActorAssetUserToGroup(actorGroup);
+//                            }
+//                        }
+//
+//                        return true;
+//                    }
+//                };
+//                worker.setContext(getActivity());
+//                worker.setCallBack(new FermatWorkerCallBack() {
+//                    @Override
+//                    public void onPostExecute(Object... result) {
+//                        dialog.dismiss();
+//                        Toast.makeText(getActivity(), "Selected users added to the group", Toast.LENGTH_SHORT).show();
+//                        appSession.setData("group_selected", group);
+//                        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
+//                    }
+//
+//                    @Override
+//                    public void onErrorOccurred(Exception ex) {
+//                        dialog.dismiss();
+//                        Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+//                        ex.printStackTrace();
+//                    }
+//                });
+//                worker.execute();
+//                return false;
+//            }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Asset User system error",

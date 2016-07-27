@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 
 import java.util.UUID;
@@ -40,9 +41,15 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
 
     private String memo;
 
+    private FeeOrigin feeOrigin;
+
+    private long        fee;
+
     private BlockchainNetworkType blockchainNetworkType;
 
     private CryptoCurrency cryptoCurrency;
+
+    private  long Total;
 
     @Override
     public CryptoAddress getAddressFrom() {
@@ -86,6 +93,16 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
         return amount;
     }
 
+    @Override
+    public long getTotal() {
+        return this.Total;
+    }
+
+    public void setTotal(long Total) {
+        this.Total = Total;
+    }
+
+
     public void setAmount(long amount) {
         this.amount = amount;
     }
@@ -123,6 +140,24 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
     @Override
     public CryptoCurrency getCryptoCurrency() {
         return this.cryptoCurrency;
+    }
+
+    @Override
+    public FeeOrigin getFeeOrigin() {
+        return this.feeOrigin;
+    }
+
+    @Override
+    public long getFee() {
+        return this.fee;
+    }
+
+    public void  setFee(long fee) {
+         this.fee = fee;
+    }
+
+    public void  setFeeOrigin(FeeOrigin feeOrigin) {
+        this.feeOrigin = feeOrigin;
     }
 
     public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {

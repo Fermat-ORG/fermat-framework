@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -24,8 +25,11 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultDao;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCurrencyCryptoVaultDatabaseException;
-import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.seed_management.ImportSeedProgress;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.seed_management.ImportedSeed;
+
 
 import org.bitcoinj.core.ECKey;
 
@@ -34,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.CryptoVault.BitcoinCurrency.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDao</code>
@@ -121,6 +127,10 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      * @throws CantInsertRecordException
      */
     public void addNewHierarchyAccount(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
+        //if it already exists, then don't continue
+        if(isNewHierarchyAccount(hierarchyAccount))
+            return;
+
         DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -142,6 +152,21 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
 
             throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage.toString(), "A database error.");
         }
+    }
+
+    private boolean isNewHierarchyAccount(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME, String.valueOf(hierarchyAccount.getId()), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME, hierarchyAccount.getDescription(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME, hierarchyAccount.getHierarchyAccountType().getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+            return (databaseTable.getCount() == 0) ? true : false;
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+        return true;
     }
 
     /**
@@ -701,5 +726,91 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
     private void throwLoadToMemoryException(Exception e, String tableName) throws CantExecuteDatabaseOperationException{
         String outputMessage = "There was an error loading into memory table " + tableName + ".";
         throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage, "Database error.");
+    }
+
+    /**
+     * inserts a new importedSeed record
+     * @param importedSeed
+     * @throws CantInsertRecordException
+     */
+    public void addNewImportedSeed(ImportedSeed importedSeed) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_TABLE_NAME);
+        DatabaseTableRecord record = databaseTable.getEmptyRecord();
+        record.setLongValue(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_DATE_COLUMN_NAME, importedSeed.getImportedSeedDate());
+        record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_NETWORK_TYPE_COLUMN_NAME, importedSeed.getBlockchainNetworkType().getCode());
+        record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_WALLET_ADDRESS_COLUMN_NAME, importedSeed.getCryptoAddress().getAddress());
+        record.setLongValue(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_BALANCE_COLUMN_NAME, importedSeed.getBalance());
+        record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_STATUS_COLUMN_NAME, importedSeed.getProgress().getCode());
+
+        try {
+            databaseTable.insertRecord(record);
+        } catch (CantInsertRecordException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error inserting a new record into Import_Seed table.", importedSeed.toString());
+        }
+    }
+
+    public void updateImportedSeed(ImportedSeed importedSeed) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_DATE_COLUMN_NAME, String.valueOf(importedSeed.getImportedSeedDate()), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            record.setLongValue(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_BALANCE_COLUMN_NAME, importedSeed.getBalance());
+            record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_STATUS_COLUMN_NAME, importedSeed.getProgress().getCode());
+
+            try {
+                databaseTable.updateRecord(record);
+            } catch (CantUpdateRecordException e) {
+                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "unable to update record in table.", importedSeed.toString());
+            }
+        }
+    }
+
+    private List<ImportedSeed> getImportedSeedsByStatusNotEqual(@Nullable ImportSeedProgress importSeedProgress) throws CantExecuteDatabaseOperationException {
+        List<ImportedSeed> importedSeedList = new ArrayList<>();
+        DatabaseTable databaseTable = database.getTable(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_TABLE_NAME);
+
+        if (importSeedProgress != null)
+            databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_STATUS_COLUMN_NAME, importSeedProgress.getCode(), DatabaseFilterType.NOT_EQUALS);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            importedSeedList.add(getImportedSeedFromRecord(record));
+        }
+
+        return importedSeedList;
+    }
+
+    private ImportedSeed getImportedSeedFromRecord(DatabaseTableRecord record){
+        long date = record.getLongValue(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_DATE_COLUMN_NAME);
+        CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_WALLET_ADDRESS_COLUMN_NAME), CryptoCurrency.BITCOIN);
+        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_NETWORK_TYPE_COLUMN_NAME));
+        ImportSeedProgress progress = ImportSeedProgress.getByCode(record.getStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_STATUS_COLUMN_NAME));
+        long balance = record.getLongValue(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_BALANCE_COLUMN_NAME);
+
+        ImportedSeed importedSeed = new ImportedSeed(date, cryptoAddress);
+        importedSeed.setBalance(balance);
+        importedSeed.setBlockchainNetworkType(blockchainNetworkType);
+        importedSeed.setProgress(progress);
+
+        return importedSeed;
+    }
+
+    public List<ImportedSeed> getPendingImportedSeeds() throws CantExecuteDatabaseOperationException {
+        return this.getImportedSeedsByStatusNotEqual(ImportSeedProgress.COMPLETED);
+    }
+
+    public List<ImportedSeed> getImportedSeeds() throws CantExecuteDatabaseOperationException {
+        return this.getImportedSeedsByStatusNotEqual(null);
     }
 }

@@ -1,89 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/cci_background_gradient_colors" >
-
-
-    <RelativeLayout
-        android:id="@+id/user_image"
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:layout_centerHorizontal="true">
-
-        <ImageView
-            android:id="@+id/crypto_customer_image"
-            android:layout_width="240dp"
-            android:layout_height="240dp"
-            tools:ignore="ContentDescription"
-            android:src="@drawable/no_picture_icon"
-            android:scaleType="fitXY"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView2"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true" />
-
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="50dp"
-            android:id="@+id/galeria"
-            android:src="@drawable/gallery_photo_button"
-            android:scaleType="fitXY"
-            android:background="#32ffffff"
-            android:layout_above="@+id/imageView2"
-            android:layout_alignEnd="@+id/imageView2"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="5dp" />
-
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="50dp"
-            android:id="@+id/camara"
-            android:src="@drawable/celphone_camara_button"
-            android:scaleType="fitXY"
-            android:background="#32ffffff"
-            android:layout_above="@+id/imageView2"
-            android:layout_alignEnd="@+id/imageView2"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="-55dp"/>
-
-    </RelativeLayout>
-
+    android:background="@drawable/cci_background_gradient_colors">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_below="@+id/user_image"
-        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:id="@+id/user_image"
+            android:layout_width="match_parent"
+            android:layout_height="260dp">
+
+            <ImageView
+                android:id="@+id/crypto_customer_image"
+                android:layout_width="240dp"
+                android:layout_height="240dp"
+                android:padding="10dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/no_picture_icon"
+                tools:ignore="ContentDescription"/>
+
+            <View
+                android:id="@+id/separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_centerVertical="true"/>
+
+            <ImageView
+                android:id="@+id/galeria"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:layout_above="@+id/separator"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="#32ffffff"
+                android:scaleType="fitXY"
+                android:src="@drawable/gallery_photo_button"/>
+
+            <ImageView
+                android:id="@+id/camara"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/separator"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:background="#32ffffff"
+                android:scaleType="fitXY"
+                android:src="@drawable/celphone_camara_button"/>
+
+        </RelativeLayout>
 
         <EditText
+            android:id="@+id/crypto_customer_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text=""
-            android:ems="10"
-            android:id="@+id/crypto_customer_name"
-            android:textColor="#ffffff"
-            android:editable="true"
-            android:selectAllOnFocus="true"
             android:background="#cc808080"
-            android:padding="12dp"
-            android:hint="Enter name or alias"
-            android:textSize="18dp"
+            android:ems="10"
             android:gravity="center_vertical"
+            android:hint="Enter name or alias"
+            android:inputType="textPersonName"
+            android:padding="12dp"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="#ffffff"
             android:textColorHint="#ffffff"
-            android:singleLine="true">
-            <requestFocus />
+            android:textSize="18sp">
+            <requestFocus/>
         </EditText>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/crypto_customer_name_text_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:gravity="right"
+            android:text="50"
+            android:textColor="#FFFFFF"
+            android:textSize="12dp" />
 
     </LinearLayout>
 
-</RelativeLayout>
+    <ProgressBar
+        android:id="@+id/cci_progress_bar"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone"/>
+
+</FrameLayout>

@@ -2,12 +2,14 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatSearchView;
 
+import java.io.Serializable;
+
 
 /**
  * Created by rodrigo on 2015.07.17..
  */
 
-public class SearchView implements FermatSearchView {
+public class SearchView implements FermatSearchView, Serializable {
 
     /**
      * Class private attributes

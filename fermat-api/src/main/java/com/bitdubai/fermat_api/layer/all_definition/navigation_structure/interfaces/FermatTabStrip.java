@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 
 import java.io.Serializable;
@@ -9,7 +10,7 @@ import java.util.List;
  * Created by rodrigo on 2015.07.20..
  * Update by Miguel Payarez on 2016.04.08
  */
-public interface FermatTabStrip  extends Serializable {
+public interface FermatTabStrip extends Serializable {
 
     List<Tab> getTabs();
 
@@ -56,6 +57,10 @@ public interface FermatTabStrip  extends Serializable {
     boolean isHasIcon();
 
     boolean isHasText();
+
+    FermatDrawable getBackgroundDrawable();
+
+    void setBackgroundDrawable(FermatDrawable backgroundDrawable);
 
 
 }

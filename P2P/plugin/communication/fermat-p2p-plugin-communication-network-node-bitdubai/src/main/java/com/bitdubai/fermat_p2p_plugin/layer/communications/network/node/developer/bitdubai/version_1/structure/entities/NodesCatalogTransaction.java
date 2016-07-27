@@ -1,10 +1,11 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Objects;
 import java.util.UUID;
 
 
@@ -32,9 +33,7 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 
 	private String ip;
 
-	private double lastLatitude;
-
-	private double lastLongitude;
+    private Location lastLocation;
 
 	private String name;
 
@@ -47,6 +46,7 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
         this.hashId = UUID.randomUUID().toString();
         this.lastConnectionTimestamp = new Timestamp(System.currentTimeMillis());
         this.registeredTimestamp = new Timestamp(System.currentTimeMillis());
+        this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
 	}
 
     public Timestamp getLastConnectionTimestamp() {
@@ -89,22 +89,6 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
         this.ip = ip;
     }
 
-    public double getLastLatitude() {
-        return lastLatitude;
-    }
-
-    public void setLastLatitude(double lastLatitude) {
-        this.lastLatitude = lastLatitude;
-    }
-
-    public double getLastLongitude() {
-        return lastLongitude;
-    }
-
-    public void setLastLongitude(double lastLongitude) {
-        this.lastLongitude = lastLongitude;
-    }
-
     public String getName() {
         return name;
     }
@@ -129,13 +113,23 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
         this.transactionType = transactionType;
     }
 
-    public void setLocation(Location location) {
+    public Location getLastLocation() {
+        return lastLocation;
+    }
 
-        if(location != null) {
+    public void setLastLocation(Location lastLocation) {
+        this.lastLocation = lastLocation;
+    }
 
-            this.lastLatitude  = location.getLatitude() ;
-            this.lastLongitude = location.getLongitude();
-        }
+    public void setLastLocation(double latitude, double longitude){
+        lastLocation = new NetworkNodeCommunicationDeviceLocation(
+                latitude,
+                longitude,
+                null     ,
+                0        ,
+                null     ,
+                System.currentTimeMillis(),
+                LocationSource.UNKNOWN);
     }
 
     @Override
@@ -147,21 +141,40 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof NodesCatalogTransaction)) return false;
+
         NodesCatalogTransaction that = (NodesCatalogTransaction) o;
-        return Objects.equals(getLastLatitude(), that.getLastLatitude()) &&
-                Objects.equals(getLastLongitude(), that.getLastLongitude()) &&
-                Objects.equals(getHashId(), that.getHashId()) &&
-                Objects.equals(getLastConnectionTimestamp(), that.getLastConnectionTimestamp()) &&
-                Objects.equals(getDefaultPort(), that.getDefaultPort()) &&
-                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
-                Objects.equals(getIp(), that.getIp()) &&
-                Objects.equals(getName(), that.getName()) &&
-                Objects.equals(getTransactionType(), that.getTransactionType());
+
+        if (getHashId() != null ? !getHashId().equals(that.getHashId()) : that.getHashId() != null)
+            return false;
+        if (getLastConnectionTimestamp() != null ? !getLastConnectionTimestamp().equals(that.getLastConnectionTimestamp()) : that.getLastConnectionTimestamp() != null)
+            return false;
+        if (getDefaultPort() != null ? !getDefaultPort().equals(that.getDefaultPort()) : that.getDefaultPort() != null)
+            return false;
+        if (getIdentityPublicKey() != null ? !getIdentityPublicKey().equals(that.getIdentityPublicKey()) : that.getIdentityPublicKey() != null)
+            return false;
+        if (getIp() != null ? !getIp().equals(that.getIp()) : that.getIp() != null) return false;
+        if (getLastLocation() != null ? !getLastLocation().equals(that.getLastLocation()) : that.getLastLocation() != null)
+            return false;
+        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null)
+            return false;
+        if (getRegisteredTimestamp() != null ? !getRegisteredTimestamp().equals(that.getRegisteredTimestamp()) : that.getRegisteredTimestamp() != null)
+            return false;
+        return !(getTransactionType() != null ? !getTransactionType().equals(that.getTransactionType()) : that.getTransactionType() != null);
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getHashId(), getDefaultPort(), getIdentityPublicKey(), getIp(), getLastLatitude(), getLastLongitude(), getName(), getTransactionType());
+        int result = getHashId() != null ? getHashId().hashCode() : 0;
+        result = 31 * result + (getLastConnectionTimestamp() != null ? getLastConnectionTimestamp().hashCode() : 0);
+        result = 31 * result + (getDefaultPort() != null ? getDefaultPort().hashCode() : 0);
+        result = 31 * result + (getIdentityPublicKey() != null ? getIdentityPublicKey().hashCode() : 0);
+        result = 31 * result + (getIp() != null ? getIp().hashCode() : 0);
+        result = 31 * result + (getLastLocation() != null ? getLastLocation().hashCode() : 0);
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getRegisteredTimestamp() != null ? getRegisteredTimestamp().hashCode() : 0);
+        result = 31 * result + (getTransactionType() != null ? getTransactionType().hashCode() : 0);
+        return result;
     }
 
     @Override

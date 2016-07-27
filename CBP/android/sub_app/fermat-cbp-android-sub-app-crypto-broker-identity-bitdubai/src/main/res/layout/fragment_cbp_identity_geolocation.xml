@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingEnd="16dp"
+              android:paddingLeft="16dp"
+              android:paddingRight="16dp"
+              android:paddingStart="16dp"
+              android:background="#f9f9f9"
+              android:orientation="vertical"
+              android:touchscreenBlocksFocus="false">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/cbi_accuracy_km"
+        android:textColor="#838383"
+        android:textSize="16sp"/>
+
+    <EditText
+        android:id="@+id/accuracy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/cbi_accuracy_hint"
+        android:inputType="number"
+        android:textColor="#616161"
+        android:theme="@style/Base.V7.Widget.AppCompat.EditText"/>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/cbi_frequency"
+        android:textColor="#838383"
+        android:textSize="16sp"/>
+
+    <Spinner
+        android:id="@+id/spinner_frequency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000"
+        android:backgroundTint="#787878"
+        android:backgroundTintMode="add"
+        android:foregroundTint="#000000"
+        android:textColor="#000000"/>
+
+</LinearLayout>

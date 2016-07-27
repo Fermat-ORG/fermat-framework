@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -101,6 +104,12 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
 
             blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
 
+
+
+            getActivity().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+            );
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -123,6 +132,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
                 isContactAddPopUp = true;
             }
 
+            hideSoftKeyboard(getActivity());
         } catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Init Views. " + e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -417,5 +427,11 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
         intraUserInformationList.add(cryptoWalletIntraUserActor);
 
 
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if(activity.getCurrentFocus() != null)
+         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 }

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#010c12"
+    android:background="#363636"
     android:orientation="vertical">
 
     <View
@@ -36,31 +36,17 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone">
+            >
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/img_home_empty"
-                tools:ignore="ContentDescription" />
+                android:background="@drawable/connections_empty"
+                tools:ignore="ContentDescription"
+                />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="You don't have any"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="connections yet"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 

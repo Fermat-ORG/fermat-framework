@@ -7,31 +7,26 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSessionReferenceApp;
 
-import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSessionReferenceApp.IDENTITY_INFO;
 
 /**
  * Created by angel on 20/1/16.
  */
-
 public class EditIdentityWorker extends FermatWorker {
     public static final int SUCCESS = 1;
-    public static final int INVALID_ENTRY_DATA = 4;
 
     private CryptoBrokerIdentityModuleManager moduleManager;
     private CryptoBrokerIdentityInformation identityInfo;
     private CryptoBrokerIdentityInformation identity;
 
-    public EditIdentityWorker(Activity context, ReferenceAppFermatSession session, CryptoBrokerIdentityInformation identity, FermatWorkerCallBack callBack) {
+    public EditIdentityWorker(Activity context, ReferenceAppFermatSession<CryptoBrokerIdentityModuleManager> session, CryptoBrokerIdentityInformation identity, FermatWorkerCallBack callBack) {
         super(context, callBack);
 
         this.identity = identity;
 
         if (session != null) {
-            CryptoBrokerIdentitySubAppSessionReferenceApp subAppSession = (CryptoBrokerIdentitySubAppSessionReferenceApp) session;
-            identityInfo = (CryptoBrokerIdentityInformation) subAppSession.getData(IDENTITY_INFO);
-            this.moduleManager = subAppSession.getModuleManager();
+            identityInfo = (CryptoBrokerIdentityInformation) session.getData(FragmentsCommons.IDENTITY_INFO);
+            this.moduleManager = session.getModuleManager();
         }
     }
 
@@ -41,24 +36,21 @@ public class EditIdentityWorker extends FermatWorker {
 
         boolean valueChanged = (identity.isPublished() != identityInfo.isPublished());
 
-        if ( identity == null ) {
-            return INVALID_ENTRY_DATA;
-        } else {
-            moduleManager.updateCryptoBrokerIdentity(identity);
-            if (valueChanged) {
-                if (identity.isPublished()) {
+        moduleManager.updateCryptoBrokerIdentity(identity);
 
-                    System.out.println("VLZ: Publicando");
+        if (valueChanged) {
+            if (identity.isPublished()) {
 
-                    moduleManager.publishIdentity(identity.getPublicKey());
-                }else {
+                System.out.println("VLZ: Publicando");
 
-                    System.out.println("VLZ: Ocultando");
+                moduleManager.unHideIdentity(identity.getPublicKey());
+            } else {
 
-                    moduleManager.hideIdentity(identity.getPublicKey());
-                }
+                System.out.println("VLZ: Ocultando");
+
+                moduleManager.hideIdentity(identity.getPublicKey());
             }
-            return SUCCESS;
         }
+        return SUCCESS;
     }
 }

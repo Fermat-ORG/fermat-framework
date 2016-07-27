@@ -18,6 +18,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.i
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_community.developer.bitdubai.version_1.structure.CryptoCustomerCommunityManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 
 /**
@@ -27,17 +28,20 @@ import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_commu
 @PluginInfo(createdBy = "lnacosta", maintainerMail = "laion.cj91@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CRYPTO_CUSTOMER_COMMUNITY)
 public class CryptoCustomerCommunitySubAppModulePluginRoot extends AbstractModule<CryptoCustomerCommunitySettings, ActiveActorIdentityInformation> {
 
-    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM               , addon  = Addons .PLUGIN_FILE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     PluginFileSystem pluginFileSystem;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_CUSTOMER   )
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_CUSTOMER)
     CryptoCustomerManager cryptoCustomerNetworkServiceManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY             , plugin = Plugins.CRYPTO_BROKER     )
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_BROKER)
     CryptoBrokerIdentityManager cryptoBrokerIdentityManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CRYPTO_CUSTOMER     )
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION, plugin = Plugins.CRYPTO_CUSTOMER)
     CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
+
+    @NeededPluginReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.EXTERNAL_API, plugin = Plugins.GEOLOCATION)
+    private GeolocationManager geolocationManager;
 
     CryptoCustomerCommunityManager moduleManager;
 
@@ -48,14 +52,15 @@ public class CryptoCustomerCommunitySubAppModulePluginRoot extends AbstractModul
 
     @Override
     public CryptoCustomerCommunityManager getModuleManager() throws CantGetModuleManagerException {
-        if(moduleManager == null)
+        if (moduleManager == null)
             moduleManager = new CryptoCustomerCommunityManager(
                     cryptoBrokerIdentityManager,
                     cryptoCustomerActorConnectionManager,
                     cryptoCustomerNetworkServiceManager,
                     this,
                     pluginFileSystem,
-                    pluginId);
+                    pluginId,
+                    geolocationManager);
 
         return moduleManager;
     }

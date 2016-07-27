@@ -25,10 +25,10 @@ public class SendConfirmNegotiatioToCryptoCustomerTest {
     private final NegotiationTransactionType transactionType = NegotiationTransactionType.CUSTOMER_BROKER_CLOSE;
 
     @Test
-    public void sendConfirmNegotiatioToCryptoCustomer()  throws Exception{
+    public void sendConfirmNegotiatioToCryptoCustomer() throws Exception {
 
         NegotiationTransmissionManagerImpl negotiationTransmissionManagerImpl = mock(NegotiationTransmissionManagerImpl.class, Mockito.RETURNS_DEEP_STUBS);
-        doCallRealMethod().when(negotiationTransmissionManagerImpl).sendConfirmNegotiatioToCryptoCustomer(negotiationTransaction, transactionType);
+        doCallRealMethod().when(negotiationTransmissionManagerImpl).sendConfirmNegotiationToCryptoCustomer(negotiationTransaction, transactionType);
 
     }
 }

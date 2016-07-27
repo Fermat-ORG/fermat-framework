@@ -3,6 +3,7 @@ package unit.com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_tr
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionManagerImpl;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -24,10 +25,10 @@ public class SendNegotiatioToCryptoCustomerTest {
     private final NegotiationTransactionType transactionType = NegotiationTransactionType.CUSTOMER_BROKER_NEW;
 
     @Test
-    public void sendNegotiatioToCryptoCustomer()  throws Exception{
+    public void sendNegotiatioToCryptoCustomer() throws Exception {
 
         NegotiationTransmissionManagerImpl negotiationTransmissionManagerImpl = mock(NegotiationTransmissionManagerImpl.class, Mockito.RETURNS_DEEP_STUBS);
-        doCallRealMethod().when(negotiationTransmissionManagerImpl).sendNegotiatioToCryptoCustomer(negotiationTransaction,transactionType);
+        doCallRealMethod().when(negotiationTransmissionManagerImpl).sendNegotiationToCryptoCustomer(negotiationTransaction, transactionType);
 
     }
 }

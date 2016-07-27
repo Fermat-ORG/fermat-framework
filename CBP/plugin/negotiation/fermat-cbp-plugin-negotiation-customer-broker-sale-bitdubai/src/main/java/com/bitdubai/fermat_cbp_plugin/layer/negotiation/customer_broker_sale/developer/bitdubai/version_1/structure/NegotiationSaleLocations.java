@@ -14,7 +14,7 @@ public class NegotiationSaleLocations implements NegotiationLocations, Serializa
     private final String location;
     private final String uri;
 
-    public NegotiationSaleLocations(UUID locationId, String location, String uri){
+    public NegotiationSaleLocations(UUID locationId, String location, String uri) {
         this.locationId = locationId;
         this.location = location;
         this.uri = uri;

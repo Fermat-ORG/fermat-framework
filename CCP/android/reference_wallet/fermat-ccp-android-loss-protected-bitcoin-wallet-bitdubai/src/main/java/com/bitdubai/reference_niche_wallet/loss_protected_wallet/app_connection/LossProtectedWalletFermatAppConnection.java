@@ -2,6 +2,8 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection
 
 import android.content.Context;
 
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -28,7 +30,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragment_factor
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class LossProtectedWalletFermatAppConnection extends AppConnections<ReferenceAppFermatSession>{
+public class LossProtectedWalletFermatAppConnection extends AppConnections<ReferenceAppFermatSession<LossProtectedWallet>>{
 
     private LossProtectedWallet moduleManager = null;
     private ReferenceAppFermatSession<LossProtectedWallet> lossWalletSession;
@@ -112,5 +114,8 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<Refer
         return null;
     }
 
-
+    @Override
+    public ResourceSearcher getResourceSearcher() {
+        return new LossProtectedWalletSearcher();
+    }
 }

@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  * Created by mati on 2015.11.23
  */
-public interface ElementsWithAnimation{
+public interface ElementsWithAnimation {
 
     void startCollapseAnimation(int verticalOffset);
 
