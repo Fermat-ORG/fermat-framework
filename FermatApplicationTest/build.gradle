@@ -23,7 +23,7 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 'android-16'
+    compileSdkVersion 'android-21'
     buildToolsVersion '23.0.3'
 
     android {
@@ -53,7 +53,7 @@ android {
 task assembleDebug(overwrite: true) {}
 
 task copyTask(type: Copy) {
-    from '/home/roy/Fermat/fermat/COR/fermat-android-core/build/outputs/apk/fermat-android-core-debug_debug.apk'
+    from '/home/lostwood/Myproject/fermat/COR/fermat-android-core/build/outputs/apk/fermat-android-core-debug_debug.apk'
     into 'build/outputs/apk/'
     rename {
         'FermatApplicationTest-debug.apk'
