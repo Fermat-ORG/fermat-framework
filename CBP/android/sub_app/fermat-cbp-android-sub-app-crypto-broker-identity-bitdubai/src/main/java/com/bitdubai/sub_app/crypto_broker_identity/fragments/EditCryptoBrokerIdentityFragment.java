@@ -284,7 +284,7 @@ public class EditCryptoBrokerIdentityFragment
             profileImage = identityInfo.getProfileImage();
 
             if (profileImage.length == 0) {
-                mBrokerImage.setImageResource(R.drawable.pic_space);
+                mBrokerImage.setImageResource(R.drawable.default_image);
             } else {
                 BitmapDrawable bmd = new BitmapDrawable(getResources(), new ByteArrayInputStream(profileImage));
                 mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bmd.getBitmap()));
