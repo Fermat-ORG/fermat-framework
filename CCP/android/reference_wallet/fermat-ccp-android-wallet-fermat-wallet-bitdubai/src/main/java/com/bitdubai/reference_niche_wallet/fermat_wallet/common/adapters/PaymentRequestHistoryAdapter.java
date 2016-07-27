@@ -250,8 +250,6 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                     cryptoWallet.refuseRequest(data.getRequestId());
                     Toast.makeText(context, "Request denied", Toast.LENGTH_SHORT).show();
                     notifyDataSetChanged();
-//                    FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
-//                    FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
                     onRefreshList.onRefresh();
                 } catch (Exception e) {
                     showMessage(context, "Cant Denied Receive Payment Exception- " + e.getMessage());
