@@ -335,7 +335,8 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindDrawables(findViewById(R.id.drawer_layout));
+
+        unbindDrawables(getDrawerLayout());
         System.gc();
     }
 
@@ -348,7 +349,13 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
                     unbindDrawables(((ViewGroup) view).getChildAt(i));
                 }
-                ((ViewGroup) view).removeAllViews();
+                try {
+                    ((ViewGroup) view).removeAllViews();
+                }catch (Exception e){
+                    if(e instanceof UnsupportedOperationException) {
+                        Log.e(TAG, "UnsupportedOperationException removeAllViews view: "+view);
+                    }
+                }
             }
         }
     }
