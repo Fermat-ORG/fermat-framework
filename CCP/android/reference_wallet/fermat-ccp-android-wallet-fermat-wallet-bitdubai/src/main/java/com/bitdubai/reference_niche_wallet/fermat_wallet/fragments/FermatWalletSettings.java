@@ -177,7 +177,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
             list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.parseColor("#54ACEC")));
 
-            list.add(new PreferenceSettingsLinkText(13, "Received Faucet Fermats", "", 15, Color.parseColor("#54ACEC")));
+            list.add(new PreferenceSettingsLinkText(13, "Received Fermats to Faucet", "", 15, Color.parseColor("#54ACEC")));
 
             //list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 

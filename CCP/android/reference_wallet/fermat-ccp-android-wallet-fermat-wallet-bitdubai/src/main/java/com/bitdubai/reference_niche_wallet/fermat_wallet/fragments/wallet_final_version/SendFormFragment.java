@@ -116,7 +116,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private LinearLayout feed_advances;
     private LinearLayout advances_btn;
     private CheckBox feed_Substract;
-
+    private FermatWorker fermatWorker;
 
     /**
      * Adapters
@@ -163,6 +163,12 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 if (fermatWalletSettings.getBlockchainNetworkType() == null) {
                     fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
+
+                if (fermatWalletSettings.getFeedLevel() == null)
+                    fermatWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
+                else
+                    feeLevel = fermatWalletSettings.getFeedLevel();
+
                 appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
 
             }
@@ -535,7 +541,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void setUpContactAddapter() {
 
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+        fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
                 try{
@@ -778,7 +784,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                         0,
                                         FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT
 
-                                        // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
                                 );
                                 Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                                 onBack(null);
@@ -857,5 +862,14 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
+    }
+
+    @Override
+    public void onStop() {
+
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+
+        super.onStop();
     }
 }
