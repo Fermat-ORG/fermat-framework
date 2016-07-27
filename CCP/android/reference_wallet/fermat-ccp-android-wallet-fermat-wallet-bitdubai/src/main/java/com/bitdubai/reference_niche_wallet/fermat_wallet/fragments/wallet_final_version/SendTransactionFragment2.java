@@ -496,10 +496,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         long balance = 0;
 
 
-        if (balanceType.equals(BalanceType.AVAILABLE))
-            balance =  moduleManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType);
-        else
-            //balance = moduleManager.getRealBalance(appSession.getAppPublicKey(), blockchainNetworkType);
+       balance =  moduleManager.getBalance(balanceType, appSession.getAppPublicKey(), blockchainNetworkType);
 
         txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, typeAmountSelected.getCode()));
 
