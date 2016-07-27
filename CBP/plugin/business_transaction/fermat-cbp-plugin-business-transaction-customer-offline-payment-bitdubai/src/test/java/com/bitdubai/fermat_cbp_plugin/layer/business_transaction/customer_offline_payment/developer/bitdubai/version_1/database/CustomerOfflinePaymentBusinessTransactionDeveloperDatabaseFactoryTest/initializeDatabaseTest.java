@@ -27,19 +27,20 @@ public class initializeDatabaseTest {
     private UUID testId;
     private CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory
             customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory;
-    public void setUpTestValues(){
+
+    public void setUpTestValues() {
         testId = UUID.randomUUID();
     }
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         setUpTestValues();
     }
 
     @Test
-    public void TestInitializeDatabaseTest() throws Exception{
+    public void TestInitializeDatabaseTest() throws Exception {
         customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory =
-                new CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory(mockPluginDatabaseSystem,testId);
+                new CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory(mockPluginDatabaseSystem, testId);
         customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
         Mockito.verify(mockPluginDatabaseSystem, Mockito.times(1)).openDatabase(
                 testId, CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);

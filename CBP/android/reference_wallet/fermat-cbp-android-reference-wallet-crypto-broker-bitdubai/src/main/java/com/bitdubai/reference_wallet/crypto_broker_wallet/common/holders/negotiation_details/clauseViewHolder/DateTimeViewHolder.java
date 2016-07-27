@@ -40,8 +40,8 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
         buttonTime.setOnClickListener(this);
         youTimeZone = (TextView) itemView.findViewById(R.id.cbw_text_you_time_zone);
         otheTimeZone = (TextView) itemView.findViewById(R.id.cbw_text_other_date);
-        separatorLineDown= itemView.findViewById(R.id.cbw_line_down);
-        separatorLineUp= itemView.findViewById(R.id.cbw_line_up);
+        separatorLineDown = itemView.findViewById(R.id.cbw_line_down);
+        separatorLineUp = itemView.findViewById(R.id.cbw_line_up);
     }
 
     @Override

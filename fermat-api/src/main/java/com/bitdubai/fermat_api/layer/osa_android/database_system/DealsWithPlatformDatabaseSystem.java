@@ -6,5 +6,5 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system;
 public interface DealsWithPlatformDatabaseSystem {
 
     void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem);
-    
+
 }

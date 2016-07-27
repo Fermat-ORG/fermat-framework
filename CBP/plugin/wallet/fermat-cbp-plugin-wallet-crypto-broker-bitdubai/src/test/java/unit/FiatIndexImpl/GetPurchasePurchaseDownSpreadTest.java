@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetPurchasePurchaseDownSpreadTest {
 
     @Test
-    public void getPurchasePurchaseDownSpread(){
+    public void getPurchasePurchaseDownSpread() {
         FiatIndexImpl fiatIndex = mock(FiatIndexImpl.class);
         when(fiatIndex.getPurchasePurchaseDownSpread()).thenReturn(1f);
         assertThat(fiatIndex.getPurchasePurchaseDownSpread()).isNotNull();

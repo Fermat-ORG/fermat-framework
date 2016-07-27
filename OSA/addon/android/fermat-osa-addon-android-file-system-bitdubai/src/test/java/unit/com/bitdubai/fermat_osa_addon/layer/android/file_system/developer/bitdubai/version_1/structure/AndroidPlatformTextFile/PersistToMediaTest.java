@@ -1,14 +1,12 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.AndroidPlatformTextFile;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.AndroidPlatformTextFile;
-import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.AndroidPluginTextFile;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +14,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-
-import java.util.UUID;
 
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
@@ -40,7 +36,7 @@ public class PersistToMediaTest {
     private FileLifeSpan testLifeSpan;
 
     @Before
-    public void setUpValues(){
+    public void setUpValues() {
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
         testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
         testDirectory = "ROBOLECTRICTEST";
@@ -50,15 +46,15 @@ public class PersistToMediaTest {
     }
 
     @Test
-    public void PersistToMedia_ValidValues_MethodInvokedSuccesFully() throws Exception{
+    public void PersistToMedia_ValidValues_MethodInvokedSuccesFully() throws Exception {
         testTextFile = new AndroidPlatformTextFile(testContext, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         catchException(testTextFile).persistToMedia();
         assertThat(caughtException()).isNull();
     }
 
     @Test
-    public void PersistToMedia_InValidFileName_MethodInvokedSuccesFully() throws Exception{
-        testTextFile = new AndroidPlatformTextFile( testContext, testDirectory, "", testPrivacyLevel, testLifeSpan);
+    public void PersistToMedia_InValidFileName_MethodInvokedSuccesFully() throws Exception {
+        testTextFile = new AndroidPlatformTextFile(testContext, testDirectory, "", testPrivacyLevel, testLifeSpan);
         catchException(testTextFile).persistToMedia();
         assertThat(caughtException()).isInstanceOf(CantPersistFileException.class);
         caughtException().printStackTrace();

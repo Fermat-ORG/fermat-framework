@@ -15,11 +15,11 @@ public interface BroadcasterInterface {
 
     void publish(BroadcasterType broadcasterType, String code);
 
-    void publish(BroadcasterType broadcasterType,String appCode ,String code);
+    void publish(BroadcasterType broadcasterType, String appCode, String code);
 
-    void publish(BroadcasterType broadcasterType, String code,Platforms lauchedPlatform);
+    void publish(BroadcasterType broadcasterType, String code, Platforms lauchedPlatform);
 
-    void publish(BroadcasterType broadcasterType, String code,FermatApps fermatApp);
+    void publish(BroadcasterType broadcasterType, String code, FermatApps fermatApp);
 
     void publish(BroadcasterType broadcasterType, String appCode, FermatBundle bundle);
 

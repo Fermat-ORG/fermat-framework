@@ -17,14 +17,19 @@ public enum ActorType implements FermatEnum {
     }
 
     @Override
-    public String getCode()   { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
     public static ActorType getByCode(String code) {
 
         switch (code) {
-            case "BROK": return BROKER;
-            case "CUST": return CUSTOMER;
-            default:     return BROKER;
+            case "BROK":
+                return BROKER;
+            case "CUST":
+                return CUSTOMER;
+            default:
+                return BROKER;
         }
     }
 }

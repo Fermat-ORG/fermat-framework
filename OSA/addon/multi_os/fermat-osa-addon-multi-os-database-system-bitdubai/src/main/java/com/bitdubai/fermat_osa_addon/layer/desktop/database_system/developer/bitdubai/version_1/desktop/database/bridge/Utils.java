@@ -6,23 +6,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Mati
  */
 public class Utils {
 
-    public static String[] getColumnsNames(ResultSet rs){
+    public static String[] getColumnsNames(ResultSet rs) {
         String[] columnNames = null;
-        try{
+        try {
             ResultSetMetaData rsmd = rs.getMetaData();
-            List<String> lstColumnNames=new ArrayList<String>();
-            for(int i=0;i<rsmd.getColumnCount();i++){
+            List<String> lstColumnNames = new ArrayList<String>();
+            for (int i = 0; i < rsmd.getColumnCount(); i++) {
                 lstColumnNames.add(rsmd.getColumnName(i));
             }
-            columnNames= new String[lstColumnNames.size()];
+            columnNames = new String[lstColumnNames.size()];
 
             columnNames = lstColumnNames.toArray(columnNames);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return columnNames;

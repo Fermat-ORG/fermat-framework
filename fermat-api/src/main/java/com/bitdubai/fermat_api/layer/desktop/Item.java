@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 public class Item<I extends FermatInterfaceObject> implements FermatInterfaceObject {
 
     I object;
-    public boolean selected=false;
+    public boolean selected = false;
 
 
     public Item(I object) {
@@ -61,7 +61,7 @@ public class Item<I extends FermatInterfaceObject> implements FermatInterfaceObj
         return object;
     }
 
-    public int getNotifications(){
+    public int getNotifications() {
         return object.getNotifications();
     }
 }

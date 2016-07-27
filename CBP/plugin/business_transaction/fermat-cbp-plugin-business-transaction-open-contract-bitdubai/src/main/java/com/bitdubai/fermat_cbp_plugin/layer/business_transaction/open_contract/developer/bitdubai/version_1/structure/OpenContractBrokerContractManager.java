@@ -60,7 +60,7 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
                                              TransactionTransmissionManager transactionTransmissionManager,
                                              OpenContractBusinessTransactionDao openContractBusinessTransactionDao,
                                              OpenContractPluginRoot pluginRoot) {
-        
+
         this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
         this.transactionTransmissionManager = transactionTransmissionManager;
         this.openContractBusinessTransactionDao = openContractBusinessTransactionDao;

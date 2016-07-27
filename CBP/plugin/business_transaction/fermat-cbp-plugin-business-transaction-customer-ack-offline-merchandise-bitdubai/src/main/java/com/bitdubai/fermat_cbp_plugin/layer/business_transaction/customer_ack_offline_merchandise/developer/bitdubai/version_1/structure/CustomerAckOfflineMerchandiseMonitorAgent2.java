@@ -23,7 +23,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.CustomerAckMerchandiseConfirmed;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.AbstractBusinessTransactionAgent;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
@@ -39,8 +38,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.ex
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.CustomerAckOfflineMerchandisePluginRoot;
@@ -85,7 +82,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
 
     @Override
     protected void doTheMainTask() {
-        try{
+        try {
 
             String contractHash;
 
@@ -95,11 +92,11 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
              * acknowledge by the customer.
              */
             List<BusinessTransactionRecord> pendingToSubmitNotificationList = customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
-            for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
-                try{
-                    contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
+            for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
+                try {
+                    contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
 
-                    System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): " +contractHash+"\n");
+                    System.out.println(new StringBuilder().append("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): ").append(contractHash).append("\n").toString());
 
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
@@ -113,7 +110,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                     );
 
                     customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -123,10 +120,10 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
              * Check pending notifications - Broker side
              */
             List<BusinessTransactionRecord> pendingToSubmitConfirmationList = customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitConfirmList();
-            for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
-                try{
+            for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
+                try {
                     System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList()\n");
-                    contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
+                    contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
                     transactionTransmissionManager.confirmNotificationReception(
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
@@ -138,7 +135,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                             PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
 
                     customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -146,11 +143,11 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
             /**
              * Check if pending events
              */
-            List<String> pendingEventsIdList= customerAckOfflineMerchandiseBusinessTransactionDao.getPendingEvents();
-            for(String eventId : pendingEventsIdList){
-                try{
+            List<String> pendingEventsIdList = customerAckOfflineMerchandiseBusinessTransactionDao.getPendingEvents();
+            for (String eventId : pendingEventsIdList) {
+                try {
                     checkPendingEvent(eventId);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -162,8 +159,8 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
 
     @Override
     protected void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
-        try{
-            String eventTypeCode= customerAckOfflineMerchandiseBusinessTransactionDao.getEventType(eventId);
+        try {
+            String eventTypeCode = customerAckOfflineMerchandiseBusinessTransactionDao.getEventType(eventId);
             String contractHash;
             BusinessTransactionMetadata businessTransactionMetadata;
             ContractTransactionStatus contractTransactionStatus;
@@ -182,6 +179,13 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
 
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("CUSTOMER_ACK_OFFLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE)
+                        continue;
+
+                    System.out.println("CUSTOMER_ACK_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (customerAckOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
 
@@ -223,6 +227,13 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
 
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("CUSTOMER_ACK_OFFLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE)
+                        continue;
+
+                    System.out.println("CUSTOMER_ACK_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (customerAckOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
 
@@ -238,7 +249,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
 //                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.COMPLETED);
                             Date date = new Date();
                             customerAckOfflineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
-                            customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash,ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
+                            customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
                             raiseAckConfirmationEvent(contractHash);
 
                         }
@@ -258,7 +269,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                 //the eventId from this event is the contractId - Customer side
                 CustomerBrokerContractPurchase customerBrokerContractPurchase =
                         customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(eventId);
-                if(customerBrokerContractPurchase!=null){
+                if (customerBrokerContractPurchase != null) {
                     String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
                     CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.
                             getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
@@ -266,7 +277,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                     Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
                     String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.BROKER_PAYMENT_METHOD);
 
-                    if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
+                    if (!MoneyType.CRYPTO.getCode().equals(clauseValue)) {
                         customerAckOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
                     }
                 }
@@ -332,7 +343,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
         }
     }
 
-    private void raiseAckConfirmationEvent(String contractHash){
+    private void raiseAckConfirmationEvent(String contractHash) {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.CUSTOMER_ACK_MERCHANDISE_CONFIRMED);
         CustomerAckMerchandiseConfirmed customerAckMerchandiseConfirmed = (CustomerAckMerchandiseConfirmed) fermatEvent;
         customerAckMerchandiseConfirmed.setSource(EventSource.CUSTOMER_ACK_OFFLINE_MERCHANDISE);

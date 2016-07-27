@@ -8,7 +8,7 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 /**
- *Created by Yordin Alayn on 22.01.16.
+ * Created by Yordin Alayn on 22.01.16.
  * Based in FooterViewHolder of Star_negotiation by nelson
  */
 public class FooterViewHolder extends FermatViewHolder implements View.OnClickListener {
@@ -39,7 +39,7 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
         }
     }
 
-    public void HideButtons(){
+    public void HideButtons() {
         addNoteButton.setVisibility(View.GONE);
         sendButton.setVisibility(View.GONE);
     }

@@ -58,15 +58,15 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TABLE_NAME);
 
-            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_ID_COLUMN_NAME,          DatabaseDataType.TEXT, 50, Boolean.TRUE);
-            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TIMESTAMP_COLUMN_NAME,               DatabaseDataType.TEXT, 30, Boolean.FALSE);
+            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.TEXT, 50, Boolean.TRUE);
+            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TIMESTAMP_COLUMN_NAME, DatabaseDataType.TEXT, 30, Boolean.FALSE);
             table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_CONTRACT_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.TEXT, 50, Boolean.FALSE);
-            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_PURCHASE_STATUS_COLUMN_NAME,         DatabaseDataType.TEXT, 25, Boolean.FALSE);
-            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_CONTRACT_STATUS_COLUMN_NAME,         DatabaseDataType.TEXT, 25, Boolean.FALSE);
-            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME,      DatabaseDataType.TEXT, 25, Boolean.FALSE);
-            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_CURRENCY_TYPE_COLUMN_NAME,           DatabaseDataType.TEXT, 25, Boolean.FALSE);
-            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_TYPE_COLUMN_NAME,        DatabaseDataType.TEXT, 25, Boolean.FALSE);
-            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_MEMO_COLUMN_NAME,                    DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_PURCHASE_STATUS_COLUMN_NAME, DatabaseDataType.TEXT, 25, Boolean.FALSE);
+            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_CONTRACT_STATUS_COLUMN_NAME, DatabaseDataType.TEXT, 25, Boolean.FALSE);
+            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME, DatabaseDataType.TEXT, 25, Boolean.FALSE);
+            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.TEXT, 25, Boolean.FALSE);
+            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.TEXT, 25, Boolean.FALSE);
+            table.addColumn(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_MEMO_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
 
 
             table.addIndex(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_FIRST_KEY_COLUMN);

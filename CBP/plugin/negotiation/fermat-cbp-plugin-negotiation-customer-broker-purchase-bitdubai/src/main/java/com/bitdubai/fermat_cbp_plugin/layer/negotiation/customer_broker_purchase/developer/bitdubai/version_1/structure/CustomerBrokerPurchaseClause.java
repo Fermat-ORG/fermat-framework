@@ -11,7 +11,7 @@ import java.util.UUID;
  * Created by angel on 21/10/15.
  */
 
-public class CustomerBrokerPurchaseClause implements Clause, Serializable{
+public class CustomerBrokerPurchaseClause implements Clause, Serializable {
     private final UUID clauseId;
     private final ClauseType type;
     private final String value;
@@ -19,7 +19,7 @@ public class CustomerBrokerPurchaseClause implements Clause, Serializable{
     private ClauseStatus status;
     private short indexOrder;
 
-    public CustomerBrokerPurchaseClause(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder){
+    public CustomerBrokerPurchaseClause(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder) {
         this.clauseId = clauseId;
         this.type = type;
         this.value = value;

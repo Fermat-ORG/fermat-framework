@@ -17,23 +17,22 @@ public class LocalClientSocketSession extends LocalSocketSession {
     private static final String TAG = "ClientSocketSession";
     private BufferChannelAIDL bufferChannelAIDL;
 
-    public LocalClientSocketSession(String pkIdentity,LocalSocket localSocket,BufferChannelAIDL bufferChannelAIDL) {
-        super(pkIdentity,localSocket);
+    public LocalClientSocketSession(String pkIdentity, LocalSocket localSocket, BufferChannelAIDL bufferChannelAIDL) {
+        super(pkIdentity, localSocket);
         this.bufferChannelAIDL = bufferChannelAIDL;
     }
-
 
 
     @Override
     public void onReceiveMessage(FermatModuleObjectWrapper object) {
         try {
-            Log.i(TAG,"Recieving object");
-            if(object.getE()!=null){
-                bufferChannelAIDL.addFullDataAndNotificateArrive(object.getObjectRequestId(),object.getE());
-            }else {
+            Log.i(TAG, "Recieving object");
+            if (object.getE() != null) {
+                bufferChannelAIDL.addFullDataAndNotificateArrive(object.getObjectRequestId(), object.getE());
+            } else {
                 bufferChannelAIDL.addFullDataAndNotificateArrive(object.getObjectRequestId(), (Serializable) object.getObject());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

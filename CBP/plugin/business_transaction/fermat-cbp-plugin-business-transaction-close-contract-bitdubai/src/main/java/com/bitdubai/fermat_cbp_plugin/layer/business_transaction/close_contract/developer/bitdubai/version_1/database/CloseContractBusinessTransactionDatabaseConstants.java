@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Manuel Perez - (darkestpriest@gmail.com) on 03/12/15.
  *
  * @version 1.0

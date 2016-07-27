@@ -15,11 +15,11 @@ public class CustomerIdentityWalletRelationshipInformation implements CustomerId
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1117;
     private static final int HASH_PRIME_NUMBER_ADD = 3001;
 
-    private final UUID      relationshipId;
-    private final String    identity;
-    private final String      wallet;
+    private final UUID relationshipId;
+    private final String identity;
+    private final String wallet;
 
-    public CustomerIdentityWalletRelationshipInformation(final UUID relationshipId, final String identity, final String Wallet){
+    public CustomerIdentityWalletRelationshipInformation(final UUID relationshipId, final String identity, final String Wallet) {
         this.identity = identity;
         this.wallet = Wallet;
         this.relationshipId = relationshipId;
@@ -41,34 +41,37 @@ public class CustomerIdentityWalletRelationshipInformation implements CustomerId
     }
 
     @Override
-    public boolean equals(final Object o){
-        if(!(o instanceof BrokerIdentityWalletRelationship))
+    public boolean equals(final Object o) {
+        if (!(o instanceof BrokerIdentityWalletRelationship))
             return false;
 
         BrokerIdentityWalletRelationship compare = (BrokerIdentityWalletRelationship) o;
 
-        if( !this.identity.equals(compare.getCryptoBroker()) )
+        if (!this.identity.equals(compare.getCryptoBroker()))
             return false;
-        if( !this.wallet.equals(compare.getWallet()) )
+        if (!this.wallet.equals(compare.getWallet()))
             return false;
         return this.relationshipId.equals(compare.getRelationshipId());
 
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int c = 0;
         c += identity.hashCode();
         c += wallet.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override
     public String toString() {
-        return "CustomerIdentityWalletRelationshipInformation{" +
-                "relationshipId=" + relationshipId +
-                ", identity='" + identity + '\'' +
-                ", wallet='" + wallet + '\'' +
-                '}';
+        return new StringBuilder()
+                .append("CustomerIdentityWalletRelationshipInformation{")
+                .append("relationshipId=").append(relationshipId)
+                .append(", identity='").append(identity)
+                .append('\'')
+                .append(", wallet='").append(wallet)
+                .append('\'')
+                .append('}').toString();
     }
 }

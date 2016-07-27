@@ -55,6 +55,7 @@ public class BankTransactionParametersRecord implements BankTransactionParameter
 
     /**
      * Constructor with parameters
+     *
      * @param publicKeyPlugin
      * @param publicKeyWallet
      * @param publicKeyActor
@@ -155,23 +156,28 @@ public class BankTransactionParametersRecord implements BankTransactionParameter
     }
 
 
-
     public void setMemo(String memo) {
         this.memo = memo;
     }
 
     @Override
     public String toString() {
-        return "BankTransactionParametersRecord{" +
-                "transactionId=" + transactionId +
-                ", publicKeyPlugin='" + publicKeyPlugin + '\'' +
-                ", publicKeyWallet='" + publicKeyWallet + '\'' +
-                ", publicKeyActor='" + publicKeyActor + '\'' +
-                ", amount=" + amount +
-                ", account='" + account + '\'' +
-                ", currency=" + currency +
-                ", memo='" + memo + '\'' +
-                '}';
+        return new StringBuilder()
+                .append("BankTransactionParametersRecord{")
+                .append("transactionId=").append(transactionId)
+                .append(", publicKeyPlugin='").append(publicKeyPlugin)
+                .append('\'')
+                .append(", publicKeyWallet='").append(publicKeyWallet)
+                .append('\'')
+                .append(", publicKeyActor='").append(publicKeyActor)
+                .append('\'')
+                .append(", amount=").append(amount)
+                .append(", account='").append(account)
+                .append('\'')
+                .append(", currency=").append(currency)
+                .append(", memo='").append(memo)
+                .append('\'')
+                .append('}').toString();
     }
 
     public void setTransactionType(TransactionType transactionType) {

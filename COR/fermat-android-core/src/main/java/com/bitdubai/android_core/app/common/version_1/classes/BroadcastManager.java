@@ -5,10 +5,10 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.FermatApplication;
-import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.receivers.NotificationReceiver;
 import com.bitdubai.android_core.app.common.version_1.receivers.UpdateViewReceiver;
 import com.bitdubai.android_core.app.common.version_1.util.interfaces.BroadcasterInterface;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
@@ -31,16 +31,16 @@ public class BroadcastManager implements BroadcasterInterface {
     @Override
     public void publish(BroadcasterType broadcasterType, String code) {
         try {
-            switch (broadcasterType){
+            switch (broadcasterType) {
                 case UPDATE_VIEW:
 //                    updateView(code);
-                    sendUpdateIntent(null,code,null);
+                    sendUpdateIntent(null, code, null);
                     break;
                 case NOTIFICATION_SERVICE:
-                    sendNotificationIntent(null,code,null);
+                    sendNotificationIntent(null, code, null);
                     break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.e(TAG, "Cant broadcast excepcion");
             e.printStackTrace();
         }
@@ -49,56 +49,55 @@ public class BroadcastManager implements BroadcasterInterface {
     @Override
     public void publish(BroadcasterType broadcasterType, String appCode, String code) {
         try {
-            switch (broadcasterType){
+            switch (broadcasterType) {
                 case UPDATE_VIEW:
 //                    updateView(appCode,code);
-                    sendUpdateIntent(appCode,code,null);
+                    sendUpdateIntent(appCode, code, null);
                     break;
                 case NOTIFICATION_SERVICE:
-                    sendNotificationIntent(appCode, code,null);
+                    sendNotificationIntent(appCode, code, null);
                     break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.e(TAG, "Cant broadcast excepcion");
             e.printStackTrace();
         }
     }
 
 
-
     @Override
-    public void publish(BroadcasterType broadcasterType, String code,Platforms platform) {
+    public void publish(BroadcasterType broadcasterType, String code, Platforms platform) {
         try {
-            switch (broadcasterType){
+            switch (broadcasterType) {
                 case UPDATE_VIEW:
 //                    updateView(code);
-                    sendUpdateIntent(null,code,null);
+                    sendUpdateIntent(null, code, null);
                     break;
                 case NOTIFICATION_SERVICE:
-                    sendNotificationIntent(null,code,null);
+                    sendNotificationIntent(null, code, null);
                     break;
             }
-        }catch (Exception e){
-            Log.e(TAG,"Cant broadcast excepcion");
+        } catch (Exception e) {
+            Log.e(TAG, "Cant broadcast excepcion");
             e.printStackTrace();
         }
     }
 
     @Override
-    public void publish(BroadcasterType broadcasterType, String code,FermatApps fermatApps) {
+    public void publish(BroadcasterType broadcasterType, String code, FermatApps fermatApps) {
         try {
-            switch (broadcasterType){
+            switch (broadcasterType) {
                 case UPDATE_VIEW:
 //                    updateView(code);
-                    sendUpdateIntent(null,code,null);
+                    sendUpdateIntent(null, code, null);
                     break;
                 case NOTIFICATION_SERVICE:
 //                    String publicKey = fermatActivity.get().searchAppFromPlatformIdentifier(fermatApps);
 //                    fermatActivity.get().notificateBroadcast(publicKey,code);
                     break;
             }
-        }catch (Exception e){
-            Log.e(TAG,"Cant broadcast excepcion");
+        } catch (Exception e) {
+            Log.e(TAG, "Cant broadcast excepcion");
             e.printStackTrace();
         }
     }
@@ -106,19 +105,19 @@ public class BroadcastManager implements BroadcasterInterface {
     @Override
     public void publish(BroadcasterType broadcasterType, String appCode, FermatBundle fermatBundle) {
         try {
-            switch (broadcasterType){
+            switch (broadcasterType) {
                 case UPDATE_VIEW:
 //                    updateView(bundle);
-                    sendUpdateIntent(appCode,null,fermatBundle);
+                    sendUpdateIntent(appCode, null, fermatBundle);
                     break;
                 case NOTIFICATION_SERVICE:
-                    sendNotificationIntent(appCode,null,fermatBundle);
+                    sendNotificationIntent(appCode, null, fermatBundle);
 //                    String publicKey = fermatActivity.get().searchAppFromPlatformIdentifier(fermatApps);
 //                    fermatActivity.get().notificateBroadcast(publicKey,code);
                     break;
             }
-        }catch (Exception e){
-            Log.e(TAG,"Cant broadcast excepcion");
+        } catch (Exception e) {
+            Log.e(TAG, "Cant broadcast excepcion");
             e.printStackTrace();
         }
     }
@@ -127,10 +126,10 @@ public class BroadcastManager implements BroadcasterInterface {
     public int publish(BroadcasterType broadcasterType, FermatBundle bundle) {
         int id = 0;
         try {
-            switch (broadcasterType){
+            switch (broadcasterType) {
                 case UPDATE_VIEW:
 //                    updateView(bundle);
-                    sendUpdateIntent(null,null,bundle);
+                    sendUpdateIntent(null, null, bundle);
                     break;
                 case NOTIFICATION_SERVICE:
 //                    fermatActivity.get().notificateBroadcast(null,bundle);
@@ -139,15 +138,15 @@ public class BroadcastManager implements BroadcasterInterface {
 //                    id = (fermatActivity.get()!=null)?fermatActivity.get().notificateProgressBroadcast(bundle):0;
                     break;
             }
-        }catch (Exception e){
-            Log.e(TAG,"Cant broadcast excepcion");
+        } catch (Exception e) {
+            Log.e(TAG, "Cant broadcast excepcion");
             e.printStackTrace();
         }
         return id;
     }
 
 
-    private void sendUpdateIntent(String appPublicKey,@Nullable String code,@Nullable FermatBundle data){
+    private void sendUpdateIntent(String appPublicKey, @Nullable String code, @Nullable FermatBundle data) {
         Intent intent = new Intent(UpdateViewReceiver.INTENT_NAME);
         intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appPublicKey);
         intent.putExtra(ApplicationConstants.INTENT_EXTRA_DATA, code);
@@ -155,7 +154,7 @@ public class BroadcastManager implements BroadcasterInterface {
         FermatApplication.getInstance().sendBroadcast(intent);
     }
 
-    private void sendNotificationIntent(String appPublicKey,@Nullable String code,@Nullable FermatBundle data) {
+    private void sendNotificationIntent(String appPublicKey, @Nullable String code, @Nullable FermatBundle data) {
         Intent intent = new Intent(NotificationReceiver.INTENT_NAME);
         intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appPublicKey);
         intent.putExtra(ApplicationConstants.INTENT_EXTRA_DATA, code);
@@ -207,8 +206,6 @@ public class BroadcastManager implements BroadcasterInterface {
 //            }
 //        }
 //    }
-
-
 
 
 }

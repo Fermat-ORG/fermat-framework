@@ -10,31 +10,31 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 21.01.16.
  */
-public class CryptoCustomerWalletModuleClausesImpl implements Clause{
+public class CryptoCustomerWalletModuleClausesImpl implements Clause {
 
-    private UUID            clauseId;
-    private ClauseType      type;
-    private String          value;
-    private ClauseStatus    status;
-    private String          proposedBy;
-    private short           indexOrder;
+    private UUID clauseId;
+    private ClauseType type;
+    private String value;
+    private ClauseStatus status;
+    private String proposedBy;
+    private short indexOrder;
 
-    public CryptoCustomerWalletModuleClausesImpl(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder){
-        this.clauseId   = clauseId;
-        this.type       = type;
-        this.value      = value;
-        this.status     = status;
+    public CryptoCustomerWalletModuleClausesImpl(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder) {
+        this.clauseId = clauseId;
+        this.type = type;
+        this.value = value;
+        this.status = status;
         this.proposedBy = proposedBy;
         this.indexOrder = indexOrder;
     }
 
     public CryptoCustomerWalletModuleClausesImpl(ClauseInformation clauseInformation, String proposer) {
-        this.clauseId   = clauseInformation.getClauseID();
-        this.type       = clauseInformation.getType();
-        this.value      = clauseInformation.getValue();
-        this.status     = clauseInformation.getStatus();
+        this.clauseId = clauseInformation.getClauseID();
+        this.type = clauseInformation.getType();
+        this.value = clauseInformation.getValue();
+        this.status = clauseInformation.getStatus();
         this.proposedBy = proposer;
-        indexOrder      = 0;
+        indexOrder = 0;
     }
 
     @Override

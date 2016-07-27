@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractLayer {
 
-    private final Map<AddonReference , AbstractAddonSubsystem> addons ;
+    private final Map<AddonReference, AbstractAddonSubsystem> addons;
     private final Map<PluginReference, AbstractPluginSubsystem> plugins;
 
     private final LayerReference layerReference;
@@ -39,14 +39,14 @@ public abstract class AbstractLayer {
 
         this.layerReference = new LayerReference(layerEnum);
 
-        this.addons  = new ConcurrentHashMap<>();
+        this.addons = new ConcurrentHashMap<>();
         this.plugins = new ConcurrentHashMap<>();
     }
 
     public AbstractLayer(Layers layerEnum, FermatContext fermatContext) {
         this.layerReference = new LayerReference(layerEnum);
         this.fermatContext = fermatContext;
-        this.addons  = new ConcurrentHashMap<>();
+        this.addons = new ConcurrentHashMap<>();
         this.plugins = new ConcurrentHashMap<>();
     }
 
@@ -60,8 +60,7 @@ public abstract class AbstractLayer {
      * Through the method <code>registerAddon</code> you can add new addons to the layer.
      * Here we'll corroborate too that the addon is not added twice.
      *
-     * @param abstractAddonSubsystem  subsystem of the addon.
-     *
+     * @param abstractAddonSubsystem subsystem of the addon.
      * @throws CantRegisterAddonException if something goes wrong.
      */
     protected final void registerAddon(final AbstractAddonSubsystem abstractAddonSubsystem) throws CantRegisterAddonException {
@@ -75,7 +74,7 @@ public abstract class AbstractLayer {
 
         try {
 
-            if(addons.containsKey(addonReference)) {
+            if (addons.containsKey(addonReference)) {
                 throw new CantRegisterAddonException(addonReference.toString(), "addon already exists in this layer.");
             }
 
@@ -96,8 +95,7 @@ public abstract class AbstractLayer {
      * Through the method <code>registerPlugin</code> you can add new plugins to the layer.
      * Here we'll corroborate too that the plugin is not added twice.
      *
-     * @param abstractPluginSubsystem  subsystem of the plugin).
-     *
+     * @param abstractPluginSubsystem subsystem of the plugin).
      * @throws CantRegisterPluginException if something goes wrong.
      */
     protected final void registerPlugin(AbstractPluginSubsystem abstractPluginSubsystem) throws CantRegisterPluginException {
@@ -111,7 +109,7 @@ public abstract class AbstractLayer {
 
         try {
 
-            if(plugins.containsKey(pluginReference)) {
+            if (plugins.containsKey(pluginReference)) {
 
                 throw new CantRegisterPluginException(pluginReference.toString(), "Plugin already exists in this layer.");
             }
@@ -135,7 +133,7 @@ public abstract class AbstractLayer {
             return addons.get(addonReference);
         } else {
 
-            throw new AddonNotFoundException("addon: "+addonReference, "addon not found in the specified layer.");
+            throw new AddonNotFoundException(new StringBuilder().append("addon: ").append(addonReference).toString(), "addon not found in the specified layer.");
         }
     }
 
@@ -145,25 +143,25 @@ public abstract class AbstractLayer {
             return plugins.get(pluginReference);
         } else {
 
-            throw new PluginNotFoundException("plugin: "+pluginReference, "plugin not found in the specified layer.");
+            throw new PluginNotFoundException(new StringBuilder().append("plugin: ").append(pluginReference).toString(), "plugin not found in the specified layer.");
         }
     }
 
     public final void fillAddonVersions(final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions) {
 
-        for(ConcurrentHashMap.Entry<AddonReference, AbstractAddonSubsystem> addon : addons.entrySet())
+        for (ConcurrentHashMap.Entry<AddonReference, AbstractAddonSubsystem> addon : addons.entrySet())
             addon.getValue().fillVersions(versions);
     }
 
     public final void fillPluginVersions(final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions) {
 
-        for(ConcurrentHashMap.Entry<PluginReference, AbstractPluginSubsystem> plugin : plugins.entrySet())
+        for (ConcurrentHashMap.Entry<PluginReference, AbstractPluginSubsystem> plugin : plugins.entrySet())
             plugin.getValue().fillVersions(versions);
     }
 
     public final void fillPluginVersionsMati(final List<PluginVersionReference> versions) {
 
-        for(ConcurrentHashMap.Entry<PluginReference, AbstractPluginSubsystem> plugin : plugins.entrySet())
+        for (ConcurrentHashMap.Entry<PluginReference, AbstractPluginSubsystem> plugin : plugins.entrySet())
             plugin.getValue().fillVersionsMati(versions);
     }
 

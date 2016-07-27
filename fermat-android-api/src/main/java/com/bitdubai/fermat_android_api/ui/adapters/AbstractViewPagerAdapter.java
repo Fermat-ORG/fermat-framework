@@ -20,12 +20,12 @@ import java.util.List;
 /**
  * AbstractViewPagerAdapter to add new subApp
  */
-public abstract class AbstractViewPagerAdapter<I,F extends FermatViewHolder> extends PagerAdapter {
+public abstract class AbstractViewPagerAdapter<I, F extends FermatViewHolder> extends PagerAdapter {
 
     private List<I> lstItems;
     private Context context;
     private LayoutInflater layoutInflater;
-    private HashMap<Integer,View> typesLoaded;
+    private HashMap<Integer, View> typesLoaded;
 
     public AbstractViewPagerAdapter(Context context, List<I> lstItems) {
         this.context = context;
@@ -58,7 +58,7 @@ public abstract class AbstractViewPagerAdapter<I,F extends FermatViewHolder> ext
     public Object instantiateItem(ViewGroup container, int position) {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         I item = lstItems.get(position);
-        int itemType = getItemType(item,position);
+        int itemType = getItemType(item, position);
         View itemView = null;
 //        if(!typesLoaded.containsKey(itemType)){
 //            itemView = layoutInflater.inflate(getItemLayout(item,position,itemType),container,false);
@@ -66,20 +66,20 @@ public abstract class AbstractViewPagerAdapter<I,F extends FermatViewHolder> ext
 //        }else{
 //            itemView = typesLoaded.get(itemType);
 //        }
-        itemView = layoutInflater.inflate(getItemLayout(item,position,itemType),container,false);
-        bindHolder(createHolder(itemView, position,itemType), position, item);
+        itemView = layoutInflater.inflate(getItemLayout(item, position, itemType), container, false);
+        bindHolder(createHolder(itemView, position, itemType), position, item);
         container.addView(itemView);
         return itemView;
     }
 
     protected abstract int getItemType(I item, int position);
 
-    protected abstract F createHolder(View item_view,int position,int itemType);
+    protected abstract F createHolder(View item_view, int position, int itemType);
 
-    protected abstract void bindHolder(F fermatViewHolder,int position,I item);
+    protected abstract void bindHolder(F fermatViewHolder, int position, I item);
 
 
-    protected abstract int getItemLayout(I item,int position,int itemType);
+    protected abstract int getItemLayout(I item, int position, int itemType);
 
 
     public void changeListItems(List<I> listItems) {

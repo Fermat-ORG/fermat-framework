@@ -8,14 +8,14 @@ import java.io.Serializable;
 /**
  * Created by Matias Furszyfer on 2016.04.18..
  */
-public class FermatModuleObjectWrapper implements Parcelable,Serializable {
+public class FermatModuleObjectWrapper implements Parcelable, Serializable {
 
     private String objectRequestId;
     private Serializable object;
     private boolean isLargeData = false;
     private Exception e;
 
-    public FermatModuleObjectWrapper(Serializable object,boolean isLargeData,String objectRequestId) {
+    public FermatModuleObjectWrapper(Serializable object, boolean isLargeData, String objectRequestId) {
         this.object = object;
         this.isLargeData = isLargeData;
         this.objectRequestId = objectRequestId;
@@ -32,7 +32,7 @@ public class FermatModuleObjectWrapper implements Parcelable,Serializable {
         this.object = object;
     }
 
-    public FermatModuleObjectWrapper(Exception e){
+    public FermatModuleObjectWrapper(Exception e) {
         this.e = e;
     }
 
@@ -79,20 +79,18 @@ public class FermatModuleObjectWrapper implements Parcelable,Serializable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        try{
+        try {
             dest.writeSerializable(object);
             dest.writeSerializable(e);
             dest.writeByte((byte) (isLargeData ? 1 : 0));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public String toString() {
-        String o = (object!=null)?object.toString():"null";
-        return "FermatModuleObjectWrapper{" +
-                "object=" +o+
-                '}';
+        String o = (object != null) ? object.toString() : "null";
+        return new StringBuilder().append("FermatModuleObjectWrapper{").append("object=").append(o).append('}').toString();
     }
 }

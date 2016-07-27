@@ -31,21 +31,25 @@ public class parseToLongTest {
     CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
     @Mock
     CustomerOnlinePaymentPluginRoot errorManager;
+
     @Before
-    public void setup(){
+    public void setup() {
         MockitoAnnotations.initMocks(this);
-        customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(customerBrokerContractPurchaseManager,customerOnlinePaymentBusinessTransactionDao, customerBrokerPurchaseNegotiationManager, errorManager);
+        customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(customerBrokerContractPurchaseManager, customerOnlinePaymentBusinessTransactionDao, customerBrokerPurchaseNegotiationManager, errorManager);
     }
+
     @Test
-    public void parseToLongTest_Should_Return_Long() throws  Exception{
-        assertEquals(customerOnlinePaymentTransactionManager.parseToCryptoAmountFormat("1", null),1);
+    public void parseToLongTest_Should_Return_Long() throws Exception {
+        assertEquals(customerOnlinePaymentTransactionManager.parseToCryptoAmountFormat("1", null), 1);
     }
+
     @Test(expected = InvalidParameterException.class)
-    public void parseToLongTest_Should_Throw_Null_InvalidParameterException() throws  Exception{
+    public void parseToLongTest_Should_Throw_Null_InvalidParameterException() throws Exception {
         customerOnlinePaymentTransactionManager.parseToCryptoAmountFormat(null, null);
     }
+
     @Test(expected = InvalidParameterException.class)
-    public void parseToLongTest_Should_Return_Exception() throws  Exception{
+    public void parseToLongTest_Should_Return_Exception() throws Exception {
         customerOnlinePaymentTransactionManager.parseToCryptoAmountFormat("Test", null);
     }
 }

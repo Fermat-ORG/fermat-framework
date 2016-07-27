@@ -1,4 +1,5 @@
 package unit.CryptoMoneyRestockTransactionImpl;
+
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.CryptoMoneyRestockTransactionImpl;
 
 import org.junit.Test;
@@ -17,7 +18,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(MockitoJUnitRunner.class)
 public class setTransactionIdTest {
     @Test
-    public void setTransactionId(){
+    public void setTransactionId() {
         CryptoMoneyRestockTransactionImpl cryptoMoneyRestockTransaction = mock(CryptoMoneyRestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoMoneyRestockTransaction).setTransactionId(Mockito.any(UUID.class));
     }

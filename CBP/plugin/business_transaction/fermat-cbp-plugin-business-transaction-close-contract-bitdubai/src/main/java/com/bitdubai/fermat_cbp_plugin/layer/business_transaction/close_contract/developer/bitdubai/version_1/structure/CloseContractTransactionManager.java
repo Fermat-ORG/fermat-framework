@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -19,8 +21,6 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.database.CloseContractBusinessTransactionDao;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 02/12/15.
@@ -102,9 +102,8 @@ public class CloseContractTransactionManager implements CloseContractManager {
                 System.out.print("\nTEST CONTRACT - CLOSE CONTRACT - MANAGER - closeSaleContract() - STATUS VAL\n");
 //            if (contractStatus.getCode().equals(ContractStatus.MERCHANDISE_SUBMIT.getCode()))
                 this.closeContractBusinessTransactionDao.persistContractRecord(customerBrokerContractPurchase, ContractType.PURCHASE);
-            }else {
-                throw new CantCloseContractException("The contract with the hash\n" + contractHash +
-                        "\n cannot be closed, because the ContractStatus is " + contractStatus);
+            } else {
+                throw new CantCloseContractException(new StringBuilder().append("The contract with the hash\n").append(contractHash).append("\n cannot be closed, because the ContractStatus is ").append(contractStatus).toString());
             }
 
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {

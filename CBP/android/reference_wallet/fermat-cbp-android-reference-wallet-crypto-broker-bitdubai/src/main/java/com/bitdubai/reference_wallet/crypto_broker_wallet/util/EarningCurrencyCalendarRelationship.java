@@ -10,11 +10,11 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
  */
 public class EarningCurrencyCalendarRelationship implements Comparable<EarningCurrencyCalendarRelationship> {
 
-    private final Integer  year               ;
-    private final Integer  month              ;
-    private final Integer  day                ;
-    private final Integer  timeReference      ;
-    private final Currency currency           ;
+    private final Integer year;
+    private final Integer month;
+    private final Integer day;
+    private final Integer timeReference;
+    private final Currency currency;
 
     public EarningCurrencyCalendarRelationship(Integer year, Integer month, Integer day, Integer timeReference, Currency currency) {
         this.year = year;
@@ -92,12 +92,18 @@ public class EarningCurrencyCalendarRelationship implements Comparable<EarningCu
 
     @Override
     public String toString() {
-        return "EarningCurrencyCalendarRelationship{" +
-                "year=" + year +
-                ", month=" + month +
-                ", day=" + day +
-                ", timeReference=" + timeReference +
-                ", currency=" + currency +
-                '}';
+        return new StringBuilder()
+                .append("EarningCurrencyCalendarRelationship{")
+                .append("year=")
+                .append(year)
+                .append(", month=")
+                .append(month)
+                .append(", day=")
+                .append(day)
+                .append(", timeReference=")
+                .append(timeReference)
+                .append(", currency=")
+                .append(currency)
+                .append('}').toString();
     }
 }

@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Yordin Alayn - (y.alayn@gmail.com) on 17/12/15.
  *
  * @version 1.0

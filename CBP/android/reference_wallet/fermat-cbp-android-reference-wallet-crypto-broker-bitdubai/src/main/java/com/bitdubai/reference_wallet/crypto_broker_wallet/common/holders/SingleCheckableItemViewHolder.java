@@ -23,7 +23,7 @@ public abstract class SingleCheckableItemViewHolder<T> extends FermatViewHolder 
 
     public abstract int getCheckboxResource();
 
-    public FermatCheckBox getCheckBox(){
+    public FermatCheckBox getCheckBox() {
         return checkBox;
     }
 }

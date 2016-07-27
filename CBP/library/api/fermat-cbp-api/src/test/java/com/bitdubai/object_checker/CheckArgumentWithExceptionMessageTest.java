@@ -13,21 +13,21 @@ import org.junit.rules.ExpectedException;
 public class CheckArgumentWithExceptionMessageTest {
 
     @Test
-    public void checkValidArgumentWithExceptionMessageTest() throws Exception{
-        String argument="Valid Argument";
-        ObjectChecker.checkArgument(argument,"The argument is null");
+    public void checkValidArgumentWithExceptionMessageTest() throws Exception {
+        String argument = "Valid Argument";
+        ObjectChecker.checkArgument(argument, "The argument is null");
     }
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void checkInvalidArgumentWithExceptionMessageTest() throws Exception{
-        String argument=null;
-        String exceptionMessage="The argument is null";
+    public void checkInvalidArgumentWithExceptionMessageTest() throws Exception {
+        String argument = null;
+        String exceptionMessage = "The argument is null";
         thrown.expect(ObjectNotSetException.class);
         thrown.expectMessage(exceptionMessage);
-        ObjectChecker.checkArgument(argument,exceptionMessage);
+        ObjectChecker.checkArgument(argument, exceptionMessage);
     }
 
 }

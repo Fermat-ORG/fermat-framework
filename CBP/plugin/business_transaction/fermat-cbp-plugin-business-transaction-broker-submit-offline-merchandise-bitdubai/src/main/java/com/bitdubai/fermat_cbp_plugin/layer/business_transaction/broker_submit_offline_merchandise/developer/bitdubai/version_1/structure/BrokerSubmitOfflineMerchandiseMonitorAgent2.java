@@ -25,7 +25,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerSubmitMerchandiseConfirmed;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.AbstractBusinessTransactionAgent;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BankMoneyDeStockRecord;
@@ -47,8 +46,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.except
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
@@ -89,6 +86,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
 
     /**
      * Default constructor with parameters
+     *
      * @param sleepTime
      * @param timeUnit
      * @param initDelayTime
@@ -142,7 +140,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToDeStockTransactionList = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingDeStockTransactionList();
             for (BusinessTransactionRecord pendingToDeStockTransaction : pendingToDeStockTransactionList) {
-                try{
+                try {
                     System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList()\n");
 
                     MoneyType moneyType = pendingToDeStockTransaction.getPaymentType();
@@ -162,7 +160,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
                         case CRYPTO:
                             throw new CantSubmitMerchandiseException("The currency type is CRYPTO, can't send crypto money from this plugin");
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -173,7 +171,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitNotificationList = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
             for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                try{
+                try {
                     System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList()\n");
 
                     contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
@@ -190,7 +188,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
                     //Updating the business transaction record
                     pendingToSubmitNotificationRecord.setContractTransactionStatus(ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED);
                     brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(pendingToSubmitNotificationRecord);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -201,10 +199,10 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitConfirmationList = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitConfirmList();
             for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                try{
+                try {
                     contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
-                    System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitConfirmList(): " + contractHash + "\n");
+                    System.out.println(new StringBuilder().append("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitConfirmList(): ").append(contractHash).append("\n").toString());
 
                     transactionTransmissionManager.confirmNotificationReception(
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
@@ -218,7 +216,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
                     //Updating the business transaction record
                     brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash,
                             ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -257,9 +255,15 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
 
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("BROKER_SUBMIT_OFFLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE)
+                        continue;
+
+                    System.out.println("BROKER_SUBMIT_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (brokerSubmitOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
-
                         contractTransactionStatus = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getContractTransactionStatus(contractHash);
                         //TODO: analyze what we need to do here.
 
@@ -277,7 +281,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
 
                         Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
                         String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.BROKER_PAYMENT_METHOD);
-                        if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
+                        if (!MoneyType.CRYPTO.getCode().equals(clauseValue)) {
                             brokerSubmitOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
                             Date date = new Date();
@@ -304,6 +308,13 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
 
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("BROKER_SUBMIT_OFFLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE)
+                        continue;
+
+                    System.out.println("BROKER_SUBMIT_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (brokerSubmitOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
 
@@ -406,17 +417,18 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
         final String accountNumber = getAccountNumber(destockRecord.getCbpWalletPublicKey(), destockRecord.getFiatCurrency());
         destockRecord.setBankAccount(accountNumber);
 
-        System.out.println("TEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeBankDeStock():" +
-                "\n - deStockRecord.getPublicKeyActor(): " + destockRecord.getPublicKeyActor() +
-                "\n - deStockRecord.getFiatCurrency(): " + destockRecord.getFiatCurrency() +
-                "\n - deStockRecord.getCbpWalletPublicKey(): " + destockRecord.getCbpWalletPublicKey() +
-                "\n - deStockRecord.getBankWalletPublicKey(): " + destockRecord.getBankWalletPublicKey() +
-                "\n - deStockRecord.getBankAccount(): " + destockRecord.getBankAccount() +
-                "\n - deStockRecord.getAmount(): " + destockRecord.getAmount() +
-                "\n - deStockRecord.getMemo(): " + destockRecord.getMemo() +
-                "\n - deStockRecord.getPriceReference(): " + destockRecord.getPriceReference() +
-                "\n - deStockRecord.getOriginTransaction(): " + destockRecord.getOriginTransaction() +
-                "\n - pendingToDeStockTransaction.getContractHash(): " + pendingToDeStockTransaction.getContractHash());
+        System.out.println(new StringBuilder()
+                .append("TEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeBankDeStock():")
+                .append("\n - deStockRecord.getPublicKeyActor(): ").append(destockRecord.getPublicKeyActor())
+                .append("\n - deStockRecord.getFiatCurrency(): ").append(destockRecord.getFiatCurrency())
+                .append("\n - deStockRecord.getCbpWalletPublicKey(): ").append(destockRecord.getCbpWalletPublicKey())
+                .append("\n - deStockRecord.getBankWalletPublicKey(): ").append(destockRecord.getBankWalletPublicKey())
+                .append("\n - deStockRecord.getBankAccount(): ").append(destockRecord.getBankAccount())
+                .append("\n - deStockRecord.getAmount(): ").append(destockRecord.getAmount())
+                .append("\n - deStockRecord.getMemo(): ").append(destockRecord.getMemo())
+                .append("\n - deStockRecord.getPriceReference(): ").append(destockRecord.getPriceReference())
+                .append("\n - deStockRecord.getOriginTransaction(): ").append(destockRecord.getOriginTransaction())
+                .append("\n - pendingToDeStockTransaction.getContractHash(): ").append(pendingToDeStockTransaction.getContractHash()).toString());
 
         bankMoneyDestockManager.createTransactionDestock(
                 destockRecord.getPublicKeyActor(),
@@ -445,17 +457,18 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
         final BigDecimal amount = getAmount(pendingToDeStockTransaction.getContractHash());
         destockRecord.setAmount(amount);
 
-        System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeCashDeStock():" +
-                "\n - destockRecord.getPublicKeyActor(): " + destockRecord.getPublicKeyActor() +
-                "\n - destockRecord.getFiatCurrency(): " + destockRecord.getFiatCurrency() +
-                "\n - destockRecord.getCbpWalletPublicKey(): " + destockRecord.getCbpWalletPublicKey() +
-                "\n - destockRecord.getBankWalletPublicKey(): " + destockRecord.getCshWalletPublicKey() +
-                "\n - destockRecord.getCashReference(): " + destockRecord.getCashReference() +
-                "\n - destockRecord.getAmount(): " + destockRecord.getAmount() +
-                "\n - destockRecord.getMemo(): " + destockRecord.getMemo() +
-                "\n - destockRecord.getPriceReference(): " + destockRecord.getPriceReference() +
-                "\n - destockRecord.getOriginTransaction(): " + destockRecord.getOriginTransaction() +
-                "\n - pendingToDeStockTransaction.getContractHash(): " + pendingToDeStockTransaction.getContractHash());
+        System.out.println(new StringBuilder()
+                .append("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeCashDeStock():")
+                .append("\n - destockRecord.getPublicKeyActor(): ").append(destockRecord.getPublicKeyActor())
+                .append("\n - destockRecord.getFiatCurrency(): ").append(destockRecord.getFiatCurrency())
+                .append("\n - destockRecord.getCbpWalletPublicKey(): ").append(destockRecord.getCbpWalletPublicKey())
+                .append("\n - destockRecord.getBankWalletPublicKey(): ").append(destockRecord.getCshWalletPublicKey())
+                .append("\n - destockRecord.getCashReference(): ").append(destockRecord.getCashReference())
+                .append("\n - destockRecord.getAmount(): ").append(destockRecord.getAmount())
+                .append("\n - destockRecord.getMemo(): ").append(destockRecord.getMemo())
+                .append("\n - destockRecord.getPriceReference(): ").append(destockRecord.getPriceReference())
+                .append("\n - destockRecord.getOriginTransaction(): ").append(destockRecord.getOriginTransaction())
+                .append("\n - pendingToDeStockTransaction.getContractHash(): ").append(pendingToDeStockTransaction.getContractHash()).toString());
 
         cashMoneyDestockManager.createTransactionDestock(
                 destockRecord.getPublicKeyActor(),
@@ -480,11 +493,11 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
             final CryptoBrokerWalletSetting cryptoBrokerWalletSetting = cryptoBrokerWallet.getCryptoWalletSetting();
             List<CryptoBrokerWalletAssociatedSetting> associatedWallets = cryptoBrokerWalletSetting.getCryptoBrokerWalletAssociatedSettings();
 
-            for(CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets){
+            for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
                 Platforms platform = associatedWallet.getPlatform();
                 Currency currency = associatedWallet.getMerchandise();
 
-                if(platform == Platforms.BANKING_PLATFORM && currency == merchandiseCurrency)
+                if (platform == Platforms.BANKING_PLATFORM && currency == merchandiseCurrency)
                     return associatedWallet.getBankAccount();
             }
 
@@ -507,7 +520,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
             String negotiationId = customerBrokerContractSale.getNegotiatiotId();
 
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-            ObjectChecker.checkArgument(customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation by Id " + negotiationId + " is null");
+            ObjectChecker.checkArgument(customerBrokerSaleNegotiation, new StringBuilder().append("The customerBrokerSaleNegotiation by Id ").append(negotiationId).append(" is null").toString());
 
             Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
             ClauseType clauseType;

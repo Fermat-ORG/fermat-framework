@@ -13,7 +13,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restoc
 /**
  * Created by franklin on 15/11/15.
  */
-public class DeveloperBitDubai  extends AbstractPluginDeveloper implements PluginLicensor {
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
     public DeveloperBitDubai() {
         super(new PluginDeveloperReference(Developers.BITDUBAI));
@@ -23,8 +23,7 @@ public class DeveloperBitDubai  extends AbstractPluginDeveloper implements Plugi
     public void start() throws CantStartPluginDeveloperException {
         try {
             registerVersion(new BusinessTransactionBankMoneyRestockPluginRoot());
-        }
-        catch (CantRegisterVersionException e) {
+        } catch (CantRegisterVersionException e) {
             throw new CantStartPluginDeveloperException(e,
                     "Plugin Developer BitDubai",
                     "Can't register Plugins version CBP Bank Money Restock");

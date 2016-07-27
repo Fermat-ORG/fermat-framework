@@ -127,6 +127,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private View rootView;
     private AutoCompleteTextView contactName;
     private EditText editTextAmount;
+    private EditText editFeedamount;
     private ImageView imageView_contact;
     private FermatButton send_button;
     private TextView txt_notes;
@@ -134,6 +135,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private TextView txt_balance;
     private String feeLevel = "";
     private String feeOrigin = "";
+    private LinearLayout advances_btn;
+
     private FermatWorker fermatWorker;
 
     /**
@@ -160,9 +163,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private List<WalletContact> walletContactList = new ArrayList<>();
 
     private ExecutorService _executor;
-    private EditText editFeedamount;
     private CheckBox feed_Substract;
-    private LinearLayout advances_btn;
     private LinearLayout layoutAdvances;
     private RadioGroup feeGroup;
     private RadioButton fee_low_btn;
@@ -187,25 +188,18 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             lossProtectedWalletSession = appSession;
 
             lossProtectedWalletManager = appSession.getModuleManager();
-
             lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey());
 
             if(lossProtectedWalletSettings != null) {
 
                 blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
-
                 lossProtectedEnabled = lossProtectedWalletSettings.getLossProtectedEnabled();
 
-
-                if (lossProtectedWalletSettings.getFeedLevel() == null){
+                if (lossProtectedWalletSettings.getFeedLevel() == null) {
                     lossProtectedWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
                     feeLevel = lossProtectedWalletSettings.getFeedLevel();
                 }
-
-
-                else
-                    feeLevel = lossProtectedWalletSettings.getFeedLevel();
-
+                else    feeLevel = lossProtectedWalletSettings.getFeedLevel();
 
             }
 
@@ -266,6 +260,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+
         }
 
         return null;
@@ -362,6 +357,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         feeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                try {
                 if (checkedId == R.id.fee_low) {
                     editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.SLOW.getFee())));
                     feeLevel = String.valueOf(BitcoinFee.SLOW);
@@ -375,13 +371,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                 bitcoinWalletSettings.setFeedLevel(feeLevel);
 
-
-                try {
                     lossProtectedWalletManager.persistSettings(appSession.getAppPublicKey(), lossProtectedWalletSettings);
                 } catch (CantPersistSettingsException e) {
                     e.printStackTrace();
                 }
-
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -867,57 +863,17 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                                 }
 
-                               // long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
-                               // BigDecimal amountDecimal = new BigDecimal(newAmount);
+                                long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
+                                BigDecimal amountDecimal = new BigDecimal(newAmount);
 
                                 BigDecimal decimalFeed = new BigDecimal(newFee);
-                                BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
+                                //BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                                 BigDecimal operator = new BigDecimal(newAmount);
 
 
-                                if(operator.compareTo(minSatoshis) == 1 )
-                                {
-                                    //check amount + fee less than balance
-                                    long total = 0;
-                                    if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode()))
-                                        total =  operator.longValueExact() +  decimalFeed.longValueExact();
-                                    else
-                                        total =  operator.longValueExact() -  decimalFeed.longValueExact();
 
-                                    if(total < Balance)
-                                    {
-                                        ConfirmSendDialog_feeCase sendConfirmDialog = new ConfirmSendDialog_feeCase(getActivity(),
-                                                lossProtectedWalletManager,
-                                                operator.longValueExact(),
-                                                decimalFeed.longValueExact(),
-                                                total,
-                                                FeeOrigin.getByCode(feeOrigin),
-                                                validAddress,
-                                                notes,
-                                                lossProtectedWalletContact.getActorPublicKey(),
-                                                lossProtectedWalletContact.getActorType(),
-                                                blockchainNetworkType,
-                                                appSession);
 
-                                        sendConfirmDialog.show();
-                                        sendConfirmDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
-                                            @Override
-                                            public void onDismiss(DialogInterface dialog) {
-
-                                                onBack(null);
-                                            }
-                                        });
-                                    }
-                                    else{
-                                        Toast.makeText(getActivity(), "Insufficient funds.", Toast.LENGTH_LONG).show();
-                                    }
-
-                                }else{
-                                    Toast.makeText(getActivity(), "Invalid Amount, must be greater than " +msg, Toast.LENGTH_LONG).show();
-                                }
-
-                                /*
                                 if (amountDecimal.longValueExact() > minSatoshis) {
 
                                     long availableBalance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
@@ -955,7 +911,43 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     else{
                                         try {
 
-                                            lossProtectedWalletManager.send(
+                                            //check amount + fee less than balance
+                                            long total = 0;
+                                            if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode()))
+                                                total =  operator.longValueExact() +  decimalFeed.longValueExact();
+                                            else
+                                                total =  operator.longValueExact() -  decimalFeed.longValueExact();
+
+                                            if(total < Balance)
+                                            {
+                                                ConfirmSendDialog_feeCase sendConfirmDialog = new ConfirmSendDialog_feeCase(getActivity(),
+                                                        lossProtectedWalletManager,
+                                                        operator.longValueExact(),
+                                                        decimalFeed.longValueExact(),
+                                                        total,
+                                                        FeeOrigin.getByCode(feeOrigin),
+                                                        validAddress,
+                                                        notes,
+                                                        lossProtectedWalletContact.getActorPublicKey(),
+                                                        lossProtectedWalletContact.getActorType(),
+                                                        blockchainNetworkType,
+                                                        appSession);
+
+                                                sendConfirmDialog.show();
+                                                sendConfirmDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                                                    @Override
+                                                    public void onDismiss(DialogInterface dialog) {
+
+                                                        onBack(null);
+                                                    }
+                                                });
+                                            }
+                                            else{
+                                                Toast.makeText(getActivity(), "Insufficient funds.", Toast.LENGTH_LONG).show();
+                                            }
+
+                                            /*lossProtectedWalletManager.send(
                                                     amountDecimal.longValueExact(),
                                                     validAddress,
                                                     notes,
@@ -971,18 +963,18 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                                     FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT
                                             );
                                             Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
-                                            onBack(null);
+                                            onBack(null);*/
 
-                                        } catch (LossProtectedInsufficientFundsException e) {
+                                        } catch (Exception e) {
                                             e.printStackTrace();
-                                            Toast.makeText(getActivity(), "Action not allowed, Insufficient Funds. ", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getActivity(), "Send Error. " + e.getMessage(), Toast.LENGTH_LONG).show();
                                         }
                                     }
 
                                 } else {
                                     Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
                                 }
-*/
+
 
                             } catch (Exception e) {
                                 appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);

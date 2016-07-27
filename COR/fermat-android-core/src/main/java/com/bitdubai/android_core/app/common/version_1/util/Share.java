@@ -10,19 +10,19 @@ import android.support.v4.app.ShareCompat;
  */
 public class Share {
 
-    public void shareText(Activity activity,String shareText){
+    public void shareText(Activity activity, String shareText) {
         Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
                 .setType("text/plain")
                 .setText(shareText)
                 .getIntent();
 // Avoid ActivityNotFoundException
-       // if (intent.resolveActivity(getPackageManager()) != null) {
+        // if (intent.resolveActivity(getPackageManager()) != null) {
         activity.startActivity(shareIntent);
         //}
     }
 
 
-    public void shareMedia(Activity activity,Uri uriToImage){
+    public void shareMedia(Activity activity, Uri uriToImage) {
         Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
                 .setType("image/png")
                 .setStream(uriToImage)
@@ -34,7 +34,7 @@ public class Share {
     }
 
 
-    public void sendMail(Activity activity,String[] emailTo,String text){
+    public void sendMail(Activity activity, String[] emailTo, String text) {
         Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
                 .setType("text/plain")
                 .addEmailTo(emailTo)
@@ -46,7 +46,7 @@ public class Share {
         //}
     }
 
-    public void chooserIntent(Activity activity){
+    public void chooserIntent(Activity activity) {
         Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
                 .setType("text/plain")
                 .createChooserIntent();
@@ -55,7 +55,6 @@ public class Share {
         activity.startActivity(shareIntent);
         //}
     }
-
 
 
 }

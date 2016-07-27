@@ -31,7 +31,7 @@ public class ReceiveCancelPurchaseNegotiationTranasctionTest {
     private final UUID transactionId = UUID.randomUUID();
 
     @Test
-    public void receiveCancelPurchaseNegotiationTranasction() throws Exception{
+    public void receiveCancelPurchaseNegotiationTranasction() throws Exception {
 
         CustomerBrokerUpdatePurchaseNegotiationTransaction customerBrokerUpdatePurchaseNegotiationTransaction = mock(CustomerBrokerUpdatePurchaseNegotiationTransaction.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(customerBrokerUpdatePurchaseNegotiationTransaction).receiveCancelPurchaseNegotiationTranasction(transactionId, customerBrokerPurchaseNegotiation);
