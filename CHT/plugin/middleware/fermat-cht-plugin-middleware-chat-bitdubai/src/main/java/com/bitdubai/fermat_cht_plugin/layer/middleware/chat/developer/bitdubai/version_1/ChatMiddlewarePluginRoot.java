@@ -6,7 +6,9 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -52,11 +54,8 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatMiddlewareDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareContactFactory;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareManager;
-import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent2;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/01/16.
  */
-@PluginInfo(createdBy = "Manuel Perez", maintainerMail = "franklinmarcano1970@gmail.com",platform = Platforms.CHAT_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.CHAT_MIDDLEWARE)
+@PluginInfo(createdBy = "Manuel Perez", maintainerMail = "franklinmarcano1970@gmail.com", platform = Platforms.CHAT_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.CHAT_MIDDLEWARE)
 public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
@@ -193,10 +192,10 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        try{
+        try {
             returnedClasses.add("ChatMiddlewarePluginRoot");
             return returnedClasses;
-        } catch (Exception exception){
+        } catch (Exception exception) {
             reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
                     FermatException.wrapException(exception));
             //I'll return an empty list
@@ -207,7 +206,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        try{
+        try {
             /*
          * I will check the current values and update the LogLevel in those which is different
          */
@@ -223,7 +222,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     ChatMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
-        } catch (Exception exception){
+        } catch (Exception exception) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }
@@ -253,7 +252,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             /**
              * Initialize Dao
              */
-            ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao=
+            ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao =
                     new ChatMiddlewareDatabaseDao(pluginDatabaseSystem,
                             pluginId,
                             database,
@@ -272,7 +271,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             /**
              * Initialize manager
              */
-            chatMiddlewareManager =new ChatMiddlewareManager(
+            chatMiddlewareManager = new ChatMiddlewareManager(
                     chatMiddlewareDatabaseDao,
                     this.chatMiddlewareContactFactory,
                     this,
@@ -286,7 +285,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             /**
              * Init monitor Agent
              */
-            ChatMiddlewareMonitorAgent2 openContractMonitorAgent=new ChatMiddlewareMonitorAgent2(
+            ChatMiddlewareMonitorAgent2 openContractMonitorAgent = new ChatMiddlewareMonitorAgent2(
                     SLEEP_TIME,
                     TIME_UNIT,
                     DELAY_TIME,
@@ -306,15 +305,12 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             /**
              * Init event recorder service.
              */
-            ChatMiddlewareRecorderService chatMiddlewareRecorderService=new ChatMiddlewareRecorderService(
+            ChatMiddlewareRecorderService chatMiddlewareRecorderService = new ChatMiddlewareRecorderService(
                     chatMiddlewareDatabaseDao,
                     eventManager,
                     this,
                     openContractMonitorAgent);
             chatMiddlewareRecorderService.start();
-
-
-
 
 
             this.serviceStatus = ServiceStatus.STARTED;
@@ -400,7 +396,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        try{
+        try {
             return chatMiddlewareDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
         } catch (Exception exception) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -412,7 +408,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        try{
+        try {
             return chatMiddlewareDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
         } catch (Exception exception) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -423,7 +419,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        try{
+        try {
             return chatMiddlewareDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (Exception exception) {
             reportError(
@@ -434,14 +430,14 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     }
 
     public static LogLevel getLogLevelByClass(String className) {
-        try{
+        try {
             /**
              * sometimes the classname may be passed dynamically with an $moretext
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return ChatMiddlewarePluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
+        } catch (Exception e) {
             /**
              * If I couldn't get the correct logging level, then I will set it to minimal.
              */
@@ -449,37 +445,38 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
         }
     }
 
-    private void testPublicKeys(){
+    private void testPublicKeys() {
         List<String> publicKey = null;
         try {
             publicKey = networkServiceChatManager.getRegisteredPubliKey();
         } catch (CantRequestListException e) {
-            System.out.println("Exception in chat middleware test: "+e.getMessage());
+            System.out.println(new StringBuilder().append("Exception in chat middleware test: ").append(e.getMessage()).toString());
             e.printStackTrace();
         }
-        System.out.println("ChatPLuginRoot MY PUBLIC KEY- "+ networkServiceChatManager.getNetWorkServicePublicKey());
+        System.out.println(new StringBuilder().append("ChatPLuginRoot MY PUBLIC KEY- ").append(networkServiceChatManager.getNetWorkServicePublicKey()).toString());
         System.out.println("-------------------REGISTED CHAT NETWORK SERVICE PUBLIC KEYS------------------");
-        for (String key : publicKey){
+        for (String key : publicKey) {
             System.out.println(key);
         }
         System.out.println("-------------------REGISTED CHAT NETWORK SERVICE PUBLIC KEYS END------------------");
     }
-    private void sendMessageTest(){
-        try{
-            Chat testChat=new ChatMock();
+
+    private void sendMessageTest() {
+        try {
+            Chat testChat = new ChatMock();
             testChat.setLocalActorPublicKey(networkServiceChatManager.getNetWorkServicePublicKey());
-           // List<String> remotePublicKey = networkServiceChatManager.getRegisteredPubliKey();
+            // List<String> remotePublicKey = networkServiceChatManager.getRegisteredPubliKey();
             testChat.setRemoteActorPublicKey("04500233060C68AD5ADD20AB786BC0BA1335F1D92786F65FD3685469AADCA9282563864F50827C1F1DF6F778BEAECE80964550701A9B78B220DD215CF434E9D8CA");
-            Message testMessage=new MessageMock(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
+            Message testMessage = new MessageMock(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
             this.chatMiddlewareManager.saveChat(testChat);
             this.chatMiddlewareManager.saveMessage(testMessage);
-        } catch(Exception exception){
-            System.out.println("Exception in chat middleware test: "+exception.getMessage());
+        } catch (Exception exception) {
+            System.out.println(new StringBuilder().append("Exception in chat middleware test: ").append(exception.getMessage()).toString());
             exception.printStackTrace();
         }
     }
 
-    private void receiveMessageTest(){
+    private void receiveMessageTest() {
         try {
             /**
              * This test must be finish in an exception, because the network service mock is not
@@ -491,8 +488,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             incomingChat.setSource(EventSource.NETWORK_SERVICE_CHAT);
             incomingChat.setChatId(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
             eventManager.raiseEvent(incomingChat);
-        } catch(Exception exception){
-            System.out.println("Exception in raise event chat middleware test: "+exception.getMessage());
+        } catch (Exception exception) {
+            System.out.println(new StringBuilder().append("Exception in raise event chat middleware test: ").append(exception.getMessage()).toString());
             exception.printStackTrace();
         }
     }
@@ -530,7 +527,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 //            exception.printStackTrace();
 //        }
 //    }
-
 
 
 }

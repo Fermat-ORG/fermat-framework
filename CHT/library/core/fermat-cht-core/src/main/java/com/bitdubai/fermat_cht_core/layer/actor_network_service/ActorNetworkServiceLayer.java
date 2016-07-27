@@ -10,7 +10,9 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 05/04/16.
  */
 public class ActorNetworkServiceLayer extends AbstractLayer {
-    public ActorNetworkServiceLayer(){super(Layers.ACTOR_NETWORK_SERVICE);}
+    public ActorNetworkServiceLayer() {
+        super(Layers.ACTOR_NETWORK_SERVICE);
+    }
 
     @Override
     public void start() throws CantStartLayerException {

@@ -9,7 +9,7 @@ public class ObjectNotSetException extends CHTException {
     static final String DEFAULT_MESSAGE = "The required object is not set.";
 
     public ObjectNotSetException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     public ObjectNotSetException(final String message) {

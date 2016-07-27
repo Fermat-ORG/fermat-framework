@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.ve
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -23,7 +24,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ExposureLevel;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetPrivateKeyException;
@@ -67,8 +67,8 @@ public class ChatIdentityDatabaseDao {
     public ChatIdentityDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId,
                                    PluginFileSystem pluginFileSystem) throws CantOpenDatabaseException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId;
-        this.pluginFileSystem     = pluginFileSystem;
+        this.pluginId = pluginId;
+        this.pluginFileSystem = pluginFileSystem;
 
         try {
             database = openDatabase();
@@ -134,8 +134,7 @@ public class ChatIdentityDatabaseDao {
         }
     }
 
-    public void changeExposureLevel(String publicKey, ExposureLevel exposureLevel) throws CantUpdateChatIdentityException
-    {
+    public void changeExposureLevel(String publicKey, ExposureLevel exposureLevel) throws CantUpdateChatIdentityException {
         try {
             /**
              * 1) Get the table.
@@ -164,7 +163,7 @@ public class ChatIdentityDatabaseDao {
         } catch (CantUpdateRecordException e) {
 
             throw new CantUpdateChatIdentityException(e.getMessage(), e, "Chat Identity", "Cant update Chat Identity, database problems.");
-        }  catch (Exception e) {
+        } catch (Exception e) {
 
             throw new CantUpdateChatIdentityException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "Cant update Chat Identity, unknown failure.");
         }
@@ -258,13 +257,13 @@ public class ChatIdentityDatabaseDao {
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME),
-                        record.getLongValue( ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME),
+                        record.getLongValue(ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME),
                         GeoFrequency.getByCode(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME)));
 
             }
         } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantGetChatUserIdentityException(e.getMessage(), e, "Chat Identity", "Cant load " + ChatIdentityDatabaseConstants.CHAT_TABLE_NAME + " table in memory.");
+            throw new CantGetChatUserIdentityException(e.getMessage(), e, "Chat Identity", new StringBuilder().append("Cant load ").append(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME).append(" table in memory.").toString());
         } catch (Exception e) {
 
             throw new CantGetChatUserIdentityException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "Cahat identity list, unknown failure.");
@@ -315,12 +314,12 @@ public class ChatIdentityDatabaseDao {
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME),
-                        record.getLongValue( ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME),
+                        record.getLongValue(ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME),
                         GeoFrequency.getByCode(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME))));
             }
         } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantListIdentitiesException(e.getMessage(), e, "Chat Identity", "Cant load " + ChatIdentityDatabaseConstants.CHAT_TABLE_NAME + " table in memory.");
+            throw new CantListIdentitiesException(e.getMessage(), e, "Chat Identity", new StringBuilder().append("Cant load ").append(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME).append(" table in memory.").toString());
         } catch (CantGetPrivateKeyException e) {
             // Failure unknown.
 
@@ -359,7 +358,7 @@ public class ChatIdentityDatabaseDao {
 
         } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Chat  Identity", "Cant load " + ChatIdentityDatabaseConstants.CHAT_TABLE_NAME + " table in memory.");
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Chat  Identity", new StringBuilder().append("Cant load ").append(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME).append(" table in memory.").toString());
 
         } catch (Exception e) {
 
@@ -371,7 +370,7 @@ public class ChatIdentityDatabaseDao {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    CHAT_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    new StringBuilder().append(CHAT_PRIVATE_KEYS_FILE_NAME).append("_").append(publicKey).toString(),
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -395,7 +394,7 @@ public class ChatIdentityDatabaseDao {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    CHAT_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    new StringBuilder().append(CHAT_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -420,7 +419,7 @@ public class ChatIdentityDatabaseDao {
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    CHAT_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    new StringBuilder().append(CHAT_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -450,7 +449,7 @@ public class ChatIdentityDatabaseDao {
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    CHAT_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    new StringBuilder().append(CHAT_PRIVATE_KEYS_FILE_NAME).append("_").append(publicKey).toString(),
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );

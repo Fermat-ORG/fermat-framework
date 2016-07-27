@@ -42,12 +42,12 @@ import java.util.List;
 
 /**
  * This plug-in is the responsible for the managing of the actor connections and actor publishing of the chat actors.
- *
+ * <p/>
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 07/04/16.
  * Edited by Leon Acosta - (laion.cj91@gmail.com) on 18/05/2016.
  *
  * @version 1.0
- * @since   Java JDK 1.7
+ * @since Java JDK 1.7
  */
 @PluginInfo(createdBy = "José D. Vilchez A", maintainerMail = "franklinmarcano1970@gmail.com", platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE)
 public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkService implements DatabaseManagerForDevelopers {
@@ -97,7 +97,6 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
     }
 
 
-
     @Override
     public final void onSentMessage(final com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage fermatMessage) {
         System.out.println("************ Mensaje supuestamente enviado chat actor network service");
@@ -108,7 +107,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
 
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.fromJson(jsonMessage);
 
-            System.out.println("********************* Message Sent Type:  " + networkServiceMessage.getMessageType());
+            System.out.println(new StringBuilder().append("********************* Message Sent Type:  ").append(networkServiceMessage.getMessageType()).toString());
 
             switch (networkServiceMessage.getMessageType()) {
 
@@ -128,7 +127,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
 
                 default:
                     throw new CantHandleNewMessagesException(
-                            "message type: " +networkServiceMessage.getMessageType().name(),
+                            new StringBuilder().append("message type: ").append(networkServiceMessage.getMessageType().name()).toString(),
                             "Message type not handled."
                     );
             }
@@ -142,21 +141,21 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
     @Override
     public void onNewMessageReceived(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage fermatMessage) {
 
-        System.out.println("****** CHAT ACTOR NETWORK SERVICE NEW MESSAGE RECEIVED: " + fermatMessage);
+        System.out.println(new StringBuilder().append("****** CHAT ACTOR NETWORK SERVICE NEW MESSAGE RECEIVED: ").append(fermatMessage).toString());
         try {
 
             String jsonMessage = fermatMessage.getContent();
 
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.fromJson(jsonMessage);
 
-            System.out.println("********************* Message Type:  " + networkServiceMessage.getMessageType());
+            System.out.println(new StringBuilder().append("********************* Message Type:  ").append(networkServiceMessage.getMessageType()).toString());
 
             switch (networkServiceMessage.getMessageType()) {
 
                 case CONNECTION_INFORMATION:
                     InformationMessage informationMessage = InformationMessage.fromJson(jsonMessage);
 
-                    System.out.println("********************* Content:  " + informationMessage);
+                    System.out.println(new StringBuilder().append("********************* Content:  ").append(informationMessage).toString());
 
                     receiveConnectionInformation(informationMessage);
 
@@ -167,7 +166,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
 
                     RequestMessage requestMessage = RequestMessage.fromJson(jsonMessage);
 
-                    System.out.println("********************* Content:  " + requestMessage);
+                    System.out.println(new StringBuilder().append("********************* Content:  ").append(requestMessage).toString());
 
                     receiveRequest(requestMessage);
 
@@ -175,7 +174,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
 
                 default:
                     throw new CantHandleNewMessagesException(
-                            "message type: " +networkServiceMessage.getMessageType().name(),
+                            new StringBuilder().append("message type: ").append(networkServiceMessage.getMessageType().name()).toString(),
                             "Message type not handled."
                     );
             }
@@ -230,7 +229,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
 
                 default:
                     throw new CantHandleNewMessagesException(
-                            "action not supported: " +informationMessage.getAction(),
+                            new StringBuilder().append("action not supported: ").append(informationMessage.getAction()).toString(),
                             "action not handled."
                     );
             }
@@ -239,11 +238,11 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
             eventToRaise.setSource(eventSource);
             eventManager.raiseEvent(eventToRaise);
 
-        } catch(CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException | CantDisconnectException e) {
+        } catch (CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException | CantDisconnectException e) {
             // i inform to error manager the error.
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Chat ANS Dao.");
-        } catch(Exception e) {
+        } catch (Exception e) {
 
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
@@ -286,11 +285,11 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
             eventToRaise.setSource(eventSource);
             eventManager.raiseEvent(eventToRaise);
 
-        } catch(CantRequestConnectionException e) {
+        } catch (CantRequestConnectionException e) {
             // i inform to error manager the error.
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Chat ANS Dao.");
-        } catch(Exception e) {
+        } catch (Exception e) {
 
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
@@ -325,7 +324,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
                 pluginId
         ).getDatabaseTableContent(
                 developerObjectFactory,
-                developerDatabase     ,
+                developerDatabase,
                 developerDatabaseTable
         );
     }

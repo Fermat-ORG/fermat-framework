@@ -9,8 +9,10 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 05/04/16.
  */
-public class ActorConnectionLayer extends AbstractLayer{
-    public ActorConnectionLayer(){super(Layers.ACTOR_CONNECTION);}
+public class ActorConnectionLayer extends AbstractLayer {
+    public ActorConnectionLayer() {
+        super(Layers.ACTOR_CONNECTION);
+    }
 
     @Override
     public void start() throws CantStartLayerException {

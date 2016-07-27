@@ -9,6 +9,8 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetP
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantInitializeActorConnectionDatabaseException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRegisterActorConnectionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -26,8 +28,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -47,7 +47,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
     }
 
     public ChatActorConnection chatActorConnectionExists(ChatLinkedActorIdentity linkedIdentity,
-                                         final String publicKey) throws CantGetActorConnectionException {
+                                                         final String publicKey) throws CantGetActorConnectionException {
 
         if (linkedIdentity == null)
             throw new CantGetActorConnectionException(null, "", "The linkedIdentity is required, can not be null");
@@ -69,7 +69,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             ChatActorConnection chatActorConnection = null;
 
-            if(records != null && !records.isEmpty())
+            if (records != null && !records.isEmpty())
                 chatActorConnection = buildActorConnectionNewRecord(records.get(0));
 
             return chatActorConnection;
@@ -78,12 +78,12 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             throw new CantGetActorConnectionException(
                     e,
-                    "linkedIdentity: - publicKey: " + publicKey,
+                    new StringBuilder().append("linkedIdentity: - publicKey: ").append(publicKey).toString(),
                     "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException e) {
             throw new CantGetActorConnectionException(
                     e,
-                    "linkedIdentity: - publicKey: " + publicKey,
+                    new StringBuilder().append("linkedIdentity: - publicKey: ").append(publicKey).toString(),
                     "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
@@ -106,7 +106,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
                 deleteNewUserProfileImage(oldActorConnection.getPublicKey());
                 actorConnectionsTable.deleteRecord(entityRecordOld);
 
-                if(actorConnection.getConnectionState().equals(oldActorConnection.getConnectionState())
+                if (actorConnection.getConnectionState().equals(oldActorConnection.getConnectionState())
                         && (!actorConnection.getConnectionState().equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE)))
                     isNew = false;
             }
@@ -209,7 +209,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             throw new CantInitializeActorConnectionDatabaseException(
                     cantOpenDatabaseException,
-                    "databaseName: " + ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
+                    new StringBuilder().append("databaseName: ").append(ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME).toString(),
                     "There was an error trying to open database."
             );
 
@@ -228,7 +228,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
                 throw new CantInitializeActorConnectionDatabaseException(
                         cantCreateDatabaseException,
-                        "databaseName: " + ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
+                        new StringBuilder().append("databaseName: ").append(ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME).toString(),
                         "There was an error trying to create database."
                 );
             }
@@ -264,7 +264,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             // TODO add better error management, "throws CantBuildDatabaseRecordException".
 
-            System.err.println("error trying to persist image:" + e.getMessage());
+            System.err.println(new StringBuilder().append("error trying to persist image:").append(e.getMessage()).toString());
             return null;
         }
     }

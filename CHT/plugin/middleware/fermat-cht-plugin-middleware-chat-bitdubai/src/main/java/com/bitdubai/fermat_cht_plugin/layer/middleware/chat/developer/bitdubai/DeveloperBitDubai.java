@@ -34,9 +34,9 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
 
             throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
 
-        } catch (Exception exception){
+        } catch (Exception exception) {
 
-            throw new CantStartPluginDeveloperException(exception,"", "CAN'T START PLUGIN");
+            throw new CantStartPluginDeveloperException(exception, "", "CAN'T START PLUGIN");
 
         }
 

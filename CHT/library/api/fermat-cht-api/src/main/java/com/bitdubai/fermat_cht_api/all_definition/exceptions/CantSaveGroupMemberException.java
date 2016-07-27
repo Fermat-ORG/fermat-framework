@@ -30,7 +30,7 @@ public class CantSaveGroupMemberException extends CHTException {
      * @param possibleReason
      */
     public CantSaveGroupMemberException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

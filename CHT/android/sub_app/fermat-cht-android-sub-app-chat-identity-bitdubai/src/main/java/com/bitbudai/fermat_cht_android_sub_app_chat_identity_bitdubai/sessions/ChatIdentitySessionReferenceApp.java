@@ -12,6 +12,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  */
 public class ChatIdentitySessionReferenceApp extends AbstractReferenceAppFermatSession<InstalledSubApp, ChatIdentityModuleManager, SubAppResourcesProviderManager> {
     public static final String IDENTITY_INFO = "CHAT_IDENTITY_INFO";
-    public ChatIdentitySessionReferenceApp(){
+
+    public ChatIdentitySessionReferenceApp() {
     }
 }

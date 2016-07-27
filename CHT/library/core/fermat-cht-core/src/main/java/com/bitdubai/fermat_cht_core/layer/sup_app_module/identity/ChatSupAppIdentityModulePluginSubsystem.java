@@ -19,7 +19,7 @@ public class ChatSupAppIdentityModulePluginSubsystem extends AbstractPluginSubsy
         try {
             registerDeveloper(new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.DeveloperBitDubai());
         } catch (Exception e) {
-            System.err.println("Exception: " + e.getMessage());
+            System.err.println(new StringBuilder().append("Exception: ").append(e.getMessage()).toString());
             throw new CantStartSubsystemException(e, null, null);
         }
     }

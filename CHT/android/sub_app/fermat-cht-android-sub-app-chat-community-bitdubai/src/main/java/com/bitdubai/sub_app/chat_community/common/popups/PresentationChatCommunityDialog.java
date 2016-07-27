@@ -27,7 +27,6 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.interfaces.RecreateView;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
@@ -69,10 +68,10 @@ public class PresentationChatCommunityDialog
      * @param resources     parent class of WalletResources and SubAppResources
      */
     public PresentationChatCommunityDialog(final Activity activity,
-                                                final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> fermatSession,
-                                                final SubAppResourcesProviderManager resources,
-                                                final ChatActorCommunitySubAppModuleManager moduleManager,
-                                                final int type/*,
+                                           final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> fermatSession,
+                                           final SubAppResourcesProviderManager resources,
+                                           final ChatActorCommunitySubAppModuleManager moduleManager,
+                                           final int type/*,
                                            final FermatApplicationCaller applicationsHelper,
                                            final int identityOrChat*/) {
 
@@ -182,20 +181,20 @@ public class PresentationChatCommunityDialog
         }
     }
 
-    private void saveSettings(){
-        if(type!=TYPE_PRESENTATION)
-                if(dontShowAgainCheckBox.isChecked()){
+    private void saveSettings() {
+        if (type != TYPE_PRESENTATION)
+            if (dontShowAgainCheckBox.isChecked()) {
 
-                    try {
-                        ChatActorCommunitySettings chatUserCommunitySettings = moduleManager.loadAndGetSettings(getSession().getAppPublicKey());
-                        chatUserCommunitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
-                        moduleManager.persistSettings(getSession().getAppPublicKey(),chatUserCommunitySettings);
-                    } catch (CantGetSettingsException
-                            | SettingsNotFoundException
-                            | CantPersistSettingsException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    ChatActorCommunitySettings chatUserCommunitySettings = moduleManager.loadAndGetSettings(getSession().getAppPublicKey());
+                    chatUserCommunitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
+                    moduleManager.persistSettings(getSession().getAppPublicKey(), chatUserCommunitySettings);
+                } catch (CantGetSettingsException
+                        | SettingsNotFoundException
+                        | CantPersistSettingsException e) {
+                    e.printStackTrace();
                 }
+            }
     }
 
     @Override
@@ -207,7 +206,7 @@ public class PresentationChatCommunityDialog
     private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-       // bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+        // bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }

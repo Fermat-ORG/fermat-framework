@@ -25,7 +25,7 @@ public class EventRecord {
 
     public EventRecord(EventType eventType) {
 
-        this.eventType=eventType;
+        this.eventType = eventType;
 
     }
 
@@ -79,13 +79,14 @@ public class EventRecord {
 
     @Override
     public String toString() {
-        return "EventRecord{" +
-                "eventId='" + eventId + '\'' +
-                ", eventStatus=" + eventStatus +
-                ", eventType=" + eventType +
-                ", eventSource=" + eventSource +
-                ", timestamp=" + timestamp +
-                ", chatId=" + chatId +
-                '}';
+        return new StringBuilder()
+                .append("EventRecord{")
+                .append("eventId='").append(eventId)
+                .append('\'')
+                .append(", eventStatus=").append(eventStatus)
+                .append(", eventType=").append(eventType)
+                .append(", eventSource=").append(eventSource)
+                .append(", timestamp=").append(timestamp)
+                .append(", chatId=").append(chatId).append('}').toString();
     }
 }
