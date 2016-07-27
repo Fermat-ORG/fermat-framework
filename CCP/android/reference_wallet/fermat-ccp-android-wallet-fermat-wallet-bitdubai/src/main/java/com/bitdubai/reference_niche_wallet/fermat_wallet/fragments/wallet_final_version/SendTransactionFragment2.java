@@ -273,7 +273,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 //noinspection TryWithIdenticalCatches
                 ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = null;
                 try {
-                    cryptoWalletIntraUserIdentity = appSession.getModuleManager().getSelectedActorIdentity();
+                    cryptoWalletIntraUserIdentity = moduleManager.getSelectedActorIdentity();
                 } catch (CantGetSelectedActorIdentityException e) {
                     e.printStackTrace();
                 } catch (ActorIdentityNotSelectedException e) {
