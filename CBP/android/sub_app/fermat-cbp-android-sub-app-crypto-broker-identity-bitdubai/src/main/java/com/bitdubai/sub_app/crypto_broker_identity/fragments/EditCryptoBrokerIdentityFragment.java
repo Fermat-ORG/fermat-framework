@@ -97,6 +97,7 @@ public class EditCryptoBrokerIdentityFragment
     private CryptoBrokerIdentityInformation identityInfo;
     List<CryptoBrokerIdentityInformation> brokerIdentities = new ArrayList<>();
     private PresentationDialog presentationDialog;
+    private boolean isPresentationDialogEnabled;
     // Managers
 
     private ImageView sw;
@@ -284,6 +285,7 @@ public class EditCryptoBrokerIdentityFragment
             }
         }else{
             visibilityLayout.setVisibility(View.GONE);
+
         }
 
         //Coming from cropper activity
@@ -311,7 +313,7 @@ public class EditCryptoBrokerIdentityFragment
 
         textCount.setText(String.valueOf(maxLenghtTextCount - mBrokerName.length()));
 
-        if (wantPublishIdentity) {
+        if (!wantPublishIdentity) {
             sw.setImageResource(R.drawable.switch_off);
         } else {
             sw.setImageResource(R.drawable.switch_on);
@@ -342,6 +344,7 @@ public class EditCryptoBrokerIdentityFragment
         if (item.getItemId() == FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID) {
             appSession.setData(FragmentsCommons.BROKER_NAME, mBrokerName.getText().toString());
             appSession.setData(FragmentsCommons.ORIGINAL_IMAGE, cryptoBrokerBitmap);
+            appSession.setData(FragmentsCommons.IDENTITY_INFO, identityInfo);
 
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_EDIT_IDENTITY, appSession.getAppPublicKey());
         }
@@ -623,20 +626,25 @@ public class EditCryptoBrokerIdentityFragment
     }
 
     public void turnOnGPSDialog() {
-        try {
-            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
-                    .setBody(R.string.cbp_broker_identity_gps)
-                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                    .setIconRes(R.drawable.bi_icon)
-                    .setBannerRes(R.drawable.banner_identity)
-                    .setVIewColor(R.color.background_toolbar)
-                    .build();
-            pd.show();
-        } catch (Exception e) {
-            e.printStackTrace();
+        /*isPresentationDialogEnabled =  (Boolean) appSession.getData("presentation_screen_enabled");
+        if (isPresentationDialogEnabled) {*/
+
+            try {
+                PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+                        .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
+                        .setBody(R.string.cbp_broker_identity_gps)
+                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                        .setIconRes(R.drawable.bi_icon)
+                        .setBannerRes(R.drawable.banner_identity)
+                        .setVIewColor(R.color.background_toolbar)
+                        .build();
+                pd.show();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-    }
+    //}
     @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
