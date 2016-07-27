@@ -13,10 +13,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_cer_plugin.layer.provider.btce.developer.bitdubai.version_1.database.BtceProviderDatabaseFactory</code>
+ * The Class  <code>com.bitdubai.fermat_cer_plugin.layer.provider.btce.developer.bitdubai.version_1.database.BtceProviderDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
- *
+ * <p/>
  * Created by Alejandro Bicelis - (abicelis@gmail.com) on 27/04/16.
  *
  * @version 1.0

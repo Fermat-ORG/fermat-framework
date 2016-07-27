@@ -6,14 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -49,7 +46,6 @@ public class HttpHelper {
     }
 
 
-
     /**
      * This method accepts an URL and fetches its content, returning it in a string
      **/
@@ -59,12 +55,12 @@ public class HttpHelper {
         String content = "";
 
         try {
-          //  stream = new URL(url).openStream();
-            URL url=new URL(receiveurl);
+            //  stream = new URL(url).openStream();
+            URL url = new URL(receiveurl);
             URLConnection con = url.openConnection();
             con.setConnectTimeout(5000);
             con.setReadTimeout(5000);
-          //  reader = new BufferedReader(new InputStreamReader(stream, Charset.forName("UTF-8")));
+            //  reader = new BufferedReader(new InputStreamReader(stream, Charset.forName("UTF-8")));
             reader = new BufferedReader(new InputStreamReader(con.getInputStream(), Charset.forName("UTF-8")));
             content = readAll(reader);
         } catch (IOException e) {

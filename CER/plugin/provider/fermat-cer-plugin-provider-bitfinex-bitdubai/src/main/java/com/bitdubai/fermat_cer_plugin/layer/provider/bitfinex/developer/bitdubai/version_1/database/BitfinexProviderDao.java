@@ -61,14 +61,14 @@ public class BitfinexProviderDao {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeBitfinexProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, "");
+                throw new CantInitializeBitfinexProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, new StringBuilder().append("Database Name: ").append(BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME).toString(), "");
             }
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeBitfinexProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, "");
+            throw new CantInitializeBitfinexProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, new StringBuilder().append("Database Name: ").append(BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME).toString(), "");
         } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantInitializeBitfinexProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, "");
+            throw new CantInitializeBitfinexProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), new StringBuilder().append("Database Name: ").append(BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME).toString(), "");
         }
     }
 
@@ -106,7 +106,7 @@ public class BitfinexProviderDao {
                 table.addStringFilter(BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME, currencyPair.getTo().getCode(), DatabaseFilterType.EQUAL);
                 break;
             default:
-                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, null, "Failed to get History for currencyPair: " + currencyPair.toString(), "ExchangeRateType (" + exchangeRateType + ") unsupported");
+                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, null, new StringBuilder().append("Failed to get History for currencyPair: ").append(currencyPair.toString()).toString(), new StringBuilder().append("ExchangeRateType (").append(exchangeRateType).append(") unsupported").toString());
         }
 
         try {
@@ -117,9 +117,9 @@ public class BitfinexProviderDao {
                 exchangeRateList.add(exchangeRate);
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't load table to memory");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get History for currencyPair: ").append(currencyPair.toString()).toString(), "Couldn't load table to memory");
         } catch (CantCreateExchangeRateException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't create ExchangeRate object");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get History for currencyPair: ").append(currencyPair.toString()).toString(), "Couldn't create ExchangeRate object");
         }
 
         return exchangeRateList;
@@ -154,7 +154,7 @@ public class BitfinexProviderDao {
         }
 
         if (records.size() != 1)
-            throw new CantGetProviderInfoException("Inconsistent number of fetched records (" + records.size() + "), should be 1.");
+            throw new CantGetProviderInfoException(new StringBuilder().append("Inconsistent number of fetched records (").append(records.size()).append("), should be 1.").toString());
 
         return records.get(0);
     }
@@ -207,8 +207,7 @@ public class BitfinexProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Bitfinex provider plugin", "Invalid From Currency value stored in table"
-                    + BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "Bitfinex provider plugin", new StringBuilder().append("Invalid From Currency value stored in table").append(BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME).append(" for id ").append(id).toString());
         }
 
         Currency toCurrency;
@@ -222,8 +221,7 @@ public class BitfinexProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Bitfinex provider plugin", "Invalid To Currency value stored in table"
-                    + BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "Bitfinex provider plugin", new StringBuilder().append("Invalid To Currency value stored in table").append(BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME).append(" for id ").append(id).toString());
         }
 
         return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);

@@ -21,17 +21,22 @@ public enum ExchangeRateType implements FermatEnum {
         this.code = code;
     }
 
-    public String getCode()   { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
     public static ExchangeRateType getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "CU":          return CURRENT;
-            case "DY":          return DAILY;
+            case "CU":
+                return CURRENT;
+            case "DY":
+                return DAILY;
             //case "WK":          return WEEK;
             //case "MT":          return MONTH;
             //case "YR":          return YEAR;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ExchangeRateType enum");
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the ExchangeRateType enum");
         }
     }
 }

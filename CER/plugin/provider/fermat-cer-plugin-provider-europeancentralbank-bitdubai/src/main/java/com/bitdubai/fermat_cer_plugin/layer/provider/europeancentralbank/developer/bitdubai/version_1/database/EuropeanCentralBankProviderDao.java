@@ -64,14 +64,14 @@ public class EuropeanCentralBankProviderDao {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeEuropeanCentralBankProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, "");
+                throw new CantInitializeEuropeanCentralBankProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, new StringBuilder().append("Database Name: ").append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).toString(), "");
             }
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeEuropeanCentralBankProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, "");
+            throw new CantInitializeEuropeanCentralBankProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, new StringBuilder().append("Database Name: ").append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).toString(), "");
         } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantInitializeEuropeanCentralBankProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, "");
+            throw new CantInitializeEuropeanCentralBankProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), new StringBuilder().append("Database Name: ").append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).toString(), "");
         }
     }
 
@@ -142,7 +142,7 @@ public class EuropeanCentralBankProviderDao {
                 exchangeRateTimestampsInDatabase.add(timestamp);
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantSaveExchangeRateException(CantSaveExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get ExchangeRates in database for CurrencyPair: " + currencyPair.toString(), "Couldn't load table to memory");
+            throw new CantSaveExchangeRateException(CantSaveExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get ExchangeRates in database for CurrencyPair: ").append(currencyPair.toString()).toString(), "Couldn't load table to memory");
         }
 
         for (ExchangeRate e : exchangeRates) {
@@ -176,13 +176,13 @@ public class EuropeanCentralBankProviderDao {
                 DatabaseTableRecord record = records.get(0);
                 return constructExchangeRateFromRecord(record);
             } else {
-                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, null, "Failed to get daily exchange rate for timestamp: " + timestamp, "Exchange Rate not found in database");
+                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, null, new StringBuilder().append("Failed to get daily exchange rate for timestamp: ").append(timestamp).toString(), "Exchange Rate not found in database");
             }
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rate for timestamp: " + timestamp, "Couldn't load table to memory");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get daily exchange rate for timestamp: ").append(timestamp).toString(), "Couldn't load table to memory");
         } catch (CantCreateExchangeRateException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rate for timestamp: " + timestamp, "Couldn't create ExchangeRate object");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get daily exchange rate for timestamp: ").append(timestamp).toString(), "Couldn't create ExchangeRate object");
         }
     }
 
@@ -190,28 +190,28 @@ public class EuropeanCentralBankProviderDao {
         List<ExchangeRate> exchangeRates = new ArrayList<>();
 
 
-        String query = "SELECT * FROM " +
-                EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME +
-                " WHERE " +
-                EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME +
-                " = '" +
-                currencyPair.getFrom().getCode() +
-                "' AND " +
-                EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME +
-                " = '" +
-                currencyPair.getTo().getCode() +
-                "' " +
-                " AND " +
-                EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
-                " >= " +
-                startTimestamp +
-                " AND " +
-                EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
-                " <= " +
-                endTimestamp +
-                " ORDER BY " +
-                EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
-                " ASC ";
+        String query = new StringBuilder()
+                .append("SELECT * FROM ")
+                .append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME)
+                .append(" WHERE ")
+                .append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME)
+                .append(" = '")
+                .append(currencyPair.getFrom().getCode())
+                .append("' AND ")
+                .append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME)
+                .append(" = '")
+                .append(currencyPair.getTo().getCode())
+                .append("' ")
+                .append(" AND ")
+                .append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME)
+                .append(" >= ").append(startTimestamp)
+                .append(" AND ")
+                .append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME)
+                .append(" <= ")
+                .append(endTimestamp)
+                .append(" ORDER BY ")
+                .append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME)
+                .append(" ASC ").toString();
 
 
         DatabaseTable table = this.database.getTable(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME);
@@ -220,9 +220,9 @@ public class EuropeanCentralBankProviderDao {
             for (DatabaseTableRecord record : table.customQuery(query, false))
                 exchangeRates.add(constructExchangeRateFromRecord(record));
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rates for period: " + startTimestamp + " to " + endTimestamp, "Couldn't load table to memory");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get daily exchange rates for period: ").append(startTimestamp).append(" to ").append(endTimestamp).toString(), "Couldn't load table to memory");
         } catch (CantCreateExchangeRateException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rates for period: " + startTimestamp + " to " + endTimestamp, "Couldn't create ExchangeRate object");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get daily exchange rates for period: ").append(startTimestamp).append(" to ").append(endTimestamp).toString(), "Couldn't create ExchangeRate object");
         }
 
         return exchangeRates;
@@ -254,9 +254,9 @@ public class EuropeanCentralBankProviderDao {
                 exchangeRateList.add(exchangeRate);
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't load table to memory");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get History for currencyPair: ").append(currencyPair.toString()).toString(), "Couldn't load table to memory");
         } catch (CantCreateExchangeRateException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't create ExchangeRate object");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get History for currencyPair: ").append(currencyPair.toString()).toString(), "Couldn't create ExchangeRate object");
         }
 
         return exchangeRateList;
@@ -291,7 +291,7 @@ public class EuropeanCentralBankProviderDao {
         }
 
         if (records.size() != 1)
-            throw new CantGetProviderInfoException("Inconsistent number of fetched records (" + records.size() + "), should be 1.");
+            throw new CantGetProviderInfoException(new StringBuilder().append("Inconsistent number of fetched records (").append(records.size()).append("), should be 1.").toString());
 
         return records.get(0);
     }
@@ -357,8 +357,7 @@ public class EuropeanCentralBankProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "EuropeanCentralBank provider plugin", "Invalid From Currency value stored in table"
-                    + EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "EuropeanCentralBank provider plugin", new StringBuilder().append("Invalid From Currency value stored in table").append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).append(" for id ").append(id).toString());
         }
 
         Currency toCurrency;
@@ -372,8 +371,7 @@ public class EuropeanCentralBankProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "EuropeanCentralBank provider plugin", "Invalid To Currency value stored in table"
-                    + EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "EuropeanCentralBank provider plugin", new StringBuilder().append("Invalid To Currency value stored in table").append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).append(" for id ").append(id).toString());
         }
 
         return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);

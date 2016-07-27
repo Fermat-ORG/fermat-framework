@@ -124,12 +124,12 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
 
         double purchasePrice = 0;
         double salePrice = 0;
         boolean providerIsDown = false;
-        boolean invertExchange=true;
+        boolean invertExchange = true;
 
         try {
 
@@ -145,8 +145,8 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
             salePrice = 0;
             invertExchange = false;
             providerIsDown = true;
-        //    this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        //    throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "DolarToday CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
+            //    this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            //    throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "DolarToday CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
         }
 
         if (currencyPair.getTo() == FiatCurrency.US_DOLLAR && invertExchange) {
@@ -155,7 +155,7 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
         }
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), purchasePrice, salePrice, (new Date().getTime() / 1000));
-        if(!providerIsDown) {
+        if (!providerIsDown) {
             try {
                 dao.saveExchangeRate(exchangeRate);
             } catch (CantSaveExchangeRateException e) {
