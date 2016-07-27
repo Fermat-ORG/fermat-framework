@@ -15,6 +15,9 @@
     <string name="not_identities">NOT IDENTITIES</string>
     <string name="create_a_new_one">CREATE A NEW ONE</string>
     <string name="no_matches">No Matches</string>
+    <string name="profile_picture_dialog_title">PROFILE PICTURE</string>
+    <string name="profile_picture_dialog_picture">Take a picture</string>>
+    <string name="profile_picture_dialog_gallery">Choose from gallery</string>>
 
     <string name="cbp_customer_identity_welcome_subTitle">Welcome to the Customer Identity.</string>
     <string name="cbp_customer_identity_welcome_body">From here you will be able to create an Customer type identity.\n\nThis Identity, will identify you in the system as an Customer, and give you access to all tasks and applications you need.\n\nOther broker or customer will be able to request connection to you by finding you with the information you provide here.</string>
