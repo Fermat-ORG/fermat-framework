@@ -15,8 +15,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.FermatApplication;
-import com.bitdubai.android_core.app.common.version_1.classes.BroadcastInterface;
-import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
+import com.bitdubai.android_core.app.common.version_1.broadcaster.BroadcastInterface;
+import com.bitdubai.android_core.app.common.version_1.broadcaster.BroadcastManager;
 import com.bitdubai.android_core.app.common.version_1.communication.platform_service.CommunicationDataKeys;
 import com.bitdubai.android_core.app.common.version_1.communication.platform_service.CommunicationMessages;
 import com.bitdubai.android_core.app.common.version_1.communication.platform_service.IntentServerServiceAction;
