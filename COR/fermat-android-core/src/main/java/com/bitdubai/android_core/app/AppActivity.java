@@ -132,38 +132,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     }
 
 
-    /**
-     * Called to retrieve per-instance state from an activity before being killed so that the state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle)
-     *
-     * @param outState
-     */
-
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//
-//    }
-
-    /**
-     * This method is called after onStart() when the activity is being re-initialized from a previously saved state, given here in savedInstanceState.
-     * Most implementations will simply use onCreate(Bundle) to restore their state, but it is sometimes convenient to do it here after all of the initialization has been done or to allow subclasses to decide whether to use your default implementation
-     * <p/>
-     * //     * @param savedInstanceState
-     */
-
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        try {
-//            if (savedInstanceState == null) {
-//                savedInstanceState = new Bundle();
-//            } else
-//                super.onRestoreInstanceState(savedInstanceState);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-
-//    }
     public void onControlledActivityBack(String activityBackCode) {
         try {
             String frgBackType = null;
@@ -322,7 +290,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             } catch (Exception e) {
                 e.printStackTrace();
                 try {
-                    //TODO: this is only because i am tired, remember to delete this.
+                    //TODO: remember to delete this.
                     fermatStructure = FermatApplication.getInstance().getAppManager().getAppStructure(appBackPublicKey);
                     nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
                 } catch (Exception e1) {
@@ -333,17 +301,10 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             if (nextActivity != null) {
                 if (!nextActivity.equals(lastActivity)) {
                     resetThisActivity();
-                    //Intent intent = getIntent(); //new Intent(this,LoadingScreenActivity.class);
-                    //intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appBackPublicKey);
-                    //recreate();
-                    //startActivity(intent);
-                    //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    //finish();
-                    //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     loadUI(FermatApplication.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
                 }
             } else {
-                Log.e(TAG, new StringBuilder().append("nextActivity null, activity code: ").append(activityName).append(". Please verify that the activity code exist in the fermat structure: ").append(fermatStructure.getPublicKey()).append(" \n Extra info: \n LastActivity: ").append(lastActivity).append(" FermatStructure: ").append(fermatStructure).append(" AppBackPublicKey: ").append(appBackPublicKey).append("\n").append(Arrays.toString(FermatApplication.getInstance().getAppManager().getRecentsAppsStack().toArray())).toString());
+                Log.e(TAG, "nextActivity null, activity code: " + activityName + ". Please verify that the activity code exist in the fermat structure: " + fermatStructure.getPublicKey() + " \n Extra info: \n LastActivity: " + lastActivity + " FermatStructure: " + fermatStructure + " AppBackPublicKey: " + appBackPublicKey + "\n" + Arrays.toString(FermatApplication.getInstance().getAppManager().getRecentsAppsStack().toArray()));
                 Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
                 handleExceptionAndRestart();
             }
@@ -441,19 +402,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
 
     }
-
-
-//    @Override
-//    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-//        super.onSaveInstanceState(outState, outPersistentState);
-//
-//    }
-
-//    @Override
-//    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
-//        super.onRestoreInstanceState(savedInstanceState, persistentState);
-//
-//    }
 
     /**
      * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
