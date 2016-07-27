@@ -27,7 +27,7 @@ public class CreateCustomerBrokerCloseSaleNegotiationTranasctionTest {
     private CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation;
 
     @Test
-    public void createCustomerBrokerCloseSaleNegotiationTranasction() throws Exception{
+    public void createCustomerBrokerCloseSaleNegotiationTranasction() throws Exception {
 
         CustomerBrokerCloseManagerImpl customerBrokerCloseManagerImpl = mock(CustomerBrokerCloseManagerImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(customerBrokerCloseManagerImpl).createCustomerBrokerCloseSaleNegotiationTranasction(customerBrokerSaleNegotiation);

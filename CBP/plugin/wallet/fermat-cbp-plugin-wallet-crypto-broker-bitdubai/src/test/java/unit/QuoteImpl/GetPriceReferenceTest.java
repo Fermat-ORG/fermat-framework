@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetPriceReferenceTest {
 
     @Test
-    public void getPriceReference(){
+    public void getPriceReference() {
         QuoteImpl quote = mock(QuoteImpl.class);
         when(quote.getPriceReference()).thenReturn(1f);
         assertThat(quote.getPriceReference()).isNotNull();

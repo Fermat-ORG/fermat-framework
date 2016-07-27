@@ -16,25 +16,25 @@ import java.util.UUID;
  * Created by franklin on 17/11/15.
  */
 public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction {
-    UUID                            transactionId;
-    String                          actorPublicKey;
-    CryptoCurrency                  cryptoCurrency;
-    String                          cbpWalletPublicKey;
-    String                          cryWalletPublicKey;
-    String                          memo;
-    String                          concept;
-    BigDecimal                      amount;
-    Timestamp                       timeStamp;
+    UUID transactionId;
+    String actorPublicKey;
+    CryptoCurrency cryptoCurrency;
+    String cbpWalletPublicKey;
+    String cryWalletPublicKey;
+    String memo;
+    String concept;
+    BigDecimal amount;
+    Timestamp timeStamp;
     TransactionStatusRestockDestock transactionStatus;
-    BigDecimal                      priceReference;
-    OriginTransaction               originTransaction;
-    String                          originTransactionId;
-    BlockchainNetworkType          blockchainNetworkType;
+    BigDecimal priceReference;
+    OriginTransaction originTransaction;
+    String originTransactionId;
+    BlockchainNetworkType blockchainNetworkType;
     //fee values
-    private long                   fee;
+    private long fee;
     private FeeOrigin feeOrigin;
 
-    public CryptoMoneyRestockTransactionImpl(){
+    public CryptoMoneyRestockTransactionImpl() {
 
     }
 
@@ -53,25 +53,24 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
                                              String originTransactionId,
                                              BlockchainNetworkType blockchainNetworkType,
                                              long fee,
-                                             FeeOrigin feeOrigin){
-        this.transactionId        = transactionId;
-        this.actorPublicKey       = actorPublicKey;
-        this.cryptoCurrency       = cryptoCurrency;
-        this.cbpWalletPublicKey   = cbpWalletPublicKey;
-        this.cryWalletPublicKey   = cryWalletPublicKey;
-        this.memo                 = memo;
-        this.concept              = concept;
-        this.amount               = amount;
-        this.timeStamp            = timeStamp;
-        this.transactionStatus    = transactionStatus;
-        this.priceReference       = priceReference;
-        this.originTransaction    = originTransaction;
-        this.originTransactionId  = originTransactionId;
-        this.blockchainNetworkType= blockchainNetworkType;
-        this.fee                   = fee;
-        this.feeOrigin             = feeOrigin;
+                                             FeeOrigin feeOrigin) {
+        this.transactionId = transactionId;
+        this.actorPublicKey = actorPublicKey;
+        this.cryptoCurrency = cryptoCurrency;
+        this.cbpWalletPublicKey = cbpWalletPublicKey;
+        this.cryWalletPublicKey = cryWalletPublicKey;
+        this.memo = memo;
+        this.concept = concept;
+        this.amount = amount;
+        this.timeStamp = timeStamp;
+        this.transactionStatus = transactionStatus;
+        this.priceReference = priceReference;
+        this.originTransaction = originTransaction;
+        this.originTransactionId = originTransactionId;
+        this.blockchainNetworkType = blockchainNetworkType;
+        this.fee = fee;
+        this.feeOrigin = feeOrigin;
     }
-
 
 
     @Override
@@ -235,7 +234,7 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
     }
 
     @Override
-    public void setFee(BitcoinFee bitcoinFee){
+    public void setFee(BitcoinFee bitcoinFee) {
         this.fee = bitcoinFee.getFee();
     }
 

@@ -62,7 +62,7 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
                  */
                 customerBrokerContractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
                 if (customerBrokerContractPurchase == null) {
-                    throw new CantAckMerchandiseException("The CustomerBrokerContractPurchase with the hash \n" + contractHash + "\nis null");
+                    throw new CantAckMerchandiseException(new StringBuilder().append("The CustomerBrokerContractPurchase with the hash \n").append(contractHash).append("\nis null").toString());
                 }
 
                 System.out.println("ACK_OFFLINE_MERCHANDISE - ackMerchandise() - persistContractInDatabase()");
@@ -83,7 +83,7 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
 
                 } else {
                     try {
-                        throw new CantAckMerchandiseException("The Ack offline merchandise with the contract ID " + contractHash + " process has begun");
+                        throw new CantAckMerchandiseException(new StringBuilder().append("The Ack offline merchandise with the contract ID ").append(contractHash).append(" process has begun").toString());
                     } catch (CantAckMerchandiseException e) {
                         pluginRoot.reportError(NOT_IMPORTANT, e);
                     }
@@ -131,9 +131,7 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
      * This method returns the contract transaction status
      *
      * @param contractHash
-     *
      * @return
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     @Override
@@ -158,9 +156,7 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
      * If returns 0 the transaction is processing.
      *
      * @param contractHash
-     *
      * @return
-     *
      * @throws CantGetCompletionDateException
      */
     @Override

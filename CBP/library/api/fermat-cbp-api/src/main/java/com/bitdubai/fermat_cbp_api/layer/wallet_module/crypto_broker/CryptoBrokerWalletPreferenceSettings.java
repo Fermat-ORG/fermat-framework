@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by Franklin Marcano on 21/01/16.
  */
-public class CryptoBrokerWalletPreferenceSettings implements WalletSettings,Serializable {
+public class CryptoBrokerWalletPreferenceSettings implements WalletSettings, Serializable {
 
     private boolean isHomeTutorialDialogEnabled;
     private boolean isWizardStartActivity = true;
@@ -30,6 +30,7 @@ public class CryptoBrokerWalletPreferenceSettings implements WalletSettings,Seri
     public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {
         this.isHomeTutorialDialogEnabled = isHomeTutorialDialogEnabled;
     }
+
     /**
      * This method let us know the default language of a wallet
      *
@@ -76,7 +77,7 @@ public class CryptoBrokerWalletPreferenceSettings implements WalletSettings,Seri
 
     @Override
     public void setIsPresentationHelpEnabled(boolean b) {
-        isHomeTutorialDialogEnabled=b;
+        isHomeTutorialDialogEnabled = b;
     }
 
     public void setIsWizardStartActivity(boolean isWizardStartActivity) {

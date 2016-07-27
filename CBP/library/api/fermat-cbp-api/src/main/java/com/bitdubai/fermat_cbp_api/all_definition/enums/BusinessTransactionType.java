@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by Yordin Alayn on 23.09.15.
  */
- 
-public enum BusinessTransactionType  implements FermatEnum {
+
+public enum BusinessTransactionType implements FermatEnum {
     STOCK("STO"),
     SALE("SAL"),
     PURCHASE("PUR");
@@ -25,10 +25,14 @@ public enum BusinessTransactionType  implements FermatEnum {
 
     public static BusinessTransactionType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "STO": return BusinessTransactionType.STOCK;
-            case "SAL": return BusinessTransactionType.SALE;
-            case "PUR": return BusinessTransactionType.PURCHASE;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the BusinessTransactionType enum");
+            case "STO":
+                return BusinessTransactionType.STOCK;
+            case "SAL":
+                return BusinessTransactionType.SALE;
+            case "PUR":
+                return BusinessTransactionType.PURCHASE;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the BusinessTransactionType enum");
         }
     }
 }

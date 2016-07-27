@@ -25,10 +25,9 @@ import java.util.UUID;
 /**
  * The Plugin File System is the implementation of the file system that is handled to external plu256gins. It differs
  * from the Platform File System in that this one requires the plug in to identify itself.
- *
  */
 
-public class AndroidPluginFileSystem implements PluginFileSystem,Serializable{
+public class AndroidPluginFileSystem implements PluginFileSystem, Serializable {
 
     private static final String CHARSET_NAME = "UTF-8";
     private static final String DIGEST_ALGORITHM = "SHA-256";
@@ -36,7 +35,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem,Serializable{
     /**
      * PluginFileSystem interface member variables.
      */
-    
+
     private Context context;
 
     public AndroidPluginFileSystem(Context context) {
@@ -44,72 +43,71 @@ public class AndroidPluginFileSystem implements PluginFileSystem,Serializable{
     }
 
     @Override
-    public final PluginTextFile getTextFile(final UUID         ownerId      ,
-                                            final String       directoryName,
-                                            final String       fileName     ,
-                                            final FilePrivacy  privacyLevel ,
-                                            final FileLifeSpan lifeSpan     ) throws FileNotFoundException   ,
+    public final PluginTextFile getTextFile(final UUID ownerId,
+                                            final String directoryName,
+                                            final String fileName,
+                                            final FilePrivacy privacyLevel,
+                                            final FileLifeSpan lifeSpan) throws FileNotFoundException,
             CantCreateFileException {
 
         try {
             AndroidPluginTextFile newFile = new AndroidPluginTextFile(
-                    ownerId                        ,
+                    ownerId,
                     context.getFilesDir().getPath(),
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
 
             newFile.loadFromMedia();
             return newFile;
-        }
-        catch (CantLoadFileException exception){
+        } catch (CantLoadFileException exception) {
 
             throw new FileNotFoundException(exception, null, "Check the cause of this error");
-        } catch(Exception e){
+        } catch (Exception e) {
 
-            throw new CantCreateFileException(e,"", "Unhandled error.");
+            throw new CantCreateFileException(e, "", "Unhandled error.");
         }
 
     }
 
     @Override
-    public final PluginTextFile createTextFile(final UUID         ownerId      ,
-                                               final String       directoryName,
-                                               final String       fileName     ,
-                                               final FilePrivacy  privacyLevel ,
-                                               final FileLifeSpan lifeSpan     ) throws  CantCreateFileException {
+    public final PluginTextFile createTextFile(final UUID ownerId,
+                                               final String directoryName,
+                                               final String fileName,
+                                               final FilePrivacy privacyLevel,
+                                               final FileLifeSpan lifeSpan) throws CantCreateFileException {
 
         try {
 
             return new AndroidPluginTextFile(
-                    ownerId                        ,
+                    ownerId,
                     context.getFilesDir().getPath(),
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
 
-        } catch(Exception e){
+        } catch (Exception e) {
 
-            throw new CantCreateFileException(e,"", "Unhandled error.");
+            throw new CantCreateFileException(e, "", "Unhandled error.");
         }
     }
 
     @Override
-    public boolean isTextFileExist(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan)  throws Exception{
+    public boolean isTextFileExist(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws Exception {
 
         String content = null;
 
         try {
             AndroidPluginTextFile androidPluginTextFile = new AndroidPluginTextFile(
-                    ownerId                        ,
+                    ownerId,
                     context.getFilesDir().getPath(),
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
 
@@ -122,8 +120,8 @@ public class AndroidPluginFileSystem implements PluginFileSystem,Serializable{
         }
 
 
-        if (content!=null){
-            if(!content.equals("")){
+        if (content != null) {
+            if (!content.equals("")) {
                 return true;
             }
         }
@@ -132,81 +130,81 @@ public class AndroidPluginFileSystem implements PluginFileSystem,Serializable{
     }
 
     @Override
-    public final PluginBinaryFile getBinaryFile(final UUID         ownerId      ,
-                                                final String       directoryName,
-                                                final String       fileName     ,
-                                                final FilePrivacy  privacyLevel ,
-                                                final FileLifeSpan lifeSpan     ) throws FileNotFoundException   ,
+    public final PluginBinaryFile getBinaryFile(final UUID ownerId,
+                                                final String directoryName,
+                                                final String fileName,
+                                                final FilePrivacy privacyLevel,
+                                                final FileLifeSpan lifeSpan) throws FileNotFoundException,
             CantCreateFileException {
 
         try {
 
             final AndroidPluginBinaryFile newFile = new AndroidPluginBinaryFile(
-                    ownerId                        ,
+                    ownerId,
                     context.getFilesDir().getPath(),
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
 
             newFile.loadFromMedia();
             return newFile;
 
-        } catch (CantLoadFileException e){
+        } catch (CantLoadFileException e) {
 
             throw new FileNotFoundException(e, "", "Check the cause");
-        }catch(Exception e){
+        } catch (Exception e) {
 
             throw new CantCreateFileException(e, "", "Unhandled error.");
         }
     }
 
     @Override
-    public final PluginBinaryFile createBinaryFile(final UUID         ownerId      ,
-                                                   final String       directoryName,
-                                                   final String       fileName     ,
-                                                   final FilePrivacy  privacyLevel ,
-                                                   final FileLifeSpan lifeSpan     ) throws CantCreateFileException {
+    public final PluginBinaryFile createBinaryFile(final UUID ownerId,
+                                                   final String directoryName,
+                                                   final String fileName,
+                                                   final FilePrivacy privacyLevel,
+                                                   final FileLifeSpan lifeSpan) throws CantCreateFileException {
 
         try {
 
             return new AndroidPluginBinaryFile(
-                    ownerId                        ,
+                    ownerId,
                     context.getFilesDir().getPath(),
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
 
-        } catch(Exception e){
+        } catch (Exception e) {
 
             throw new CantCreateFileException(e, "", "Unhandled error.");
         }
     }
 
     @Override
-    public final void deleteTextFile(final UUID         ownerId      ,
-                                     final String       directoryName,
-                                     final String       fileName     ,
-                                     final FilePrivacy  privacyLevel ,
-                                     final FileLifeSpan lifeSpan     ) throws CantCreateFileException,
-            FileNotFoundException  {
+    public final void deleteTextFile(final UUID ownerId,
+                                     final String directoryName,
+                                     final String fileName,
+                                     final FilePrivacy privacyLevel,
+                                     final FileLifeSpan lifeSpan) throws CantCreateFileException,
+            FileNotFoundException {
 
         try {
 
-            final AndroidPluginTextFile newFile =  new AndroidPluginTextFile(
-                    ownerId                        ,
+            final AndroidPluginTextFile newFile = new AndroidPluginTextFile(
+                    ownerId,
                     context.getFilesDir().getPath(),
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
             newFile.delete();
 
-        } catch (Exception e){
+        } catch (Exception e) {
 
             throw new CantCreateFileException(e, "", "Check the cause");
         }
@@ -214,29 +212,29 @@ public class AndroidPluginFileSystem implements PluginFileSystem,Serializable{
     }
 
     @Override
-    public final void deleteBinaryFile(final UUID         ownerId      ,
-                                       final String       directoryName,
-                                       final String       fileName     ,
-                                       final FilePrivacy  privacyLevel ,
-                                       final FileLifeSpan lifeSpan     ) throws CantCreateFileException,
-                                                                                FileNotFoundException  {
+    public final void deleteBinaryFile(final UUID ownerId,
+                                       final String directoryName,
+                                       final String fileName,
+                                       final FilePrivacy privacyLevel,
+                                       final FileLifeSpan lifeSpan) throws CantCreateFileException,
+            FileNotFoundException {
 
         try {
 
             final AndroidPluginBinaryFile newFile = new AndroidPluginBinaryFile(
-                    ownerId                        ,
+                    ownerId,
                     context.getFilesDir().getPath(),
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
             newFile.delete();
 
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
 
             throw e;
-        } catch (Exception e){
+        } catch (Exception e) {
 
             throw new CantCreateFileException(e, "", "Check the cause");
         }
@@ -249,11 +247,11 @@ public class AndroidPluginFileSystem implements PluginFileSystem,Serializable{
             final MessageDigest md = MessageDigest.getInstance(DIGEST_ALGORITHM);
             md.update(fileName.getBytes(Charset.forName(CHARSET_NAME)));
             byte[] digest = md.digest();
-            byte[] encoded = Base64.encode(digest,1);
+            byte[] encoded = Base64.encode(digest, 1);
             final String encryptedString = new String(encoded, CHARSET_NAME);
-            return encryptedString.replace("/","");
+            return encryptedString.replace("/", "");
 
-        } catch(Exception e){
+        } catch (Exception e) {
 
             throw new CantHashFileNameException(e, "", "This Should never happen unless we change the DIGEST_ALGORITHM Constant");
         }

@@ -25,13 +25,13 @@ public class CryptoBrokerIdentityInfoAdapter
         implements Filterable {
 
     private ErrorManager errorManager;
-    private Activity     activity ;
+    private Activity activity;
 
     CryptoBrokerIdentityListFilter filter;
 
-    public CryptoBrokerIdentityInfoAdapter(final Activity                                   context      ,
-                                           final ErrorManager                               errorManager ,
-                                           final ArrayList<CryptoBrokerIdentityInformation> dataSet      ) {
+    public CryptoBrokerIdentityInfoAdapter(final Activity context,
+                                           final ErrorManager errorManager,
+                                           final ArrayList<CryptoBrokerIdentityInformation> dataSet) {
 
         super(context, dataSet);
 
@@ -40,9 +40,9 @@ public class CryptoBrokerIdentityInfoAdapter
     }
 
     @Override
-    protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder  ,
-                              final CryptoBrokerIdentityInformation    data    ,
-                              final int                                position) {
+    protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder,
+                              final CryptoBrokerIdentityInformation data,
+                              final int position) {
 
         filter = getFilter();
 
@@ -51,9 +51,9 @@ public class CryptoBrokerIdentityInfoAdapter
         holder.setText(spannedText);
         holder.setImage(data.getProfileImage());
 
-        if( data.isPublished() ){
+        if (data.isPublished()) {
             holder.setStatus("Visible");
-        }else{
+        } else {
             holder.setStatus("Not visible");
         }
 

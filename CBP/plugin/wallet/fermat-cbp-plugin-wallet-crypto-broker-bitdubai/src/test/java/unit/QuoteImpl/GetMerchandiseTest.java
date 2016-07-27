@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class GetMerchandiseTest {
 
     @Test
-    public void getMerchandise(){
+    public void getMerchandise() {
         QuoteImpl quote = mock(QuoteImpl.class);
         when(quote.getMerchandise()).thenReturn(FiatCurrency.ARGENTINE_PESO);
         assertThat(quote.getMerchandise()).isNotNull();

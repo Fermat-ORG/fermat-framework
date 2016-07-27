@@ -12,9 +12,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 
-import org.apache.commons.codec.binary.Base64;
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
@@ -35,7 +32,7 @@ public class DesktopPluginDatabaseSystem implements PluginDatabaseSystem {
     /**
      * <p>This method open a specified database file.
      *
-     * @param ownerId ID plugin
+     * @param ownerId      ID plugin
      * @param databaseName database name to use
      * @return Database Object
      * @throws CantOpenDatabaseException
@@ -43,19 +40,17 @@ public class DesktopPluginDatabaseSystem implements PluginDatabaseSystem {
      */
     @Override
     public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
-        try{
+        try {
             DesktopDatabase database;
             //String hasDBName = hashDataBaseName(databaseName);
             database = new DesktopDatabase(ownerId, databaseName);
             database.openDatabase(databaseName);
 
             return database;
-        } catch (final DatabaseNotFoundException exception){
+        } catch (final DatabaseNotFoundException exception) {
 
             throw exception;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new CantOpenDatabaseException();
         }
 
@@ -65,23 +60,21 @@ public class DesktopPluginDatabaseSystem implements PluginDatabaseSystem {
     /**
      * <p>This method delete a specified database file.
      *
-     * @param ownerId ID plugin
+     * @param ownerId      ID plugin
      * @param databaseName database name to use
      * @throws CantOpenDatabaseException
      * @throws DatabaseNotFoundException
      */
     @Override
     public void deleteDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
-        try{
+        try {
             DesktopDatabase database;
             //String hasDBName = hashDataBaseName(databaseName);
             database = new DesktopDatabase(ownerId, databaseName);
             database.deleteDatabase(databaseName);
 
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new CantOpenDatabaseException();
         }
 
@@ -89,24 +82,23 @@ public class DesktopPluginDatabaseSystem implements PluginDatabaseSystem {
 
 
     /**
-     *<p> This method create a new database file
+     * <p> This method create a new database file
      *
-     * @param ownerId ID plugin
+     * @param ownerId      ID plugin
      * @param databaseName database name to use
      * @return
      * @throws CantCreateDatabaseException
      */
     @Override
     public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
-        try{
+        try {
             DesktopDatabase database;
-           // String hasDBName = hashDataBaseName(databaseName);
+            // String hasDBName = hashDataBaseName(databaseName);
             database = new DesktopDatabase(ownerId, databaseName);
             database.createDatabase(databaseName);
 
             return database;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new CantCreateDatabaseException();
         }
 
@@ -118,7 +110,6 @@ public class DesktopPluginDatabaseSystem implements PluginDatabaseSystem {
      *
      * @param context Android Context object
      */
-
 
 
     /**

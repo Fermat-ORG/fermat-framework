@@ -13,22 +13,22 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.even
 public class NewContractOpenedEventHandler extends AbstractBrokerAckOfflinePaymentEventHandler {
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if(this.brokerAckOfflinePaymentRecorderService.getStatus()== ServiceStatus.STARTED) {
+        if (this.brokerAckOfflinePaymentRecorderService.getStatus() == ServiceStatus.STARTED) {
 
             try {
                 this.brokerAckOfflinePaymentRecorderService.newContractOpenedEvenHandler((NewContractOpened) fermatEvent);
-            } catch(CantSaveEventException exception){
-                throw new CantSaveEventException(exception,"Handling the NewContractOpened", "Check the cause");
-            } catch(ClassCastException exception){
+            } catch (CantSaveEventException exception) {
+                throw new CantSaveEventException(exception, "Handling the NewContractOpened", "Check the cause");
+            } catch (ClassCastException exception) {
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("EXCEPTION DETECTOR----------------------------------");
                 //exception.printStackTrace();
                 throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the NewContractOpened", "Cannot cast this event");
-            } catch(Exception exception){
-                throw new CantSaveEventException(exception,"Handling the NewContractOpened", "Unexpected exception");
+            } catch (Exception exception) {
+                throw new CantSaveEventException(exception, "Handling the NewContractOpened", "Unexpected exception");
             }
 
-        }else {
+        } else {
             throw new TransactionServiceNotStartedException();
         }
     }

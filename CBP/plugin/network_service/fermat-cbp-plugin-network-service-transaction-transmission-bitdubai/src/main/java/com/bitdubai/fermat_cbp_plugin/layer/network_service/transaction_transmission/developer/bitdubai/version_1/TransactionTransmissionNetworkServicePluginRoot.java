@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -26,7 +25,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.AbstractBusinessTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionConnectionsDAO;
@@ -49,7 +47,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
@@ -126,8 +123,8 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
         reprocessPendingMessage();
     }
 
-    private void reprocessPendingMessage(){
-        try{
+    private void reprocessPendingMessage() {
+        try {
             //Check if nay message not sent
             Map<String, Object> filters = new HashMap<>();
             filters.put(
@@ -136,10 +133,10 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
             List<NetworkServiceMessage> networkServiceMessages = getNetworkServiceConnectionManager()
                     .getOutgoingMessagesDao()
                     .findAll(filters);
-            System.out.println("Transaction Transmission found " + networkServiceMessages.size()+" for sending");
-            for(NetworkServiceMessage networkServiceMessage : networkServiceMessages){
-                try{
-                    System.out.println("Trying to send pending message to " + networkServiceMessage.getReceiverPublicKey());
+            System.out.println(new StringBuilder().append("Transaction Transmission found ").append(networkServiceMessages.size()).append(" for sending").toString());
+            for (NetworkServiceMessage networkServiceMessage : networkServiceMessages) {
+                try {
+                    System.out.println(new StringBuilder().append("Trying to send pending message to ").append(networkServiceMessage.getReceiverPublicKey()).toString());
                     networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.DELIVERED);
                     getNetworkServiceConnectionManager()
                             .getOutgoingMessagesDao().update(networkServiceMessage);
@@ -148,27 +145,27 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                     final ActorProfile receiver = new ActorProfile();
                     receiver.setIdentityPublicKey(networkServiceMessage.getReceiverPublicKey());
                     sendNewMessage(sender, receiver, networkServiceMessage.toJson());
-                } catch (Exception e){
+                } catch (Exception e) {
                     System.out.println("Transaction Transmission found an exception sending pending messages");
                     e.printStackTrace();
                 }
 
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Transaction Transmission cannot check if there's sending pending messages");
             e.printStackTrace();
         }
 
     }
 
-    private void startTimer(){
+    private void startTimer() {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 // change message state to process retry later
                 reprocessPendingMessage();
             }
-        }, 0,reprocessTimer);
+        }, 0, reprocessTimer);
     }
 
     @Override
@@ -204,9 +201,9 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
             this.startTimer();
 
         } catch (Exception exception) {
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            String context = contextBuffer.toString();
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Plugin ID: ").append(pluginId);
+            String context = stringBuilder.toString();
             String possibleCause = "The plugin was unable to start";
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), context, possibleCause);
         }
@@ -345,14 +342,14 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public void onSentMessage(NetworkServiceMessage fermatMessage) {
-        System.out.println("Transaction Transmission just sent :"+fermatMessage.getId());
-        try{
+        System.out.println(new StringBuilder().append("Transaction Transmission just sent :").append(fermatMessage.getId()).toString());
+        try {
             getNetworkServiceConnectionManager()
                     .getOutgoingMessagesDao().markAsDelivered(fermatMessage);
 
         } catch (Exception e) {
             reportError(UnexpectedPluginExceptionSeverity
-                    .DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                            .DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
         }
 

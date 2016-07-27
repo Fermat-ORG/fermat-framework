@@ -9,23 +9,23 @@ public class AndroidVariable {
     private final String variableName;
     private final String variableValue;
 
-    public AndroidVariable(String variableName ,
+    public AndroidVariable(String variableName,
                            String variableValue) {
 
-        this.variableName  = variableName ;
+        this.variableName = variableName;
         this.variableValue = variableValue;
     }
 
-    public String getName(){
+    public String getName() {
         return this.variableName;
     }
 
-    public String getValue(){
+    public String getValue() {
         return this.variableValue;
     }
 
     @Override
-    public String toString(){
-        return variableName + "=" + variableValue;
+    public String toString() {
+        return new StringBuilder().append(variableName).append("=").append(variableValue).toString();
     }
 }

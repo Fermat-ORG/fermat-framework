@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BankMoneyTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BankMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 
@@ -13,22 +13,22 @@ import java.util.UUID;
  * Created by franklin on 17/11/15.
  */
 public class BankMoneyDestockTransactionImpl implements BankMoneyTransaction {
-    UUID                            transactionId;
-    String                          actorPublicKey;
-    FiatCurrency                    fiatCurrency;
-    String                          cbpWalletPublicKey;
-    String                          bnkWalletPublicKey;
-    String                          memo;
-    String                          concept;
-    String                          bankAccount;
-    BigDecimal                      amount;
-    Timestamp                       timeStamp;
+    UUID transactionId;
+    String actorPublicKey;
+    FiatCurrency fiatCurrency;
+    String cbpWalletPublicKey;
+    String bnkWalletPublicKey;
+    String memo;
+    String concept;
+    String bankAccount;
+    BigDecimal amount;
+    Timestamp timeStamp;
     TransactionStatusRestockDestock transactionStatus;
-    BigDecimal                      priceReference;
-    OriginTransaction               originTransaction;
-    String                          originTransactionId;
+    BigDecimal priceReference;
+    OriginTransaction originTransaction;
+    String originTransactionId;
 
-    public BankMoneyDestockTransactionImpl(){
+    public BankMoneyDestockTransactionImpl() {
 
     }
 
@@ -45,23 +45,22 @@ public class BankMoneyDestockTransactionImpl implements BankMoneyTransaction {
                                            TransactionStatusRestockDestock transactionStatus,
                                            BigDecimal priceReference,
                                            OriginTransaction originTransaction,
-                                           String originTransactionId){
-        this.transactionId      = transactionId;
-        this.actorPublicKey     = actorPublicKey;
-        this.fiatCurrency       = fiatCurrency;
+                                           String originTransactionId) {
+        this.transactionId = transactionId;
+        this.actorPublicKey = actorPublicKey;
+        this.fiatCurrency = fiatCurrency;
         this.cbpWalletPublicKey = cbpWalletPublicKey;
         this.bnkWalletPublicKey = bnkWalletPublicKey;
-        this.memo               = memo;
-        this.concept            = concept;
-        this.bankAccount        = bankAccount;
-        this.amount             = amount;
-        this.timeStamp          = timeStamp;
-        this.transactionStatus  = transactionStatus;
-        this.priceReference     = priceReference;
-        this.originTransaction  = originTransaction;
-        this.originTransactionId= originTransactionId;
+        this.memo = memo;
+        this.concept = concept;
+        this.bankAccount = bankAccount;
+        this.amount = amount;
+        this.timeStamp = timeStamp;
+        this.transactionStatus = transactionStatus;
+        this.priceReference = priceReference;
+        this.originTransaction = originTransaction;
+        this.originTransactionId = originTransactionId;
     }
-
 
 
     @Override

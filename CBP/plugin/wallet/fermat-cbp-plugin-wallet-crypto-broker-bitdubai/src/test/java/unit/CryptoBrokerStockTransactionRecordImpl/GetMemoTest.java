@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetMemoTest {
 
     @Test
-    public void getMemo(){
+    public void getMemo() {
         CryptoBrokerStockTransactionRecordImpl cryptoBrokerStockTransactionRecord = mock(CryptoBrokerStockTransactionRecordImpl.class);
         when(cryptoBrokerStockTransactionRecord.getMemo()).thenReturn(new String());
         assertThat(cryptoBrokerStockTransactionRecord.getMemo()).isNotNull();

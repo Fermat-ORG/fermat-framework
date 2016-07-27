@@ -42,25 +42,25 @@ public class createDatabaseTest {
     private String testDataBaseName;
     private UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
 
-    public void setUpTestValues(){
+    public void setUpTestValues() {
         testId = UUID.randomUUID();
         testDataBaseName = UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_DATABASE_NAME;
     }
 
-    public void setUpGeneralMockitoRules() throws Exception{
+    public void setUpGeneralMockitoRules() throws Exception {
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockPluginDatabaseSystem.createDatabase(testId, testDataBaseName)).thenReturn(mockDatabase);
         when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTableFactory);
     }
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         setUpTestValues();
         setUpGeneralMockitoRules();
     }
 
     @Test
-    public void CreateDatabase_SuccessfulInvocation_ReturnsDatabase() throws Exception{
+    public void CreateDatabase_SuccessfulInvocation_ReturnsDatabase() throws Exception {
         UserLevelBusinessTransactionCustomerBrokerSaleDatabaseFactory testUserLevelDataBaseFactory = new UserLevelBusinessTransactionCustomerBrokerSaleDatabaseFactory(mockPluginDatabaseSystem);
         Database checkDatabase = testUserLevelDataBaseFactory.createDatabase(testId, testDataBaseName);
         assertThat(checkDatabase).isNotNull();

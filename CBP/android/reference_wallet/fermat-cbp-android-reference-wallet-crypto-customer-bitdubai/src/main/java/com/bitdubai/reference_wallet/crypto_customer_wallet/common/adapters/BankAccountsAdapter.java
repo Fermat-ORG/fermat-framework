@@ -4,10 +4,8 @@ import android.content.Context;
 import android.view.View;
 
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.BankAccountViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.WalletViewHolder;
 
 import java.util.List;
 

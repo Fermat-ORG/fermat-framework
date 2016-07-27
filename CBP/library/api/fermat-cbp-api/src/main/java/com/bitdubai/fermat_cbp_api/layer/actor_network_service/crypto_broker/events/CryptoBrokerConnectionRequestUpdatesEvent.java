@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.AbstractEvent;
  * represents a CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES event.
  * The event is raised when the Actor Network Service Crypto Broker receives a notification of updates over
  * one of its requests and an action must be done.
- *
+ * <p/>
  * Created by by Leon Acosta (laion.cj91@gmail.com) on 24/11/2015.
  */
 public final class CryptoBrokerConnectionRequestUpdatesEvent extends AbstractEvent {

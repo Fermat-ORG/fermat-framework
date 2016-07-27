@@ -63,6 +63,7 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * Constructor
+     *
      * @throws NoSuchProviderException
      * @throws NoSuchAlgorithmException
      */
@@ -74,6 +75,7 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#generateKeyPair()
      */
     @Override
@@ -85,6 +87,7 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#readPublicKey(String)
      */
     @Override
@@ -96,6 +99,7 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#readPrivateKey(String)
      */
     @Override
@@ -108,6 +112,7 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#createPublicKeyFromPrivateKey(PrivateKey)
      */
     @Override
@@ -129,10 +134,11 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#encrypt(String, String)
      */
     @Override
-    public String encrypt(String pubKey, String plaintTex) throws Exception{
+    public String encrypt(String pubKey, String plaintTex) throws Exception {
 
 //        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 //        byteArrayOutputStream.reset();
@@ -161,10 +167,11 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#decrypt(String, String)
      */
     @Override
-    public String decrypt(String privateKey, String encryptedTex) throws Exception{
+    public String decrypt(String privateKey, String encryptedTex) throws Exception {
 
         StringBuilder decryptedMsj = new StringBuilder();
 
@@ -192,9 +199,10 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#encode(byte[])
      */
-    public String encode(byte[] data){
+    public String encode(byte[] data) {
 
 //        return Base64.toBase64String(data);
         return null;
@@ -202,6 +210,7 @@ public class FermatBouncyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#decode(String)
      */
     public byte[] decode(String data) throws UnsupportedEncodingException {

@@ -8,8 +8,8 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.Earnin
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantExtractEarningsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantMarkEarningTransactionAsExtractedException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningTransactionNotFoundException;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractorManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractor;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractorManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
@@ -122,7 +122,7 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
     private void markEarningTransactionsAsExtracted(List<EarningTransaction> earningTransactions, Currency earningCurrency) throws CantExtractEarningsException {
         try {
             for (EarningTransaction earningTransaction : earningTransactions)
-                if (earningTransaction.getEarningCurrency() == earningCurrency){
+                if (earningTransaction.getEarningCurrency() == earningCurrency) {
                     dao.markEarningTransactionAsExtracted(earningTransaction.getId());
                     earningTransaction.markAsExtracted();
                 }

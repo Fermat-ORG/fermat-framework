@@ -65,56 +65,56 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
  */
 public class CustomerBrokerNewAgent2 extends AbstractAgent {
 
-    private Database                                            database;
-    private Thread                                              agentThread;
-    private LogManager                                          logManager;
-    private EventManager                                        eventManager;
-    private NegotiationTransactionCustomerBrokerNewPluginRoot   pluginRoot;
-    private PluginDatabaseSystem                                pluginDatabaseSystem;
-    private UUID                                                pluginId;
-    private NegotiationTransmissionManager                      negotiationTransmissionManager;
-    private CustomerBrokerPurchaseNegotiation                   customerBrokerPurchaseNegotiation;
-    private CustomerBrokerPurchaseNegotiationManager            customerBrokerPurchaseNegotiationManager;
-    private CustomerBrokerSaleNegotiation                       customerBrokerSaleNegotiation;
-    private CustomerBrokerSaleNegotiationManager                customerBrokerSaleNegotiationManager;
-    private Broadcaster                                         broadcaster;
-    private CustomerBrokerNewNegotiationTransactionDatabaseDao  dao;
+    private Database database;
+    private Thread agentThread;
+    private LogManager logManager;
+    private EventManager eventManager;
+    private NegotiationTransactionCustomerBrokerNewPluginRoot pluginRoot;
+    private PluginDatabaseSystem pluginDatabaseSystem;
+    private UUID pluginId;
+    private NegotiationTransmissionManager negotiationTransmissionManager;
+    private CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation;
+    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    private CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation;
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    private Broadcaster broadcaster;
+    private CustomerBrokerNewNegotiationTransactionDatabaseDao dao;
 
-    private int                 iterationConfirmSend    = 0;
-    private Map<UUID,Integer>   transactionSend         = new HashMap<>();
+    private int iterationConfirmSend = 0;
+    private Map<UUID, Integer> transactionSend = new HashMap<>();
 
     public CustomerBrokerNewAgent2(
-            long                                                sleepTime,
-            TimeUnit                                            timeUnit,
-            long                                                initDelayTime,
-            PluginDatabaseSystem                                pluginDatabaseSystem,
-            LogManager                                          logManager,
-            NegotiationTransactionCustomerBrokerNewPluginRoot   pluginRoot,
-            EventManager                                        eventManager,
-            UUID                                                pluginId,
-            CustomerBrokerNewNegotiationTransactionDatabaseDao  dao,
-            NegotiationTransmissionManager                      negotiationTransmissionManager,
-            CustomerBrokerPurchaseNegotiation                   customerBrokerPurchaseNegotiation,
-            CustomerBrokerSaleNegotiation                       customerBrokerSaleNegotiation,
-            CustomerBrokerPurchaseNegotiationManager            customerBrokerPurchaseNegotiationManager,
-            CustomerBrokerSaleNegotiationManager                customerBrokerSaleNegotiationManager,
+            long sleepTime,
+            TimeUnit timeUnit,
+            long initDelayTime,
+            PluginDatabaseSystem pluginDatabaseSystem,
+            LogManager logManager,
+            NegotiationTransactionCustomerBrokerNewPluginRoot pluginRoot,
+            EventManager eventManager,
+            UUID pluginId,
+            CustomerBrokerNewNegotiationTransactionDatabaseDao dao,
+            NegotiationTransmissionManager negotiationTransmissionManager,
+            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
+            CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
+            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
             Broadcaster broadcaster
-    ){
+    ) {
 
         super(sleepTime, timeUnit, initDelayTime);
 
-        this.pluginDatabaseSystem                       = pluginDatabaseSystem;
-        this.logManager                                 = logManager;
-        this.pluginRoot                                 = pluginRoot;
-        this.eventManager                               = eventManager;
-        this.pluginId                                   = pluginId;
-        this.dao                                        = dao;
-        this.negotiationTransmissionManager             = negotiationTransmissionManager;
-        this.customerBrokerPurchaseNegotiation          = customerBrokerPurchaseNegotiation;
-        this.customerBrokerSaleNegotiation              = customerBrokerSaleNegotiation;
-        this.customerBrokerPurchaseNegotiationManager   = customerBrokerPurchaseNegotiationManager;
-        this.customerBrokerSaleNegotiationManager       = customerBrokerSaleNegotiationManager;
-        this.broadcaster                                = broadcaster;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.logManager = logManager;
+        this.pluginRoot = pluginRoot;
+        this.eventManager = eventManager;
+        this.pluginId = pluginId;
+        this.dao = dao;
+        this.negotiationTransmissionManager = negotiationTransmissionManager;
+        this.customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiation;
+        this.customerBrokerSaleNegotiation = customerBrokerSaleNegotiation;
+        this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
+        this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
+        this.broadcaster = broadcaster;
     }
 
     @Override
@@ -123,13 +123,13 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
             @Override
             public void run() {
 
-                try{
+                try {
 
                     doTheMainTask();
 
-                } catch (   CantSendCustomerBrokerNewNegotiationTransactionException |
-                            CantSendCustomerBrokerNewConfirmationNegotiationTransactionException |
-                            CantUpdateRecordException e) {
+                } catch (CantSendCustomerBrokerNewNegotiationTransactionException |
+                        CantSendCustomerBrokerNewConfirmationNegotiationTransactionException |
+                        CantUpdateRecordException e) {
                     pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
@@ -147,21 +147,20 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
     private void doTheMainTask() throws
             CantSendCustomerBrokerNewNegotiationTransactionException,
             CantSendCustomerBrokerNewConfirmationNegotiationTransactionException,
-            CantUpdateRecordException
-    {
-        try{
+            CantUpdateRecordException {
+        try {
 
-            String                              negotiationXML;
+            String negotiationXML;
             NegotiationType negotiationType;
-            UUID                                transactionId;
+            UUID transactionId;
             List<CustomerBrokerNew> negotiationPendingToSubmitList;
-            CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
-            CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
-            int                                 timeConfirmSend     = 20;
+            CustomerBrokerPurchaseNegotiation purchaseNegotiation = new NegotiationPurchaseRecord();
+            CustomerBrokerSaleNegotiation saleNegotiation = new NegotiationSaleRecord();
+            int timeConfirmSend = 20;
 
             //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
-            negotiationPendingToSubmitList  = dao.getPendingToSubmitNegotiation();
-            if(!negotiationPendingToSubmitList.isEmpty()){
+            negotiationPendingToSubmitList = dao.getPendingToSubmitNegotiation();
+            if (!negotiationPendingToSubmitList.isEmpty()) {
                 for (CustomerBrokerNew negotiationTransaction : negotiationPendingToSubmitList) {
 
                     System.out.print("\n\n**** 5) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PURCHASE NEGOTIATION SEND ****\n");
@@ -169,10 +168,10 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
                     negotiationType = negotiationTransaction.getNegotiationType();
                     transactionId = negotiationTransaction.getTransactionId();
 
-                    switch (negotiationType){
+                    switch (negotiationType) {
                         case PURCHASE:
                             purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
-                            System.out.print("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n");
+                            System.out.print(new StringBuilder().append("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): ").append(purchaseNegotiation.getNegotiationId()).append(" ****\n").toString());
                             //SEND NEGOTIATION TO BROKER
                             negotiationTransmissionManager.sendNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                             break;
@@ -188,19 +187,19 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
 
             //SEND CONFIRM PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_CONFIRMATION)
             negotiationPendingToSubmitList = dao.getPendingToConfirmtNegotiation();
-            if(!negotiationPendingToSubmitList.isEmpty()){
+            if (!negotiationPendingToSubmitList.isEmpty()) {
                 for (CustomerBrokerNew negotiationTransaction : negotiationPendingToSubmitList) {
 
                     negotiationXML = negotiationTransaction.getNegotiationXML();
                     negotiationType = negotiationTransaction.getNegotiationType();
                     transactionId = negotiationTransaction.getTransactionId();
 
-                    System.out.print("\n\n**** 22) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION FOR SEND transactionId: " + transactionId + " ****\n");
+                    System.out.print(new StringBuilder().append("\n\n**** 22) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION FOR SEND transactionId: ").append(transactionId).append(" ****\n").toString());
 
-                    switch (negotiationType){
+                    switch (negotiationType) {
                         case SALE:
-                            saleNegotiation = (CustomerBrokerSaleNegotiation)XMLParser.parseXML(negotiationXML,saleNegotiation);
-                            System.out.print("\n\n**** 23) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION SEND negotiationId(XML): " + transactionId + " ****\n");
+                            saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+                            System.out.print(new StringBuilder().append("\n\n**** 23) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION SEND negotiationId(XML): ").append(transactionId).append(" ****\n").toString());
                             negotiationTransmissionManager.sendConfirmNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                             break;
                     }
@@ -218,7 +217,7 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
 
             //PROCES PENDING EVENT
             List<UUID> pendingEventsIdList = dao.getPendingEvents();
-            for(UUID eventId : pendingEventsIdList){
+            for (UUID eventId : pendingEventsIdList) {
                 checkPendingEvent(eventId);
             }
 
@@ -240,22 +239,22 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
 
         } catch (CantGetNegotiationTransactionListException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Negotiation","Cannot get the Negotiation list from database");
+            throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Negotiation", "Cannot get the Negotiation list from database");
         } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,e,"Sending Negotiation","Cannot Update State the Negotiation from database");
+            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "Sending Negotiation", "Cannot Update State the Negotiation from database");
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,e,"Sending Negotiation","Unexpected result in database");
+            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "Sending Negotiation", "Unexpected result in database");
         } catch (CantSendNegotiationToCryptoBrokerException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Sale Negotiation","Error in Negotiation Transmission Network Service");
+            throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Sale Negotiation", "Error in Negotiation Transmission Network Service");
         } catch (CantSendConfirmToCryptoCustomerException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendCustomerBrokerNewConfirmationNegotiationTransactionException(CantSendCustomerBrokerNewConfirmationNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Confirm Purchase Negotiation", "Error in Negotiation Transmission Network Service");
         } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantSendCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
+            throw new CantSendCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Sending Negotiation", "UNKNOWN FAILURE.");
         }
     }
 
@@ -263,18 +262,18 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
 
         try {
 
-            UUID                            transactionId;
-            UUID                            transmissionId;
+            UUID transactionId;
+            UUID transmissionId;
             NegotiationTransmission negotiationTransmission;
             NegotiationTransaction negotiationTransaction;
-            NegotiationType                 negotiationType;
-            String                          negotiationXML;
+            NegotiationType negotiationType;
+            String negotiationXML;
             CustomerBrokerNewSaleNegotiationTransaction customerBrokerNewSaleNegotiationTransaction;
-            
-            CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
-            CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
 
-            String eventTypeCode    = dao.getEventType(eventId);
+            CustomerBrokerPurchaseNegotiation purchaseNegotiation = new NegotiationPurchaseRecord();
+            CustomerBrokerSaleNegotiation saleNegotiation = new NegotiationSaleRecord();
+
+            String eventTypeCode = dao.getEventType(eventId);
 
             //EVENT - RECEIVE NEGOTIATION
             if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW.getCode())) {
@@ -283,7 +282,8 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
 
                     negotiationTransmission = record.getInformation();
 
-                    if(negotiationTransmission.getNegotiationTransactionType().getCode().equals(NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode())){
+                    final NegotiationTransactionType negotiationTransactionType = negotiationTransmission.getNegotiationTransactionType();
+                    if (negotiationTransactionType == NegotiationTransactionType.CUSTOMER_BROKER_NEW) {
 
                         negotiationXML = negotiationTransmission.getNegotiationXML();
                         transmissionId = negotiationTransmission.getTransmissionId();
@@ -303,7 +303,7 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
                                         System.out.print("\n**** 21) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION  ****\n");
                                         saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
 
-                                        if(negotiationTransaction == null) {
+                                        if (negotiationTransaction == null) {
 
                                             System.out.print("\n**** 21.1) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION NEW ****\n");
                                             customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
@@ -344,7 +344,7 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
 
                                 System.out.print("\n**** 25.1) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - NEW NEGOTIATION TRANSACTION CONFIRM ****\n");
 
-                                if(negotiationTransaction == null) {
+                                if (negotiationTransaction == null) {
 
                                     switch (negotiationType) {
                                         case PURCHASE:
@@ -394,7 +394,7 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
         } catch (CantConfirmTransactionException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
-        } catch (CantUpdateRecordException e){
+        } catch (CantUpdateRecordException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (Exception e) {
@@ -402,5 +402,4 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
             e.printStackTrace();
         }
     }
-
 }

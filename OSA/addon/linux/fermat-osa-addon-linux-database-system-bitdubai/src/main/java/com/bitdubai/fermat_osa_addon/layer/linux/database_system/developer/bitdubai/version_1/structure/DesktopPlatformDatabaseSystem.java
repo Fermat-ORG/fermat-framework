@@ -11,10 +11,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabas
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  * The Class <code>com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.structure.DesktopPlatformDatabaseSystem</code>
@@ -35,22 +31,21 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
      * <p>This method open a specified database file.
      *
      * @param databaseName database name to use
-     * @return  Database object
+     * @return Database object
      * @throws CantOpenDatabaseException
      * @throws DatabaseNotFoundException
      */
 
     @Override
-    public Database openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException{
-        try{
+    public Database openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+        try {
             DesktopDatabase database;
-           // String hasDBName = hashDataBaseName(databaseName);
+            // String hasDBName = hashDataBaseName(databaseName);
             database = new DesktopDatabase(databaseName);
             database.openDatabase(databaseName);
 
             return database;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new CantOpenDatabaseException();
         }
 
@@ -64,16 +59,15 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
      * @throws CantCreateDatabaseException
      */
     @Override
-    public Database createDatabase (String databaseName) throws CantCreateDatabaseException{
-        try{
+    public Database createDatabase(String databaseName) throws CantCreateDatabaseException {
+        try {
             DesktopDatabase database;
             //String hasDBName = hashDataBaseName(databaseName);
             database = new DesktopDatabase(databaseName);
             database.createDatabase(databaseName);
 
             return database;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new CantCreateDatabaseException();
         }
 
@@ -88,16 +82,14 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
      */
     @Override
     public void deleteDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
-        try{
+        try {
             DesktopDatabase database;
 
             database = new DesktopDatabase(databaseName);
             database.deleteDatabase(databaseName);
 
 
-        }
-        catch (DatabaseNotFoundException e)
-        {
+        } catch (DatabaseNotFoundException e) {
             throw new CantOpenDatabaseException();
         }
 

@@ -7,16 +7,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
+ * <p>The abstract class <code>com.bitdubai.fermat_api.layer.osa_android.database_system</code> is a interface
+ * that define the methods to  provides the caller with a Table Structure object.
  *
- *  <p>The abstract class <code>com.bitdubai.fermat_api.layer.osa_android.database_system</code> is a interface
- *     that define the methods to  provides the caller with a Table Structure object.
- *
- *
- *
- *  @author  Luis
- *  @version 1.0.0
- *  @since   23/03/15.
- * */
+ * @author Luis
+ * @version 1.0.0
+ * @since 23/03/15.
+ */
 public interface DatabaseFactory {
 
     void createTable(UUID ownerId, DatabaseTableFactory tableFactory) throws InvalidOwnerIdException, CantCreateTableException;
@@ -28,5 +25,5 @@ public interface DatabaseFactory {
     DatabaseTableFactory newTableFactory(String tableName);
 
     void createDatabase(String databaseName) throws CantCreateDatabaseException;
-    
+
 }

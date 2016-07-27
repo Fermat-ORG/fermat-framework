@@ -113,7 +113,7 @@ public class FermatApplication extends MultiDexApplication implements FermatAppl
 
 
     private void handleUncaughtException(Thread thread, Throwable e) {
-        fermatFramework.handleUncaughtException(thread,e);
+        fermatFramework.handleUncaughtException(thread, e);
     }
 
     public FermatAppsManagerService getAppManager() {
@@ -135,7 +135,7 @@ public class FermatApplication extends MultiDexApplication implements FermatAppl
         int processId = android.os.Process.myPid();
 
         String myProcessName = getApplicationContext().getPackageName();
-        Log.i(TAG, "context:" + myProcessName);
+        Log.i(TAG, new StringBuilder().append("context:").append(myProcessName).toString());
 
     }
 
@@ -163,6 +163,11 @@ public class FermatApplication extends MultiDexApplication implements FermatAppl
     }
 
     @Override
+    public Object loadObject(String pluginName,ClassLoader classLoader){
+        return fermatFramework.loadObject(pluginName,classLoader);
+    }
+
+    @Override
     public Object objectToProxyfactory(Object base, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface) {
         return fermatFramework.getLoaderManager().objectToProxyFactory(base, interfaceLoader, interfaces, returnInterface);
     }
@@ -176,7 +181,7 @@ public class FermatApplication extends MultiDexApplication implements FermatAppl
 
     @Override
     public void registerReceiver(FermatIntentFilter filter, FermatBroadcastReceiver fermatBroadcastReceiver, String appPublicKey) {
-        fermatFramework.registerReceiver(filter,fermatBroadcastReceiver,appPublicKey);
+        fermatFramework.registerReceiver(filter, fermatBroadcastReceiver, appPublicKey);
     }
 
     @Override

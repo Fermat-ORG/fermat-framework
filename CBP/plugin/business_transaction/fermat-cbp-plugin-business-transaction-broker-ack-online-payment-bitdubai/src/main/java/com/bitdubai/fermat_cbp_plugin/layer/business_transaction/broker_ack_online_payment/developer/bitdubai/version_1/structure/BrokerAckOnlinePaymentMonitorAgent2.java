@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -25,7 +24,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.AbstractBusinessTransactionAgent;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.IncomingMoneyEventWrapper;
@@ -40,16 +38,12 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.BrokerAckOnlinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database.BrokerAckOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.exceptions.IncomingOnlinePaymentException;
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -70,6 +64,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
 
     /**
      * Default constructor with parameters
+     *
      * @param sleepTime
      * @param timeUnit
      * @param initDelayTime
@@ -109,9 +104,9 @@ public class BrokerAckOnlinePaymentMonitorAgent2
              */
             List<String> pendingMoneyEventIdList = dao.getPendingIncomingMoneyEvents();
             for (String eventId : pendingMoneyEventIdList) {
-                try{
+                try {
                     checkPendingIncomingMoneyEvents(eventId);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -124,7 +119,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitNotificationList = dao.getPendingToSubmitNotificationList();
             for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                try{
+                try {
                     System.out.println("ACK_ONLINE_PAYMENT [Broker] - getting Pending To Submit Notification Record");
 
                     contractHash = pendingToSubmitNotificationRecord.getContractHash();
@@ -142,7 +137,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
 
                     dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.ONLINE_PAYMENT_ACK);
                     System.out.println("ACK_ONLINE_PAYMENT [Broker] - ContractTransactionStatus updated to ONLINE_PAYMENT_ACK");
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -153,7 +148,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitConfirmationList = dao.getPendingToSubmitConfirmList();
             for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                try{
+                try {
                     System.out.println("ACK_ONLINE_PAYMENT [Customer] - getting Pending To Submit Confirmation Record");
                     contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
@@ -170,7 +165,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
 
                     dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT);
                     System.out.println("ACK_ONLINE_PAYMENT [Customer] - ContractTransactionStatus updated to CONFIRM_ONLINE_ACK_PAYMENT");
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -207,6 +202,13 @@ public class BrokerAckOnlinePaymentMonitorAgent2
                 for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("BROKER_ACK_ONLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.BROKER_ACK_ONLINE_PAYMENT)
+                        continue;
+
+                    System.out.println("BROKER_ACK_ONLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (!dao.isContractHashInDatabase(contractHash)) {
                         CustomerBrokerContractPurchase contractPurchase = contractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
@@ -239,6 +241,13 @@ public class BrokerAckOnlinePaymentMonitorAgent2
                 for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("BROKER_ACK_ONLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.BROKER_ACK_ONLINE_PAYMENT)
+                        continue;
+
+                    System.out.println("BROKER_ACK_ONLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (dao.isContractHashInDatabase(contractHash)) {
                         businessTransactionRecord = dao.getBusinessTransactionRecordByContractHash(contractHash);
@@ -293,7 +302,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
                         long cryptoAmount = getCryptoAmount(amountStr, paymentCurrencyCode);
 
                         dao.persistContractInDatabase(saleContract, cryptoAmount, paymentCurrency);
-                        System.out.println("BROKER_ACK_ONLINE_PAYMENT [Broker] - NEW_CONTRACT_OPENED - persisted sale contract. cryptoAmount = " + cryptoAmount + " - paymentCurrency = " + paymentCurrency);
+                        System.out.println(new StringBuilder().append("BROKER_ACK_ONLINE_PAYMENT [Broker] - NEW_CONTRACT_OPENED - persisted sale contract. cryptoAmount = ").append(cryptoAmount).append(" - paymentCurrency = ").append(paymentCurrency).toString());
                     }
                 } catch (Exception e) {
                     System.out.println("BROKER_ACK_ONLINE_PAYMENT - NEW_CONTRACT_OPENED - EXCEPTION!! Probably this is been executed in the Customer Side");
@@ -357,23 +366,20 @@ public class BrokerAckOnlinePaymentMonitorAgent2
             long incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
             long contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
             if (incomingCryptoAmount != contractCryptoAmount) {
-                throw new IncomingOnlinePaymentException("The incoming crypto amount received is " + incomingCryptoAmount +
-                        "\nThe amount excepted in contract " + contractHash + "\nis " + contractCryptoAmount);
+                throw new IncomingOnlinePaymentException(new StringBuilder().append("The incoming crypto amount received is ").append(incomingCryptoAmount).append("\nThe amount excepted in contract ").append(contractHash).append("\nis ").append(contractCryptoAmount).toString());
             }
 
             //TODO probar esto
             CryptoCurrency incomingCryptoCurrency = incomingMoneyEventWrapper.getCryptoCurrency();
             CryptoCurrency contractCryptoCurrency = businessTransactionRecord.getCryptoCurrency();
             if (incomingCryptoCurrency != contractCryptoCurrency) {
-                throw new IncomingOnlinePaymentException("The incoming crypto currency received is " + incomingCryptoCurrency +
-                        "\nThe crypto currency excepted in contract " + contractHash + "\nis " + contractCryptoCurrency);
+                throw new IncomingOnlinePaymentException(new StringBuilder().append("The incoming crypto currency received is ").append(incomingCryptoCurrency).append("\nThe crypto currency excepted in contract ").append(contractHash).append("\nis ").append(contractCryptoCurrency).toString());
             }
 
             String receiverActorPublicKey = incomingMoneyEventWrapper.getReceiverPublicKey();
             String expectedActorPublicKey = businessTransactionRecord.getCustomerPublicKey();
             if (!receiverActorPublicKey.equals(expectedActorPublicKey)) {
-                throw new IncomingOnlinePaymentException("The actor public key that receive the money is " + receiverActorPublicKey +
-                        "\nThe broker public key in contract " + contractHash + "\nis " + expectedActorPublicKey);
+                throw new IncomingOnlinePaymentException(new StringBuilder().append("The actor public key that receive the money is ").append(receiverActorPublicKey).append("\nThe broker public key in contract ").append(contractHash).append("\nis ").append(expectedActorPublicKey).toString());
             }
 
             businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION);

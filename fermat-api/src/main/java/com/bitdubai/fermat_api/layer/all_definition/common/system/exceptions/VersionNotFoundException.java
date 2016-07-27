@@ -24,7 +24,7 @@ public class VersionNotFoundException extends FermatException {
         this(DEFAULT_MESSAGE, null, context, possibleReason);
     }
 
-    public VersionNotFoundException(String context, String possibleReason,Exception e) {
+    public VersionNotFoundException(String context, String possibleReason, Exception e) {
         this(DEFAULT_MESSAGE, e, context, possibleReason);
     }
 

@@ -23,7 +23,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Yordin Alayn - (y.alayn@gmail.com) on 27/11/15.
  *
  * @version 1.0
@@ -33,15 +33,15 @@ import java.util.UUID;
 public final class NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final UUID                 pluginId            ;
+    private final UUID pluginId;
 
-    private       Database             database            ;
+    private Database database;
 
     public NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem,
                                                                          final UUID pluginId) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
+        this.pluginId = pluginId;
     }
 
     public final void initializeDatabase() throws CantInitializeNetworkServiceDatabaseException {
@@ -159,7 +159,7 @@ public final class NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory
             selectedTable.loadToMemory();
             final List<DatabaseTableRecord> records = selectedTable.getRecords();
 
-            for (final DatabaseTableRecord row: records){
+            for (final DatabaseTableRecord row : records) {
 
                 final List<String> developerRow = new ArrayList<>();
 
@@ -173,7 +173,7 @@ public final class NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             return returnedRecords;
         }
         return returnedRecords;

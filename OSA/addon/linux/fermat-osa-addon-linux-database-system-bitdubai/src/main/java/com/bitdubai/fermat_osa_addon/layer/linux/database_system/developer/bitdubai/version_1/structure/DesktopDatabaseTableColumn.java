@@ -17,20 +17,20 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * DatabaseTableColumn Member Variables.
      */
 
-    private final String           name        ;
-    private final DatabaseDataType type        ;
-    private final int              dataTypeSize;
-    private final boolean          primaryKey  ;
+    private final String name;
+    private final DatabaseDataType type;
+    private final int dataTypeSize;
+    private final boolean primaryKey;
 
-    public DesktopDatabaseTableColumn(final String           name        ,
-                                      final DatabaseDataType type        ,
-                                      final int              dataTypeSize,
-                                      final boolean          primaryKey  ) {
+    public DesktopDatabaseTableColumn(final String name,
+                                      final DatabaseDataType type,
+                                      final int dataTypeSize,
+                                      final boolean primaryKey) {
 
-        this.name         = name        ;
-        this.type         = type        ;
+        this.name = name;
+        this.type = type;
         this.dataTypeSize = dataTypeSize;
-        this.primaryKey   = primaryKey  ;
+        this.primaryKey = primaryKey;
     }
 
     /**
@@ -43,8 +43,7 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * @return String column name
      */
     @Override
-    public String getName ()
-    {
+    public String getName() {
         return this.name;
     }
 
@@ -55,17 +54,17 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * @return DatabaseDataType enum
      */
     @Override
-    public DatabaseDataType getDataType ()
-    {
+    public DatabaseDataType getDataType() {
         return this.type;
     }
 
     /**
      * <p>Gets the data size of the column
+     *
      * @return int data size column
      */
     @Override
-    public int getDataTypeSize (){
+    public int getDataTypeSize() {
         return this.dataTypeSize;
     }
 
@@ -75,7 +74,7 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * @return boolean if primary key
      */
     @Override
-    public boolean isPrimaryKey (){
+    public boolean isPrimaryKey() {
         return primaryKey;
     }
 

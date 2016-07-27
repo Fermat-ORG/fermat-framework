@@ -19,7 +19,7 @@ public class GetFiatCurrencyTest {
     private FiatCurrency cryptoCurrency = FiatCurrency.ARGENTINE_PESO;
 
     @Test
-    public void getCryptoCurrency(){
+    public void getCryptoCurrency() {
         BankMoneyDestockTransactionImpl bankMoneyDestockTransaction = mock(BankMoneyDestockTransactionImpl.class);
         when(bankMoneyDestockTransaction.getFiatCurrency()).thenReturn(cryptoCurrency);
         assertThat(bankMoneyDestockTransaction.getFiatCurrency()).isNotNull();

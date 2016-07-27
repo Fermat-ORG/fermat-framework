@@ -44,7 +44,7 @@ public class WalletUtils {
     public static String formatBalanceString(long balance,int typeAmount) {
         String stringBalance = "";
 
-        if(typeAmount== ShowMoneyType.BITCOIN.getCode()){
+        if(typeAmount== ShowMoneyType.FRMT.getCode()){
             DecimalFormat df = new DecimalFormat();
             df.setMaximumFractionDigits(4);
             df.setMinimumFractionDigits(2);
@@ -82,7 +82,7 @@ public class WalletUtils {
     public static String formatBalanceStringNotDecimal(long balance,int typeAmount) {
         String stringBalance = "";
 
-        if(typeAmount== ShowMoneyType.BITCOIN.getCode()){
+        if(typeAmount== ShowMoneyType.FRMT.getCode()){
             DecimalFormat df = new DecimalFormat();
             df.setMaximumFractionDigits(0);
             df.setMinimumFractionDigits(0);
@@ -127,7 +127,7 @@ public class WalletUtils {
     public static CryptoAddress validateAddress(String strToValidate,FermatWallet fermatWallet,BlockchainNetworkType blockchainNetworkType) {
         String[] tokens = strToValidate.split("-|\\.|:|,|;| ");
 
-        CryptoAddress cryptoAddress = new CryptoAddress(null, CryptoCurrency.BITCOIN);
+        CryptoAddress cryptoAddress = new CryptoAddress(null, CryptoCurrency.FERMAT);
         for (String token : tokens) {
             token = token.trim();
             if (token.length() > 25 && token.length() < 40) {
@@ -261,7 +261,7 @@ public class WalletUtils {
 
         String stringAmount = "";
 
-        if(typeAmount== ShowMoneyType.BITCOIN.getCode()){
+        if(typeAmount== ShowMoneyType.FRMT.getCode()){
             DecimalFormat df = new DecimalFormat();
             df.setMaximumFractionDigits(maxDecimal);
             df.setMinimumFractionDigits(minDecimal);

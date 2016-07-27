@@ -44,7 +44,7 @@ public class FermatAppConnectionManager {
         if (activity == null) Log.e(TAG, "Activity null");
         if (openConnections.containsKey(publicKey)) {
             fermatAppConnection = openConnections.get(publicKey);
-            if(fermatAppConnection!=null) {
+            if (fermatAppConnection != null) {
                 if (fermatAppConnection.getContext() != null) {
                     if (!fermatAppConnection.getContext().equals(activity)) {
                         fermatAppConnection.clear();
@@ -53,8 +53,8 @@ public class FermatAppConnectionManager {
                 } else {
                     fermatAppConnection.setContext(activity);
                 }
-            }else{
-                Log.e(TAG,"AppConnection null, please check this in the FermatAppConnectionManager class");
+            } else {
+                Log.e(TAG, "AppConnection null, please check this in the FermatAppConnectionManager class");
             }
             return fermatAppConnection;
         }
@@ -212,7 +212,7 @@ public class FermatAppConnectionManager {
                 e.printStackTrace();
             }
         }
-        if(fermatAppConnection!=null) fermatAppConnection.setFullyLoadedSession(session);
+        if (fermatAppConnection != null) fermatAppConnection.setFullyLoadedSession(session);
         return fermatAppConnection;
     }
 

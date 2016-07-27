@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetPublicKeyTest {
     @Test
-    public void getPublicKey (){
+    public void getPublicKey() {
         CryptoCustomerWalletModuleActorIdentityImpl cryptoCustomerWalletModuleActorIdentity = mock(CryptoCustomerWalletModuleActorIdentityImpl.class);
         when(cryptoCustomerWalletModuleActorIdentity.getPublicKey()).thenReturn(new String());
         assertThat(cryptoCustomerWalletModuleActorIdentity.getPublicKey()).isNotNull();

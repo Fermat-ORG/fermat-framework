@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces;
 
 
-
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerSearchResult;

@@ -7,7 +7,7 @@ import java.util.Collection;
 /**
  * Created by Matias Furszyfer on 2015.12.06..
  */
-public interface SubAppManager extends AppManager{
+public interface SubAppManager extends AppManager {
 
     Collection<InstalledSubApp> getUserSubApps() throws CantGetUserSubAppException;
 

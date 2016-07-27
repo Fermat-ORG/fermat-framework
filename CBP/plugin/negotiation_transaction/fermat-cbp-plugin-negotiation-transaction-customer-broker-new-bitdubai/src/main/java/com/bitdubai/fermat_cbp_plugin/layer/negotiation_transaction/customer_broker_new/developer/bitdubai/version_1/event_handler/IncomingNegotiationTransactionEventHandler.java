@@ -13,14 +13,14 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmissio
 public class IncomingNegotiationTransactionEventHandler extends AbstractCustomerBrokerNewEventHandler {
 //public class IncomingNegotiationTransactionEventHandler implements FermatEventHandler {
 
-    public IncomingNegotiationTransactionEventHandler(){
+    public IncomingNegotiationTransactionEventHandler() {
 //        System.out.print("\n\n**** 6.0) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
     }
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 //        System.out.print("\n\n**** 6.1) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
-        if(this.customerBrokerNewServiceEventHandler.getStatus()== ServiceStatus.STARTED) {
+        if (this.customerBrokerNewServiceEventHandler.getStatus() == ServiceStatus.STARTED) {
 
             try {
 
@@ -28,15 +28,15 @@ public class IncomingNegotiationTransactionEventHandler extends AbstractCustomer
 
                 this.customerBrokerNewServiceEventHandler.incomingNegotiationTransactionEventHandler((IncomingNegotiationTransactionEvent) fermatEvent);
 
-            } catch(CantSaveEventException exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingNegotiationTransactionEventHandler", "Check the cause");
-            } catch(ClassCastException exception){
+            } catch (CantSaveEventException exception) {
+                throw new CantSaveEventException(exception, "Handling the IncomingNegotiationTransactionEventHandler", "Check the cause");
+            } catch (ClassCastException exception) {
                 throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the IncomingNegotiationTransactionEventHandler", "Cannot cast this event");
-            } catch(Exception exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingNegotiationTransactionEventHandler", "Unexpected exception");
+            } catch (Exception exception) {
+                throw new CantSaveEventException(exception, "Handling the IncomingNegotiationTransactionEventHandler", "Unexpected exception");
             }
 
-        }else {
+        } else {
             throw new TransactionServiceNotStartedException();
         }
     }

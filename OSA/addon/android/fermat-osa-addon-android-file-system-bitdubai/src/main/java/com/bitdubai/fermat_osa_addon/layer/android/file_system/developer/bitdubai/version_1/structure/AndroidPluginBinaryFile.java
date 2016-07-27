@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
 
-import android.content.Context;
 import android.os.Environment;
 
 import com.bitdubai.fermat_api.FermatException;
@@ -46,7 +45,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
     private byte[] content;
 
 
-    public AndroidPluginBinaryFile(final UUID ownerId, final String contextPath, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan){
+    public AndroidPluginBinaryFile(final UUID ownerId, final String contextPath, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan) {
         this.ownerId = ownerId;
         this.contextPath = contextPath;
         this.directoryName = directoryName;
@@ -55,27 +54,27 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         this.lifeSpan = lifeSpan;
     }
 
-	public String getFileName() {
-		return fileName;
-	}
+    public String getFileName() {
+        return fileName;
+    }
 
-	public String getDirectoryName() {
-		return directoryName;
-	}
+    public String getDirectoryName() {
+        return directoryName;
+    }
 
-	public FilePrivacy getPrivacyLevel() {
-		return privacyLevel;
-	}
+    public FilePrivacy getPrivacyLevel() {
+        return privacyLevel;
+    }
 
-	public UUID getOwnerId() {
-		return ownerId;
-	}
+    public UUID getOwnerId() {
+        return ownerId;
+    }
 
-	public FileLifeSpan getLifeSpan() {
-		return lifeSpan;
-	}
+    public FileLifeSpan getLifeSpan() {
+        return lifeSpan;
+    }
 
-	/**
+    /**
      * PluginBinaryFile Interface implementation.
      */
     @Override
@@ -90,7 +89,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
 
     @Override
     public void persistToMedia() throws CantPersistFileException {
-        if(content == null){
+        if (content == null) {
             String message = CantCreateFileException.DEFAULT_MESSAGE;
             FermatException cause = null;
             String context = "Content: null";
@@ -102,7 +101,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
          *  Evaluate privacyLevel to determine the location of directory - external or internal
          */
         String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
+        if (privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
             path = contextPath;
@@ -111,8 +110,8 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
          */
 
 
-        if(!this.directoryName.isEmpty())
-            path += "/" + this.ownerId + "/" + this.directoryName;
+        if (!this.directoryName.isEmpty())
+            path += new StringBuilder().append("/").append(this.ownerId).append("/").append(this.directoryName).toString();
 
         /**
          * If the directory does not exist the I create it.
@@ -131,14 +130,14 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             /**
              * Finally I write the content.
              */
-            OutputStream outputStream =  new BufferedOutputStream(new FileOutputStream(file));
+            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
             outputStream.write(this.content);
             outputStream.close();
-            
+
         } catch (Exception e) {
             String message = CantCreateFileException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
-            String context = "File Info: " + toString();
+            String context = new StringBuilder().append("File Info: ").append(toString()).toString();
             String possibleCause = "This is a problem in the outputstream, check the cause message to see what happened";
             throw new CantPersistFileException(message, cause, context, possibleCause);
         }
@@ -148,28 +147,28 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
     @Override
     public void loadFromMedia() throws CantLoadFileException {
 
-    	FileInputStream  binaryStream = null;
-    	
-        try {
-        /**
-         *  Evaluate privacyLevel to determine the location of directory - external or internal
-         */
-        String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
-            path = Environment.getExternalStorageDirectory().toString();
-        else
-            path = contextPath;
+        FileInputStream binaryStream = null;
 
-        /**
-         * Get the file handle.
-         */
-        File file = new File(path + "/" + this.ownerId + "/" + this.directoryName + "/" + this.fileName);
+        try {
+            /**
+             *  Evaluate privacyLevel to determine the location of directory - external or internal
+             */
+            String path = "";
+            if (privacyLevel == FilePrivacy.PUBLIC)
+                path = Environment.getExternalStorageDirectory().toString();
+            else
+                path = contextPath;
+
+            /**
+             * Get the file handle.
+             */
+            File file = new File(new StringBuilder().append(path).append("/").append(this.ownerId).append("/").append(this.directoryName).append("/").append(this.fileName).toString());
 
 
             /**
              * Read the content.
              */
-            if(file.exists()) {
+            if (file.exists()) {
                 binaryStream = new FileInputStream(file);
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
@@ -186,47 +185,46 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
                  * return content.
                  */
                 this.content = buffer.toByteArray();
-            }
-                else
-            {
+            } else {
                 this.content = new byte[0];
             }
 
 
         } catch (Exception e) {
-            throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, e,"","Check the cause of this error");
-            
+            throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, e, "", "Check the cause of this error");
+
         } finally {
-        	try {
-        		if (binaryStream != null)
-        		binaryStream.close();	
-        	} catch (Exception e) {
-                throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, FermatException.wrapException(e),"","Check the cause of this error");
-        	}
-        	
+            try {
+                if (binaryStream != null)
+                    binaryStream.close();
+            } catch (Exception e) {
+                throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause of this error");
+            }
+
         }
     }
+
     @Override
     public void delete() throws FileNotFoundException {
         /**
          *  Evaluate privacyLevel to determine the location of directory - external or internal
          */
         try {
-        String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
-            path = Environment.getExternalStorageDirectory().toString();
-        else
-            path = contextPath;
-        File file = new File(path +"/"+ this.directoryName, this.fileName);
-        file.delete();
+            String path = "";
+            if (privacyLevel == FilePrivacy.PUBLIC)
+                path = Environment.getExternalStorageDirectory().toString();
+            else
+                path = contextPath;
+            File file = new File(new StringBuilder().append(path).append("/").append(this.directoryName).toString(), this.fileName);
+            file.delete();
         } catch (Exception e) {
-       throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(e),"","Check the cause of this error");
-    }
+            throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause of this error");
+        }
     }
 
     @Override
-    public boolean equals(Object o){
-        if(!(o instanceof AndroidPluginBinaryFile))
+    public boolean equals(Object o) {
+        if (!(o instanceof AndroidPluginBinaryFile))
             return false;
 
         AndroidPluginBinaryFile compare = (AndroidPluginBinaryFile) o;
@@ -234,22 +232,22 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int c = 0;
         c += directoryName.hashCode();
         c += fileName.hashCode();
         c += privacyLevel.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
+        if (privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
             path = contextPath;
-        return path +"/"+ this.directoryName + "/" + fileName;
+        return new StringBuilder().append(path).append("/").append(this.directoryName).append("/").append(fileName).toString();
     }
 
 

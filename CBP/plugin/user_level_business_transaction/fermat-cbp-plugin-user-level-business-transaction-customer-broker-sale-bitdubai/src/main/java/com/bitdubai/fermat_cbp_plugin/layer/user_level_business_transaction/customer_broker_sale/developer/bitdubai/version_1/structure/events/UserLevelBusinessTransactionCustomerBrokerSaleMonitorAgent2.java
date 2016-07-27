@@ -43,6 +43,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.interfaces.BankMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.interfaces.CashMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.interfaces.CryptoMoneyRestockManager;
@@ -116,7 +117,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
 
     public UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2(long sleepTime,
                                                                        TimeUnit timeUnit,
-                                                                       long initDelayTime,AbstractPlugin pluginRoot,
+                                                                       long initDelayTime, AbstractPlugin pluginRoot,
                                                                        CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
                                                                        PluginDatabaseSystem pluginDatabaseSystem,
                                                                        UUID pluginId,
@@ -260,7 +261,13 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
 
             //Find the negotiation's customerCurrency, to find the marketExchangeRate of that currency vs. USD
 
-            final Collection<Clause> clauses = transactionInfo.getClauses();
+            Collection<Clause> clauses = null;
+            try {
+                clauses = transactionInfo.getClauses();
+            } catch (CantGetListClauseException e) {
+                e.printStackTrace();
+            }
+//            final Collection<Clause> clauses = transactionInfo.getClauses();
             final String customerCurrency = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY);
 
             float marketExchangeRate = 1;
@@ -273,30 +280,13 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
             }
 
             boolean isContract = openContractManager.isOpenContract(transactionInfo.getNegotiationId().toString());
-            if(transactionInfo.getStatus().equals(NegotiationStatus.WAITING_FOR_CLOSING) && (!isContract)){
+            if (transactionInfo.getStatus().equals(NegotiationStatus.WAITING_FOR_CLOSING) && (!isContract)) {
 
                 openContractManager.openSaleContract(transactionInfo, marketExchangeRate);
 
                 //Actualiza el Transaction_Status de la Transaction Customer Broker Sale a IN_OPEN_CONTRACT
                 customerBrokerSale.setTransactionStatus(IN_OPEN_CONTRACT);
                 dao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
-
-                /*FermatBundle fermatBundle = new FermatBundle();
-                fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_SALE.getCode());
-                fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
-                fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-                fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION);
-                fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
-                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
-
-<<<<<<< HEAD
-                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);*/
-/*=======
-                fermatBundle = new FermatBundle();
-                fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-                fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
->>>>>>> 0b77e4ac982dacacaff5541307b362f1affcafad*/
             }
         }
     }
@@ -332,16 +322,16 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
 
-                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(),timeToDelivery,"MM/dd/yyyy hh:mm a");
+                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(), timeToDelivery, "MM/dd/yyyy hh:mm a");
                     String dateDelivery = dateTimeZoneDelivery.getDate();
 
-                    DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(),getDateTimeUTC(),"MM/dd/yyyy hh:mm a");
+                    DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(), getDateTimeUTC(), "MM/dd/yyyy hh:mm a");
                     String dateToday = dateTimeZoneToday.getDate(TimeZone.getTimeZone("UTC"));
 
 //                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
 //                            "\n - " + dateDelivery + " compareTo " + dateToday);
 
-                    if(dateDelivery.compareTo(dateToday) == 0){
+                    if (dateDelivery.compareTo(dateToday) == 0) {
 //                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +getDateTimeUTC()+" >= "+timeToDelivery);
 //                    if (getDateTimeUTC() >= timeToDelivery) {
 
@@ -562,16 +552,16 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
 
-                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(),timeToDelivery,"MM/dd/yyyy hh:mm a");
+                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(), timeToDelivery, "MM/dd/yyyy hh:mm a");
                     String dateDelivery = dateTimeZoneDelivery.getDate();
 
-                    DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(),getDateTimeUTC(),"MM/dd/yyyy hh:mm a");
+                    DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(), getDateTimeUTC(), "MM/dd/yyyy hh:mm a");
                     String dateToday = dateTimeZoneToday.getDate(TimeZone.getTimeZone("UTC"));
 
 //                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
 //                            "\n - " + dateDelivery + " compareTo " + dateToday);
 
-                    if(dateDelivery.compareTo(dateToday) == 0){
+                    if (dateDelivery.compareTo(dateToday) == 0) {
 //                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +getDateTimeUTC()+" >= "+timeToDelivery);
 //                    if (getDateTimeUTC() >= timeToDelivery) {
 
@@ -699,7 +689,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
      * Se debe enviar un Broadcast para actualizar la UI
      *
      * @param brokerWalletPublicKey the broker wallet public key
-     *
      * @throws FermatException
      * @throws ParseException
      */
@@ -748,7 +737,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
      * @param brokerWalletPublicKey the broker wallet public key
      * @param contractSale          the sale contract information
      * @param negotiationId         the negotiation ID associated with the contract
-     *
      * @throws FermatException
      * @throws ParseException
      */
@@ -795,8 +783,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                         cryptoWalletPublicKey = WalletsPublicKeys.CCP_FERMAT_WALLET.getCode();
                         break;
                     default:
-                        throw new UnsupportedOperationException("The Crypto Restock operation is not supported for the currency " +
-                                cryptoCurrency.getFriendlyName());
+                        throw new UnsupportedOperationException(new StringBuilder().append("The Crypto Restock operation is not supported for the currency ").append(cryptoCurrency.getFriendlyName()).toString());
                 }
 
                 cryptoMoneyRestockManager.createTransactionRestock(
@@ -860,7 +847,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
      *
      * @param valueFilter the value of the filter
      * @param columnValue the column name which is going to be queried
-     *
      * @return the filter object
      */
     private DatabaseTableFilter getFilterTable(final String valueFilter, final String columnValue) {
@@ -899,9 +885,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
      * Return the market exchange rate for the currency to sell vs USD
      *
      * @param customerCurrency the code of the currency to sell
-     *
      * @return the market exchange rate fot this currency vs USD
-     *
      * @throws CantGetExchangeRateException
      */
     private float getMarketExchangeRate(String customerCurrency) throws CantGetExchangeRateException {
@@ -959,13 +943,13 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
         throw new CantGetExchangeRateException();
     }
 
-    private long getDateTimeUTC(){
+    private long getDateTimeUTC() {
 
-        try{
+        try {
 
             return UniversalTime.getUTC().getTime();
 
-        } catch (CantGetUTCException e){
+        } catch (CantGetUTCException e) {
             System.out.print("Cant get Date UTC in User Level Business Transaction Customer Broker Purchase");
         }
 

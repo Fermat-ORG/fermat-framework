@@ -70,7 +70,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             amountText = (FermatEditText) findViewById(R.id.cbw_ctd_amount);
 
             //If working with BIC, allow a max of 999,999,999.99999999 BTC
-            if(Platforms.CRYPTO_CURRENCY_PLATFORM.equals(setting.getPlatform()))
+            if (Platforms.CRYPTO_CURRENCY_PLATFORM.equals(setting.getPlatform()))
                 amountText.setFilters(new InputFilter[]{new NumberInputFilter(17, 8)});
             else
                 amountText.setFilters(new InputFilter[]{new NumberInputFilter(11, 2)});
@@ -142,7 +142,9 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             }
 
         } catch (Exception e) {
-            Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("There's been an error, please try again ").append(e.getMessage());
+            Toast.makeText(activity.getApplicationContext(), stringBuilder.toString(), Toast.LENGTH_SHORT).show();
 
             final ErrorManager errorManager = session.getErrorManager();
             errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, DISABLES_THIS_FRAGMENT, e);

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 public class SetPriceReferenceTest {
 
     @Test
-    public void setPriceReference(){
+    public void setPriceReference() {
         CashMoneyDestockTransactionImpl cashMoneyDestockTransaction = mock(CashMoneyDestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cashMoneyDestockTransaction).setPriceReference(Mockito.any(BigDecimal.class));
     }

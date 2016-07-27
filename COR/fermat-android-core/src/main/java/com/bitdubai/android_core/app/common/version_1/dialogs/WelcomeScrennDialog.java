@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by mati on 2015.11.27..
  */
-public class WelcomeScrennDialog extends FermatDialog<ReferenceAppFermatSession,SubAppResourcesProviderManager> implements View.OnClickListener{
+public class WelcomeScrennDialog extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     private final Activity activity;
     private RadioGroup radio_group;
@@ -101,7 +101,7 @@ public class WelcomeScrennDialog extends FermatDialog<ReferenceAppFermatSession,
                 }
             });
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -122,8 +122,6 @@ public class WelcomeScrennDialog extends FermatDialog<ReferenceAppFermatSession,
     public void onClick(View v) {
 
     }
-
-
 
 
     @Override

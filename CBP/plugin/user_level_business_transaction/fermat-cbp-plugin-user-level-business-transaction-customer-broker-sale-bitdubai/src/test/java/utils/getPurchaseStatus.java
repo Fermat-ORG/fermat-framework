@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class getPurchaseStatus {
 
     @Test
-    public void getPurchaseStatus(){
+    public void getPurchaseStatus() {
         CustomerBrokerSaleImpl customerBrokerPurchaseImpl = mock(CustomerBrokerSaleImpl.class);
         when(customerBrokerPurchaseImpl.getPurchaseStatus()).thenReturn(new String());
         assertThat(customerBrokerPurchaseImpl.getPurchaseStatus()).isNotNull();

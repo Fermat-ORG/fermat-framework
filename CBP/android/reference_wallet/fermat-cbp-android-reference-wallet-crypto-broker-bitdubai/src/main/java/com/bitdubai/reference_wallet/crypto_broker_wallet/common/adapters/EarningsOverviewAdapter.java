@@ -40,7 +40,7 @@ public class EarningsOverviewAdapter extends FermatAdapter<EarningsDetailData, E
         holder.bind(data, frequency, earningCurrency);
     }
 
-    public void setTimeFrecuency(TimeFrequency frequency){
+    public void setTimeFrecuency(TimeFrequency frequency) {
         this.frequency = frequency;
     }
 }

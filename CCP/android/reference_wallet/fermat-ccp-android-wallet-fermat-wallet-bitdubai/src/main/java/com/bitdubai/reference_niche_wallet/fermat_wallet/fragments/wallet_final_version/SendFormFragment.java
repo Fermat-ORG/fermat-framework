@@ -35,7 +35,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-
 import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
@@ -63,7 +62,6 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkCo
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantFindWalletContactException;
@@ -82,7 +80,6 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.Connection
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
-
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -119,7 +116,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private LinearLayout feed_advances;
     private LinearLayout advances_btn;
     private CheckBox feed_Substract;
-
+    private FermatWorker fermatWorker;
 
     /**
      * Adapters
@@ -166,6 +163,12 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 if (fermatWalletSettings.getBlockchainNetworkType() == null) {
                     fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
+
+                if (fermatWalletSettings.getFeedLevel() == null)
+                    fermatWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
+                else
+                    feeLevel = fermatWalletSettings.getFeedLevel();
+
                 appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
 
             }
@@ -283,17 +286,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         fee_high_btn  =(RadioButton)  rootView.findViewById(R.id.fee_High);
 
 
-        advances_btn.setOnClickListener(new View.OnClickListener()
-        {
+        advances_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if (layoutAdvances.getVisibility() == View.GONE)
-                {
+            public void onClick(View v) {
+                if (layoutAdvances.getVisibility() == View.GONE) {
                     layoutAdvances.setVisibility(View.VISIBLE);
-                }else
-                {
-                 layoutAdvances.setVisibility(View.GONE);
+                } else {
+                    layoutAdvances.setVisibility(View.GONE);
                 }
             }
         });
@@ -342,7 +341,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
         List<String> list = new ArrayList<String>();
         list.add("FTMS");
-        list.add("BTC");
         list.add("Bits");
         list.add("Satoshis");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
@@ -369,7 +367,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             }
 
                             break;
-                        case 1:
+                      /*  case 1:
                             text = "[btc]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
@@ -379,10 +377,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 newAmount = amount;
                             }
 
-                            break;
+                            break;*/
                         case 2:
                             text = "[bits]";
-                            if (txtType.equals("[btc]")) {
+                            if (txtType.equals("[ftms]")) {
                                 newAmount = bitcoinConverter.getBitsFromBTC(amount);
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = bitcoinConverter.getBits(amount);
@@ -395,7 +393,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             text = "[satoshis]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                            } else if (txtType.equals("[btc]")) {
+                            } else if (txtType.equals("[ftms]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
                             } else {
                                 newAmount = amount;
@@ -543,7 +541,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void setUpContactAddapter() {
 
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+        fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
                 try{
@@ -755,7 +753,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             String newAmount = "";
                             String msg = "";
 
-                            if (txtType.equals("[btc]")) {
+                            if (txtType.equals("[ftms]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
                                 msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
                             } else if (txtType.equals("[satoshis]")) {
@@ -765,10 +763,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
                                 msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                             }
-                            else if (txtType.equals("[ftms]")) {
-                                newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                                msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" FTMS.";
-                            }
+
 
                             BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                             BigDecimal operator = new BigDecimal(newAmount);
@@ -789,7 +784,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                         0,
                                         FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT
 
-                                        // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
                                 );
                                 Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                                 onBack(null);
@@ -868,5 +862,14 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
+    }
+
+    @Override
+    public void onStop() {
+
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+
+        super.onStop();
     }
 }

@@ -2,7 +2,6 @@ package com.bitdubai.fermat_cbp_api.layer.desktop_module.sub_app_manager.interfa
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.SubAppCategory;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.SubAppType;
-
 import com.bitdubai.fermat_cbp_api.all_definition.util.Version;
 
 import java.util.List;

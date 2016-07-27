@@ -15,13 +15,12 @@ public enum TransactionStatus implements FermatEnum {
     IN_MERCHANDISE_SUBMIT("IMSU"),
     IN_PENDING_MERCHANDISE("IPME"),
     COMPLETED("COMP"),
-    CANCELLED("CANC")
-    ;
+    CANCELLED("CANC");
 
     String code;
 
-    TransactionStatus(String code){
-        this.code=code;
+    TransactionStatus(String code) {
+        this.code = code;
     }
 
     //PUBLIC METHODS
@@ -30,14 +29,12 @@ public enum TransactionStatus implements FermatEnum {
         for (TransactionStatus value : values()) {
             if (value.getCode().equals(code)) return value;
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the OpenContractStatus enum.");
+        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the OpenContractStatus enum.");
     }
 
     @Override
     public String toString() {
-        return "TransactionStatus{" +
-                "code='" + code + '\'' +
-                '}';
+        return new StringBuilder().append("TransactionStatus{").append("code='").append(code).append('\'').append('}').toString();
     }
 
     //GETTER AND SETTERS
