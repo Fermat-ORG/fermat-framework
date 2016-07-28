@@ -179,10 +179,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-            if (fermatWalletSettings.getFeedLevel()==null)
+        /*    if (fermatWalletSettings.getFeedLevel()==null)
                 fermatWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
             else
-                feeLevel = fermatWalletSettings.getFeedLevel();
+                feeLevel = fermatWalletSettings.getFeedLevel(); */
 
 
         } catch (CantGetSettingsException e) {
