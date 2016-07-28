@@ -451,9 +451,14 @@ public class EditCryptoBrokerIdentityFragment
                                         REQUEST_IMAGE_CAPTURE);
                             }
                         }
+//                        getActivity().getContentResolver().notifyChange(selectedImage, null);
+//                        Bundle extras = data.getExtras();
+//                        cryptoBrokerBitmap = (Bitmap) extras.get("data");
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
-                        Bundle extras = data.getExtras();
-                        cryptoBrokerBitmap = (Bitmap) extras.get("data");
+                        Bitmap reducedSizeBitmap = getBitmap(imageToUploadUri.getPath());
+                        if (reducedSizeBitmap != null) {
+                            cryptoBrokerBitmap = reducedSizeBitmap;
+                        }
                     }
                     break;
                 case REQUEST_LOAD_IMAGE:
@@ -479,6 +484,63 @@ public class EditCryptoBrokerIdentityFragment
         }
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private Bitmap getBitmap(String path) {
+        Uri uri = Uri.fromFile(new File(path));
+        InputStream in = null;
+        try {
+            final int IMAGE_MAX_SIZE = 3000000; // 1.2MP
+            in = getActivity().getContentResolver().openInputStream(uri);
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(in, null, o);
+            in.close();
+            int scale = 1;
+            while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) >
+                    IMAGE_MAX_SIZE) {
+                scale++;
+            }
+            Log.d("", new StringBuilder().append("scale = ").append(scale).append(", orig-width: ").append(o.outWidth).append(", orig-height: ").append(o.outHeight).toString());
+
+            Bitmap b = null;
+            in = getActivity().getContentResolver().openInputStream(uri);
+            if (scale > 1) {
+                scale--;
+                // scale to max possible inSampleSize that still yields an image
+                // larger than target
+                o = new BitmapFactory.Options();
+                o.inSampleSize = scale;
+                b = BitmapFactory.decodeStream(in, null, o);
+
+                // resize to desired dimensions
+                int height = b.getHeight();
+                int width = b.getWidth();
+                Log.d("", new StringBuilder().append("1th scale operation dimenions - width: ").append(width).append(", height: ").append(height).toString());
+
+                double y = Math.sqrt(IMAGE_MAX_SIZE
+                        / (((double) width) / height));
+                double x = (y / height) * width;
+
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
+                        (int) y, true);
+                b.recycle();
+                b = scaledBitmap;
+
+                System.gc();
+            } else {
+                b = BitmapFactory.decodeStream(in);
+            }
+            in.close();
+
+            Log.d("", new StringBuilder().append("bitmap size - width: ").append(b.getWidth()).append(", height: ").append(b.getHeight()).toString());
+            return b;
+        } catch (IOException e) {
+            Log.e("", e.getMessage(), e);
+            return null;
+        }
     }
 
     @Override
