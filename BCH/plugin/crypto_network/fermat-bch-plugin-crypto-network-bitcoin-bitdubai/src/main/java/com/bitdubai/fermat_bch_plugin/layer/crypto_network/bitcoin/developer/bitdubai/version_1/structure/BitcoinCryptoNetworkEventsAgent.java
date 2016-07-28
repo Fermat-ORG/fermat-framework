@@ -238,7 +238,7 @@ public class BitcoinCryptoNetworkEventsAgent extends AbstractAgent{
     }
 
     @Override
-    protected void onErrorOccur() {
+    protected void onErrorOccur(Exception e) {
 
     }
 }

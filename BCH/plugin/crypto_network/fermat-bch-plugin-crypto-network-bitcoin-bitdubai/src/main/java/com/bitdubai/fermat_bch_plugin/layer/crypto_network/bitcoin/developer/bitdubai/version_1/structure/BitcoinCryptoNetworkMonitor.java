@@ -960,7 +960,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             }
 
             @Override
-            protected void onErrorOccur() {
+            protected void onErrorOccur(Exception e) {
 
             }
 
@@ -1100,7 +1100,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         }
 
         @Override
-        protected void onErrorOccur() {
+        protected void onErrorOccur(Exception e){
 
         }
 
