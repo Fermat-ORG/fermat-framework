@@ -374,11 +374,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
     private void setUpHeader(LayoutInflater inflater)  throws CantGetBalanceException {
         final RelativeLayout container_header_balance = getToolbarHeader();
-        try{
-            container_header_balance.removeAllViews();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
         final int sdk = android.os.Build.VERSION.SDK_INT;
         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
             container_header_balance.setBackgroundDrawable( getResources().getDrawable(R.drawable.background_white_gradient) );

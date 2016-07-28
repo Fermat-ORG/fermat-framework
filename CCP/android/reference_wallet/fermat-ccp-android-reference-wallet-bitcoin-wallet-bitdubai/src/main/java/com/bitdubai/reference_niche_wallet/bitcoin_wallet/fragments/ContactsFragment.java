@@ -840,10 +840,12 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         for (int i = 0; i < items.size(); i++) {//) {
                             CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
-                            if (currentSection.matches(numberRegex))
+                            if (currentSection.matches(numberRegex)) {
                                 // is Digit
                                 numbers.add(cryptoWalletWalletContact.getActorName());
-                            else if (currentSection.matches(letterRegex)) {
+                                positions.put(i, cryptoWalletWalletContact);
+
+                            }else if (currentSection.matches(letterRegex)) {
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
                                 positions.put(i, cryptoWalletWalletContact);
@@ -871,20 +873,25 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                         // add the letters items in the list and his corresponding sections based on its first letter
                         String prevSection = "";
-                        for (int i = 0; i < letters.size(); i++) {//String currentItem : letters) {
-                            String currentItem = letters.get(i);
-                            String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
+                        try{
+                            for (int i = 0; i < letters.size(); i++) {//String currentItem : letters) {
+                                String currentItem = letters.get(i);
+                                String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
 
-                            if (!prevSection.equals(currentSection)) {
-                                mListItems.add(currentSection);
+                                if (!prevSection.equals(currentSection)) {
+                                    mListItems.add(currentSection);
 
-                                // array list of section positions
-                                mListSectionPos.add(mListItems.indexOf(currentSection));
-                                prevSection = currentSection;
+                                    // array list of section positions
+                                    mListSectionPos.add(mListItems.indexOf(currentSection));
+                                    prevSection = currentSection;
+                                }
+
+                                mListItems.add(positions.get(i));
                             }
-
-                            mListItems.add(positions.get(i));
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
+
                     }
 
                 }
