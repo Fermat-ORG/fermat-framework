@@ -13,22 +13,22 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmissio
 public class IncomingConfirmBusinessTransactionResponseEventHandler extends AbstractOpenContractEventHandler {
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if(this.openContractRecorderService.getStatus()== ServiceStatus.STARTED) {
+        if (this.openContractRecorderService.getStatus() == ServiceStatus.STARTED) {
 
             try {
                 this.openContractRecorderService.incomingConfirmBusinessTransactionResponse((IncomingConfirmBusinessTransactionResponse) fermatEvent);
-            } catch(CantSaveEventException exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingConfirmBusinessTransactionResponse", "Check the cause");
-            } catch(ClassCastException exception){
+            } catch (CantSaveEventException exception) {
+                throw new CantSaveEventException(exception, "Handling the IncomingConfirmBusinessTransactionResponse", "Check the cause");
+            } catch (ClassCastException exception) {
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("EXCEPTION DETECTOR----------------------------------");
                 //exception.printStackTrace();
                 throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the IncomingConfirmBusinessTransactionResponse", "Cannot cast this event");
-            } catch(Exception exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingConfirmBusinessTransactionResponse", "Unexpected exception");
+            } catch (Exception exception) {
+                throw new CantSaveEventException(exception, "Handling the IncomingConfirmBusinessTransactionResponse", "Unexpected exception");
             }
 
-        }else {
+        } else {
             throw new TransactionServiceNotStartedException();
         }
     }

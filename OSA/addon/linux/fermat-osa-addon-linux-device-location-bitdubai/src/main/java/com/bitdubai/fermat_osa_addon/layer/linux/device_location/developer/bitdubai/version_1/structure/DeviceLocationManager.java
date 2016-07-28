@@ -9,7 +9,7 @@ import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdu
 
 /**
  * The class <code>com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.structure.DeviceLocationManager</code>
-
+ * <p/>
  * This addon handles a layer of Device Location representation.
  * Encapsulates all the necessary functions to retrieve the geolocation of the device.
  * <p/>

@@ -13,7 +13,7 @@ public abstract class AbstractCustomerAckOnlineMerchandiseEventHandler implement
     public void setCustomerAckOnlineMerchandiseRecorderService(
             CustomerAckOnlineMerchandiseRecorderService customerAckOnlineMerchandiseRecorderService) throws
             CantSetObjectException {
-        if(customerAckOnlineMerchandiseRecorderService ==null){
+        if (customerAckOnlineMerchandiseRecorderService == null) {
             throw new CantSetObjectException("customerAckOnlineMerchandiseRecorderService is null");
         }
         this.customerAckOnlineMerchandiseRecorderService = customerAckOnlineMerchandiseRecorderService;

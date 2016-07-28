@@ -24,7 +24,7 @@ public class NavMenuBuilder<S extends SideMenu> {
     /**
      * Set navigation header
      */
-    public static FrameLayout buildHeader(Activity activity,NavigationViewPainter viewPainter) {
+    public static FrameLayout buildHeader(Activity activity, NavigationViewPainter viewPainter) {
         if (viewPainter != null) {
             final View view = viewPainter.addNavigationViewHeader();
             FrameLayout frameLayout = (FrameLayout) activity.findViewById(R.id.navigation_view_header);

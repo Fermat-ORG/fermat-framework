@@ -25,32 +25,31 @@ import java.util.concurrent.Executors;
 //import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CurrencyPairImpl;
 
 public class CurrentMoodService extends Service {
-	public static final String UPDATEMOOD = "UpdateMood";
-	public static final String CURRENTMOOD = "CurrentMood";
-	
-	private String currentMood;
-	private LinkedList<String> moods;
-	private final FermatSystem fermatSystem;
-	
-	public CurrentMoodService(){
-		this.moods = new LinkedList<String>();
-		fermatSystem = FermatSystem.getInstance();
-	}
+    public static final String UPDATEMOOD = "UpdateMood";
+    public static final String CURRENTMOOD = "CurrentMood";
+
+    private String currentMood;
+    private LinkedList<String> moods;
+    private final FermatSystem fermatSystem;
+
+    public CurrentMoodService() {
+        this.moods = new LinkedList<String>();
+        fermatSystem = FermatSystem.getInstance();
+    }
 
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStart(intent, startId);
 
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		super.onStart(intent, startId);
-		
         Log.i(CurrentMoodWidgetProvider.WIDGETTAG, "onStartCommand");
 
         updateMood(intent);
-			
-		stopSelf(startId);
-		
-		return START_STICKY;
-	}
+
+        stopSelf(startId);
+
+        return START_STICKY;
+    }
 
 //	private String getRandomMood() {
 //		Random r = new Random(Calendar.getInstance().getTimeInMillis());
@@ -58,42 +57,42 @@ public class CurrentMoodService extends Service {
 //		return moods.get(pos);
 //	}
 
-	private void updateMood(Intent intent) {
+    private void updateMood(Intent intent) {
         Log.i(CurrentMoodWidgetProvider.WIDGETTAG, "This is the intent " + intent);
-        if (intent != null){
-    		String requestedAction = intent.getAction();
+        if (intent != null) {
+            String requestedAction = intent.getAction();
             Log.i(CurrentMoodWidgetProvider.WIDGETTAG, "This is the action " + requestedAction);
-    		if (requestedAction != null && requestedAction.equals(UPDATEMOOD)){
+            if (requestedAction != null && requestedAction.equals(UPDATEMOOD)) {
 
 
-	            //this.currentMood = getRandomMood();
+                //this.currentMood = getRandomMood();
 
-				CurrencyExchangeProviderFilterManager providerFilter = null;
-				try {
-					providerFilter = (CurrencyExchangeProviderFilterManager) fermatSystem.startAndGetPluginVersion(new PluginVersionReference(
-							 Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM,
-							 Layers.SEARCH,
-							 Plugins.FILTER,
-							 Developers.BITDUBAI,
-							 new Version()));
-				} catch (VersionNotFoundException e) {
-					e.printStackTrace();
-				} catch (CantStartPluginException e) {
-					e.printStackTrace();
-				}
+                CurrencyExchangeProviderFilterManager providerFilter = null;
+                try {
+                    providerFilter = (CurrencyExchangeProviderFilterManager) fermatSystem.startAndGetPluginVersion(new PluginVersionReference(
+                            Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM,
+                            Layers.SEARCH,
+                            Plugins.FILTER,
+                            Developers.BITDUBAI,
+                            new Version()));
+                } catch (VersionNotFoundException e) {
+                    e.printStackTrace();
+                } catch (CantStartPluginException e) {
+                    e.printStackTrace();
+                }
 
 
-				int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0);
+                int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0);
 
-	            Log.i(CurrentMoodWidgetProvider.WIDGETTAG, "This is the currentMood " + currentMood + " to widget " + widgetId);
+                Log.i(CurrentMoodWidgetProvider.WIDGETTAG, "This is the currentMood " + currentMood + " to widget " + widgetId);
 
-	            AppWidgetManager appWidgetMan = AppWidgetManager.getInstance(this);
-	            RemoteViews views = new RemoteViews(this.getPackageName(),R.layout.bitcoin_widget);
+                AppWidgetManager appWidgetMan = AppWidgetManager.getInstance(this);
+                RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.bitcoin_widget);
 
 
 //				final CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
 
-				ExecutorService executorService = Executors.newSingleThreadExecutor();
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
 //				try {
 //					Collection<CurrencyExchangeRateProviderManager> filteredProviders =
 //							providerFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
@@ -120,18 +119,17 @@ public class CurrentMoodService extends Service {
 //				}
 
 
-	            appWidgetMan.updateAppWidget(widgetId, views);
-	            
-	            Log.i(CurrentMoodWidgetProvider.WIDGETTAG, "CurrentMood updated!");
-    		}
+                appWidgetMan.updateAppWidget(widgetId, views);
+
+                Log.i(CurrentMoodWidgetProvider.WIDGETTAG, "CurrentMood updated!");
+            }
         }
-	}
+    }
 
 
-
-	@Override
-	public IBinder onBind(Intent intent) {
-		return null;
-	}
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
 }

@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class GetAllCustomerBrokerUpdateNegotiationTranasctionTest {
 
     @Test
-    public void getAllCustomerBrokerUpdateNegotiationTranasction() throws Exception{
+    public void getAllCustomerBrokerUpdateNegotiationTranasction() throws Exception {
 
         List<CustomerBrokerUpdate> list = new ArrayList<>();
 

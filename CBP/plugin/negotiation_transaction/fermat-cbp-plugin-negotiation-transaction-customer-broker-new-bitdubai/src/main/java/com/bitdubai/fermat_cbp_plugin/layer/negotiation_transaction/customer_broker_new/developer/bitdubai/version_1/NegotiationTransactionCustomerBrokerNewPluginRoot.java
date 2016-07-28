@@ -5,7 +5,9 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -41,11 +43,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.event_handler.CustomerBrokerNewServiceEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewManagerImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,51 +61,51 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem                    pluginDatabaseSystem;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.LOG_MANAGER)
-    private LogManager                              logManager;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.EVENT_MANAGER)
-    private EventManager                            eventManager;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION,         plugin = Plugins.NEGOTIATION_PURCHASE)
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
     private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION,         plugin = Plugins.NEGOTIATION_SALE)
-    private CustomerBrokerSaleNegotiationManager    customerBrokerSaleNegotiationManager;
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE,     plugin = Plugins.NEGOTIATION_TRANSMISSION)
-    private NegotiationTransmissionManager          negotiationTransmissionManager;
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.NEGOTIATION_TRANSMISSION)
+    private NegotiationTransmissionManager negotiationTransmissionManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
-    private Broadcaster                             broadcaster;
+    private Broadcaster broadcaster;
 
     /*Represent the dataBase*/
-    private Database                                                        dataBase;
+    private Database dataBase;
 
     /*Represent DeveloperDatabaseFactory*/
     CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory;
 
     /*Represent CustomerBrokerNewNegotiationTransactionDatabaseDao*/
-    private CustomerBrokerNewNegotiationTransactionDatabaseDao              customerBrokerNewNegotiationTransactionDatabaseDao;
+    private CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao;
 
     /*Represent Customer Broker New Manager*/
-    private CustomerBrokerNewManagerImpl                                    customerBrokerNewManagerImpl;
+    private CustomerBrokerNewManagerImpl customerBrokerNewManagerImpl;
 
     /*Represent Agent*/
-    private CustomerBrokerNewAgent2                                          customerBrokerNewAgent;
+    private CustomerBrokerNewAgent2 customerBrokerNewAgent;
 //    private CustomerBrokerNewAgent                                          customerBrokerNewAgent;
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiation                               customerBrokerPurchaseNegotiation;
+    private CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation;
 
     /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiation                                   customerBrokerSaleNegotiation;
+    private CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation;
 
     /*Represent Service Event Handler*/
-    private CustomerBrokerNewServiceEventHandler                            customerBrokerNewServiceEventHandler;
+    private CustomerBrokerNewServiceEventHandler customerBrokerNewServiceEventHandler;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -124,7 +123,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         //TEA
         listenersAdded = new ArrayList<>();
     }
-    
+
     /*IMPLEMENTATION Service.*/
     @Override
     public void start() throws CantStartPluginException {
@@ -149,7 +148,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             );
 
             //Init event recorder service.
-            customerBrokerNewServiceEventHandler = new CustomerBrokerNewServiceEventHandler(customerBrokerNewNegotiationTransactionDatabaseDao,eventManager);
+            customerBrokerNewServiceEventHandler = new CustomerBrokerNewServiceEventHandler(customerBrokerNewNegotiationTransactionDatabaseDao, eventManager);
             customerBrokerNewServiceEventHandler.start();
 
             //Init monitor Agent
@@ -187,17 +186,17 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.print("-----------------------\n CUSTOMER BROKER NEW: SUCCESSFUL START "+pluginId.toString()+" \n-----------------------\n");
+            System.out.print(new StringBuilder().append("-----------------------\n CUSTOMER BROKER NEW: SUCCESSFUL START ").append(pluginId.toString()).append(" \n-----------------------\n").toString());
 
-        } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException e){
+        } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker New PluginRoot - Database","Unexpected Exception");
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), "Error Starting Customer Broker New PluginRoot - Database", "Unexpected Exception");
         } catch (Exception e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker New PluginRoot","Unexpected Exception");
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), "Error Starting Customer Broker New PluginRoot", "Unexpected Exception");
         }
     }
-    
+
     @Override
     public void pause() {
         this.serviceStatus = ServiceStatus.PAUSED;
@@ -209,10 +208,14 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     }
 
     @Override
-    public void stop() { this.serviceStatus = ServiceStatus.STOPPED; }
+    public void stop() {
+        this.serviceStatus = ServiceStatus.STOPPED;
+    }
 
     @Override
-    public FermatManager getManager() { return customerBrokerNewManagerImpl; }
+    public FermatManager getManager() {
+        return customerBrokerNewManagerImpl;
+    }
     /*END IMPLEMENTATION Service.*/
 
     /*IMPLEMENTATION DatabaseManagerForDevelopers.*/
@@ -258,11 +261,11 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     }
 
     public static LogLevel getLogLevelByClass(String className) {
-        try{
+        try {
             //sometimes the classname may be passed dynamically with an $moretext. I need to ignore whats after this.
             String[] correctedClass = className.split((Pattern.quote("$")));
             return NegotiationTransactionCustomerBrokerNewPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
+        } catch (Exception e) {
             //If I couldn't get the correct logging level, then I will set it to minimal.
             return DEFAULT_LOG_LEVEL;
         }

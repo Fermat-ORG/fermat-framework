@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class GetMoneyTypeTest {
 
     @Test
-    public void getCurrencyType(){
+    public void getCurrencyType() {
         CryptoBrokerStockTransactionRecordImpl cryptoBrokerStockTransactionRecord = mock(CryptoBrokerStockTransactionRecordImpl.class);
         when(cryptoBrokerStockTransactionRecord.getMoneyType()).thenReturn(MoneyType.CRYPTO);
         assertThat(cryptoBrokerStockTransactionRecord.getMoneyType()).isNotNull();

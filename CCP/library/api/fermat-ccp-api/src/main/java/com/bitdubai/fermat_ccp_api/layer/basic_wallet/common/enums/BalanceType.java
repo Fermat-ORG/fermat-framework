@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums;
 
+import java.io.Serializable;
+
 /**
  * Created by natalia on 06/07/15.
  */
-public enum BalanceType {
+public enum BalanceType  implements Serializable {
 
     AVAILABLE("AVAILABLE"),
     REAL("REAL"),

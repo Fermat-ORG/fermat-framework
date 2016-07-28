@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 public class SetPluginTest {
 
     @Test
-    public void setPlugin(){
+    public void setPlugin() {
         CryptoBrokerWalletProviderSettingImpl cryptoBrokerWalletProviderSetting = mock(CryptoBrokerWalletProviderSettingImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoBrokerWalletProviderSetting).setPlugin(Mockito.any(UUID.class));
     }

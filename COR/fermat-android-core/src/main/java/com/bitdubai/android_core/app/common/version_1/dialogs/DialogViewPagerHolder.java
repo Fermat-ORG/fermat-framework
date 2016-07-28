@@ -9,7 +9,7 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 /**
  * Created by mati on 2016.04.05..
  */
-public class DialogViewPagerHolder extends FermatViewHolder{
+public class DialogViewPagerHolder extends FermatViewHolder {
 
     public FermatTextView txt_title;
     public FermatTextView first_paragraph;

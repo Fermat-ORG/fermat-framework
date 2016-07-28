@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by Yordin Alayn on 24.09.15.
  */
- 
+
 public enum CryptoCurrencyType implements FermatEnum {
     BITCOIN("BTC");
 
@@ -23,8 +23,10 @@ public enum CryptoCurrencyType implements FermatEnum {
 
     public static CryptoCurrencyType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "BTC": return CryptoCurrencyType.BITCOIN;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the CryptoCurrencyType enum");
+            case "BTC":
+                return CryptoCurrencyType.BITCOIN;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the CryptoCurrencyType enum");
         }
     }
 }

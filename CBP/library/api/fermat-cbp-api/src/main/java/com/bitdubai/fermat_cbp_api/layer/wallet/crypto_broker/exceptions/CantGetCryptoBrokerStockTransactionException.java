@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantGetCryptoBrokerStockTransactionException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T GET CRYPTO BROKER STOCK TRANSACTION";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

@@ -13,28 +13,28 @@ import java.util.List;
  */
 public class ReceiversManager {
 
-    private HashMap<BroadcasterType,List<FermatBroadcastReceiver>> receivers;
+    private HashMap<BroadcasterType, List<FermatBroadcastReceiver>> receivers;
 
     public ReceiversManager() {
         receivers = new HashMap<>();
     }
 
-    public void registerReceiver(BroadcasterType broadcasterType,FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey){
+    public void registerReceiver(BroadcasterType broadcasterType, FermatBroadcastReceiver fermatBroadcastReceiver, String appPublicKey) {
         List<FermatBroadcastReceiver> list = null;
-        if(!receivers.containsKey(broadcasterType)) {
+        if (!receivers.containsKey(broadcasterType)) {
             list = new ArrayList<>();
-            receivers.put(broadcasterType,list);
-        }else list = receivers.get(broadcasterType);
+            receivers.put(broadcasterType, list);
+        } else list = receivers.get(broadcasterType);
         list.add(fermatBroadcastReceiver);
     }
 
-    public void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey){
-        if(!receivers.containsKey(fermatBroadcastReceiver.getBroadcasterType())) return;
+    public void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver, String appPublicKey) {
+        if (!receivers.containsKey(fermatBroadcastReceiver.getBroadcasterType())) return;
         receivers.get(fermatBroadcastReceiver.getBroadcasterType()).remove(fermatBroadcastReceiver);
     }
 
     public void pushIntent(FermatIntentFilter fermatIntentFilter) {
-        if (receivers.containsKey(fermatIntentFilter.getBroadcasterType())){
+        if (receivers.containsKey(fermatIntentFilter.getBroadcasterType())) {
             for (FermatBroadcastReceiver fermatBroadcastReceiver : receivers.get(fermatIntentFilter.getBroadcasterType())) {
                 fermatBroadcastReceiver.onReceive(fermatIntentFilter.getFermatBundle());
             }

@@ -13,13 +13,13 @@ import java.util.List;
 /**
  * Created by Matias Furszyfer on 2016.06.09..
  */
-public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInterface> extends FragmentStatePagerAdapter implements FermatUIAdapter<F>{
+public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInterface> extends FragmentStatePagerAdapter implements FermatUIAdapter<F> {
 
     protected F[] fragments;
     protected String[] titles;
     private int lastPosition;
 
-    public FermatScreenAdapter(FragmentManager fm,F[] fragments) {
+    public FermatScreenAdapter(FragmentManager fm, F[] fragments) {
         super(fm);
         this.fragments = fragments;
     }
@@ -49,11 +49,11 @@ public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInte
 //        }
     }
 
-    public void destroyCurrentFragments(){
-        for(AbstractFermatFragmentInterface fragment : fragments){
-            Fragment fragment1 =(Fragment)fragment;
+    public void destroyCurrentFragments() {
+        for (AbstractFermatFragmentInterface fragment : fragments) {
+            Fragment fragment1 = (Fragment) fragment;
             FragmentManager manager = fragment1.getFragmentManager();
-            if(manager != null) {
+            if (manager != null) {
                 FragmentTransaction trans = manager.beginTransaction();
                 trans.detach(fragment1);
                 trans.remove(fragment1);
@@ -62,8 +62,8 @@ public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInte
         }
     }
 
-    public void onFragmentFocus(int position){
-        if(fragments!=null) {
+    public void onFragmentFocus(int position) {
+        if (fragments != null) {
             fragments[lastPosition].setFragmentFocus(false);
             lastPosition = position;
             fragments[position].setFragmentFocus(true);
@@ -76,7 +76,7 @@ public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInte
 
     public void setStartFragmentPosition(int startFragmentPosition) {
         this.lastPosition = startFragmentPosition;
-        if(fragments!=null)
-        fragments[lastPosition].setFragmentFocus(true);
+        if (fragments != null)
+            fragments[lastPosition].setFragmentFocus(true);
     }
 }

@@ -12,30 +12,32 @@ public enum UnexpectedAddonsExceptionSeverity implements FermatEnum {
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
-    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS ("DSFWTA"),
-    DISABLES_THIS_ADDONS                           ("DTA"),
-    NOT_IMPORTANT                                  ("NI"),
-
-    ;
+    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS("DSFWTA"),
+    DISABLES_THIS_ADDONS("DTA"),
+    NOT_IMPORTANT("NI"),;
 
     private final String code;
 
-    UnexpectedAddonsExceptionSeverity(final String code){
+    UnexpectedAddonsExceptionSeverity(final String code) {
         this.code = code;
     }
 
     public static UnexpectedAddonsExceptionSeverity getByCode(final String code) throws InvalidParameterException {
 
-        switch (code){
+        switch (code) {
 
-            case "NI":     return NOT_IMPORTANT                                 ;
-            case "DSFWTA": return DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS;
-            case "DTA":    return DISABLES_THIS_ADDONS                          ;
+            case "NI":
+                return NOT_IMPORTANT;
+            case "DSFWTA":
+                return DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS;
+            case "DTA":
+                return DISABLES_THIS_ADDONS;
 
-            default: throw new InvalidParameterException(
-                    "Code: " + code,
-                    "The received code is not valid for the UnexpectedAddonsExceptionSeverity enum"
-            );
+            default:
+                throw new InvalidParameterException(
+                        new StringBuilder().append("Code: ").append(code).toString(),
+                        "The received code is not valid for the UnexpectedAddonsExceptionSeverity enum"
+                );
         }
     }
 

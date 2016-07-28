@@ -1,18 +1,12 @@
 package com.bitdubai.sub_app.crypto_customer_identity.common.holders;
 
-import android.graphics.drawable.BitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.SpannableString;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
-
-import java.io.ByteArrayInputStream;
 
 /**
  * Created by nelson on 01/09/15.
@@ -37,7 +31,7 @@ public class CryptoCustomerIdentityInfoViewHolder extends FermatViewHolder {
         */
     }
 
-    public ImageView getImage(){
+    public ImageView getImage() {
         return identityImage;
     }
 

@@ -19,7 +19,7 @@ public class ContentFileTest extends TestCase {
         String fileContent = "";
 
         for (Plugins plugin : Plugins.values())
-            fileContent = fileContent + plugin.getCode() + ";" + UUID.randomUUID() + "\\|";
+            fileContent = new StringBuilder().append(fileContent).append(plugin.getCode()).append(";").append(UUID.randomUUID()).append("\\|").toString();
 
         String[] stringPluginIdPairs = fileContent.split("\\|");
 

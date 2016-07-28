@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetTimeStampTest {
 
     @Test
-    public void getTimeStamp(){
+    public void getTimeStamp() {
         BankMoneyRestockTransactionImpl bankMoneyRestockTransaction = mock(BankMoneyRestockTransactionImpl.class);
         when(bankMoneyRestockTransaction.getTimeStamp()).thenReturn(new Timestamp(1));
         assertThat(bankMoneyRestockTransaction.getTimeStamp()).isNotNull();

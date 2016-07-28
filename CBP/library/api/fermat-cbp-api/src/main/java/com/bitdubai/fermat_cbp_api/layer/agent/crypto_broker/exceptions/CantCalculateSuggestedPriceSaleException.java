@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantCalculateSuggestedPriceSaleException extends FermatException {
     public static final String DEFAULT_MESSAGE = "Falled To Calculate Suggested Price Sale.";
+
     public CantCalculateSuggestedPriceSaleException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

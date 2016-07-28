@@ -29,7 +29,7 @@ import java.util.concurrent.Executors;
 /**
  * RecyclerView Fragment
  */
-public abstract class FermatWalletListFragment<M,S extends FermatSession,RP extends ResourceProviderManager> extends AbstractFermatFragment<S,RP>
+public abstract class FermatWalletListFragment<M, S extends FermatSession, RP extends ResourceProviderManager> extends AbstractFermatFragment<S, RP>
         implements RecyclerListFragment, SwipeRefreshLayout.OnRefreshListener, FermatWorkerCallBack {
 
     /**
@@ -113,7 +113,7 @@ public abstract class FermatWalletListFragment<M,S extends FermatSession,RP exte
             recyclerView.setHasFixedSize(recyclerHasFixedSize());
             layoutManager = getLayoutManager();
             if (layoutManager != null)
-                if(!layoutManager.isAttachedToWindow())
+                if (!layoutManager.isAttachedToWindow())
                     recyclerView.setLayoutManager(layoutManager);
             adapter = getAdapter();
             if (adapter != null) {

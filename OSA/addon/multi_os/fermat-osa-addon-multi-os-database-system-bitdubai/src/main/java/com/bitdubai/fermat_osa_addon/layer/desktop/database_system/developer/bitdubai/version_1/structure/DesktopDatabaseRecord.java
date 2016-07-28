@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.structure;
 
 
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +15,7 @@ import java.util.UUID;
 
 /**
  * This class define methods to get and set database table record values.
- *
+ * <p/>
  * *
  */
 
@@ -24,9 +24,9 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
     /**
      * DatabaseTableRecord Interface member variables.
      */
-     private List<DatabaseRecord> values;
+    private List<DatabaseRecord> values;
 
-    public DesktopDatabaseRecord (){
+    public DesktopDatabaseRecord() {
 
     }
 
@@ -45,7 +45,7 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
     public String getStringValue(String columnName) {
 
         for (int i = 0; i < values.size(); i++) {
-            if(values.get(i).getName().equals(columnName)){
+            if (values.get(i).getName().equals(columnName)) {
                 return values.get(i).getValue();
             }
         }
@@ -54,13 +54,14 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
 
     /**
      * <p>Get field record value in UUID object
+     *
      * @param columnName column name to get back
      * @return UUID value object
      */
     @Override
     public UUID getUUIDValue(String columnName) {
         for (int i = 0; i < values.size(); i++) {
-            if(values.get(i).getName().equals(columnName)){
+            if (values.get(i).getName().equals(columnName)) {
                 return UUID.fromString(values.get(i).getValue());
             }
         }
@@ -70,6 +71,7 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
 
     /**
      * <p>Get field record value in long object
+     *
      * @param columnName column name to get back
      * @return long object
      */
@@ -77,8 +79,8 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
     public long getLongValue(String columnName) {
 
         for (int i = 0; i < values.size(); i++) {
-            if(values.get(i).getName().equals(columnName)){
-                return Long.parseLong (values.get(i).getValue());
+            if (values.get(i).getName().equals(columnName)) {
+                return Long.parseLong(values.get(i).getValue());
             }
         }
         return 0;
@@ -86,13 +88,14 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
 
     /**
      * <p>Get field record value in Integer object
+     *
      * @param columnName column name to get back
      * @return Integer object
      */
     @Override
-    public Integer getIntegerValue(String columnName){
+    public Integer getIntegerValue(String columnName) {
         for (int i = 0; i < values.size(); i++) {
-            if(values.get(i).getName().equals(columnName)){
+            if (values.get(i).getName().equals(columnName)) {
                 return Integer.valueOf(values.get(i).getValue());
             }
         }
@@ -101,13 +104,14 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
 
     /**
      * <p>Get field record value in float object
+     *
      * @param columnName column name to get back
      * @return float object
      */
     @Override
-    public float getFloatValue(String columnName){
+    public float getFloatValue(String columnName) {
         for (int i = 0; i < values.size(); i++) {
-            if(values.get(i).getName().equals(columnName)){
+            if (values.get(i).getName().equals(columnName)) {
                 return Float.parseFloat(values.get(i).getValue());
             }
         }
@@ -116,13 +120,14 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
 
     /**
      * <p>Get field record value in Double object
+     *
      * @param columnName column name to get back
      * @return Double object
      */
     @Override
-    public double getDoubleValue(String columnName){
+    public double getDoubleValue(String columnName) {
         for (int i = 0; i < values.size(); i++) {
-            if(values.get(i).getName().equals(columnName)){
+            if (values.get(i).getName().equals(columnName)) {
                 return Double.parseDouble(values.get(i).getValue());
             }
         }
@@ -137,13 +142,14 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
 
     /**
      * <p>Set String field record value
+     *
      * @param columnName name of the column to which is assigned the value
-     * @param value column value in string
+     * @param value      column value in string
      */
     @Override
     public void setStringValue(String columnName, String value) {
 
-        if(values == null)
+        if (values == null)
             values = new ArrayList<DatabaseRecord>();
 
         DatabaseRecord record = new DesktopRecord();
@@ -151,20 +157,21 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
         record.setName(columnName);
         record.setValue(value);
 
-         // Set the field as modified to take in method after update
+        // Set the field as modified to take in method after update
         record.setChange(true);
         values.add(record);
     }
 
     /**
      * <p>Set UUID  field record value
+     *
      * @param columnName name of the column to which is assigned the value
-     * @param value column value in UUID
+     * @param value      column value in UUID
      */
     @Override
     public void setUUIDValue(String columnName, UUID value) {
 
-        if(values == null)
+        if (values == null)
             values = new ArrayList<DatabaseRecord>();
 
         DatabaseRecord record = new DesktopRecord();
@@ -178,13 +185,14 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
 
     /**
      * <p>Set Long field record value
+     *
      * @param columnName name of the column to which is assigned the value
-     * @param value column value in long
+     * @param value      column value in long
      */
 
     @Override
     public void setLongValue(String columnName, long value) {
-        if(values == null)
+        if (values == null)
             values = new ArrayList<DatabaseRecord>();
 
         DatabaseRecord record = new DesktopRecord();
@@ -200,12 +208,13 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
 
     /**
      * <p>Set Integer field record value
+     *
      * @param columnName name of the column to which is assigned the value
-     * @param value column value in integer
+     * @param value      column value in integer
      */
     @Override
     public void setIntegerValue(String columnName, Integer value) {
-        if(values == null)
+        if (values == null)
             values = new ArrayList<DatabaseRecord>();
 
         DatabaseRecord record = new DesktopRecord();
@@ -220,13 +229,14 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
 
     /**
      * <p>Set Float field record value
+     *
      * @param columnName name of the column to which is assigned the value
      * @param value
      */
     @Override
-     public void setFloatValue(String columnName, float value){
+    public void setFloatValue(String columnName, float value) {
 
-        if(values == null)
+        if (values == null)
             values = new ArrayList<DatabaseRecord>();
 
         DatabaseRecord record = new DesktopRecord();
@@ -239,13 +249,14 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
 
     /**
      * <p>Set Double  field record value
+     *
      * @param columnName name of the column to which is assigned the value
-     * @param value column value in double
+     * @param value      column value in double
      */
     @Override
-    public void setDoubleValue(String columnName, double value){
+    public void setDoubleValue(String columnName, double value) {
 
-        if(values == null)
+        if (values == null)
             values = new ArrayList<DatabaseRecord>();
 
         DatabaseRecord record = new DesktopRecord();
@@ -272,15 +283,14 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
     }
 
     @Override
-    public List<DatabaseRecord> getValues(){
-       return this.values;
-   }
-
-    @Override
-    public void setValues( List<DatabaseRecord> values ){
-       this.values = values;
+    public List<DatabaseRecord> getValues() {
+        return this.values;
     }
 
+    @Override
+    public void setValues(List<DatabaseRecord> values) {
+        this.values = values;
+    }
 
 
 }

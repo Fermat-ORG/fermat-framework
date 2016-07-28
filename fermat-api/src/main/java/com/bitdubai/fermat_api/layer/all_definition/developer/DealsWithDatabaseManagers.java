@@ -13,10 +13,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
  */
 public interface DealsWithDatabaseManagers {
 
-    void addDatabaseManager(PluginVersionReference       pluginVersionReference      ,
+    void addDatabaseManager(PluginVersionReference pluginVersionReference,
                             Plugin databaseManagerForDevelopers);
 
-    void addDatabaseManager(AddonVersionReference        addonVersionReference       ,
+    void addDatabaseManager(AddonVersionReference addonVersionReference,
                             Addon databaseManagerForDevelopers);
 
 }

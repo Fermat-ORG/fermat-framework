@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 /**
  * Created by Matias Furszyfer on 2016.03.04..
  */
-public interface AppManager extends ModuleManager<DesktopManagerSettings,ActiveActorIdentityInformation> {
+public interface AppManager extends ModuleManager<DesktopManagerSettings, ActiveActorIdentityInformation> {
 
     //todo: hace falta agregar una excepcion para todos los que usan esto
     FermatApp getApp(String publicKey) throws Exception;

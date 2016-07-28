@@ -16,7 +16,7 @@ public interface ClientBrokerService {
 
     ModuleManager[] getModuleManager(PluginVersionReference[] pluginVersionReference) throws CantCreateProxyException;
 
-    Object sendMessage(PluginVersionReference pluginVersionReference, Object proxy, Method method,MethodDetail methodDetail, Object[] args) throws Exception;
+    Object sendMessage(PluginVersionReference pluginVersionReference, Object proxy, Method method, MethodDetail methodDetail, Object[] args) throws Exception;
 
     boolean isFermatBackgroundServiceRunning();
 

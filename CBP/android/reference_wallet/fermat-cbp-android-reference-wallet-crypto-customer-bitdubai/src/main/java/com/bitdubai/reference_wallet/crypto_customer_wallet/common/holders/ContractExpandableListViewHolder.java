@@ -63,7 +63,7 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         customerName.setText(itemInfo.getCryptoBrokerAlias());
         try {
             typeOfPayment.setText(MoneyType.getByCode(itemInfo.getTypeOfPayment()).getFriendlyName());
-        }catch (FermatException e){
+        } catch (FermatException e) {
             typeOfPayment.setText(itemInfo.getTypeOfPayment());
         }
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoBrokerImage()));
@@ -75,7 +75,7 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
     @NonNull
     private String getContractActionDescription(ContractBasicInformation itemInfo, ContractStatus contractStatus) {
         DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-        return getReceivingOrSendingText(contractStatus) + " " + decimalFormat.format(itemInfo.getAmount()) + " " + itemInfo.getMerchandise();
+        return new StringBuilder().append(getReceivingOrSendingText(contractStatus)).append(" ").append(decimalFormat.format(itemInfo.getAmount())).append(" ").append(itemInfo.getMerchandise()).toString();
     }
 
     private int getStatusBackgroundColor(ContractStatus status) {
@@ -101,8 +101,8 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         if (status == ContractStatus.CANCELLED)
             return R.string.contract_cancelled;
 
-        if (status == ContractStatus.PENDING_PAYMENT){
-            if(nearExpirationDatetime)
+        if (status == ContractStatus.PENDING_PAYMENT) {
+            if (nearExpirationDatetime)
                 return R.string.about_to_expire;
             else
                 return R.string.waiting_for_you;
@@ -118,7 +118,7 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
     }
 
 
-        private Drawable getImgDrawable(byte[] customerImg) {
+    private Drawable getImgDrawable(byte[] customerImg) {
         if (customerImg != null && customerImg.length > 0)
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 

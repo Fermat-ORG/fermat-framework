@@ -11,7 +11,7 @@ public class WelcomeDialogItem {
     private String thirdParagraphs;
     private int img;
 
-    public WelcomeDialogItem(String title, String firstParagraphs, String secondParagraphs, String thirdParagraphs,int imgRes) {
+    public WelcomeDialogItem(String title, String firstParagraphs, String secondParagraphs, String thirdParagraphs, int imgRes) {
         this.title = title;
         this.firstParagraphs = firstParagraphs;
         this.secondParagraphs = secondParagraphs;

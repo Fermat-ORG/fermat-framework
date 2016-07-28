@@ -52,7 +52,7 @@ public enum ClauseStatus implements FermatEnum {
                 return CONFIRM;
 
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ClauseStatus enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the ClauseStatus enum");
         }
     }
 }

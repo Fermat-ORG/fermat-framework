@@ -13,22 +13,22 @@ import java.util.UUID;
  * Created by franklin on 17/11/15.
  */
 public class BankMoneyRestockTransactionImpl implements BankMoneyTransaction {
-    UUID                            transactionId;
-    String                          actorPublicKey;
-    FiatCurrency                    fiatCurrency;
-    String                          cbpWalletPublicKey;
-    String                          bnkWalletPublicKey;
-    String                          memo;
-    String                          concept;
-    String                          bankAccount;
-    BigDecimal                      amount;
-    Timestamp                       timeStamp;
+    UUID transactionId;
+    String actorPublicKey;
+    FiatCurrency fiatCurrency;
+    String cbpWalletPublicKey;
+    String bnkWalletPublicKey;
+    String memo;
+    String concept;
+    String bankAccount;
+    BigDecimal amount;
+    Timestamp timeStamp;
     TransactionStatusRestockDestock transactionStatus;
-    BigDecimal                      priceReference;
-    OriginTransaction               originTransaction;
-    String                          originTransactionId;
+    BigDecimal priceReference;
+    OriginTransaction originTransaction;
+    String originTransactionId;
 
-    public BankMoneyRestockTransactionImpl(){
+    public BankMoneyRestockTransactionImpl() {
 
     }
 
@@ -40,28 +40,27 @@ public class BankMoneyRestockTransactionImpl implements BankMoneyTransaction {
                                            String memo,
                                            String concept,
                                            String bankAccount,
-                                           BigDecimal  amount,
+                                           BigDecimal amount,
                                            Timestamp timeStamp,
                                            TransactionStatusRestockDestock transactionStatus,
                                            BigDecimal priceReference,
                                            OriginTransaction originTransaction,
-                                           String originTransactionId){
-        this.transactionId      = transactionId;
-        this.actorPublicKey     = actorPublicKey;
-        this.fiatCurrency       = fiatCurrency;
+                                           String originTransactionId) {
+        this.transactionId = transactionId;
+        this.actorPublicKey = actorPublicKey;
+        this.fiatCurrency = fiatCurrency;
         this.cbpWalletPublicKey = cbpWalletPublicKey;
         this.bnkWalletPublicKey = bnkWalletPublicKey;
-        this.memo               = memo;
-        this.concept            = concept;
-        this.bankAccount        = bankAccount;
-        this.amount             = amount;
-        this.timeStamp          = timeStamp;
-        this.transactionStatus  = transactionStatus;
-        this.priceReference     = priceReference;
-        this.originTransaction  = originTransaction;
-        this.originTransactionId= originTransactionId;
+        this.memo = memo;
+        this.concept = concept;
+        this.bankAccount = bankAccount;
+        this.amount = amount;
+        this.timeStamp = timeStamp;
+        this.transactionStatus = transactionStatus;
+        this.priceReference = priceReference;
+        this.originTransaction = originTransaction;
+        this.originTransactionId = originTransactionId;
     }
-
 
 
     @Override

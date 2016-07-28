@@ -2,7 +2,6 @@ package com.bitdubai.fermat_android_api.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -10,13 +9,9 @@ import android.widget.LinearLayout;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Fermat Adapter
@@ -35,13 +30,13 @@ public abstract class FermatAdapterNew<M, H extends FermatViewHolder> extends Re
 
     protected ResourceProviderManager resourceProviderManager;
 
-    protected FermatAdapterNew(Context context,ViewInflater viewInflater,ResourceProviderManager resourceProviderManager) {
+    protected FermatAdapterNew(Context context, ViewInflater viewInflater, ResourceProviderManager resourceProviderManager) {
         this.context = context;
         this.viewInflater = viewInflater;
         this.resourceProviderManager = resourceProviderManager;
     }
 
-    protected FermatAdapterNew(Context context, List<M> dataSet,ViewInflater viewInflater,ResourceProviderManager resourceProviderManager) {
+    protected FermatAdapterNew(Context context, List<M> dataSet, ViewInflater viewInflater, ResourceProviderManager resourceProviderManager) {
         this.context = context;
         this.dataSet = dataSet;
         this.viewInflater = viewInflater;
@@ -181,21 +176,21 @@ public abstract class FermatAdapterNew<M, H extends FermatViewHolder> extends Re
 
         LinearLayout.LayoutParams lps = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-        lps.setMargins(0,15,5,0);
+        lps.setMargins(0, 15, 5, 0);
 
         linearLayout.setLayoutParams(lps);
 
 
-        try{
+        try {
 
 
             //return createHolder(viewInflater.inflate(resourceProviderManager.getLayoutResource(getCardViewResourceName(), ScreenOrientation.PORTRAIT, UUID.fromString("f39421a2-0b63-4d50-aba6-51b70d492c3e"), "reference_wallet")),type);
 
-           return createHolder(viewInflater.inflate(layout,linearLayout),type);
-        }catch (Exception e){
+            return createHolder(viewInflater.inflate(layout, linearLayout), type);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return createHolder(viewInflater.inflate(layout,linearLayout),type);
+        return createHolder(viewInflater.inflate(layout, linearLayout), type);
         //return createHolder(LayoutInflater.from(context).inflate(getCardViewResource(), viewGroup, false), type);
     }
 
@@ -289,7 +284,6 @@ public abstract class FermatAdapterNew<M, H extends FermatViewHolder> extends Re
      * @param position position to render
      */
     protected abstract void bindHolder(H holder, M data, int position);
-
 
 
 }

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 public class SetAmountTest {
 
     @Test
-    public void setAmount(){
+    public void setAmount() {
         CashMoneyDestockTransactionImpl cashMoneyDestockTransaction = mock(CashMoneyDestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cashMoneyDestockTransaction).setAmount(Mockito.any(BigDecimal.class));
     }

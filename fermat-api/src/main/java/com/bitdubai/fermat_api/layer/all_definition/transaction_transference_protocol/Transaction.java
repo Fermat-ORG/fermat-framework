@@ -5,21 +5,21 @@ import java.util.UUID;
 /**
  * Created by eze on 09/06/15.
  */
-public class Transaction <E> {
+public class Transaction<E> {
     private UUID transactionID;
     private E information;
     private Action action;
     private long timestamp;
 
 
-    public Transaction(UUID transactionID, E information , Action action, long timestamp) {
+    public Transaction(UUID transactionID, E information, Action action, long timestamp) {
         this.transactionID = transactionID;
         this.information = information;
         this.action = action;
         this.timestamp = timestamp;
     }
 
-    public UUID getTransactionID(){
+    public UUID getTransactionID() {
         return this.transactionID;
     }
 
@@ -27,7 +27,7 @@ public class Transaction <E> {
         return this.information;
     }
 
-    public Action getAction(){
+    public Action getAction() {
         return this.action;
     }
 

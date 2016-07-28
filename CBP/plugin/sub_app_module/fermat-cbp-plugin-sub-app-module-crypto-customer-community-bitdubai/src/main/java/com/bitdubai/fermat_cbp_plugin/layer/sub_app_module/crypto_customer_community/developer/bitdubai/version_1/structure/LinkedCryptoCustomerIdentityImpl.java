@@ -14,8 +14,8 @@ public class LinkedCryptoCustomerIdentityImpl implements LinkedCryptoCustomerIde
 
     private final UUID connectionId;
     private final String publicKey;
-    private final String alias    ;
-    private final byte[] image    ;
+    private final String alias;
+    private final byte[] image;
 
     public LinkedCryptoCustomerIdentityImpl(final UUID connectionId,
                                             final String publicKey,
@@ -24,16 +24,16 @@ public class LinkedCryptoCustomerIdentityImpl implements LinkedCryptoCustomerIde
 
         this.connectionId = connectionId;
         this.publicKey = publicKey;
-        this.alias     = alias    ;
-        this.image     = image    ;
+        this.alias = alias;
+        this.image = image;
     }
 
     public LinkedCryptoCustomerIdentityImpl(final CryptoCustomerActorConnection actorConnection) {
 
         this.connectionId = actorConnection.getConnectionId();
         this.publicKey = actorConnection.getPublicKey();
-        this.alias     = actorConnection.getAlias()    ;
-        this.image     = actorConnection.getImage()    ;
+        this.alias = actorConnection.getAlias();
+        this.image = actorConnection.getImage();
     }
 
     @Override

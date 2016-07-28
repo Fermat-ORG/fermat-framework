@@ -1,9 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.agents;
 
 import com.bitdubai.fermat_api.AbstractAgent;
-import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
@@ -53,7 +51,6 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 ex
         this.dao = dao;
 
     }
-
 
 
     @Override
@@ -128,7 +125,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 ex
 
                 sellTransactionToMatch = unmatchedSellInputTransaction;
 
-                System.out.println(" *************** processing sell transaction: " + sellTransactionToMatch.getOriginTransactionId());
+                System.out.println(new StringBuilder().append(" *************** processing sell transaction: ").append(sellTransactionToMatch.getOriginTransactionId()).toString());
 
                 DatabaseTransaction databaseTransaction = dao.getNewDatabaseTransaction();
 
@@ -142,7 +139,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 ex
                     break;
 
                 for (InputTransaction inputTransaction : unmatchedBuyInputTransactions)
-                    System.out.println("    ************ unmatched buy transactions: " + inputTransaction.getOriginTransactionId());
+                    System.out.println(new StringBuilder().append("    ************ unmatched buy transactions: ").append(inputTransaction.getOriginTransactionId()).toString());
 
                 UUID earningTransactionId = UUID.randomUUID();
 
@@ -156,9 +153,9 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 ex
                     // amount matched with the current buy transaction
                     float amountMatchedTemp = amountMatched + buyTransaction.getAmountReceiving();
 
-                    System.out.println("       ********* amountToMatch    : " + amountToMatch);
-                    System.out.println("       ********* amountMatched    : " + amountMatched);
-                    System.out.println("       ********* amountMatchedTemp: " + amountMatchedTemp);
+                    System.out.println(new StringBuilder().append("       ********* amountToMatch    : ").append(amountToMatch).toString());
+                    System.out.println(new StringBuilder().append("       ********* amountMatched    : ").append(amountMatched).toString());
+                    System.out.println(new StringBuilder().append("       ********* amountMatchedTemp: ").append(amountMatchedTemp).toString());
 
                     // if there are equals, i will generate the earning transaction and mark both sell and buy transaction as matched.
                     if (amountToMatch == amountMatchedTemp) {
@@ -196,7 +193,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 ex
                                 earningTransactionId
                         );
 
-                        System.out.println("            **** partialToMatch: " + partialToMatch);
+                        System.out.println(new StringBuilder().append("            **** partialToMatch: ").append(partialToMatch).toString());
 
                         InputTransaction partialRest = dao.createPartialUnmatchedInputTransaction(
                                 databaseTransaction,
@@ -208,7 +205,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 ex
                                 earningsPair.getId()
                         );
 
-                        System.out.println("            **** partialRest: " + partialRest);
+                        System.out.println(new StringBuilder().append("            **** partialRest: ").append(partialRest).toString());
 
                         dao.markInputTransactionAsSplit(databaseTransaction, buyTransaction.getId());
                         matchedBuyTransactions.add(partialToMatch);
@@ -235,8 +232,8 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 ex
                 if (amountToMatch > amountMatched) {
 
                     System.out.println("       ********* woow we cannot reach the amount to match with the buy transactions we will have to cut the sell transaction    : ");
-                    System.out.println("           ***** amountToMatch: " + amountToMatch);
-                    System.out.println("           ***** amountMatched: " + amountMatched);
+                    System.out.println(new StringBuilder().append("           ***** amountToMatch: ").append(amountToMatch).toString());
+                    System.out.println(new StringBuilder().append("           ***** amountMatched: ").append(amountMatched).toString());
 
                     System.out.println("         ******* generated new sell input transactions: one matched, one unmatched");
 
@@ -256,7 +253,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 ex
                             earningsPair.getId()
                     );
 
-                    System.out.println("           ***** partialRest: " + partialRest);
+                    System.out.println(new StringBuilder().append("           ***** partialRest: ").append(partialRest).toString());
 
                     InputTransaction partialToMatch = dao.createPartialMatchedInputTransaction(
                             databaseTransaction,
@@ -269,7 +266,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 ex
                             earningTransactionId
                     );
 
-                    System.out.println("           ***** partialToMatch: " + partialToMatch);
+                    System.out.println(new StringBuilder().append("           ***** partialToMatch: ").append(partialToMatch).toString());
 
                     dao.markInputTransactionAsSplit(databaseTransaction, sellTransactionToMatch.getId());
                     sellTransactionToMatch = partialToMatch;
@@ -279,10 +276,10 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 ex
                 }
 
                 System.out.println("       ********* Now We'll create the new EarningTransaction: ");
-                System.out.println("          ****** sellTransactionToMatch: " + sellTransactionToMatch);
+                System.out.println(new StringBuilder().append("          ****** sellTransactionToMatch: ").append(sellTransactionToMatch).toString());
 
                 for (InputTransaction buyTransactionToMatch : matchedBuyTransactions)
-                    System.out.println("          ****** buyTransactionToMatch : " + buyTransactionToMatch);
+                    System.out.println(new StringBuilder().append("          ****** buyTransactionToMatch : ").append(buyTransactionToMatch).toString());
 
                 System.out.println("                *****");
 
@@ -294,8 +291,8 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 ex
 
                 float earningAmount = sellAmountReceiving - buyAmountGiving;
 
-                System.out.println("          ****** sellAmountReceiving: " + sellAmountReceiving);
-                System.out.println("          ****** buyAmountGiving    : " + buyAmountGiving);
+                System.out.println(new StringBuilder().append("          ****** sellAmountReceiving: ").append(sellAmountReceiving).toString());
+                System.out.println(new StringBuilder().append("          ****** buyAmountGiving    : ").append(buyAmountGiving).toString());
 
                 EarningTransaction newEarningTransaction = new MatchingEngineMiddlewareEarningTransaction(
                         earningTransactionId,
@@ -306,7 +303,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 ex
                         dao);
 
                 System.out.println("          ****** : ******");
-                System.out.println("          ****** newEarningTransaction: " + newEarningTransaction);
+                System.out.println(new StringBuilder().append("          ****** newEarningTransaction: ").append(newEarningTransaction).toString());
                 System.out.println("          ****** : ******");
 
 

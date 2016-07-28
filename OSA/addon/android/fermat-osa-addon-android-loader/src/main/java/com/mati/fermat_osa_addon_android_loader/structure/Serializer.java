@@ -14,8 +14,8 @@ import java.io.StreamCorruptedException;
 public class Serializer {
 
 
-    public static byte[] prepareData(Object data){
-        if(data==null) return null;
+    public static byte[] prepareData(Object data) {
+        if (data == null) return null;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutput out = null;
         byte[] b = null;
@@ -43,12 +43,12 @@ public class Serializer {
         return b;
     }
 
-    public static Object desearialize(byte[] data, ClassLoader classLoader){
+    public static Object desearialize(byte[] data, ClassLoader classLoader) {
         ByteArrayInputStream bis = new ByteArrayInputStream(data);
         ObjectInput in = null;
         Object o = null;
         try {
-            in = new ObjectInputStreamWithLoader(bis,classLoader);
+            in = new ObjectInputStreamWithLoader(bis, classLoader);
             o = in.readObject();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

@@ -5,7 +5,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CBPException;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 12/01/16.
  */
-public class CantGetPublicKeyException  extends CBPException {
+public class CantGetPublicKeyException extends CBPException {
     /**
      * Represent the default message
      */
@@ -31,7 +31,7 @@ public class CantGetPublicKeyException  extends CBPException {
      * @param possibleReason
      */
     public CantGetPublicKeyException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

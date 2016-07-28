@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorNetworkServiceSearch</code>
  * contains all the functionality to search crypto customer actors.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/11/2015.
  */
 public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustomerSearch {
@@ -55,8 +55,8 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
 
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println("************** I'm a crypto customer searched: "+actorProfile);
-                System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
+                System.out.println(new StringBuilder().append("************** I'm a crypto customer searched: ").append(actorProfile).toString());
+                System.out.println(new StringBuilder().append("************** Do I have profile image?: ").append(actorProfile.getPhoto() != null).toString());
 
                 cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
@@ -116,8 +116,8 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
 
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println("************** I'm a crypto customer searched: "+actorProfile + " - " + actorProfile.getStatus());
-                System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
+                System.out.println(new StringBuilder().append("************** I'm a crypto customer searched: ").append(actorProfile).append(" - ").append(actorProfile.getStatus()).toString());
+                System.out.println(new StringBuilder().append("************** Do I have profile image?: ").append(actorProfile.getPhoto() != null).toString());
 
                 cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
@@ -161,8 +161,8 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
 
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println("************** I'm a crypto customer searched: "+actorProfile);
-                System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
+                System.out.println(new StringBuilder().append("************** I'm a crypto customer searched: ").append(actorProfile).toString());
+                System.out.println(new StringBuilder().append("************** Do I have profile image?: ").append(actorProfile.getPhoto() != null).toString());
 
                 cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
@@ -206,8 +206,8 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
 
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println("************** I'm a crypto customer searched: "+actorProfile);
-                System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
+                System.out.println(new StringBuilder().append("************** I'm a crypto customer searched: ").append(actorProfile).toString());
+                System.out.println(new StringBuilder().append("************** Do I have profile image?: ").append(actorProfile.getPhoto() != null).toString());
 
                 cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
@@ -251,8 +251,8 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
 
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println("************** I'm a crypto customer searched: "+actorProfile);
-                System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
+                System.out.println(new StringBuilder().append("************** I'm a crypto customer searched: ").append(actorProfile).toString());
+                System.out.println(new StringBuilder().append("************** Do I have profile image?: ").append(actorProfile.getPhoto() != null).toString());
 
                 cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
@@ -296,8 +296,8 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
 
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println("************** I'm a crypto customer searched: "+actorProfile);
-                System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
+                System.out.println(new StringBuilder().append("************** I'm a crypto customer searched: ").append(actorProfile).toString());
+                System.out.println(new StringBuilder().append("************** Do I have profile image?: ").append(actorProfile.getPhoto() != null).toString());
 
                 cryptoCustomerExposingData = new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus());
             }

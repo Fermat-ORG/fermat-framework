@@ -13,22 +13,22 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmissio
 public class IncomingNewContractStatusUpdateEventHandler extends AbstractBrokerSubmitOnlineMerchandiseEventHandler {
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if(this.brokerSubmitOnlineMerchandiseRecorderService.getStatus()== ServiceStatus.STARTED) {
+        if (this.brokerSubmitOnlineMerchandiseRecorderService.getStatus() == ServiceStatus.STARTED) {
 
             try {
                 this.brokerSubmitOnlineMerchandiseRecorderService.incomingNewContractStatusUpdateEventHandler((IncomingNewContractStatusUpdate) fermatEvent);
-            } catch(CantSaveEventException exception){
-                throw new CantSaveEventException(exception,"Handling the incomingNewContractStatusUpdate", "Check the cause");
-            } catch(ClassCastException exception){
+            } catch (CantSaveEventException exception) {
+                throw new CantSaveEventException(exception, "Handling the incomingNewContractStatusUpdate", "Check the cause");
+            } catch (ClassCastException exception) {
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("EXCEPTION DETECTOR----------------------------------");
                 //exception.printStackTrace();
                 throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the incomingNewContractStatusUpdate", "Cannot cast this event");
-            } catch(Exception exception){
-                throw new CantSaveEventException(exception,"Handling the incomingNewContractStatusUpdate", "Unexpected exception");
+            } catch (Exception exception) {
+                throw new CantSaveEventException(exception, "Handling the incomingNewContractStatusUpdate", "Unexpected exception");
             }
 
-        }else {
+        } else {
             throw new TransactionServiceNotStartedException();
         }
     }

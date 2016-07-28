@@ -46,19 +46,19 @@ public abstract class AbstractPlatform {
 
     private Map<LayerReference, AbstractLayer> layers;
 
-    private PlatformReference        platformReference;
+    private PlatformReference platformReference;
 
     public AbstractPlatform(final PlatformReference platformReference) {
 
-        this.layers            = new ConcurrentHashMap<>();
+        this.layers = new ConcurrentHashMap<>();
         this.platformReference = platformReference;
     }
 
     public AbstractPlatform(final PlatformReference platformReference,
                             final FermatContext fermatContext) {
 
-        this.layers            = new ConcurrentHashMap<>();
-        this.fermatContext     = fermatContext    ;
+        this.layers = new ConcurrentHashMap<>();
+        this.fermatContext = fermatContext;
         this.platformReference = platformReference;
     }
 
@@ -66,8 +66,7 @@ public abstract class AbstractPlatform {
      * Through the method <code>registerLayer</code> you can add new layers to the platform.
      * Here we'll corroborate too that the layer is not added twice.
      *
-     * @param abstractLayer  layer instance.
-     *
+     * @param abstractLayer layer instance.
      * @throws CantRegisterLayerException if something goes wrong.
      */
     protected final void registerLayer(final AbstractLayer abstractLayer) throws CantRegisterLayerException {
@@ -81,8 +80,8 @@ public abstract class AbstractPlatform {
 
         try {
 
-            if(layers.containsKey(layerReference))
-                throw new CantRegisterLayerException("layer: " + layerReference.toString(), "Layer already exists in this platform.");
+            if (layers.containsKey(layerReference))
+                throw new CantRegisterLayerException(new StringBuilder().append("layer: ").append(layerReference.toString()).toString(), "Layer already exists in this platform.");
 
             abstractLayer.start();
 
@@ -93,7 +92,7 @@ public abstract class AbstractPlatform {
 
         } catch (final CantStartLayerException e) {
 
-            throw new CantRegisterLayerException(e, "layer: " + layerReference.toString(), "Error trying to start the layer.");
+            throw new CantRegisterLayerException(e, new StringBuilder().append("layer: ").append(layerReference.toString()).toString(), "Error trying to start the layer.");
         }
     }
 
@@ -101,17 +100,15 @@ public abstract class AbstractPlatform {
         if (layers.containsKey(layerReference))
             return layers.get(layerReference);
         else
-            throw new LayerNotFoundException("layer: "+layerReference.getLayer(), "layer not found.");
+            throw new LayerNotFoundException(new StringBuilder().append("layer: ").append(layerReference.getLayer()).toString(), "layer not found.");
     }
 
     /**
      * Through the method <code>getAddonVersion</code> you can get a addon version instance passing like parameter a version reference instance.
      *
      * @param addonVersionReference addon version reference data.
-     *
      * @return a addon version instance.
-     *
-     * @throws VersionNotFoundException   if we can't find a addon version with the given version reference parameters.
+     * @throws VersionNotFoundException if we can't find a addon version with the given version reference parameters.
      */
     public final AbstractAddon getAddonVersion(final AddonVersionReference addonVersionReference) throws VersionNotFoundException {
 
@@ -129,10 +126,8 @@ public abstract class AbstractPlatform {
      * Through the method <code>getAddonDeveloper</code> you can get a addonDeveloper instance passing like parameter a developer reference instance.
      *
      * @param addonDeveloperReference addon developer reference data.
-     *
      * @return a addon developer instance.
-     *
-     * @throws DeveloperNotFoundException   if we can't find a addon developer with the given developer reference parameters.
+     * @throws DeveloperNotFoundException if we can't find a addon developer with the given developer reference parameters.
      */
     public final AbstractAddonDeveloper getAddonDeveloper(final AddonDeveloperReference addonDeveloperReference) throws DeveloperNotFoundException {
 
@@ -154,7 +149,7 @@ public abstract class AbstractPlatform {
 
         } catch (LayerNotFoundException e) {
 
-            throw new AddonNotFoundException(e, "addon: "+addonReference.toString(), "layer not found for the specified addon.");
+            throw new AddonNotFoundException(e, new StringBuilder().append("addon: ").append(addonReference.toString()).toString(), "layer not found for the specified addon.");
         }
     }
 
@@ -162,10 +157,8 @@ public abstract class AbstractPlatform {
      * Through the method <code>getPluginVersion</code> you can get a plugin version instance passing like parameter a version reference instance.
      *
      * @param pluginVersionReference plugin version reference data.
-     *
      * @return a plugin version instance.
-     *
-     * @throws VersionNotFoundException   if we can't find a plugin version with the given version reference parameters.
+     * @throws VersionNotFoundException if we can't find a plugin version with the given version reference parameters.
      */
     public final AbstractPlugin getPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException {
         AbstractPlugin abstractPlugin = null;
@@ -189,7 +182,7 @@ public abstract class AbstractPlatform {
         return abstractPlugin;
     }
 
-    private boolean isPluginLoadedInTheNewWay(PluginVersionReference pluginVersionReference){
+    private boolean isPluginLoadedInTheNewWay(PluginVersionReference pluginVersionReference) {
         PluginVersionReference pluginVersionReference2 = new PluginVersionReference(
                 Platforms.BLOCKCHAINS,
                 Layers.CRYPTO_NETWORK,
@@ -204,10 +197,8 @@ public abstract class AbstractPlatform {
      * Through the method <code>getPluginDeveloper</code> you can get a pluginDeveloper instance passing like parameter a developer reference instance.
      *
      * @param pluginDeveloperReference plugin developer reference data.
-     *
      * @return a plugin developer instance.
-     *
-     * @throws DeveloperNotFoundException   if we can't find a plugin developer with the given developer reference parameters.
+     * @throws DeveloperNotFoundException if we can't find a plugin developer with the given developer reference parameters.
      */
     public final DeveloperPluginInterface getPluginDeveloper(final PluginDeveloperReference pluginDeveloperReference) throws DeveloperNotFoundException {
 
@@ -229,25 +220,25 @@ public abstract class AbstractPlatform {
 
         } catch (LayerNotFoundException e) {
 
-            throw new PluginNotFoundException(e, "plugin: "+pluginReference.toString(), "layer not found for the specified plugin.");
+            throw new PluginNotFoundException(e, new StringBuilder().append("plugin: ").append(pluginReference.toString()).toString(), "layer not found for the specified plugin.");
         }
     }
 
     public final void fillAddonVersions(final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions) {
 
-        for(ConcurrentHashMap.Entry<LayerReference, AbstractLayer> layer : layers.entrySet())
+        for (ConcurrentHashMap.Entry<LayerReference, AbstractLayer> layer : layers.entrySet())
             layer.getValue().fillAddonVersions(versions);
     }
 
     public final void fillPluginVersions(final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions) {
 
-        for(ConcurrentHashMap.Entry<LayerReference, AbstractLayer> layer : layers.entrySet())
+        for (ConcurrentHashMap.Entry<LayerReference, AbstractLayer> layer : layers.entrySet())
             layer.getValue().fillPluginVersions(versions);
     }
 
     public final void fillPluginVersionsMati(final List<PluginVersionReference> versions) {
 
-        for(ConcurrentHashMap.Entry<LayerReference, AbstractLayer> layer : layers.entrySet())
+        for (ConcurrentHashMap.Entry<LayerReference, AbstractLayer> layer : layers.entrySet())
             layer.getValue().fillPluginVersionsMati(versions);
     }
 
@@ -261,16 +252,16 @@ public abstract class AbstractPlatform {
 
     public abstract void start() throws CantStartPlatformException;
 
-    public ArrayList<AbstractPlugin> getPlugins(){
+    public ArrayList<AbstractPlugin> getPlugins() {
         ArrayList<AbstractPlugin> abstractPlugins = new ArrayList<>();
         Iterator<AbstractLayer> iterator = getLayers().iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             Iterator<AbstractPluginSubsystem> abstractPluginSubsystemIterator = iterator.next().getPlugins().iterator();
-            while(abstractPluginSubsystemIterator.hasNext()){
+            while (abstractPluginSubsystemIterator.hasNext()) {
                 Iterator<DeveloperPluginInterface> iterator1 = abstractPluginSubsystemIterator.next().getDevelopers().iterator();
-                while (iterator1.hasNext()){
+                while (iterator1.hasNext()) {
                     Iterator<AbstractPlugin> iterator2 = iterator1.next().getVersions().iterator();
-                    while (iterator2.hasNext()){
+                    while (iterator2.hasNext()) {
                         abstractPlugins.add(iterator2.next());
                     }
                 }

@@ -2,20 +2,20 @@ package com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classe
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonDeveloper;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterDeveloperException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonDeveloperException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.DeveloperNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterDeveloperException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.DeveloperNotFoundException;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The abstract class <code>AbstractAddonSubsystem</code>
  * contains all the basic functionality of an addon Subsystem class.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
 public abstract class AbstractAddonSubsystem {
@@ -35,8 +35,7 @@ public abstract class AbstractAddonSubsystem {
      * Throw the method <code>registerDeveloper</code> you can add new developers to the addon subsystem.
      * Here we'll corroborate too that the developer is not added twice.
      *
-     * @param addonDeveloper  addonDeveloper in-self.
-     *
+     * @param addonDeveloper addonDeveloper in-self.
      * @throws CantRegisterDeveloperException if something goes wrong.
      */
     protected final void registerDeveloper(final AbstractAddonDeveloper addonDeveloper) throws CantRegisterDeveloperException {
@@ -47,7 +46,7 @@ public abstract class AbstractAddonSubsystem {
 
         try {
 
-            if(developers.containsKey(addonDeveloperReference))
+            if (developers.containsKey(addonDeveloperReference))
                 throw new CantRegisterDeveloperException(addonDeveloperReference.toString(), "developer already exists for this addon.");
 
             addonDeveloper.start();
@@ -80,7 +79,7 @@ public abstract class AbstractAddonSubsystem {
 
     public final void fillVersions(final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions) {
 
-        for(ConcurrentHashMap.Entry<AddonDeveloperReference, AbstractAddonDeveloper> developer : developers.entrySet())
+        for (ConcurrentHashMap.Entry<AddonDeveloperReference, AbstractAddonDeveloper> developer : developers.entrySet())
             versions.putAll(developer.getValue().listVersions());
 
     }

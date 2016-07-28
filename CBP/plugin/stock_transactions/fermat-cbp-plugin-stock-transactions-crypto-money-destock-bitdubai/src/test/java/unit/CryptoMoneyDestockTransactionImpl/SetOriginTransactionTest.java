@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 public class SetOriginTransactionTest {
 
     @Test
-    public void setOriginTransaction(){
+    public void setOriginTransaction() {
         CryptoMoneyDestockTransactionImpl cryptoMoneyDestockTransaction = mock(CryptoMoneyDestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoMoneyDestockTransaction).setOriginTransaction(Mockito.any(OriginTransaction.class));
     }

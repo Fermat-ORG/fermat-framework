@@ -10,7 +10,7 @@ import java.util.UUID;
  * Created by angel on 21/10/15.
  */
 
-public class CustomerBrokerSaleClause implements Clause{
+public class CustomerBrokerSaleClause implements Clause {
     private final UUID clauseId;
     private final ClauseType type;
     private final String value;
@@ -18,7 +18,7 @@ public class CustomerBrokerSaleClause implements Clause{
     private ClauseStatus status;
     private short indexOrder;
 
-    public CustomerBrokerSaleClause(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder){
+    public CustomerBrokerSaleClause(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder) {
         this.clauseId = clauseId;
         this.type = type;
         this.value = value;

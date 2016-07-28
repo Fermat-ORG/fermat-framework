@@ -17,24 +17,22 @@ public enum Country implements FermatEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    ARGENTINA                   ("AR", "Argentina"),
-    AUSTRALIA                   ("AU", "Australia"),
-    BRAZIL                      ("BR", "Brazil"),
-    CANADA                      ("CA", "Canada"),
-    CHILE                       ("CL", "Chile"),
-    CHINA                       ("CN", "China"),
-    COLOMBIA                    ("CO", "Colombia"),
-    EUROZONE                    ("EU", "Eurozone"),
-    GREAT_BRITAIN               ("GB", "Great Britain"),
-    JAPAN                       ("JP", "Japan"),
-    MEXICO                      ("MX", "Mexico"),
-    NEW_ZEALAND                 ("NZ", "New Zealand"),
-    SWITZERLAND                 ("CH", "Switzerland"),
-    UNITED_STATES_OF_AMERICA    ("US", "United States of America"),
-    VENEZUELA                   ("VE", "Venezuela"),
-    NONE                        ("NONE", "NONE"),
-
-    ;
+    ARGENTINA("AR", "Argentina"),
+    AUSTRALIA("AU", "Australia"),
+    BRAZIL("BR", "Brazil"),
+    CANADA("CA", "Canada"),
+    CHILE("CL", "Chile"),
+    CHINA("CN", "China"),
+    COLOMBIA("CO", "Colombia"),
+    EUROZONE("EU", "Eurozone"),
+    GREAT_BRITAIN("GB", "Great Britain"),
+    JAPAN("JP", "Japan"),
+    MEXICO("MX", "Mexico"),
+    NEW_ZEALAND("NZ", "New Zealand"),
+    SWITZERLAND("CH", "Switzerland"),
+    UNITED_STATES_OF_AMERICA("US", "United States of America"),
+    VENEZUELA("VE", "Venezuela"),
+    NONE("NONE", "NONE"),;
 
     private final String code;
     private final String mDisplayName;
@@ -47,25 +45,41 @@ public enum Country implements FermatEnum {
     public static Country getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "AR": return Country.ARGENTINA;
-            case "AU": return Country.AUSTRALIA;
-            case "BR": return Country.BRAZIL;
-            case "CA": return Country.CANADA;
-            case "CL": return Country.CHILE;
-            case "CN": return Country.CHINA;
-            case "CO": return Country.COLOMBIA;
-            case "EU": return Country.EUROZONE;
-            case "GB": return Country.GREAT_BRITAIN;
-            case "JP": return Country.JAPAN;
-            case "MX": return Country.MEXICO;
-            case "NZ": return Country.NEW_ZEALAND;
-            case "CH": return Country.SWITZERLAND;
-            case "US": return Country.UNITED_STATES_OF_AMERICA;
-            case "VE": return Country.VENEZUELA;
-            case "NONE": return Country.NONE;
+            case "AR":
+                return Country.ARGENTINA;
+            case "AU":
+                return Country.AUSTRALIA;
+            case "BR":
+                return Country.BRAZIL;
+            case "CA":
+                return Country.CANADA;
+            case "CL":
+                return Country.CHILE;
+            case "CN":
+                return Country.CHINA;
+            case "CO":
+                return Country.COLOMBIA;
+            case "EU":
+                return Country.EUROZONE;
+            case "GB":
+                return Country.GREAT_BRITAIN;
+            case "JP":
+                return Country.JAPAN;
+            case "MX":
+                return Country.MEXICO;
+            case "NZ":
+                return Country.NEW_ZEALAND;
+            case "CH":
+                return Country.SWITZERLAND;
+            case "US":
+                return Country.UNITED_STATES_OF_AMERICA;
+            case "VE":
+                return Country.VENEZUELA;
+            case "NONE":
+                return Country.NONE;
             default:
                 throw new InvalidParameterException(
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "This Code Is Not Valid for the Country enum"
                 );
         }

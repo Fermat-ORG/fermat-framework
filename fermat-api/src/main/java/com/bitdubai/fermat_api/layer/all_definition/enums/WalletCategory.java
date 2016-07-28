@@ -22,12 +22,16 @@ public enum WalletCategory implements FermatEnum {
 
     public static WalletCategory getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "BRDNW": return BRANDED_NICHE_WALLET;
-            case "BRDRW": return BRANDED_REFERENCE_WALLET;
-            case "REFW":  return REFERENCE_WALLET;
-            case "NCHW":  return NICHE_WALLET;
+            case "BRDNW":
+                return BRANDED_NICHE_WALLET;
+            case "BRDRW":
+                return BRANDED_REFERENCE_WALLET;
+            case "REFW":
+                return REFERENCE_WALLET;
+            case "NCHW":
+                return NICHE_WALLET;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the WalletCategory enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the WalletCategory enum");
         }
     }
 

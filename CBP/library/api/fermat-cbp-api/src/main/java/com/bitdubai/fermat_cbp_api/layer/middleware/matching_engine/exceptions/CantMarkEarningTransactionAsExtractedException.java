@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by nelsonalfo on 19/04/16.
  */
-public class CantMarkEarningTransactionAsExtractedException extends FermatException{
+public class CantMarkEarningTransactionAsExtractedException extends FermatException {
     public static final String DEFAULT_MESSAGE = "Can't change the Earning Transaction status to EXTRACTED";
 
     /**
