@@ -116,6 +116,7 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      *
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<FermatWalletWalletContact> listWalletContacts(String walletPublicKey, String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException;
 
 

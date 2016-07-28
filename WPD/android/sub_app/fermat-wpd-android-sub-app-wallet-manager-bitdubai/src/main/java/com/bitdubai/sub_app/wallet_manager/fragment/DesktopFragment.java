@@ -345,7 +345,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
                     Item item = new Item(installedWallet);
                     item.setIconResource(R.drawable.icon_loss_protected);
                     item.setPosition(8);
-                    installedWallet.setAppStatus(AppsStatus.DEV);
+                    installedWallet.setAppStatus(AppsStatus.ALPHA);
                     lstItemsWithIcon.add(item);
                 }
 

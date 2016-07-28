@@ -68,6 +68,9 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_VAULT   , plugin = Plugins.BITCOIN_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.FERMAT_VAULT)
+    private CryptoVaultManager cryptoFermatVaultManager;
+
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
     private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
 
@@ -137,6 +140,7 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
             this.transactionHandlerFactory = new OutgoingIntraActorTransactionHandlerFactory(this.eventManager,this.cryptoWalletManager, this.outgoingIntraActorDao,this.lossProtectedWalletManager);
             this.transactionProcessorAgent = new OutgoingIntraActorTransactionProcessorAgent(getErrorManager(),
                                                                                             this.cryptoVaultManager,
+                                                                                            this.cryptoFermatVaultManager,
                                                                                             this.bitcoinNetworkManager,
                                                                                             this.cryptoWalletManager,
                                                                                             this.outgoingIntraActorDao,
