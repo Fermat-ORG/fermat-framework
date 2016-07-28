@@ -11,9 +11,11 @@
             />
 
         <com.bitdubai.fermat_android_api.ui.Views.SquareImageView
+            android:id="@+id/cht_profile_gradient_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/cht_background_contact"/>
+            android:src="@drawable/cht_gradient_status_2"
+            />
 
 
     <RelativeLayout
@@ -51,7 +53,7 @@
            <TextView
                android:layout_width="match_parent"
                android:layout_height="0dp"
-               android:layout_weight="40"
+               android:layout_weight="50"
                android:text="Status"
                android:gravity="center_vertical"
                android:textSize="20sp"
