@@ -137,7 +137,8 @@ public class EditCryptoBrokerIdentityFragment
         } catch (CantListCryptoBrokersException e) {
             e.printStackTrace();
         }
-        appSession.setData(FragmentsCommons.VISIBILITY, identityInfo.isPublished());
+        appSession.setData(FragmentsCommons.VISIBILITY, (identityInfo!= null) ?
+                identityInfo.isPublished() : false);
 
         //If we landed here from CryptoBrokerImageCropperFragment, save the cropped Image.
         if (appSession.getData(FragmentsCommons.CROPPED_IMAGE) != null) {
@@ -348,6 +349,12 @@ public class EditCryptoBrokerIdentityFragment
         }*/
         if ((Boolean)appSession.getData(FragmentsCommons.TEMP_VISIBILITY) != null){
             appSession.setData(FragmentsCommons.VISIBILITY, appSession.getData(FragmentsCommons.TEMP_VISIBILITY));
+            if ((Boolean) appSession.getData(FragmentsCommons.TEMP_VISIBILITY) == true){
+                wantPublishIdentity = true;
+            }else{
+                wantPublishIdentity = false;
+            }
+
         }
 
         if ((Boolean) appSession.getData(FragmentsCommons.VISIBILITY)){
