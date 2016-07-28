@@ -12,6 +12,8 @@ public class FragmentsCommons {
     public static final String FREQUENCY_DATA = "FREQUENCY_DATA";
     public static final String ACCURACY_DATA = "ACCURACY_DATA";
     public static final String BROKER_NAME = "BROKER_NAME";
+    public static final String VISIBILITY = "VISIBILITY";
+    public static final String TEMP_VISIBILITY = "TEMP_VISIBILITY";
     public static final int ADD_IDENTITY_OPTION_MENU_ID = 1;
     public static final int HELP_OPTION_MENU_ID = 2;
     public static final int GEOLOCATION_SETTINGS_OPTION_MENU_ID = 3;
