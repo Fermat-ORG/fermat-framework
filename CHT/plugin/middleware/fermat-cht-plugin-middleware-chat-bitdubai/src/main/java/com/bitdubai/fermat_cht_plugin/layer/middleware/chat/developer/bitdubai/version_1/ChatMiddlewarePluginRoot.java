@@ -450,10 +450,10 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
         try {
             publicKey = networkServiceChatManager.getRegisteredPubliKey();
         } catch (CantRequestListException e) {
-            System.out.println(new StringBuilder().append("Exception in chat middleware test: ").append(e.getMessage()).toString());
+            System.out.println("Exception in chat middleware test: " + e.getMessage());
             e.printStackTrace();
         }
-        System.out.println(new StringBuilder().append("ChatPLuginRoot MY PUBLIC KEY- ").append(networkServiceChatManager.getNetWorkServicePublicKey()).toString());
+        System.out.println("ChatPLuginRoot MY PUBLIC KEY- " + networkServiceChatManager.getNetWorkServicePublicKey());
         System.out.println("-------------------REGISTED CHAT NETWORK SERVICE PUBLIC KEYS------------------");
         for (String key : publicKey) {
             System.out.println(key);
@@ -471,7 +471,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             this.chatMiddlewareManager.saveChat(testChat);
             this.chatMiddlewareManager.saveMessage(testMessage);
         } catch (Exception exception) {
-            System.out.println(new StringBuilder().append("Exception in chat middleware test: ").append(exception.getMessage()).toString());
+            System.out.println("Exception in chat middleware test: " + exception.getMessage());
             exception.printStackTrace();
         }
     }
@@ -489,7 +489,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             incomingChat.setChatId(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
             eventManager.raiseEvent(incomingChat);
         } catch (Exception exception) {
-            System.out.println(new StringBuilder().append("Exception in raise event chat middleware test: ").append(exception.getMessage()).toString());
+            System.out.println("Exception in raise event chat middleware test: " + exception.getMessage());
             exception.printStackTrace();
         }
     }

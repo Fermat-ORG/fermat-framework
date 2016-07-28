@@ -71,11 +71,6 @@ public class AbstractCHTFermatEvent implements FermatEvent {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("AbstractCHTFermatEvent{")
-                .append("eventType=").append(eventType)
-                .append(", eventSource=").append(eventSource)
-                .append(", chatId=").append(chatId)
-                .append('}').toString();
+        return "AbstractCHTFermatEvent{" + "eventType=" + eventType + ", eventSource=" + eventSource + ", chatId=" + chatId + '}';
     }
 }

@@ -103,17 +103,6 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("ChatActorCommunitySubAppModuleInformationImpl{")
-                .append("publicKey='").append(publicKey)
-                .append('\'')
-                .append(", alias='").append(alias)
-                .append('\'')
-                .append(", connectionState='").append(connectionState)
-                .append('\'')
-                .append(", connectionId='").append(connectionId)
-                .append('\'')
-                .append(", image=").append(image != null)
-                .append('}').toString();
+        return "ChatActorCommunitySubAppModuleInformationImpl{" + "publicKey='" + publicKey + '\'' + ", alias='" + alias + '\'' + ", connectionState='" + connectionState + '\'' + ", connectionId='" + connectionId + '\'' + ", image=" + (image != null) + '}';
     }
 }

@@ -131,7 +131,7 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         String content, aux;
         JSONObject json;
@@ -143,7 +143,7 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
 
         try {
             content = HttpHelper.getHTTPContent("http://api.bluelytics.com.ar/json/last_price");
-            json = new JSONObject(new StringBuilder().append("{\"indexes\": ").append(content).append("}").toString());
+            json = new JSONObject("{\"indexes\": " + content + "}");
             jsonArr = json.getJSONArray("indexes");
 
             for (int i = 0; i < jsonArr.length(); ++i) {

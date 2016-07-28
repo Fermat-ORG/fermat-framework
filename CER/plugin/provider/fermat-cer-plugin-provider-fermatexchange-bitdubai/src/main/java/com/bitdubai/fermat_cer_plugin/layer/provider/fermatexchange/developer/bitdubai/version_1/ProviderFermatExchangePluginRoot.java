@@ -164,28 +164,28 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
 
         String url, currPairParam;
         JSONObject json;
         double purchase, sale = 0;
 
-        currPairParam = new StringBuilder().append(currencyPair.getFrom().getCode()).append("_").append(currencyPair.getTo().getCode()).toString();
-        url = new StringBuilder().append("http://api.fermatexchange.com/ticker/?pairs=").append(currPairParam).toString();
+        currPairParam = currencyPair.getFrom().getCode() + "_" + currencyPair.getTo().getCode();
+        url = "http://api.fermatexchange.com/ticker/?pairs=" + currPairParam;
 
         try {
 
             //TODO: uncomment / kill these two lines when FermatExchange is done
             //json =  new JSONObject(HttpHelper.getHTTPContent(url));
-            json = new JSONObject(new StringBuilder().append("{\"").append(currPairParam).append("\":{\"timestamp\":\"1463844159\",\"purchase\":\"123.45\",\"sale\":\"456.78\"}}").toString());
+            json = new JSONObject("{\"" + currPairParam + "\":{\"timestamp\":\"1463844159\",\"purchase\":\"123.45\",\"sale\":\"456.78\"}}");
 
             purchase = json.getJSONObject(currPairParam).getDouble("purchase");
             sale = json.getJSONObject(currPairParam).getDouble("sale");
 
         } catch (JSONException e) {
             errorManager.reportUnexpectedPluginException(Plugins.FERMAT_EXCHANGE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "FermatExchange CER Provider", new StringBuilder().append("Cant Get exchange rate for ").append(currencyPair.getFrom().getCode()).append("-").append(currencyPair.getTo().getCode()).toString());
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "FermatExchange CER Provider", "Cant Get exchange rate for " + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
         }
 
 
@@ -208,7 +208,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided timestamp is in the future");
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         ExchangeRate requiredExchangeRate = null;
 
@@ -223,22 +223,22 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
             JSONObject json;
             double purchase, sale = 0;
 
-            currPairParam = new StringBuilder().append(currencyPair.getFrom().getCode()).append("_").append(currencyPair.getTo().getCode()).toString();
+            currPairParam = currencyPair.getFrom().getCode() + "_" + currencyPair.getTo().getCode();
             dateParam = DateHelper.getDateStringFromTimestamp(timestamp);
-            url = new StringBuilder().append("http://api.fermatexchange.com/historical/daily/?pairs=").append(currPairParam).append("&from=").append(dateParam).append("&to=").append(dateParam).toString();
+            url = "http://api.fermatexchange.com/historical/daily/?pairs=" + currPairParam + "&from=" + dateParam + "&to=" + dateParam;
 
             try {
 
                 //TODO: MOCK, uncomment / kill these lines when FermatExchange is done
                 //json =  new JSONObject(HttpHelper.getHTTPContent(url));
-                json = new JSONObject(new StringBuilder().append("{\"").append(currPairParam).append("\":{\"").append(dateParam).append("\":{\"purchase\": \"123.45\",\"sale\": \"456.78\"}}}").toString());
+                json = new JSONObject("{\"" + currPairParam + "\":{\"" + dateParam + "\":{\"purchase\": \"123.45\",\"sale\": \"456.78\"}}}");
 
                 purchase = json.getJSONObject(currPairParam).getJSONObject(dateParam).getDouble("purchase");
                 sale = json.getJSONObject(currPairParam).getJSONObject(dateParam).getDouble("sale");
 
             } catch (JSONException ex) {
                 errorManager.reportUnexpectedPluginException(Plugins.FERMAT_EXCHANGE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
-                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, ex, "FermatExchange CER Provider", new StringBuilder().append("Cant Get exchange rate for ").append(currencyPair.getFrom().getCode()).append("-").append(currencyPair.getTo().getCode()).toString());
+                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, ex, "FermatExchange CER Provider", "Cant Get exchange rate for " + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
             }
 
             //Create exchange rate
@@ -268,7 +268,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided startTimestamp is in the future");
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         long stdStartTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(startTimestamp);
         long stdEndTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(endTimestamp);
@@ -287,10 +287,10 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
         JSONObject json;
         double purchase, sale = 0;
 
-        currPairParam = new StringBuilder().append(currencyPair.getFrom().getCode()).append("_").append(currencyPair.getTo().getCode()).toString();
+        currPairParam = currencyPair.getFrom().getCode() + "_" + currencyPair.getTo().getCode();
         dateStartParam = DateHelper.getDateStringFromTimestamp(stdStartTimestamp);
         dateEndParam = DateHelper.getDateStringFromTimestamp(stdEndTimestamp);
-        url = new StringBuilder().append("http://api.fermatexchange.com/historical/daily/?pairs=").append(currPairParam).append("&from=").append(dateStartParam).append("&to=").append(dateEndParam).toString();
+        url = "http://api.fermatexchange.com/historical/daily/?pairs=" + currPairParam + "&from=" + dateStartParam + "&to=" + dateEndParam;
 
         try {
 
@@ -313,7 +313,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
 
         } catch (JSONException ex) {
             errorManager.reportUnexpectedPluginException(Plugins.FERMAT_EXCHANGE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, ex, "FermatExchange CER Provider", new StringBuilder().append("Cant Get exchange rate for ").append(currencyPair.getFrom().getCode()).append("-").append(currencyPair.getTo().getCode()).toString());
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, ex, "FermatExchange CER Provider", "Cant Get exchange rate for " + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
         }
 
 
@@ -331,7 +331,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }

@@ -214,7 +214,7 @@ public class ActorConnectionEventActions {
                     chatNetworkService.confirm(request.getRequestId());
                     break;
                 default:
-                    throw new UnsupportedActorTypeException(new StringBuilder().append("request: ").append(request).toString(), "Unsupported actor type exception.");
+                    throw new UnsupportedActorTypeException("request: " + request, "Unsupported actor type exception.");
             }
 
         } catch (final UnsupportedActorTypeException unsupportedActorTypeException) {
@@ -225,19 +225,19 @@ public class ActorConnectionEventActions {
         } catch (final ActorConnectionAlreadyExistsException actorConnectionAlreadyExistsException) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, actorConnectionAlreadyExistsException);
-            throw new ConnectionAlreadyRequestedException(actorConnectionAlreadyExistsException, new StringBuilder().append("request: ").append(request).toString(), "The connection was already requested or exists.");
+            throw new ConnectionAlreadyRequestedException(actorConnectionAlreadyExistsException, "request: " + request, "The connection was already requested or exists.");
         } catch (final CantRegisterActorConnectionException cantRegisterActorConnectionException) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRegisterActorConnectionException);
-            throw new CantRequestActorConnectionException(cantRegisterActorConnectionException, new StringBuilder().append("request: ").append(request).toString(), "Problem registering the actor connection in DAO.");
+            throw new CantRequestActorConnectionException(cantRegisterActorConnectionException, "request: " + request, "Problem registering the actor connection in DAO.");
         } catch (final CantConfirmException cantConfirmException) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantConfirmException);
-            throw new CantRequestActorConnectionException(cantConfirmException, new StringBuilder().append("request: ").append(request).toString(), "Error trying to confirm the connection request through the network service.");
+            throw new CantRequestActorConnectionException(cantConfirmException, "request: " + request, "Error trying to confirm the connection request through the network service.");
         } catch (final Exception exception) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantRequestActorConnectionException(exception, new StringBuilder().append("request: ").append(request).toString(), "Unhandled error.");
+            throw new CantRequestActorConnectionException(exception, "request: " + request, "Unhandled error.");
         }
 
     }
@@ -268,7 +268,7 @@ public class ActorConnectionEventActions {
                     break;
 
                 default:
-                    throw new UnexpectedConnectionStateException(new StringBuilder().append("connectionId: ").append(connectionId).append(" - currentConnectionState: ").append(currentConnectionState).toString(), "Unexpected contact state for denying.");
+                    throw new UnexpectedConnectionStateException("connectionId: " + connectionId + " - currentConnectionState: " + currentConnectionState, "Unexpected contact state for denying.");
             }
 
         } catch (final ActorConnectionNotFoundException | UnexpectedConnectionStateException innerException) {
@@ -278,19 +278,19 @@ public class ActorConnectionEventActions {
         } catch (final CantGetConnectionStateException cantGetConnectionStateException) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
-            throw new CantDisconnectFromActorException(cantGetConnectionStateException, new StringBuilder().append("connectionId: ").append(connectionId).toString(), "Error trying to get the connection state.");
+            throw new CantDisconnectFromActorException(cantGetConnectionStateException, "connectionId: " + connectionId, "Error trying to get the connection state.");
         } catch (final CantConfirmException | ConnectionRequestNotFoundException networkServiceException) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
-            throw new CantDisconnectFromActorException(networkServiceException, new StringBuilder().append("connectionId: ").append(connectionId).toString(), "Error trying to disconnect from an actor through the network service.");
+            throw new CantDisconnectFromActorException(networkServiceException, "connectionId: " + connectionId, "Error trying to disconnect from an actor through the network service.");
         } catch (final CantChangeActorConnectionStateException cantChangeActorConnectionStateException) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
-            throw new CantDisconnectFromActorException(cantChangeActorConnectionStateException, new StringBuilder().append("connectionId: ").append(connectionId).toString(), "Error trying to change the actor connection state.");
+            throw new CantDisconnectFromActorException(cantChangeActorConnectionStateException, "connectionId: " + connectionId, "Error trying to change the actor connection state.");
         } catch (final Exception exception) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantDisconnectFromActorException(exception, new StringBuilder().append("connectionId: ").append(connectionId).toString(), "Unhandled error.");
+            throw new CantDisconnectFromActorException(exception, "connectionId: " + connectionId, "Unhandled error.");
         }
     }
 
@@ -320,7 +320,7 @@ public class ActorConnectionEventActions {
                     break;
 
                 default:
-                    throw new UnexpectedConnectionStateException(new StringBuilder().append("connectionId: ").append(connectionId).append(" - currentConnectionState: ").append(currentConnectionState).toString(), "Unexpected contact state for denying.");
+                    throw new UnexpectedConnectionStateException("connectionId: " + connectionId + " - currentConnectionState: " + currentConnectionState, "Unexpected contact state for denying.");
             }
 
         } catch (final ActorConnectionNotFoundException | UnexpectedConnectionStateException innerException) {
@@ -330,19 +330,19 @@ public class ActorConnectionEventActions {
         } catch (final CantGetConnectionStateException cantGetConnectionStateException) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
-            throw new CantDenyActorConnectionRequestException(cantGetConnectionStateException, new StringBuilder().append("connectionId: ").append(connectionId).toString(), "Error trying to get the connection state.");
+            throw new CantDenyActorConnectionRequestException(cantGetConnectionStateException, "connectionId: " + connectionId, "Error trying to get the connection state.");
         } catch (final CantConfirmException | ConnectionRequestNotFoundException networkServiceException) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
-            throw new CantDenyActorConnectionRequestException(networkServiceException, new StringBuilder().append("connectionId: ").append(connectionId).toString(), "Error trying to deny the connection through the network service.");
+            throw new CantDenyActorConnectionRequestException(networkServiceException, "connectionId: " + connectionId, "Error trying to deny the connection through the network service.");
         } catch (final CantChangeActorConnectionStateException cantChangeActorConnectionStateException) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
-            throw new CantDenyActorConnectionRequestException(cantChangeActorConnectionStateException, new StringBuilder().append("connectionId: ").append(connectionId).toString(), "Error trying to change the actor connection state.");
+            throw new CantDenyActorConnectionRequestException(cantChangeActorConnectionStateException, "connectionId: " + connectionId, "Error trying to change the actor connection state.");
         } catch (final Exception exception) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantDenyActorConnectionRequestException(exception, new StringBuilder().append("connectionId: ").append(connectionId).toString(), "Unhandled error.");
+            throw new CantDenyActorConnectionRequestException(exception, "connectionId: " + connectionId, "Unhandled error.");
         }
 
     }
@@ -373,7 +373,7 @@ public class ActorConnectionEventActions {
                     break;
 
                 default:
-                    throw new UnexpectedConnectionStateException(new StringBuilder().append("connectionId: ").append(connectionId).append(" - currentConnectionState: ").append(currentConnectionState).toString(), "Unexpected contact state for cancelling.");
+                    throw new UnexpectedConnectionStateException("connectionId: " + connectionId + " - currentConnectionState: " + currentConnectionState, "Unexpected contact state for cancelling.");
             }
 
             //TODO: REALIZAR EVENTO PARA AGREGAR CONTACTO
@@ -390,19 +390,19 @@ public class ActorConnectionEventActions {
         } catch (final CantGetConnectionStateException cantGetConnectionStateException) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
-            throw new CantAcceptActorConnectionRequestException(cantGetConnectionStateException, new StringBuilder().append("connectionId: ").append(connectionId).toString(), "Error trying to get the connection state.");
+            throw new CantAcceptActorConnectionRequestException(cantGetConnectionStateException, "connectionId: " + connectionId, "Error trying to get the connection state.");
         } catch (final CantConfirmException | ConnectionRequestNotFoundException networkServiceException) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
-            throw new CantAcceptActorConnectionRequestException(networkServiceException, new StringBuilder().append("connectionId: ").append(connectionId).toString(), "Error trying to accept the connection through the network service.");
+            throw new CantAcceptActorConnectionRequestException(networkServiceException, "connectionId: " + connectionId, "Error trying to accept the connection through the network service.");
         } catch (final CantChangeActorConnectionStateException cantChangeActorConnectionStateException) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
-            throw new CantAcceptActorConnectionRequestException(cantChangeActorConnectionStateException, new StringBuilder().append("connectionId: ").append(connectionId).toString(), "Error trying to change the actor connection state.");
+            throw new CantAcceptActorConnectionRequestException(cantChangeActorConnectionStateException, "connectionId: " + connectionId, "Error trying to change the actor connection state.");
         } catch (final Exception exception) {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantAcceptActorConnectionRequestException(exception, new StringBuilder().append("connectionId: ").append(connectionId).toString(), "Unhandled error.");
+            throw new CantAcceptActorConnectionRequestException(exception, "connectionId: " + connectionId, "Unhandled error.");
         }
     }
 }

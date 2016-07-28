@@ -195,7 +195,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
                 final Currency earningCurrency = earningsPair.getEarningCurrency();
                 final String earningCurrencyCode = earningCurrency.getCode();
 
-                String currencies = new StringBuilder().append(linkedCurrencyCode).append(" / ").append(earningCurrencyCode).toString();
+                String currencies = linkedCurrencyCode + " / " + earningCurrencyCode;
                 String value = "0.0";
 
                 final List<EarningTransaction> earnings = moduleManager.searchEarnings(earningsPair);

@@ -103,12 +103,6 @@ public class ChatExposingData {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("ChatExposingData{")
-                .append("publicKey='").append(publicKey)
-                .append('\'')
-                .append(", alias='").append(alias)
-                .append('\'')
-                .append(", image=").append(Arrays.toString(image))
-                .append('}').toString();
+        return "ChatExposingData{" + "publicKey='" + publicKey + '\'' + ", alias='" + alias + '\'' + ", image=" + Arrays.toString(image) + '}';
     }
 }

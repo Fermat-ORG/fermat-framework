@@ -112,18 +112,7 @@ public class ContactConnectionImpl implements ContactConnection {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("ContactImpl{")
-                .append("contactId=").append(contactId)
-                .append(", remoteName='").append(remoteName)
-                .append('\'')
-                .append(", alias='").append(alias)
-                .append('\'')
-                .append(", remoteActorType=").append(remoteActorType)
-                .append(", remoteActorPublicKey='").append(remoteActorPublicKey)
-                .append('\'')
-                .append(", creationDate=").append(creationDate)
-                .append('}').toString();
+        return "ContactImpl{" + "contactId=" + contactId + ", remoteName='" + remoteName + '\'' + ", alias='" + alias + '\'' + ", remoteActorType=" + remoteActorType + ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' + ", creationDate=" + creationDate + '}';
     }
 
     @Override

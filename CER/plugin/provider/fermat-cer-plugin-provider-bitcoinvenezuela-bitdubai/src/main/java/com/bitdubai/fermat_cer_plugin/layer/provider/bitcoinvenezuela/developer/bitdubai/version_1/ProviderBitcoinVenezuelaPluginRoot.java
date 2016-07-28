@@ -148,7 +148,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         //Determine cryptoCurrency base
         String exchangeFrom, exchangeTo;
@@ -207,7 +207,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided timestamp is in the future");
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         ExchangeRate requiredExchangeRate = null;
 
@@ -268,7 +268,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided startTimestamp is in the future");
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         long stdStartTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(startTimestamp);
         long stdEndTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(endTimestamp);
@@ -325,7 +325,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }
@@ -338,8 +338,8 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
         JSONObject json;
 
         try {
-            json = new JSONObject(HttpHelper.getHTTPContent(new StringBuilder().append("http://api.bitcoinvenezuela.com/historical/?pair=").append(currencyFrom.getCode()).append(currencyTo.getCode()).toString()));
-            json = json.getJSONObject(new StringBuilder().append(currencyTo.getCode()).append("_").append(currencyFrom.getCode()).toString());
+            json = new JSONObject(HttpHelper.getHTTPContent("http://api.bitcoinvenezuela.com/historical/?pair=" + currencyFrom.getCode() + currencyTo.getCode()));
+            json = json.getJSONObject(currencyTo.getCode() + "_" + currencyFrom.getCode());
 
             Iterator<?> keys = json.keys();
             while (keys.hasNext()) {

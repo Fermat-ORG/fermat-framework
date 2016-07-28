@@ -310,11 +310,11 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println(new StringBuilder().append("ACK_OFFLINE_PAYMENT - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("ACK_OFFLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
                     if (remoteBusinessTransaction != Plugins.BROKER_ACK_OFFLINE_PAYMENT)
                         continue;
 
-                    System.out.println(new StringBuilder().append("ACK_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("ACK_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (brokerAckOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
                         contractTransactionStatus = brokerAckOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(contractHash);
@@ -349,11 +349,11 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println(new StringBuilder().append("ACK_OFFLINE_PAYMENT - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("ACK_OFFLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
                     if (remoteBusinessTransaction != Plugins.BROKER_ACK_OFFLINE_PAYMENT)
                         continue;
 
-                    System.out.println(new StringBuilder().append("ACK_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("ACK_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (brokerAckOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
                         businessTransactionRecord = brokerAckOfflinePaymentBusinessTransactionDao.getBrokerBusinessTransactionRecordByContractHash(contractHash);
@@ -482,13 +482,13 @@ public class BrokerAckOfflinePaymentMonitorAgent2
             String negotiationId = customerBrokerContractSale.getNegotiatiotId();
             String actorPublicKey = customerBrokerContractSale.getPublicKeyBroker();
             ObjectChecker.checkArgument(
-                    negotiationId, new StringBuilder().append("The negotiationId for contractHash ").append(contractHash).append(" is null").toString());
+                    negotiationId, "The negotiationId for contractHash " + contractHash + " is null");
 
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation =
                     customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
                             UUID.fromString(negotiationId));
             ObjectChecker.checkArgument(
-                    customerBrokerSaleNegotiation, new StringBuilder().append("The customerBrokerSaleNegotiation by Id ").append(negotiationId).append(" is null").toString());
+                    customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation by Id " + negotiationId + " is null");
 
             Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
             ClauseType clauseType;
@@ -537,13 +537,13 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                     brokerAmount,
                     account,
                     brokerCurrency,
-                    new StringBuilder().append("Payment from Customer ").append(customerAlias).toString());
+                    "Payment from Customer " + customerAlias);
 
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             throw new CantGetBankTransactionParametersRecordException(
                     e,
                     "Getting the BankTransactionParametersRecord",
-                    new StringBuilder().append("Cannot get the CustomerBrokerContractSale by contractHash/Id:\n").append(contractHash).toString());
+                    "Cannot get the CustomerBrokerContractSale by contractHash/Id:\n" + contractHash);
         } catch (ObjectNotSetException e) {
             throw new CantGetBankTransactionParametersRecordException(
                     e,
@@ -595,10 +595,10 @@ public class BrokerAckOfflinePaymentMonitorAgent2
 
             String negotiationId = customerBrokerContractSale.getNegotiatiotId();
             String brokerPublicKey = customerBrokerContractSale.getPublicKeyBroker();
-            ObjectChecker.checkArgument(negotiationId, new StringBuilder().append("The negotiationId for contractHash ").append(contractHash).append(" is null").toString());
+            ObjectChecker.checkArgument(negotiationId, "The negotiationId for contractHash " + contractHash + " is null");
 
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-            ObjectChecker.checkArgument(customerBrokerSaleNegotiation, new StringBuilder().append("The customerBrokerSaleNegotiation by Id").append(negotiationId).append(" is null").toString());
+            ObjectChecker.checkArgument(customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation by Id" + negotiationId + " is null");
 
             Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
             ClauseType clauseType;
@@ -640,11 +640,11 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                     pluginId.toString(),
                     brokerAmount,
                     brokerCurrency,
-                    new StringBuilder().append("Payment from Customer ").append(customerAlias).toString(),
+                    "Payment from Customer " + customerAlias,
                     TransactionType.CREDIT);
 
         } catch (CantGetListCustomerBrokerContractSaleException e) {
-            throw new CantGetCashTransactionParameterException(e, "Getting the CashTransactionParametersRecord", new StringBuilder().append("Cannot get the CustomerBrokerContractSale by contractHash/Id:\n").append(contractHash).toString());
+            throw new CantGetCashTransactionParameterException(e, "Getting the CashTransactionParametersRecord", "Cannot get the CustomerBrokerContractSale by contractHash/Id:\n" + contractHash);
         } catch (ObjectNotSetException e) {
             throw new CantGetCashTransactionParameterException(e, "Getting the CashTransactionParametersRecord", "An object to set is null");
         } catch (CantGetListSaleNegotiationsException e) {

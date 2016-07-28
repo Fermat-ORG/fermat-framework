@@ -297,7 +297,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                                     dat, moduleManager.getSelectedActorIdentity());
                     disconnectDialog.setTitle("Disconnect");
                     disconnectDialog.setDescription("Do you want to disconnect from");
-                    disconnectDialog.setUsername(new StringBuilder().append(dat.getAlias()).append("?").toString());
+                    disconnectDialog.setUsername(dat.getAlias() + "?");
                     disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {

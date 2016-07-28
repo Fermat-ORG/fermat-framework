@@ -234,7 +234,7 @@ public class GeolocationChatIdentityFragment extends AbstractFermatFragment<Refe
     public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<GeoFrequency> dataAdapter) throws CantGetChatIdentityException {
         checkIdentity();
         if (identity != null) {
-            accuracy.setText(new StringBuilder().append("").append(identity.getAccuracy()).toString());
+            accuracy.setText("" + identity.getAccuracy());
             if (!identity.getFrecuency().equals(null)) {
                 int spinnerPosition = dataAdapter.getPosition(identity.getFrecuency());
                 frequency.setSelection(spinnerPosition);

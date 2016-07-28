@@ -146,9 +146,9 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
-        String url = new StringBuilder().append("http://api.fixer.io/latest?base=").append(currencyPair.getFrom().getCode()).append("&symbols=").append(currencyPair.getTo().getCode()).toString();
+        String url = "http://api.fixer.io/latest?base=" + currencyPair.getFrom().getCode() + "&symbols=" + currencyPair.getTo().getCode();
         double price = 0;
         String aux;
         boolean providerIsDown = false;
@@ -186,7 +186,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided timestamp is in the future");
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         ExchangeRate requiredExchangeRate = null;
 
@@ -197,7 +197,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
         } catch (CantGetExchangeRateException e) {
 
             String stdDateStr = DateHelper.getDateStringFromTimestamp(timestamp);
-            String url = new StringBuilder().append("http://api.fixer.io/latest?base=").append(currencyPair.getFrom().getCode()).append("&symbols=").append(currencyPair.getTo().getCode()).append("&date=").append(stdDateStr).toString();
+            String url = "http://api.fixer.io/latest?base=" + currencyPair.getFrom().getCode() + "&symbols=" + currencyPair.getTo().getCode() + "&date=" + stdDateStr;
             double price = 0;
             String aux;
 
@@ -208,7 +208,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
                 price = Double.valueOf(aux);
 
             } catch (JSONException ex) {
-                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, ex, "EuropeanCentralBank CER Provider", new StringBuilder().append("Cant Get exchange rate for").append(currencyPair.getFrom().getCode()).append("-").append(currencyPair.getTo().getCode()).toString());
+                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, ex, "EuropeanCentralBank CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
             }
 
 
@@ -233,7 +233,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided startTimestamp is in the future");
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         long stdStartTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(startTimestamp);
         long stdEndTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(endTimestamp);
@@ -251,7 +251,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
 
         //Query API
         long loopTimestamp = startTimestamp;
-        String baseUrl = new StringBuilder().append("http://api.fixer.io/latest?base=").append(currencyPair.getFrom().getCode()).append("&symbols=").append(currencyPair.getTo().getCode()).append("&date=").toString();
+        String baseUrl = "http://api.fixer.io/latest?base=" + currencyPair.getFrom().getCode() + "&symbols=" + currencyPair.getTo().getCode() + "&date=";
         double price;
         String aux;
         while (loopTimestamp <= endTimestamp) {
@@ -279,7 +279,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }

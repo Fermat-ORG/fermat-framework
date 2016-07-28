@@ -185,7 +185,7 @@ public class CloseContractMonitorAgent implements
                  */
                 try {
 
-                    logManager.log(CloseContractPluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
+                    logManager.log(CloseContractPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CannotSendContractHashException | CantUpdateRecordException e) {
                     pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -290,7 +290,7 @@ public class CloseContractMonitorAgent implements
                             return;
                         }
 
-                        System.out.println(new StringBuilder().append("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus = ").append(contractTransactionStatus).toString());
+                        System.out.println("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus = " + contractTransactionStatus);
                         if (contractTransactionStatus == ContractTransactionStatus.CHECKING_CLOSING_CONTRACT) {
 
                             switch (contractType) {
@@ -336,7 +336,7 @@ public class CloseContractMonitorAgent implements
                             return;
                         }
 
-                        System.out.println(new StringBuilder().append("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - contractTransactionStatus = ").append(contractTransactionStatus).toString());
+                        System.out.println("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - contractTransactionStatus = " + contractTransactionStatus);
                         if (contractTransactionStatus == ContractTransactionStatus.SUBMIT_CLOSING_CONTRACT_CONFIRMATION) {
                             closeContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_COMPLETED);
                             raiseNewContractClosedEvent();

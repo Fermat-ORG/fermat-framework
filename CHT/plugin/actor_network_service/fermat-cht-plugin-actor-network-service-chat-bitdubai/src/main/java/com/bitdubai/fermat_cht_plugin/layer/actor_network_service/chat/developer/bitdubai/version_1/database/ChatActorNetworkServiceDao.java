@@ -58,7 +58,7 @@ public class ChatActorNetworkServiceDao {
 
     private ErrorManager errorManager;
 
-    private static final String PROFILE_IMAGE_DIRECTORY_NAME = new StringBuilder().append(DeviceDirectory.LOCAL_USERS.getName()).append("/CBP/cryptoBrokerActorNS").toString();
+    private static final String PROFILE_IMAGE_DIRECTORY_NAME = DeviceDirectory.LOCAL_USERS.getName() + "/CBP/cryptoBrokerActorNS";
     private static final String PROFILE_IMAGE_FILE_NAME_PREFIX = "profileImage";
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
@@ -433,7 +433,7 @@ public class ChatActorNetworkServiceDao {
                 connectionNewsTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, "requestId: " + requestId, "Cannot find an actor connection request with that requestId.");
 
         } catch (final CantUpdateRecordException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -489,7 +489,7 @@ public class ChatActorNetworkServiceDao {
                 connectionNewsTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, "requestId: " + requestId, "Cannot find an actor connection request with that requestId.");
 
         } catch (final CantUpdateRecordException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -521,7 +521,7 @@ public class ChatActorNetworkServiceDao {
             if (!records.isEmpty())
                 return buildConnectionNewRecord(records.get(0));
             else
-                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor Connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, "requestId: " + requestId, "Cannot find an actor Connection request with that requestId.");
 
         } catch (final CantLoadTableToMemoryException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -571,7 +571,7 @@ public class ChatActorNetworkServiceDao {
                 actorConnectionRequestTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor Connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, "requestId: " + requestId, "Cannot find an actor Connection request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -624,7 +624,7 @@ public class ChatActorNetworkServiceDao {
                 actorConnectionRequestTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an address exchange request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, "requestId: " + requestId, "Cannot find an address exchange request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -692,7 +692,7 @@ public class ChatActorNetworkServiceDao {
                 connectionNewsTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, "requestId: " + requestId, "Cannot find an actor connection request with that requestId.");
 
         } catch (final CantUpdateRecordException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -729,7 +729,7 @@ public class ChatActorNetworkServiceDao {
 
             } else
                 throw new ConnectionRequestNotFoundException(
-                        new StringBuilder().append("connectionId: ").append(connectionId).toString(),
+                        "connectionId: " + connectionId,
                         "Cannot find an actor connection request with that requestId."
                 );
 
@@ -738,7 +738,7 @@ public class ChatActorNetworkServiceDao {
 
             throw new CantListPendingConnectionRequestsException(
                     cantLoadTableToMemoryException,
-                    new StringBuilder().append("connectionId: ").append(connectionId).toString(),
+                    "connectionId: " + connectionId,
                     "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
@@ -792,7 +792,7 @@ public class ChatActorNetworkServiceDao {
             // TODO add better error management, "throws CantBuildDatabaseRecordException".
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
-            System.err.println(new StringBuilder().append("error trying to persist image:").append(e.getMessage()).toString());
+            System.err.println("error trying to persist image:" + e.getMessage());
             return record;
         }
     }
@@ -936,6 +936,6 @@ public class ChatActorNetworkServiceDao {
     }
 
     private String buildProfileImageFileName(final String publicKey) {
-        return new StringBuilder().append(PROFILE_IMAGE_FILE_NAME_PREFIX).append("_").append(publicKey).toString();
+        return PROFILE_IMAGE_FILE_NAME_PREFIX + "_" + publicKey;
     }
 }

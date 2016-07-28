@@ -42,7 +42,7 @@ public class ChatConnectionRequestUpdatesEventHandler implements FermatEventHand
 
             } else {
                 EventType eventExpected = EventType.CHAT_ACTOR_CONNECTION_UPDATE_CONNECTION;
-                String context = new StringBuilder().append("Event received: ").append(fermatEvent.getEventType().toString()).append(" - ").append(fermatEvent.getEventType().getCode()).append("\n").append("Event expected: ").append(eventExpected.toString()).append(" - ").append(eventExpected.getCode()).toString();
+                String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode() + "\n" + "Event expected: " + eventExpected.toString() + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);
             }
         } else {

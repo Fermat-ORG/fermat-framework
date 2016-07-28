@@ -76,15 +76,7 @@ public class CitiesImpl implements Cities, Serializable {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("CityRecord{")
-                .append("name='").append(name)
-                .append('\'')
-                .append(", latitude=").append(latitude)
-                .append(", longitude=").append(longitude)
-                .append(", countryCode='").append(countryCode)
-                .append('\'')
-                .append('}').toString();
+        return "CityRecord{" + "name='" + name + '\'' + ", latitude=" + latitude + ", longitude=" + longitude + ", countryCode='" + countryCode + '\'' + '}';
     }
 
     public void setName(String newName) {

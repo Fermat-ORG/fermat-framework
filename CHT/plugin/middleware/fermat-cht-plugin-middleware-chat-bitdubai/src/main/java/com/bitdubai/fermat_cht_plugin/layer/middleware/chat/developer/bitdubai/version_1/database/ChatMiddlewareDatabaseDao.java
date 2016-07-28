@@ -140,7 +140,7 @@ public class ChatMiddlewareDatabaseDao {
             throw new DatabaseOperationException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
-                    new StringBuilder().append("error trying to get Contact from the database with filter: ").append(filter.toString()).toString(),
+                    "error trying to get Contact from the database with filter: " + filter.toString(),
                     null);
         }
     }
@@ -186,7 +186,7 @@ public class ChatMiddlewareDatabaseDao {
             throw new DatabaseOperationException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
-                    new StringBuilder().append("error trying to get Contact from the database with filter: ").append(localPublicKey).toString(),
+                    "error trying to get Contact from the database with filter: " + localPublicKey,
                     null);
         }
     }
@@ -400,7 +400,7 @@ public class ChatMiddlewareDatabaseDao {
             throw new DatabaseOperationException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
-                    new StringBuilder().append("error trying to get Contact from the database with filter: ").append(filter.toString()).toString(),
+                    "error trying to get Contact from the database with filter: " + filter.toString(),
                     null);
         }
     }
@@ -440,7 +440,7 @@ public class ChatMiddlewareDatabaseDao {
             throw new CantGetChatException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     e,
-                    new StringBuilder().append("error trying to get Chat from the database with filter: ").append(chatId.toString()).toString(),
+                    "error trying to get Chat from the database with filter: " + chatId.toString(),
                     null);
         }
     }
@@ -479,7 +479,7 @@ public class ChatMiddlewareDatabaseDao {
             throw new CantGetChatException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     e,
-                    new StringBuilder().append("error trying to get Chat from the database with filter: ").append(publicKey).toString(),
+                    "error trying to get Chat from the database with filter: " + publicKey,
                     null);
         }
     }
@@ -831,7 +831,7 @@ public class ChatMiddlewareDatabaseDao {
             throw new CantGetMessageException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
-                    new StringBuilder().append("error trying to get Message from the database with filter: ").append(chatId.toString()).toString(),
+                    "error trying to get Message from the database with filter: " + chatId.toString(),
                     null);
         }
     }
@@ -873,7 +873,7 @@ public class ChatMiddlewareDatabaseDao {
             throw new DatabaseOperationException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
-                    new StringBuilder().append("error trying to get Message from the database with filter: ").append(chatId.toString()).toString(),
+                    "error trying to get Message from the database with filter: " + chatId.toString(),
                     null);
         }
     }
@@ -925,7 +925,7 @@ public class ChatMiddlewareDatabaseDao {
             throw new CantGetMessageException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
-                    new StringBuilder().append("error trying to get Count Message from the database with filter: ").append(chatId.toString()).toString(),
+                    "error trying to get Count Message from the database with filter: " + chatId.toString(),
                     null);
         }
     }
@@ -963,7 +963,7 @@ public class ChatMiddlewareDatabaseDao {
             throw new DatabaseOperationException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
-                    new StringBuilder().append("error trying to get Message from the database with filter: ").append(messageId.toString()).toString(),
+                    "error trying to get Message from the database with filter: " + messageId.toString(),
                     null);
         }
     }
@@ -976,7 +976,7 @@ public class ChatMiddlewareDatabaseDao {
 
     public void saveMessage(Message message) throws CantSaveMessageException, DatabaseOperationException {
         try {
-            System.out.println(new StringBuilder().append("*** 12345 case 4:send msg in Dao layer").append(new Timestamp(System.currentTimeMillis())).toString());
+            System.out.println("*** 12345 case 4:send msg in Dao layer" + new Timestamp(System.currentTimeMillis()));
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -1089,7 +1089,7 @@ public class ChatMiddlewareDatabaseDao {
         try {
             file = this.pluginFileSystem.getBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CHAT_USER_IDENTITY_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CHAT_USER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -1131,7 +1131,7 @@ public class ChatMiddlewareDatabaseDao {
         try {
             file = this.pluginFileSystem.getBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CONTACT_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CONTACT_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -1173,7 +1173,7 @@ public class ChatMiddlewareDatabaseDao {
         try {
             file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CHAT_USER_IDENTITY_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CHAT_USER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -1215,7 +1215,7 @@ public class ChatMiddlewareDatabaseDao {
         try {
             file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CONTACT_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CONTACT_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -1618,7 +1618,7 @@ public class ChatMiddlewareDatabaseDao {
         }
         recordsSize = records.size();
         if (recordsSize > VALID_RESULTS_NUMBER) {
-            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(VALID_RESULTS_NUMBER).append(", but I got ").append(recordsSize).toString());
+            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
         }
     }
 
@@ -2164,7 +2164,7 @@ public class ChatMiddlewareDatabaseDao {
         if (code.equals(EventType.INCOMING_STATUS.getCode())) {
             return EventType.INCOMING_STATUS;
         }
-        throw new InvalidParameterException(new StringBuilder().append("The code ").append(code).append(" is not valid in EvenType enum").toString());
+        throw new InvalidParameterException("The code " + code + " is not valid in EvenType enum");
     }
 
     /**
@@ -2233,7 +2233,7 @@ public class ChatMiddlewareDatabaseDao {
         } catch (CantLoadTableToMemoryException exception) {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    new StringBuilder().append("Updating parameter ").append(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
+                    "Updating parameter " + ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
         }
     }
 
@@ -2256,7 +2256,7 @@ public class ChatMiddlewareDatabaseDao {
             checkDatabaseRecords(records);
             if (records.isEmpty()) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
-                        new StringBuilder().append("This record ").append(eventRecord).append(" does not exists in database.").toString());
+                        "This record " + eventRecord + " does not exists in database.");
             }
             DatabaseTableRecord record = records.get(0);
             record.setStringValue(
@@ -2282,7 +2282,7 @@ public class ChatMiddlewareDatabaseDao {
                     FermatException.wrapException(exception));
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    new StringBuilder().append("Updating parameter ").append(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
+                    "Updating parameter " + ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
         } catch (Exception e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));

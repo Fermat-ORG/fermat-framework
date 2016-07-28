@@ -65,14 +65,6 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("ChatActorCommunitySelectableIdentityImpl{")
-                .append("publicKey='").append(publicKey)
-                .append('\'')
-                .append(", actorType=").append(actorType)
-                .append(", alias='").append(alias)
-                .append('\'')
-                .append(", image=").append(image != null)
-                .append('}').toString();
+        return "ChatActorCommunitySelectableIdentityImpl{" + "publicKey='" + publicKey + '\'' + ", actorType=" + actorType + ", alias='" + alias + '\'' + ", image=" + (image != null) + '}';
     }
 }

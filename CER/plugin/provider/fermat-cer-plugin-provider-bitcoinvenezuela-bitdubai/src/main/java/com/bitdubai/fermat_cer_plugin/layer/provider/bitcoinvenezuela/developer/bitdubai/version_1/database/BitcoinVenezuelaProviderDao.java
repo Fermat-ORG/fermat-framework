@@ -64,14 +64,14 @@ public class BitcoinVenezuelaProviderDao {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeBitcoinVenezuelaProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, new StringBuilder().append("Database Name: ").append(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).toString(), "");
+                throw new CantInitializeBitcoinVenezuelaProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, "");
             }
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeBitcoinVenezuelaProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, new StringBuilder().append("Database Name: ").append(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).toString(), "");
+            throw new CantInitializeBitcoinVenezuelaProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, "");
         } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantInitializeBitcoinVenezuelaProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), new StringBuilder().append("Database Name: ").append(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).toString(), "");
+            throw new CantInitializeBitcoinVenezuelaProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, "");
         }
     }
 
@@ -142,7 +142,7 @@ public class BitcoinVenezuelaProviderDao {
                 exchangeRateTimestampsInDatabase.add(timestamp);
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantSaveExchangeRateException(CantSaveExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get ExchangeRates in database for CurrencyPair: ").append(currencyPair.toString()).toString(), "Couldn't load table to memory");
+            throw new CantSaveExchangeRateException(CantSaveExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get ExchangeRates in database for CurrencyPair: " + currencyPair.toString(), "Couldn't load table to memory");
         }
 
         for (ExchangeRate e : exchangeRates) {
@@ -176,13 +176,13 @@ public class BitcoinVenezuelaProviderDao {
                 DatabaseTableRecord record = records.get(0);
                 return constructExchangeRateFromRecord(record);
             } else {
-                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, null, new StringBuilder().append("Failed to get daily exchange rate for timestamp: ").append(timestamp).toString(), "Exchange Rate not found in database");
+                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, null, "Failed to get daily exchange rate for timestamp: " + timestamp, "Exchange Rate not found in database");
             }
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get daily exchange rate for timestamp: ").append(timestamp).toString(), "Couldn't load table to memory");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rate for timestamp: " + timestamp, "Couldn't load table to memory");
         } catch (CantCreateExchangeRateException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get daily exchange rate for timestamp: ").append(timestamp).toString(), "Couldn't create ExchangeRate object");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rate for timestamp: " + timestamp, "Couldn't create ExchangeRate object");
         }
     }
 
@@ -255,9 +255,9 @@ public class BitcoinVenezuelaProviderDao {
                 exchangeRateList.add(exchangeRate);
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get History for currencyPair: ").append(currencyPair.toString()).toString(), "Couldn't load table to memory");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't load table to memory");
         } catch (CantCreateExchangeRateException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get History for currencyPair: ").append(currencyPair.toString()).toString(), "Couldn't create ExchangeRate object");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't create ExchangeRate object");
         }
 
         return exchangeRateList;
@@ -292,7 +292,7 @@ public class BitcoinVenezuelaProviderDao {
         }
 
         if (records.size() != 1)
-            throw new CantGetProviderInfoException(new StringBuilder().append("Inconsistent number of fetched records (").append(records.size()).append("), should be 1.").toString());
+            throw new CantGetProviderInfoException("Inconsistent number of fetched records (" + records.size() + "), should be 1.");
 
         return records.get(0);
     }
@@ -358,7 +358,7 @@ public class BitcoinVenezuelaProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "BitcoinVenezuela provider plugin", new StringBuilder().append("Invalid From Currency value stored in table").append(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).append(" for id ").append(id).toString());
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "BitcoinVenezuela provider plugin", "Invalid From Currency value stored in table" + BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
         }
 
         Currency toCurrency;
@@ -372,7 +372,7 @@ public class BitcoinVenezuelaProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "BitcoinVenezuela provider plugin", new StringBuilder().append("Invalid To Currency value stored in table").append(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME).append(" for id ").append(id).toString());
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "BitcoinVenezuela provider plugin", "Invalid To Currency value stored in table" + BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
         }
 
         return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);

@@ -220,7 +220,7 @@ public class ChatMiddlewareMonitorAgent implements
                 try {
                     //logManager.log(null,
                     logManager.log(ChatMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()),
-                            new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
+                            "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (Exception e) {
                     chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -333,7 +333,7 @@ public class ChatMiddlewareMonitorAgent implements
                             chat.setRemoteActorPublicKey(groupMember.getActorPublicKey());
                             chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
                             chat.setRemoteActorType(PlatformComponentType.ACTOR_CHAT);
-                            System.out.println(new StringBuilder().append("ChatMetadata to send:\n").append(constructChatMetadata(chat, messages.get(0))).toString());
+                            System.out.println("ChatMetadata to send:\n" + constructChatMetadata(chat, messages.get(0)));
                             try {
                                 chatNetworkServiceManager.sendChatMetadata(
                                         chat.getLocalActorPublicKey(),
@@ -445,7 +445,7 @@ public class ChatMiddlewareMonitorAgent implements
                     chatMiddlewarePluginRoot,
                     pluginFileSystem);
 
-            System.out.println(new StringBuilder().append("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == ").append(chatMetadata.getMessage()).append(" MESSAGE STATUS == ").append(chatMetadata.getMessageStatus()).toString());
+            System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == " + chatMetadata.getMessage() + " MESSAGE STATUS == " + chatMetadata.getMessageStatus());
 
 //                    if (!checkChatMetadata(chatMetadata)) return;
 
@@ -509,7 +509,7 @@ public class ChatMiddlewareMonitorAgent implements
 //                boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
                 boolean isOnline = chatActorNetworkServiceManager.isActorOnline(actionOnline.getPublicKey());
                 actionOnline.setValue(isOnline);
-                System.out.println(new StringBuilder().append("12345 is online ").append(isOnline).toString());
+                System.out.println("12345 is online " + isOnline);
                 if (isOnline) actionOnline.setLastOn(false);
                 if (!isOnline && actionOnline.getLastOn() != true) {
                     DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm");
@@ -668,7 +668,7 @@ public class ChatMiddlewareMonitorAgent implements
 
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
             if (chat != null) {
-                System.out.println(new StringBuilder().append("12345 Saving is writing chat ").append(chat.getChatId()).toString());
+                System.out.println("12345 Saving is writing chat " + chat.getChatId());
                 chat.setIsWriting(true);
                 chatMiddlewareDatabaseDao.saveChat(chat);
                 System.out.println("12345 chat saved");
@@ -764,7 +764,7 @@ public class ChatMiddlewareMonitorAgent implements
         } else {
             //This is a case that in this version I cannot handle
             throw new CantGetPendingTransactionException(
-                    new StringBuilder().append("The Chat Id ").append(chatId).append(" does not exists in database").toString());
+                    "The Chat Id " + chatId + " does not exists in database");
         }
     }
 

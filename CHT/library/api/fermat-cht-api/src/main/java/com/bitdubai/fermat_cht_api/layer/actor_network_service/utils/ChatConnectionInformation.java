@@ -94,18 +94,6 @@ public class ChatConnectionInformation {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("ChatConnectionInformation{")
-                .append("connectionId=").append(connectionId)
-                .append(", senderPublicKey='").append(senderPublicKey)
-                .append('\'')
-                .append(", senderActorType=").append(senderActorType)
-                .append(", senderAlias='").append(senderAlias)
-                .append('\'')
-                .append(", senderImage=").append(Arrays.toString(senderImage))
-                .append(", destinationPublicKey='").append(destinationPublicKey)
-                .append('\'')
-                .append(", sendingTime=").append(sendingTime)
-                .append('}').toString();
+        return "ChatConnectionInformation{" + "connectionId=" + connectionId + ", senderPublicKey='" + senderPublicKey + '\'' + ", senderActorType=" + senderActorType + ", senderAlias='" + senderAlias + '\'' + ", senderImage=" + Arrays.toString(senderImage) + ", destinationPublicKey='" + destinationPublicKey + '\'' + ", sendingTime=" + sendingTime + '}';
     }
 }

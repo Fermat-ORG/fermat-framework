@@ -132,9 +132,9 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
             recordsToDelete.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId());
             PurchaseNegotiationClauseTable.deleteRecord(recordsToDelete);
 
-            System.out.print(new StringBuilder().append("\n**** 28.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n").append("\nClauses Date.").toString());
+            System.out.print("\n**** 28.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n" + "\nClauses Date.");
             for (Clause _clause : negotiation.getClauses()) {
-                System.out.print(new StringBuilder().append("\n - ").append(_clause.getType()).append("").append(_clause.getValue()).append("\n").toString());
+                System.out.print("\n - " + _clause.getType() + "" + _clause.getValue() + "\n");
                 addNewClause(negotiation.getNegotiationId(), _clause);
             }
 
@@ -216,7 +216,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
 
     public boolean closeNegotiation(UUID negotiationId) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         try {
-            System.out.print(new StringBuilder().append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL").append("\n - NEGOTIATION PURCHASE DAO closeNegotiation(").append(negotiationId).append(")\n").toString());
+            System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL" + "\n - NEGOTIATION PURCHASE DAO closeNegotiation(" + negotiationId + ")\n");
             DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME);
             DatabaseTableRecord recordToUpdate = PurchaseNegotiationTable.getEmptyRecord();
             PurchaseNegotiationTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
@@ -801,7 +801,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
             return table.getRecords().size() > 0;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantAddNewClausesException(em.getMessage(), em, "Customer Broker Purchase Negotiation Clause Id Not Exists", new StringBuilder().append("Cant load ").append(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantAddNewClausesException(em.getMessage(), em, "Customer Broker Purchase Negotiation Clause Id Not Exists", "Cant load " + CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantAddNewClausesException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Purchase Negotiation Clause Id Not Exists", "unknown failure.");
         }

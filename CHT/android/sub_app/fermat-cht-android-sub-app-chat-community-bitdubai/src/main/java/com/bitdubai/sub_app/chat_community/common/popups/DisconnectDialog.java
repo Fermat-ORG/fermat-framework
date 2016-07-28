@@ -80,7 +80,7 @@ public class DisconnectDialog
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
         if (chatUserInformation != null) {
-            setDescription(new StringBuilder().append("Do you want to be disconnected from ").append(chatUserInformation.getAlias()).append("?").toString());
+            setDescription("Do you want to be disconnected from " + chatUserInformation.getAlias() + "?");
         }
         mDescription.setText(description != null ? description : "");
         mUsername.setText(username != null ? username : "");

@@ -36,7 +36,7 @@ public class CurrencyPairAndProvider implements Serializable {
 
     @Override
     public String toString() {
-        return new StringBuilder().append(currencyFrom.getCode()).append("/").append(currencyTo.getCode()).append(" - ").append(providerName).toString();
+        return currencyFrom.getCode() + "/" + currencyTo.getCode() + " - " + providerName;
     }
 
     public UUID getProviderId() {

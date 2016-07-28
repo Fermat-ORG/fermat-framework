@@ -50,7 +50,7 @@ public class ObjectChecker {
             ObjectNotSetException {
         int argumentCounter = 0;
         for (Object argument : checkingArguments) {
-            checkArgument(argument, new StringBuilder().append("The argument ").append(argumentCounter).append(" is null").toString());
+            checkArgument(argument, "The argument " + argumentCounter + " is null");
             argumentCounter++;
         }
 
@@ -69,7 +69,7 @@ public class ObjectChecker {
 
         int argumentCounter = 0;
         for (Object argument : checkingArguments) {
-            checkArgument(argument, new StringBuilder().append("The argument ").append(argumentCounter).append(" is null").toString());
+            checkArgument(argument, "The argument " + argumentCounter + " is null");
             argumentCounter++;
         }
 

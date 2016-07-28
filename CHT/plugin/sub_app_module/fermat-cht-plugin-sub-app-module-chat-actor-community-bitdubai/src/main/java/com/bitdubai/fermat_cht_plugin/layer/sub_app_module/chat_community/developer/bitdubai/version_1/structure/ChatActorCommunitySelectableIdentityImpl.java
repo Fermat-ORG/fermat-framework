@@ -119,25 +119,6 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("ChatActorCommunitySelectableIdentityImpl{")
-                .append("publicKey='").append(publicKey)
-                .append('\'')
-                .append(", actorType=").append(actorType)
-                .append(", alias='").append(alias)
-                .append('\'')
-                .append(", image=").append(image != null)
-                .append(", country='").append(country)
-                .append('\'')
-                .append(", state='").append(state)
-                .append('\'')
-                .append(", city='").append(city)
-                .append('\'')
-                .append(", connectionState='").append(connectionState)
-                .append('\'')
-                .append(", accuracy='").append(accuracy)
-                .append('\'')
-                .append(", frequency='").append(frequency != null)
-                .append('}').toString();
+        return "ChatActorCommunitySelectableIdentityImpl{" + "publicKey='" + publicKey + '\'' + ", actorType=" + actorType + ", alias='" + alias + '\'' + ", image=" + (image != null) + ", country='" + country + '\'' + ", state='" + state + '\'' + ", city='" + city + '\'' + ", connectionState='" + connectionState + '\'' + ", accuracy='" + accuracy + '\'' + ", frequency='" + (frequency != null) + '}';
     }
 }

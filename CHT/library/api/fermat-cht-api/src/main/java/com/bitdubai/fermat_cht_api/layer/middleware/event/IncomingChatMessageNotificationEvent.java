@@ -125,20 +125,6 @@ public class IncomingChatMessageNotificationEvent implements FermatEvent {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("IncomingChatMessageNotificationEvent{")
-                .append("eventType=").append(eventType)
-                .append(", eventSource=").append(eventSource)
-                .append(", alertTitle='").append(alertTitle)
-                .append('\'')
-                .append(", textTitle='").append(textTitle)
-                .append('\''
-                ).append(", textBody='").append(textBody)
-                .append('\'')
-                .append(", localPublicKey='").append(localPublicKey)
-                .append('\'')
-                .append(", notificationType='").append(notificationType)
-                .append('\'')
-                .append('}').toString();
+        return "IncomingChatMessageNotificationEvent{" + "eventType=" + eventType + ", eventSource=" + eventSource + ", alertTitle='" + alertTitle + '\'' + ", textTitle='" + textTitle + '\'' + ", textBody='" + textBody + '\'' + ", localPublicKey='" + localPublicKey + '\'' + ", notificationType='" + notificationType + '\'' + '}';
     }
 }

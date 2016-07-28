@@ -51,19 +51,14 @@ public class CustomerBrokerNewPurchaseNegotiationTransaction {
 
             UUID transactionId = UUID.randomUUID();
 
-            System.out.print(new StringBuilder().append("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PURCHASE NEGOTIATION - CUSTOMER BROKER NEW PURCHASE NEGOTIATION TRANSACTION. transactionId: ").append(transactionId).append(" ****\n").toString());
+            System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PURCHASE NEGOTIATION - CUSTOMER BROKER NEW PURCHASE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
 
-            System.out.print(new StringBuilder()
-                            .append("\n\n --- 3.1) Negotiation Mock Date")
-                            .append("\n- NegotiationId = ").append(customerBrokerPurchaseNegotiation.getNegotiationId())
-                            .append("\n- CustomerPublicKey = ").append(customerBrokerPurchaseNegotiation.getCustomerPublicKey())
-                            .append("\n- BrokerPublicKey = ").append(customerBrokerPurchaseNegotiation.getBrokerPublicKey())
-                            .append("\n- Status = ").append(customerBrokerPurchaseNegotiation.getStatus()).toString()
+            System.out.print("\n\n --- 3.1) Negotiation Mock Date" + "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() + "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() + "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getBrokerPublicKey() + "\n- Status = " + customerBrokerPurchaseNegotiation.getStatus()
             );
 
             System.out.print("\n**** 3.2) MOCK MODULE CRYPTO CUSTOMER - PURCHASE NEGOTIATION - CLAUSES NEGOTIATION****\n");
             for (Clause information : customerBrokerPurchaseNegotiation.getClauses()) {
-                System.out.print(new StringBuilder().append("\n**** 3.2.1) - CLAUSES: ****\n").append("\n- ").append(information.getType().getCode()).append(": ").append(information.getValue()).append(" (STATUS: ").append(information.getStatus()).append(")").toString());
+                System.out.print("\n**** 3.2.1) - CLAUSES: ****\n" + "\n- " + information.getType().getCode() + ": " + information.getValue() + " (STATUS: " + information.getStatus() + ")");
             }
 
             //CREATE NEGOTIATION
@@ -71,12 +66,7 @@ public class CustomerBrokerNewPurchaseNegotiationTransaction {
 
             //TEST GET NEGOTIATION
             CustomerBrokerPurchaseNegotiation purchase = this.customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(customerBrokerPurchaseNegotiation.getNegotiationId());
-            System.out.print(new StringBuilder()
-                            .append("\n\n --- 3.3) Negotiation DATABASE Date")
-                            .append("\n- NegotiationId = ").append(purchase.getNegotiationId())
-                            .append("\n- CustomerPublicKey = ").append(purchase.getCustomerPublicKey())
-                            .append("\n- BrokerPublicKey = ").append(purchase.getBrokerPublicKey())
-                            .append("\n- Status = ").append(customerBrokerPurchaseNegotiation.getStatus()).toString()
+            System.out.print("\n\n --- 3.3) Negotiation DATABASE Date" + "\n- NegotiationId = " + purchase.getNegotiationId() + "\n- CustomerPublicKey = " + purchase.getCustomerPublicKey() + "\n- BrokerPublicKey = " + purchase.getBrokerPublicKey() + "\n- Status = " + customerBrokerPurchaseNegotiation.getStatus()
             );
 
             //CREATE NEGOTIATION TRANSATION

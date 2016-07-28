@@ -118,7 +118,7 @@ public abstract class AbstractCryptoAddress {
             );
 
         } catch (InvalidParameterException | CallToGetByCodeOnNONEException e) {
-            throw new CantRegisterCryptoAddressBookException(e, new StringBuilder().append("walletCategory: ").append(installedWallet.getWalletCategory()).append(" - walletPlatformIdentifier: ").append(installedWallet.getWalletPlatformIdentifier()).toString(), "Error trying to get the reference wallet type.");
+            throw new CantRegisterCryptoAddressBookException(e, "walletCategory: " + installedWallet.getWalletCategory() + " - walletPlatformIdentifier: " + installedWallet.getWalletPlatformIdentifier(), "Error trying to get the reference wallet type.");
         } catch (CantRegisterCryptoAddressBookRecordException e) {
             throw new CantRegisterCryptoAddressBookException(e, "", "Error trying to register the crypto address.");
         }

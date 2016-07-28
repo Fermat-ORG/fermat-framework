@@ -96,7 +96,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                 try {
                     contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
 
-                    System.out.println(new StringBuilder().append("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): ").append(contractHash).append("\n").toString());
+                    System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): " + contractHash + "\n");
 
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
@@ -181,11 +181,11 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println(new StringBuilder().append("CUSTOMER_ACK_OFFLINE_MERCHANDISE - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("CUSTOMER_ACK_OFFLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
                     if (remoteBusinessTransaction != Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE)
                         continue;
 
-                    System.out.println(new StringBuilder().append("CUSTOMER_ACK_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("CUSTOMER_ACK_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (customerAckOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
 
@@ -229,11 +229,11 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println(new StringBuilder().append("CUSTOMER_ACK_OFFLINE_MERCHANDISE - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("CUSTOMER_ACK_OFFLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
                     if (remoteBusinessTransaction != Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE)
                         continue;
 
-                    System.out.println(new StringBuilder().append("CUSTOMER_ACK_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("CUSTOMER_ACK_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (customerAckOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
 

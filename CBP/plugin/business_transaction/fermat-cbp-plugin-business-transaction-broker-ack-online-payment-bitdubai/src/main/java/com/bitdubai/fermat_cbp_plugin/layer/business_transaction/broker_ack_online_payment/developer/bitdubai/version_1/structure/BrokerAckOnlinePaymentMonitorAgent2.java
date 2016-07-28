@@ -204,11 +204,11 @@ public class BrokerAckOnlinePaymentMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println(new StringBuilder().append("BROKER_ACK_ONLINE_PAYMENT - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("BROKER_ACK_ONLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
                     if (remoteBusinessTransaction != Plugins.BROKER_ACK_ONLINE_PAYMENT)
                         continue;
 
-                    System.out.println(new StringBuilder().append("BROKER_ACK_ONLINE_PAYMENT - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("BROKER_ACK_ONLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (!dao.isContractHashInDatabase(contractHash)) {
                         CustomerBrokerContractPurchase contractPurchase = contractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
@@ -243,11 +243,11 @@ public class BrokerAckOnlinePaymentMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println(new StringBuilder().append("BROKER_ACK_ONLINE_PAYMENT - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("BROKER_ACK_ONLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
                     if (remoteBusinessTransaction != Plugins.BROKER_ACK_ONLINE_PAYMENT)
                         continue;
 
-                    System.out.println(new StringBuilder().append("BROKER_ACK_ONLINE_PAYMENT - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("BROKER_ACK_ONLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (dao.isContractHashInDatabase(contractHash)) {
                         businessTransactionRecord = dao.getBusinessTransactionRecordByContractHash(contractHash);
@@ -302,7 +302,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
                         long cryptoAmount = getCryptoAmount(amountStr, paymentCurrencyCode);
 
                         dao.persistContractInDatabase(saleContract, cryptoAmount, paymentCurrency);
-                        System.out.println(new StringBuilder().append("BROKER_ACK_ONLINE_PAYMENT [Broker] - NEW_CONTRACT_OPENED - persisted sale contract. cryptoAmount = ").append(cryptoAmount).append(" - paymentCurrency = ").append(paymentCurrency).toString());
+                        System.out.println("BROKER_ACK_ONLINE_PAYMENT [Broker] - NEW_CONTRACT_OPENED - persisted sale contract. cryptoAmount = " + cryptoAmount + " - paymentCurrency = " + paymentCurrency);
                     }
                 } catch (Exception e) {
                     System.out.println("BROKER_ACK_ONLINE_PAYMENT - NEW_CONTRACT_OPENED - EXCEPTION!! Probably this is been executed in the Customer Side");
@@ -366,20 +366,20 @@ public class BrokerAckOnlinePaymentMonitorAgent2
             long incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
             long contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
             if (incomingCryptoAmount != contractCryptoAmount) {
-                throw new IncomingOnlinePaymentException(new StringBuilder().append("The incoming crypto amount received is ").append(incomingCryptoAmount).append("\nThe amount excepted in contract ").append(contractHash).append("\nis ").append(contractCryptoAmount).toString());
+                throw new IncomingOnlinePaymentException("The incoming crypto amount received is " + incomingCryptoAmount + "\nThe amount excepted in contract " + contractHash + "\nis " + contractCryptoAmount);
             }
 
             //TODO probar esto
             CryptoCurrency incomingCryptoCurrency = incomingMoneyEventWrapper.getCryptoCurrency();
             CryptoCurrency contractCryptoCurrency = businessTransactionRecord.getCryptoCurrency();
             if (incomingCryptoCurrency != contractCryptoCurrency) {
-                throw new IncomingOnlinePaymentException(new StringBuilder().append("The incoming crypto currency received is ").append(incomingCryptoCurrency).append("\nThe crypto currency excepted in contract ").append(contractHash).append("\nis ").append(contractCryptoCurrency).toString());
+                throw new IncomingOnlinePaymentException("The incoming crypto currency received is " + incomingCryptoCurrency + "\nThe crypto currency excepted in contract " + contractHash + "\nis " + contractCryptoCurrency);
             }
 
             String receiverActorPublicKey = incomingMoneyEventWrapper.getReceiverPublicKey();
             String expectedActorPublicKey = businessTransactionRecord.getCustomerPublicKey();
             if (!receiverActorPublicKey.equals(expectedActorPublicKey)) {
-                throw new IncomingOnlinePaymentException(new StringBuilder().append("The actor public key that receive the money is ").append(receiverActorPublicKey).append("\nThe broker public key in contract ").append(contractHash).append("\nis ").append(expectedActorPublicKey).toString());
+                throw new IncomingOnlinePaymentException("The actor public key that receive the money is " + receiverActorPublicKey + "\nThe broker public key in contract " + contractHash + "\nis " + expectedActorPublicKey);
             }
 
             businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION);

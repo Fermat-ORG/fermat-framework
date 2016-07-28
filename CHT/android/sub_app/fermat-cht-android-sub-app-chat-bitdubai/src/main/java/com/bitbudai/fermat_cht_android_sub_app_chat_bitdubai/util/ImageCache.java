@@ -69,7 +69,7 @@ public class ImageCache {
 
         // Set up memory cache
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, new StringBuilder().append("Memory cache created (size = ").append(memCacheSize).append(")").toString());
+            Log.d(TAG, "Memory cache created (size = " + memCacheSize + ")");
         }
         mMemoryCache = new LruCache<String, Bitmap>(memCacheSize) {
             /**
@@ -144,7 +144,7 @@ public class ImageCache {
      */
     public static int calculateMemCacheSize(float percent) {
         if (percent < 0.05f || percent > 0.8f) {
-            throw new IllegalArgumentException(new StringBuilder().append("setMemCacheSizePercent - percent must be ").append("between 0.05 and 0.8 (inclusive)").toString());
+            throw new IllegalArgumentException("setMemCacheSizePercent - percent must be " + "between 0.05 and 0.8 (inclusive)");
         }
         return Math.round(percent * Runtime.getRuntime().maxMemory() / 1024);
     }
