@@ -15,6 +15,7 @@ import com.bitdubai.sub_app.crypto_broker_identity.R;
 /**
  * FERMAT-ORG
  * Developed by Lozadaa on 13/05/16.
+ * Edited for CBP by Jinmy Bohorquez 27/06/2016
  */
 public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickListener{
 
@@ -23,11 +24,9 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
      */
     private Button camBtn;
     private Button galleryBtn;
-    private ImageView rotateBtn;
     int BUTTON_TOUCH = 0;
     public int TOUCH_GALLERY = 1;
     public int TOUCH_CAM = 2;
-    public int TOUCH_ROTATE = 3;
     public DialogSelectCamOrPic(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources) {
         super(activity, referenceAppFermatSession, resources);
     }
@@ -38,8 +37,6 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
         super.onCreate(savedInstanceState);
         galleryBtn = (Button) findViewById(R.id.img_gallery);
         camBtn = (Button) findViewById(R.id.img_cam);
-       // rotateBtn = (ImageView) findViewById(R.id.img_rotate);
-      //  rotateBtn.setOnClickListener(this);
         galleryBtn.setOnClickListener(this);
         camBtn.setOnClickListener(this);
         getWindow().setTitle("");
@@ -53,7 +50,7 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_select_cam_or_gallery;
+        return R.layout.dialog_broker_select_cam_or_gallery;
     }
 
     @Override
@@ -76,9 +73,5 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
             setButtonTouch(TOUCH_CAM);
             dismiss();
         }
-     /*   if(i == R.id.img_rotate){
-            setButtonTouch(TOUCH_ROTATE);
-            dismiss();
-        }*/
     }
 }

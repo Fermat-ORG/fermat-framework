@@ -90,7 +90,7 @@
         android:layout_width="188dp"
         android:layout_height="38dp"
         android:layout_alignParentBottom="true"
-        android:background="#09D261"
+        android:background="#ffffff"
         android:drawableStart="@drawable/chort_buttom_accept"
         android:drawableLeft="@drawable/chort_buttom_accept"
         android:textColor="@android:color/white"
@@ -102,7 +102,8 @@
         android:layout_alignEnd="@+id/editTextStatus"
         android:layout_alignRight="@+id/editTextStatus"
         android:layout_alignStart="@+id/editTextStatus"
-        android:layout_alignLeft="@+id/editTextStatus" />
+        android:layout_alignLeft="@+id/editTextStatus"
+        style="?android:attr/borderlessButtonStyle"/>
 
     <Button
         android:id="@+id/btnRotate"
