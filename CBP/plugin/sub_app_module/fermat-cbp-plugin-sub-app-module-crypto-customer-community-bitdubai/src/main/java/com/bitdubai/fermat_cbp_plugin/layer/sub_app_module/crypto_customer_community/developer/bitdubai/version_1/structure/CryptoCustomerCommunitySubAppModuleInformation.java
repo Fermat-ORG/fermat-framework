@@ -28,7 +28,6 @@ public class CryptoCustomerCommunitySubAppModuleInformation implements CryptoCus
     private ProfileStatus profileStatus;
 
 
-
     public CryptoCustomerCommunitySubAppModuleInformation(String publicKey,
                                                           String alias,
                                                           byte[] image,
@@ -82,7 +81,7 @@ public class CryptoCustomerCommunitySubAppModuleInformation implements CryptoCus
         this.connectionState = null;
         this.connectionId = null;
         this.location = exposingData.getLocation();
-        if(exposingData.getProfileStatus() != null)
+        if (exposingData.getProfileStatus() != null)
             this.profileStatus = exposingData.getProfileStatus();
     }
 
@@ -128,15 +127,22 @@ public class CryptoCustomerCommunitySubAppModuleInformation implements CryptoCus
 
     @Override
     public String toString() {
-        return "CryptoCustomerCommunitySubAppModuleInformation{" +
-                "publicKey='" + publicKey + '\'' +
-                ", alias='" + alias + '\'' +
-                ", connectionState='" + connectionState + '\'' +
-                ", connectionId='" + connectionId + '\'' +
-                ", image=" + (image != null) + '\'' +
-                ", country='" + country + '\'' +
-                ", place='" + place +
-                '}';
+        return new StringBuilder()
+                .append("CryptoCustomerCommunitySubAppModuleInformation{")
+                .append("publicKey='").append(publicKey)
+                .append('\'')
+                .append(", alias='").append(alias)
+                .append('\'')
+                .append(", connectionState='").append(connectionState)
+                .append('\'')
+                .append(", connectionId='").append(connectionId)
+                .append('\'')
+                .append(", image=").append(image != null)
+                .append('\'')
+                .append(", country='").append(country)
+                .append('\'')
+                .append(", place='").append(place)
+                .append('}').toString();
     }
 
     @Override
@@ -161,7 +167,8 @@ public class CryptoCustomerCommunitySubAppModuleInformation implements CryptoCus
     public boolean equals(Object obj) {
         if (obj == null) return false;
 
-        if (!CryptoCustomerCommunityInformation.class.isAssignableFrom(obj.getClass())) return false;
+        if (!CryptoCustomerCommunityInformation.class.isAssignableFrom(obj.getClass()))
+            return false;
 
         final CryptoCustomerCommunitySubAppModuleInformation other = (CryptoCustomerCommunitySubAppModuleInformation) obj;
 

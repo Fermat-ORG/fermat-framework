@@ -29,7 +29,7 @@ public class ConstructionTest {
     private TransactionTransmissionNetworkServicePluginRoot transactionTransmissionNetworkServicePluginRoot;
 
     @Test
-    public void ConstructionTest(){
+    public void ConstructionTest() {
         TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent transactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent = new TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent(
                 this.transactionTransmissionNetworkServicePluginRoot,
                 this.wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()

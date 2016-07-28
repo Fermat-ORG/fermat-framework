@@ -224,7 +224,7 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append("[");
-        for (Map.Entry<String,DatabaseRecord> record : values.entrySet()) {
+        for (Map.Entry<String, DatabaseRecord> record : values.entrySet()) {
             buffer.append(" ")
                     .append(record.getValue().toString())
                     .append(",");

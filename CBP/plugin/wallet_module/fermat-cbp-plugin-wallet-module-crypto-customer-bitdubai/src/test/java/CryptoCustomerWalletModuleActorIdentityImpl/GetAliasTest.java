@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetAliasTest {
     @Test
-    public void getAlias(){
+    public void getAlias() {
         CryptoCustomerWalletModuleActorIdentityImpl cryptoCustomerWalletModuleActorIdentity = mock(CryptoCustomerWalletModuleActorIdentityImpl.class);
         when(cryptoCustomerWalletModuleActorIdentity.getAlias()).thenReturn(new String());
         assertThat(cryptoCustomerWalletModuleActorIdentity.getAlias()).isNotNull();

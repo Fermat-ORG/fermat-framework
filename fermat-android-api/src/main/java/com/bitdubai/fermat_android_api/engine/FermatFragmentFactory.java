@@ -13,10 +13,10 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by Matias Furszyfer on 2015.11.21..
  */
-public abstract class FermatFragmentFactory  <S extends FermatSession,R extends ResourceProviderManager,F extends FermatFragmentsEnumType> implements AppFragmentFactory<S,R> {
+public abstract class FermatFragmentFactory<S extends FermatSession, R extends ResourceProviderManager, F extends FermatFragmentsEnumType> implements AppFragmentFactory<S, R> {
 
     @Override
-    public <T extends Fragment & AbstractFermatFragmentInterface,FF extends FermatFragment> T getFragment(String code, S AppsSession, R resourceProviderManager,FF fermatFragmentType) throws FragmentNotFoundException {
+    public <T extends Fragment & AbstractFermatFragmentInterface, FF extends FermatFragment> T getFragment(String code, S AppsSession, R resourceProviderManager, FF fermatFragmentType) throws FragmentNotFoundException {
         F fragments = getFermatFragmentEnumType(code);
         T fermatFragment = getFermatFragment(fragments);
         fermatFragment.setAppSession(AppsSession);

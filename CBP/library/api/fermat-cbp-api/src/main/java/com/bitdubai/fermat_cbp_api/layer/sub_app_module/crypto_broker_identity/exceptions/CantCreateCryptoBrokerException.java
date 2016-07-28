@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantCreateCryptoBrokerException extends FermatException {
 
     private static final String DEFAULT_MESSAGE = "CAN'T CREATE CRYPTO BROKER EXCEPTION";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -19,6 +20,7 @@ public class CantCreateCryptoBrokerException extends FermatException {
     public CantCreateCryptoBrokerException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
     public CantCreateCryptoBrokerException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }

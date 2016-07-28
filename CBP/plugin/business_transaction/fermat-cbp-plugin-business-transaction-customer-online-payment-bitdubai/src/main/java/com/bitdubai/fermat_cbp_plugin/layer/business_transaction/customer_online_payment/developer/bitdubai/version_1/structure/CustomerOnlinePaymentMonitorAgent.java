@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_onlin
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -70,7 +71,6 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -263,7 +263,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                  */
                 try {
 
-                    logManager.log(CustomerOnlinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(CustomerOnlinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
                     doTheMainTask();
                 } catch (CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
                     pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -320,7 +320,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                     //I'll check if the payment was sent in a previous loop
                     contractTransactionStatus = businessTransactionRecord
                             .getContractTransactionStatus();
-                    if(contractTransactionStatus!=ContractTransactionStatus.PENDING_PAYMENT){
+                    if (contractTransactionStatus != ContractTransactionStatus.PENDING_PAYMENT) {
                         /**
                          * If the contractTransactionStatus is different to PENDING_PAYMENT means
                          * that tha payment through the Crypto* Wallet was done.
@@ -481,8 +481,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
          * @param record the Business Transaction record associated with the crypto transaction
          */
         private void raiseIncomingMoneyNotificationEvent(BusinessTransactionRecord record) {
-            System.out.println("SUBMIT_ONLINE_PAYMENT - raiseIncomingMoneyNotificationEvent - record.getCryptoCurrency() = " + record.getCryptoCurrency());
-            System.out.println("SUBMIT_ONLINE_PAYMENT - raiseIncomingMoneyNotificationEvent - record.getCryptoAmount() = " + record.getCryptoAmount());
+            System.out.println(new StringBuilder().append("SUBMIT_ONLINE_PAYMENT - raiseIncomingMoneyNotificationEvent - record.getCryptoCurrency() = ").append(record.getCryptoCurrency()).toString());
+            System.out.println(new StringBuilder().append("SUBMIT_ONLINE_PAYMENT - raiseIncomingMoneyNotificationEvent - record.getCryptoAmount() = ").append(record.getCryptoAmount()).toString());
 
             FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_MONEY_NOTIFICATION);
             IncomingMoneyNotificationEvent event = (IncomingMoneyNotificationEvent) fermatEvent;
@@ -503,7 +503,6 @@ public class CustomerOnlinePaymentMonitorAgent implements
          * check the status of the crypto transaction and update the Business Transaction accordingly
          *
          * @param businessTransactionRecord the business transaction record associated with the crypto transaction
-         *
          * @throws CantUpdateRecordException
          */
         private void checkPendingTransaction(BusinessTransactionRecord businessTransactionRecord) throws CantUpdateRecordException {
@@ -534,7 +533,6 @@ public class CustomerOnlinePaymentMonitorAgent implements
          * Check the pending Business Transaction events and act accordingly
          *
          * @param eventId the event ID
-         *
          * @throws UnexpectedResultReturnedFromDatabaseException
          */
         private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
@@ -638,7 +636,6 @@ public class CustomerOnlinePaymentMonitorAgent implements
          *
          * @param cryptoAmountString the crypto amount in String
          * @param currencyCode       the crypto currency code
-         *
          * @return the crypto amount in satoshi
          */
         private long getCryptoAmount(String cryptoAmountString, String currencyCode) {
@@ -660,7 +657,6 @@ public class CustomerOnlinePaymentMonitorAgent implements
          * Return the reference wallet associated with the crypto currency
          *
          * @param cryptoCurrency the crypto currency
-         *
          * @return the reference wallet or null
          */
         private ReferenceWallet getReferenceWallet(CryptoCurrency cryptoCurrency) {

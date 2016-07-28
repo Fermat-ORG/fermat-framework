@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableCo
 
 /**
  * This class define methods to get and set the properties of the columns in a table in the database.
- *
+ * <p/>
  * *
  */
 public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
@@ -19,7 +19,7 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * DatabaseTableColumn Member Variables.
      */
 
-    String name ="";
+    String name = "";
     DatabaseDataType type;
     int dataTypeSize;
     boolean primaryKey;
@@ -34,19 +34,17 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * @return String column name
      */
     @Override
-    public String getName ()
-    {
+    public String getName() {
         return this.name;
     }
 
     /**
-     *<p>Set the column name
+     * <p>Set the column name
      *
      * @param name column name to set
      */
     @Override
-    public void setName (String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -56,38 +54,38 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * @return DatabaseDataType enum
      */
     @Override
-    public DatabaseDataType getType ()
-    {
+    public DatabaseDataType getType() {
         return this.type;
     }
 
 
     /**
      * <p>Sets the data type of the column
+     *
      * @param type DatabaseDataType enum
      */
     @Override
-    public void setType(DatabaseDataType type)
-    {
+    public void setType(DatabaseDataType type) {
         this.type = type;
     }
 
     /**
-     *<p>Sets the data size of the column
+     * <p>Sets the data size of the column
      *
      * @param dataTypeSize data size column
      */
     @Override
-    public void setDataTypeSize (int dataTypeSize){
+    public void setDataTypeSize(int dataTypeSize) {
         this.dataTypeSize = dataTypeSize;
     }
 
     /**
      * <p>Gets the data size of the column
+     *
      * @return int data size column
      */
     @Override
-    public int getDataTypeSize (){
+    public int getDataTypeSize() {
         return this.dataTypeSize;
     }
 
@@ -97,7 +95,7 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * @param primaryKey boolean if primary key
      */
     @Override
-    public void setPrimaryKey (boolean primaryKey){
+    public void setPrimaryKey(boolean primaryKey) {
         this.primaryKey = primaryKey;
     }
 
@@ -107,7 +105,7 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * @return boolean if primary key
      */
     @Override
-    public boolean getPrimaryKey (){
+    public boolean getPrimaryKey() {
         return primaryKey;
     }
 }

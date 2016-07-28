@@ -69,13 +69,14 @@
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbw_provider_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:textAllCaps="true"
+                android:gravity="center"
                 android:textColor="@color/market_rate_text"
                 android:textSize="@dimen/cbw_market_exchange_rate_text_size"
-                tools:text="Bitcoin Venezuela"/>
+                tools:text="Bitcoin Venezuela"
+                android:autoText="false" />
         </LinearLayout>
 
         <LinearLayout

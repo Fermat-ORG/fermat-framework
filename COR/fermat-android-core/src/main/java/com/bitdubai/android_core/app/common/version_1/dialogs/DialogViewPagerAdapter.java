@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by mati on 2016.04.05..
  */
-public class DialogViewPagerAdapter extends AbstractViewPagerAdapter<WelcomeDialogItem,DialogViewPagerHolder> {
+public class DialogViewPagerAdapter extends AbstractViewPagerAdapter<WelcomeDialogItem, DialogViewPagerHolder> {
 
 
     public DialogViewPagerAdapter(Context context, List<WelcomeDialogItem> lstItems) {
@@ -24,8 +24,8 @@ public class DialogViewPagerAdapter extends AbstractViewPagerAdapter<WelcomeDial
     }
 
     @Override
-    protected DialogViewPagerHolder createHolder(View item_view, int position,int itemType) {
-        return new DialogViewPagerHolder(item_view,itemType);
+    protected DialogViewPagerHolder createHolder(View item_view, int position, int itemType) {
+        return new DialogViewPagerHolder(item_view, itemType);
     }
 
     @Override

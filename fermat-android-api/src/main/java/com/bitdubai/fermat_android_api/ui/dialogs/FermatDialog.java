@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by Matias Furszyfer on 2015.10.18..
  */
-public abstract class FermatDialog <S extends FermatSession,R extends ResourceProviderManager> extends Dialog {
+public abstract class FermatDialog<S extends FermatSession, R extends ResourceProviderManager> extends Dialog {
 
 
     private final Context activity;
@@ -31,20 +31,20 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
 
 
     /**
-     *  Constructor using Session and Resources
+     * Constructor using Session and Resources
      *
      * @param activity
      * @param fermatSession parent class of walletSession and SubAppSession
-     * @param resources parent class of WalletResources and SubAppResources
+     * @param resources     parent class of WalletResources and SubAppResources
      */
-    public FermatDialog(Context activity,S fermatSession,R resources) {
+    public FermatDialog(Context activity, S fermatSession, R resources) {
         super(activity);
         this.activity = activity;
         this.fermatSession = fermatSession;
         this.resources = resources;
     }
 
-    public FermatDialog(Context activity, int themeResId,S fermatSession,R resources) {
+    public FermatDialog(Context activity, int themeResId, S fermatSession, R resources) {
         super(activity, themeResId);
         this.activity = activity;
         this.fermatSession = fermatSession;
@@ -57,9 +57,9 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
         try {
             requestWindowFeature(setWindowFeature());
             setContentView(setLayoutId());
-        }catch (Exception e){
-            getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH,e);
-            Toast.makeText(getOwnerActivity(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            Toast.makeText(getOwnerActivity(), new StringBuilder().append("Oooops! recovering from system error - ").append(e.getMessage()).toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -72,53 +72,52 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
         LocalBroadcastManager.getInstance(getContext())
                 .sendBroadcast(broadcast);
     }
+
     /**
-     *
      * Set the layout content view
+     *
      * @return
      */
     protected abstract int setLayoutId();
 
     /**
      * Window feacture
+     *
      * @return
      */
     protected abstract int setWindowFeature();
 
     /**
-     *
      * @return Session
      */
-    public S getSession(){
+    public S getSession() {
         return fermatSession;
     }
 
     /**
-     *
-     *
      * @return resoruces instance
      */
 
-    public R getResources(){
+    public R getResources() {
         return resources;
     }
 
     /**
-     *
      * @return error manager from session
      */
-    public ErrorManager getErrorManager(){
+    public ErrorManager getErrorManager() {
         return fermatSession != null ? fermatSession.getErrorManager() : null;
     }
 
     protected void changeApp(String fermatAppToConnectPublicKey, Object[] objects) {
         getFermatScreenSwapper().connectWithOtherApp(fermatAppToConnectPublicKey, objects);
     }
-    protected FermatScreenSwapper getFermatScreenSwapper(){
+
+    protected FermatScreenSwapper getFermatScreenSwapper() {
         return (FermatScreenSwapper) activity;
     }
 
-    protected Context getActivity(){
+    protected Context getActivity() {
         return activity;
     }
 

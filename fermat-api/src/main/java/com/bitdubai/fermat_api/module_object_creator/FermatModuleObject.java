@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by mati on 2016.04.18..
  */
-public class FermatModuleObject<O> implements FermatModuleObjectInterface,Serializable{
+public class FermatModuleObject<O> implements FermatModuleObjectInterface, Serializable {
 
     int id;
     String name;
@@ -37,9 +37,11 @@ public class FermatModuleObject<O> implements FermatModuleObjectInterface,Serial
 
     @Override
     public String toString() {
-        return "FermatModuleObject{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return new StringBuilder()
+                .append("FermatModuleObject{")
+                .append("id=").append(id)
+                .append(", name='").append(name)
+                .append('\'')
+                .append('}').toString();
     }
 }

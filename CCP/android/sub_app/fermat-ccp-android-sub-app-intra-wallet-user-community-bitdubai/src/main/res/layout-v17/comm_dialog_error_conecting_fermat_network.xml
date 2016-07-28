@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="16dp"
+        android:background="#21386D"
         android:text="Fermat Network Offline"
         android:textColor="#FFF"
         android:textSize="17sp"

@@ -10,9 +10,10 @@ public interface CustomerAckOfflineMerchandiseManager extends CustomerAckMerchan
 
     /**
      * This method send a payment according the contract elements.
+     *
      * @param contractHash
      * @throws CantAckMerchandiseException
      */
-    void ackMerchandise(String contractHash)throws CantAckMerchandiseException;
+    void ackMerchandise(String contractHash) throws CantAckMerchandiseException;
 
 }

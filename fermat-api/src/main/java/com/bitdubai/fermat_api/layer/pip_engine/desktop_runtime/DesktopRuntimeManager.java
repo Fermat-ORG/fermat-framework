@@ -14,5 +14,5 @@ public interface DesktopRuntimeManager extends RuntimeManager {
 
     DesktopObject getDesktopObject(String desktopObjectType);
 
-    Map<String,DesktopObject> listDesktops();
+    Map<String, DesktopObject> listDesktops();
 }

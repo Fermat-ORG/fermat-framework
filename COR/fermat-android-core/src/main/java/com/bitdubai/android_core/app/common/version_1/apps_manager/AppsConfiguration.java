@@ -25,35 +25,35 @@ public class AppsConfiguration {
     private final String APPS_CONFIGURATION_FILE = "installed_app_configuration.txt";
 
     public AppsConfiguration(FermatAppsManagerService fermatAppsManager) {
-        this.fermatAppsManager = new WeakReference<FermatAppsManagerService>(fermatAppsManager) ;
+        this.fermatAppsManager = new WeakReference<FermatAppsManagerService>(fermatAppsManager);
     }
 
-    public HashMap<String, FermatAppType> readAppsCoreInstalled(){
-        try{
+    public HashMap<String, FermatAppType> readAppsCoreInstalled() {
+        try {
             Context context = FermatApplication.getInstance().getApplicationContext();
             FileInputStream fIn = context.openFileInput(APPS_CONFIGURATION_FILE);
             ObjectInputStream isr = new ObjectInputStream(fIn);
             return (HashMap<String, FermatAppType>) isr.readObject();
-        } catch (FileNotFoundException fileNotFoundException){
+        } catch (FileNotFoundException fileNotFoundException) {
             updateAppsCoreInstalled();
         } catch (IOException ioe) {
             updateAppsCoreInstalled();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             updateAppsCoreInstalled();
         }
         return new HashMap<>();
     }
 
-    public HashMap<String,FermatAppType>  updateAppsCoreInstalled(){
-        HashMap<String,FermatAppType> appsInstalledInDevice = new HashMap<>();
+    public HashMap<String, FermatAppType> updateAppsCoreInstalled() {
+        HashMap<String, FermatAppType> appsInstalledInDevice = new HashMap<>();
         // Aplicaciones instaladas en el dispoanae sitivo separadas por tipo
         for (FermatAppType fermatAppType : FermatAppType.values()) {
             RuntimeManager runtimeManager = fermatAppsManager.get().selectRuntimeManager(fermatAppType);
-            if(runtimeManager != null)
+            if (runtimeManager != null)
                 for (String key : fermatAppsManager.get().selectRuntimeManager(fermatAppType).getListOfAppsPublicKey()) {
-                    appsInstalledInDevice.put(key,fermatAppType);
+                    appsInstalledInDevice.put(key, fermatAppType);
                 }
         }
         Context context = FermatApplication.getInstance().getApplicationContext();
@@ -64,13 +64,11 @@ public class AppsConfiguration {
             osw.writeObject(appsInstalledInDevice);
             osw.flush();
             osw.close();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return appsInstalledInDevice;
     }
-
-
 
 
 }

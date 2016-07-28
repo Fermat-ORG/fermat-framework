@@ -39,25 +39,30 @@ public class getDatabaseTableListTest {
     private String testDataBaseName;
     private CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory
             customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory;
-    public void setUpTestValues(){
+
+    public void setUpTestValues() {
         arrayList.add(developerDatabaseTable);
         arrayList.add(developerDatabaseTable);
         testId = UUID.randomUUID();
         testDataBaseName = CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME;
     }
-    public void setUpGeneralMockitoRules() throws Exception{
+
+    public void setUpGeneralMockitoRules() throws Exception {
         when(mockPluginDatabaseSystem.createDatabase(testId, testDataBaseName)).thenReturn(mockDatabase);
         when(developerObjectFactory.getNewDeveloperDatabaseTable(anyString(), anyList())).thenReturn(developerDatabaseTable);
     }
+
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         setUpTestValues();
         setUpGeneralMockitoRules();
     }
+
     @Test
-    public void getDatabaseTableListTest() throws Exception{
+    public void getDatabaseTableListTest() throws Exception {
         customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory =
-                new CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory(mockPluginDatabaseSystem,testId);
+                new CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory(mockPluginDatabaseSystem, testId);
         assertEquals(arrayList, customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.
-                getDatabaseTableList(developerObjectFactory));    }
+                getDatabaseTableList(developerObjectFactory));
+    }
 }

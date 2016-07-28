@@ -18,7 +18,7 @@ import java.util.Map;
 
 
 /**
- *Created by Yordin Alayn on 22.01.16.
+ * Created by Yordin Alayn on 22.01.16.
  * Based in AmountToBuyViewHolder of Star_negotiation by nelson
  */
 public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnClickListener {
@@ -30,18 +30,18 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     private boolean paymentBuy;
     private View separatorLineUp;
     private View separatorLineDown;
-    NumberFormat numberFormat= DecimalFormat.getInstance();
+    NumberFormat numberFormat = DecimalFormat.getInstance();
 
     public AmountToBuyViewHolder(View itemView) {
         super(itemView);
 
         this.paymentBuy = Boolean.TRUE;
 
-        currencyToBuyTextValue  = (TextView) itemView.findViewById(R.id.ccw_currency_to_buy);
-        buyingText              = (TextView) itemView.findViewById(R.id.ccw_buying_text);
-        buyingValue             = (FermatButton) itemView.findViewById(R.id.ccw_buying_value);
-        separatorLineDown= itemView.findViewById(R.id.ccw_line_down);
-        separatorLineUp= itemView.findViewById(R.id.ccw_line_up);
+        currencyToBuyTextValue = (TextView) itemView.findViewById(R.id.ccw_currency_to_buy);
+        buyingText = (TextView) itemView.findViewById(R.id.ccw_buying_text);
+        buyingValue = (FermatButton) itemView.findViewById(R.id.ccw_buying_value);
+        separatorLineDown = itemView.findViewById(R.id.ccw_line_down);
+        separatorLineUp = itemView.findViewById(R.id.ccw_line_up);
         buyingValue.setOnClickListener(this);
         /*currencyToBuyTextValue = (TextView) itemView.findViewById(R.id.ccw_currency_to_buy);
         youWillPayTextValue = (TextView) itemView.findViewById(R.id.ccw_you_will_pay_text_value);
@@ -67,9 +67,9 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
 
         currencyToBuyTextValue.setText(currencyToBuy.getValue());
         buyingText.setText(buyingTextValue);
-        if(clause.getValue().equals("0.0") || clause.getValue().equals("0")){
+        if (clause.getValue().equals("0.0") || clause.getValue().equals("0")) {
             buyingValue.setText("0.0");
-        }else{
+        } else {
             buyingValue.setText(fixFormat(clause.getValue()));
         }
 
@@ -138,12 +138,12 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     }
 
 
-    private String fixFormat(String value){
+    private String fixFormat(String value) {
 
         try {
-            if(compareLessThan1(value)){
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
             return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
@@ -155,15 +155,14 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     }
 
 
-
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
         try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -172,7 +171,7 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     }
 
 
-    public boolean setPaymentBuy(boolean paymentBuy){
+    public boolean setPaymentBuy(boolean paymentBuy) {
         return this.paymentBuy = paymentBuy;
     }
 }

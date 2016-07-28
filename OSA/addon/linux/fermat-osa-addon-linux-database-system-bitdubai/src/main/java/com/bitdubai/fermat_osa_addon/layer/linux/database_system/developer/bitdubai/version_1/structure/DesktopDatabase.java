@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
@@ -307,7 +306,7 @@ public class DesktopDatabase implements Database, DatabaseFactory {
 
             List<List<String>> indexes = table.listIndexes();
             for (List<String> indexColumns : indexes) {
-                query = " CREATE INDEX IF NOT EXISTS " + table.getTableName()+"_" +StringUtils.join(indexColumns, "_")+ "_idx ON " + table.getTableName() + " (" + StringUtils.join(indexColumns, ",") + ")";
+                query = " CREATE INDEX IF NOT EXISTS " + table.getTableName() + "_" + StringUtils.join(indexColumns, "_") + "_idx ON " + table.getTableName() + " (" + StringUtils.join(indexColumns, ",") + ")";
                 executeQuery(this.query);
             }
 
@@ -366,7 +365,7 @@ public class DesktopDatabase implements Database, DatabaseFactory {
              */
             List<List<String>> indexes = table.listIndexes();
             for (List<String> indexColumns : indexes) {
-                query = " CREATE INDEX IF NOT EXISTS " + table.getTableName()+"_" +StringUtils.join(indexColumns, "_")+ "_idx ON " + table.getTableName() + " (" + StringUtils.join(indexColumns, ",") + ")";
+                query = " CREATE INDEX IF NOT EXISTS " + table.getTableName() + "_" + StringUtils.join(indexColumns, "_") + "_idx ON " + table.getTableName() + " (" + StringUtils.join(indexColumns, ",") + ")";
                 executeQuery(this.query);
             }
 

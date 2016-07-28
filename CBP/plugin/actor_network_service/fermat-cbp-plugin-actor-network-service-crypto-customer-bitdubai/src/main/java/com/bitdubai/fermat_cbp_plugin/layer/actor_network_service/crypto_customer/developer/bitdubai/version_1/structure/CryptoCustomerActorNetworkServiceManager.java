@@ -41,15 +41,15 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
                     cryptoCustomer.getLocation(),
                     Actors.CBP_CRYPTO_CUSTOMER,
                     cryptoCustomer.getImage(),
-                    0,0
+                    0, 0
             );
 
-        } catch (final ActorAlreadyRegisteredException| CantRegisterActorException e) {
+        } catch (final ActorAlreadyRegisteredException | CantRegisterActorException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Problem trying to register an identity component.");
 
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Unhandled Exception.");
@@ -68,7 +68,7 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
                     null,
                     actor.getImage()
             );
-        }catch (Exception e){
+        } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Unhandled Exception.");
@@ -80,16 +80,16 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
 
         try {
 
-            System.out.println("************** im in the network service exposing the identities: quantity:"+cryptoCustomerExposingDataList.size());
+            System.out.println(new StringBuilder().append("************** im in the network service exposing the identities: quantity:").append(cryptoCustomerExposingDataList.size()).toString());
 
             for (final CryptoCustomerExposingData cryptoCustomer : cryptoCustomerExposingDataList)
                 this.exposeIdentity(cryptoCustomer);
 
-        } catch (final CantExposeIdentityException e){
+        } catch (final CantExposeIdentityException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentitiesException(e, null, "Problem trying to expose an identity.");
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentitiesException(e, null, "Unhandled Exception.");

@@ -16,14 +16,12 @@ public interface FermatSession {
     FermatApp getFermatApp();
 
     /**
-     *
      * @param key
      * @param object
      */
     void setData(String key, Object object);
 
     /**
-     *
      * @param key
      * @return
      */
@@ -35,7 +33,6 @@ public interface FermatSession {
     void removeData(String key);
 
     /**
-     *
      * @return
      */
     ErrorManager getErrorManager();

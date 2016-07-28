@@ -178,7 +178,6 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
      * This method publish an updated identity.
      *
      * @param cryptoBrokerIdentityPublicKey the broker identity public key
-     *
      * @throws CantGetDeviceLocationException
      * @throws IdentityNotFoundException
      * @throws CantGetIdentityException
@@ -206,7 +205,6 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
      * This method updates a crypto broker identity
      *
      * @param cryptoBrokerIdentity the broker identity
-     *
      * @throws CantUpdateBrokerIdentityException
      */
     public void updateCryptoBrokerIdentity(CryptoBrokerIdentity cryptoBrokerIdentity)

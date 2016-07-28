@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDaoTest;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -8,7 +9,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,8 +41,9 @@ public class updateEventStatusTest {
     @Mock
     List<DatabaseTableRecord> databaseTableRecordList;
     private UUID testId;
+
     @Before
-    public void setup()throws Exception{
+    public void setup() throws Exception {
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
@@ -59,15 +60,16 @@ public class updateEventStatusTest {
     }
 
     @Test
-    public void updateEventStatusTest()throws Exception{
+    public void updateEventStatusTest() throws Exception {
         when(mockDatabase.getTable(
-               CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME
+                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME
         )).thenReturn(databaseTable);
         customerOnlinePaymentBusinessTransactionDao.updateEventStatus("EventID", EventStatus.PENDING);
-        verify(databaseTable,times(1)).updateRecord(databaseTableRecord);
+        verify(databaseTable, times(1)).updateRecord(databaseTableRecord);
     }
+
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void updateEventStatusTest_Should_Throw_Exception()throws Exception{
+    public void updateEventStatusTest_Should_Throw_Exception() throws Exception {
         customerOnlinePaymentBusinessTransactionDao.updateEventStatus("EventID", EventStatus.PENDING);
     }
 }

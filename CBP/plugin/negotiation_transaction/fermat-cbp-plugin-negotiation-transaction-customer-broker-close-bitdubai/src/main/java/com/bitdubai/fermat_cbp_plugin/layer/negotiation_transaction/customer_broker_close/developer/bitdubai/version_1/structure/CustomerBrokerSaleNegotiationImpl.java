@@ -13,54 +13,60 @@ import java.util.UUID;
  */
 public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNegotiation {
 
-    private final   UUID                negotiationId;
-    private final   String              customerPublicKey;
-    private final   String              brokerPublicKey;
-    private final   long                startDate;
-    private final   long                negotiationExpirationDate;
-    private final   NegotiationStatus   status;
-    private final   boolean             nearExpirationDatetime;
-    private final   Collection          <Clause> clauses;
-    private         long                lastNegotiationUpdateDate;
-    private         String              cancelReason;
-    private         String              memo;
-    private         boolean             dataHasChanged;
+    private final UUID negotiationId;
+    private final String customerPublicKey;
+    private final String brokerPublicKey;
+    private final long startDate;
+    private final long negotiationExpirationDate;
+    private final NegotiationStatus status;
+    private final boolean nearExpirationDatetime;
+    private final Collection<Clause> clauses;
+    private long lastNegotiationUpdateDate;
+    private String cancelReason;
+    private String memo;
+    private boolean dataHasChanged;
 
     public CustomerBrokerSaleNegotiationImpl(
-        UUID                negotiationId,
-        String              customerPublicKey,
-        String              brokerPublicKey,
-        long                startDate,
-        long                negotiationExpirationDate,
-        NegotiationStatus   status,
-        boolean             nearExpirationDatetime,
-        Collection          <Clause> clauses,
-        long                lastNegotiationUpdateDate,
-        String              cancelReason,
-        String              memo
-    ){
+            UUID negotiationId,
+            String customerPublicKey,
+            String brokerPublicKey,
+            long startDate,
+            long negotiationExpirationDate,
+            NegotiationStatus status,
+            boolean nearExpirationDatetime,
+            Collection<Clause> clauses,
+            long lastNegotiationUpdateDate,
+            String cancelReason,
+            String memo
+    ) {
 
-        this.negotiationId              = negotiationId;
-        this.customerPublicKey          = customerPublicKey;
-        this.brokerPublicKey            = brokerPublicKey;
-        this.startDate                  = startDate;
-        this.negotiationExpirationDate  = negotiationExpirationDate;
-        this.status                     = status;
-        this.nearExpirationDatetime     = nearExpirationDatetime;
-        this.clauses                    = clauses;
-        this.lastNegotiationUpdateDate  = lastNegotiationUpdateDate;
-        this.cancelReason               = cancelReason;
-        this.memo                       = memo;
+        this.negotiationId = negotiationId;
+        this.customerPublicKey = customerPublicKey;
+        this.brokerPublicKey = brokerPublicKey;
+        this.startDate = startDate;
+        this.negotiationExpirationDate = negotiationExpirationDate;
+        this.status = status;
+        this.nearExpirationDatetime = nearExpirationDatetime;
+        this.clauses = clauses;
+        this.lastNegotiationUpdateDate = lastNegotiationUpdateDate;
+        this.cancelReason = cancelReason;
+        this.memo = memo;
     }
 
     @Override
-    public String getCustomerPublicKey() { return this.customerPublicKey; }
+    public String getCustomerPublicKey() {
+        return this.customerPublicKey;
+    }
 
     @Override
-    public String getBrokerPublicKey() { return this.brokerPublicKey; }
+    public String getBrokerPublicKey() {
+        return this.brokerPublicKey;
+    }
 
     @Override
-    public UUID getNegotiationId() { return this.negotiationId; }
+    public UUID getNegotiationId() {
+        return this.negotiationId;
+    }
 
     @Override
     public Long getStartDate() {
@@ -73,7 +79,9 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
     }
 
     @Override
-    public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate) { this.lastNegotiationUpdateDate = lastNegotiationUpdateDate; }
+    public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate) {
+        this.lastNegotiationUpdateDate = lastNegotiationUpdateDate;
+    }
 
     @Override
     public Long getNegotiationExpirationDate() {
@@ -86,7 +94,9 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
     }
 
     @Override
-    public Boolean getNearExpirationDatetime() { return null; }
+    public Boolean getNearExpirationDatetime() {
+        return null;
+    }
 
     @Override
     public Collection<Clause> getClauses() {
@@ -117,7 +127,10 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
         return dataHasChanged;
     }
 
-    public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo, NegotiationStatus status){}
+    public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo, NegotiationStatus status) {
+    }
 
-    public String toString(){ return "";}
+    public String toString() {
+        return "";
+    }
 }

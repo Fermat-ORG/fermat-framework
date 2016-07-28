@@ -15,9 +15,9 @@ public enum Compatibility implements FermatEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    COMPATIBLE  ("COMP"),
+    COMPATIBLE("COMP"),
     INCOMPATIBLE("INCO"),
-    NONE        ("NONE");
+    NONE("NONE");
 
     private final String code;
 
@@ -29,12 +29,12 @@ public enum Compatibility implements FermatEnum {
         for (Compatibility vault : Compatibility.values()) {
             if (vault.getCode().equals(code))
                 return vault;
-            }
-        throw new InvalidParameterException(
-                "Code Received: " + code,
-                "This code is not valid for the Compatibility enum."
-            );
         }
+        throw new InvalidParameterException(
+                new StringBuilder().append("Code Received: ").append(code).toString(),
+                "This code is not valid for the Compatibility enum."
+        );
+    }
 
     @Override
     public String getCode() {

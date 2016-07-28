@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
  * The Class <code>CryptoBrokerWalletDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Yordin Alayn - (y.alayn@gmail.com) on 30/10/15.
  * Modified by Franklin 01.12.2015
  *

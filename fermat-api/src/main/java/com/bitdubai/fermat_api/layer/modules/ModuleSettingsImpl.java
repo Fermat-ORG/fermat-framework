@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
  */
 public interface ModuleSettingsImpl<Z extends FermatSettings> {
 
-    void persistSettings(String publicKey,final Z settings) throws CantPersistSettingsException;
+    void persistSettings(String publicKey, final Z settings) throws CantPersistSettingsException;
+
     Z loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException;
 }

@@ -27,43 +27,44 @@ public class DeviceNetwork implements Network {
      */
 
     /**
-     *<p> This method gets the network connection type.
+     * <p> This method gets the network connection type.
      *
      * @return ConnectionType enum
      */
     @Override
-    public ConnectionType getType(){
+    public ConnectionType getType() {
         return this.type;
     }
 
     /**
-     *<p> This method gets if the device is connected to the network.
+     * <p> This method gets if the device is connected to the network.
      *
      * @return boolean if connected
      */
     @Override
-    public boolean getIsConnected(){
+    public boolean getIsConnected() {
         return this.isconnected;
     }
 
     /**
      * <p> This method sets the network connection type.
+     *
      * @param type ConnectionType enum
      */
     @Override
-    public void setType(ConnectionType type){
+    public void setType(ConnectionType type) {
 
         this.type = type;
     }
 
 
     /**
-     *<p> This method sets if the device is connected to the network.
+     * <p> This method sets if the device is connected to the network.
      *
      * @param connected boolean if connected
      */
     @Override
-    public void setIsConnected(boolean connected){
+    public void setIsConnected(boolean connected) {
         this.isconnected = connected;
     }
 }

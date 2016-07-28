@@ -30,7 +30,7 @@ public class CantInitializeDatabaseException extends CBPException {
      * @param possibleReason
      */
     public CantInitializeDatabaseException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

@@ -39,7 +39,7 @@ import java.util.List;
  * Modified by abicelis on 06/04/16
  */
 
-public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener{
+public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     //Constants
     public static final int BANK_DIALOG = 1;
@@ -49,7 +49,6 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
     private static int MAX_LENGHT_BANK_NAME = 15;
     private static int MAX_LENGHT_BANK_ALIAS = 10;
     private static int MAX_LENGHT_BANK_ACCOUNT = 25;
-
 
 
     //Managers
@@ -71,25 +70,43 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
     FiatCurrency selectedBankAccountCurrency, selectedCashCurrency;
     BankAccountNumber createdBankAccount;
 
-    List<String> fiatCurrenciesFriendly =  new ArrayList<>();
-    List<String> fiatCurrencies =  new ArrayList<>();
-    List<String> bankAccountTypesFriendly =  new ArrayList<>();
-    List<String> bankAccountTypes =  new ArrayList<>();
+    List<String> fiatCurrenciesFriendly = new ArrayList<>();
+    List<String> fiatCurrencies = new ArrayList<>();
+    List<String> bankAccountTypesFriendly = new ArrayList<>();
+    List<String> bankAccountTypes = new ArrayList<>();
 
     private final TextWatcher bankNameTextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
     private final TextWatcher accountNumberTextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
     private final TextWatcher accountAliasTextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
 
     public InputDialogCBP(Activity activity, ReferenceAppFermatSession referenceAppFermatSession, SubAppResourcesProviderManager resources, CryptoBrokerWalletModuleManager WalletManager, int dialogType) {
@@ -114,13 +131,11 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
         //Get fermat FiatCurrencies
         for (FiatCurrency f : FiatCurrency.values()) {
             fiatCurrencies.add(f.getCode());
-            fiatCurrenciesFriendly.add(f.getFriendlyName() + " (" + f.getCode() + ")");
+            fiatCurrenciesFriendly.add(new StringBuilder().append(f.getFriendlyName()).append(" (").append(f.getCode()).append(")").toString());
         }
 
 
-
-
-        if(dialogType == BANK_DIALOG) {
+        if (dialogType == BANK_DIALOG) {
 
             //Set up Views
             bankAccountTypeSpinner = (Spinner) findViewById(R.id.cbp_bank_account_type);
@@ -159,7 +174,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
             }
 
             //Set up bankAccountType Spinner
-            ArrayAdapter<String> bankAccountTypeAdapter = new ArrayAdapter<>(getActivity(),R.layout.cbw_simple_spinner_item, bankAccountTypesFriendly);
+            ArrayAdapter<String> bankAccountTypeAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_simple_spinner_item, bankAccountTypesFriendly);
             bankAccountTypeAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_item);
             bankAccountTypeAdapter.notifyDataSetChanged();
             bankAccountTypeSpinner.setAdapter(bankAccountTypeAdapter);
@@ -196,9 +211,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
             });
 
 
-        }
-
-        else if (dialogType == CASH_DIALOG) {
+        } else if (dialogType == CASH_DIALOG) {
 
             //Set up Views
             cashCurrencySpinner = (Spinner) findViewById(R.id.idcbp_cash_currency);
@@ -214,7 +227,8 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     try {
                         selectedCashCurrency = FiatCurrency.getByCode(fiatCurrencies.get(position));
-                    } catch (InvalidParameterException e) {}
+                    } catch (InvalidParameterException e) {
+                    }
                 }
 
                 @Override
@@ -225,15 +239,17 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
     }
 
 
-    public BankAccountNumber getCreatedBankAccount(){ return createdBankAccount; }
+    public BankAccountNumber getCreatedBankAccount() {
+        return createdBankAccount;
+    }
 
 
     protected int setLayoutId() {
-        if(dialogType == BANK_DIALOG)
+        if (dialogType == BANK_DIALOG)
             return R.layout.inputdialogcbp_bank;
         else
             return R.layout.inputdialogcbp_cash;
-            //return R.layout.hello;
+        //return R.layout.hello;
     }
 
 
@@ -262,8 +278,8 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
                 createdBankAccount = walletManager.newEmptyBankAccountNumber(selectedBankAccountBankName, selectedBankAccountType, selectedBankAccountAlias, selectedBankAccountNumber, selectedBankAccountCurrency);
                 walletManager.addNewAccount(createdBankAccount, WalletsPublicKeys.BNK_BANKING_WALLET.getCode());
                 dismiss();
-            }catch(Exception e){
-                Log.e(TAG,"Error on:"+ e +" ------------VALORES DE VARIABLES----------->" + selectedBankAccountBankName +"->"+ selectedBankAccountType +"->"+ selectedBankAccountAlias +"->"+ selectedBankAccountNumber +"->"+ selectedBankAccountCurrency);
+            } catch (Exception e) {
+                Log.e(TAG, new StringBuilder().append("Error on: ").append(e).append(" ------------VALORES DE VARIABLES----------->").append(selectedBankAccountBankName).append("->").append(selectedBankAccountType).append("->").append(selectedBankAccountAlias).append("->").append(selectedBankAccountNumber).append("->").append(selectedBankAccountCurrency).toString());
             }
         }
         if (id == R.id.idcbp_button_action_cash) {
@@ -271,7 +287,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
                 walletManager.createCashMoneyWallet(WalletsPublicKeys.CSH_MONEY_WALLET.getCode(), selectedCashCurrency);
                 dismiss();
             } catch (Exception e) {
-                Log.e(TAG, "Error on:" + e + " ------------VALORES DE VARIABLES----------->" + selectedCashCurrency);
+                Log.e(TAG, new StringBuilder().append("Error on: ").append(e).append(" ------------VALORES DE VARIABLES----------->").append(selectedCashCurrency).toString());
             }
         }
 

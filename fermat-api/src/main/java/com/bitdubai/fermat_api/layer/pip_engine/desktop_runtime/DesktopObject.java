@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.09.16..
  */
-public interface DesktopObject extends FermatStructure{
+public interface DesktopObject extends FermatStructure {
 
 
     /**
@@ -21,7 +21,7 @@ public interface DesktopObject extends FermatStructure{
     public String getType();
 
     /**
-     *  screens for desktop
+     * screens for desktop
      *
      * @return
      */
@@ -29,7 +29,7 @@ public interface DesktopObject extends FermatStructure{
     public Map<Activities, Activity> getActivities();
 
     /**
-     *  get specific screen
+     * get specific screen
      *
      * @param activities
      * @return
@@ -47,11 +47,11 @@ public interface DesktopObject extends FermatStructure{
 
 
     /**
-     *  set languajes
+     * set languajes
      *
      * @return
      */
 
-    public Map<String,LanguagePackage> getLanguagePackages();
+    public Map<String, LanguagePackage> getLanguagePackages();
 
 }

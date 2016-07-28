@@ -10,8 +10,8 @@ import java.io.Serializable;
  */
 public class Badge extends FermatDrawable implements Serializable {
 
-    public enum Position{
-        TOP_RIGHT,RIGHT,LEFT,TOP_LEFT,CENTER
+    public enum Position {
+        TOP_RIGHT, RIGHT, LEFT, TOP_LEFT, CENTER
     }
 
     private int size;

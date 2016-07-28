@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetIdTest {
 
     @Test
-    public void getId(){
+    public void getId() {
         CryptoBrokerWalletSettingSpreadImpl cryptoBrokerWalletSettingSpread = mock(CryptoBrokerWalletSettingSpreadImpl.class);
         when(cryptoBrokerWalletSettingSpread.getId()).thenReturn(UUID.randomUUID());
         assertThat(cryptoBrokerWalletSettingSpread.getId()).isNotNull();

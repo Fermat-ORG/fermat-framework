@@ -12,11 +12,11 @@ import java.util.List;
 
 public class AdapterPlatformsSupported {
 
-    public static String getPlatformsSupported(List<Platforms> platforms){
+    public static String getPlatformsSupported(List<Platforms> platforms) {
         String result = "";
 
-        for(Platforms p : platforms){
-            result += p.getCode()+":";
+        for (Platforms p : platforms) {
+            result += new StringBuilder().append(p.getCode()).append(":").toString();
         }
 
         return result;
@@ -28,7 +28,7 @@ public class AdapterPlatformsSupported {
 
         String[] plats = platforms.split(":");
 
-        for(int i=0; i<plats.length; i++){
+        for (int i = 0; i < plats.length; i++) {
 
             result.add(Platforms.getByCode(plats[i]));
 

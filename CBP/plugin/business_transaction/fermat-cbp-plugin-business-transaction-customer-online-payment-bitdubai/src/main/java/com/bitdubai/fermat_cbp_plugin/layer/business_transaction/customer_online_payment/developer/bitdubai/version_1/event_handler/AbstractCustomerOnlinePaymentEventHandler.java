@@ -13,7 +13,7 @@ public abstract class AbstractCustomerOnlinePaymentEventHandler implements Ferma
     public void setCustomerOnlinePaymentRecorderService(
             CustomerOnlinePaymentRecorderService customerOnlinePaymentRecorderService) throws
             CantSetObjectException {
-        if(customerOnlinePaymentRecorderService ==null){
+        if (customerOnlinePaymentRecorderService == null) {
             throw new CantSetObjectException("customerOnlinePaymentRecorderService is null");
         }
         this.customerOnlinePaymentRecorderService = customerOnlinePaymentRecorderService;

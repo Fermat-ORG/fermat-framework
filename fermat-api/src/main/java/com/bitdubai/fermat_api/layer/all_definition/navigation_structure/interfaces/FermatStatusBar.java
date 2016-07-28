@@ -8,7 +8,7 @@ import java.io.Serializable;
 public interface FermatStatusBar extends Serializable {
     String getColor();
 
-    boolean isVisible() ;
+    boolean isVisible();
 
     void setColor(String color);
 

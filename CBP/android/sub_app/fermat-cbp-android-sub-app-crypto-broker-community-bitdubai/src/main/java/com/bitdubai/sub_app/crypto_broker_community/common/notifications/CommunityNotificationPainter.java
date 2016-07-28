@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 
 /**
  * This class contains the basic functionality of the crypto broker community notification painter.
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 29/02/2016.
  *
  * @author lnacosta
@@ -17,17 +17,17 @@ public class CommunityNotificationPainter extends NotificationPainter {
     private String title;
     private String textBody;
     private String image;
-    private int    icon;
+    private int icon;
 
     public CommunityNotificationPainter(final String title,
                                         final String textBody,
                                         final String image,
-                                        final int icon){
+                                        final int icon) {
 
-        this.title    = title   ;
+        this.title = title;
         this.textBody = textBody;
-        this.image    = image   ;
-        this.icon     = icon    ;
+        this.image = image;
+        this.icon = icon;
 
     }
 

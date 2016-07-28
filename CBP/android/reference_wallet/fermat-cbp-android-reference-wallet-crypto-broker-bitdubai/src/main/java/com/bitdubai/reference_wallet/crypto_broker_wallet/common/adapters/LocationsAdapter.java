@@ -3,7 +3,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters;
 import android.content.Context;
 import android.view.View;
 
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.LocationViewHolder;
 

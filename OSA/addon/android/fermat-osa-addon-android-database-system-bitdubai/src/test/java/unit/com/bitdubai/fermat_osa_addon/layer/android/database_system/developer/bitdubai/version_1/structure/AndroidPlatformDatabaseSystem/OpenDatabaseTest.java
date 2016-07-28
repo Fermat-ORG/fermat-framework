@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidPlatformDatabaseSystem;
-import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidPluginDatabaseSystem;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +12,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-
-import java.util.UUID;
 
 import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
@@ -38,21 +34,21 @@ public class OpenDatabaseTest {
 
 
     @Before
-    public void setUpContext(){
+    public void setUpContext() {
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = shadowOf(mockActivity).getApplicationContext();
 
     }
 
     @Test
-    public void openDatabase_DatabaseInPath_InvokedSuccesfully() throws Exception{
+    public void openDatabase_DatabaseInPath_InvokedSuccesfully() throws Exception {
         testDatabase.createDatabase(testDatabaseName);
         catchException(testDatabase).openDatabase(testDatabaseName);
         assertThat(caughtException()).isNull();
     }
 
     @Test
-    public void openDatabase_DatabaseInAlreadyOpen_InvokedSuccesfully() throws Exception{
+    public void openDatabase_DatabaseInAlreadyOpen_InvokedSuccesfully() throws Exception {
         testDatabase.createDatabase(testDatabaseName);
 
         catchException(testDatabase).openDatabase(testDatabaseName);
@@ -60,14 +56,14 @@ public class OpenDatabaseTest {
     }
 
     @Test
-    public void openDatabase_NoDatabaseInPath_ThrowException() throws Exception{
+    public void openDatabase_NoDatabaseInPath_ThrowException() throws Exception {
         catchException(testDatabase).openDatabase(testDatabaseName);
         assertThat(caughtException()).isInstanceOf(CantOpenDatabaseException.class);
 
     }
 
     @Test
-    public void openDatabase_DatabaseInPath_InvokedSuccesfully1() throws Exception{
+    public void openDatabase_DatabaseInPath_InvokedSuccesfully1() throws Exception {
         testDatabase.createDatabase(testDatabaseName);
         catchException(testDatabase).openDatabase(testDatabaseName);
         assertThat(caughtException()).isNull();

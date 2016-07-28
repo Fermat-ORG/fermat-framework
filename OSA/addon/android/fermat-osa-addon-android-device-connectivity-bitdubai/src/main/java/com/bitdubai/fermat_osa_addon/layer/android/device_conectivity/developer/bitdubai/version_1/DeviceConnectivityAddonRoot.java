@@ -11,13 +11,13 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.ConnectionType;
+import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
+import com.bitdubai.fermat_api.layer.osa_android.DeviceNetwork;
+import com.bitdubai.fermat_api.layer.osa_android.Network;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetActiveConnectionException;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetConnectionsException;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetIsConnectedException;
-import com.bitdubai.fermat_api.layer.osa_android.ConnectionType;
-import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
-import com.bitdubai.fermat_api.layer.osa_android.Network;
-import com.bitdubai.fermat_api.layer.osa_android.DeviceNetwork;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure.NetworkStateReceiver;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.UUID;
 /**
  * This addon handles a layer of Device Connectivity representation.
  * Encapsulates all the necessary functions for recovering the network to which the device is connected.
- *
+ * <p/>
  * * * *
  */
 
@@ -54,7 +54,7 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
     }
 
 
-	/**
+    /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
@@ -66,13 +66,13 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
      */
 
     /**
-     *<p> This method set the context object
+     * <p> This method set the context object
      *
      * @param context Android Context object
      */
 //    @Override
-    public void setContext (Object context){
-        this.context = (Context)context;
+    public void setContext(Object context) {
+        this.context = (Context) context;
     }
 
     @Override
@@ -111,12 +111,9 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
 
         conecctions = new ArrayList<Network>();
 
-        for (NetworkInfo n : netinfo)
-        {
+        for (NetworkInfo n : netinfo) {
 
 
-
-            
 //            switch( n.getType()) {
 //
 //                case android.net.ConnectivityManager.TYPE_MOBILE_DUN://4
@@ -176,7 +173,7 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
 
 
     /**
-     *<p>Return the network who is connected in the phone
+     * <p>Return the network who is connected in the phone
      *
      * @return Network objects
      * @throws CantGetActiveConnectionException
@@ -188,10 +185,10 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
 
         boolean isConnected = netinfo.isConnected();
         ConnectionType connectionType = null;
-        switch(netinfo.getType()) {
+        switch (netinfo.getType()) {
 
             case android.net.ConnectivityManager.TYPE_MOBILE_DUN:
-                connectionType = ConnectionType.MOBILE_DUN ;
+                connectionType = ConnectionType.MOBILE_DUN;
 
                 break;
             case android.net.ConnectivityManager.TYPE_MOBILE_HIPRI:
@@ -226,15 +223,15 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
 
                 break;
             default:
-            	break;
+                break;
         }
 
-        return new DeviceNetwork(connectionType,isConnected);
+        return new DeviceNetwork(connectionType, isConnected);
     }
 
 
     /**
-     *<p>Returns whether the device is connected to a network.
+     * <p>Returns whether the device is connected to a network.
      *
      * @param redType ConnectionType enum object
      * @return boolean if connected
@@ -243,8 +240,8 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
 //    @Override
     public boolean isConnected(ConnectionType redType) throws Exception {
         android.net.ConnectivityManager connection = (android.net.ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        int networkType =1;
-        switch(redType) {
+        int networkType = 1;
+        switch (redType) {
 
             case WI_FI:
                 networkType = 1;
@@ -268,10 +265,10 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
                 networkType = 5;
                 break;
             case MOBILE_SUPL:
-                networkType =3;
+                networkType = 3;
                 break;
             case MOBILE_MMS:
-                networkType =2;
+                networkType = 2;
                 break;
         }
 
@@ -287,10 +284,10 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-	/**
+    /**
      * Service Interface implementation.
      */
-    public void start()  throws CantStartPluginException {
+    public void start() throws CantStartPluginException {
         /**
          * I will start the Monitor Agent.
          */
@@ -318,7 +315,7 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
 
         this.receivers = new ArrayList<>();
         this.serviceStatus = ServiceStatus.STARTED;
-        context.registerReceiver(networkState,new IntentFilter(
+        context.registerReceiver(networkState, new IntentFilter(
                 android.net.ConnectivityManager.CONNECTIVITY_ACTION));
 
 

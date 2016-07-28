@@ -27,14 +27,12 @@ public interface EarningsSettings {
      * Automatically will be generated an UUID to the earnings pair, with it, we can identify the same.
      * It will be in state ASSOCIATED directly.
      *
-     * @param earningCurrency   the currency which we decided to extract the earnings.
-     * @param linkedCurrency    the currency that we're linking to the previous selected currency to conform the pair.
-     * @param walletReference   the information of the wallet that we're associating and where we will deposit the earnings.
-     *
+     * @param earningCurrency the currency which we decided to extract the earnings.
+     * @param linkedCurrency  the currency that we're linking to the previous selected currency to conform the pair.
+     * @param walletReference the information of the wallet that we're associating and where we will deposit the earnings.
      * @return an instance of the well formed associated EarningPair-
-     *
-     * @throws CantAssociatePairException      if something goes wrong.
-     * @throws PairAlreadyAssociatedException  if the pair is already associated.
+     * @throws CantAssociatePairException     if something goes wrong.
+     * @throws PairAlreadyAssociatedException if the pair is already associated.
      */
     EarningsPair registerPair(
 
@@ -42,29 +40,27 @@ public interface EarningsSettings {
             Currency linkedCurrency,
             WalletReference walletReference
 
-    ) throws CantAssociatePairException    ,
-             PairAlreadyAssociatedException;
+    ) throws CantAssociatePairException,
+            PairAlreadyAssociatedException;
 
     /**
      * Through the method <code>associateEarningsPair</code> you can associate an earnings pair from the wallet in which we're working.
      *
      * @param earningsPairID an UUID identifying the pair.
-     *
-     * @throws CantAssociatePairException    if something goes wrong.
-     * @throws PairNotFoundException         if the id cannot be found in database.
+     * @throws CantAssociatePairException if something goes wrong.
+     * @throws PairNotFoundException      if the id cannot be found in database.
      */
     void associateEarningsPair(
 
             UUID earningsPairID
 
     ) throws CantAssociatePairException,
-             PairNotFoundException     ;
+            PairNotFoundException;
 
     /**
      * Through the method <code>disassociateEarningsPair</code> you can disassociate an earnings pair from the wallet in which we're working.
      *
      * @param earningsPairID an UUID identifying the pair.
-     *
      * @throws CantDisassociatePairException if something goes wrong.
      * @throws PairNotFoundException         if the id cannot be found in database.
      */
@@ -73,30 +69,28 @@ public interface EarningsSettings {
             UUID earningsPairID
 
     ) throws CantDisassociatePairException,
-             PairNotFoundException        ;
+            PairNotFoundException;
 
     /**
      * Through the method <code>updateEarningsPair</code> you can update an earnings pair from the wallet in which we're working.
      *
-     * @param earningsPairID    an UUID identifying the pair.
-     * @param walletReference   the information of the wallet that we're associating and where we will deposit the earnings.
-     *
-     * @throws CantUpdatePairException    if something goes wrong.
-     * @throws PairNotFoundException      if the id cannot be found in database.
+     * @param earningsPairID  an UUID identifying the pair.
+     * @param walletReference the information of the wallet that we're associating and where we will deposit the earnings.
+     * @throws CantUpdatePairException if something goes wrong.
+     * @throws PairNotFoundException   if the id cannot be found in database.
      */
     void updateEarningsPair(
 
-            UUID            earningsPairID,
+            UUID earningsPairID,
             WalletReference walletReference
 
     ) throws CantUpdatePairException,
-             PairNotFoundException  ;
+            PairNotFoundException;
 
     /**
      * Through the method <code>disassociateEarningsPair</code> you can list all the earnings pairs associated with the wallet in which we're working.
      *
      * @return a list of earnings pair object with the information of each one.
-     *
      * @throws CantListEarningsPairsException if something goes wrong.
      */
     List<EarningsPair> listEarningPairs(

@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 /**
  * The interface <code>com.bitdubai.fermat_api.layer.all_definition.event.interfaces.FermatEvent</code>
  * represent the basic functionality of a Fermat Event.<p/>
- *
+ * <p/>
  * Created by ciencias.
  * Modified by Leon Acosta - (laion.cj91@gmail.com) on 16/09/2015.
  *
@@ -17,6 +17,7 @@ public interface FermatEvent<T extends FermatEventEnum> {
 
     /**
      * Throw the method <code>getEventType</code> you can get the information of the event type.
+     *
      * @return an instance of a Fermat Enum.
      */
     T getEventType();

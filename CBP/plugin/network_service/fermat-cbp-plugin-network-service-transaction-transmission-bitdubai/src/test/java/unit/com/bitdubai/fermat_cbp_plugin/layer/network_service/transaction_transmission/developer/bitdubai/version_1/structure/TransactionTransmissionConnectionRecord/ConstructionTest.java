@@ -4,7 +4,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
@@ -26,7 +25,7 @@ public class ConstructionTest {
     private String lastConnection;
 
     @Test
-    public void Construction() throws Exception{
+    public void Construction() throws Exception {
         TransactionTransmissionConnectionRecord transactionTransmissionConnectionRecord = new TransactionTransmissionConnectionRecord(
                 this.id,
                 this.actorPublicKey,

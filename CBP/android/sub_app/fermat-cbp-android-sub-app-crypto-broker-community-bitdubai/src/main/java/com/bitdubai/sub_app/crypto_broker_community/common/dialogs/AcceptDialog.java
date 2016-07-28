@@ -84,10 +84,10 @@ public class AcceptDialog
         if (i == R.id.positive_button) {
             // try {
             if (cryptoBrokerCommunityInformation != null && identity != null) {
-             //   Toast.makeText(getContext(), "TODO ACCEPT ->", Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(getContext(), "TODO ACCEPT ->", Toast.LENGTH_SHORT).show();
                 //TODO: cuando se puede recibir una solicitud de conexion por parte de un Broker ejecutar lo que esta comentado para aceptarla
                 //getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(), information.getName(), information.getPublicKey(), information.getProfileImage());
-                Toast.makeText(getContext(), cryptoBrokerCommunityInformation.getAlias() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), new StringBuilder().append(cryptoBrokerCommunityInformation.getAlias()).append(" Accepted connection request").toString(), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
             }

@@ -2,9 +2,9 @@ package com.bitdubai.android_core.app.common.version_1.settings_slider;
 
 import android.util.Log;
 
-import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
@@ -20,7 +20,7 @@ public class SettingsSliderProvisoryData {
 
     private static final String TAG = "SliderData";
 
-    public static List<SettingsItem> getSettings(){
+    public static List<SettingsItem> getSettings() {
         List<SettingsItem> list = new ArrayList<>();
         try {
 
@@ -54,13 +54,13 @@ public class SettingsSliderProvisoryData {
                             break;
                     }
                     appStatusName = androidCoreSettings.getAppsStatus().getCode();
-                }else{
-                    Log.e(TAG,"core setting fail");
+                } else {
+                    Log.e(TAG, "core setting fail");
                 }
-                }catch(CantGetSettingsException | SettingsNotFoundException e){
-                    appStatusRes = R.drawable.icon_alpha_hdpi;
-                    // e.printStackTrace();
-                }
+            } catch (CantGetSettingsException | SettingsNotFoundException e) {
+                appStatusRes = R.drawable.icon_alpha_hdpi;
+                // e.printStackTrace();
+            }
 
 
             SettingsItem settingsItemSettings = new SettingsItem(SettingsType.APP_STATUS, appStatusRes, "App Filter", (appStatusName.equals("")) ? "Alpha" : appStatusName);
@@ -80,7 +80,7 @@ public class SettingsSliderProvisoryData {
             list.add(settingsHelp);
 //            list.add(settingErrorReport);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -88,5 +88,5 @@ public class SettingsSliderProvisoryData {
 
 
     }
-    
+
 }

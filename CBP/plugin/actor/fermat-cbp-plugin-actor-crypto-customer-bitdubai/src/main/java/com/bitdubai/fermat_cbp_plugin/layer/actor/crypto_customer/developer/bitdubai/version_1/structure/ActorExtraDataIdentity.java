@@ -19,7 +19,7 @@ public class ActorExtraDataIdentity implements ActorIdentity, Serializable {
     long accuracy;
     GeoFrequency frequency;
 
-    public ActorExtraDataIdentity(String alias, String publicKey, byte[] image, long accuracy, GeoFrequency frequency){
+    public ActorExtraDataIdentity(String alias, String publicKey, byte[] image, long accuracy, GeoFrequency frequency) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.image = image;

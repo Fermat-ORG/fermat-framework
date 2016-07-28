@@ -11,28 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterNew;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.interfaces.RecyclerListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.RecyclerListFragmentNew;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
-import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 /**
  * Created Matias Furszyfer 22/09/2015
- *
  */
 
 /**
@@ -62,8 +52,6 @@ public abstract class FermatListFragmentNew<M> extends AbstractFermatFragment
     protected SwipeRefreshLayout swipeRefreshLayout;
 
 
-
-
     /**
      *
      * @param savedInstanceState
@@ -77,11 +65,10 @@ public abstract class FermatListFragmentNew<M> extends AbstractFermatFragment
     }
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-       // WalletResourcesProviderManager walletResourcesProviderManager = (WalletResourcesProviderManager) walletSession.getResourceProviderManager();
+        // WalletResourcesProviderManager walletResourcesProviderManager = (WalletResourcesProviderManager) walletSession.getResourceProviderManager();
         String layout = null;
 
         layout = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
@@ -115,7 +102,7 @@ public abstract class FermatListFragmentNew<M> extends AbstractFermatFragment
 //        } catch (CantGetResourcesException e) {
 //            e.printStackTrace();
 //        }
-        View rootView = viewInflater.inflate(layout,null);  //inflater.inflate(getLayoutResource(), container, false);
+        View rootView = viewInflater.inflate(layout, null);  //inflater.inflate(getLayoutResource(), container, false);
         initViews(rootView);
         return rootView;
     }

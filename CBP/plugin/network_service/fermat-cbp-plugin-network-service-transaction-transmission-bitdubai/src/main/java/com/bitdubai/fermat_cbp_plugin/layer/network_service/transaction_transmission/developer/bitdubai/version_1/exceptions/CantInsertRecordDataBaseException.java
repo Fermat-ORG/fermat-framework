@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * The exception <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.network_service.exceptions.CantInsertRecordDataBaseException</code>
  * is thrown when there is an error trying to insert a record in database.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 06/10/2015.
  */
 public class CantInsertRecordDataBaseException extends FermatException {

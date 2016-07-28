@@ -16,7 +16,7 @@ public interface FermatActivityManager extends Serializable {
     //esto no va acá
     void reportError(String userTo) throws Exception;
 
-    void sendMailExternal(String userTo,String bodyText) throws Exception;
+    void sendMailExternal(String userTo, String bodyText) throws Exception;
 
     void goHome();
 

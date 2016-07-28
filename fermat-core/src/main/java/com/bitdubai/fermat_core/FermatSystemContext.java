@@ -40,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * The class <code>com.bitdubai.fermat_core.FermatSystemContext</code>
  * the system context hold all the  references of the mains components of fermat.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 21/10/2015.
  */
 public final class FermatSystemContext {
@@ -55,7 +55,7 @@ public final class FermatSystemContext {
      * The platforms array contains all the references to the platforms.
      * The key is an element of the Platforms enum, and the value is the Platform in-self.
      */
-    public FermatSystemContext(final Object osContext,FermatContext fermatContext) {
+    public FermatSystemContext(final Object osContext, FermatContext fermatContext) {
 
         this.osContext = osContext;
         this.platforms = new ConcurrentHashMap<>();
@@ -66,8 +66,7 @@ public final class FermatSystemContext {
      * Through the method <code>registerLayer</code> you can add new layers to the platform.
      * Here we'll corroborate too that the layer is not added twice.
      *
-     * @param abstractPlatform  platform instance.
-     *
+     * @param abstractPlatform platform instance.
      * @throws CantRegisterPlatformException if something goes wrong.
      */
     public final void registerPlatform(AbstractPlatform abstractPlatform) throws CantRegisterPlatformException {
@@ -79,8 +78,8 @@ public final class FermatSystemContext {
             if (platformReference == null)
                 throw new CantRegisterPlatformException("platformReference=null", "The platform does not contain a platform reference to recognize it.");
 
-            if(platforms.containsKey(platformReference))
-                throw new CantRegisterPlatformException("platform: " + platformReference.toString(), "platform already exists in the system context.");
+            if (platforms.containsKey(platformReference))
+                throw new CantRegisterPlatformException(new StringBuilder().append("platform: ").append(platformReference.toString()).toString(), "platform already exists in the system context.");
 
             abstractPlatform.start();
 
@@ -91,7 +90,7 @@ public final class FermatSystemContext {
 
         } catch (final CantStartPlatformException e) {
 
-            throw new CantRegisterPlatformException(e, "platform: " + platformReference.toString(), "Error trying to start the platform.");
+            throw new CantRegisterPlatformException(e, new StringBuilder().append("platform: ").append(platformReference.toString()).toString(), "Error trying to start the platform.");
         }
     }
 
@@ -99,10 +98,8 @@ public final class FermatSystemContext {
      * Through the method <code>getAddonVersion</code> you can get a addon version instance passing like parameter a version reference instance.
      *
      * @param addonVersionReference addon version reference data.
-     *
      * @return a addon version instance.
-     *
-     * @throws VersionNotFoundException   if we can't find a addon version with the given version reference parameters.
+     * @throws VersionNotFoundException if we can't find a addon version with the given version reference parameters.
      */
     public final AbstractAddon getAddonVersion(final AddonVersionReference addonVersionReference) throws VersionNotFoundException {
 
@@ -120,10 +117,8 @@ public final class FermatSystemContext {
      * Through the method <code>getAddonDeveloper</code> you can get a addonDeveloper instance passing like parameter a developer reference instance.
      *
      * @param addonDeveloperReference addon developer reference data.
-     *
      * @return a addon developer instance.
-     *
-     * @throws DeveloperNotFoundException   if we can't find a addon developer with the given developer reference parameters.
+     * @throws DeveloperNotFoundException if we can't find a addon developer with the given developer reference parameters.
      */
     public final AbstractAddonDeveloper getAddonDeveloper(final AddonDeveloperReference addonDeveloperReference) throws DeveloperNotFoundException {
 
@@ -145,7 +140,7 @@ public final class FermatSystemContext {
 
         } catch (LayerNotFoundException e) {
 
-            throw new AddonNotFoundException(e, "addon: "+addonReference.toString(), "layer not found for the specified addon.");
+            throw new AddonNotFoundException(e, new StringBuilder().append("addon: ").append(addonReference.toString()).toString(), "layer not found for the specified addon.");
         }
     }
 
@@ -153,10 +148,8 @@ public final class FermatSystemContext {
      * Through the method <code>getPluginVersion</code> you can get a plugin version instance passing like parameter a version reference instance.
      *
      * @param pluginVersionReference plugin version reference data.
-     *
      * @return a plugin version instance.
-     *
-     * @throws VersionNotFoundException   if we can't find a plugin version with the given version reference parameters.
+     * @throws VersionNotFoundException if we can't find a plugin version with the given version reference parameters.
      */
     public final AbstractPluginInterface getPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException {
 
@@ -190,7 +183,7 @@ public final class FermatSystemContext {
         return abstractPlugin;
     }
 
-    private boolean isPluginLoadedInTheNewWay(PluginVersionReference pluginVersionReference){
+    private boolean isPluginLoadedInTheNewWay(PluginVersionReference pluginVersionReference) {
         PluginVersionReference pluginVersionReference2 = new PluginVersionReference(
                 Platforms.BLOCKCHAINS,
                 Layers.CRYPTO_NETWORK,
@@ -205,10 +198,8 @@ public final class FermatSystemContext {
      * Through the method <code>getPluginDeveloper</code> you can get a pluginDeveloper instance passing like parameter a developer reference instance.
      *
      * @param pluginDeveloperReference plugin developer reference data.
-     *
      * @return a plugin developer instance.
-     *
-     * @throws DeveloperNotFoundException   if we can't find a plugin developer with the given developer reference parameters.
+     * @throws DeveloperNotFoundException if we can't find a plugin developer with the given developer reference parameters.
      */
     public final DeveloperPluginInterface getPluginDeveloper(final PluginDeveloperReference pluginDeveloperReference) throws DeveloperNotFoundException {
 
@@ -226,10 +217,8 @@ public final class FermatSystemContext {
      * Through the method <code>getPluginSubsystem</code> you can get a subsystem instance passing like parameter a plugin reference instance.
      *
      * @param pluginReference plugin reference data.
-     *
      * @return a plugin subsystem instance.
-     *
-     * @throws PluginNotFoundException   if we can't find a plugin with the given plugin reference parameters.
+     * @throws PluginNotFoundException if we can't find a plugin with the given plugin reference parameters.
      */
     public final AbstractPluginSubsystem getPluginSubsystem(final PluginReference pluginReference) throws PluginNotFoundException {
 
@@ -239,7 +228,7 @@ public final class FermatSystemContext {
 
         } catch (LayerNotFoundException e) {
 
-            throw new PluginNotFoundException(e, "plugin: " + pluginReference.toString(), "layer not found in the platform of the system context.");
+            throw new PluginNotFoundException(e, new StringBuilder().append("plugin: ").append(pluginReference.toString()).toString(), "layer not found in the platform of the system context.");
         }
     }
 
@@ -247,10 +236,8 @@ public final class FermatSystemContext {
      * Through the method <code>getLayer</code> you can get a Layer instance passing like parameter a layer reference instance.
      *
      * @param layerReference layer reference data.
-     *
      * @return a layer instance.
-     *
-     * @throws LayerNotFoundException   if we can't find a layer with the given layer reference parameters.
+     * @throws LayerNotFoundException if we can't find a layer with the given layer reference parameters.
      */
     public final AbstractLayer getLayer(final LayerReference layerReference) throws LayerNotFoundException {
 
@@ -260,7 +247,7 @@ public final class FermatSystemContext {
 
         } catch (final PlatformNotFoundException e) {
 
-            throw new LayerNotFoundException(e, "layer: " + layerReference.toString(), "the platform of the layer was not founded in the system context.");
+            throw new LayerNotFoundException(e, new StringBuilder().append("layer: ").append(layerReference.toString()).toString(), "the platform of the layer was not founded in the system context.");
         }
     }
 
@@ -268,17 +255,15 @@ public final class FermatSystemContext {
      * Through the method <code>getPlatform</code> you can get a Platform instance passing like parameter a platform reference instance.
      *
      * @param platformReference platform reference data.
-     *
      * @return a platform instance.
-     *
-     * @throws PlatformNotFoundException   if we can't find a platform with the given platform reference parameters.
+     * @throws PlatformNotFoundException if we can't find a platform with the given platform reference parameters.
      */
     public final AbstractPlatform getPlatform(final PlatformReference platformReference) throws PlatformNotFoundException {
 
         if (platforms.containsKey(platformReference)) {
             return platforms.get(platformReference);
         } else {
-            throw new PlatformNotFoundException("platform: " + platformReference.toString(), "platform not found in the system context.");
+            throw new PlatformNotFoundException(new StringBuilder().append("platform: ").append(platformReference.toString()).toString(), "platform not found in the system context.");
         }
     }
 
@@ -286,7 +271,7 @@ public final class FermatSystemContext {
 
         final ConcurrentHashMap<AddonVersionReference, AbstractAddon> versions = new ConcurrentHashMap<>();
 
-        for(ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
+        for (ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
             platform.getValue().fillAddonVersions(versions);
 
         return versions;
@@ -296,7 +281,7 @@ public final class FermatSystemContext {
 
         final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions = new ConcurrentHashMap<>();
 
-        for(ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
+        for (ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
             platform.getValue().fillPluginVersions(versions);
 
         return versions;
@@ -307,7 +292,7 @@ public final class FermatSystemContext {
 //        final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions = new ConcurrentHashMap<>();
         List<PluginVersionReference> versions = new ArrayList<>();
 
-        for(ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
+        for (ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
             platform.getValue().fillPluginVersionsMati(versions);
 
         return versions;

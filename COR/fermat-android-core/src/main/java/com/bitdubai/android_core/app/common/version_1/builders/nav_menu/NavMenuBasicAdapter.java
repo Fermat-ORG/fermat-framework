@@ -25,11 +25,12 @@ public class NavMenuBasicAdapter extends FermatAdapter<MenuItem, NavigationItemM
     private final FermatBasicNavigationMenuBody body;
     Typeface tf;
 
-    public NavMenuBasicAdapter(Context context, List<MenuItem> dataSet,FermatBasicNavigationMenuBody body) {
+    public NavMenuBasicAdapter(Context context, List<MenuItem> dataSet, FermatBasicNavigationMenuBody body) {
         super(context, dataSet);
         this.body = body;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
+
     /**
      * Create a new holder instance
      *
@@ -50,11 +51,11 @@ public class NavMenuBasicAdapter extends FermatAdapter<MenuItem, NavigationItemM
     @Override
     protected int getCardViewResource() {
         int rowRes = 0;
-        if(body.getRowLayout()!=null){
+        if (body.getRowLayout() != null) {
             FermatLayout fermatLayout = body.getRowLayout();
-            rowRes = ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.LAYOUT_TYPE,context, fermatLayout.getId(), fermatLayout.getSourceLocation(), fermatLayout.getOwner().getOwnerAppPublicKey());
+            rowRes = ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.LAYOUT_TYPE, context, fermatLayout.getId(), fermatLayout.getSourceLocation(), fermatLayout.getOwner().getOwnerAppPublicKey());
         }
-        return (rowRes!=0)?rowRes:com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.layout.navigation_row;
+        return (rowRes != 0) ? rowRes : com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.layout.navigation_row;
     }
 
     /**
@@ -68,15 +69,18 @@ public class NavMenuBasicAdapter extends FermatAdapter<MenuItem, NavigationItemM
     protected void bindHolder(NavigationItemMenuViewHolder holder, MenuItem data, int position) {
         try {
             holder.getLabel().setText(data.getLabel());
-            if(data.isSelected()) {
-                if(data.getBackgroundSelectedColor()!=null)holder.getRow_container().setBackgroundColor(Color.parseColor(data.getBackgroundSelectedColor()));
-                if(data.getSelectedTextColor()!=null) holder.getLabel().setTextColor(Color.parseColor(data.getSelectedTextColor()));
-            }else{
+            if (data.isSelected()) {
+                if (data.getBackgroundSelectedColor() != null)
+                    holder.getRow_container().setBackgroundColor(Color.parseColor(data.getBackgroundSelectedColor()));
+                if (data.getSelectedTextColor() != null)
+                    holder.getLabel().setTextColor(Color.parseColor(data.getSelectedTextColor()));
+            } else {
                 holder.getLabel().setTextColor(Color.parseColor(data.getTextColor()));
             }
             FermatDrawable icon = data.getFermatDrawable();
-            if(icon!=null) holder.getIcon().setImageResource(ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE,context, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey()));
-        }catch (Exception e){
+            if (icon != null)
+                holder.getIcon().setImageResource(ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE, context, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey()));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

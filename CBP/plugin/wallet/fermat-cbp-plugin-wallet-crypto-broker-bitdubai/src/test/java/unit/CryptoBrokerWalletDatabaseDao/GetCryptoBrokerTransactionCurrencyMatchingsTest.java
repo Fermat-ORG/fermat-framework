@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
@@ -14,14 +13,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetTransactionCryptoBrokerWalletMatchingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.CryptoBrokerWalletPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseConstants;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -29,6 +24,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import unit.common.ParentTestClass;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -41,32 +38,11 @@ import static org.mockito.Mockito.when;
  * Created by nelsonalfo on 06/04/16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
+public class GetCryptoBrokerTransactionCurrencyMatchingsTest extends ParentTestClass {
     final String BROKER_WALLET_PUBLIC_KEY = "BROKER_WALLET_PUBLIC_KEY";
     final String BROKER_PUBLIC_KEY = "BROKER_PUBLIC_KEY";
     final String ORIGIN_TRANSACTION_ID_1 = "1as856789qwe23qw879421eqw5q3";
     final String ORIGIN_TRANSACTION_ID_2 = "132456789asd846548asd6asd548";
-
-    @Mock
-    private Database database;
-
-    @Mock
-    CryptoBrokerWalletPluginRoot pluginRoot;
-
-    List<DatabaseTableRecord> availableSaleRecordsFromTable;
-    List<DatabaseTableRecord> creditRecords;
-    List<DatabaseTableRecord> debitRecords;
-
-    CryptoBrokerWalletDatabaseDao cryptoBrokerWalletDatabaseDaoSpy;
-
-    @Before
-    public void setUp() {
-        creditRecords = new ArrayList<>();
-        debitRecords = new ArrayList<>();
-
-        cryptoBrokerWalletDatabaseDaoSpy = Mockito.spy(new CryptoBrokerWalletDatabaseDao(database, pluginRoot));
-        availableSaleRecordsFromTable = null;
-    }
 
     @Test
     public void getAvailableSaleCreditRecordsFromTable() throws CantLoadTableToMemoryException {
@@ -359,8 +335,6 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         assertThat(currencyMatching.getCurrencyReceiving()).isEqualTo(FiatCurrency.US_DOLLAR);
         assertThat(currencyMatching.getAmountGiving()).isEqualTo(1);
         assertThat(currencyMatching.getAmountReceiving()).isEqualTo(5);
-
-        Mockito.verify(pluginRoot).reportError(eq(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT), any(InvalidParameterException.class));
     }
 
     private void addOneSaleDebit() {

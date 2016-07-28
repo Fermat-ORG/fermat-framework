@@ -29,19 +29,19 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public /*abstract */class SettingsManager<Z extends FermatSettings> implements Serializable {
 
-    private static final String SETTINGS_DIRECTORY_NAME   = "settings";
-    private static final String SETTINGS_FILE_NAME_PREFIX = "sFile_"  ;
+    private static final String SETTINGS_DIRECTORY_NAME = "settings";
+    private static final String SETTINGS_FILE_NAME_PREFIX = "sFile_";
 
     private final PluginFileSystem pluginFileSystem;
-    private final UUID             pluginId        ;
+    private final UUID pluginId;
 
     protected Map<String, Z> moduleSettingsMap;
 
     public SettingsManager(final PluginFileSystem pluginFileSystem,
-                           final UUID             pluginId        ) {
+                           final UUID pluginId) {
 
         this.pluginFileSystem = pluginFileSystem;
-        this.pluginId         = pluginId        ;
+        this.pluginId = pluginId;
 
         this.moduleSettingsMap = new ConcurrentHashMap<>();
     }
@@ -50,13 +50,12 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> implements S
      * Through the method <code>persistSettings</code> we can persist the settings of the specific
      * wallet or sub-app in where we are working having in count the public its public key.
      *
-     * @param publicKey  of the wallet or sub-app.
-     * @param settings   instance of the settings of the specific sub-app or wallet.
-     *
+     * @param publicKey of the wallet or sub-app.
+     * @param settings  instance of the settings of the specific sub-app or wallet.
      * @throws CantPersistSettingsException if something goes wrong.
      */
-    public final void persistSettings(      String publicKey,
-                                      final Z      settings ) throws CantPersistSettingsException {
+    public final void persistSettings(String publicKey,
+                                      final Z settings) throws CantPersistSettingsException {
 
 
         if (publicKey == null)
@@ -80,11 +79,11 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> implements S
 
             moduleSettingsMap.put(publicKey, settings);
 
-        } catch(final CantCreateFileException |
-                      CantPersistFileException e) {
+        } catch (final CantCreateFileException |
+                CantPersistFileException e) {
 
             throw new CantPersistSettingsException(e, "", "Cant persist settings file exception.");
-        } catch(final FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
 
             try {
 
@@ -114,16 +113,14 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> implements S
      * Through the method <code>loadAndGetSettings</code> we can get the settings of the specific
      * wallet or sub-app in where we are working having in count the public its public key.
      *
-     * @param publicKey  of the wallet or sub-app.
-     *
+     * @param publicKey of the wallet or sub-app.
      * @return an instance of the given fermat settings.
-     *
-     * @throws CantGetSettingsException   if something goes wrong.
-     * @throws SettingsNotFoundException  if we can't find a module settings for the given public key.
+     * @throws CantGetSettingsException  if something goes wrong.
+     * @throws SettingsNotFoundException if we can't find a module settings for the given public key.
      */
     @SuppressWarnings("unchecked")
-    public final Z loadAndGetSettings(String publicKey) throws CantGetSettingsException  ,
-                                                                     SettingsNotFoundException {
+    public final Z loadAndGetSettings(String publicKey) throws CantGetSettingsException,
+            SettingsNotFoundException {
 
         if (publicKey == null)
             publicKey = "default";
@@ -153,24 +150,24 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> implements S
 
         } catch (CantCreateFileException e) {
             throw new CantGetSettingsException(e, "", "Cant create module settings file exception.");
-        } catch( FileNotFoundException e) {
-           throw new SettingsNotFoundException(e, "", "Cant find module settings file exception.");
+        } catch (FileNotFoundException e) {
+            throw new SettingsNotFoundException(e, "", "Cant find module settings file exception.");
 
         }
 
     }
 
     private String buildSettingsFileName(final String publicKey) {
-        return SETTINGS_FILE_NAME_PREFIX + "_" + publicKey;
+        return new StringBuilder().append(SETTINGS_FILE_NAME_PREFIX).append("_").append(publicKey).toString();
     }
 
     @Override
     public String toString() {
-        return "SettingsManager{" +
-                "pluginId=" + pluginId +
-                '}';
+        return new StringBuilder()
+                .append("SettingsManager{")
+                .append("pluginId=").append(pluginId)
+                .append('}').toString();
     }
-
 
 
 }

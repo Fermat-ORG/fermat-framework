@@ -153,7 +153,6 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     FermatWorker fermatWorker;
 
-    private ExecutorService _executor;
 
     public static ContactsFragment newInstance() {
 
@@ -170,7 +169,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
 
-        _executor = Executors.newFixedThreadPool(2);
+
         try {
             cryptoWallet = appSession.getModuleManager();
             toolbar = getToolbar();
@@ -622,10 +621,9 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     @Override
     public void onStop() {
 
+
         if(fermatWorker != null)
             fermatWorker.shutdownNow();
-
-
         super.onStop();
     }
 

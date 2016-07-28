@@ -40,7 +40,7 @@ public class CryptoEarningExtractor implements EarningExtractor {
                     BigDecimal.ZERO,
                     OriginTransaction.EARNING_EXTRACTION,
                     earningsPair.getId().toString(),
-                    BlockchainNetworkType.getDefaultBlockchainNetworkType(),fee,feeOrigin);
+                    BlockchainNetworkType.getDefaultBlockchainNetworkType(), fee, feeOrigin);
 
         } catch (CantCreateCryptoMoneyDestockException e) {
             throw new CantExtractEarningsException(e, "Trying to make the Crypto Destock of the merchandise",
