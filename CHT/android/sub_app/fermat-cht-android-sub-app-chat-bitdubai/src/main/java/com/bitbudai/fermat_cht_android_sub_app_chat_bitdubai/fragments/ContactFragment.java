@@ -108,7 +108,7 @@ public class ContactFragment
             if(con.getContactStatus() != null){
                 contactStatus.setText(con.getContactStatus());
             } else
-                contactStatus.setText("Unknown");
+                contactStatus.setText("Available");
 
             ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
             BitmapDrawable bmd = new BitmapDrawable(bytes);
@@ -119,9 +119,9 @@ public class ContactFragment
 //            String myDate = date.toString();
             String myDate = (String) appSession.getData("DATELASTCONNECTION");//chatSession.getSelectedContact();
             if(myDate==null)
-                myDate="";
+                myDate="No info available";
             else if(myDate.equals(""))
-                    myDate="";
+                    myDate="No info available";
 
             contactStatusDate = (TextView) layout.findViewById(R.id.contact_status_date);
             contactStatusDate.setText(myDate);
