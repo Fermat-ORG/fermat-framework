@@ -100,10 +100,6 @@
                android:paddingBottom="10dp"
                />
 
-
-
-
-
        </LinearLayout>
    </RelativeLayout>
 </RelativeLayout>
