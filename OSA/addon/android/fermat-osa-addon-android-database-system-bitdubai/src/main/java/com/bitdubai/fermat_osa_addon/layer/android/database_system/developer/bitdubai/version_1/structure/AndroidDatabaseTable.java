@@ -245,7 +245,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
 //                        .append("'");
             }
             database = this.database.getWritableDatabase();
-            Log.i("AndroidDatabase", "Database name:"+tableName+" insert quantity: " + database.insert(tableName, null, contentValues));
+            Log.i("AndroidDatabase", "Database name:"+tableName+" insert id: " + database.insert(tableName, null, contentValues));
 
 //            database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
         } catch (Exception exception) {
