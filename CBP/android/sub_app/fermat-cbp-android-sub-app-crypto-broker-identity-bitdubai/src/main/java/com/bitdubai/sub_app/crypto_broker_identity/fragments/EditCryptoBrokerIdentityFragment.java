@@ -137,6 +137,7 @@ public class EditCryptoBrokerIdentityFragment
         } catch (CantListCryptoBrokersException e) {
             e.printStackTrace();
         }
+        appSession.setData(FragmentsCommons.VISIBILITY, identityInfo.isPublished());
 
         //If we landed here from CryptoBrokerImageCropperFragment, save the cropped Image.
         if (appSession.getData(FragmentsCommons.CROPPED_IMAGE) != null) {
@@ -167,6 +168,25 @@ public class EditCryptoBrokerIdentityFragment
             e.printStackTrace();
         }
 
+
+        /*IdentityBrokerPreferenceSettings subappSettings;
+        try {
+            subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            subappSettings = null;
+        }
+
+        if (subappSettings == null) {
+            subappSettings = new IdentityBrokerPreferenceSettings();
+            subappSettings.setIsPresentationHelpEnabled(true);
+            try {
+                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), subappSettings);
+                isGpsDialogEnable = subappSettings.isGpsDialogEnabled();
+            } catch (Exception ignore) {
+                isGpsDialogEnable = true;
+            }
+        }*/
+
         try {
             settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
             isGpsDialogEnable = settings.isGpsDialogEnabled();
@@ -189,6 +209,7 @@ public class EditCryptoBrokerIdentityFragment
     }
 
     private void initViews(View layout) {
+
         actualizable = true;
 
         progressBar = layout.findViewById(R.id.cbi_progress_bar);
@@ -237,9 +258,11 @@ public class EditCryptoBrokerIdentityFragment
                 if (wantPublishIdentity) {
                     sw.setImageResource(R.drawable.switch_off);
                     wantPublishIdentity = false;
+                    appSession.setData(FragmentsCommons.TEMP_VISIBILITY, false);
                 } else {
                     sw.setImageResource(R.drawable.switch_on);
                     wantPublishIdentity = true;
+                    appSession.setData(FragmentsCommons.TEMP_VISIBILITY, true);
                 }
             }
         });
@@ -291,7 +314,6 @@ public class EditCryptoBrokerIdentityFragment
             }
         }else{
             visibilityLayout.setVisibility(View.GONE);
-
         }
 
         //Coming from cropper activity
@@ -319,11 +341,22 @@ public class EditCryptoBrokerIdentityFragment
 
         textCount.setText(String.valueOf(maxLenghtTextCount - mBrokerName.length()));
 
-        if (!wantPublishIdentity) {
+        /*if (!wantPublishIdentity){
             sw.setImageResource(R.drawable.switch_off);
         } else {
             sw.setImageResource(R.drawable.switch_on);
+        }*/
+        if ((Boolean)appSession.getData(FragmentsCommons.TEMP_VISIBILITY) != null){
+            appSession.setData(FragmentsCommons.VISIBILITY, appSession.getData(FragmentsCommons.TEMP_VISIBILITY));
         }
+
+        if ((Boolean) appSession.getData(FragmentsCommons.VISIBILITY)){
+            sw.setImageResource(R.drawable.switch_on);
+        }else{
+            sw.setImageResource(R.drawable.switch_off);
+        }
+
+
 
         checkGPSOn();
 
@@ -352,6 +385,7 @@ public class EditCryptoBrokerIdentityFragment
             appSession.setData(FragmentsCommons.ORIGINAL_IMAGE, cryptoBrokerBitmap);
             appSession.setData(FragmentsCommons.IDENTITY_INFO, identityInfo);
             appSession.setData(FragmentsCommons.IMAGE_BYTE_ARRAY, identityImgByteArray);
+            //appSession.setData(FragmentsCommons.VISIBILITY, wantPublishIdentity);
 
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_EDIT_IDENTITY, appSession.getAppPublicKey());
         }
@@ -668,6 +702,11 @@ public class EditCryptoBrokerIdentityFragment
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbp_action_bar_gradient_colors));
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        appSession.removeData(FragmentsCommons.TEMP_VISIBILITY);
 
 
+    }
 }
