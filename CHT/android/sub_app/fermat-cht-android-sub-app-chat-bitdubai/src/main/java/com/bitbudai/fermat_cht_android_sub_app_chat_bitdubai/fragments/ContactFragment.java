@@ -103,21 +103,25 @@ public class ContactFragment
 //            contactid.add(con.getRemoteActorPublicKey());
 //            if(con.getContactStatus() != null) {
 //                contactalias.add(con.getContactStatus().toString());
-//            }
-
+//
             contactStatus = (TextView) layout.findViewById(R.id.contact_status_input);
             if(con.getContactStatus() != null){
                 contactStatus.setText(con.getContactStatus());
             } else
-                contactStatus.setText("No Status");
+                contactStatus.setText("Unknown");
 
             ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
             BitmapDrawable bmd = new BitmapDrawable(bytes);
             contacticon.add(bmd.getBitmap());
 
-            long time = con.getCreationDate();
-            Date date = new java.util.Date(time);
-            String myDate = date.toString();
+//            long time = con.getCreationDate();
+//            Date date = new java.util.Date(time);
+//            String myDate = date.toString();
+            String myDate = (String) appSession.getData("DATELASTCONNECTION");//chatSession.getSelectedContact();
+            if(myDate==null)
+                myDate="";
+            else if(myDate.equals(""))
+                    myDate="";
 
             contactStatusDate = (TextView) layout.findViewById(R.id.contact_status_date);
             contactStatusDate.setText(myDate);

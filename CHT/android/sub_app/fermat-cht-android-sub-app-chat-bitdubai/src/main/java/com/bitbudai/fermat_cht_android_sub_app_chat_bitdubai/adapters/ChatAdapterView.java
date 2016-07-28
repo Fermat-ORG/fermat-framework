@@ -419,6 +419,7 @@ public class ChatAdapterView extends LinearLayout {
 
                 if (date != null && !date.equals("no record")) {
                     toolbar.setSubtitle(Html.fromHtml("<small><small>Last time "+setFormatLastTime(date)+"</small></small>"));
+                    appSession.setData("DATELASTCONNECTION", setFormatLastTime(date));
                 } else {
 
                     Log.i("159753**LastTimeOnChat", "No show");
