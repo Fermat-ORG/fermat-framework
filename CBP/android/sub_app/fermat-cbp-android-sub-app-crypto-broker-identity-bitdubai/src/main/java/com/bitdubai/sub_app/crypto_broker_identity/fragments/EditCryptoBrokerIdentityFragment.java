@@ -42,6 +42,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -67,6 +68,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+
+import static android.widget.Toast.makeText;
 
 /**
  * This Fragment let you edit a Broker Identity
@@ -163,39 +166,7 @@ public class EditCryptoBrokerIdentityFragment
         }
 
         //Check if GPS is on and coordinate are fine
-        try {
-            location = appSession.getModuleManager().getLocation();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-
-        /*IdentityBrokerPreferenceSettings subappSettings;
-        try {
-            subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
-        } catch (Exception e) {
-            subappSettings = null;
-        }
-
-        if (subappSettings == null) {
-            subappSettings = new IdentityBrokerPreferenceSettings();
-            subappSettings.setIsPresentationHelpEnabled(true);
-            try {
-                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), subappSettings);
-                isGpsDialogEnable = subappSettings.isGpsDialogEnabled();
-            } catch (Exception ignore) {
-                isGpsDialogEnable = true;
-            }
-        }*/
-
-        try {
-            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
-            isGpsDialogEnable = settings.isGpsDialogEnabled();
-        } catch (Exception e) {
-            settings = new IdentityBrokerPreferenceSettings();
-            settings.setGpsDialogEnabled(true);
-            isGpsDialogEnable = true;
-        }
 
         turnGPSOn();
 
@@ -223,6 +194,65 @@ public class EditCryptoBrokerIdentityFragment
         final Button botonU = (Button) layout.findViewById(R.id.create_crypto_broker_button);
         /*final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
         final ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);*/
+
+        presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+                .setBannerRes(R.drawable.banner_identity)
+                .setBody(R.string.cbp_broker_identity_welcome_body)
+                .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setVIewColor(R.color.background_toolbar)
+                .setIsCheckEnabled(false)
+                .build();
+
+        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                checkGPSOn();
+            }
+        });
+
+        IdentityBrokerPreferenceSettings subappSettings;
+        try {
+            subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            subappSettings = null;
+        }
+
+        if (subappSettings == null) {
+            subappSettings = new IdentityBrokerPreferenceSettings();
+            subappSettings.setIsPresentationHelpEnabled(true);
+            try {
+                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), subappSettings);
+            } catch (Exception ignore) {
+
+            }
+        }
+
+        boolean showDialog;
+        try {
+            showDialog = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+            if (showDialog) {
+                presentationDialog.show();
+            }
+        } catch (FermatException e) {
+            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+
+        //Check if GPS is on and coordinate are fine
+        try {
+            location = appSession.getModuleManager().getLocation();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            isGpsDialogEnable = settings.isGpsDialogEnabled();
+        } catch (Exception e) {
+            settings = new IdentityBrokerPreferenceSettings();
+            settings.setGpsDialogEnabled(true);
+            isGpsDialogEnable = true;
+        }
 
         registerForContextMenu(mBrokerImage);
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
@@ -363,29 +393,28 @@ public class EditCryptoBrokerIdentityFragment
             sw.setImageResource(R.drawable.switch_off);
         }
 
-
-
-        checkGPSOn();
-
         final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
-
-        presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
-                .setBannerRes(R.drawable.banner_identity)
-                .setBody(R.string.cbp_broker_identity_welcome_body)
-                .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
-                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                .setVIewColor(R.color.background_toolbar)
-                .setIsCheckEnabled(false)
-                .build();
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == FragmentsCommons.HELP_OPTION_MENU_ID) {
-            presentationDialog.show();
+            new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+                    .setBannerRes(R.drawable.banner_identity)
+                    .setBody(R.string.cbp_broker_identity_welcome_body)
+                    .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setVIewColor(R.color.background_toolbar)
+                    .setIsCheckEnabled(false)
+                    .build().show();
+
+
+
             return true;
+
+
         }
         if (item.getItemId() == FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID) {
             appSession.setData(FragmentsCommons.BROKER_NAME, mBrokerName.getText().toString());
@@ -436,7 +465,7 @@ public class EditCryptoBrokerIdentityFragment
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -461,7 +490,7 @@ public class EditCryptoBrokerIdentityFragment
 
         //progressBar.setVisibility(View.GONE);
 
-        Toast.makeText(getActivity(), "Crypto Broker Identity Updated.", Toast.LENGTH_LONG).show();
+        makeText(getActivity(), "Crypto Broker Identity Updated.", Toast.LENGTH_LONG).show();
         //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY, appSession.getAppPublicKey());
         getActivity().onBackPressed();
     }
@@ -475,7 +504,7 @@ public class EditCryptoBrokerIdentityFragment
 
         //progressBar.setVisibility(View.GONE);
 
-        Toast.makeText(getActivity().getApplicationContext(), "Error trying to edit the identity.", Toast.LENGTH_SHORT).show();
+        makeText(getActivity().getApplicationContext(), "Error trying to edit the identity.", Toast.LENGTH_SHORT).show();
         appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
                 UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
     }
@@ -488,10 +517,10 @@ public class EditCryptoBrokerIdentityFragment
         final byte[] imgInBytes = (cryptoBrokerBitmap != null) ? identityImgByteArray : profileImage;
 
         if (brokerNameText.trim().isEmpty()) {
-            Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
+            makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
 
         } else if (imgInBytes == null) {
-            Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
 
         } else {
             final int accuracy = getAccuracyData();
@@ -511,10 +540,10 @@ public class EditCryptoBrokerIdentityFragment
         final String brokerAlias = mBrokerName.getText().toString();
 
         if (brokerAlias.trim().isEmpty()) {
-            Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
+            makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
 
         } else if (cryptoBrokerBitmap == null) {
-            Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
 
         } else {
             final int accuracy = getAccuracyData();
@@ -559,7 +588,7 @@ public class EditCryptoBrokerIdentityFragment
                     imageToUploadUri = Uri.fromFile(f);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 } else {
-                    Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                    makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
                 }
             }
         } else {
@@ -624,7 +653,7 @@ public class EditCryptoBrokerIdentityFragment
                 if (Build.VERSION.SDK_INT < 23) {
                     String provider = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if (!provider.contains("gps")) { //if gps is disabled
-                        Toast.makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
@@ -632,7 +661,7 @@ public class EditCryptoBrokerIdentityFragment
                 } else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if (!provider.contains("gps")) { //if gps is disabled
-                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
@@ -640,9 +669,9 @@ public class EditCryptoBrokerIdentityFragment
 
             } catch (Exception ex) {
                 if (Build.VERSION.SDK_INT < 23) {
-                    Toast.makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                    makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                    makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
                 }
             }
         }
