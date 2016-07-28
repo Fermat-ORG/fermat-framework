@@ -84,14 +84,6 @@ public class CryptoMoneyDeStockRecord extends AbstractDeStockRecord {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("CryptoMoneyDeStockRecord{")
-                .append("cryptoCurrency=").append(cryptoCurrency)
-                .append(", cryptoWalletPublicKey='").append(cryptoWalletPublicKey)
-                .append('\'')
-                .append(", blockchainNetworkType=").append(blockchainNetworkType)
-                .append(", fee=").append(fee)
-                .append(", feeOrigin=").append(feeOrigin)
-                .append('}').toString();
+        return "CryptoMoneyDeStockRecord{" + "cryptoCurrency=" + cryptoCurrency + ", cryptoWalletPublicKey='" + cryptoWalletPublicKey + '\'' + ", blockchainNetworkType=" + blockchainNetworkType + ", fee=" + fee + ", feeOrigin=" + feeOrigin + '}';
     }
 }

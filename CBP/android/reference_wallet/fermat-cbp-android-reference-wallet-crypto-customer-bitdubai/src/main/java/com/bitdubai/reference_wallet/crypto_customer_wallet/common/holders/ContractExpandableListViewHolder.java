@@ -75,7 +75,7 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
     @NonNull
     private String getContractActionDescription(ContractBasicInformation itemInfo, ContractStatus contractStatus) {
         DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-        return new StringBuilder().append(getReceivingOrSendingText(contractStatus)).append(" ").append(decimalFormat.format(itemInfo.getAmount())).append(" ").append(itemInfo.getMerchandise()).toString();
+        return getReceivingOrSendingText(contractStatus) + " " + decimalFormat.format(itemInfo.getAmount()) + " " + itemInfo.getMerchandise();
     }
 
     private int getStatusBackgroundColor(ContractStatus status) {

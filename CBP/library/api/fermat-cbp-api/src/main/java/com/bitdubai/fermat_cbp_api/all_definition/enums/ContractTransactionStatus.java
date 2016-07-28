@@ -92,12 +92,12 @@ public enum ContractTransactionStatus implements FermatEnum {
         for (ContractTransactionStatus value : values()) {
             if (value.getCode().equals(code)) return value;
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the ContractTransactionStatus enum.");
+        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContractTransactionStatus enum.");
     }
 
     @Override
     public String toString() {
-        return new StringBuilder().append("ContractTransactionStatus{").append("code='").append(code).append('\'').append('}').toString();
+        return "ContractTransactionStatus{" + "code='" + code + '\'' + '}';
     }
 
     //GETTER AND SETTERS

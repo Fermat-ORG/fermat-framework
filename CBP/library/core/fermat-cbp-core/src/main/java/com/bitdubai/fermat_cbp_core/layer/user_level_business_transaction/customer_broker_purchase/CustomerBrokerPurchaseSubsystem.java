@@ -20,7 +20,7 @@ public class CustomerBrokerPurchaseSubsystem extends AbstractPluginSubsystem {
         try {
             registerDeveloper(new DeveloperBitDubai());
         } catch (Exception e) {
-            System.err.println(new StringBuilder().append("Exception: ").append(e.getMessage()).toString());
+            System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);
         }
     }

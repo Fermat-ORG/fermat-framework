@@ -28,7 +28,7 @@ public enum NegotiationType implements FermatEnum {
             case "SALE":
                 return NegotiationType.SALE;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the NegotiationType enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the NegotiationType enum");
         }
     }
 }

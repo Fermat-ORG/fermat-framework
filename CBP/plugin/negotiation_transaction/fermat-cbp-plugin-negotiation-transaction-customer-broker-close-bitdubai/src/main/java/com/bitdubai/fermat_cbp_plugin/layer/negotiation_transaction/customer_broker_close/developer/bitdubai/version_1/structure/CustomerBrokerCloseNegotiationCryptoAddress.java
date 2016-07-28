@@ -328,8 +328,8 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
 
             cryptoAdreess = customerBrokerCloseCryptoAddress.CryptoAddressesNew(request);
             adreess = cryptoAdreess.getAddress();
-            adreess = new StringBuilder().append(adreess).append(":").append(intraUser.getPublicKey()).toString();
-            System.out.print(new StringBuilder().append("\n\n**** 3.1.1.2.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CRYPTO ADDRESS: ").append(adreess).append(" ****\n").toString());
+            adreess = adreess + ":" + intraUser.getPublicKey();
+            System.out.print("\n\n**** 3.1.1.2.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CRYPTO ADDRESS: " + adreess + " ****\n");
 
         } catch (CantCryptoAddressesNewException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

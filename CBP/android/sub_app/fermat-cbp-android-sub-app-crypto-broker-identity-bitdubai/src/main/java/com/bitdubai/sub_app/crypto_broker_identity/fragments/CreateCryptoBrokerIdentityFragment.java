@@ -408,7 +408,7 @@ public class CreateCryptoBrokerIdentityFragment
                     IMAGE_MAX_SIZE) {
                 scale++;
             }
-            Log.d("", new StringBuilder().append("scale = ").append(scale).append(", orig-width: ").append(o.outWidth).append(", orig-height: ").append(o.outHeight).toString());
+            Log.d("", "scale = " + scale + ", orig-width: " + o.outWidth + ", orig-height: " + o.outHeight);
 
             Bitmap b = null;
             in = getActivity().getContentResolver().openInputStream(uri);
@@ -423,7 +423,7 @@ public class CreateCryptoBrokerIdentityFragment
                 // resize to desired dimensions
                 int height = b.getHeight();
                 int width = b.getWidth();
-                Log.d("", new StringBuilder().append("1th scale operation dimenions - width: ").append(width).append(", height: ").append(height).toString());
+                Log.d("", "1th scale operation dimenions - width: " + width + ", height: " + height);
 
                 double y = Math.sqrt(IMAGE_MAX_SIZE
                         / (((double) width) / height));
@@ -440,7 +440,7 @@ public class CreateCryptoBrokerIdentityFragment
             }
             in.close();
 
-            Log.d("", new StringBuilder().append("bitmap size - width: ").append(b.getWidth()).append(", height: ").append(b.getHeight()).toString());
+            Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " + b.getHeight());
             return b;
         } catch (IOException e) {
             Log.e("", e.getMessage(), e);

@@ -185,7 +185,7 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public void onSentMessage(NetworkServiceMessage messageSent) {
-        System.out.println(new StringBuilder().append("Negotiation Transmission just sent :").append(messageSent.getId()).toString());
+        System.out.println("Negotiation Transmission just sent :" + messageSent.getId());
         try {
             NegotiationTransmissionImpl negotiationTransmission =
                     NegotiationTransmissionImpl.fronJson(messageSent.getContent());
@@ -220,7 +220,7 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
                 List<NegotiationTransmission> lstActorRecord = outgoingNotificationDao.findAllByTransmissionState(
                         NegotiationTransmissionState.PROCESSING_SEND
                 );
-                System.out.println(new StringBuilder().append("NEGOTIATION TRANSMISSION - I found ").append(lstActorRecord.size()).append(" for sending").toString());
+                System.out.println("NEGOTIATION TRANSMISSION - I found " + lstActorRecord.size() + " for sending");
                 NegotiationType negotiationType;
                 for (NegotiationTransmission nt : lstActorRecord) {
                     negotiationType = nt.getNegotiationType();
@@ -317,10 +317,7 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
             System.out.print("\n**** 12) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
 
-            System.out.print(new StringBuilder()
-                            .append("\n**** 12) MOCK NEGOTIATION TRANSMISSION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION DATE: ****\n")
-                            .append("- ActorReceive = ").append(negotiationTransmission.getPublicKeyActorReceive())
-                            .append("- ActorSend = ").append(negotiationTransmission.getPublicKeyActorSend()).toString()
+            System.out.print("\n**** 12) MOCK NEGOTIATION TRANSMISSION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION DATE: ****\n" + "- ActorReceive = " + negotiationTransmission.getPublicKeyActorReceive() + "- ActorSend = " + negotiationTransmission.getPublicKeyActorSend()
             );
 
             if (negotiationTransmission.getNegotiationType().getCode().equals(NegotiationType.PURCHASE.getCode())) {

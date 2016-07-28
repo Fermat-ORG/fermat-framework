@@ -184,7 +184,7 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
 
                 if (earningPairId == null) {
 
-                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new CantCreateInputTransactionException(new StringBuilder().append("currencyMatching: ").append(currencyMatching).toString(), "There's no earnings pair set for this currency matching."));
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new CantCreateInputTransactionException("currencyMatching: " + currencyMatching, "There's no earnings pair set for this currency matching."));
 
                 } else {
 

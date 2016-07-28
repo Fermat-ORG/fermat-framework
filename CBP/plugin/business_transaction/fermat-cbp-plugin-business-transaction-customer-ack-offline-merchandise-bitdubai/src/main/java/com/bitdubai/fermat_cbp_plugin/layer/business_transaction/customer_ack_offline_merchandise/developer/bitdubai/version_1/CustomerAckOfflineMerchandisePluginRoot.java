@@ -362,7 +362,7 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
             String[] correctedClass = className.split((Pattern.quote("$")));
             return CustomerAckOfflineMerchandisePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
-            System.err.println(new StringBuilder().append("CantGetLogLevelByClass: ").append(e.getMessage()).toString());
+            System.err.println("CantGetLogLevelByClass: " + e.getMessage());
             return DEFAULT_LOG_LEVEL;
         }
     }

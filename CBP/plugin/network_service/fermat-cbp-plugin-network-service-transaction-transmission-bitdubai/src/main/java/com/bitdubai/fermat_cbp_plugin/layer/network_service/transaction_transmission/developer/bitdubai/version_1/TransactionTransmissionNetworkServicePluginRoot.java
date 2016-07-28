@@ -133,10 +133,10 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
             List<NetworkServiceMessage> networkServiceMessages = getNetworkServiceConnectionManager()
                     .getOutgoingMessagesDao()
                     .findAll(filters);
-            System.out.println(new StringBuilder().append("Transaction Transmission found ").append(networkServiceMessages.size()).append(" for sending").toString());
+            System.out.println("Transaction Transmission found " + networkServiceMessages.size() + " for sending");
             for (NetworkServiceMessage networkServiceMessage : networkServiceMessages) {
                 try {
-                    System.out.println(new StringBuilder().append("Trying to send pending message to ").append(networkServiceMessage.getReceiverPublicKey()).toString());
+                    System.out.println("Trying to send pending message to " + networkServiceMessage.getReceiverPublicKey());
                     networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.DELIVERED);
                     getNetworkServiceConnectionManager()
                             .getOutgoingMessagesDao().update(networkServiceMessage);
@@ -342,7 +342,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public void onSentMessage(NetworkServiceMessage fermatMessage) {
-        System.out.println(new StringBuilder().append("Transaction Transmission just sent :").append(fermatMessage.getId()).toString());
+        System.out.println("Transaction Transmission just sent :" + fermatMessage.getId());
         try {
             getNetworkServiceConnectionManager()
                     .getOutgoingMessagesDao().markAsDelivered(fermatMessage);
