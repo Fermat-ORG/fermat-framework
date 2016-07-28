@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
@@ -50,7 +51,7 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
         this.networkServiceRoot                = networkServiceRoot;
         this.status                            = AgentStatus.CREATED;
         this.poolConnectionsWaitingForResponse = new HashMap<>();
-        this.scheduledThreadPool               = Executors.newScheduledThreadPool(4);
+        this.scheduledThreadPool               = Executors.newScheduledThreadPool(5);
         this.scheduledFutures                  = new ArrayList<>();
     }
 
@@ -102,7 +103,11 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
              */
             List<NetworkServiceMessage> messages = networkServiceRoot.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findByFailCount(countFail, countFailMax);
 
-            System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getProfile().getNetworkServiceType()+") - processPendingOutgoingMessage messages.size() = "+ (messages != null ? messages.size() : 0));
+            NetworkClientConnection networkClientConnection = networkServiceRoot.getConnection();
+
+//            System.out.println("12345P2 pending messages "+ messages.size());
+
+            System.out.println("CommunicationSupervisorPendingMessagesAgent (" + networkServiceRoot.getProfile().getNetworkServiceType() + ") - processPendingOutgoingMessage messages.size() = " + (messages != null ? messages.size() : 0));
 
             if(messages != null) {
 
@@ -111,14 +116,16 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
                  */
                 for (NetworkServiceMessage fermatMessage: messages) {
 
-                    if (!poolConnectionsWaitingForResponse.containsKey(fermatMessage.getReceiverPublicKey())) {
+                    if (!poolConnectionsWaitingForResponse.containsKey(fermatMessage.getReceiverPublicKey()) && networkClientConnection.isConnected()) {
+                        System.out.println("12345P2P PENDING TO SEND MESSAGE");
 
                         ActorProfile remoteParticipant = new ActorProfile();
                         remoteParticipant.setIdentityPublicKey(fermatMessage.getReceiverPublicKey());
 
-                        networkServiceRoot.getConnection().callActor(networkServiceRoot.getProfile(), remoteParticipant);
 
-                        poolConnectionsWaitingForResponse.put(fermatMessage.getReceiverPublicKey(), remoteParticipant);
+                        networkClientConnection.callActor(networkServiceRoot.getProfile(), remoteParticipant);
+
+//                        poolConnectionsWaitingForResponse.put(fermatMessage.getReceiverPublicKey(), remoteParticipant);
 
                     }
                 }
@@ -129,6 +136,27 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
             System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getProfile().getNetworkServiceType()+") - processPendingOutgoingMessage detect a error: "+e.getMessage());
             e.printStackTrace();
         }
+
+    }
+
+    private void processSentMessages(){
+        try{
+        java.util.Date utilDate = new java.util.Date();
+        long comparingDate = utilDate.getTime();
+
+        List<NetworkServiceMessage> messages = networkServiceRoot.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findBySentMessages();
+//        System.out.println("12345P2 sent messages "+ messages.size());
+
+        for(NetworkServiceMessage message : messages){
+            if(message.getShippingTimestamp().getTime()+30000<=comparingDate){
+//                System.out.println("12345P2P LATE SENT MESSAGE");
+                networkServiceRoot.onNetworkServiceFailedMessage(message);
+            }
+        }
+    } catch (Exception e) {
+        System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getProfile().getNetworkServiceType()+") - processPendingOutgoingMessage detect a error: "+e.getMessage());
+        e.printStackTrace();
+    }
 
     }
 
@@ -163,6 +191,7 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
             try {
 
                 scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingIncomingMessageProcessorTask(),        30, 30, TimeUnit.SECONDS));
+                scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(),       0,  30, TimeUnit.SECONDS));
                 scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(1, 4),     1,  1, TimeUnit.MINUTES));
                 scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(5, 9),    10, 10, TimeUnit.MINUTES));
                 scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(10, null), 1,  1, TimeUnit.HOURS));
@@ -282,6 +311,8 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
         @Override
         public void run() {
             processPendingOutgoingMessage(countFailMin, countFailMax);
+            if (countFailMax == null && countFailMin==null)
+                processSentMessages();
         }
     }
 

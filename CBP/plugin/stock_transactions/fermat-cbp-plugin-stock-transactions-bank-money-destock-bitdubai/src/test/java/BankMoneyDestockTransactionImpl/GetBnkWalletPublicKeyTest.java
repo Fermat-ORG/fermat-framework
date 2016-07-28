@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetBnkWalletPublicKeyTest {
 
     @Test
-    public void getBnkWalletPublicKey(){
+    public void getBnkWalletPublicKey() {
         BankMoneyDestockTransactionImpl bankMoneyDestockTransaction = mock(BankMoneyDestockTransactionImpl.class);
         when(bankMoneyDestockTransaction.getBnkWalletPublicKey()).thenReturn(new String());
         assertThat(bankMoneyDestockTransaction.getBnkWalletPublicKey()).isNotNull();

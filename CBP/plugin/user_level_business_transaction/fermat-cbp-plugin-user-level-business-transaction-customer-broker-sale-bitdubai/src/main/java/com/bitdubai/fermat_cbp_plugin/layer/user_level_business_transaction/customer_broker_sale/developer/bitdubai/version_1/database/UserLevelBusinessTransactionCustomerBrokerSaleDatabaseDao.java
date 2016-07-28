@@ -101,23 +101,20 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao {
         }
     }
 
-    public List<CustomerBrokerSale> getCustomerBrokerSales(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException
-    {
+    public List<CustomerBrokerSale> getCustomerBrokerSales(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException {
         Database database = null;
         List<CustomerBrokerSale> customerBrokerSales = new ArrayList<>();
-        try{
+        try {
             database = openDatabase();
 
-            for (DatabaseTableRecord record : getCustomerBrokerSaleRecordData(filter))
-            {
+            for (DatabaseTableRecord record : getCustomerBrokerSaleRecordData(filter)) {
                 final CustomerBrokerSale customerBrokerSale = getCustomerBrokerSale(record);
                 customerBrokerSales.add(customerBrokerSale);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get customers Broker Purchase from the database with filter: " + filter.toString(), null);
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, new StringBuilder().append("error trying to get customers Broker Purchase from the database with filter: ").append(filter.toString()).toString(), null);
         }
 
         return customerBrokerSales;
@@ -125,8 +122,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao {
 
 
     public void saveCustomerBrokerSaleTransactionData(CustomerBrokerSale customerBrokerSale) throws DatabaseOperationException, MissingCustomerBrokerSaleDataException {
-        try
-        {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -134,7 +130,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao {
             DatabaseTableRecord customerBrokerPurchaseRecord = getCustomerBrokerSaleRecord(customerBrokerSale);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(customerBrokerSale.getTransactionId().toString());
+            filter.setValue(customerBrokerSale.getTransactionId());
             filter.setColumn(UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_CONTRACT_TRANSACTION_ID_COLUMN_NAME);
 
             if (isNewRecord(table, filter))
@@ -148,7 +144,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Customer Broker Purchase Transaction in the database.", null);
@@ -166,8 +162,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao {
         return table.getRecords();
     }
 
-    private CustomerBrokerSale getCustomerBrokerSale(final DatabaseTableRecord record) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException
-    {
+    private CustomerBrokerSale getCustomerBrokerSale(final DatabaseTableRecord record) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
         return new CustomerBrokerSaleImpl(
                 record.getStringValue(UserLevelBusinessTransactionCustomerBrokerSaleConstants.
                         CUSTOMER_BROKER_SALE_TRANSACTION_ID_COLUMN_NAME),

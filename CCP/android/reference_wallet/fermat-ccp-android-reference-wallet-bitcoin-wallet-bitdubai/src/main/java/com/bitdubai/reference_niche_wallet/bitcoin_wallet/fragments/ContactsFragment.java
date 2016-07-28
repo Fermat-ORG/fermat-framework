@@ -9,10 +9,12 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
@@ -147,8 +149,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private FrameLayout contacts_container;
     private boolean connectionDialogIsShow = false;
     private boolean isScrolled = false;
+    private Toolbar toolbar;
 
-    private ExecutorService _executor;
+    FermatWorker fermatWorker;
+
 
     public static ContactsFragment newInstance() {
 
@@ -165,9 +169,13 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
 
-        _executor = Executors.newFixedThreadPool(2);
+
         try {
-        cryptoWallet = appSession.getModuleManager();
+            cryptoWallet = appSession.getModuleManager();
+            toolbar = getToolbar();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.setElevation(10);
+            }
 
 
         } catch (Exception e) {
@@ -306,8 +314,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         mSearchView.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 String str = s.toString();
-                final int visibility = str.isEmpty() ? View.GONE : View.VISIBLE;
-                mClearSearchImageButton.setVisibility(visibility);
+
+                //final int visibility = str.isEmpty() ? View.GONE : View.VISIBLE;
+                // mClearSearchImageButton.setVisibility(visibility);
+
                 if (mPinnedHeaderAdapter != null) {
                     mPinnedHeaderAdapter.getFilter().filter(str);
                     mPinnedHeaderAdapter.notifyDataSetChanged();
@@ -356,7 +366,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void onRefresh() {
 
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+      fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
 
@@ -452,19 +462,21 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void setupViews(View rootView) {
         mSearchView = (EditText) rootView.findViewById(R.id.search_view);
-        mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+
+        //mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+
         contacts_container = (FrameLayout) rootView.findViewById(R.id.contacts_container);
         mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
         mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
 
-        mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
+       /* mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSearchView.getText().clear();
             }
-        });
+        });*/
 
         mEmptyView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -593,8 +605,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         dialog.dismiss();
         walletContact = new WalletContact();
         walletContact.setName("");
-        registerForContextMenu(mClearSearchImageButton);
-        getActivity().openContextMenu(mClearSearchImageButton);
+       // registerForContextMenu(mClearSearchImageButton);
+        //getActivity().openContextMenu(mClearSearchImageButton);
     }
 
     public void setWalletSession(ReferenceAppFermatSession appSession) {
@@ -603,6 +615,16 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
         this.walletResourcesProviderManager = walletResourcesProviderManager;
+    }
+
+
+    @Override
+    public void onStop() {
+
+
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+        super.onStop();
     }
 
     @Override
@@ -818,9 +840,11 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         for (int i = 0; i < items.size(); i++) {//) {
                             CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
-                            if (currentSection.matches(numberRegex))
+                            if (currentSection.matches(numberRegex)) {
                                 // is Digit
                                 numbers.add(cryptoWalletWalletContact.getActorName());
+                                positions.put(i, cryptoWalletWalletContact);
+                            }
                             else if (currentSection.matches(letterRegex)) {
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
@@ -837,14 +861,16 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             // add the section position in the list section positions
                             mListSectionPos.add(mListItems.indexOf(symbolCode));
                             // add all the items in this group
-                            mListItems.addAll(symbols);
+                            //mListItems.addAll(symbols);
+                            mListItems.addAll(positions.values());
                         }
 
                         final String numberCode = HeaderTypes.NUMBER.getCode();
                         if (!numbers.isEmpty()) {
                             mListItems.add(numberCode);
                             mListSectionPos.add(mListItems.indexOf(numberCode));
-                            mListItems.addAll(numbers);
+                          //  mListItems.addAll(numbers);
+                            mListItems.addAll(positions.values());
                         }
 
                         // add the letters items in the list and his corresponding sections based on its first letter

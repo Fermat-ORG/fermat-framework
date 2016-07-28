@@ -29,7 +29,7 @@ public class createTransactionDestockTest {
         doCallRealMethod().when(stockTransactionBankMoneyDestockManager).createTransactionDestock(
                 Mockito.any(String.class),
                 Mockito.any(FiatCurrency.class),
-                Mockito.any(String.class),Mockito.any(String.class),
+                Mockito.any(String.class), Mockito.any(String.class),
                 Mockito.any(String.class),
                 Mockito.any(BigDecimal.class),
                 Mockito.any(String.class),

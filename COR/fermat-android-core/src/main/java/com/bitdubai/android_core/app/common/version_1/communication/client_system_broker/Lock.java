@@ -18,9 +18,10 @@ public class Lock {
     }
 
     public void block() {
-        this.isBlock.compareAndSet(false,true);
+        this.isBlock.compareAndSet(false, true);
     }
-    public void unblock(){
-        this.isBlock.compareAndSet(true,false);
+
+    public void unblock() {
+        this.isBlock.compareAndSet(true, false);
     }
 }

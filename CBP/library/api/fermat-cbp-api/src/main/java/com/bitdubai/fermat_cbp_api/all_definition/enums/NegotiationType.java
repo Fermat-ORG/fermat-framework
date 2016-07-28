@@ -6,10 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by Yordin Alayn on 09.12.15.
  */
-public enum NegotiationType implements FermatEnum{
-    PURCHASE    ("PURC"),
-    SALE        ("SALE")
-    ;
+public enum NegotiationType implements FermatEnum {
+    PURCHASE("PURC"),
+    SALE("SALE");
 
     private String code;
 
@@ -24,9 +23,12 @@ public enum NegotiationType implements FermatEnum{
 
     public static NegotiationType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "PURC": return NegotiationType.PURCHASE;
-            case "SALE": return NegotiationType.SALE;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the NegotiationType enum");
+            case "PURC":
+                return NegotiationType.PURCHASE;
+            case "SALE":
+                return NegotiationType.SALE;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the NegotiationType enum");
         }
     }
 }

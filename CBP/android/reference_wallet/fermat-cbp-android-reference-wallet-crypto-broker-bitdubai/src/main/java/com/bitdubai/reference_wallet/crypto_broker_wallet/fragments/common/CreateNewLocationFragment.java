@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,8 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
     private static int MAX_LENGHT_STATE = 30;
     private static int MAX_LENGHT_CITY = 30;
     private static int MAX_LENGHT_ADDRESS = 100;
+    private String lastActivity = "";
+    private boolean isFromNegDetail = false;
 
     // UI
     private FermatEditText cityTextView;
@@ -54,24 +57,48 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
     private ErrorManager errorManager;
 
     private final TextWatcher cityTextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {cityTextCount.setText(String.valueOf(MAX_LENGHT_CITY - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            cityTextCount.setText(String.valueOf(MAX_LENGHT_CITY - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
     private final TextWatcher stateTextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {stateTextCount.setText(String.valueOf(MAX_LENGHT_STATE - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            stateTextCount.setText(String.valueOf(MAX_LENGHT_STATE - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
     private final TextWatcher address1TextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {address1TextCount.setText(String.valueOf(MAX_LENGHT_ADDRESS - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            address1TextCount.setText(String.valueOf(MAX_LENGHT_ADDRESS - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
     private final TextWatcher address2TextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {address2TextCount.setText(String.valueOf(MAX_LENGHT_ADDRESS - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            address2TextCount.setText(String.valueOf(MAX_LENGHT_ADDRESS - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
 
     public static CreateNewLocationFragment newInstance() {
@@ -84,9 +111,9 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
 
         View layout = inflater.inflate(R.layout.cbw_fragement_create_new_location, container, false);
 
-        for(Country c : Country.values()) {
-               if(c != Country.NONE)
-                   countries.add(c);
+        for (Country c : Country.values()) {
+            if (c != Country.NONE)
+                countries.add(c);
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_spinner_item, getListOfCountryNames(countries));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -128,6 +155,13 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
         try {
             walletManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+            lastActivity = (String) appSession.getData(FragmentsCommons.LAST_ACTIVITY);
+            setChangeBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS);
+            if (lastActivity.equals(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode())) {
+                setChangeBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS);
+                isFromNegDetail = true;
+            }
+            appSession.setData(FragmentsCommons.LAST_ACTIVITY, "");
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
@@ -159,6 +193,10 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
     @Override
     public void onClick(View view) {
@@ -186,7 +224,10 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
         if (location.length() > 0) {
             try {
                 walletManager.createNewLocation(location.toString(), "");
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
+                if (isFromNegDetail)
+                    getActivity().onBackPressed();
+                else
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
             } catch (CantCreateLocationSaleException e) {
                 if (errorManager != null)
                     errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);

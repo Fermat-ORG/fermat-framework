@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_o
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Manuel Perez - (darkpriestrelative@gmail.com) on 26/12/15.
  *
  * @version 1.0

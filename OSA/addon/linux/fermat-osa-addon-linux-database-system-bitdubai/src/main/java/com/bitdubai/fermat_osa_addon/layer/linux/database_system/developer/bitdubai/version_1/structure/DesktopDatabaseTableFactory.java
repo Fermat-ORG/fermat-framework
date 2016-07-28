@@ -27,19 +27,20 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
      * DatabaseTableFactory Member Variables.
      */
 
-    private final List<List<String>>             indexes     ;
-    private final String                         tableName   ;
+    private final List<List<String>> indexes;
+    private final String tableName;
     private final ArrayList<DatabaseTableColumn> tableColumns;
 
     /**
      * <p>DatabaseTableFactory class constructor
+     *
      * @param tableName table name to use
      */
-    public DesktopDatabaseTableFactory (final String tableName){
+    public DesktopDatabaseTableFactory(final String tableName) {
 
         this.tableName = tableName;
 
-        this.indexes      = new ArrayList<>();
+        this.indexes = new ArrayList<>();
         this.tableColumns = new ArrayList<>();
     }
 
@@ -48,8 +49,9 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
      */
 
     /**
-     *<p>Define the index field in the table
-     * @param index  index field name
+     * <p>Define the index field in the table
+     *
+     * @param index index field name
      */
     @Override
     public void addIndex(final String index) {
@@ -65,28 +67,28 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
     }
 
     /**
-     *<p>Returns the index field in the table
+     * <p>Returns the index field in the table
      *
      * @return String index field name
      */
 
     @Override
-    public List<List<String>> listIndexes(){
+    public List<List<String>> listIndexes() {
         return indexes;
     }
 
     /**
-     *<p> Returns the name of the table
+     * <p> Returns the name of the table
      *
      * @return String table name
      */
     @Override
-    public  String getTableName (){
+    public String getTableName() {
         return this.tableName;
     }
 
     /**
-     *<p>Sets properties of a new column to the table
+     * <p>Sets properties of a new column to the table
      *
      * @param columnName   New column name
      * @param dataType     New column data type
@@ -94,10 +96,10 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
      * @param primaryKey   Boolean column if primary ley
      */
     @Override
-    public void addColumn(final String           columnName  ,
-                          final DatabaseDataType dataType    ,
-                          final int              dataTypeSize,
-                          final boolean          primaryKey  ) {
+    public void addColumn(final String columnName,
+                          final DatabaseDataType dataType,
+                          final int dataTypeSize,
+                          final boolean primaryKey) {
 
         this.tableColumns.add(
                 new DesktopDatabaseTableColumn(
@@ -115,7 +117,7 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
      * @return ArrayList of DatabaseTableColumn object
      */
     @Override
-    public  ArrayList<DatabaseTableColumn> getColumns (){
+    public ArrayList<DatabaseTableColumn> getColumns() {
         return this.tableColumns;
     }
 

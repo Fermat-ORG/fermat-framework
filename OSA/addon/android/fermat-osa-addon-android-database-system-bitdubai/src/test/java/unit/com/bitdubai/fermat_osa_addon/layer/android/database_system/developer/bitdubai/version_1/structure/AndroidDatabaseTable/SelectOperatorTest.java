@@ -42,7 +42,7 @@ public class SelectOperatorTest {
 
     private DatabaseTableFactory testTableFactory;
 
-    public  void setUpDatabase() throws Exception {
+    public void setUpDatabase() throws Exception {
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
         testOwnerId = UUID.randomUUID();
@@ -50,7 +50,7 @@ public class SelectOperatorTest {
         testDatabase.createDatabase(testDatabaseName);
     }
 
-    public void setUpTable() throws Exception{
+    public void setUpTable() throws Exception {
         testTableFactory = new AndroidDatabaseTableFactory(testTableName);
         testTableFactory.addColumn("testColumn1", DatabaseDataType.INTEGER, 0, false);
         testTableFactory.addColumn("testColumn2", DatabaseDataType.STRING, 10, false);
@@ -58,13 +58,13 @@ public class SelectOperatorTest {
     }
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         setUpDatabase();
         setUpTable();
     }
 
     @Test
-    public void loadTable_TableAlreadyExists_RecordsListLoaded() throws Exception{
+    public void loadTable_TableAlreadyExists_RecordsListLoaded() throws Exception {
         try {
             testDatabaseTable = testDatabase.getTable(testTableName);
             testDatabaseTable.addStringFilter("column1", "value1", DatabaseFilterType.EQUAL);
@@ -78,7 +78,7 @@ public class SelectOperatorTest {
             testDatabaseTable.addAggregateFunction("column3", DataBaseAggregateFunctionType.AVG, "column3_avg");
             testDatabaseTable.loadToMemory();
             assertThat(testDatabaseTable.getRecords()).isNotNull();
-        } catch(Exception e){
+        } catch (Exception e) {
             System.out.println("hubo un error que no me importa");
             //System.out.println(e.toString());
         }

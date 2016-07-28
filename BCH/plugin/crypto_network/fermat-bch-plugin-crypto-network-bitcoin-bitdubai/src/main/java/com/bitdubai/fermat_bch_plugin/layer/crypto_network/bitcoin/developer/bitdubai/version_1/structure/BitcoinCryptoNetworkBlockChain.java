@@ -90,6 +90,13 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
     }
 
     /**
+     * deletes the blockchain
+     */
+    public void deleteBlockchain(){
+        File blockChainFile = new File(BLOCKCHAIN_PATH, BLOCKCHAIN_FILENAME);
+        blockChainFile.delete();
+    }
+    /**
      * Initializes the blockchain and blockstore objects.
      * @throws BlockStoreException if something went wrong and I can't create the blockchain
      */
@@ -118,8 +125,7 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
          */
         if (isReset){
             firstTime = true;
-            if (isReset)
-                blockChainFile.delete();
+            blockChainFile.delete();
         }
 
 
@@ -145,10 +151,10 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
             if (firstTime){
                 switch (BLOCKCHAIN_NETWORK_TYPE){
                     case TEST_NET:
-                        loadCheckpoint("2016-07-04 00:00:43");
+                        loadCheckpoint("2016-07-13 00:00:00");
                         break;
                     case PRODUCTION:
-                        loadCheckpoint("2016-06-30 22:11:25");
+                        loadCheckpoint("2016-07-25 00:00:00");
                         break;
                 }
             }

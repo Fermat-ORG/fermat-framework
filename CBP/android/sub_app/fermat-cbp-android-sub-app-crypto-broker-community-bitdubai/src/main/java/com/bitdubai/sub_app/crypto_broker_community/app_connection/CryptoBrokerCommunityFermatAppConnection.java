@@ -87,7 +87,7 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Ref
                 return new CommunityNotificationPainter("Crypto Broker Community", "A Broker wants to connect with you.",
                         "", R.drawable.cbc_ic_nav_connections);
             case CBPBroadcasterConstants.CBC_ACTOR_CONNECTED:
-                new CommunityNotificationPainter("Crypto Broker Community", "A Broker accepted your connection request.",
+                return new CommunityNotificationPainter("Crypto Broker Community", "A Broker accepted your connection request.",
                         "", R.drawable.cbc_ic_nav_connections);
             default:
                 return null;

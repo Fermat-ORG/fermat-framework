@@ -1,11 +1,6 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 
-import static com.googlecode.catchexception.CatchException.*;
-import static org.fest.assertions.api.Assertions.*;
-
 import android.app.Activity;
-import android.content.Context;
-import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -14,7 +9,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
-import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseRecord;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTableFactory;
 
 import org.junit.Before;
@@ -26,8 +20,10 @@ import org.robolectric.annotation.Config;
 
 import java.util.UUID;
 
-import static org.robolectric.Shadows.shadowOf;
 import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
+
+import static com.googlecode.catchexception.CatchException.*;
+import static org.fest.assertions.api.Assertions.*;
 
 /**
  * Created by jorgegonzalez on 2015.06.30..
@@ -44,7 +40,7 @@ public class ExecuteTransactionTest {
     private UUID testOwnerId;
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
         testOwnerId = UUID.randomUUID();
@@ -53,7 +49,7 @@ public class ExecuteTransactionTest {
     }
 
     @Test
-    public void executeTransaction_Transactionok_ThrowsDatabaseTransactionFailed() throws Exception{
+    public void executeTransaction_Transactionok_ThrowsDatabaseTransactionFailed() throws Exception {
         DatabaseTableFactory testTableFactory = new AndroidDatabaseTableFactory("testTable");
         testTableFactory.addColumn("testColumn1", DatabaseDataType.INTEGER, 0, false);
         testTableFactory.addColumn("testColumn2", DatabaseDataType.STRING, 10, false);
@@ -73,11 +69,11 @@ public class ExecuteTransactionTest {
         DatabaseTableRecord selectRecord = dataBaseTable.getRecords().get(0);
 
         DatabaseTableRecord updateRecord = dataBaseTable.getRecords().get(0);
-        updateRecord.setStringValue("testColumn2","columnChange");
+        updateRecord.setStringValue("testColumn2", "columnChange");
 
         DatabaseTableRecord insertRecord = dataBaseTable.getEmptyRecord();
 
-        insertRecord.setIntegerValue("testColumn1",10);
+        insertRecord.setIntegerValue("testColumn1", 10);
         insertRecord.setStringValue("testColumn2", "column3");
 
         DatabaseTransaction databaseTransaction = testDatabase.newTransaction();
@@ -94,7 +90,7 @@ public class ExecuteTransactionTest {
     }
 
     @Test
-    public void executeTransaction_NullTransaction_ThrowsDatabaseTransactionFailed() throws Exception{
+    public void executeTransaction_NullTransaction_ThrowsDatabaseTransactionFailed() throws Exception {
 
         catchException(testDatabase).executeTransaction(null);
 

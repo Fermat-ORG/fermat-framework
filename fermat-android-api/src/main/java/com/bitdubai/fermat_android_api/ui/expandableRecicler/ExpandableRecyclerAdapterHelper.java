@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Helper for {@link ExpandableRecyclerAdapter}.
- *
+ * <p/>
  * Created by Ryan Brooks on 6/11/15.
  */
 public class ExpandableRecyclerAdapterHelper {
@@ -24,7 +24,7 @@ public class ExpandableRecyclerAdapterHelper {
         ParentListItem parentListItem;
         ParentWrapper parentWrapper;
 
-        if(parentItemList!=null) {
+        if (parentItemList != null) {
             int parentListItemCount = parentItemList.size();
             for (int i = 0; i < parentListItemCount; i++) {
                 parentListItem = parentItemList.get(i);

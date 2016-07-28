@@ -10,4 +10,11 @@ import java.io.Serializable;
  */
 public interface CryptoBrokerIdentity extends ActorIdentity, Serializable {
 
+    /**
+     * This method returns the CryptoBrokerIdentityExtraData from this identity.
+     *
+     * @return
+     */
+    CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData();
+
 }

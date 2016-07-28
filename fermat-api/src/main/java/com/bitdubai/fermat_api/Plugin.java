@@ -6,7 +6,7 @@ import java.util.UUID;
 
 /**
  * It has the main functionality of a Fermat Plug-In.
- *
+ * <p/>
  * Created by ciencias on 02.02.15.
  * Updated by lnacosta (laion.cj91@gmail.com) on 20/11/2015.
  */
@@ -17,7 +17,7 @@ public interface Plugin {
      *
      * @param pluginId uuid representing the id of the plug-in.
      */
-    void setId (UUID pluginId);
+    void setId(UUID pluginId);
 
     /**
      * Through this method we can get an instance of the manager of that plug-in.
@@ -26,5 +26,5 @@ public interface Plugin {
      * @return an instance of FermatManager.
      */
     FermatManager getManager();
-    
+
 }

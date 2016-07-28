@@ -27,7 +27,8 @@ public interface ErrorManager extends FermatManager {
     void reportUnexpectedPlatformException(PlatformComponents exceptionSource, UnexpectedPlatformExceptionSeverity unexpectedPlatformExceptionSeverity, Exception exception);
 
     void reportUnexpectedPluginException(Plugins exceptionSource, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception);
-    void reportUnexpectedPluginException(Plugins exceptionSource, Platforms platform, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception,final String[] mailTo);
+
+    void reportUnexpectedPluginException(Plugins exceptionSource, Platforms platform, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception, final String[] mailTo);
 
     void reportUnexpectedWalletException(Wallets exceptionSource, UnexpectedWalletExceptionSeverity unexpectedWalletExceptionSeverity, Exception exception);
 
@@ -40,35 +41,37 @@ public interface ErrorManager extends FermatManager {
     /**
      * Throw the method <code>reportUnexpectedPluginException</code> you can report an unexpected error in a plugin.
      *
-     * @param exceptionSource    plugin version reference indicating in where the error was produced.
-     * @param exceptionSeverity  severity of the exception, priority stuff.
-     * @param exception          exception reported.
+     * @param exceptionSource   plugin version reference indicating in where the error was produced.
+     * @param exceptionSeverity severity of the exception, priority stuff.
+     * @param exception         exception reported.
      */
-    void reportUnexpectedPluginException(final PluginVersionReference            exceptionSource  ,
+    void reportUnexpectedPluginException(final PluginVersionReference exceptionSource,
                                          final UnexpectedPluginExceptionSeverity exceptionSeverity,
-                                         final Exception                         exception        );
+                                         final Exception exception);
 
     /**
      * Throw the method <code>reportUnexpectedAddonsException</code> you can report an unexpected error in an addon.
      *
-     * @param exceptionSource    addon version reference indicating in where the error was produced.
-     * @param exceptionSeverity  severity of the exception, priority stuff.
-     * @param exception          exception reported.
+     * @param exceptionSource   addon version reference indicating in where the error was produced.
+     * @param exceptionSeverity severity of the exception, priority stuff.
+     * @param exception         exception reported.
      */
-    void reportUnexpectedAddonsException(final AddonVersionReference             exceptionSource  ,
+    void reportUnexpectedAddonsException(final AddonVersionReference exceptionSource,
                                          final UnexpectedAddonsExceptionSeverity exceptionSeverity,
-                                         final Exception                         exception        );
+                                         final Exception exception);
 
     /**
      * Throw the method <code>reportUnexpectedEventException</code> you can report an unexpected error in an event.
      * The only who reports this type of exceptions is now the event monitor, and he doesn't know the severity of
      * an exception, for that reason the severity is always "UNKNOWN".
      *
-     * @param exceptionSource  event who throw the exception.
-     * @param exception        exception reported.
+     * @param exceptionSource event who throw the exception.
+     * @param exception       exception reported.
      */
     void reportUnexpectedEventException(final FermatEvent exceptionSource,
-                                        final Exception   exception      );
+                                        final Exception exception);
 
     void enabledErrorReport(boolean isErrorReportEnabled);
+
+    void reportUnexpectedPluginException(Plugins plugin, Platforms platform, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception, String[] mailTo, String extraData);
 }

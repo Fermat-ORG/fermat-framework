@@ -10,13 +10,13 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum CryptoBrokerContactState implements FermatEnum {
 
     PENDING_LOCALLY_ACCEPTANCE("PYA"),
-    BLOCKED ("BCK"),
-    DENIED_LOCALLY ("DEN"),
-    CANCELLED ("CAN"),
-    CONNECTED ("CTC"),
+    BLOCKED("BCK"),
+    DENIED_LOCALLY("DEN"),
+    CANCELLED("CAN"),
+    CONNECTED("CTC"),
     DISCONNECTED_LOCALLY("DSL"),
     DISCONNECTED_REMOTELY("DSR"),
-    PENDING_REMOTELY_ACCEPTANCE ("PRA");
+    PENDING_REMOTELY_ACCEPTANCE("PRA");
 
     private String code;
 
@@ -31,16 +31,25 @@ public enum CryptoBrokerContactState implements FermatEnum {
 
     public static CryptoBrokerContactState getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "PYA": return CryptoBrokerContactState.PENDING_LOCALLY_ACCEPTANCE;
-            case "BCK": return CryptoBrokerContactState.BLOCKED;
-            case "DEN": return CryptoBrokerContactState.DENIED_LOCALLY;
-            case "CAN": return CryptoBrokerContactState.CANCELLED;
-            case "CTC": return CryptoBrokerContactState.CONNECTED;
-            case "DIS": return CryptoBrokerContactState.DISCONNECTED_LOCALLY;
-            case "DSR": return CryptoBrokerContactState.DISCONNECTED_REMOTELY;
-            case "PRA": return CryptoBrokerContactState.PENDING_REMOTELY_ACCEPTANCE;
+            case "PYA":
+                return CryptoBrokerContactState.PENDING_LOCALLY_ACCEPTANCE;
+            case "BCK":
+                return CryptoBrokerContactState.BLOCKED;
+            case "DEN":
+                return CryptoBrokerContactState.DENIED_LOCALLY;
+            case "CAN":
+                return CryptoBrokerContactState.CANCELLED;
+            case "CTC":
+                return CryptoBrokerContactState.CONNECTED;
+            case "DIS":
+                return CryptoBrokerContactState.DISCONNECTED_LOCALLY;
+            case "DSR":
+                return CryptoBrokerContactState.DISCONNECTED_REMOTELY;
+            case "PRA":
+                return CryptoBrokerContactState.PENDING_REMOTELY_ACCEPTANCE;
 
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the ContactState enum");
         }
     }
 

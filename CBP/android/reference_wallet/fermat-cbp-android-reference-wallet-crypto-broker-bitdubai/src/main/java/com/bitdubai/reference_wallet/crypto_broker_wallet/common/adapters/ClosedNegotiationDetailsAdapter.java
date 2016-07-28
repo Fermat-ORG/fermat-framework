@@ -230,15 +230,21 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
 
         final List<ClauseInformation> data = new ArrayList<>();
 
-        data.add(clauses.get(ClauseType.EXCHANGE_RATE));
-        data.add(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY));
-        data.add(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY));
-        data.add(clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD));
+        if (clauses.get(ClauseType.EXCHANGE_RATE) != null)
+            data.add(clauses.get(ClauseType.EXCHANGE_RATE));
+        if (clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY) != null)
+            data.add(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY));
+        if (clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY) != null)
+            data.add(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY));
+        if (clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD) != null)
+            data.add(clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD));
         if (brokerPaymentMethodDetail != null) data.add(brokerPaymentMethodDetail);
         if (receptionMethod != null) data.add(receptionMethod);
         if (customerReceptionMethodDetail != null) data.add(customerReceptionMethodDetail);
-        data.add(clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER));
-        data.add(clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER));
+        if (clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) != null)
+            data.add(clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER));
+        if (clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER) != null)
+            data.add(clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER));
 
         return data;
     }

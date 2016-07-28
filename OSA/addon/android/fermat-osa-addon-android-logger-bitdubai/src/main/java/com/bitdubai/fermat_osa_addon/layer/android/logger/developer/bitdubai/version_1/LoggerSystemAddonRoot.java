@@ -11,7 +11,7 @@ import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.ver
  * Created by rodrigo on 2015.06.25..
  * Modified by lnacosta (laion.cj91@gmail.com) on 05/11/2015.
  */
-public final class LoggerSystemAddonRoot extends AbstractAddon  {
+public final class LoggerSystemAddonRoot extends AbstractAddon {
 
     private FermatManager fermatManager;
 

@@ -15,7 +15,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class ConstructionTest {
 
     @Test
-    public void Construction_ValidParameters_NewObjectCreated(){
+    public void Construction_ValidParameters_NewObjectCreated() {
 
         CryptoBrokerWalletPluginRoot cryptoBrokerWalletPluginRoot = new CryptoBrokerWalletPluginRoot();
         assertThat(cryptoBrokerWalletPluginRoot).isNotNull();

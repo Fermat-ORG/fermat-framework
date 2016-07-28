@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by Matias Furszyfer on 2016.06.15..
  */
-public class OptionMenuChangeActivityOnPressEvent implements OptionMenuPressEvent<OptionMenuChangeActivityOnPressEvent>,Serializable{
+public class OptionMenuChangeActivityOnPressEvent implements OptionMenuPressEvent<OptionMenuChangeActivityOnPressEvent>, Serializable {
 
     /**
      * Activity code to open

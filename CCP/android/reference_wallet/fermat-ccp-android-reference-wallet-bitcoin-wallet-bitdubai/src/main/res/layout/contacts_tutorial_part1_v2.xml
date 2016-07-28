@@ -69,7 +69,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:textSize="14sp"
-            android:text="@string/in_this_wallet_you_can_have_text"
+            android:text="This wallet allows for two  different types of contacts:"
             android:gravity="center"
             android:textColor="@color/grey_900" />
 

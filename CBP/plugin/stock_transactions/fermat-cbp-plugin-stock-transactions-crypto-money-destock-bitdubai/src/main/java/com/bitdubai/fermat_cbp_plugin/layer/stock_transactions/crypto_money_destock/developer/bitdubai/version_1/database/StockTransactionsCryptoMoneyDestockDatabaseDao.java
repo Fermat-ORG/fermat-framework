@@ -74,7 +74,7 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
     }
 
     private DatabaseTableRecord getBankMoneyDestockRecord(CryptoMoneyTransaction cryptoMoneyTransaction
-                                                          ) throws DatabaseOperationException {
+    ) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -138,17 +138,17 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
         //Fee values
         long fee = bankMoneyRestockTransactionRecord.getLongValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_FEE_COLUMN_NAME);
         long minimalFee = BitcoinFee.SLOW.getFee();
-        if(fee<minimalFee){
+        if (fee < minimalFee) {
             fee = minimalFee;
         }
         String feeOriginString = bankMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_ORIGIN_FEE_COLUMN_NAME);
         FeeOrigin feeOrigin;
-        if(feeOriginString==null||feeOriginString.isEmpty()){
+        if (feeOriginString == null || feeOriginString.isEmpty()) {
             feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
         } else {
             try {
                 feeOrigin = FeeOrigin.getByCode(feeOriginString);
-            } catch (InvalidParameterException ex){
+            } catch (InvalidParameterException ex) {
                 feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
             }
         }
@@ -160,8 +160,7 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
 
     public void saveCryptoMoneyDestockTransactionData(CryptoMoneyTransaction cryptoMoneyTransaction) throws DatabaseOperationException, MissingCryptoMoneyDestockDataException {
 
-        try
-        {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -186,15 +185,14 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Bank Money Restock Transaction in the database.", null);
         }
     }
 
-    public List<CryptoMoneyTransaction> getCryptoMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException
-    {
+    public List<CryptoMoneyTransaction> getCryptoMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException {
         Database database = null;
         try {
             database = openDatabase();
@@ -203,18 +201,17 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
             for (DatabaseTableRecord cryptoMoneyRestockRecord : getCryptoMoneyDestockData(filter)) {
                 final CryptoMoneyTransaction cryptoMoneyTransaction = getCryptoMoneyRestockTransaction(cryptoMoneyRestockRecord);
 
-                if(!cryptoMoneyTransaction.getTransactionStatus().equals(TransactionStatusRestockDestock.COMPLETED))
+                if (!cryptoMoneyTransaction.getTransactionStatus().equals(TransactionStatusRestockDestock.COMPLETED))
                     cryptoMoneyTransactions.add(cryptoMoneyTransaction);
             }
 
             database.closeDatabase();
 
             return cryptoMoneyTransactions;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Bank Money Restock Transaction from the database with filter: " + filter.toString(), null);
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, new StringBuilder().append("error trying to get Bank Money Restock Transaction from the database with filter: ").append(filter.toString()).toString(), null);
         }
     }
 }

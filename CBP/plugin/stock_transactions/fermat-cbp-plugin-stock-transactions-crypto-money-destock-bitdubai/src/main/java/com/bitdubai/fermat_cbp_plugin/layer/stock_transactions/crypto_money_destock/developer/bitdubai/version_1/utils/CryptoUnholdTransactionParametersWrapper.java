@@ -15,14 +15,14 @@ import java.util.UUID;
 public class CryptoUnholdTransactionParametersWrapper implements CryptoUnholdTransactionParameters {
     private UUID transactionId;
     private CryptoCurrency cryptoCurrency;
-    private  String          walletPublicKey;
-    private  String          publicActorKey;
+    private String walletPublicKey;
+    private String publicActorKey;
     private BigDecimal amount;
-    private  String          memo;
-    private  String          publicKeyPlugin;
+    private String memo;
+    private String publicKeyPlugin;
     private BlockchainNetworkType blockchainNetworkType;
     //fee values
-    private long                   fee;
+    private long fee;
     private FeeOrigin feeOrigin;
 
     public CryptoUnholdTransactionParametersWrapper(UUID transactionId,
@@ -35,20 +35,21 @@ public class CryptoUnholdTransactionParametersWrapper implements CryptoUnholdTra
                                                     BlockchainNetworkType blockchainNetworkType,
                                                     long fee,
                                                     FeeOrigin feeOrigin
-    ){
-        this.transactionId   = transactionId;
-        this.cryptoCurrency  = cryptoCurrency;
+    ) {
+        this.transactionId = transactionId;
+        this.cryptoCurrency = cryptoCurrency;
         this.walletPublicKey = walletPublicKey;
-        this.publicActorKey  = publicActorKey;
-        this.amount          = amount;
-        this.memo            = memo;
+        this.publicActorKey = publicActorKey;
+        this.amount = amount;
+        this.memo = memo;
         this.publicKeyPlugin = publicKeyPlugin;
         this.blockchainNetworkType = blockchainNetworkType;
         this.fee = fee;
         this.feeOrigin = feeOrigin;
     }
 
-    public CryptoUnholdTransactionParametersWrapper(){}
+    public CryptoUnholdTransactionParametersWrapper() {
+    }
 
     @Override
     public UUID getTransactionId() {
@@ -127,7 +128,7 @@ public class CryptoUnholdTransactionParametersWrapper implements CryptoUnholdTra
 
     @Override
     public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
-    this.blockchainNetworkType = blockchainNetworkType;
+        this.blockchainNetworkType = blockchainNetworkType;
     }
 
     @Override
@@ -141,7 +142,7 @@ public class CryptoUnholdTransactionParametersWrapper implements CryptoUnholdTra
     }
 
     @Override
-    public void setFee(BitcoinFee bitcoinFee){
+    public void setFee(BitcoinFee bitcoinFee) {
         this.fee = bitcoinFee.getFee();
     }
 

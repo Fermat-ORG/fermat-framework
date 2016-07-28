@@ -148,7 +148,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             return ContractTransactionStatus.getByCode(stringContractTransactionStatus);
         } catch (InvalidParameterException e) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -157,7 +157,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     "Invalid code in ContractTransactionStatus enum");
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -189,7 +189,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             return eventTypeList;
         } catch (CantLoadTableToMemoryException e) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantGetContractListException(e,
@@ -197,7 +197,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     "Cannot load the table into memory");
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -225,7 +225,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             return value;
         } catch (CantLoadTableToMemoryException e) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
@@ -233,7 +233,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     "Cannot load the database table");
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -271,7 +271,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -290,7 +290,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -323,9 +323,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      * @param key         String with the search key.
      * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
-     *
      * @return List<CustomerOfflinePaymentRecord>
-     *
      * @throws CantGetContractListException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
@@ -350,7 +348,6 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      * This method returns a CustomerOfflinePaymentRecord
      *
      * @return
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -365,7 +362,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             );
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -380,7 +377,6 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      * @param key
      * @param keyColumn
      * @param valueColumn
-     *
      * @return
      */
     private List<String> getStringList(
@@ -408,7 +404,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             return contractHashList;
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetContractListException(e,
-                    "Getting " + valueColumn + " based on " + key,
+                    new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(),
                     "Cannot load the table into memory");
         }
     }
@@ -423,7 +419,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             return contractHashFromDatabase != null;
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -438,9 +434,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      * @param key
      * @param keyColumn
      * @param valueColumn
-     *
      * @return
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private String getValue(String key,
@@ -476,7 +470,6 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      * This method check the database record result.
      *
      * @param records
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private void checkDatabaseRecords(List<DatabaseTableRecord> records) throws
@@ -493,7 +486,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
         }
         recordsSize = records.size();
         if (recordsSize > VALID_RESULTS_NUMBER) {
-            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
+            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(VALID_RESULTS_NUMBER).append(", but I got ").append(recordsSize).toString());
         }
     }
 
@@ -501,13 +494,16 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      * This method persists a basic record in database
      *
      * @param customerBrokerContractPurchase
-     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
             CustomerBrokerContractPurchase customerBrokerContractPurchase)
             throws CantInsertRecordException {
         try {
+            if (isContractHashInDatabase(customerBrokerContractPurchase.getContractId())) {
+                System.out.println(new StringBuilder().append("The contract ").append(customerBrokerContractPurchase).append(" exists in database").toString());
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
             databaseTableRecord = buildDatabaseTableRecord(
@@ -517,7 +513,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             databaseTable.insertRecord(databaseTableRecord);
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception,
@@ -564,7 +560,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             return customerOfflinePaymentRecord;
         } catch (CantLoadTableToMemoryException e) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
@@ -572,7 +568,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     "Cannot load the database table");
         } catch (InvalidParameterException e) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
@@ -580,7 +576,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     "Invalid parameter in ContractTransactionStatus");
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -607,7 +603,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             databaseTable.updateRecord(record);
         } catch (CantLoadTableToMemoryException exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -616,7 +612,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     "Unexpected results in database");
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -629,13 +625,16 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
      *
      * @param customerBrokerContractSale
-     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
             CustomerBrokerContractSale customerBrokerContractSale)
             throws CantInsertRecordException {
         try {
+            if (isContractHashInDatabase(customerBrokerContractSale.getContractId())) {
+                System.out.println(new StringBuilder().append("The contract ").append(customerBrokerContractSale).append(" exists in database").toString());
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
             databaseTableRecord = buildDatabaseTableRecord(
@@ -645,7 +644,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             databaseTable.insertRecord(databaseTableRecord);
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception,
@@ -659,7 +658,6 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      *
      * @param record
      * @param customerBrokerContractSale
-     *
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
@@ -691,7 +689,6 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      *
      * @param record
      * @param customerOfflinePaymentRecord
-     *
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
@@ -730,7 +727,6 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      *
      * @param record
      * @param customerBrokerContractPurchase
-     *
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
@@ -763,7 +759,6 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      *
      * @param contractHash
      * @param cryptoTransactionUUID
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -788,7 +783,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             databaseTable.updateRecord(record);
         } catch (CantLoadTableToMemoryException exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -797,7 +792,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     "There was an unexpected result in database");
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -817,7 +812,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     contractTransactionStatus.getCode());
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
@@ -830,7 +825,6 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      * @param contractHash
      * @param statusColumnName
      * @param newStatus
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -853,7 +847,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             record.setStringValue(statusColumnName, newStatus);
             databaseTable.updateRecord(record);
         } catch (CantLoadTableToMemoryException exception) {
-            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Updating parameter " + statusColumnName, "");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, new StringBuilder().append("Updating parameter ").append(statusColumnName).toString(), "");
         }
     }
 
@@ -878,15 +872,15 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             databaseTable.updateRecord(record);
         } catch (CantLoadTableToMemoryException exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    "Updating parameter " + CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
+                    new StringBuilder().append("Updating parameter ").append(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
@@ -898,7 +892,6 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      *
      * @param eventType
      * @param eventSource
-     *
      * @throws CantSaveEventException
      */
     public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
@@ -917,7 +910,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
         } catch (CantInsertRecordException exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -926,7 +919,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     "Cannot insert a record in Offline Payment database");
         } catch (Exception exception) {
             this.pluginRoot.reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -940,9 +933,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      * This method returns the completion date from database.
      *
      * @param contractHash
-     *
      * @return
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public long getCompletionDateByContractHash(
@@ -977,9 +968,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      * This method sets the completion date in the database.
      *
      * @param contractHash
-     *
      * @return
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public void setCompletionDateByContractHash(

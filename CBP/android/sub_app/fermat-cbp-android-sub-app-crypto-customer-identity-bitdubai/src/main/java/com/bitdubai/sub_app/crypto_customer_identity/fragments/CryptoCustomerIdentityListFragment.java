@@ -8,8 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,9 +65,8 @@ public class CryptoCustomerIdentityListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+//        onRefreshBroker();
         cleanSessionData();
-
         onRefresh();
     }
 
@@ -90,6 +87,7 @@ public class CryptoCustomerIdentityListFragment
                 .setBody(R.string.cbp_customer_identity_welcome_body)
                 .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setVIewColor(R.color.ccc_color_dialog_identity)
                 .setIsCheckEnabled(false)
                 .build();
 
@@ -290,4 +288,82 @@ public class CryptoCustomerIdentityListFragment
         if (appSession.getData(FragmentsCommons.ORIGINAL_IMAGE) != null)
             appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
     }
+
+    /**
+     * Checking if a broker profile is already created before a customer is created
+     */
+//    public void onRefreshBroker() {
+//        try{
+//            final FermatWorker worker = new FermatWorker() {
+//                @Override
+//                protected Object doInBackground() throws Exception {
+//                    return getMoreDataAsyncBroker();
+//                }
+//            };
+//            worker.setContext(getActivity());
+//            worker.setCallBack(new FermatWorkerCallBack() {
+//                @SuppressWarnings("unchecked")
+//                @Override
+//                public void onPostExecute(Object... result) {
+//                    if (isAttached) {
+//                        if (result != null &&
+//                                result.length > 0) {
+//                            if (getActivity() != null) {
+//                                existentBrokerIdentityDialog();
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onErrorOccurred(Exception ex) {
+//                    try{
+//                        worker.shutdownNow();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//            worker.execute();
+//        }catch (Exception ignore){
+//            if (executor != null) {
+//                executor.shutdown();
+//                executor = null;
+//            }
+//        }
+//    }
+//
+//    public void existentBrokerIdentityDialog() {
+//        try {
+//            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+//                    .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
+//                    .setBody(R.string.cbp_customer_identity_existent_broker)
+//                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+//                    .setCheckButtonAndTextVisible(0)
+//                    .setIsCheckEnabled(false)
+//                    .setBannerRes(R.drawable.banner_identity_customer)
+//                    .setVIewColor(R.color.ccc_color_dialog_identity)
+//                    .build();
+//            pd.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialog) {
+//                    getActivity().onBackPressed();
+//                }
+//            });
+//            pd.show();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public List<CryptoBrokerIdentityInformation> getMoreDataAsyncBroker() {
+//        List<CryptoBrokerIdentityInformation> data = new ArrayList<>();
+//        try {
+//            data = appSession.getModuleManager().listIdentities(0, 0);
+//        } catch (CantListCryptoBrokersException ex) {
+//            appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY,
+//                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+//        }
+//        return data;
+//    }
 }

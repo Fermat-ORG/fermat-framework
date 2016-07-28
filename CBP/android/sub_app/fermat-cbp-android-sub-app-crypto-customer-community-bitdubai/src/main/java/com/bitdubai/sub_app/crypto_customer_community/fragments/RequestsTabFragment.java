@@ -181,6 +181,7 @@ public class RequestsTabFragment
                             .setIconRes(R.drawable.crypto_customer)
                             .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
+                            .setVIewColor(R.color.ccc_color_dialog)
                             .setIsCheckEnabled(false)
                             .build();
 
@@ -234,7 +235,6 @@ public class RequestsTabFragment
     @Override
     public List<LinkedCryptoCustomerIdentity> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<LinkedCryptoCustomerIdentity> dataSet = new ArrayList<>();
-
         try {
             offset = pos;
             final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
@@ -328,7 +328,6 @@ public class RequestsTabFragment
     @Override
     public void onFragmentFocus() {
         super.onFragmentFocus();
-
-        onRefresh();
+        if (isAttached) onRefresh();
     }
 }

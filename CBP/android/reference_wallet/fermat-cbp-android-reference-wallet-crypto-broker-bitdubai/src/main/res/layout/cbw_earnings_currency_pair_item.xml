@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+    android:id="@+id/cbw_earning_currency_pair_button"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cbw_earning_currency_pair_button"
     android:layout_width="wrap_content"
     android:layout_height="35dp"
     android:layout_marginLeft="16dp"
     android:layout_marginStart="16dp"
+    android:background="@color/cbw_wizard_color"
+    android:paddingEnd="12dp"
     android:paddingLeft="12dp"
     android:paddingRight="12dp"
-    android:background="@color/cbw_wizard_color"
-    android:textSize="16sp"
+    android:paddingStart="12dp"
+    android:maxLines="1"
     android:textColor="@color/white"
-    android:singleLine="true"
+    android:textSize="16sp"
     tools:text="BTC/VEF"/>

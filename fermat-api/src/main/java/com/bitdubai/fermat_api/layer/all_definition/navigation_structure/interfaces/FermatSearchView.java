@@ -9,7 +9,7 @@ public interface FermatSearchView extends Serializable {
 
     String getText();
 
-    String getIcon() ;
+    String getIcon();
 
     String getLabel();
 

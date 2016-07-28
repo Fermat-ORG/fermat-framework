@@ -7,25 +7,25 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting
  * Created by franklin on 15/02/16.
  */
 public class CurrencyMatchingImp implements CurrencyMatching {
-    private String   originTransactionId;
+    private String originTransactionId;
     private Currency currencyGiving;
     private Currency currencyReceiving;
-    private float    amountGiving;
-    private float    amountReceiving;
+    private float amountGiving;
+    private float amountReceiving;
 
-    public CurrencyMatchingImp(){}
+    public CurrencyMatchingImp() {
+    }
 
-    public CurrencyMatchingImp(String   originTransactionId,
+    public CurrencyMatchingImp(String originTransactionId,
                                Currency currencyGiving,
                                Currency currencyReceiving,
-                               float    amountGiving,
-                               float    amountReceiving)
-    {
+                               float amountGiving,
+                               float amountReceiving) {
         this.originTransactionId = originTransactionId;
-        this.currencyGiving      = currencyGiving;
-        this.currencyReceiving   = currencyReceiving;
-        this.amountGiving        = amountGiving;
-        this.amountReceiving     = amountReceiving;
+        this.currencyGiving = currencyGiving;
+        this.currencyReceiving = currencyReceiving;
+        this.amountGiving = amountGiving;
+        this.amountReceiving = amountReceiving;
     }
 
     @Override
@@ -55,12 +55,14 @@ public class CurrencyMatchingImp implements CurrencyMatching {
 
     @Override
     public String toString() {
-        return "CurrencyMatchingImp{" +
-                "originTransactionId='" + originTransactionId + '\'' +
-                ", currencyGiving=" + currencyGiving +
-                ", currencyReceiving=" + currencyReceiving +
-                ", amountGiving=" + amountGiving +
-                ", amountReceiving=" + amountReceiving +
-                '}';
+        return new StringBuilder()
+                .append("CurrencyMatchingImp{")
+                .append("originTransactionId='").append(originTransactionId)
+                .append('\'')
+                .append(", currencyGiving=").append(currencyGiving)
+                .append(", currencyReceiving=").append(currencyReceiving)
+                .append(", amountGiving=").append(amountGiving)
+                .append(", amountReceiving=").append(amountReceiving)
+                .append('}').toString();
     }
 }

@@ -70,7 +70,7 @@ public interface AbstractPluginInterface extends FermatManager, Plugin, Service 
                               FermatManager fermatManager) throws CantAssignReferenceException,
             IncompatibleReferenceException;
 
-    void assignAddonReferenceMati(String platformCode, String layerCode, String addonCode, String developerCode, String version, Object fermatManager) throws CantAssignReferenceException,IncompatibleReferenceException;
+    void assignAddonReferenceMati(String platformCode, String layerCode, String addonCode, String developerCode, String version, Object fermatManager) throws CantAssignReferenceException, IncompatibleReferenceException;
 
     void assignPluginReference(AbstractPluginInterface abstractPlugin) throws CantAssignReferenceException,
             IncompatibleReferenceException;

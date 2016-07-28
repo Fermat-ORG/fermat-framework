@@ -21,7 +21,7 @@ public class FermatWalletSettings implements WalletSettings,Serializable {
     private BlockchainNetworkType blockchainNetworkType;
     private boolean notificationEnabled;
     private boolean isBlockchainDownloadEnabled;
-
+    private String feedLeel;
     public FermatWalletSettings() {
         this.lastSelectedIdentity = null;
     }
@@ -103,5 +103,13 @@ public class FermatWalletSettings implements WalletSettings,Serializable {
 
     public void setNotificationEnabled(boolean notificationEnabled) {
         this.notificationEnabled = notificationEnabled;
+    }
+
+    public String getFeedLevel() {
+        return this.feedLeel;
+    }
+
+    public void setFeedLevel(String feedLeel) {
+        this.feedLeel = feedLeel;
     }
 }

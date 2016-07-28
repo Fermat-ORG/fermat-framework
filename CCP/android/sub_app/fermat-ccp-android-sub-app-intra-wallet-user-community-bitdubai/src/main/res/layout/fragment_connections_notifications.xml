@@ -5,6 +5,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/no_notifications_icon"
+            tools:ignore="ContentDescription"
+            android:visibility="visible" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NO NOTIFICATIONS"
+            android:textColor="#b8b8b8"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="10dp" />
+
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -30,39 +59,28 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <!--Empty view-->
+
         <LinearLayout
-            android:id="@+id/empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#010c12"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/img_home_empty"
-                tools:ignore="ContentDescription" />
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:id="@+id/connection_success"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="#2bd5ca"
+            android:visibility="gone"
+            android:layout_alignParentEnd="false">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="You don't have "
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/text_connection_success"
                 android:textColor="#ffffff"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="any notifications yet"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
-
+                android:text="You are now connected"
+                android:gravity="center"
+                android:textSize="18dp"
+                android:visibility="visible" />
         </LinearLayout>
 
     </RelativeLayout>

@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cus
  * The Class <code>UserLevelBusinessTransactionCustomerBrokerSaleConstants
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Franklin Marcano - (franklinmarcano970@gmail.com) on 15.12.15
  *
  * @version 1.0
@@ -19,7 +19,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleConstants {
     /**
      * Customer Broker Purchase database table definition.
      */
-    public static final String CUSTOMER_BROKER_SALE_TABLE_NAME    = "customer_broker_sale";
+    public static final String CUSTOMER_BROKER_SALE_TABLE_NAME = "customer_broker_sale";
 
     public static final String CUSTOMER_BROKER_SALE_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
     public static final String CUSTOMER_BROKER_SALE_TIMESTAMP_COLUMN_NAME = "timestamp";

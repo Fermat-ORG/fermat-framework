@@ -12,19 +12,22 @@ public interface TranslatorIdentity {
 
     /**
      * Get the alias of the represented translator identity
+     *
      * @return String Alias
      */
     String getAlias();
 
     /**
      * Get the public key of the represented developer
+     *
      * @return string pulic key
      */
     String getPublicKey();
 
     /**
      * Sign a message with translator private key
-     * @param  mensage to sign
+     *
+     * @param mensage to sign
      * @return string signed message
      * @throws CantSingMessageException
      */

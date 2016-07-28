@@ -25,6 +25,7 @@ public class BusinessTransactionMetadataRecord implements BusinessTransactionMet
     BusinessTransactionTransactionType transactionType;
     Long timestamp;
     UUID transactionId;
+    UUID transactionContractId;
     TransactionTransmissionStates transactionTransmissionStates;
     boolean pendingFlag;
     Plugins remoteBusinessTransaction;
@@ -42,25 +43,62 @@ public class BusinessTransactionMetadataRecord implements BusinessTransactionMet
                                              UUID transactionId,
                                              TransactionTransmissionStates transactionTransmissionStates,
                                              Plugins remoteBusinessTransaction
-    ){
-        this.contractHash=contractHash;
-        this.contractTransactionStatus=contractTransactionStatus;
-        this.receiverId=receiverId;
+    ) {
+        this.contractHash = contractHash;
+        this.contractTransactionStatus = contractTransactionStatus;
+        this.receiverId = receiverId;
         this.receiverType = receiverType;
-        this.senderId=senderId;
-        this.senderType=senderType;
-        if(contractId==null){
-            this.contractId=contractHash;
+        this.senderId = senderId;
+        this.senderType = senderType;
+        if (contractId == null) {
+            this.contractId = contractHash;
         } else {
-            this.contractId=contractId;
+            this.contractId = contractId;
         }
-        this.negotiationId=negotiationId;
-        this.transactionType=transactionType;
-        this.timestamp=timestamp;
-        this.transactionId=transactionId;
+        this.negotiationId = negotiationId;
+        this.transactionType = transactionType;
+        this.timestamp = timestamp;
+        this.transactionId = transactionId;
+        this.transactionContractId = transactionId;
         this.transactionTransmissionStates = transactionTransmissionStates;
-        this.pendingFlag=false;
-        this.remoteBusinessTransaction=remoteBusinessTransaction;
+        this.pendingFlag = false;
+        this.remoteBusinessTransaction = remoteBusinessTransaction;
+    }
+
+    public BusinessTransactionMetadataRecord(String contractHash,
+                                             ContractTransactionStatus contractTransactionStatus,
+                                             String senderId,
+                                             PlatformComponentType receiverType,
+                                             String receiverId,
+                                             PlatformComponentType senderType,
+                                             String contractId,
+                                             String negotiationId,
+                                             BusinessTransactionTransactionType transactionType,
+                                             Long timestamp,
+                                             UUID transactionId,
+                                             UUID transactionContractId,
+                                             TransactionTransmissionStates transactionTransmissionStates,
+                                             Plugins remoteBusinessTransaction
+    ) {
+        this.contractHash = contractHash;
+        this.contractTransactionStatus = contractTransactionStatus;
+        this.receiverId = receiverId;
+        this.receiverType = receiverType;
+        this.senderId = senderId;
+        this.senderType = senderType;
+        if (contractId == null) {
+            this.contractId = contractHash;
+        } else {
+            this.contractId = contractId;
+        }
+        this.negotiationId = negotiationId;
+        this.transactionType = transactionType;
+        this.timestamp = timestamp;
+        this.transactionId = transactionId;
+        this.transactionContractId = transactionContractId;
+        this.transactionTransmissionStates = transactionTransmissionStates;
+        this.pendingFlag = false;
+        this.remoteBusinessTransaction = remoteBusinessTransaction;
     }
 
     @Override
@@ -114,16 +152,23 @@ public class BusinessTransactionMetadataRecord implements BusinessTransactionMet
     }
 
     @Override
-    public UUID getTransactionId(){ return this.transactionId;  }
+    public UUID getTransactionId() {
+        return this.transactionId;
+    }
+
+    @Override
+    public UUID getTransactionContractId() {
+        return this.transactionId;
+    }
 
     @Override
     public void setBusinessTransactionTransactionType(BusinessTransactionTransactionType businessTransactionTransactionType) {
-        this.transactionType=businessTransactionTransactionType;
+        this.transactionType = businessTransactionTransactionType;
     }
 
     @Override
     public void setState(TransactionTransmissionStates transactionTransmissionStates) {
-        this.transactionTransmissionStates=transactionTransmissionStates;
+        this.transactionTransmissionStates = transactionTransmissionStates;
     }
 
     @Override
@@ -132,13 +177,13 @@ public class BusinessTransactionMetadataRecord implements BusinessTransactionMet
     }
 
     @Override
-    public TransactionTransmissionStates getState(){
+    public TransactionTransmissionStates getState() {
         return this.transactionTransmissionStates;
     }
 
     @Override
     public void confirmRead() {
-        this.pendingFlag=true;
+        this.pendingFlag = true;
     }
 
     @Override
@@ -148,7 +193,7 @@ public class BusinessTransactionMetadataRecord implements BusinessTransactionMet
 
     @Override
     public void setRemoteBusinessTransaction(Plugins remoteBusinessTransaction) {
-        this.remoteBusinessTransaction=remoteBusinessTransaction;
+        this.remoteBusinessTransaction = remoteBusinessTransaction;
     }
 
 }

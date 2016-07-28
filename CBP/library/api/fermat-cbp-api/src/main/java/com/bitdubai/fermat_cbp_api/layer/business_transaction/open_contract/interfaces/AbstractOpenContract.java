@@ -44,7 +44,7 @@ public abstract class AbstractOpenContract {
             boolean nearExpirationDatetime)
             throws InvalidParameterException, CantGetIndexException {
 
-        ContractSaleRecord contractRecord=new ContractSaleRecord();
+        ContractSaleRecord contractRecord = new ContractSaleRecord();
         Currency merchandiseCurrency = CryptoCurrency.BITCOIN;
         float merchandiseAmount;
         long merchandiseDeliveryExpirationDate = 0;
@@ -55,54 +55,54 @@ public abstract class AbstractOpenContract {
         long dayTime;
 
         //Contract clauses
-        Collection<ContractClause> contractClauses=new ArrayList<>();
+        Collection<ContractClause> contractClauses = new ArrayList<>();
         ContractClause contractClause;
         ClauseType clauseType;
-        for(Clause clause : negotiationClauses){
-            clauseValue=clause.getValue();
-            clauseType=clause.getType();
-            switch (clauseType){
+        for (Clause clause : negotiationClauses) {
+            clauseValue = clause.getValue();
+            clauseType = clause.getType();
+            switch (clauseType) {
 
                 case BROKER_CURRENCY:
-                    if(FiatCurrency.codeExists(clauseValue)){
-                        merchandiseCurrency= FiatCurrency.getByCode(clauseValue);
+                    if (FiatCurrency.codeExists(clauseValue)) {
+                        merchandiseCurrency = FiatCurrency.getByCode(clauseValue);
                     }
-                    if(CryptoCurrency.codeExists(clauseValue)){
-                        merchandiseCurrency= CryptoCurrency.getByCode(clauseValue);
+                    if (CryptoCurrency.codeExists(clauseValue)) {
+                        merchandiseCurrency = CryptoCurrency.getByCode(clauseValue);
                     }
                     contractRecord.setMerchandiseCurrency(merchandiseCurrency);
                     break;
                 case BROKER_CURRENCY_QUANTITY:
-                    merchandiseAmount=parseToFloat(clauseValue);
+                    merchandiseAmount = parseToFloat(clauseValue);
                     contractRecord.setMerchandiseAmount(merchandiseAmount);
                     break;
                 case BROKER_DATE_TIME_TO_DELIVER:
-                    merchandiseDeliveryExpirationDate=parseToLong(clauseValue);
+                    merchandiseDeliveryExpirationDate = parseToLong(clauseValue);
                     contractRecord.setMerchandiseDeliveryExpirationDate(merchandiseDeliveryExpirationDate);
                     break;
                 case CUSTOMER_CURRENCY_QUANTITY:
-                    paymentAmount=parseToFloat(clauseValue);
+                    paymentAmount = parseToFloat(clauseValue);
                     contractRecord.setPaymentAmount(paymentAmount);
                     break;
                 case CUSTOMER_CURRENCY:
-                    if(FiatCurrency.codeExists(clauseValue)){
-                        paymentCurrency= FiatCurrency.getByCode(clauseValue);
+                    if (FiatCurrency.codeExists(clauseValue)) {
+                        paymentCurrency = FiatCurrency.getByCode(clauseValue);
                     }
-                    if(CryptoCurrency.codeExists(clauseValue)){
-                        paymentCurrency= CryptoCurrency.getByCode(clauseValue);
+                    if (CryptoCurrency.codeExists(clauseValue)) {
+                        paymentCurrency = CryptoCurrency.getByCode(clauseValue);
                     }
                     contractRecord.setPaymentCurrency(paymentCurrency);
                     break;
                 case CUSTOMER_DATE_TIME_TO_DELIVER:
-                    paymentExpirationDate=parseToLong(clauseValue);
+                    paymentExpirationDate = parseToLong(clauseValue);
                     contractRecord.setPaymentExpirationDate(paymentExpirationDate);
                     break;
                 case CUSTOMER_PAYMENT_METHOD:
-                    contractClause=createContractClause(clauseValue);
+                    contractClause = createContractClause(clauseValue);
                     contractClauses.add(contractClause);
                     break;
                 case BROKER_PAYMENT_METHOD:
-                    contractClause=createContractClause(clauseValue);
+                    contractClause = createContractClause(clauseValue);
                     contractClauses.add(contractClause);
                     break;
                 /*
@@ -124,7 +124,7 @@ public abstract class AbstractOpenContract {
         contractRecord.generateContractHash();
         //To avoid a null field I gonna set the dayTime to 0
         //TODO: encontrar el valor de entrega de mercancia o de pago
-        dayTime=merchandiseDeliveryExpirationDate;
+        dayTime = merchandiseDeliveryExpirationDate;
         contractRecord.setDayTime(dayTime);
         //New fields
         contractRecord.setNearExpirationDatetime(nearExpirationDatetime);
@@ -141,7 +141,7 @@ public abstract class AbstractOpenContract {
             boolean nearExpirationDatetime)
             throws InvalidParameterException, CantGetIndexException {
 
-        ContractPurchaseRecord contractRecord=new ContractPurchaseRecord();
+        ContractPurchaseRecord contractRecord = new ContractPurchaseRecord();
         Currency merchandiseCurrency = CryptoCurrency.BITCOIN;
         float merchandiseAmount;
         long merchandiseDeliveryExpirationDate;
@@ -152,55 +152,55 @@ public abstract class AbstractOpenContract {
         long dayTime;
 
         //Contract clauses
-        Collection<ContractClause> contractClauses=new ArrayList<>();
+        Collection<ContractClause> contractClauses = new ArrayList<>();
         ContractClause contractClause;
         ClauseType clauseType;
 
-        for(Clause clause : negotiationClauses){
-            clauseValue=clause.getValue();
-            clauseType=clause.getType();
-            switch (clauseType){
+        for (Clause clause : negotiationClauses) {
+            clauseValue = clause.getValue();
+            clauseType = clause.getType();
+            switch (clauseType) {
 
                 case BROKER_CURRENCY:
-                    if(FiatCurrency.codeExists(clauseValue)){
-                        merchandiseCurrency= FiatCurrency.getByCode(clauseValue);
+                    if (FiatCurrency.codeExists(clauseValue)) {
+                        merchandiseCurrency = FiatCurrency.getByCode(clauseValue);
                     }
-                    if(CryptoCurrency.codeExists(clauseValue)){
-                        merchandiseCurrency= CryptoCurrency.getByCode(clauseValue);
+                    if (CryptoCurrency.codeExists(clauseValue)) {
+                        merchandiseCurrency = CryptoCurrency.getByCode(clauseValue);
                     }
                     contractRecord.setMerchandiseCurrency(merchandiseCurrency);
                     break;
                 case BROKER_CURRENCY_QUANTITY:
-                    merchandiseAmount=parseToFloat(clauseValue);
+                    merchandiseAmount = parseToFloat(clauseValue);
                     contractRecord.setMerchandiseAmount(merchandiseAmount);
                     break;
                 case BROKER_DATE_TIME_TO_DELIVER:
-                    merchandiseDeliveryExpirationDate=parseToLong(clauseValue);
+                    merchandiseDeliveryExpirationDate = parseToLong(clauseValue);
                     contractRecord.setMerchandiseDeliveryExpirationDate(merchandiseDeliveryExpirationDate);
                     break;
                 case CUSTOMER_CURRENCY_QUANTITY:
-                    paymentAmount=parseToFloat(clauseValue);
+                    paymentAmount = parseToFloat(clauseValue);
                     contractRecord.setPaymentAmount(paymentAmount);
                     break;
                 case CUSTOMER_CURRENCY:
-                    if(FiatCurrency.codeExists(clauseValue)){
-                        paymentCurrency= FiatCurrency.getByCode(clauseValue);
+                    if (FiatCurrency.codeExists(clauseValue)) {
+                        paymentCurrency = FiatCurrency.getByCode(clauseValue);
                     }
-                    if(CryptoCurrency.codeExists(clauseValue)){
-                        paymentCurrency= CryptoCurrency.getByCode(clauseValue);
+                    if (CryptoCurrency.codeExists(clauseValue)) {
+                        paymentCurrency = CryptoCurrency.getByCode(clauseValue);
                     }
                     contractRecord.setPaymentCurrency(paymentCurrency);
                     break;
                 case CUSTOMER_DATE_TIME_TO_DELIVER:
-                    paymentExpirationDate=parseToLong(clauseValue);
+                    paymentExpirationDate = parseToLong(clauseValue);
                     contractRecord.setPaymentExpirationDate(paymentExpirationDate);
                     break;
                 case CUSTOMER_PAYMENT_METHOD:
-                    contractClause=createContractClause(clauseValue);
+                    contractClause = createContractClause(clauseValue);
                     contractClauses.add(contractClause);
                     break;
                 case BROKER_PAYMENT_METHOD:
-                    contractClause=createContractClause(clauseValue);
+                    contractClause = createContractClause(clauseValue);
                     contractClauses.add(contractClause);
                     break;
                 /*
@@ -230,11 +230,11 @@ public abstract class AbstractOpenContract {
     }
 
     private ContractClause createContractClause(String clauseValue) throws InvalidParameterException {
-        ContractClauseRecord contractClause=new ContractClauseRecord();
-        Integer executionOrder=616;
-        UUID clauseId=UUID.randomUUID();
+        ContractClauseRecord contractClause = new ContractClauseRecord();
+        Integer executionOrder = 616;
+        UUID clauseId = UUID.randomUUID();
         contractClause.setClauseId(clauseId);
-        ContractClauseType contractClauseType =ContractClauseType.getByCode(clauseValue);
+        ContractClauseType contractClauseType = ContractClauseType.getByCode(clauseValue);
         contractClause.setType(contractClauseType);
         contractClause.setExecutionOrder(executionOrder);
         contractClause.setStatus(ContractClauseStatus.PENDING);
@@ -243,20 +243,21 @@ public abstract class AbstractOpenContract {
 
     /**
      * This method creates a ContractSaleRecord for purchase with given Negotiation clauses.
+     *
      * @param negotiationClauses
      * @return
      * @throws InvalidParameterException
      */
     public ContractPurchaseRecord createPurchaseContractRecord(Collection<Clause> negotiationClauses,
-                                               CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-                                               float referencePrice)
+                                                               CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
+                                                               float referencePrice)
             throws InvalidParameterException,
             CantGetIndexException {
 
-        String brokerPublicKey=customerBrokerPurchaseNegotiation.getBrokerPublicKey();
-        String customerPublicKey=customerBrokerPurchaseNegotiation.getCustomerPublicKey();
-        String negotiationId=customerBrokerPurchaseNegotiation.getNegotiationId().toString();
-        ContractPurchaseRecord contractRecord= createContractPurchaseRecordFromNegotiationClauses(
+        String brokerPublicKey = customerBrokerPurchaseNegotiation.getBrokerPublicKey();
+        String customerPublicKey = customerBrokerPurchaseNegotiation.getCustomerPublicKey();
+        String negotiationId = customerBrokerPurchaseNegotiation.getNegotiationId().toString();
+        ContractPurchaseRecord contractRecord = createContractPurchaseRecordFromNegotiationClauses(
                 negotiationClauses,
                 referencePrice,
                 brokerPublicKey,
@@ -269,6 +270,7 @@ public abstract class AbstractOpenContract {
 
     /**
      * This method creates a ContractSaleRecord for purchase with given Negotiation clauses.
+     *
      * @param negotiationClauses
      * @return
      * @throws InvalidParameterException
@@ -279,10 +281,10 @@ public abstract class AbstractOpenContract {
             throws InvalidParameterException,
             CantGetIndexException {
 
-        String brokerPublicKey=customerBrokerSaleNegotiation.getBrokerPublicKey();
-        String customerPublicKey=customerBrokerSaleNegotiation.getCustomerPublicKey();
-        String negotiationId=customerBrokerSaleNegotiation.getNegotiationId().toString();
-        ContractSaleRecord contractRecord= createContractRecordFromNegotiationClauses(
+        String brokerPublicKey = customerBrokerSaleNegotiation.getBrokerPublicKey();
+        String customerPublicKey = customerBrokerSaleNegotiation.getCustomerPublicKey();
+        String negotiationId = customerBrokerSaleNegotiation.getNegotiationId().toString();
+        ContractSaleRecord contractRecord = createContractRecordFromNegotiationClauses(
                 negotiationClauses,
                 referencePrice,
                 brokerPublicKey,
@@ -303,38 +305,40 @@ public abstract class AbstractOpenContract {
 
     /**
      * This method parse a String object to a float object
+     *
      * @param stringValue
      * @return
      * @throws InvalidParameterException
      */
     public float parseToFloat(String stringValue) throws InvalidParameterException {
-        if(stringValue==null){
+        if (stringValue == null) {
             throw new InvalidParameterException("Cannot parse a null string value to float");
-        }else{
-            try{
+        } else {
+            try {
                 return DecimalFormat.getInstance().parse(stringValue).floatValue();
-            }catch (Exception exception){
-                    throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,
-                            FermatException.wrapException(exception),
-                            "Paring String object to float",
-                            "Cannot parse string value to float");
+            } catch (Exception exception) {
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,
+                        FermatException.wrapException(exception),
+                        "Paring String object to float",
+                        "Cannot parse string value to float");
             }
         }
     }
 
     /**
      * This method parse a String object to a long object
+     *
      * @param stringValue
      * @return
      * @throws InvalidParameterException
      */
     public long parseToLong(String stringValue) throws InvalidParameterException {
-        if(stringValue==null){
+        if (stringValue == null) {
             throw new InvalidParameterException("Cannot parse a null string value to long");
-        }else{
-            try{
+        } else {
+            try {
                 return Long.valueOf(stringValue);
-            }catch (Exception exception){
+            } catch (Exception exception) {
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,
                         FermatException.wrapException(exception),
                         "Parsing String object to long",

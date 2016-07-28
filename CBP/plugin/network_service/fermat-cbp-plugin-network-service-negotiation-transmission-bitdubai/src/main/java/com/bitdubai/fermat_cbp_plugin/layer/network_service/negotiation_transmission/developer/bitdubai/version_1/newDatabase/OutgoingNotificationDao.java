@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
@@ -21,8 +22,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class OutgoingNotificationDao {
 
 
         } catch (CantInsertRecordException e) {
-            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+            throw new CantCreateNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
         }
     }
 
@@ -82,7 +83,7 @@ public class OutgoingNotificationDao {
 
 
         } catch (CantInsertRecordException e) {
-            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+            throw new CantCreateNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
         }
     }
 
@@ -122,7 +123,7 @@ public class OutgoingNotificationDao {
             System.out.print("\n\n**** 19.2.2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT, CONFIRM TRANSAMISSION ****\n");
 
         } catch (CantUpdateRecordDataBaseException e) {
-            throw new CantConfirmNotificationException(e,e.getContext(),"ERROR UPDATING DATABASE. CHECK UPDATE METHOD");
+            throw new CantConfirmNotificationException(e, e.getContext(), "ERROR UPDATING DATABASE. CHECK UPDATE METHOD");
         }
     }
 
@@ -153,7 +154,7 @@ public class OutgoingNotificationDao {
             e.printStackTrace();
         } catch (InvalidParameterException e) {
             e.printStackTrace();
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -192,10 +193,10 @@ public class OutgoingNotificationDao {
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
             // Register the failure.
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + NegotiationTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            StringBuilder contextBuilder = new StringBuilder();
+            contextBuilder.append("Database Name: ").append(NegotiationTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
-            String context = contextBuffer.toString();
+            String context = contextBuilder.toString();
             String possibleCause = "The record do not exist";
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
@@ -232,9 +233,9 @@ public class OutgoingNotificationDao {
             return list;
 
         } catch (CantLoadTableToMemoryException e) {
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Table Name: " + NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME);
-            throw new CantReadRecordDataBaseException(CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "The data no exist");
+            StringBuilder contextBuilder = new StringBuilder();
+            contextBuilder.append("Table Name: ").append(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME);
+            throw new CantReadRecordDataBaseException(CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, contextBuilder.toString(), "The data no exist");
         } catch (InvalidParameterException e) {
             throw new CantReadRecordDataBaseException(CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, "", "Invalid parameter");
         }
@@ -333,8 +334,36 @@ public class OutgoingNotificationDao {
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(negotiationTransmission.isFlagRead()));
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, String.valueOf(negotiationTransmission.isPendingFlag()));
         record.setIntegerValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME, negotiationTransmission.getSentCount());
-        if(negotiationTransmission.getResponseToNotificationId() != null)
-        record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, negotiationTransmission.getResponseToNotificationId());
+        if (negotiationTransmission.getResponseToNotificationId() != null)
+            record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, negotiationTransmission.getResponseToNotificationId());
         return record;
+    }
+
+    public void changeStatusNotSentMessage() throws CantReadRecordDataBaseException {
+
+        try {
+            DatabaseTable negotiationTransmissionTable = getDatabaseTable();
+
+            negotiationTransmissionTable.addStringFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
+            negotiationTransmissionTable.addStringFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+
+            negotiationTransmissionTable.loadToMemory();
+
+
+            for (DatabaseTableRecord record : negotiationTransmissionTable.getRecords()) {
+                record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode());
+                negotiationTransmissionTable.updateRecord(record);
+            }
+
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (CantUpdateRecordException e) {
+            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "", "Cant get negotiation transmission record data.");
+
+        }
+
     }
 }

@@ -14,4 +14,6 @@
     <color name="ccc_separator">#E0E0E0</color>
     <color name="ccc_gradient_start_color">#2D2E82</color>
     <color name="ccc_gradient_end_color">#a60f7f</color>
+
+    <color name="ccc_color_dialog">#2D2E82</color>
 </resources>

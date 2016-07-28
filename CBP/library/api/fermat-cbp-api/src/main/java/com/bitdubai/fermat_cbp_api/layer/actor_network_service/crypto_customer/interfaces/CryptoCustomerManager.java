@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoCustomerManager</code>
  * provides the methods to interact with the crypto customer actor network service.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/11/2015.
  */
 public interface CryptoCustomerManager extends FermatManager {
@@ -18,18 +18,16 @@ public interface CryptoCustomerManager extends FermatManager {
     /**
      * Through the method <code>exposeIdentity</code> we can expose the crypto identities created in the device..
      *
-     * @param cryptoCustomerExposingData  crypto broker exposing information.
-     *
-     * @throws CantExposeIdentityException   if something goes wrong.
+     * @param cryptoCustomerExposingData crypto broker exposing information.
+     * @throws CantExposeIdentityException if something goes wrong.
      */
     void exposeIdentity(final CryptoCustomerExposingData cryptoCustomerExposingData) throws CantExposeIdentityException;
 
     /**
      * Through the method <code>exposeIdentity</code> we can expose the crypto identities created in the device..
      *
-     * @param CryptoCustomerExposingData  crypto customer exposing information.
-     *
-     * @throws CantExposeIdentityException   if something goes wrong.
+     * @param CryptoCustomerExposingData crypto customer exposing information.
+     * @throws CantExposeIdentityException if something goes wrong.
      */
     void updateIdentity(CryptoCustomerExposingData CryptoCustomerExposingData) throws CantExposeIdentityException;
 
@@ -37,9 +35,8 @@ public interface CryptoCustomerManager extends FermatManager {
      * Through the method <code>exposeIdentities</code> we can expose the crypto identities created in the device.
      * The information given will be shown to all the crypto customers.
      *
-     * @param cryptoCustomerExposingDataList  list of crypto broker exposing information.
-     *
-     * @throws CantExposeIdentitiesException   if something goes wrong.
+     * @param cryptoCustomerExposingDataList list of crypto broker exposing information.
+     * @throws CantExposeIdentitiesException if something goes wrong.
      */
     void exposeIdentities(final Collection<CryptoCustomerExposingData> cryptoCustomerExposingDataList) throws CantExposeIdentitiesException;
 

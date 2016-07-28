@@ -17,8 +17,7 @@ public enum WizardTypes {
     CBP_WALLET_CRYPTO_BROKER_START_WIZARD("CBPWCBSW"),
     CBP_WALLET_CRYPTO_CUSTOMER_START_WIZARD("CBPWCCSW"),
 
-    DESKTOP_WELCOME_WIZARD("DWW")
-    ;
+    DESKTOP_WELCOME_WIZARD("DWW");
 
 
     private String code;
@@ -51,7 +50,7 @@ public enum WizardTypes {
             case "DWW":
                 return DESKTOP_WELCOME_WIZARD;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the Plugins enum");
         }
         //return null;
     }

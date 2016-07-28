@@ -120,6 +120,8 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
     BlockchainNetworkType blockchainNetworkType;
     private ExecutorService _executor;
 
+    private FermatWorker fermatWorker;
+
     private List<WalletContact> walletContactList = new ArrayList<>();
 
     public static RequestFormFragment newInstance() {
@@ -343,7 +345,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
 
     private void setUpContactAddapter() {
 
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+        fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
                 try{
@@ -615,6 +617,15 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
         }
     }
 
+    @Override
+    public void onStop() {
+
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+
+        super.onStop();
+    }
+
     private void sendRequest() {
 
         try {
@@ -641,7 +652,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                     String txtType = txt_type.getText().toString();
                     String newAmount = "";
 
-                    String notes = null;
+                    String notes = "";
                     if (txt_notes.getText().toString().length() != 0){
                       notes = txt_notes.getText().toString();
                     }

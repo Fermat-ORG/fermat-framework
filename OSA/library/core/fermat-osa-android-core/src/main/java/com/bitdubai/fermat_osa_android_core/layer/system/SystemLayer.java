@@ -1,10 +1,11 @@
 package com.bitdubai.fermat_osa_android_core.layer.system;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.AndroidCoreUtils;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterAddonException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_osa_android_core.layer.system.device_conectivity.DeviceConectivityAddonSubsystem;
 import com.bitdubai.fermat_osa_android_core.layer.system.device_location.DeviceLocationAddonSubsystem;
 import com.bitdubai.fermat_osa_android_core.layer.system.logger.LoggerAddonSubsystem;
 import com.bitdubai.fermat_osa_android_core.layer.system.platform_database_system.PlatformDatabaseSystemAddonSubsystem;
@@ -46,8 +47,9 @@ public class SystemLayer extends AbstractLayer {
             registerAddon(new PluginFileSystemAddonSubsystem());
             registerAddon(new PluginBroadcasterSystemAddonSubsystem(androidCoreUtils));
             registerAddon(new PluginHardwareAddonSubsystem());
+            registerAddon(new DeviceConectivityAddonSubsystem());
 
-        } catch(CantRegisterAddonException e) {
+        } catch (CantRegisterAddonException e) {
 
             throw new CantStartLayerException(
                     e,

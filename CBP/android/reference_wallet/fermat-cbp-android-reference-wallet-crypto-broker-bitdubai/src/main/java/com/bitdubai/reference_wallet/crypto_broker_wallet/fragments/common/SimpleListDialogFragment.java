@@ -66,7 +66,7 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
 
             } else if (choice instanceof Currency) {
                 final Currency currency = (Currency) choice;
-                data.add(currency.getFriendlyName() + " (" + currency.getCode() + ")");
+                data.add(new StringBuilder().append(currency.getFriendlyName()).append(" (").append(currency.getCode()).append(")").toString());
 
             } else if (choice instanceof MoneyType) {
                 MoneyType moneyType = (MoneyType) choice;
@@ -76,7 +76,7 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
                 NegotiationLocations location = (NegotiationLocations) choice;
                 data.add(location.getLocation());
 
-            }else {
+            } else {
                 data.add(choice.toString());
             }
         }

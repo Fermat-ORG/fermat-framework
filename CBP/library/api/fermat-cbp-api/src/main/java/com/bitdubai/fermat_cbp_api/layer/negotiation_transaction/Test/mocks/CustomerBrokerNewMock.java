@@ -10,31 +10,45 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 04.01.16.
  */
-public class CustomerBrokerNewMock implements CustomerBrokerNew{
+public class CustomerBrokerNewMock implements CustomerBrokerNew {
 
     @Override
-    public UUID getTransactionId(){ return UUID.fromString("550e8400-e29b-41d4-a716-446655440000");}
+    public UUID getTransactionId() {
+        return UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
+    }
 
     @Override
-    public UUID getNegotiationId(){ return UUID.fromString("550e8400-e29b-41d4-a716-446655440000");}
+    public UUID getNegotiationId() {
+        return UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
+    }
 
     @Override
-    public String getPublicKeyBroker(){ return "getPublicKeyBroker";}
+    public String getPublicKeyBroker() {
+        return "getPublicKeyBroker";
+    }
 
     @Override
-    public String getPublicKeyCustomer(){ return "getPublicKeyCustomer";}
+    public String getPublicKeyCustomer() {
+        return "getPublicKeyCustomer";
+    }
 
     @Override
-    public NegotiationTransactionStatus getStatusTransaction(){ return NegotiationTransactionStatus.PENDING_SUBMIT; }
+    public NegotiationTransactionStatus getStatusTransaction() {
+        return NegotiationTransactionStatus.PENDING_SUBMIT;
+    }
 
     @Override
-    public NegotiationType getNegotiationType() { return NegotiationType.PURCHASE; }
+    public NegotiationType getNegotiationType() {
+        return NegotiationType.PURCHASE;
+    }
 
     @Override
-    public String getNegotiationXML(){ return null;}
+    public String getNegotiationXML() {
+        return null;
+    }
 
     @Override
-    public long getTimestamp(){
+    public long getTimestamp() {
         Date time = new Date();
         return time.getTime();
     }

@@ -14,7 +14,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.Cr
 public abstract class CryptoBrokerActorConnectionSearch extends ActorConnectionSearch<CryptoBrokerLinkedActorIdentity, CryptoBrokerActorConnection> {
 
     public CryptoBrokerActorConnectionSearch(final CryptoBrokerLinkedActorIdentity actorIdentity,
-                                             final ActorConnectionDao<CryptoBrokerLinkedActorIdentity, CryptoBrokerActorConnection> dao          ) {
+                                             final ActorConnectionDao<CryptoBrokerLinkedActorIdentity, CryptoBrokerActorConnection> dao) {
 
         super(actorIdentity, dao);
     }

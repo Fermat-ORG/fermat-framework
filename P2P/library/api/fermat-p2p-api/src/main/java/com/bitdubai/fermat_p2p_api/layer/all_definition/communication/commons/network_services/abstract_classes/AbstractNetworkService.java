@@ -5,10 +5,12 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -40,7 +42,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.P2PLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServicePendingMessagesSupervisorAgent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceRegistrationProcessAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.daos.QueriesDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
@@ -63,6 +64,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientNewMessageTransmitEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientSentMessageDeliveredEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientSentMessageFailedEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeIdentityException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeNetworkServiceProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException;
@@ -76,7 +78,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -167,7 +168,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     /**
      * Represents the networkServiceRegistrationProcessAgent
      */
-    private NetworkServiceRegistrationProcessAgent networkServiceRegistrationProcessAgent;
+//    private NetworkServiceRegistrationProcessAgent networkServiceRegistrationProcessAgent;
 
     /**
      * Represents the NetworkServicePendingMessagesSupervisorAgent
@@ -242,9 +243,17 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
              */
 //            this.networkServiceRegistrationProcessAgent = new NetworkServiceRegistrationProcessAgent(this);
 //            this.networkServiceRegistrationProcessAgent.start();
-            p2PLayerManager.register(this);
 
+            /**
+             * Start elements
+             */
             onNetworkServiceStart();
+
+            p2PLayerManager.register(this);
+            /**
+             * Register Elements after Start
+             */
+            handleNetworkServiceRegisteredEvent();
 
         } catch (Exception exception) {
 
@@ -526,6 +535,14 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         eventManager.addListener(actorListReceivedListener);
         listenersAdded.add(actorListReceivedListener);
 
+        /*
+         * 11. Listen and handle Network Client Sent Message Failed Event
+         */
+        FermatEventListener sentMessageFailedListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_SENT_MESSAGE_FAILED);
+        sentMessageFailedListener.setEventHandler(new NetworkClientSentMessageFailedEventHandler(this));
+        eventManager.addListener(sentMessageFailedListener);
+        listenersAdded.add(sentMessageFailedListener);
+
     }
 
     private void deleteQueriesHistory() throws CantDeleteRecordDataBaseException {
@@ -535,16 +552,16 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     public final void handleNetworkClientRegisteredEvent(final CommunicationChannels communicationChannel) throws FermatException {
 
-        if(networkServiceRegistrationProcessAgent != null && networkServiceRegistrationProcessAgent.getActive()) {
-            networkServiceRegistrationProcessAgent.stop();
-            networkServiceRegistrationProcessAgent = null;
-        }
+//        if(networkServiceRegistrationProcessAgent != null && networkServiceRegistrationProcessAgent.getActive()) {
+//            networkServiceRegistrationProcessAgent.stop();
+//            networkServiceRegistrationProcessAgent = null;
+//        }
 
         if (this.getConnection().isConnected() && this.getConnection().isRegistered())
             this.getConnection().registerProfile(this.getProfile());
         else {
-            this.networkServiceRegistrationProcessAgent = new NetworkServiceRegistrationProcessAgent(this);
-            this.networkServiceRegistrationProcessAgent.start();
+//            this.networkServiceRegistrationProcessAgent = new NetworkServiceRegistrationProcessAgent(this);
+//            this.networkServiceRegistrationProcessAgent.start();
         }
 
     }
@@ -560,14 +577,18 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
                 /*
                  * Read all pending message from database
                  */
-                List<NetworkServiceMessage> messages = getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAll(filters);
+                List<NetworkServiceMessage> messages = getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAllPendingToSendByPublicKey(filters);
 
                 /*
                  * For each message
                  */
                 for (NetworkServiceMessage message : messages) {
+//                    System.out.println("12345P2P Estado de conexión = "+networkClientCall.isConnected());
+//                    System.out.println("12345P2P Intentando enviar mensaje= " +message.getContent());
 
                     if (networkClientCall.isConnected() && (message.getFermatMessagesStatus() == FermatMessagesStatus.PENDING_TO_SEND)) {
+//                        System.out.println("12345P2P INSIDE");
+//                        System.out.println("12345** --Estado= " +message.getFermatMessagesStatus());
 
                         networkClientCall.sendPackageMessage(message);
 
@@ -659,10 +680,33 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.parseContent(incomingMessage);
 
             //TODO networkServiceMessage.setContent(AsymmetricCryptography.decryptMessagePrivateKey(networkServiceMessage.getContent(), this.identity.getPrivateKey()));
-            /*
-             * process the new message receive
-             */
+           /*
+            * process the new message receive
+            */
             networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.NEW_RECEIVED);
+
+            NetworkServiceMessage networkServiceMessageOld;
+
+            try {
+                networkServiceMessageOld = networkServiceConnectionManager.getIncomingMessagesDao().findById(networkServiceMessage.getId().toString());
+                if(networkServiceMessageOld!=null && networkServiceMessageOld.equals(networkServiceMessage)) {
+                    System.out.println("***************** MESSAGE DUPLICATED. IGNORING MESSAGE *****************");
+                    return;
+                }
+
+                if(networkServiceMessageOld!=null){
+                    System.out.println("***************** ID DUPLICATED. GENERATING A NEW ONE *****************");
+                    networkServiceMessage.setId(UUID.randomUUID());
+                }
+            } catch(CantReadRecordDataBaseException e) {
+                e.printStackTrace();
+            } catch(RecordNotFoundException e){
+                /**
+                 * Exception empty because not import if Record not found ¿? need better that
+                 * explication for Jose Vilchez
+                 */
+            }
+
             networkServiceConnectionManager.getIncomingMessagesDao().create(networkServiceMessage);
             networkServiceConnectionManager.getNetworkServiceRoot().onNewMessageReceived(networkServiceMessage);
 
@@ -678,8 +722,10 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         try {
             if (networkServicePendingMessagesSupervisorAgent == null)
                 this.networkServicePendingMessagesSupervisorAgent = new NetworkServicePendingMessagesSupervisorAgent(this);
-
+            if(networkServicePendingMessagesSupervisorAgent.getStatus()!=null && networkServicePendingMessagesSupervisorAgent.getStatus().equals(AgentStatus.STARTED))
+                return;
             this.networkServicePendingMessagesSupervisorAgent.start();
+            System.out.println("12345CBP handleNetworkServiceRegisteredEvent starteado");
         } catch (Exception ex) {
             System.out.println("Failed to start the messages supervisor agent - > NS: " + this.getProfile().getNetworkServiceType());
         }
@@ -812,7 +858,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
              * Read all pending message from database
              */
             Map<String, Object> filters = new HashMap<>();
-            filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME, destinationPublicKey                    );
+            filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME, destinationPublicKey);
             filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
 
             List<NetworkServiceMessage> messages = getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAll(filters);
@@ -846,7 +892,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             }
 
-        } catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
         }
 
@@ -945,6 +991,18 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             networkServiceConnectionManager.getOutgoingMessagesDao().markAsDelivered(networkServiceMessage);
 
             onSentMessage(networkServiceMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public final synchronized void onNetworkServiceFailedMessage(NetworkServiceMessage networkServiceMessage) {
+
+        System.out.println("12345P2P onNetworkServiceFailedMessage Message failed " + networkServiceMessage.toJson());
+
+        try {
+            networkServiceConnectionManager.getOutgoingMessagesDao().markAsPendingToSend(networkServiceMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -14,19 +14,19 @@ import java.util.Map;
  */
 public final class ActorExtraDataInformation implements ActorExtraData {
 
-    private final String                               customer  ;
-    private final ActorIdentity                        broker    ;
-    private final Collection<QuotesExtraData>          quotes    ;
+    private final String customer;
+    private final ActorIdentity broker;
+    private final Collection<QuotesExtraData> quotes;
     private final Map<Currency, Collection<Platforms>> currencies;
 
-    public ActorExtraDataInformation(final String                               customer  ,
-                                     final ActorIdentity                        broker    ,
-                                     final Collection<QuotesExtraData>          quotes    ,
+    public ActorExtraDataInformation(final String customer,
+                                     final ActorIdentity broker,
+                                     final Collection<QuotesExtraData> quotes,
                                      final Map<Currency, Collection<Platforms>> currencies) {
 
-        this.customer   = customer  ;
-        this.broker     = broker    ;
-        this.quotes     = quotes    ;
+        this.customer = customer;
+        this.broker = broker;
+        this.quotes = quotes;
         this.currencies = currencies;
     }
 
@@ -52,12 +52,14 @@ public final class ActorExtraDataInformation implements ActorExtraData {
 
     @Override
     public String toString() {
-        return "ActorExtraDataInformation{" +
-                "customer='" + customer + '\'' +
-                ", broker=" + broker +
-                ", quotes=" + quotes +
-                ", currencies=" + currencies +
-                '}';
+        return new StringBuilder()
+                .append("ActorExtraDataInformation{")
+                .append("customer='").append(customer)
+                .append('\'')
+                .append(", broker=").append(broker)
+                .append(", quotes=").append(quotes)
+                .append(", currencies=").append(currencies)
+                .append('}').toString();
     }
 
 }

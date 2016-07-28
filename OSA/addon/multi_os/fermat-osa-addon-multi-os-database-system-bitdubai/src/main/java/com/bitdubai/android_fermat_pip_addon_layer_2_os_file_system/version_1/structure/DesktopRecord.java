@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
  */
 
 
-
 /**
  * This class define methods to access the properties of the object Database Record
  * *
@@ -34,17 +33,17 @@ public class DesktopRecord implements DatabaseRecord {
      * @return String record name
      */
     @Override
-    public String getName(){
+    public String getName() {
         return this.recordName;
     }
 
     /**
-     *<p>Returns record field value
+     * <p>Returns record field value
      *
      * @return String record value
      */
     @Override
-    public String getValue(){
+    public String getValue() {
         return this.recordValue;
     }
 
@@ -54,35 +53,38 @@ public class DesktopRecord implements DatabaseRecord {
      * @return boolean if change
      */
     @Override
-    public boolean getChange(){
+    public boolean getChange() {
         return this.recordChange;
     }
 
     /**
      * Set the field record name
+     *
      * @param name field name
      */
     @Override
-    public void setName (String name){
+    public void setName(String name) {
         this.recordName = name;
     }
 
     /**
      * Set the field record value
+     *
      * @param value field value
      */
     @Override
-    public void setValue (String value){
+    public void setValue(String value) {
         this.recordValue = value;
     }
 
 
     /**
      * Set if the record was changed
+     *
      * @param change boolean if change
      */
     @Override
-    public void setChange (boolean change){
+    public void setChange(boolean change) {
         this.recordChange = change;
     }
 }

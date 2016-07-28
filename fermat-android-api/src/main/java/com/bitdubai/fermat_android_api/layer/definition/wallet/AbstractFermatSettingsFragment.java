@@ -35,7 +35,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by mati on 2016.05.26..
  */
-public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,R extends ResourceProviderManager>extends PreferenceFragment implements AbstractFermatFragmentInterface<S,R> {
+public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession, R extends ResourceProviderManager> extends PreferenceFragment implements AbstractFermatFragmentInterface<S, R> {
 
 
     /**
@@ -45,7 +45,8 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
     /**
      * If the fragment is visible for the user
      */
-    private boolean isVisible;;
+    private boolean isVisible;
+    ;
 
     /**
      * Platform
@@ -62,8 +63,8 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
     private WizardConfiguration context;
 
 
-    public enum ScreenSize{
-        LARGE,NORMAL, UNDEFINED, SMALL
+    public enum ScreenSize {
+        LARGE, NORMAL, UNDEFINED, SMALL
     }
 
 
@@ -131,16 +132,16 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
 
     }
 
-    protected void wizardNext(){
+    protected void wizardNext() {
         Activity activity = getActivity();
-        if(activity instanceof FermatWizardActivity){
+        if (activity instanceof FermatWizardActivity) {
             ((FermatWizardActivity) activity).nextScreen();
         }
     }
 
-    protected void wizardBack(){
+    protected void wizardBack() {
         Activity activity = getActivity();
-        if(activity instanceof FermatWizardActivity){
+        if (activity instanceof FermatWizardActivity) {
             ((FermatWizardActivity) activity).nextScreen();
         }
     }
@@ -152,7 +153,7 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
     }
 
     private DesktopAppSelector getDesktopAppSelector() throws Exception {
-        if(getActivity() instanceof DesktopAppSelector){
+        if (getActivity() instanceof DesktopAppSelector) {
             return (DesktopAppSelector) getActivity();
         }
         throw new Exception("big problem occur");
@@ -161,8 +162,8 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
     /**
      * Method used to go to home desktop
      */
-    protected void home(){
-        ((FermatActivityManager)getActivity()).goHome();
+    protected void home() {
+        ((FermatActivityManager) getActivity()).goHome();
     }
 
 
@@ -216,11 +217,12 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
     /**
      * Change activity
      */
-    protected final void changeActivity(String activityCode,String appPublicKey, Object... objectses) {
+    protected final void changeActivity(String activityCode, String appPublicKey, Object... objectses) {
         destroy();
         ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, appPublicKey, objectses);
 
     }
+
     /**
      * Change activity
      */
@@ -230,7 +232,7 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
         ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, null);
     }
 
-    protected void changeApp(Engine emgine,Object[] objects){
+    protected void changeApp(Engine emgine, Object[] objects) {
         //getFermatScreenSwapper().connectWithOtherApp(emgine, objects);
     }
 
@@ -244,38 +246,38 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
                 .sendBroadcast(broadcast);
     }
 
-    protected void invalidate(){
+    protected void invalidate() {
         getPaintActivtyFeactures().invalidate();
     }
 
 
-    protected void destroy(){
+    protected void destroy() {
         onDestroy();
         System.gc();
     }
 
     protected void sendErrorReport(String userTo) throws Exception {
-        ((FermatActivityManager)getActivity()).reportError(userTo);
+        ((FermatActivityManager) getActivity()).reportError(userTo);
     }
 
     protected void sendMail(String userTo, String bodyText) throws Exception {
-        ((FermatActivityManager)getActivity()).sendMailExternal(userTo, bodyText);
+        ((FermatActivityManager) getActivity()).sendMailExternal(userTo, bodyText);
     }
 
-    protected final void onBack(String activityCodeBack){
+    protected final void onBack(String activityCodeBack) {
         getFermatScreenSwapper().onControlledActivityBack(activityCodeBack);
     }
 
-    protected final void setChangeBackActivity(Activities backActivity){
+    protected final void setChangeBackActivity(Activities backActivity) {
         getFermatScreenSwapper().setChangeBackActivity(backActivity);
     }
 
-    protected final FermatRuntime getRuntimeManager(){
-        return ((FermatActivityManager)getActivity()).getRuntimeManager();
+    protected final FermatRuntime getRuntimeManager() {
+        return ((FermatActivityManager) getActivity()).getRuntimeManager();
     }
 
-    protected final FermatActivityManager getFermatActivityManager(){
-        return ((FermatActivityManager)getActivity());
+    protected final FermatActivityManager getFermatActivityManager() {
+        return ((FermatActivityManager) getActivity());
     }
 
     protected final NetworkStatus getFermatNetworkStatus() throws CantGetCommunicationNetworkStatusException {
@@ -286,19 +288,19 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
         return getFermatStates().getBitcoinNetworkStatus(blockchainNetworkType);
     }
 
-    protected final FermatStates getFermatStates(){
-        return  ((FermatStates)getActivity());
+    protected final FermatStates getFermatStates() {
+        return ((FermatStates) getActivity());
     }
 
 
-    public final void onUpdateViewHandler(final String appCode,final String code){
-        if(appSession.getAppPublicKey().equals(appCode)){
+    public final void onUpdateViewHandler(final String appCode, final String code) {
+        if (appSession.getAppPublicKey().equals(appCode)) {
             onUpdateView(code);
         }
 
     }
 
-    public final void onUpdateViewUIThred(final String code){
+    public final void onUpdateViewUIThred(final String code) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -331,9 +333,11 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
     public void onUpdateView(FermatBundle bundle) {
 
     }
+
     public void onUpdateViewUIThred(FermatBundle bundle) {
 
     }
+
     /**
      * This method will be called when the user press the back button
      */
@@ -343,7 +347,7 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
 
     @Override
     public void setFragmentFocus(boolean isVisible) {
-        this.isVisible =isVisible;
+        this.isVisible = isVisible;
         onFragmentFocus();
     }
 
@@ -355,11 +359,11 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
     }
 
 
-    public ScreenSize getScreenSize(){
+    public ScreenSize getScreenSize() {
         int screenSize = getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK;
         ScreenSize screenSizeType = null;
-        switch(screenSize) {
+        switch (screenSize) {
             case Configuration.SCREENLAYOUT_SIZE_LARGE:
                 screenSizeType = ScreenSize.LARGE;
                 break;

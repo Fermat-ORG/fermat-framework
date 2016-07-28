@@ -13,21 +13,21 @@ import java.util.UUID;
 /**
  * The Class <code>WalletTransactionWrapper</code>
  * contains the instance interface WalletTransaction
- *
+ * <p/>
  * Created by franklin on 17/11/15.
  */
 public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRecord {
-    private final UUID              transactionId;
-    private final Currency          merchandise;
-    private final BalanceType       balanceType;
-    private final TransactionType   transactionType;
+    private final UUID transactionId;
+    private final Currency merchandise;
+    private final BalanceType balanceType;
+    private final TransactionType transactionType;
     private final MoneyType moneyType;
-    private final String            walletPublicKey;
-    private final String            brokerPublicKey;
-    private final BigDecimal        amount;
-    private final long              timeStamp;
-    private final String            memo;
-    private final BigDecimal        priceReference;
+    private final String walletPublicKey;
+    private final String brokerPublicKey;
+    private final BigDecimal amount;
+    private final long timeStamp;
+    private final String memo;
+    private final BigDecimal priceReference;
     private final OriginTransaction originTransaction;
     private String originTransactionId;
     private boolean seen;
@@ -35,39 +35,41 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     /**
      * Constructor for WalletTransactionWrapper
      */
-    public WalletTransactionWrapper(UUID              transactionId,
-                                    Currency          merchandise,
-                                    BalanceType       balanceType,
-                                    TransactionType   transactionType,
+    public WalletTransactionWrapper(UUID transactionId,
+                                    Currency merchandise,
+                                    BalanceType balanceType,
+                                    TransactionType transactionType,
                                     MoneyType moneyType,
-                                    String            walletPublicKey,
-                                    String            brokerPublicKey,
-                                    BigDecimal        amount,
-                                    long              timeStamp,
-                                    String            memo,
-                                    BigDecimal        priceReference,
+                                    String walletPublicKey,
+                                    String brokerPublicKey,
+                                    BigDecimal amount,
+                                    long timeStamp,
+                                    String memo,
+                                    BigDecimal priceReference,
                                     OriginTransaction originTransaction,
                                     String originTransactionId,
-                                    boolean seen){
+                                    boolean seen) {
 
-        this.transactionId     = transactionId;
-        this.merchandise       = merchandise;
-        this.balanceType       = balanceType;
-        this.transactionType   = transactionType;
+        this.transactionId = transactionId;
+        this.merchandise = merchandise;
+        this.balanceType = balanceType;
+        this.transactionType = transactionType;
         this.moneyType = moneyType;
-        this.walletPublicKey   = walletPublicKey;
-        this.brokerPublicKey   = brokerPublicKey;
-        this.amount            = amount;
-        this.timeStamp         = timeStamp;
-        this.memo              = memo;
-        this.priceReference    = priceReference;
+        this.walletPublicKey = walletPublicKey;
+        this.brokerPublicKey = brokerPublicKey;
+        this.amount = amount;
+        this.timeStamp = timeStamp;
+        this.memo = memo;
+        this.priceReference = priceReference;
         this.originTransaction = originTransaction;
         this.originTransactionId = originTransactionId;
         this.seen = seen;
     }
 
     @Override
-    public UUID getTransactionId() { return transactionId; }
+    public UUID getTransactionId() {
+        return transactionId;
+    }
 
     @Override
     public BalanceType getBalanceType() {
@@ -142,7 +144,7 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
 
     @Override
     public BigDecimal getRunningBookBalance() {
-        return  new BigDecimal(0);
+        return new BigDecimal(0);
     }
 
     @Override

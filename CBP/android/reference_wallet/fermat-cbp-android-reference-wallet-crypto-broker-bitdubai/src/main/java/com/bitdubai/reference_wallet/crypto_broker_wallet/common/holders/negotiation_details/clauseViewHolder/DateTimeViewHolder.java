@@ -11,9 +11,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseI
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -28,6 +25,8 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
     private TextView descriptionTextView;
     private TextView youTimeZone;
     private TextView otheTimeZone;
+    private View separatorLineUp;
+    private View separatorLineDown;
 
 
     public DateTimeViewHolder(View itemView, int holderType) {
@@ -41,6 +40,8 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
         buttonTime.setOnClickListener(this);
         youTimeZone = (TextView) itemView.findViewById(R.id.cbw_text_you_time_zone);
         otheTimeZone = (TextView) itemView.findViewById(R.id.cbw_text_other_date);
+        separatorLineDown = itemView.findViewById(R.id.cbw_line_down);
+        separatorLineUp = itemView.findViewById(R.id.cbw_line_up);
     }
 
     @Override
@@ -58,27 +59,20 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
         Map<ClauseType, ClauseInformation> clauses = data.getClauses();
         ClauseInformation otherTimeZoneClause = clauses.get(ClauseType.CUSTOMER_TIME_ZONE);
 
-        if(otherTimeZoneClause != null) {
+        if (otherTimeZoneClause != null) {
+            String yourTimeZoneValue = TimeZone.getDefault().getID();
+            String otherTimeZoneValue = otherTimeZoneClause.getValue();
 
-            String otheTimeZoneValue = "Undefined";
+            if (!yourTimeZoneValue.equals(otherTimeZoneValue)) {
 
-            String youTimeZoneValue = TimeZone.getDefault().getID();
-            otheTimeZoneValue = otherTimeZoneClause.getValue();
-
-            if(!youTimeZoneValue.equals(otheTimeZoneValue)) {
-
-//                String dateTime = dateFormat.format(timeInMillis) + " " + timeFormat.format(timeInMillis);
                 youTimeZone.setVisibility(View.VISIBLE);
                 otheTimeZone.setVisibility(View.VISIBLE);
 
-                DateTimeZone dateTimeZoneOther = new DateTimeZone(otheTimeZoneValue, timeInMillis, "MM/dd/yyyy hh:mm a");
+                DateTimeZone otherTimeZoneDate = new DateTimeZone(otherTimeZoneValue, timeInMillis, "MM/dd/yyyy hh:mm a");
 
-                youTimeZone.setText(youTimeZoneValue);
-//                otheTimeZone.setText("Customer Date: " + getDateTimeOther(otheTimeZoneValue, dateTime) + " ( " + otheTimeZoneValue + " )");
-                otheTimeZone.setText("Customer Date: " + dateTimeZoneOther.getDate() + " ( " + otheTimeZoneValue + " )");
-
+                youTimeZone.setText(String.format("Time Zone: %1$s", yourTimeZoneValue));
+                otheTimeZone.setText(String.format("Customer Date: %1$s (%2$s)", otherTimeZoneDate.getDate(), otherTimeZoneValue));
             }
-
         }
     }
 
@@ -112,12 +106,20 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
 
     @Override
     protected void onAcceptedStatus() {
+        separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
+        separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
         descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
+        youTimeZone.setTextColor(getColor(R.color.card_title_color_status_accepted));
+        otheTimeZone.setTextColor(getColor(R.color.card_title_color_status_accepted));
     }
 
     @Override
     protected void setChangedStatus() {
+        separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
+        separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
         descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
+        youTimeZone.setTextColor(getColor(R.color.card_title_color_status_changed));
+        otheTimeZone.setTextColor(getColor(R.color.card_title_color_status_changed));
     }
 
     @Override

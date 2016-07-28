@@ -73,7 +73,7 @@ public interface CBPWalletsModuleManager<T extends FermatSettings, S extends Act
     /**
      * Returns a Collection of the clauses of a negotiation, as per given by the customerBrokerPurchaseNegotiationManager
      *
-     * @param negotiationId  the ID of the negotiation
+     * @param negotiationId the ID of the negotiation
      */
     Collection<Clause> getNegotiationClausesFromNegotiationId(UUID negotiationId) throws CantGetListClauseException;
 
@@ -106,7 +106,6 @@ public interface CBPWalletsModuleManager<T extends FermatSettings, S extends Act
     CustomerBrokerNegotiationInformation getNegotiationInformation(UUID negotiationID) throws CantGetNegotiationInformationException;
 
     /**
-     *
      * @return Collection<NegotiationLocations>
      */
     Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) throws CantGetListLocationsSaleException, CantGetListLocationsPurchaseException;

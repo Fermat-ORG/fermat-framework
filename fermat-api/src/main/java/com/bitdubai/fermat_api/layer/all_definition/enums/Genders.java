@@ -14,11 +14,9 @@ public enum Genders implements FermatEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    FEMALE      ("F"),
-    INDEFINITE  ("I"),
-    MALE        ("M")
-
-    ;
+    FEMALE("F"),
+    INDEFINITE("I"),
+    MALE("M");
 
     private final String code;
 
@@ -30,13 +28,16 @@ public enum Genders implements FermatEnum {
 
         switch (code) {
 
-            case "F": return Genders.FEMALE;
-            case "I": return Genders.INDEFINITE;
-            case "M": return Genders.MALE;
+            case "F":
+                return Genders.FEMALE;
+            case "I":
+                return Genders.INDEFINITE;
+            case "M":
+                return Genders.MALE;
 
             default:
                 throw new InvalidParameterException(
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "The received code is not valid for the Genders enum"
                 );
         }

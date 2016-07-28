@@ -18,13 +18,13 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {
 
-    private final UUID                  transmissionId      = UUID.randomUUID();
-    private final PlatformComponentType actorReceiveType    = PlatformComponentType.ACTOR_CRYPTO_BROKER;
+    private final UUID transmissionId = UUID.randomUUID();
+    private final PlatformComponentType actorReceiveType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
 
     private ConfirmMessage testObj1;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         testObj1 = new ConfirmMessage(transmissionId, actorReceiveType);
     }
 

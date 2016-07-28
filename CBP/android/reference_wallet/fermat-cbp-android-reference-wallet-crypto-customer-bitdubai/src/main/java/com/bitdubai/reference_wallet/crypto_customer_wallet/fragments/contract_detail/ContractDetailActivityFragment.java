@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -44,6 +43,9 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,6 +71,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
     private List<ContractDetail> contractInformation;
     private ContractBasicInformation data;
 
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
+
 
     // UI
     private ImageView brokerImage;
@@ -76,7 +80,6 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
     private FermatTextView detailDate;
     private FermatTextView detailRate;
     private FermatTextView brokerName;
-    private FermatButton negotiationButton;
     private RecyclerView recyclerView;
 
     public static ContractDetailActivityFragment newInstance() {
@@ -136,13 +139,13 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
         sellingSummary = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_selling_summary);
         detailDate = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_date);
         detailRate = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_rate);
-        negotiationButton = (FermatButton) rootView.findViewById(R.id.ccw_contract_details_negotiation_details);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.ccw_contract_details_contract_steps_recycler_view);
 
         //Configure recyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(new ContractDetailAdapter(getActivity(), contractInformation, appSession, moduleManager, this));
 
+        final View negotiationButton = rootView.findViewById(R.id.ccw_contract_details_negotiation_details);
         negotiationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,8 +159,10 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
     private void bindData() {
         final SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy", Locale.getDefault());
         final String paymentCurrency = data.getPaymentCurrency();
+
+
         final String merchandise = data.getMerchandise();
-        final double exchangeRateAmount = getFormattedNumber(data.getExchangeRateAmount());
+        final String exchangeRateAmount = fixFormat(String.valueOf(data.getExchangeRateAmount()));
         final Date lastUpdate = new Date(data.getLastUpdate());
 
         brokerImage.setImageDrawable(getImgDrawable(data.getCryptoBrokerImage()));
@@ -187,51 +192,52 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
                 String merchandisePaymentMethod = "MK";
                 MoneyType customerPaymentMethodType = MoneyType.BANK;
                 MoneyType brokerPaymentMethodType = MoneyType.BANK;
-                try{
+                try {
                     Collection<Clause> clauses = moduleManager.getNegotiationClausesFromNegotiationId(data.getNegotiationId());
 
                     //Extract info from clauses
-                    for(Clause clause : clauses)
-                    {
-                        if(clause.getType() == ClauseType.EXCHANGE_RATE)
+                    for (Clause clause : clauses) {
+                        if (clause.getType() == ClauseType.EXCHANGE_RATE)
                             exchangeRate = clause.getValue();
 
-                        if(clause.getType() == ClauseType.BROKER_CURRENCY){
+                        if (clause.getType() == ClauseType.BROKER_CURRENCY) {
                             try {
-                                if(FiatCurrency.codeExists(clause.getValue()))
+                                if (FiatCurrency.codeExists(clause.getValue()))
                                     paymentCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
-                                else if(CryptoCurrency.codeExists(clause.getValue()))
+                                else if (CryptoCurrency.codeExists(clause.getValue()))
                                     paymentCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
-                            }catch(Exception e) {
+                            } catch (Exception e) {
                                 paymentCurrency = clause.getValue();
                             }
                         }
-                        if(clause.getType() == ClauseType.BROKER_CURRENCY_QUANTITY)
+                        if (clause.getType() == ClauseType.BROKER_CURRENCY_QUANTITY)
                             paymentAmount = clause.getValue();
-                        if(clause.getType() == ClauseType.BROKER_PAYMENT_METHOD){
-                            merchandisePaymentMethod  = MoneyType.getByCode(clause.getValue()).getFriendlyName();
+                        if (clause.getType() == ClauseType.BROKER_PAYMENT_METHOD) {
+                            merchandisePaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
                             brokerPaymentMethodType = MoneyType.getByCode(clause.getValue());
                         }
-                        if(clause.getType() == ClauseType.CUSTOMER_CURRENCY) {
+                        if (clause.getType() == ClauseType.CUSTOMER_CURRENCY) {
                             try {
                                 if (FiatCurrency.codeExists(clause.getValue()))
                                     merchandiseCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
                                 else if (CryptoCurrency.codeExists(clause.getValue()))
                                     merchandiseCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
-                            }catch(Exception e) {
+                            } catch (Exception e) {
                                 merchandiseCurrency = clause.getValue();
                             }
                         }
-                        if(clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY)
+                        if (clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY)
                             merchandiseAmount = clause.getValue();
-                        if(clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD){
+                        if (clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD) {
                             paymentPaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
                             customerPaymentMethodType = MoneyType.getByCode(clause.getValue());
                         }
 
                     }
 
-                }catch(Exception e) {e.printStackTrace();}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
 
                 long paymentSubmitDate = moduleManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.PAYMENT_SUBMIT, paymentPaymentMethod);
@@ -259,7 +265,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
                         paymentAmount,
                         paymentPaymentMethod,
                         paymentCurrency,
-                        paymentSubmitDate,customerPaymentMethodType);
+                        paymentSubmitDate, customerPaymentMethodType);
                 contractDetails.add(contractDetail);
 
                 //Payment Reception step
@@ -271,7 +277,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
                         paymentAmount,
                         paymentPaymentMethod,
                         paymentCurrency,
-                        paymentAckDate,customerPaymentMethodType);
+                        paymentAckDate, customerPaymentMethodType);
                 contractDetails.add(contractDetail);
 
                 //Merchandise Delivery step
@@ -283,7 +289,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
                         merchandiseAmount,
                         merchandisePaymentMethod,
                         merchandiseCurrency,
-                        merchandiseSubmitDate,brokerPaymentMethodType);
+                        merchandiseSubmitDate, brokerPaymentMethodType);
                 contractDetails.add(contractDetail);
 
                 //Merchandise Reception step
@@ -295,7 +301,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
                         merchandiseAmount,
                         merchandisePaymentMethod,
                         merchandiseCurrency,
-                        merchandiseAckDate,brokerPaymentMethodType);
+                        merchandiseAckDate, brokerPaymentMethodType);
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -345,5 +351,37 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
 
     public void goToWalletHome() {
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
+    }
+
+
+    private String fixFormat(String value) {
+
+        try {
+            if (compareLessThan1(value)) {
+                numberFormat.setMaximumFractionDigits(8);
+            } else {
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
+        try {
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
     }
 }

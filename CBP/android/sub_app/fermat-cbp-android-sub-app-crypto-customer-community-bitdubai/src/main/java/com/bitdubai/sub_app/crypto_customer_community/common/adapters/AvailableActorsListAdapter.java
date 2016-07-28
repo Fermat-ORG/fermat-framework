@@ -26,6 +26,7 @@ public class AvailableActorsListAdapter extends FermatAdapter<CryptoCustomerComm
     public static final int DATA_ITEM = 1;
     public static final int LOADING_ITEM = 2;
     private boolean loadingData = true;
+    private LoadingMoreViewHolder loadingMoreViewHolder;
 
 
     public AvailableActorsListAdapter(Context context, List<CryptoCustomerCommunityInformation> dataSet) {
@@ -66,7 +67,7 @@ public class AvailableActorsListAdapter extends FermatAdapter<CryptoCustomerComm
             super.onBindViewHolder(holder, position);
 
         else if (holder instanceof LoadingMoreViewHolder) {
-            final LoadingMoreViewHolder loadingMoreViewHolder = (LoadingMoreViewHolder) holder;
+            loadingMoreViewHolder = (LoadingMoreViewHolder) holder;
             loadingMoreViewHolder.progressBar.setVisibility(loadingData ? View.VISIBLE : View.GONE);
         }
     }
@@ -93,5 +94,8 @@ public class AvailableActorsListAdapter extends FermatAdapter<CryptoCustomerComm
 
     public void setLoadingData(boolean loadingData) {
         this.loadingData = loadingData;
+        if(loadingMoreViewHolder!=null) {
+            loadingMoreViewHolder.progressBar.setVisibility(loadingData ? View.VISIBLE : View.GONE);
+        }
     }
 }

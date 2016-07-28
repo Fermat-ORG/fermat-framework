@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 public class SetTimeStampTest {
 
     @Test
-    public void setTimeStamp(){
+    public void setTimeStamp() {
         CryptoMoneyRestockTransactionImpl cryptoMoneyRestockTransaction = mock(CryptoMoneyRestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoMoneyRestockTransaction).setTimeStamp(Mockito.any(Timestamp.class));
     }

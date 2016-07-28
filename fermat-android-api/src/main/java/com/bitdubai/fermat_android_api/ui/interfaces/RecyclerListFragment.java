@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_android_api.ui.interfaces;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 

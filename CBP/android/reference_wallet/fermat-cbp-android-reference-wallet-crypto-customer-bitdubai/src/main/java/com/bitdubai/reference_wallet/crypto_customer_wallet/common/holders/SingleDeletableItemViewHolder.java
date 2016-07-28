@@ -23,7 +23,7 @@ public abstract class SingleDeletableItemViewHolder<T> extends FermatViewHolder 
 
     public abstract int getCloseButtonResource();
 
-    public ImageView getCloseButton(){
+    public ImageView getCloseButton() {
         return closeButton;
     }
 }

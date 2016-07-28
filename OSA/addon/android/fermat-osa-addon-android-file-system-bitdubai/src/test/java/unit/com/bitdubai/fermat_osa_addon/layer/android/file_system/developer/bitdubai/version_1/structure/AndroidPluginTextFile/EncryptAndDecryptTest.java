@@ -1,10 +1,8 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.AndroidPluginTextFile;
 
-import com.bitdubai.android_fermat_pip_addon.layer_2_os.file_system.BuildConfig;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.AndroidPluginFileSystem;
 
@@ -25,8 +23,8 @@ import java.util.UUID;
 @Config(constants = android.support.v13.BuildConfig.class)
 public class EncryptAndDecryptTest {
 
-    private static final String PLUGIN_IDS_DIRECTORY_NAME = "lnacosta"  ;
-    private static final String PLUGIN_IDS_FILE_NAME      = "walletsIds" ;
+    private static final String PLUGIN_IDS_DIRECTORY_NAME = "lnacosta";
+    private static final String PLUGIN_IDS_FILE_NAME = "walletsIds";
 
     @Test
     public void constructorIntOk() throws Exception {
@@ -54,7 +52,7 @@ public class EncryptAndDecryptTest {
         try {
             UUID uuid = UUID.randomUUID();
             ECCKeyPair eccKeyPair = new ECCKeyPair();
-            String content = eccKeyPair.getPrivateKey()+";"+eccKeyPair.getPublicKey();
+            String content = eccKeyPair.getPrivateKey() + ";" + eccKeyPair.getPublicKey();
 
             AndroidPluginFileSystem fileSystem = new AndroidPluginFileSystem("/home");
 

@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile</code> represent
  * the profile of the platform component, that is use to register like a platform component whit the web socket communication cloud server.
  * <p/>
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 02/09/15.
  *
  * @version 1.0

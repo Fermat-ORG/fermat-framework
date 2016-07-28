@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdu
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Angel Veloz - (vlzangel91@gmail.com) on 16/01/16.
  *
  * @version 1.0
@@ -12,6 +12,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdu
  */
 public class CryptoBrokerActorDatabaseConstants {
 
+    public static final String DATABASE_NAME = "actor_crypto_broker";
     /**
      * Crypto Broker Actor Relationship database table definition.
      */
