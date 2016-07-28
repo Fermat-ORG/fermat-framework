@@ -3605,12 +3605,12 @@ public class SubAppAppsGenerator {
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#9A12B09F");
+        statusBar.setColor("#4270A3");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Geolocation");
-        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#9A12B09F");

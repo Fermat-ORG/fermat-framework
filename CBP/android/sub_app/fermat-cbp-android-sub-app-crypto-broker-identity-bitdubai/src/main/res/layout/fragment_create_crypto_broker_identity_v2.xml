@@ -70,6 +70,7 @@
         android:layout_below="@+id/crypto_broker_name"
         android:layout_marginTop="4dp"
         android:layout_centerHorizontal="true"
+        android:visibility="gone"
         />
     <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
 
@@ -87,7 +88,7 @@
         android:layout_below="@+id/statusView"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        />
+        android:visibility="gone"/>
         <!--android:textAlignment="center"/>-->
 
     <RelativeLayout
@@ -135,10 +136,10 @@
 
         android:layout_marginTop="16dp"
         android:layout_marginBottom="24dp"
-        android:layout_alignEnd="@+id/crypto_broker_status"
-        android:layout_alignRight="@+id/crypto_broker_status"
-        android:layout_alignStart="@+id/crypto_broker_status"
-        android:layout_alignLeft="@+id/crypto_broker_status"
+        android:layout_alignEnd="@+id/crypto_broker_name"
+        android:layout_alignRight="@+id/crypto_broker_name"
+        android:layout_alignStart="@+id/crypto_broker_name"
+        android:layout_alignLeft="@+id/crypto_broker_name"
         />
 
     <Button
@@ -168,11 +169,6 @@
         android:layout_alignEnd="@+id/statusView"
         android:layout_alignRight="@+id/statusView"
         />
-
-
-
-
-
 
     <ProgressBar
         android:id="@+id/cbi_progress_bar"
