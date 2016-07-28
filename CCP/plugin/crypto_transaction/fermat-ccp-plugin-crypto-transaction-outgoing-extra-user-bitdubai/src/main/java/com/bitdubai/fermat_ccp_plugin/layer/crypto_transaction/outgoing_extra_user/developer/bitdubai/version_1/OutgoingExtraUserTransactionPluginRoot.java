@@ -68,6 +68,9 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_VAULT   , plugin = Plugins.BITCOIN_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.FERMAT_VAULT)
+    private CryptoVaultManager cryptoFermatVaultManager;
+
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     private Broadcaster broadcaster;
 
@@ -104,6 +107,7 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
         this.transactionProcessorAgent = new OutgoingExtraUserTransactionProcessorAgent(
                 cryptoWalletManager,
                 cryptoVaultManager  ,
+               cryptoFermatVaultManager,
                 bitcoinNetworkManager,
                 getErrorManager()        ,
                 dao,

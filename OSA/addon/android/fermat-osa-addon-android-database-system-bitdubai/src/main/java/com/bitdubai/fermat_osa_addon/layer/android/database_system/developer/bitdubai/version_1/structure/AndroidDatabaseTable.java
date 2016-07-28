@@ -245,7 +245,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
 //                        .append("'");
             }
             database = this.database.getWritableDatabase();
-            Log.i("AndroidDatabase", "Database name:"+tableName+" insert quantity: " + database.insert(tableName, null, contentValues));
+            Log.i("AndroidDatabase", "Database name:"+tableName+" insert id: " + database.insert(tableName, null, contentValues));
 
 //            database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
         } catch (Exception exception) {
@@ -802,6 +802,44 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
     @Override
     public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException {
+        SQLiteDatabase database = null;
+        try {
+           /* List<DatabaseRecord> records = record.getValues();
+
+            StringBuilder queryWhereClause = new StringBuilder();
+
+            if (!records.isEmpty()) {
+                for (int i = 0; i < records.size(); ++i) {
+
+                    if (queryWhereClause.length() > 0) {
+                        queryWhereClause.append(" and ");
+                        queryWhereClause.append(records.get(i).getName());
+                    } else
+                        queryWhereClause.append(records.get(i).getName());
+                    queryWhereClause.append("=");
+                    queryWhereClause.append("'").append(records.get(i).getValue()).append("'");
+                }
+            } else {
+                queryWhereClause = null;
+            }
+
+            database = this.database.getWritableDatabase();*/
+
+            if (!makeFilter2().isEmpty()) {
+                database.delete(tableName, makeFilter2(), null);
+            } else {
+                database.delete(tableName,null,null);
+            }
+
+        } catch (Exception exception) {
+            throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
+        } finally {
+            if(database != null)
+                database.close();
+        }
+    }
+
+    public void deleteRecordOld(DatabaseTableRecord record) throws CantDeleteRecordException {
         SQLiteDatabase database = null;
         try {
             List<DatabaseRecord> records = record.getValues();

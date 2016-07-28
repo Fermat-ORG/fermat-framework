@@ -188,12 +188,9 @@ public class WalletContactsMiddlewareDao {
         try {
             DatabaseTable walletContactAddressBookTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_TABLE_NAME);
             walletContactAddressBookTable.addUUIDFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_CONTACT_ID_COLUMN_NAME, walletContactRecord.getContactId(), DatabaseFilterType.EQUAL);
-            walletContactAddressBookTable.loadToMemory();
 
-            List<DatabaseTableRecord> records = walletContactAddressBookTable.getRecords();
+           DatabaseTableRecord record = walletContactAddressBookTable.getEmptyRecord();
 
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
 
                 if (walletContactRecord.getActorAlias()     != null)
                     record.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_ALIAS_COLUMN_NAME     , walletContactRecord.getActorAlias()    );
@@ -206,14 +203,10 @@ public class WalletContactsMiddlewareDao {
                 insertCryptoAddresses(walletContactRecord.getContactId(), walletContactRecord.getCryptoAddresses());
 
                 walletContactAddressBookTable.updateRecord(record);
-            } else {
-                throw new WalletContactNotFoundException(WalletContactNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a wallet contact with that id");
-            }
+
         } catch (CantInsertCryptoAddressesException | CantDeleteCryptoAddressesException e) {
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, e, "", "There's a problem updating crypto addresses");
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-        } catch (CantUpdateRecordException exception) {
+         } catch (CantUpdateRecordException exception) {
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, exception, "", "Cant update record exception.");
         }
     }
@@ -228,19 +221,13 @@ public class WalletContactsMiddlewareDao {
             DatabaseTable walletContactAddressBookTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_TABLE_NAME);
 
             walletContactAddressBookTable.addUUIDFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_CONTACT_ID_COLUMN_NAME, contactId, DatabaseFilterType.EQUAL);
+            DatabaseTableRecord record = walletContactAddressBookTable.getEmptyRecord();
 
-            walletContactAddressBookTable.loadToMemory();
-
-            List<DatabaseTableRecord> records = walletContactAddressBookTable.getRecords();
-
-            DatabaseTableRecord record = records.get(0);
 
             record.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_COMPATIBILITY_COLUMN_NAME, compatibility.getCode());
 
             walletContactAddressBookTable.updateRecord(record);
 
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (CantUpdateRecordException exception) {
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, exception, "", "Cant update record exception.");
         }

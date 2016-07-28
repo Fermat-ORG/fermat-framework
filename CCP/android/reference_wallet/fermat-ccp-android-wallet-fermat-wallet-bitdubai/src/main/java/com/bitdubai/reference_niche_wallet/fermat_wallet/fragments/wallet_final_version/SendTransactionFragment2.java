@@ -273,7 +273,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 //noinspection TryWithIdenticalCatches
                 ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = null;
                 try {
-                    cryptoWalletIntraUserIdentity = appSession.getModuleManager().getSelectedActorIdentity();
+                    cryptoWalletIntraUserIdentity = moduleManager.getSelectedActorIdentity();
                 } catch (CantGetSelectedActorIdentityException e) {
                     e.printStackTrace();
                 } catch (ActorIdentityNotSelectedException e) {
@@ -492,10 +492,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         long balance = 0;
 
 
-        if (balanceType.equals(BalanceType.AVAILABLE))
-            balance =  moduleManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType);
-        else
-            //balance = moduleManager.getRealBalance(appSession.getAppPublicKey(), blockchainNetworkType);
+       balance =  moduleManager.getBalance(balanceType, appSession.getAppPublicKey(), blockchainNetworkType);
 
         txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, typeAmountSelected.getCode()));
 
@@ -516,7 +513,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if(id == 1){
+            if(id == 2){
                 changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
                 return true;
             }else{

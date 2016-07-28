@@ -5,9 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#fff">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/send_form"
         android:layout_width="match_parent"
@@ -282,9 +284,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/feed_advances"
                     android:orientation="vertical"
-                    android:visibility="visible"
-
-                    >
+                    android:visibility="visible">
 
                     <View
                         android:layout_width="match_parent"
