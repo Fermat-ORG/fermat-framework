@@ -397,6 +397,15 @@ public class ChatListFragment
         updatevalues();
         if (chatSettings.isHomeTutorialDialogEnabled() == true) {
             setUpHelpChat();
+        } else {
+            final ChatActorCommunitySelectableIdentity identity = chatIdentity;
+            if (identity == null) {
+                try {
+                    applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
 //        Just if chat is going to allow multiple identities
 // try {
