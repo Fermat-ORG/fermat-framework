@@ -36,8 +36,8 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        galleryBtn = (ImageView) findViewById(R.id.img_gallery);
-        camBtn = (ImageView) findViewById(R.id.img_cam);
+        galleryBtn = (ImageView) findViewById(R.id.img_gallery_cht_btn);
+        camBtn = (ImageView) findViewById(R.id.img_cam_cht_btn);
         // rotateBtn = (ImageView) findViewById(R.id.img_rotate);
         //  rotateBtn.setOnClickListener(this);
         galleryBtn.setOnClickListener(this);
@@ -67,11 +67,11 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.img_gallery) {
+        if (i == R.id.img_gallery_cht_btn) {
             setButtonTouch(TOUCH_GALLERY);
             dismiss();
         }
-        if (i == R.id.img_cam) {
+        if (i == R.id.img_cam_cht_btn) {
             setButtonTouch(TOUCH_CAM);
             dismiss();
         }
