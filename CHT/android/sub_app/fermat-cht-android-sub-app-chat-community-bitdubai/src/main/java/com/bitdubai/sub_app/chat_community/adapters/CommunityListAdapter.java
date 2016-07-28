@@ -236,15 +236,19 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
             if (data.getCountry().equals("null") || data.getCountry().equals(""))
                 countryAddress = "";
             else countryAddress = data.getCountry();
-            if (stateAddress == "" && cityAddress == "" && countryAddress == "") {
+            if (stateAddress.equalsIgnoreCase("") && cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
                 holder.location_text.setText("Not Found");
             } else
-                holder.location_text.setText(cityAddress + stateAddress + countryAddress);
+                holder.location_text.setText(new StringBuilder().append(cityAddress).append(stateAddress).append(countryAddress).toString());
         } else
             holder.location_text.setText("Not Found");
 
-        if (data.getProfileStatus() != ProfileStatus.ONLINE)
+        if (data.getProfileStatus() == ProfileStatus.ONLINE)
+            holder.location_text.setTextColor(Color.parseColor("#47BF73"));//Verde no brillante
+        else if (data.getProfileStatus() == ProfileStatus.OFFLINE)
             holder.location_text.setTextColor(Color.RED);
+        else if (data.getProfileStatus() == ProfileStatus.UNKNOWN)
+            holder.location_text.setTextColor(Color.BLACK);
 
         final ChatActorCommunityInformation dat = data;
         holder.add_contact_button.setOnClickListener(new View.OnClickListener() {

@@ -81,15 +81,19 @@ public class ContactsListAdapter
                 if (data.getCountry().equals("null") || data.getState().equals("") || data.getCountry().equals("country"))
                     countryAddress = "";
                 else countryAddress = data.getCountry();
-                if (stateAddress == "" && cityAddress == "" && countryAddress == "") {
+                if (stateAddress.equalsIgnoreCase("") && cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
                     holder.location.setText("Not Found");
                 } else
-                    holder.location.setText(cityAddress + stateAddress + countryAddress);
+                    holder.location.setText(new StringBuilder().append(cityAddress).append(stateAddress).append(countryAddress).toString());
             } else
                 holder.location.setText("Not Found");
 
-            if (data.getProfileStatus() != ProfileStatus.ONLINE)
+            if (data.getProfileStatus() == ProfileStatus.ONLINE)
+                holder.location.setTextColor(Color.parseColor("#47BF73"));//Verde no brillante
+            else if (data.getProfileStatus() == ProfileStatus.OFFLINE)
                 holder.location.setTextColor(Color.RED);
+            else if (data.getProfileStatus() == ProfileStatus.UNKNOWN)
+                holder.location.setTextColor(Color.BLACK);
 
             final ChatActorCommunityInformation dat = data;
             holder.friendAvatar.setOnClickListener(new View.OnClickListener() {
@@ -107,10 +111,10 @@ public class ContactsListAdapter
                         if (dat.getCountry().equals("null") || dat.getCountry().equals(""))
                             countryAddress = "";
                         else countryAddress = dat.getCountry();
-                        if (stateAddress == "" && cityAddress == "" && countryAddress == "") {
+                        if (stateAddress.equalsIgnoreCase("") && cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
                             contact.setCountryText("Not Found");
                         } else
-                            contact.setCountryText(cityAddress + stateAddress + countryAddress);
+                            contact.setCountryText(new StringBuilder().append(cityAddress).append(stateAddress).append(countryAddress).toString());
                     } else
                         contact.setCountryText("Not Found");
 
