@@ -152,7 +152,7 @@ public class ProviderBterPluginRoot extends AbstractPlugin implements DatabaseMa
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         //Determine cryptoCurrency base
         String exchangeFrom, exchangeTo;
@@ -176,7 +176,7 @@ public class ProviderBterPluginRoot extends AbstractPlugin implements DatabaseMa
         double salePrice = 0;
 
         try {
-            json = new JSONObject(HttpHelper.getHTTPContent(new StringBuilder().append("http://data.bter.com/api/1/ticker/").append(exchangeFrom).append("_").append(exchangeTo).toString()));
+            json = new JSONObject(HttpHelper.getHTTPContent("http://data.bter.com/api/1/ticker/" + exchangeFrom + "_" + exchangeTo));
             purchasePrice = json.getDouble("buy");
             salePrice = json.getDouble("sell");
 
@@ -220,7 +220,7 @@ public class ProviderBterPluginRoot extends AbstractPlugin implements DatabaseMa
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }

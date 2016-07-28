@@ -148,7 +148,7 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         //Determine cryptoCurrency base
         String exchangeFrom, exchangeTo;
@@ -174,7 +174,7 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
         double salePrice = 0;
 
         try {
-            json = new JSONObject(HttpHelper.getHTTPContent(new StringBuilder().append("https://api.bitfinex.com/v1/pubticker/").append(exchangeFrom).append(exchangeTo).toString()));
+            json = new JSONObject(HttpHelper.getHTTPContent("https://api.bitfinex.com/v1/pubticker/" + exchangeFrom + exchangeTo));
             purchasePrice = json.getDouble("bid");
             salePrice = json.getDouble("ask");
 
@@ -219,7 +219,7 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }

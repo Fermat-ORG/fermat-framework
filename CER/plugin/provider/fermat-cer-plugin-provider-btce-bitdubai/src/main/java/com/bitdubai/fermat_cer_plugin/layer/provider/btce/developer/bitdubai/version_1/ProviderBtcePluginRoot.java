@@ -145,7 +145,7 @@ public class ProviderBtcePluginRoot extends AbstractPlugin implements DatabaseMa
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         //Determine cryptoCurrency base
         String exchangeFrom, exchangeTo;
@@ -169,8 +169,8 @@ public class ProviderBtcePluginRoot extends AbstractPlugin implements DatabaseMa
         double salePrice = 0;
 
         try {
-            String currencyString = new StringBuilder().append(exchangeFrom.toLowerCase()).append("_").append(exchangeTo.toLowerCase()).toString();
-            json = new JSONObject(HttpHelper.getHTTPContent(new StringBuilder().append("https://btc-e.com/api/3/ticker/").append(currencyString).toString()));
+            String currencyString = exchangeFrom.toLowerCase() + "_" + exchangeTo.toLowerCase();
+            json = new JSONObject(HttpHelper.getHTTPContent("https://btc-e.com/api/3/ticker/" + currencyString));
             json = json.getJSONObject(currencyString);
             purchasePrice = json.getDouble("buy");
             salePrice = json.getDouble("sell");
@@ -215,7 +215,7 @@ public class ProviderBtcePluginRoot extends AbstractPlugin implements DatabaseMa
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }

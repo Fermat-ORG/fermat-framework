@@ -152,7 +152,7 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         //Determine cryptoCurrency base
         String exchangeFrom, exchangeTo;
@@ -176,8 +176,8 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
         double salePrice = 0;
 
         try {
-            String currencyString = new StringBuilder().append(exchangeFrom.toLowerCase()).append("-").append(exchangeTo.toLowerCase()).toString();
-            json = new JSONObject(HttpHelper.getHTTPContent(new StringBuilder().append("https://c-cex.com/t/").append(currencyString).append(".json").toString()));
+            String currencyString = exchangeFrom.toLowerCase() + "-" + exchangeTo.toLowerCase();
+            json = new JSONObject(HttpHelper.getHTTPContent("https://c-cex.com/t/" + currencyString + ".json"));
             json = json.getJSONObject("ticker");
             purchasePrice = json.getDouble("buy");
             salePrice = json.getDouble("sell");
@@ -214,7 +214,7 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
         if (DateHelper.timestampIsInTheFuture(timestamp))
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided timestamp is in the future");
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         //Determine if from-to currencies need to be inverted to query API
         boolean invertCurrencies;
@@ -258,7 +258,7 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
         if (DateHelper.timestampIsInTheFuture(startTimestamp))
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided startTimestamp is in the future");
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
 
         //Determine if from-to currencies need to be inverted to query API
@@ -280,7 +280,7 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException(new StringBuilder().append("Unsupported currencyPair=").append(currencyPair.toString()).toString());
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }
@@ -293,11 +293,11 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         JSONObject json;
-        String currencyPair = (invertCurrencies ? new StringBuilder().append(currencyTo.getCode().toLowerCase()).append("-").append(currencyFrom.getCode().toLowerCase()).toString() :
-                new StringBuilder().append(currencyFrom.getCode().toLowerCase()).append("-").append(currencyTo.getCode().toLowerCase()).toString());
+        String currencyPair = (invertCurrencies ? currencyTo.getCode().toLowerCase() + "-" + currencyFrom.getCode().toLowerCase() :
+                currencyFrom.getCode().toLowerCase() + "-" + currencyTo.getCode().toLowerCase());
 
         try {
-            json = new JSONObject(HttpHelper.getHTTPContent(new StringBuilder().append("https://c-cex.com/t/s.html?a=tradehistory&d1=").append(dateFrom).append("&d2=").append(dateTo).append("&pair=").append(currencyPair).toString()));
+            json = new JSONObject(HttpHelper.getHTTPContent("https://c-cex.com/t/s.html?a=tradehistory&d1=" + dateFrom + "&d2=" + dateTo + "&pair=" + currencyPair));
             JSONArray jsonArray = json.getJSONArray("return");
 
 
