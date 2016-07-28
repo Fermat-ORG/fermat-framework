@@ -604,27 +604,22 @@ public class EditCryptoBrokerIdentityFragment
         if (brokerAlias.trim().isEmpty()) {
             makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
 
-        } else if (cryptoBrokerBitmap == null) {
-            makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
-
         } else {
             final int accuracy = getAccuracyData();
             final GeoFrequency frequency = getFrequencyData();
 
             FermatWorker fermatWorker = new CreateIdentityWorker(getActivity(), appSession.getModuleManager(), this,
-                    brokerAlias, identityImgByteArray, accuracy, frequency);
-
-            /*FermatWorker fermatWorker = new CreateIdentityWorker(getActivity(), appSession.getModuleManager(), this,
-                    brokerAlias, identityImgByteArray, accuracy, frequency);*/
-
-
-
+                    brokerAlias, (identityImgByteArray == null) ? ImagesUtils.toByteArray(convertImage(R.drawable.no_profile_image)) : identityImgByteArray, accuracy, frequency);
 
             //progressBar.setVisibility(View.VISIBLE);
             executor = fermatWorker.execute();
             //Toast.makeText(getActivity(), "Crypto Broker Identity Created", Toast.LENGTH_LONG).show();
 
         }
+    }
+
+    private Bitmap convertImage(int resImage) {
+        return BitmapFactory.decodeResource(getActivity().getResources(), resImage);
     }
 
     private void dispatchTakePictureIntent() {

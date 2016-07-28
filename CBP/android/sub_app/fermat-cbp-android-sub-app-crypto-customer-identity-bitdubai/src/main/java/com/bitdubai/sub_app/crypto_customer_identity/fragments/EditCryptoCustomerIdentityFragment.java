@@ -352,7 +352,8 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
     private void editIdentityInfoInBackDevice() {
         final String customerNameText = mCustomerName.getText().toString();
 
-        final byte[] imgInBytes = (cryptoCustomerBitmap != null) ? identityImgByteArray : profileImage;
+        final byte[] imgInBytes = (cryptoCustomerBitmap != null) ? ImagesUtils.toByteArray(convertImage(R.drawable.no_profile_image)) : profileImage;
+
 
         if (customerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name", Toast.LENGTH_LONG).show();
@@ -372,6 +373,10 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
             progressBar.setVisibility(View.VISIBLE);
             executor = fermatWorker.execute();
         }
+    }
+
+    private Bitmap convertImage(int resImage) {
+        return BitmapFactory.decodeResource(getActivity().getResources(), resImage);
     }
 
     private void dispatchTakePictureIntent() {

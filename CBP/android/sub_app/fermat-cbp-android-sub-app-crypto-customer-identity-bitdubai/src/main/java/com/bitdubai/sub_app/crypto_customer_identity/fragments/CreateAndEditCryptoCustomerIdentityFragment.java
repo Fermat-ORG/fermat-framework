@@ -443,15 +443,12 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         if (customerAlias.trim().isEmpty()) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
 
-        } else if (cryptoCustomerBitmap == null) {
-            Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
-
         } else {
             final int accuracy = getAccuracyData();
             final GeoFrequency frequency = getFrequencyData();
 
             FermatWorker fermatWorker = new CreateIdentityWorker(getActivity(), appSession.getModuleManager(), this,
-                    customerAlias, identityImageByteArray, accuracy, frequency);
+                    customerAlias, (identityImageByteArray == null) ? ImagesUtils.toByteArray(convertImage(R.drawable.no_profile_image)) : identityImageByteArray, accuracy, frequency);
 
             //progressBar.setVisibility(View.VISIBLE);
             executor = fermatWorker.execute();
@@ -461,7 +458,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
     private void editIdentityInfoInBackDevice() {
         final String customerNameText = mCustomerName.getText().toString();
 
-        final byte[] imgInBytes = (cryptoCustomerBitmap != null) ? identityImageByteArray : profileImage;
+        final byte[] imgInBytes = (cryptoCustomerBitmap != null) ? ImagesUtils.toByteArray(convertImage(R.drawable.no_profile_image)) : profileImage;
 
         if (customerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name", Toast.LENGTH_LONG).show();
@@ -481,6 +478,10 @@ public class CreateAndEditCryptoCustomerIdentityFragment
             //progressBar.setVisibility(View.VISIBLE);
             executor = fermatWorker.execute();
         }
+    }
+
+    private Bitmap convertImage(int resImage) {
+        return BitmapFactory.decodeResource(getActivity().getResources(), resImage);
     }
 
     @Override
