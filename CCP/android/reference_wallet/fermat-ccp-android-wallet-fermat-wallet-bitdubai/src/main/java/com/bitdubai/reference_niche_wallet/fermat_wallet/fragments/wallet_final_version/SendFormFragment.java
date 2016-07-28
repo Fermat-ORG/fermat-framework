@@ -178,6 +178,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             fermatWallet = appSession.getModuleManager();
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+        /*    if (fermatWalletSettings.getFeedLevel()==null)
+                fermatWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
+            else
+                feeLevel = fermatWalletSettings.getFeedLevel(); */
+
+
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
@@ -284,6 +291,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         fee_low_btn   =(RadioButton)  rootView.findViewById(R.id.fee_low);
         fee_medium_btn=(RadioButton)  rootView.findViewById(R.id.fee_Medium);
         fee_high_btn  =(RadioButton)  rootView.findViewById(R.id.fee_High);
+        editFeedamount=(EditText)     rootView.findViewById(R.id.fee_amount);
 
         editFeedamount = (EditText) rootView.findViewById(R.id.feed_amount);
 
@@ -312,7 +320,17 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             fee_high_btn.setChecked(true);
         }
 
-        editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.valueOf(feeLevel).getFee())));
+        String feelevel = null;
+        try {
+             feelevel = bitcoinConverter.getBTC(String.valueOf(BitcoinFee.valueOf(feeLevel).getFee()));
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if (feelevel.equals(""))
+            editFeedamount.setText("000");
+        else editFeedamount.setText(feelevel);
 
         feeGroup.setOnCheckedChangeListener((new RadioGroup.OnCheckedChangeListener() {
             @Override
