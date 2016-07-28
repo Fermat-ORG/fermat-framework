@@ -48,7 +48,7 @@ public abstract class AbstractAgent {
                 try {
                     agentJob();
                 }catch (Exception e){
-                    onErrorOccur();
+                    onErrorOccur(e);
                 }
             }
         }, initDelayTime, sleepTime, timeUnit);
@@ -104,7 +104,7 @@ public abstract class AbstractAgent {
      */
     protected abstract void agentJob();
 
-    protected abstract void onErrorOccur();
+    protected abstract void onErrorOccur(Exception e);
 
 
 }

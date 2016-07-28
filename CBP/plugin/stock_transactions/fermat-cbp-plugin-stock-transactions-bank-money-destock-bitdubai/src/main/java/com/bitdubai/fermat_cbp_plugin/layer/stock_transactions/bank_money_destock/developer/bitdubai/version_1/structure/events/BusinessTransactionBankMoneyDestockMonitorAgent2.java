@@ -87,7 +87,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent2 extends AbstractAg
     }
 
     @Override
-    protected void onErrorOccur() {
+    protected void onErrorOccur(Exception e) {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("BusinessTransactionBankMoneyDestockMonitorAgent2 Error"));

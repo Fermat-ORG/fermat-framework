@@ -58,7 +58,7 @@ public class CashMoneyTransactionHoldProcessorAgent2 extends AbstractAgent {
     }
 
     @Override
-    protected void onErrorOccur() {
+    protected void onErrorOccur(Exception e) {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("CashMoneyTransactionHoldProcessorAgent2 Error"));
