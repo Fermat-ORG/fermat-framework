@@ -707,7 +707,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
 
                 if (transactionId.equals(negotiationId) && transactionStatus != IN_PAYMENT_SUBMIT) {
 
-                    applySalePaymentCredit(brokerWalletPublicKey, contract, negotiationId);
+                    //applySalePaymentCredit(brokerWalletPublicKey, contract, negotiationId);
 
                     userLevelTransaction.setTransactionStatus(IN_PAYMENT_SUBMIT);
                     userLevelTransaction.setContractStatus(ContractStatus.PAYMENT_SUBMIT.getCode());
