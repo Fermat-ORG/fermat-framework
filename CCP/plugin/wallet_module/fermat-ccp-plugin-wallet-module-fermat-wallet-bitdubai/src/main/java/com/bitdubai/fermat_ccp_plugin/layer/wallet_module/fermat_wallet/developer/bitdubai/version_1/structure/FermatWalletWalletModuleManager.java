@@ -1594,21 +1594,25 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         }
     }
 
-    private FermatWalletModuleTransaction enrichTransaction(CryptoWalletTransaction bitcoinWalletTransaction, String walletPublicKey, String intraUserLoggedInPublicKey) throws CantEnrichTransactionException {
+   
+
+    private FermatWalletModuleTransaction enrichTransaction(CryptoWalletTransaction cryptoWalletTransaction, String walletPublicKey, String intraUserLoggedInPublicKey) throws CantEnrichTransactionException {
         try {
             Actor involvedActor = null;
             UUID contactId = null;
             WalletContactRecord walletContactRecord = null;
-            switch (bitcoinWalletTransaction.getTransactionType()) {
+            switch (cryptoWalletTransaction.getTransactionType()) {
                 case CREDIT:
                     try {
-                        if(bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER){
-                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+
+                        if(cryptoWalletTransaction.getActorFromType() == Actors.INTRA_USER){
+                            involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorToPublicKey(), cryptoWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorFromPublicKey(), walletPublicKey);
                             if(involvedActor==null)
                             {
-                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
-                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
+                                involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorFromPublicKey(), cryptoWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
+                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorToPublicKey(), walletPublicKey);
+
                             }
                         }else {
                             involvedActor = null;
@@ -1622,8 +1626,8 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                         contactId = null;
                     } catch ( CantGetActorException e) {
                         try{
-                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+                            involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorFromPublicKey(), cryptoWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorToPublicKey(), walletPublicKey);
                             if (walletContactRecord != null)
                                 contactId = walletContactRecord.getContactId();
                         }catch (CantGetActorException exe){
@@ -1635,12 +1639,14 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                     break;
                 case DEBIT:
                     try {
-                        if (bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER) {
-                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
-                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
+
+                        if (cryptoWalletTransaction.getActorFromType() == Actors.INTRA_USER) {
+                            involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorToPublicKey(), cryptoWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorToPublicKey(), walletPublicKey);
                             if (involvedActor == null) {
-                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+                                involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorFromPublicKey(), cryptoWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
+                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorFromPublicKey(), walletPublicKey);
+
                             }
                         }else {
                             involvedActor = null;
@@ -1655,12 +1661,11 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                     }
                     break;
             }
-            return new FermatWalletWalletModuleTransaction(bitcoinWalletTransaction, contactId, involvedActor);
+            return new FermatWalletWalletModuleTransaction(cryptoWalletTransaction, contactId, involvedActor);
         } catch (Exception e) {
             throw new CantEnrichTransactionException(CantEnrichTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
         }
     }
-
 
     private Actor getActorByActorPublicKeyAndType(String actorPublicKey, Actors actorType, String intraUserLoggedInPublicKey) throws CantGetActorException {
         Actor actor;

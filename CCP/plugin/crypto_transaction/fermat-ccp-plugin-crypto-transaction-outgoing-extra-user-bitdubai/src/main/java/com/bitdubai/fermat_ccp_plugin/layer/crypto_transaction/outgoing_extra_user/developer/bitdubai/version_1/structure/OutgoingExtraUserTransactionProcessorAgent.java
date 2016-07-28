@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -42,9 +43,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_us
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.OutgoingExtraActorWalletNotSupportedException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionWrapper;
 
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.Transaction;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -66,6 +64,9 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
     private final CryptoWalletManager cryptoWalletManager;
     private final CryptoVaultManager cryptoVaultManager  ;
+    private final CryptoVaultManager cryptoFermatVaultManager  ;
+
+
 
     private final BlockchainManager bitcoinNetworkManager  ;
     private final ErrorManager         errorManager        ;
@@ -79,6 +80,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
      */
     public OutgoingExtraUserTransactionProcessorAgent(final CryptoWalletManager cryptoWalletManager,
                                                       final CryptoVaultManager cryptoVaultManager  ,
+                                                      final CryptoVaultManager cryptoFermatVaultManager,
                                                       final BlockchainManager bitcoinNetworkManager,
                                                       final ErrorManager         errorManager        ,
                                                       final OutgoingExtraUserDao dao                 ,
@@ -88,6 +90,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
         this.cryptoWalletManager = cryptoWalletManager;
         this.cryptoVaultManager   = cryptoVaultManager  ;
+        this.cryptoFermatVaultManager = cryptoFermatVaultManager;
         this.bitcoinNetworkManager   = bitcoinNetworkManager  ;
         this.errorManager         = errorManager        ;
         this.dao                  = dao                 ;
@@ -220,7 +223,13 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
         for(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionWrapper transaction : transactionList) {
             // Now we apply it in the vault
             try {
-                String hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), new CryptoAmount(transaction.getAmount(),transaction.getFeeOrigin(),transaction.getFee()), transaction.getBlockchainNetworkType());
+                String hash = "";
+                //check currency btc or frmts
+                if(transaction.getCryptoCurrency().equals(CryptoCurrency.BITCOIN))
+                 hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), new CryptoAmount(transaction.getAmount(), transaction.getFeeOrigin(), transaction.getFee()), transaction.getBlockchainNetworkType());
+                else
+                    hash = this.cryptoFermatVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), new CryptoAmount(transaction.getAmount(), transaction.getFeeOrigin(), transaction.getFee()), transaction.getBlockchainNetworkType());
+
                 dao.setTransactionHash(transaction,hash);
                 dao.setToSTCV(transaction);
 

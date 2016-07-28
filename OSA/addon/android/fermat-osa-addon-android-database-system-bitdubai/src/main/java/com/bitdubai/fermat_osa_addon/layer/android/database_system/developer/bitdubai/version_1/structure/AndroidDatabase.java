@@ -206,9 +206,6 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         try {
 
             StringBuilder strRecords = new StringBuilder("");
-
-            StringBuilder query = new StringBuilder("");
-
             List<DatabaseRecord> records = record.getValues();
 
             List<DatabaseAggregateFunction> tableSelectOperator = table.getTableAggregateFunction();
@@ -250,13 +247,8 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 }
             }
 
-            query.append("SELECT ")
-                    .append(strRecords)
-                    .append(" FROM ")
-                    .append(table.getTableName())
-                    .append(table.makeFilter());
 
-            c = database.rawQuery(query.toString(), null);
+            c = database.rawQuery("SELECT " + strRecords + " FROM " + table.getTableName() + table.makeFilter() , null);
             int columnsCant = 0;
 
             if (c.moveToFirst()) {
@@ -640,7 +632,6 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         try {
             List<DatabaseRecord> records = record.getValues();
             StringBuilder strRecords = new StringBuilder();
-            StringBuilder query = new StringBuilder("");
 
             for (DatabaseRecord dbRecord : records) {
 
@@ -668,14 +659,9 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 }
             }
 
-            query.append("UPDATE ")
-                    .append(table.getTableName())
-                    .append(" SET ")
-                    .append(strRecords)
-                    .append(" ")
-                    .append(table.makeFilter());
 
-            return database.compileStatement(query.toString());
+
+            return database.compileStatement("UPDATE " + table.getTableName() + " SET " + strRecords + " " + " " );
 
         } catch (Exception exception) {
             throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
@@ -687,8 +673,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         try {
             StringBuilder strRecords = new StringBuilder("");
             StringBuilder strValues = new StringBuilder("");
-            StringBuilder query = new StringBuilder("");
-            List<DatabaseRecord> records = record.getValues();
+             List<DatabaseRecord> records = record.getValues();
 
 
             for (int i = 0; i < records.size(); ++i) {
@@ -716,17 +701,10 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 }
             }
 
-            query.append("INSERT INTO ")
-                    .append(table.getTableName())
-                    .append("( ")
-                    .append(strRecords)
-                    .append(") VALUES (")
-                    .append(strValues)
-                    .append(")");
 
 //            database.execSQL(query.toString());
 
-            return database.compileStatement(query.toString());
+            return database.compileStatement("INSERT INTO " + table.getTableName() + "( " + strRecords + ") VALUES (" + strValues + ")" );
         } catch (Exception exception) {
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         }
