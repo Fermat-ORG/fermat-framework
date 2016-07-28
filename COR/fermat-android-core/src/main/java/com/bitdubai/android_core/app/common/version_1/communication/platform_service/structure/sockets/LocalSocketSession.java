@@ -28,8 +28,11 @@ public abstract class LocalSocketSession {
     private boolean isSenderActive;
     private boolean isReceiverActive;
 
-    ObjectOutputStream objectOutputStream;
-    ObjectInputStream objectInputStream;
+    /**
+     * Streams
+     */
+    private ObjectOutputStream objectOutputStream;
+    private ObjectInputStream objectInputStream;
 
     private boolean isReConnecting;
 
@@ -115,24 +118,11 @@ public abstract class LocalSocketSession {
         if(! (object instanceof Serializable)) throw new IllegalArgumentException("Object :"+object.getClass().getName()+" is nos Serializable");
         if(localSocket!=null){
             FermatModuleObjectWrapper fermatModuleObjectWrapper = new FermatModuleObjectWrapper((Serializable) object,true,requestId);
-//            ObjectOutput out = null;
             try {
 //                objectOutputStream.flush();
 //                Log.e(TAG,"LocalSocket states: "+ "connected: "+localSocket.isConnected()+", bound: "+localSocket.isBound());
                 Log.i(TAG, "send method: object type return" + object.getClass().getName() + ", number: " + i++);
                 sendPackage(fermatModuleObjectWrapper);
-//                if (localSocket.isBound()) {
-//                    sendPackage(fermatModuleObjectWrapper);
-//                }else{
-//                    Log.e(TAG,"Socket disconnected, reconnecting");
-//                    try {
-//                        reconnect(true,false);
-////                        sendMessage(requestId, object);
-//
-//                    }catch (Exception e){
-//                        e.printStackTrace();
-//                    }
-//                }
             } catch (IOException e) {
                 Log.e(TAG,"send IOException");
                 if(!localSocket.isConnected()){
@@ -254,8 +244,6 @@ public abstract class LocalSocketSession {
                                         //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
                                         if (object != null) {
                                             onReceiveMessage(object);
-                                            read--;
-                                            //messageSize.decrementAndGet();
                                         } else {
                                             Log.e(TAG, "Object receiver null");
                                             Log.e(TAG, "Read: " + read);
@@ -284,18 +272,6 @@ public abstract class LocalSocketSession {
         }
     }
 
-
-
-
-
-    public void addWaitingMessage(String dataId){
-        Log.i(TAG,"Message arrive, unlocking wait..");
-//        messageSize.incrementAndGet();
-//        waitMessageLocker.unblock();
-//        synchronized (waitMessageLocker){
-//            waitMessageLocker.notify();
-//        }
-    }
 
 
     public abstract void onReceiveMessage(FermatModuleObjectWrapper object);
