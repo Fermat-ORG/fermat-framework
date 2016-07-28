@@ -842,9 +842,11 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         for (int i = 0; i < items.size(); i++) {//) {
                             CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
-                            if (currentSection.matches(numberRegex))
+                            if (currentSection.matches(numberRegex)) {
                                 // is Digit
                                 numbers.add(cryptoWalletWalletContact.getActorName());
+                                positions.put(i, cryptoWalletWalletContact);
+                            }
                             else if (currentSection.matches(letterRegex)) {
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
