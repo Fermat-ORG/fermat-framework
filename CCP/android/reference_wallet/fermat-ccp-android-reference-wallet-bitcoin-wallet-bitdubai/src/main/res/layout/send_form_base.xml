@@ -284,7 +284,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/feed_advances"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <View
                         android:layout_width="match_parent"
