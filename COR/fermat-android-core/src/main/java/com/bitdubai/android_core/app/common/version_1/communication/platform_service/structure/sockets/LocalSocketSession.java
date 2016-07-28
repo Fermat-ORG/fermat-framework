@@ -72,6 +72,7 @@ public abstract class LocalSocketSession {
                 if (objectOutputStream != null) {
                     objectOutputStream.close();
                 }
+                isSenderActive = false;
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -92,6 +93,7 @@ public abstract class LocalSocketSession {
             }catch (Exception e){
                 e.printStackTrace();
             }
+            isReceiverActive = false;
         }
     }
 
@@ -134,11 +136,13 @@ public abstract class LocalSocketSession {
                         }
                     }else Log.e(TAG, "send method: isOutputShutdown true");
                     //test
-                    try {
-                        Log.e(TAG, "send method: reconnecting");
-                        reconnect(true,false);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
+                    if (isSenderActive) {
+                        try {
+                            Log.e(TAG, "send method: reconnecting");
+                            reconnect(true, false);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 }else Log.e(TAG, "send method: localSocket connected");
                 e.printStackTrace();
@@ -259,11 +263,13 @@ public abstract class LocalSocketSession {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                try {
-                    reconnect(false,true);
-                    startReceiving();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+                if(isReceiverActive) {
+                    try {
+                        reconnect(false, true);
+                        startReceiving();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
 
             }catch (Exception e){
