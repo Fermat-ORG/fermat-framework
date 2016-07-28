@@ -169,29 +169,6 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("ChatActorCommunitySubAppModuleInformationImpl{")
-                .append("publicKey='").append(publicKey)
-                .append('\'')
-                .append(", alias='").append(alias)
-                .append('\'')
-                .append(", connectionState='").append(connectionState)
-                .append('\'')
-                .append(", connectionId='").append(connectionId)
-                .append('\'')
-                .append(", image=").append(image != null)
-                .append('\'')
-                .append(", status=").append(status)
-                .append('\'')
-                .append(", country=").append(country)
-                .append('\'')
-                .append(", state=").append(state)
-                .append('\'')
-                .append(", city=").append(city)
-                .append('\'')
-                .append(", location=").append(location != null)
-                .append(", profileStatus=").append(profileStatus.getCode())
-                .append('\'')
-                .append('}').toString();
+        return "ChatActorCommunitySubAppModuleInformationImpl{" + "publicKey='" + publicKey + '\'' + ", alias='" + alias + '\'' + ", connectionState='" + connectionState + '\'' + ", connectionId='" + connectionId + '\'' + ", image=" + (image != null) + '\'' + ", status=" + status + '\'' + ", country=" + country + '\'' + ", state=" + state + '\'' + ", city=" + city + '\'' + ", location=" + (location != null) + ", profileStatus=" + profileStatus.getCode() + '\'' + '}';
     }
 }

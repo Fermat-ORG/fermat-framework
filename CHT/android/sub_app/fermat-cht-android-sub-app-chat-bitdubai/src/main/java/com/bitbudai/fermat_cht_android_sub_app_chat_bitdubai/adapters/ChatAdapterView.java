@@ -396,12 +396,12 @@ public class ChatAdapterView extends LinearLayout {
                 }
 
                 if (Validate.isDateToday(new Date(date))) {
-                    fecha = new StringBuilder().append("today at ").append(formattedTime).toString();
+                    fecha = "today at " + formattedTime;
                 } else {
                     Date today = new Date();
                     long dias = (today.getTime() - new Date(date).getTime()) / (1000 * 60 * 60 * 24);
                     if (dias == 1) {
-                        fecha = new StringBuilder().append("yesterday at ").append(formattedTime).toString();
+                        fecha = "yesterday at " + formattedTime;
                     }
                 }
             } catch (Exception e) {
@@ -416,7 +416,7 @@ public class ChatAdapterView extends LinearLayout {
             case ConstantSubtitle.IS_OFFLINE:
 
                 if (date != null && !date.equals("no record")) {
-                    toolbar.setSubtitle(Html.fromHtml(new StringBuilder().append("<small><small>Last time ").append(setFormatLastTime(date)).append("</small></small>").toString()));
+                    toolbar.setSubtitle(Html.fromHtml("<small><small>Last time " + setFormatLastTime(date) + "</small></small>"));
                 } else {
 
                     Log.i("159753**LastTimeOnChat", "No show");
@@ -640,7 +640,7 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setChatId(newChatId);
                         chat.setObjectId(UUID.randomUUID());
                         chat.setStatus(ChatStatus.VISSIBLE);
-                        chat.setChatName(new StringBuilder().append("Chat_").append(newContact.getAlias()).toString());
+                        chat.setChatName("Chat_" + newContact.getAlias());
                         chat.setDate(new Timestamp(dv));
                         chat.setLastMessageDate(new Timestamp(dv));
                         chat.setTypeChat(TypeChat.INDIVIDUAL);
@@ -696,7 +696,7 @@ public class ChatAdapterView extends LinearLayout {
                     chatMessage.setMe(true);
                     messageET.setText("");
                     displayMessage(chatMessage);
-                    System.out.println(new StringBuilder().append("*** 12345 case 1:send msg in android layer").append(new Timestamp(System.currentTimeMillis())).toString());
+                    System.out.println("*** 12345 case 1:send msg in android layer" + new Timestamp(System.currentTimeMillis()));
                 } catch (CantSaveMessageException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (CantSaveChatException e) {

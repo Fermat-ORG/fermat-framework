@@ -74,7 +74,7 @@ public class AcceptDialog
         negativeBtn.setOnClickListener(this);
 
         title.setText("Connection Request");
-        description.setText(new StringBuilder().append(chatUserInformation.getAlias()).append(" wants to be your friend in P2P Chat").toString());
+        description.setText(chatUserInformation.getAlias() + " wants to be your friend in P2P Chat");
         userName.setText("");
 
     }
@@ -102,7 +102,7 @@ public class AcceptDialog
                             .acceptChatActor(chatUserInformation.getConnectionId());
                     getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED, Boolean.TRUE);
                     Toast.makeText(getContext(),
-                            new StringBuilder().append(chatUserInformation.getAlias()).append(" Accepted connection request").toString(),
+                            chatUserInformation.getAlias() + " Accepted connection request",
                             Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();

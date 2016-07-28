@@ -204,7 +204,7 @@ public class ChatMetadataRecordDAO implements DAO {
             contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
-            String possibleCause = new StringBuilder().append("The Template Database triggered an unexpected problem that wasn't able to solve by itself\n").append(e.getMessage()).toString();
+            String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself\n" + e.getMessage();
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(e.getMessage(), e, context, possibleCause);
             throw cantInsertRecordDataBaseException;
         }
@@ -650,16 +650,16 @@ public class ChatMetadataRecordDAO implements DAO {
             update(chatMetadataRecord);
 
         } catch (CantGetNotificationException e) {
-            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, new StringBuilder().append("notificationId: ").append(transactionID).toString(), "Error trying to get the notification.");
+            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, "notificationId: " + transactionID, "Error trying to get the notification.");
             throw cantConfirmNotificationException;
         } catch (NotificationNotFoundException e) {
-            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, new StringBuilder().append("notificationId: ").append(transactionID).toString(), "Notification not found.");
+            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, "notificationId: " + transactionID, "Notification not found.");
             throw cantConfirmNotificationException;
         } catch (CantUpdateRecordDataBaseException e) {
-            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, new StringBuilder().append("notificationId: ").append(transactionID).toString(), "Error updating getDatabase().");
+            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, "notificationId: " + transactionID, "Error updating getDatabase().");
             throw cantConfirmNotificationException;
         } catch (CantReadRecordDataBaseException e) {
-            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, new StringBuilder().append("notificationId: ").append(transactionID).toString(), "Error reading getDatabase().");
+            CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, "notificationId: " + transactionID, "Error reading getDatabase().");
             throw cantConfirmNotificationException;
         }
     }

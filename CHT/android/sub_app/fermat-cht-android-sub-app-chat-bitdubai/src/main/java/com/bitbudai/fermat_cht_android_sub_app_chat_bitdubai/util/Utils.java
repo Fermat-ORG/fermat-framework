@@ -65,7 +65,7 @@ public class Utils {
     public static int safeLongToInt(long l) {
         if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
             throw new IllegalArgumentException
-                    (new StringBuilder().append(l).append(" cannot be cast to int without changing its value.").toString());
+                    (String.valueOf(l) + " cannot be cast to int without changing its value.");
         }
         return (int) l;
     }
@@ -78,12 +78,12 @@ public class Utils {
             char[] iconText = new char[2];
             firstName.getChars(0, 1, iconText, 0);
             firstName.getChars(1, 2, iconText, 1);
-            return (new StringBuilder().append("").append(iconText[0]).append(iconText[1]).toString()).toUpperCase();
+            return ("" + iconText[0] + iconText[1]).toUpperCase();
         } else {
             char[] iconText = new char[2];
             firstName.getChars(0, 1, iconText, 0);
             lastName.getChars(0, 1, iconText, 1);
-            return (new StringBuilder().append("").append(iconText[0]).append(iconText[1]).toString()).toUpperCase();
+            return ("" + iconText[0] + iconText[1]).toUpperCase();
         }
     }
 
@@ -560,7 +560,7 @@ public class Utils {
             bitmap.recycle();
             bitmap = null;
         } catch (Exception e) {
-            Log.e("Tag", new StringBuilder().append("rotateFileImage error ").append(e).toString());
+            Log.e("Tag", "rotateFileImage error " + e);
         }
     }
 

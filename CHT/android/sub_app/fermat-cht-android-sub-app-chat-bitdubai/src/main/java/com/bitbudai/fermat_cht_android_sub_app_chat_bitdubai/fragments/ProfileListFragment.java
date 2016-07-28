@@ -185,7 +185,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
                     //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
                     final ChatUserIdentity profileSelected = null;//chatManager.getChatUserIdentity(profileid.get(position));
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-                    builder1.setMessage(new StringBuilder().append("Do you want to select ").append(profileSelected.getAlias()).append(" as your active profile?").toString());
+                    builder1.setMessage("Do you want to select " + profileSelected.getAlias() + " as your active profile?");
                     builder1.setCancelable(true);
                     builder1.setPositiveButton(
                             "Yes",
@@ -196,7 +196,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
                                         //appSession.setData(ChatSessionReferenceApp.PROFILE_DATA, profileSelected);
                                         //ChatUserIdentity profile = chatSession.getSelectedProfile();
                                         chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
-                                        Toast.makeText(getActivity(), new StringBuilder().append("Profile Selected: ").append(profileSelected.getAlias()).toString(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), "Profile Selected: " + profileSelected.getAlias(), Toast.LENGTH_SHORT).show();
                                         changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                                     } catch (Exception e) {
                                         errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

@@ -263,7 +263,7 @@ public class ChatIdentityDatabaseDao {
             }
         } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantGetChatUserIdentityException(e.getMessage(), e, "Chat Identity", new StringBuilder().append("Cant load ").append(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantGetChatUserIdentityException(e.getMessage(), e, "Chat Identity", "Cant load " + ChatIdentityDatabaseConstants.CHAT_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
 
             throw new CantGetChatUserIdentityException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "Cahat identity list, unknown failure.");
@@ -319,7 +319,7 @@ public class ChatIdentityDatabaseDao {
             }
         } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantListIdentitiesException(e.getMessage(), e, "Chat Identity", new StringBuilder().append("Cant load ").append(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantListIdentitiesException(e.getMessage(), e, "Chat Identity", "Cant load " + ChatIdentityDatabaseConstants.CHAT_TABLE_NAME + " table in memory.");
         } catch (CantGetPrivateKeyException e) {
             // Failure unknown.
 
@@ -358,7 +358,7 @@ public class ChatIdentityDatabaseDao {
 
         } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Chat  Identity", new StringBuilder().append("Cant load ").append(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Chat  Identity", "Cant load " + ChatIdentityDatabaseConstants.CHAT_TABLE_NAME + " table in memory.");
 
         } catch (Exception e) {
 
@@ -370,7 +370,7 @@ public class ChatIdentityDatabaseDao {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CHAT_PRIVATE_KEYS_FILE_NAME).append("_").append(publicKey).toString(),
+                    CHAT_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -394,7 +394,7 @@ public class ChatIdentityDatabaseDao {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CHAT_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CHAT_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -419,7 +419,7 @@ public class ChatIdentityDatabaseDao {
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CHAT_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CHAT_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -449,7 +449,7 @@ public class ChatIdentityDatabaseDao {
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CHAT_PRIVATE_KEYS_FILE_NAME).append("_").append(publicKey).toString(),
+                    CHAT_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );

@@ -178,21 +178,17 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
     @Override
     public void onNewMessageReceived(NetworkServiceMessage newFermatMessageReceive) {
         try {
-            System.out.println(new StringBuilder()
-                    .append("----------------------------\n")
-                    .append("CONVIERTIENDO MENSAJE ENTRANTE A GSON: ")
-                    .append(newFermatMessageReceive.toJson())
-                    .append("\n-------------------------------------------------").toString());
+            System.out.println("----------------------------\n" + "CONVIERTIENDO MENSAJE ENTRANTE A GSON: " + newFermatMessageReceive.toJson() + "\n-------------------------------------------------");
 
             JsonObject messageData = EncodeMsjContent.decodeMsjContent(newFermatMessageReceive);
             Gson gson = new Gson();
             ChatMessageTransactionType chatMessageTransactionType = gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE), ChatMessageTransactionType.class);
-            System.out.println(new StringBuilder().append("chatMessageTransactionType = ").append(chatMessageTransactionType).toString());
+            System.out.println("chatMessageTransactionType = " + chatMessageTransactionType);
             ChatMetadataRecord chatMetadataRecord;
             switch (chatMessageTransactionType) {
                 case CHAT_METADATA_TRASMIT:
                     String chatMetadataJson = messageData.get(ChatTransmissionJsonAttNames.CHAT_METADATA).getAsString();
-                    System.out.println(new StringBuilder().append("chatMetadataJson = ").append(chatMetadataJson).toString());
+                    System.out.println("chatMetadataJson = " + chatMetadataJson);
                     /*
                      * Convert the xml to object
                      */
@@ -200,11 +196,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                     chatMetadataRecord = ChatMetadataRecord.fromJson(chatMetadataJson);
 //                    messageData = EncodeMsjContent.decodeMsjContent(chatMetadataXml);
 //                    chatMetadataRecord = new ChatMetadataRecord(messageData);
-                    System.out.println(new StringBuilder()
-                            .append("----------------------------\n")
-                            .append("MENSAJE LLEGO EXITOSAMENTE:")
-                            .append(chatMetadataRecord.getLocalActorPublicKey())
-                            .append("\n-------------------------------------------------").toString());
+                    System.out.println("----------------------------\n" + "MENSAJE LLEGO EXITOSAMENTE:" + chatMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
 
                     String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Timestamp(System.currentTimeMillis()));
 
@@ -217,12 +209,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                     chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
                     chatMetadataRecord.setSentDate(timeStamp);
                     chatMetadataRecord.setFlagReadead(false);
-                    System.out.println(new StringBuilder()
-                            .append("----------------------------\n")
-                            .append("CREANDO REGISTRO EN EL INCOMING NOTIFICATION DAO:")
-                            .append("\n ")
-                            .append(chatMetadataRecord.getMessage())
-                            .append("\n-------------------------------------------------").toString());
+                    System.out.println("----------------------------\n" + "CREANDO REGISTRO EN EL INCOMING NOTIFICATION DAO:" + "\n " + chatMetadataRecord.getMessage() + "\n-------------------------------------------------");
 
                     chatMetadataRecord.setFlagReadead(false);
                     getChatMetadataRecordDAO().createNotification(chatMetadataRecord);
@@ -244,11 +231,11 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                         chatMetadataRecord = getChatMetadataRecordDAO().getNotificationByResponseTo(responseTo);
 
                         if (chatMetadataRecord != null) {
-                            System.out.println(new StringBuilder().append("12345 UPDATE RECIBIDO MENSAJE == ").append(chatMetadataRecord.getMessage()).append(" MESSAGE STATUS == ").append(messageStatus).toString());
+                            System.out.println("12345 UPDATE RECIBIDO MENSAJE == " + chatMetadataRecord.getMessage() + " MESSAGE STATUS == " + messageStatus);
                             chatMetadataRecord.setChatId(chatMetadataRecord.getChatId());
 
                             if (chatProtocolState == ChatProtocolState.DONE) {
-                                System.out.println(new StringBuilder().append("----------------------------\n").append("MENSAJE ACCEPTED LLEGÓ BIEN: CASE DONE").append(chatMetadataRecord.getLocalActorPublicKey()).append("\n-------------------------------------------------").toString());
+                                System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE DONE" + chatMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
                                 chatMetadataRecord.setDistributionStatus(DistributionStatus.DELIVERED);
                                 chatMetadataRecord.changeState(chatProtocolState);
                                 getChatMetadataRecordDAO().update(chatMetadataRecord);
@@ -268,7 +255,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                                 if (messageStatus == null) {
                                     break;
                                 }
-                                System.out.println(new StringBuilder().append("----------------------------\n").append("MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER").append(chatMetadataRecord.getLocalActorPublicKey()).append("\n-------------------------------------------------").toString());
+                                System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + chatMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
                                 launchIncomingChatStatusNotification(chatMetadataRecord);
 
                             }
@@ -774,7 +761,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             final String remote = chatMetadataRecord.getRemoteActorPublicKey();
             final PlatformComponentType remoteType = chatMetadataRecord.getRemoteActorType();
             getChatMetadataRecordDAO().createNotification(chatMetadataRecord);
-            System.out.println(new StringBuilder().append("*** 12345 case 6:send msg in NS layer").append(new Timestamp(System.currentTimeMillis())).toString());
+            System.out.println("*** 12345 case 6:send msg in NS layer" + new Timestamp(System.currentTimeMillis()));
             if (chatMetadata.getTypeChat().equals(TypeChat.INDIVIDUAL)) {
                 executorService.submit(new Runnable() {
                     @Override
@@ -977,11 +964,11 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                                 DistributionStatus.SENT);
 
                 String remotePublicKey;
-                System.out.println(new StringBuilder().append("CHAT NS - I found ").append(chatMetadataRecordList.size()).append(" pending for sending").toString());
+                System.out.println("CHAT NS - I found " + chatMetadataRecordList.size() + " pending for sending");
 
                 for (ChatMetadataRecord chatMetadataRecord : chatMetadataRecordList) {
                     remotePublicKey = chatMetadataRecord.getRemoteActorPublicKey();
-                    System.out.println(new StringBuilder().append("CHAT NS - Trying to re-send to ").append(remotePublicKey).toString());
+                    System.out.println("CHAT NS - Trying to re-send to " + remotePublicKey);
 
                     String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Timestamp(System.currentTimeMillis()));
 

@@ -69,9 +69,6 @@ public class NetworkServiceMessage {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("NetworkServiceMessage{")
-                .append("messageType=").append(messageType)
-                .append('}').toString();
+        return "NetworkServiceMessage{" + "messageType=" + messageType + '}';
     }
 }

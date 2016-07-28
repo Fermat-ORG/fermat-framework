@@ -33,7 +33,7 @@ public class DialogGetTimePicker extends FermatDialog {
         int hour = time.getHour();
         int minute = time.getMinute();
 
-        time_select = new StringBuilder().append(hour).append(":").append(minute).toString();
+        time_select = String.valueOf(hour) + ":" + minute;
         btnselect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

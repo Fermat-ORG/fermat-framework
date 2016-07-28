@@ -48,7 +48,7 @@ public class ChatActorConnectionDatabaseFactory {
 
             throw new CantCreateDatabaseException(
                     e,
-                    new StringBuilder().append("databaseName: ").append(databaseName).toString(),
+                    "databaseName: " + databaseName,
                     "Exception not handled by the plugin, There is a problem and i cannot create the database."
             );
         }
@@ -85,7 +85,7 @@ public class ChatActorConnectionDatabaseFactory {
 
                 throw new CantCreateDatabaseException(
                         e,
-                        new StringBuilder().append("tableName: ").append(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME).toString(),
+                        "tableName: " + ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME,
                         "Exception not handled by the plugin, There is a problem and i cannot create the table."
                 );
             }
@@ -96,7 +96,7 @@ public class ChatActorConnectionDatabaseFactory {
 
             throw new CantCreateDatabaseException(
                     e,
-                    new StringBuilder().append("databaseName: ").append(databaseName).toString(),
+                    "databaseName: " + databaseName,
                     "There is a problem with the ownerId of the database."
             );
         }

@@ -353,7 +353,7 @@ public class ContactsListFragment
                                 data, moduleManager.getSelectedActorIdentity());
                 disconnectDialog.setTitle("Disconnect");
                 disconnectDialog.setDescription("Do you want to disconnect from");
-                disconnectDialog.setUsername(new StringBuilder().append(data.getAlias()).append("?").toString());
+                disconnectDialog.setUsername(data.getAlias() + "?");
                 disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -379,7 +379,7 @@ public class ContactsListFragment
                                 data, moduleManager.getSelectedActorIdentity());
                 disconnectDialog.setTitle("Disconnect");
                 disconnectDialog.setDescription("Do you want to disconnect from");
-                disconnectDialog.setUsername(new StringBuilder().append(data.getAlias()).append("?").toString());
+                disconnectDialog.setUsername(data.getAlias() + "?");
                 disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {

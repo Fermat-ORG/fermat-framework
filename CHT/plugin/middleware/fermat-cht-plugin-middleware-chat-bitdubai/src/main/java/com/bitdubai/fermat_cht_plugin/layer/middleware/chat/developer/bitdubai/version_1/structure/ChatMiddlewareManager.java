@@ -552,7 +552,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     public void saveMessage(Message message) throws CantSaveMessageException {
         try {
             ObjectChecker.checkArgument(message, "The message argument is null");
-            System.out.println(new StringBuilder().append("*** 12345 case 3:send msg in Manager layer").append(new Timestamp(System.currentTimeMillis())).toString());
+            System.out.println("*** 12345 case 3:send msg in Manager layer" + new Timestamp(System.currentTimeMillis()));
             this.chatMiddlewareDatabaseDao.saveMessage(message);
         } catch (ObjectNotSetException e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -670,7 +670,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     public void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException {
         try {
             ActionState writingState = chatMiddlewareDatabaseDao.getWritingActionById(chatId);
-            System.out.println(new StringBuilder().append("12345 writingState ").append(writingState).toString());
+            System.out.println("12345 writingState " + writingState);
             if (writingState != null && writingState == ActionState.ACTIVE) return;
 
             chatMiddlewareDatabaseDao.saveWritingAction(chatId, ActionState.ACTIVE);
@@ -729,7 +729,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             }
 
             ActionState onlineState = chatMiddlewareDatabaseDao.getOnlineActionStateByPk(remotePublicKey);
-            System.out.println(new StringBuilder().append("12345 onlineState ").append(onlineState).toString());
+            System.out.println("12345 onlineState " + onlineState);
             if (onlineState != null && onlineState == ActionState.ACTIVE) return;
 
             chatMiddlewareDatabaseDao.saveOnlineActionState(remotePublicKey, ActionState.ACTIVE);
@@ -801,7 +801,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             //event.setNotificationType(NotificationType.INCOMING_CHAT_MESSAGE.getCode());
             event.setSource(ChatMiddlewarePluginRoot.EVENT_SOURCE);
             this.chatMiddlewarePluginRoot.getEventManager().raiseEvent(event);
-            System.out.println(new StringBuilder().append("MiddleWareChatPluginRoot - IncomingChatMessageNotificationEvent fired!: ").append(event.toString()).toString());
+            System.out.println("MiddleWareChatPluginRoot - IncomingChatMessageNotificationEvent fired!: " + event.toString());
         } catch (Exception exception) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
@@ -889,7 +889,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     @Override
     public void sendMessage(Message createdMessage) throws CantSendChatMessageException {
         try {
-            System.out.println(new StringBuilder().append("*** 12345 case 5:send msg in Agent layer").append(new Timestamp(System.currentTimeMillis())).toString());
+            System.out.println("*** 12345 case 5:send msg in Agent layer" + new Timestamp(System.currentTimeMillis()));
             UUID chatId = createdMessage.getChatId();
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
             if (chat == null) {
@@ -901,7 +901,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     chat,
                     createdMessage
             );
-            System.out.println(new StringBuilder().append("ChatMetadata to send:\n").append(chatMetadata).toString());
+            System.out.println("ChatMetadata to send:\n" + chatMetadata);
             try {
                 chatNetworkServiceManager.sendChatMetadata(
                         localActorPublicKey,

@@ -318,22 +318,6 @@ public class ChatImpl implements Chat {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("ChatImpl{")
-                .append("chatId=").append(chatId)
-                .append(", objectId=").append(objectId)
-                .append(", localActorType=").append(localActorType)
-                .append(", localActorPublicKey='").append(localActorPublicKey)
-                .append('\'')
-                .append(", remoteActorType=").append(remoteActorType)
-                .append(", remoteActorPublicKey='").append(remoteActorPublicKey)
-                .append('\'')
-                .append(", chatName='").append(chatName)
-                .append('\'')
-                .append(", status=").append(status)
-                .append(", date=").append(date)
-                .append(", lastMessageDate=").append(lastMessageDate)
-                .append(", contactAssociated=").append(contactAssociated)
-                .append('}').toString();
+        return "ChatImpl{" + "chatId=" + chatId + ", objectId=" + objectId + ", localActorType=" + localActorType + ", localActorPublicKey='" + localActorPublicKey + '\'' + ", remoteActorType=" + remoteActorType + ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' + ", chatName='" + chatName + '\'' + ", status=" + status + ", date=" + date + ", lastMessageDate=" + lastMessageDate + ", contactAssociated=" + contactAssociated + '}';
     }
 }

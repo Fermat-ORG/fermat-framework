@@ -59,7 +59,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
-            System.out.println(new StringBuilder().append("Chat Actor Network Service Search Test Listing through communication layer... SUCCESS: ").append(list.size()).append(" actors found.").toString());
+            System.out.println("Chat Actor Network Service Search Test Listing through communication layer... SUCCESS: " + list.size() + " actors found.");
 
             final List<ChatExposingData> chatExposingDataArrayList = new ArrayList<>();
 
@@ -228,7 +228,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 //
 //                    String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY), String.class);
 //                }
-                System.out.println(new StringBuilder().append("************** I\'m a crypto Chat: ").append(actorProfile.getAlias()).append(" - ").append(actorProfile.getStatus()).toString());
+                System.out.println("************** I\'m a crypto Chat: " + actorProfile.getAlias() + " - " + actorProfile.getStatus());
 
                 chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), "", "", "", "", actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }

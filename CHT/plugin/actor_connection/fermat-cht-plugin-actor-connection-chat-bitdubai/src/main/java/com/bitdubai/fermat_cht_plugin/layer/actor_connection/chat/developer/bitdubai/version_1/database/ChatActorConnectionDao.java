@@ -78,12 +78,12 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             throw new CantGetActorConnectionException(
                     e,
-                    new StringBuilder().append("linkedIdentity: - publicKey: ").append(publicKey).toString(),
+                    "linkedIdentity: - publicKey: " + publicKey,
                     "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException e) {
             throw new CantGetActorConnectionException(
                     e,
-                    new StringBuilder().append("linkedIdentity: - publicKey: ").append(publicKey).toString(),
+                    "linkedIdentity: - publicKey: " + publicKey,
                     "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
@@ -209,7 +209,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             throw new CantInitializeActorConnectionDatabaseException(
                     cantOpenDatabaseException,
-                    new StringBuilder().append("databaseName: ").append(ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME).toString(),
+                    "databaseName: " + ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
                     "There was an error trying to open database."
             );
 
@@ -228,7 +228,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
                 throw new CantInitializeActorConnectionDatabaseException(
                         cantCreateDatabaseException,
-                        new StringBuilder().append("databaseName: ").append(ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME).toString(),
+                        "databaseName: " + ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
                         "There was an error trying to create database."
                 );
             }
@@ -264,7 +264,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             // TODO add better error management, "throws CantBuildDatabaseRecordException".
 
-            System.err.println(new StringBuilder().append("error trying to persist image:").append(e.getMessage()).toString());
+            System.err.println("error trying to persist image:" + e.getMessage());
             return null;
         }
     }
