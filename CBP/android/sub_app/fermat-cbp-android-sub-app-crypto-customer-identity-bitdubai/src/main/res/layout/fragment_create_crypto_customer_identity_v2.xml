@@ -15,7 +15,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp">
         <ImageView
-            android:id="@+id/cbp_customer_image"
+            android:id="@+id/crypto_customer_image"
             android:background="#00000000"
             android:src="@drawable/default_image"
             android:contentDescription="ignore"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/editTextName"
+        android:id="@+id/crypto_customer_name"
         android:hint="Name"
         android:textColor="#808080"
         android:foregroundTint="#808080"
@@ -62,9 +62,10 @@
         android:text="Status"
         android:textColor="#0f74a7"
         android:id="@+id/statusView"
-        android:layout_below="@+id/editTextName"
+        android:layout_below="@+id/crypto_customer_name"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
+        android:visibility="invisible"
         />
 
     <EditText
@@ -73,12 +74,13 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:textColor="#808080"
-        android:id="@+id/editTextStatus"
+        android:id="@+id/crypto_customer_status"
         android:hint="Status"
         android:textColorHint="#808080"
         android:foregroundTint="#808080"
         android:layout_below="@+id/statusView"
         android:layout_centerHorizontal="true"
+        android:visibility="invisible"
         android:gravity="center"/>
 
     <LinearLayout
@@ -94,10 +96,10 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:layout_alignEnd="@+id/editTextStatus"
-        android:layout_alignRight="@+id/editTextStatus"
-        android:layout_alignStart="@+id/editTextStatus"
-        android:layout_alignLeft="@+id/editTextStatus">
+        android:layout_alignEnd="@+id/crypto_customer_status"
+        android:layout_alignRight="@+id/crypto_customer_status"
+        android:layout_alignStart="@+id/crypto_customer_status"
+        android:layout_alignLeft="@+id/crypto_customer_status">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -117,4 +119,18 @@
         android:layout_alignEnd="@+id/statusView"
         android:layout_alignRight="@+id/statusView"
         />
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/crypto_customer_name_text_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-14dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:gravity="right"
+        android:visibility="gone"
+        android:text="50"
+        android:textColor="#FFFFFF"
+        android:textSize="12dp" />
 </RelativeLayout>
