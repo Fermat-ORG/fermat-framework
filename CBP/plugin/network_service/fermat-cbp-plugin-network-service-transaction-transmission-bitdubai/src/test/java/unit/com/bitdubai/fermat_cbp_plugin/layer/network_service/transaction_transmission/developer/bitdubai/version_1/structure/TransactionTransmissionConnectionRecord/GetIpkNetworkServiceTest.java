@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetIpkNetworkServiceTest {
 
     @Test
-    public void getIpkNetworkService() throws Exception{
+    public void getIpkNetworkService() throws Exception {
         TransactionTransmissionConnectionRecord transactionTransmissionConnectionRecord = mock(TransactionTransmissionConnectionRecord.class);
         when(transactionTransmissionConnectionRecord.getIpkNetworkService()).thenReturn(new String());
         assertThat(transactionTransmissionConnectionRecord.getIpkNetworkService()).isNotNull();

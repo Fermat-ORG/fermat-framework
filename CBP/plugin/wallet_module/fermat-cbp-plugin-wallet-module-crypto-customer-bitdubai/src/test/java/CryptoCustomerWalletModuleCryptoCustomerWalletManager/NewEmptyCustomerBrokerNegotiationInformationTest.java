@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class NewEmptyCustomerBrokerNegotiationInformationTest {
     @Test
-    public void newEmptyCustomerBrokerNegotiationInformation() throws CantNewEmptyCustomerBrokerNegotiationInformationException{
+    public void newEmptyCustomerBrokerNegotiationInformation() throws CantNewEmptyCustomerBrokerNegotiationInformationException {
         CryptoCustomerWalletModuleCryptoCustomerWalletManager cryptoCustomerWalletModuleCryptoCustomerWalletManager = mock(CryptoCustomerWalletModuleCryptoCustomerWalletManager.class);
         when(cryptoCustomerWalletModuleCryptoCustomerWalletManager.newEmptyCustomerBrokerNegotiationInformation()).thenReturn(new CustomerBrokerNegotiationInformation() {
             @Override

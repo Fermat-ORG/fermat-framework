@@ -5,11 +5,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -22,7 +20,7 @@ public class GetContractTransactionStatusTest {
     private ContractTransactionStatus contractTransactionStatusMock = ContractTransactionStatus.CONFIRM_CLOSED_CONTRACT;
 
     @Test
-    public void getContracTranssactionStatusMock() throws Exception{
+    public void getContracTranssactionStatusMock() throws Exception {
         BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class);
         when(businessTransactionMetadataRecord.getContractTransactionStatus()).thenReturn(contractTransactionStatusMock);
         assertThat(businessTransactionMetadataRecord.getContractTransactionStatus()).isNotNull();

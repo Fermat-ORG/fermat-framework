@@ -44,7 +44,7 @@ public enum OriginTransaction implements FermatEnum {
             case "EAREXT":
                 return EARNING_EXTRACTION;
             default:
-                throw new InvalidParameterException("Code Received: " + code, "This Code Is Not Valid for the OriginTransaction enum");
+                throw new InvalidParameterException(new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the OriginTransaction enum");
         }
     }
 }

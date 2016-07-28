@@ -15,7 +15,6 @@ import java.util.Collection;
 public interface CryptoCustomerActorManager extends FermatManager {
 
     /**
-     *
      * @param identity
      * @param wallet
      * @return
@@ -24,7 +23,6 @@ public interface CryptoCustomerActorManager extends FermatManager {
     CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, String wallet) throws CantCreateNewCustomerIdentityWalletRelationshipException;
 
     /**
-     *
      * @param wallet
      * @return
      * @throws CantClearAssociatedCustomerIdentityWalletRelationshipException
@@ -32,14 +30,12 @@ public interface CryptoCustomerActorManager extends FermatManager {
     void clearAssociatedCustomerIdentityWalletRelationship(String wallet) throws CantClearAssociatedCustomerIdentityWalletRelationshipException;
 
     /**
-     *
      * @return
      * @throws CantGetCustomerIdentityWalletRelationshipException
      */
     Collection<CustomerIdentityWalletRelationship> getAllCustomerIdentityWalletRelationship() throws CantGetCustomerIdentityWalletRelationshipException;
 
     /**
-     *
      * @param publicKey
      * @return
      * @throws CantGetCustomerIdentityWalletRelationshipException
@@ -50,17 +46,15 @@ public interface CryptoCustomerActorManager extends FermatManager {
      * Through this method you can get the relationship between a crypto customer wallet and a crypto customer identity having in coung the crypto customer wallet public key.
      *
      * @param walletPublicKey of the wallet in where we're looking the relationship.
-     *
      * @return an instance of CustomerIdentityWalletRelationship object with the information of the relationship.
-     *
-     * @throws CantGetCustomerIdentityWalletRelationshipException   if something goes wrong.
-     * @throws RelationshipNotFoundException                            if we can't find a relationship for this wallet.
+     * @throws CantGetCustomerIdentityWalletRelationshipException if something goes wrong.
+     * @throws RelationshipNotFoundException                      if we can't find a relationship for this wallet.
      */
     CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(
 
             String walletPublicKey
 
     ) throws CantGetCustomerIdentityWalletRelationshipException,
-             RelationshipNotFoundException                         ;
+            RelationshipNotFoundException;
 
 }

@@ -33,7 +33,7 @@ public class FermatClassLoader extends ClassLoader{
                     return c;
             }
         }catch (ClassNotFoundException e){
-            e.printStackTrace();
+//            e.printStackTrace();
 //            Log.i(TAG,"Clase no encontrada");
             try{
                 if (classLoaderParent != null) {
@@ -42,7 +42,7 @@ public class FermatClassLoader extends ClassLoader{
                         return c;
                 }
             }catch (ClassNotFoundException e1){
-                e1.printStackTrace();
+//                e1.printStackTrace();
 //                Log.i(TAG,"Clase padre no encontrada");
                 try {
                     Class<?> c = getSystemClassLoader().loadClass(className);
@@ -51,7 +51,7 @@ public class FermatClassLoader extends ClassLoader{
                     else
                         return super.loadClass(className);
                 }catch (Exception e2){
-                    Log.i(TAG,"Clase base no encontrada");
+                    Log.e(TAG,"Clase base no encontrada, Clase: "+className);
                     e2.printStackTrace();
                 }
             }

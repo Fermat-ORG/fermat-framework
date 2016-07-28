@@ -14,11 +14,11 @@ public class IncomingNegotiationTransmissionConfirmResponseEvent extends Generic
         super(eventType);
     }
 
-    public PlatformComponentType getDestinationPlatformComponentType(){
+    public PlatformComponentType getDestinationPlatformComponentType() {
         return destinationPlatformComponentType;
     }
 
-    public void setDestinationPlatformComponentType(PlatformComponentType destinationPlatformComponentType){
+    public void setDestinationPlatformComponentType(PlatformComponentType destinationPlatformComponentType) {
         this.destinationPlatformComponentType = destinationPlatformComponentType;
     }
 }

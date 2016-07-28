@@ -37,8 +37,7 @@ public abstract class AbstractAddonDeveloper {
      * Through the method <code>registerVersion</code> you can add new versions to the addon developer.
      * Here we'll corroborate too that the version is not added twice.
      *
-     * @param abstractAddon  addon in-self.
-     *
+     * @param abstractAddon addon in-self.
      * @throws CantRegisterVersionException if something goes wrong.
      */
     protected final void registerVersion(final AbstractAddon abstractAddon) throws CantRegisterVersionException {
@@ -47,15 +46,14 @@ public abstract class AbstractAddonDeveloper {
 
         addonVersionReference.setAddonDeveloperReference(this.addonDeveloperReference);
 
-        if(versions.putIfAbsent(addonVersionReference, abstractAddon) != null)
+        if (versions.putIfAbsent(addonVersionReference, abstractAddon) != null)
             throw new CantRegisterVersionException(addonVersionReference.toString3(), "Version already exists for this addon developer.");
     }
 
     /**
      * Through the method <code>getAddonByVersion</code> you can get a specific version of the addon.
      *
-     * @param addonVersionReference  addon reference.
-     *
+     * @param addonVersionReference addon reference.
      * @throws VersionNotFoundException if something goes wrong.
      */
     public final AbstractAddon getAddonByVersion(final AddonVersionReference addonVersionReference) throws VersionNotFoundException {

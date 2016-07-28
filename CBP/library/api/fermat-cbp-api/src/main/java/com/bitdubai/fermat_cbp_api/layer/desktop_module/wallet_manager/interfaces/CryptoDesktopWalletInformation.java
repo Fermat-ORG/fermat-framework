@@ -61,7 +61,7 @@ public interface CryptoDesktopWalletInformation {
      * registers the wallet)
      *
      * @return an string that is result of the method getCode of an enum that can be inferred by the
-     *         WalletCategory of the wallet.
+     * WalletCategory of the wallet.
      */
     String getWalletPlatformIdentifier();
 
@@ -71,7 +71,6 @@ public interface CryptoDesktopWalletInformation {
      * @return the name of the said icon
      */
     String getWalletIcon();
-
 
 
     WalletType getWalletType();

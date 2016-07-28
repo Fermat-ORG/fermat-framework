@@ -11,19 +11,19 @@ import android.view.WindowManager;
 public class MainLayoutHelper {
 
     //color 0 is not color
-    public static void setTranslucentStatusBar(Window window,int color) {
+    public static void setTranslucentStatusBar(Window window, int color) {
         if (window == null) return;
         int sdkInt = Build.VERSION.SDK_INT;
         if (sdkInt >= Build.VERSION_CODES.LOLLIPOP) {
-            setTranslucentStatusBarLollipop(window,color);
+            setTranslucentStatusBarLollipop(window, color);
         } else if (sdkInt >= Build.VERSION_CODES.KITKAT) {
             setTranslucentStatusBarKiKat(window);
         }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private static void setTranslucentStatusBarLollipop(Window window,int color) {
-        if(color!=0) window.setStatusBarColor(color);
+    private static void setTranslucentStatusBarLollipop(Window window, int color) {
+        if (color != 0) window.setStatusBarColor(color);
 //                window.getContext()
 //                        .getResources()
 //                        .getColor(R.color. / add here your translucent color code /));

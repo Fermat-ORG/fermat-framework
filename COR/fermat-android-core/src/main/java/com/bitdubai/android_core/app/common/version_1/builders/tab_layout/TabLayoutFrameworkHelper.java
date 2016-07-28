@@ -15,14 +15,14 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.tab_lay
  */
 public class TabLayoutFrameworkHelper {
 
-    public static View obtainFrameworkAvailableView(Context context,int id){
+    public static View obtainFrameworkAvailableView(Context context, int id) {
         return obtainFrameworkAvailableView(context, id, null);
     }
 
 
     public static View obtainFrameworkAvailableView(Context context, int id, Object[] listeners) {
         View view = null;
-        switch (id){
+        switch (id) {
             case TabsViewsAvailables.TAB_NOTIFICATION_VIEW:
                 View v = LayoutInflater.from(context).inflate(R.layout.custom_tab, null);
                 View badge = v.findViewById(R.id.badge);

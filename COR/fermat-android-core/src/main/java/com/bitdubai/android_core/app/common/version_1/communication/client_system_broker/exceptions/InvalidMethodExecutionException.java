@@ -7,9 +7,7 @@ import java.lang.reflect.Method;
  */
 public class InvalidMethodExecutionException extends RuntimeException {
 
-    public InvalidMethodExecutionException(Object object, Method method,String cause) {
-        super("InvalidMethodExecutionException in:"+object.getClass().getInterfaces()[0].getName()+"\n" +
-                "Method: "+ method+ "\n" +
-                "Method detail is not corresponding to the actual method call, cause: "+cause);
+    public InvalidMethodExecutionException(Object object, Method method, String cause) {
+        super(new StringBuilder().append("InvalidMethodExecutionException in:").append(object.getClass().getInterfaces()[0].getName()).append("\n").append("Method: ").append(method).append("\n").append("Method detail is not corresponding to the actual method call, cause: ").append(cause).toString());
     }
 }

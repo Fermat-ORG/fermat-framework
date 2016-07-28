@@ -15,8 +15,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.FermatApplication;
-import com.bitdubai.android_core.app.common.version_1.classes.BroadcastInterface;
-import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
+import com.bitdubai.android_core.app.common.version_1.broadcaster.BroadcastInterface;
+import com.bitdubai.android_core.app.common.version_1.broadcaster.BroadcastManager;
 import com.bitdubai.android_core.app.common.version_1.communication.platform_service.CommunicationDataKeys;
 import com.bitdubai.android_core.app.common.version_1.communication.platform_service.CommunicationMessages;
 import com.bitdubai.android_core.app.common.version_1.communication.platform_service.IntentServerServiceAction;
@@ -199,11 +199,11 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
                 Log.e(TAG, "ERROR: Class or fields of the class are not implementing Serializable, class name: " + data.getClass().getName());
                 if (data instanceof ArrayList || data instanceof List) {
                     //todo: this is not working
-                    Log.e(TAG,"This error is caused by a Collection Class, please check the element the collection");
+                    Log.e(TAG, "This error is caused by a Collection Class, please check the element the collection");
                     Log.e(TAG, String.valueOf(data.getClass().getComponentType()));
                 }
             }
-            throw new Exception("ERROR: Class is not implementing Serializable, class name: " + data.getClass().getName());
+            throw new Exception(new StringBuilder().append("ERROR: Class is not implementing Serializable, class name: ").append(data.getClass().getName()).toString());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -249,14 +249,14 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
         try {
             Log.i(TAG, "Socket sending response to client");
             LocalServerSocketSession localServerSocketSession = socketsClients.get(clientKey);
-            if(localServerSocketSession!=null) {
+            if (localServerSocketSession != null) {
                 if (!localServerSocketSession.isSenderActive()) {
                     localServerSocketSession.startSender();
                 }
                 localServerSocketSession.sendMessage(dataId, data);
                 Log.i(TAG, "Socket response sent");
-            }else {
-                Log.e(TAG,"Channel null, \n ExtraInfo: clientKey= "+clientKey+" \n clients set: "+socketsClients.keySet());
+            } else {
+                Log.e(TAG, "Channel null, \n ExtraInfo: clientKey= " + clientKey + " \n clients set: " + socketsClients.keySet());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -298,7 +298,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
                 serverThread.setDaemon(true);
                 serverThread.start();
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return clientKey;
@@ -403,9 +403,9 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
         @Override
         public FermatModuleObjectWrapper invoqueModuleLargeDataMethod(String clientKey, String dataId, String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, ModuleObjectParameterWrapper[] parameters) throws RemoteException {
             Object returnModuleObject = null;
-            PluginVersionReference pluginVersionReference =  null;
+            PluginVersionReference pluginVersionReference = null;
             try {
-                pluginVersionReference= new PluginVersionReference(
+                pluginVersionReference = new PluginVersionReference(
                         Platforms.getByCode(platformCode),
                         Layers.getByCode(layerCode),
                         Plugins.getByCode(pluginsCode),
@@ -428,21 +428,21 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
                 } else {
                     if (!(returnModuleObject instanceof Serializable)) {
                         if (returnModuleObject != null) {
-                            NotSerializableException e = new NotSerializableException("Object returned: " + returnModuleObject.getClass().getName() + " from method " + method + " is not implementing serializable");
+                            NotSerializableException e = new NotSerializableException(new StringBuilder().append("Object returned: ").append(returnModuleObject.getClass().getName()).append(" from method ").append(method).append(" is not implementing serializable").toString());
                             fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, e);
                             // return the exception
                             sendLargeData(dataId, clientKey, fermatModuleObjectWrapper);
-                        }else{
+                        } else {
                             fermatModuleObjectWrapper = new FermatModuleObjectWrapper(null, true, dataId);
                         }
-                    }else {
+                    } else {
                         Serializable aidlObject = (Serializable) returnModuleObject;
                         try {
                             sendLargeData(dataId, clientKey, aidlObject);
                             fermatModuleObjectWrapper = new FermatModuleObjectWrapper(null, true, dataId);
                         } catch (Exception e) {
                             fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, e);
-                            sendLargeData(dataId, clientKey,fermatModuleObjectWrapper);
+                            sendLargeData(dataId, clientKey, fermatModuleObjectWrapper);
                             e.printStackTrace();
                         }
                     }
@@ -451,9 +451,9 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
 //                Exception e1 = new Exception("Error in Method: "+method+" object returned: "+returnModuleObject,e);
                 try {
                     fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, e);
-                    sendLargeData(dataId, clientKey,fermatModuleObjectWrapper);
+                    sendLargeData(dataId, clientKey, fermatModuleObjectWrapper);
                 } catch (Exception e1) {
-                    Log.e(TAG,"Error, please contact furszy and show him the stacktrace below");
+                    Log.e(TAG, "Error, please contact furszy and show him the stacktrace below");
                     e1.printStackTrace();
                     fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, e1);
                 }
@@ -524,8 +524,6 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
     };
 
 
-
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -576,7 +574,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
 
             executorService = Executors.newCachedThreadPool();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -616,7 +614,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
 
         try {
             serverThread.interrupt();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -625,7 +623,6 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -654,7 +651,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
                     moduleManager = ((AbstractModule) fermatManager).getModuleManager();
                     clazz = moduleManager.getClass();
                 } else {
-                    Log.e(TAG,"Error: No extends AbstractModule class, Plugin: "+pluginVersionReference);
+                    Log.e(TAG, "Error: No extends AbstractModule class, Plugin: " + pluginVersionReference);
                     clazz = fermatManager.getClass();
                 }
                 Method m = null;
@@ -711,13 +708,11 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
                             Log.e(TAG, "NOT FOUND ModuleManger for this pluginVersionRefence:" + pluginVersionReference.toString());
                         }
                     }
-
                     if (m != null) {
-                        if(!m.getReturnType().equals(Void.TYPE) && returnedObject==null){
-                            Log.i(TAG, "Object returned null in method: "+method+" from plugin: "+pluginVersionReference.toString3()+" please check the module if this is not what you expected");
+                        if (!m.getReturnType().equals(Void.TYPE) && returnedObject == null) {
+                            Log.i(TAG, "Object returned null in method: " + method + " from plugin: " + pluginVersionReference.toString3() + " please check the module if this is not what you expected");
                         }
                     }
-
                 } catch (NoSuchMethodException e) {
                     Log.e(TAG, "NoSuchMethodException:" + method + " on class" + clazz.getName());
                     e.printStackTrace();
@@ -759,7 +754,8 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
 //                Log.i(TAG,"PluginVersionReference: "+ pluginVersionReference.toString());
 //                Log.i(TAG,"Parameters: "+parameters);
                 RuntimeManager runtimeManager = fermatSystem.getRuntimeManager(pluginVersionReference);
-                Class clazz =  runtimeManager.getClass();;
+                Class clazz = runtimeManager.getClass();
+                ;
                 Method m = null;
                 Object returnedObject = null;
                 Object[] params = null;
@@ -811,18 +807,18 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
 
                             }
                         } else {
-                            Log.e(TAG, "NOT FOUND ModuleManger for this pluginVersionRefence:" + pluginVersionReference.toString());
+                            Log.e(TAG, new StringBuilder().append("NOT FOUND ModuleManger for this pluginVersionRefence:").append(pluginVersionReference.toString()).toString());
                         }
                     }
 
                     if (m != null) {
-                        if(!m.getReturnType().equals(Void.TYPE) && returnedObject==null){
-                            Log.i(TAG, "Object returned null in method: "+method+" from plugin: "+pluginVersionReference.toString3()+" please check the module if this is not what you expected");
+                        if (!m.getReturnType().equals(Void.TYPE) && returnedObject == null) {
+                            Log.i(TAG, new StringBuilder().append("Object returned null in method: ").append(method).append(" from plugin: ").append(pluginVersionReference.toString3()).append(" please check the module if this is not what you expected").toString());
                         }
                     }
 
                 } catch (NoSuchMethodException e) {
-                    Log.e(TAG, "NoSuchMethodException:" + method + " on class" + clazz.getName());
+                    Log.e(TAG, new StringBuilder().append("NoSuchMethodException:").append(method).append(" on class").append(clazz.getName()).toString());
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
                     return e.getTargetException();
@@ -853,10 +849,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
     }
 
 
-
-
     /**
-     *
      * AsyncTask loader
      *
      * @param result array of native object (handle result field with result[0], result[1],... result[n]
@@ -885,7 +878,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
         }
 
         // Indicate that app was loaded.
-        Log.i(TAG,"PlatformService running");
+        Log.i(TAG, "PlatformService running");
         isFermatSystemRunning = true;
 //        Intent intent = new Intent();
 //        intent.setAction("org.fermat.SYSTEM_RUNNING");
@@ -928,7 +921,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
     class IncomingHandler extends Handler {
         @Override
         public void handleMessage(final Message msg) {
-            Log.d(TAG, "Received from service: " + msg.arg1);
+            Log.d(TAG, new StringBuilder().append("Received from service: ").append(msg.arg1).toString());
             final Bundle data = msg.getData();
             try {
                 switch (msg.what) {

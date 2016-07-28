@@ -1,13 +1,14 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTransaction;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.*;
+import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
+import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseRecord;
+import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTableFactory;
+import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTransaction;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,11 +17,11 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.robolectric.Shadows.shadowOf;
-
 import java.util.UUID;
+
 import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by angel on 28/7/15.
@@ -43,7 +44,7 @@ public class SelectsAndroidDatabaseTransactionTest {
     private AndroidDatabaseRecord record_1, record_2;
     private AndroidDatabaseTransaction transaction_1, transaction_2;
 
-    public  void setUpDatabase() throws Exception {
+    public void setUpDatabase() throws Exception {
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
         testOwnerId = UUID.randomUUID();
@@ -51,7 +52,7 @@ public class SelectsAndroidDatabaseTransactionTest {
         testDatabase.createDatabase(testDatabaseName);
     }
 
-    public void setUpTable() throws Exception{
+    public void setUpTable() throws Exception {
 
         testTableFactory = new AndroidDatabaseTableFactory("tabla_1");
         testTableFactory.addColumn("testColumn1", DatabaseDataType.INTEGER, 0, true);
@@ -78,13 +79,13 @@ public class SelectsAndroidDatabaseTransactionTest {
     }
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         setUpDatabase();
         setUpTable();
     }
 
     @Test
-    public void Selects_AreEquals(){
+    public void Selects_AreEquals() {
         transaction_2 = new AndroidDatabaseTransaction();
         transaction_2.addRecordToSelect(tabla_1, record_1);
         assertThat(transaction_1.getRecordsToSelect()).isEqualTo(transaction_2.getRecordsToSelect());
@@ -92,7 +93,7 @@ public class SelectsAndroidDatabaseTransactionTest {
     }
 
     @Test
-    public void Selects_NotEquals(){
+    public void Selects_NotEquals() {
         transaction_2 = new AndroidDatabaseTransaction();
         transaction_2.addRecordToSelect(tabla_2, record_2);
         assertThat(transaction_1.getTablesToSelect()).isNotEqualTo(transaction_2.getTablesToSelect());

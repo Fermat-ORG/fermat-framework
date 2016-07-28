@@ -8,7 +8,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.AbstractCBPFermatEventT
  */
 public class IncomingNegotiationTransmissionEventTEA extends AbstractCBPFermatEventTEA {
 
-    public IncomingNegotiationTransmissionEventTEA(FermatEventEnum eventType){
+    public IncomingNegotiationTransmissionEventTEA(FermatEventEnum eventType) {
         super(eventType);
     }
 }

@@ -12,13 +12,13 @@ import java.util.List;
 /**
  * Created by mati on 2016.03.03..
  */
-public class RecentsAdapter extends OverviewAdapter<RecentHolder,RecentApp> {
+public class RecentsAdapter extends OverviewAdapter<RecentHolder, RecentApp> {
 
 
     private final Context context;
     private RecentCallback recentCallback;
 
-    public RecentsAdapter(Context context,List<RecentApp> recentApps) {
+    public RecentsAdapter(Context context, List<RecentApp> recentApps) {
         super(recentApps);
         this.context = context;
     }
@@ -31,7 +31,7 @@ public class RecentsAdapter extends OverviewAdapter<RecentHolder,RecentApp> {
 
     @Override
     public void onBindViewHolder(final RecentHolder viewHolder) {
-        if(viewHolder.getPosition()==0){
+        if (viewHolder.getPosition() == 0) {
             recentCallback.onFirstElementAdded();
         }
 
@@ -44,18 +44,18 @@ public class RecentsAdapter extends OverviewAdapter<RecentHolder,RecentApp> {
         });
         try {
             viewHolder.getIcon().setImageResource(viewHolder.model.getFermatApp().getIconResource());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
             viewHolder.getTitle().setText(viewHolder.model.getFermatApp().getAppName());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
             int res = viewHolder.model.getFermatApp().getBannerRes();
-            if(res!=0) viewHolder.getRoot().setBackgroundResource(res);
-        }catch (Exception e){
+            if (res != 0) viewHolder.getRoot().setBackgroundResource(res);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

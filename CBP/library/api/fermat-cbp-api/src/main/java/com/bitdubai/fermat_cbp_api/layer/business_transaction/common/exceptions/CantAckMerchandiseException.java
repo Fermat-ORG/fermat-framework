@@ -31,7 +31,7 @@ public class CantAckMerchandiseException extends CBPException {
      * @param possibleReason
      */
     public CantAckMerchandiseException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

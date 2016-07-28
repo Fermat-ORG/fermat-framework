@@ -30,7 +30,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragment_factor
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class LossProtectedWalletFermatAppConnection extends AppConnections<ReferenceAppFermatSession>{
+public class LossProtectedWalletFermatAppConnection extends AppConnections<ReferenceAppFermatSession<LossProtectedWallet>>{
 
     private LossProtectedWallet moduleManager = null;
     private ReferenceAppFermatSession<LossProtectedWallet> lossWalletSession;

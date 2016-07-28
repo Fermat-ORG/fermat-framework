@@ -155,7 +155,6 @@ public class xmlConversionTest extends TestCase {
 //        runtimeSubApp.addActivity(runtimeActivity);
 
 
-
         /**End Wallet Factory*/
 
         Skin skin = new Skin();
@@ -168,25 +167,25 @@ public class xmlConversionTest extends TestCase {
 
         skin.setVersion(new Version(1, 0, 0));
 
-        Map<String,Layout> layoutHashMap = new HashMap<String,Layout>();
+        Map<String, Layout> layoutHashMap = new HashMap<String, Layout>();
         Layout layout;
 
-        layout = new Layout(UUID.randomUUID(),"payment_request_base.xml","payment_request_base");
+        layout = new Layout(UUID.randomUUID(), "payment_request_base.xml", "payment_request_base");
 
-        layoutHashMap.put("payment_request_base",layout);
+        layoutHashMap.put("payment_request_base", layout);
 
-        layout = new Layout(UUID.randomUUID(),"pending_request_row.xml","pending_request_row");
+        layout = new Layout(UUID.randomUUID(), "pending_request_row.xml", "pending_request_row");
 
-        layoutHashMap.put("pending_request_row",layout);
+        layoutHashMap.put("pending_request_row", layout);
 
-        layout = new Layout(UUID.randomUUID(),"pending_request_row2.xml","pending_request_row2");
+        layout = new Layout(UUID.randomUUID(), "pending_request_row2.xml", "pending_request_row2");
 
         layoutHashMap.put("pending_request_row2", layout);
 
 
         skin.setPortraitLayouts(layoutHashMap);
 
-        Map<String,Resource> resourceHashMap = new HashMap<String,Resource>();
+        Map<String, Resource> resourceHashMap = new HashMap<String, Resource>();
 
         Resource resource;
 
@@ -203,7 +202,7 @@ public class xmlConversionTest extends TestCase {
         skin.setResources(resourceHashMap);
 
         try {
-            skin.setNavigationStructureCompatibility(new VersionCompatibility(new Version(1,0,0),new Version(1,0,0)));
+            skin.setNavigationStructureCompatibility(new VersionCompatibility(new Version(1, 0, 0), new Version(1, 0, 0)));
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         }

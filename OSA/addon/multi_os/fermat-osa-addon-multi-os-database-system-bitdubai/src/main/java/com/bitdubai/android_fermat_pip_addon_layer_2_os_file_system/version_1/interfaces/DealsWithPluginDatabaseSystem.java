@@ -6,5 +6,5 @@ package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdub
 public interface DealsWithPluginDatabaseSystem {
 
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem);
-    
+
 }

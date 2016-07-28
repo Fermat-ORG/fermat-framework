@@ -1,6 +1,5 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation;
 
-import android.graphics.Color;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
@@ -42,8 +41,8 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
         buttonTime.setOnClickListener(this);
         youTimeZone = (TextView) itemView.findViewById(R.id.ccw_text_you_time_zone);
         otheTimeZone = (TextView) itemView.findViewById(R.id.ccw_text_other_date);
-        separatorLineDown= itemView.findViewById(R.id.ccw_line_down);
-        separatorLineUp= itemView.findViewById(R.id.ccw_line_up);
+        separatorLineDown = itemView.findViewById(R.id.ccw_line_down);
+        separatorLineUp = itemView.findViewById(R.id.ccw_line_up);
 
     }
 

@@ -84,7 +84,7 @@ public class AcceptDialog
             try {
                 if (linkedCryptoCustomerIdentity != null && identity != null) {
                     getSession().getModuleManager().acceptCryptoCustomer(linkedCryptoCustomerIdentity.getConnectionId());
-                    Toast.makeText(getContext(), "Accepted connection request from " + linkedCryptoCustomerIdentity.getAlias(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), new StringBuilder().append("Accepted connection request from ").append(linkedCryptoCustomerIdentity.getAlias()).toString(), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }

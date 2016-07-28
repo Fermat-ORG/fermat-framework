@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 public class SetPlatformTest {
 
     @Test
-    public void setPlatform(){
+    public void setPlatform() {
         CryptoBrokerWalletAssociatedSettingImpl cryptoBrokerWalletAssociatedSetting = mock(CryptoBrokerWalletAssociatedSettingImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoBrokerWalletAssociatedSetting).setPlatform(Mockito.any(Platforms.class));
     }

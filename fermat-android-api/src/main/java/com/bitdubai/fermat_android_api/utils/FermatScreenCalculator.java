@@ -8,9 +8,9 @@ import android.content.Context;
 public class FermatScreenCalculator {
 
 
-    public static int getPx(Context context,float dps){
+    public static int getPx(Context context, float dps) {
         final float scale = context.getResources().getDisplayMetrics().density;
-        return  (int) (dps * scale + 0.5f);
+        return (int) (dps * scale + 0.5f);
     }
 
 

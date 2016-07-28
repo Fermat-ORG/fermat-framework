@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetDescriptionTest {
 
     @Test
-    public void getDescription(){
+    public void getDescription() {
         CryptoBrokerWalletProviderSettingImpl cryptoBrokerWalletProviderSetting = mock(CryptoBrokerWalletProviderSettingImpl.class);
         when(cryptoBrokerWalletProviderSetting.getDescription()).thenReturn(new String());
         assertThat(cryptoBrokerWalletProviderSetting.getDescription()).isNotNull();

@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.classes;
+package com.bitdubai.android_core.app.common.version_1.broadcaster;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -16,7 +16,9 @@ import android.util.LruCache;
  * @author Tristan Waddington
  */
 public class MyTypefaceSpan extends MetricAffectingSpan {
-    /** An <code>LruCache</code> for previously loaded typefaces. */
+    /**
+     * An <code>LruCache</code> for previously loaded typefaces.
+     */
     private static LruCache<String, Typeface> sTypefaceCache =
             new LruCache<String, Typeface>(12);
 

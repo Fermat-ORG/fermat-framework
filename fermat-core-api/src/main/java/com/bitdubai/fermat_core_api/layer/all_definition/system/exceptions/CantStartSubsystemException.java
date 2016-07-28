@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * The exception <code>CantStartSubsystemException</code>
  * is thrown when there is an error trying to start a subsystem class.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
 public class CantStartSubsystemException extends FermatException {

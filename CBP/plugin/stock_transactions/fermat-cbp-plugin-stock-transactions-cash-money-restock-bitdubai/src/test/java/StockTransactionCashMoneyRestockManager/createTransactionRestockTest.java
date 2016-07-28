@@ -28,7 +28,7 @@ public class createTransactionRestockTest {
         StockTransactionCashMoneyRestockManager stockTransactionCashMoneyRestockManager = mock(StockTransactionCashMoneyRestockManager.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(stockTransactionCashMoneyRestockManager).createTransactionRestock(Mockito.any(String.class),
                 Mockito.any(FiatCurrency.class), Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String.class),
-                Mockito.any(BigDecimal.class), Mockito.any(String.class), Mockito.any(BigDecimal.class), Mockito.any(OriginTransaction.class),Mockito.anyString());
+                Mockito.any(BigDecimal.class), Mockito.any(String.class), Mockito.any(BigDecimal.class), Mockito.any(OriginTransaction.class), Mockito.anyString());
     }
 
 }

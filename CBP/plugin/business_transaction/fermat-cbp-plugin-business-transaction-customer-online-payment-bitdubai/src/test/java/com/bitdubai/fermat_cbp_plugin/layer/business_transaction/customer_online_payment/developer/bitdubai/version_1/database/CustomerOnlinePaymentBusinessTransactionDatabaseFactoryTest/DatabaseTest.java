@@ -40,28 +40,29 @@ public class DatabaseTest {
     private UUID testId;
     private String testDataBaseName;
     private CustomerOnlinePaymentBusinessTransactionDatabaseFactory customerOnlinePaymentBusinessTransactionDatabaseFactory;
-    public void setUpTestValues(){
+
+    public void setUpTestValues() {
         testId = UUID.randomUUID();
         testDataBaseName = CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME;
     }
 
-    public void setUpGeneralMockitoRules() throws Exception{
+    public void setUpGeneralMockitoRules() throws Exception {
         when(mockPluginDatabaseSystem.createDatabase(testId, testDataBaseName)).thenReturn(mockDatabase);
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTableFactory);
     }
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         setUpTestValues();
         setUpGeneralMockitoRules();
     }
 
     @Test
-    public void TestCreateDatabase_Should_Equal_Class() throws Exception{
+    public void TestCreateDatabase_Should_Equal_Class() throws Exception {
         customerOnlinePaymentBusinessTransactionDatabaseFactory =
                 new CustomerOnlinePaymentBusinessTransactionDatabaseFactory(mockPluginDatabaseSystem);
         Database checkDatabase = customerOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(testId, testDataBaseName);
-        assertEquals(mockDatabase.getClass(),checkDatabase.getClass());
+        assertEquals(mockDatabase.getClass(), checkDatabase.getClass());
     }
 }

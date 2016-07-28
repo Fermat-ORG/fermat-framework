@@ -71,7 +71,7 @@ public enum Wallets {
                 throw new InvalidParameterException(
                         InvalidParameterException.DEFAULT_MESSAGE,
                         null,
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "This Code Is Not Valid for the Wallets enum");
         }
 

@@ -15,7 +15,7 @@ import static com.bitdubai.fermat_android_api.core.FrameworkAvailableDrawables.I
 /**
  * Created by Matias Furszyfer on 2016.06.19..
  */
-public class ResDrawableFrameworkHelper  {
+public class ResDrawableFrameworkHelper {
 
 
     public static <I extends FermatDrawable> Drawable obtainDrawable(Context context, I fermatDrawable) {
@@ -34,7 +34,7 @@ public class ResDrawableFrameworkHelper  {
 
     public static int obtainResDrawable(Context context, int id) {
         int resId = 0;
-        switch (id){
+        switch (id) {
             case IC_ARROW_BACK_WHITE:
                 //todo: ver esto
                 resId = R.drawable.arrow_left;
@@ -42,7 +42,6 @@ public class ResDrawableFrameworkHelper  {
         }
         return resId;
     }
-
 
 
 }

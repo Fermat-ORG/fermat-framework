@@ -21,11 +21,11 @@ public class CantHandleNewMessagesException extends FermatException {
         super(message, cause, context, possibleReason);
     }
 
-    public CantHandleNewMessagesException(Exception cause, String context, String possibleReason){
+    public CantHandleNewMessagesException(Exception cause, String context, String possibleReason) {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
-    public CantHandleNewMessagesException(String context, String possibleReason){
+    public CantHandleNewMessagesException(String context, String possibleReason) {
         this(DEFAULT_MESSAGE, null, context, possibleReason);
     }
 }

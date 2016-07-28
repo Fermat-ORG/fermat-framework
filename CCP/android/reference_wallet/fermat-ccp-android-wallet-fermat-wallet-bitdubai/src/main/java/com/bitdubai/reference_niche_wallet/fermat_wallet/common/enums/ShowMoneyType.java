@@ -5,7 +5,7 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums;
  */
 public enum ShowMoneyType {
 
-    BITCOIN (1),
+    FRMT (1),
     BITS   (2);
 
     private final int code;
@@ -19,7 +19,7 @@ public enum ShowMoneyType {
     public static ShowMoneyType getByCode(int code) {
 
         switch (code) {
-            case 1: return ShowMoneyType.BITCOIN;
+            case 1: return ShowMoneyType.FRMT;
             case 2: return ShowMoneyType.BITS;
 
         }
@@ -27,6 +27,6 @@ public enum ShowMoneyType {
         /**
          * Return by default.
          */
-        return ShowMoneyType.BITCOIN;
+        return ShowMoneyType.FRMT;
     }
 }

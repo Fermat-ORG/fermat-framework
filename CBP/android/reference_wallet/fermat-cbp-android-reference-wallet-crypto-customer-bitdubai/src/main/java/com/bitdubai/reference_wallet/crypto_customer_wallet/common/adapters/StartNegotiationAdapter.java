@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -18,7 +17,6 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ExchangeRateViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.SingleChoiceViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.start_negotiation.StartNegotiationActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
@@ -42,12 +40,11 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private StartNegotiationActivityFragment footerListener;
     ClauseViewHolder.Listener clauseListener;
-    private List <IndexInfoSummary> marketRateList;
+    private List<IndexInfoSummary> marketRateList;
     private boolean walletUser = false;
 
 
-
-    public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation, boolean walletUser ) {
+    public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation, boolean walletUser) {
         super(context);
 
         this.negotiationInformation = negotiationInformation;
@@ -94,9 +91,9 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
 
             case TYPE_ITEM_AMOUNT_TO_PAY:
 
-                    final AmountToBuyViewHolder amountToPayViewHolder = new AmountToBuyViewHolder(itemView);
-                    amountToPayViewHolder.setPaymentBuy(Boolean.FALSE);
-                    return amountToPayViewHolder;
+                final AmountToBuyViewHolder amountToPayViewHolder = new AmountToBuyViewHolder(itemView);
+                amountToPayViewHolder.setPaymentBuy(Boolean.FALSE);
+                return amountToPayViewHolder;
 
 
             case TYPE_FOOTER:
@@ -153,7 +150,7 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
                 return TYPE_ITEM_AMOUNT_TO_BUY;
             case BROKER_CURRENCY_QUANTITY:
                 return TYPE_ITEM_AMOUNT_TO_PAY;
-           default:
+            default:
                 return TYPE_ITEM_SINGLE_CHOICE;
         }
     }
@@ -209,7 +206,7 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
         this.clauseListener = clauseListener;
     }
 
-    public void setMarketRateList(List <IndexInfoSummary> marketRateList){
+    public void setMarketRateList(List<IndexInfoSummary> marketRateList) {
         this.marketRateList = marketRateList;
     }
 

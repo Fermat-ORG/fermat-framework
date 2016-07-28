@@ -4,18 +4,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -24,7 +21,7 @@ import java.util.Map;
 
 
 /**
- *Created by Yordin Alayn on 22.01.16.
+ * Created by Yordin Alayn on 22.01.16.
  * Based in ExchangeRateViewHolder of Star_negotiation by nelson
  */
 public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnClickListener {
@@ -50,13 +47,13 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateText = (TextView) itemView.findViewById(R.id.ccw_exchange_rate_text);
         markerRateReference = (TextView) itemView.findViewById(R.id.ccw_market_rate_value);
         markerRateText = (TextView) itemView.findViewById(R.id.ccw_market_rate_text);
-        separatorLineDown= itemView.findViewById(R.id.ccw_line_down);
-        separatorLineUp= itemView.findViewById(R.id.ccw_line_up);
+        separatorLineDown = itemView.findViewById(R.id.ccw_line_down);
+        separatorLineUp = itemView.findViewById(R.id.ccw_line_up);
         yourExchangeRateValue.setOnClickListener(this);
 
         numberFormat = DecimalFormat.getInstance();
 
-    //    formatter.setRoundingMode(RoundingMode.DOWN);
+        //    formatter.setRoundingMode(RoundingMode.DOWN);
     }
 
     @Override
@@ -68,8 +65,8 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
 
-    //    BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
-    //    String marketExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue()));
+        //    BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
+        //    String marketExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue()));
 
 
         markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(),
@@ -106,7 +103,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         return R.id.ccw_card_view_title;
     }
 
-    public void setMarketRateList(List<IndexInfoSummary> marketRateList){
+    public void setMarketRateList(List<IndexInfoSummary> marketRateList) {
         this.marketRateList = marketRateList;
     }
 
@@ -142,7 +139,8 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
                 break;
         }
     }
-    private String getMarketRate(Map<ClauseType, ClauseInformation> clauses){
+
+    private String getMarketRate(Map<ClauseType, ClauseInformation> clauses) {
 
         BrokerCurrencyQuotation brokerCurrencyQuotation = new BrokerCurrencyQuotation(marketRateList);
         String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(
@@ -190,13 +188,12 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     }*/
 
 
-
-    private String fixFormat(String value){
+    private String fixFormat(String value) {
 
         try {
-            if(compareLessThan1(value)){
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
             return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
@@ -207,14 +204,14 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
 
     }
 
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
         try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
             }
         } catch (ParseException e) {
             e.printStackTrace();

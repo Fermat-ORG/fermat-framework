@@ -130,17 +130,12 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
     }
 
     @Override
-    protected Runnable agentJob() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                doTheMainTask();
-            }
-        };
+    protected void agentJob() {
+        doTheMainTask();
     }
 
     @Override
-    protected void onErrorOccur() {
+    protected void onErrorOccur(Exception e) {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 Error"));
@@ -472,7 +467,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
      * <p/>
      * Update Contract Status to CANCELLED for expiration time in payment submit.
      * If Expiration Time is done, Update the contract status to CANCELLED.
-     *
      */
     private void changeTransactionStatusFromInContractSubmitToCancelledIfExpirationTimeReached() throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantGetListPurchaseNegotiationsException, CantGetListClauseException, CantUpdateCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
         final List<CustomerBrokerPurchase> userLevelTransactions = dao.getCustomerBrokerPurchases(null);
@@ -557,7 +551,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
      * <p/>
      * Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento de notificacion
      * siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
-     *
      */
     private void updateContractExpirationDateWhitStatusInContractSubmitAndNotify() throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantUpdateCustomerBrokerContractPurchaseException {
 
@@ -653,6 +646,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
             } catch (CantGetListClauseException e) {
                 e.printStackTrace();
             }
+//            final Collection<Clause> clauses = transactionInfo.getClauses();
             final String customerCurrency = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY);
 
             float marketExchangeRate = 1;
@@ -665,7 +659,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
             }
 
             boolean isContract = openContractManager.isOpenContract(transactionInfo.getNegotiationId().toString());
-            if(transactionInfo.getStatus().equals(NegotiationStatus.WAITING_FOR_CLOSING) && (!isContract)){
+            if (transactionInfo.getStatus().equals(NegotiationStatus.WAITING_FOR_CLOSING) && (!isContract)) {
 
                 openContractManager.openPurchaseContract(transactionInfo, marketExchangeRate);
 
@@ -726,9 +720,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
      * check if the negotiation is registered in the database of this plugin
      *
      * @param negotiationId the negotiation ID
-     *
      * @return <code>true</code> if the negotiation is registerd. <code>false</code> otherwise
-     *
      * @throws DatabaseOperationException
      * @throws InvalidParameterException
      */
@@ -747,7 +739,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
      *
      * @param valueFilter the value of the filter
      * @param columnValue the column to filter
-     *
      * @return the database filter object
      */
     private DatabaseTableFilter getFilterTable(final String valueFilter, final String columnValue) {
@@ -789,9 +780,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
      * Return the market exchange rate for the given currency
      *
      * @param customerCurrency the currency
-     *
      * @return the market rate
-     *
      * @throws CantGetExchangeRateException
      */
     private float getMarketExchangeRate(String customerCurrency) throws CantGetExchangeRateException {

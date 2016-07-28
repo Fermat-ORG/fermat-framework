@@ -14,7 +14,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 public class UserLevelBusinessTransactionCustomerBrokerSaleManager implements CustomerBrokerSaleManager {
     public static String REVIEW_NEGOTIATION_NOTIFICATION = "Review negotiation";
     UserLevelBusinessTransactionCustomerBrokerSalePluginRoot userLevelBusinessTransactionCustomerBrokerSalePluginRoot = new UserLevelBusinessTransactionCustomerBrokerSalePluginRoot();
-    public UserLevelBusinessTransactionCustomerBrokerSaleManager(){}
+
+    public UserLevelBusinessTransactionCustomerBrokerSaleManager() {
+    }
 
     @Override
     public void notificationReviewNegotiation(String publicKey, String tittle, String body) throws CantSendNotificationReviewNegotiation {
@@ -27,7 +29,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleManager implements Cu
         event.setNotificationType(NotificationType.REVIEW_NOTIFICATION.getCode());
         event.setSource(UserLevelBusinessTransactionCustomerBrokerSalePluginRoot.EVENT_SOURCE);
         this.userLevelBusinessTransactionCustomerBrokerSalePluginRoot.getEventManager().raiseEvent(event);
-        System.out.println("UserLevelBusinessTransactionCustomerBrokerSALEPluginRoot - ReviewNegotiationNotificationEvent fired!: " + event.toString());
+        System.out.println(new StringBuilder().append("UserLevelBusinessTransactionCustomerBrokerSALEPluginRoot - ReviewNegotiationNotificationEvent fired!: ").append(event.toString()).toString());
     }
 
     private String getSourceString(EventSource eventSource) {

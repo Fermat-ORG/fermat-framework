@@ -56,6 +56,8 @@
     <color name="text_value_status_accepted">#0e0e0e</color>
     <color name="activity_background">#222</color>
 
+    <color name="cbw_provider_is_down">#CC0000</color>
+
     <color name="cbw_setting_item_color">#dbdbdb</color>
 
     <color name="cbw_wizard_color">#1270A6</color>

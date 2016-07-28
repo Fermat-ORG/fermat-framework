@@ -14,7 +14,7 @@ public class NegotiationPurchaseLocations implements NegotiationLocations, Seria
     private final String location;
     private final String uri;
 
-    public NegotiationPurchaseLocations(UUID locationId, String location, String uri){
+    public NegotiationPurchaseLocations(UUID locationId, String location, String uri) {
         this.locationId = locationId;
         this.location = location;
         this.uri = uri;

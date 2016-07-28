@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
-
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_osa_addon.layer.linux.file_system.developer.bitdubai.version_1.exceptions.CantHashFileNameException;
 
@@ -20,7 +19,7 @@ import java.security.MessageDigest;
 
 /**
  * The Platform File System is the implementation of the file system that is handled to external plugins not requires the plug in to identify itself.
- * <p>
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
  */
 public class LinuxPlatformFileSystem implements PlatformFileSystem {
@@ -79,16 +78,14 @@ public class LinuxPlatformFileSystem implements PlatformFileSystem {
      * @param fileName      name of file to load
      * @param privacyLevel  level of privacy for the file, if it is public or private
      * @param lifeSpan      lifeSpan of the file, whether it is permanent or temporary
-     *
      * @return PlatformTextFile object
-     *
      * @throws CantCreateFileException
      */
     @Override
-    public PlatformTextFile createFile(final String       directoryName,
-                                       final String       fileName     ,
-                                       final FilePrivacy  privacyLevel ,
-                                       final FileLifeSpan lifeSpan     ) throws CantCreateFileException {
+    public PlatformTextFile createFile(final String directoryName,
+                                       final String fileName,
+                                       final FilePrivacy privacyLevel,
+                                       final FileLifeSpan lifeSpan) throws CantCreateFileException {
 
         try {
             return new LinuxPlatformTextFile(
@@ -99,9 +96,9 @@ public class LinuxPlatformFileSystem implements PlatformFileSystem {
                     lifeSpan
             );
 
-        } catch(Exception e){
+        } catch (Exception e) {
 
-            throw new CantCreateFileException(e,"", "Unhandled error.");
+            throw new CantCreateFileException(e, "", "Unhandled error.");
         }
     }
 
@@ -144,9 +141,9 @@ public class LinuxPlatformFileSystem implements PlatformFileSystem {
             byte[] digest = md.digest();
             byte[] encoded = new Base64().encode(digest);
             final String encryptedString = new String(encoded, CHARSET_NAME);
-            return encryptedString.replace("/","");
+            return encryptedString.replace("/", "");
 
-        } catch(Exception e){
+        } catch (Exception e) {
 
             throw new CantHashFileNameException(e, "", "This Should never happen unless we change the DIGEST_ALGORITHM Constant");
         }

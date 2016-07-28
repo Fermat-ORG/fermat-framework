@@ -8,16 +8,16 @@ import java.util.Collection;
 import java.util.UUID;
 
 /**
- *  Created by angel on 19/10/15.
+ * Created by angel on 19/10/15.
  */
 
 public class CustomerBrokerSaleNegotiationInformation implements CustomerBrokerSaleNegotiation {
 
-    private final UUID   negotiationId;
+    private final UUID negotiationId;
     private final String publicKeyCustomer;
     private final String publicKeyBroker;
-    private final Long   startDataTime;
-    private final Long   negotiationExpirationDate;
+    private final Long startDataTime;
+    private final Long negotiationExpirationDate;
     private NegotiationStatus statusNegotiation;
     private final Collection<Clause> clauses;
 
@@ -25,10 +25,10 @@ public class CustomerBrokerSaleNegotiationInformation implements CustomerBrokerS
 
     private String cancelReason;
     private String memo;
-    private Long   lastNegotiationUpdateDate;
+    private Long lastNegotiationUpdateDate;
 
     public CustomerBrokerSaleNegotiationInformation(
-            UUID   negotiationId,
+            UUID negotiationId,
             String publicKeyCustomer,
             String publicKeyBroker,
             Long startDataTime,
@@ -39,8 +39,8 @@ public class CustomerBrokerSaleNegotiationInformation implements CustomerBrokerS
 
             String memo,
             String cancelReason,
-            Long   lastNegotiationUpdateDate
-    ){
+            Long lastNegotiationUpdateDate
+    ) {
         this.negotiationId = negotiationId;
         this.publicKeyCustomer = publicKeyCustomer;
         this.publicKeyBroker = publicKeyBroker;

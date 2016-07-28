@@ -14,24 +14,26 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2016.06.04..
  */
-public class ComboType2FermatSession <A extends FermatApp,R extends ResourceProviderManager> extends BaseFermatSession<A,R> implements ComboAppType2FermatSession {
+public class ComboType2FermatSession<A extends FermatApp, R extends ResourceProviderManager> extends BaseFermatSession<A, R> implements ComboAppType2FermatSession {
 
 
-    private Map<String,FermatSession> sessionMap;
+    private Map<String, FermatSession> sessionMap;
 
     public ComboType2FermatSession(String publicKey, A fermatApp, R resourceProviderManager, ErrorManager errorManager) {
         super(publicKey, fermatApp, resourceProviderManager, errorManager);
         sessionMap = new HashMap<>();
     }
 
-    public void addSession(String appPublicKey,FermatSession session) throws InvalidParameterException {
-        if (sessionMap.containsKey(appPublicKey)) throw new  InvalidParameterException("Session already exist");
-        sessionMap.put(appPublicKey,session);
+    public void addSession(String appPublicKey, FermatSession session) throws InvalidParameterException {
+        if (sessionMap.containsKey(appPublicKey))
+            throw new InvalidParameterException("Session already exist");
+        sessionMap.put(appPublicKey, session);
     }
 
     @Override
     public <T extends FermatSession> T getFermatSession(String appPublicKey, Class<T> sessionType) throws InvalidParameterException {
-        if (!sessionMap.containsKey(appPublicKey)) throw new  InvalidParameterException("Session not exist for pk: "+appPublicKey,"Pk valids in this ComboSession: "+ Arrays.toString(sessionMap.keySet().toArray()));
+        if (!sessionMap.containsKey(appPublicKey))
+            throw new InvalidParameterException(new StringBuilder().append("Session not exist for pk: ").append(appPublicKey).toString(), new StringBuilder().append("Pk valids in this ComboSession: ").append(Arrays.toString(sessionMap.keySet().toArray())).toString());
         return (T) sessionMap.get(appPublicKey);
     }
 }

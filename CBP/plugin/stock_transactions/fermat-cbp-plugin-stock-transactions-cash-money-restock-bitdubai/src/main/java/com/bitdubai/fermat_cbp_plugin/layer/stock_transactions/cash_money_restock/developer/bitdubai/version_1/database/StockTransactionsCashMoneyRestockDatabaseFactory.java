@@ -60,20 +60,20 @@ public class StockTransactionsCashMoneyRestockDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TABLE_NAME);
 
-            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_ID_COLUMN_NAME,        DatabaseDataType.TEXT, 50, Boolean.TRUE);
-            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PUBLIC_KEY_ACTOR_COLUMN_NAME,      DatabaseDataType.TEXT, 255, Boolean.FALSE);
-            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_FIAT_CURRENCY_COLUMN_NAME,         DatabaseDataType.TEXT, 15, Boolean.FALSE);
+            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.TEXT, 50, Boolean.TRUE);
+            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PUBLIC_KEY_ACTOR_COLUMN_NAME, DatabaseDataType.TEXT, 255, Boolean.FALSE);
+            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_FIAT_CURRENCY_COLUMN_NAME, DatabaseDataType.TEXT, 15, Boolean.FALSE);
             table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 255, Boolean.FALSE);
             table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CSH_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 255, Boolean.FALSE);
-            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CASH_REFERENCE_COLUMN_NAME,        DatabaseDataType.TEXT, 100, Boolean.FALSE);
-            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CONCEPT_COLUMN_NAME,               DatabaseDataType.TEXT, 100, Boolean.FALSE);
-            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_AMOUNT_COLUMN_NAME,                DatabaseDataType.MONEY, 0, Boolean.FALSE);
-            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME,             DatabaseDataType.TEXT, 30, Boolean.FALSE);
-            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_MEMO_COLUMN_NAME,                  DatabaseDataType.TEXT, 100, Boolean.FALSE);
-            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME,    DatabaseDataType.TEXT, 15, Boolean.FALSE);
-            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME,       DatabaseDataType.MONEY, 0, Boolean.FALSE);
-            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME,    DatabaseDataType.TEXT, 15, Boolean.FALSE);
-            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME,    DatabaseDataType.TEXT, 255, Boolean.FALSE);
+            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CASH_REFERENCE_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CONCEPT_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_AMOUNT_COLUMN_NAME, DatabaseDataType.MONEY, 0, Boolean.FALSE);
+            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME, DatabaseDataType.TEXT, 30, Boolean.FALSE);
+            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_MEMO_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME, DatabaseDataType.TEXT, 15, Boolean.FALSE);
+            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, DatabaseDataType.MONEY, 0, Boolean.FALSE);
+            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, DatabaseDataType.TEXT, 15, Boolean.FALSE);
+            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.TEXT, 255, Boolean.FALSE);
 
             table.addIndex(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_FIRST_KEY_COLUMN);
 

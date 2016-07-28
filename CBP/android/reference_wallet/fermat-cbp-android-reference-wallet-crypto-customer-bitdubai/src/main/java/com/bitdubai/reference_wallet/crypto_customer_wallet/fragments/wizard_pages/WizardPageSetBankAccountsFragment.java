@@ -94,7 +94,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Re
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        if(isHomeTutorialDialogEnabled) {
+        if (isHomeTutorialDialogEnabled) {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
@@ -141,7 +141,6 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Re
 
         return layout;
     }
-
 
 
     private void configureToolbar() {
