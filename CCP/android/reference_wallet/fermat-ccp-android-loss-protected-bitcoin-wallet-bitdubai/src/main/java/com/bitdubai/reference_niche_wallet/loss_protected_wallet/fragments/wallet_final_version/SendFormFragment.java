@@ -979,6 +979,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             } catch (Exception e) {
                                 appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                                 Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+
                             }
                         } else {
                             Toast.makeText(getActivity(), "Invalid Amount", Toast.LENGTH_LONG).show();
