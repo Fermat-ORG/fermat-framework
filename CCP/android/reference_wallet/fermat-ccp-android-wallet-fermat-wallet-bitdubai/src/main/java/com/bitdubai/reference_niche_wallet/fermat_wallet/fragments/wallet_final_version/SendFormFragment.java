@@ -293,8 +293,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         fee_high_btn  =(RadioButton)  rootView.findViewById(R.id.fee_High);
         editFeedamount=(EditText)     rootView.findViewById(R.id.fee_amount);
 
-        editFeedamount = (EditText) rootView.findViewById(R.id.feed_amount);
-
 
         advances_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -755,7 +753,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
                     String amount = txtAmount.getText().toString();
 
-                    EditText txtFee= (EditText) rootView.findViewById(R.id.feed_amount);
+                    EditText txtFee= (EditText) rootView.findViewById(R.id.fee_amount);
                     String fee = txtFee.getText().toString();
 
 
