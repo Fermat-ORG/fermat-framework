@@ -321,25 +321,14 @@ public class IncomingNotificationDao implements DAO {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
             cryptoPaymentRequestTable.addUUIDFilter(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
 
-            cryptoPaymentRequestTable.loadToMemory();
+           record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
 
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+            cryptoPaymentRequestTable.updateRecord(record);
 
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
 
-                record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
-
-                cryptoPaymentRequestTable.updateRecord(record);
-            } else {
-                throw new RequestNotFoundException("RequestId: "+requestId, "Cannot find a CryptoPaymentRequest with the given id.");
-            }
-
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantUpdateRecordDataBaseException( "Exception not handled by the plugin, there is a problem in database and i cannot load the table.",e);
-        } catch (CantUpdateRecordException exception) {
+       } catch (CantUpdateRecordException exception) {
 
             throw new CantUpdateRecordDataBaseException("Cant update record exception.",exception);
         }
@@ -361,23 +350,12 @@ public class IncomingNotificationDao implements DAO {
 
             cryptoPaymentRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, senderPublicKey, DatabaseFilterType.EQUAL);
 
-            cryptoPaymentRequestTable.loadToMemory();
+           DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
 
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+          record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, notificationDescriptor.getCode());
 
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
+           cryptoPaymentRequestTable.updateRecord(record);
 
-                record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, notificationDescriptor.getCode());
-
-                cryptoPaymentRequestTable.updateRecord(record);
-            } else {
-                throw new RequestNotFoundException("RequestId: "+senderPublicKey, "Cannot find a CryptoPaymentRequest with the given id.");
-            }
-
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantUpdateRecordDataBaseException( "Exception not handled by the plugin, there is a problem in database and i cannot load the table.",e);
         } catch (CantUpdateRecordException exception) {
 
             throw new CantUpdateRecordDataBaseException("Cant update record exception.",exception);
@@ -401,26 +379,16 @@ public class IncomingNotificationDao implements DAO {
 
             cryptoPaymentRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, senderPublicKey, DatabaseFilterType.EQUAL);
 
-            cryptoPaymentRequestTable.loadToMemory();
+            DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
 
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+            record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, notificationDescriptor.getCode());
+            record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, actorProtocolState.getCode());
 
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
-
-                record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, notificationDescriptor.getCode());
-                record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, actorProtocolState.getCode());
-
-                cryptoPaymentRequestTable.updateRecord(record);
+            cryptoPaymentRequestTable.updateRecord(record);
 
                 return buildActorNetworkServiceRecord(record);
-            } else {
-                throw new RequestNotFoundException("senderPublicKey: "+senderPublicKey, "Cannot find a connection request with the given id.");
-            }
 
-        } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantUpdateRecordDataBaseException( "Exception not handled by the plugin, there is a problem in database and i cannot load the table.",e);
         } catch (CantUpdateRecordException exception) {
 
             throw new CantUpdateRecordDataBaseException("Cant update record exception.",exception);

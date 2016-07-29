@@ -11,6 +11,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
@@ -38,11 +42,13 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
     private onRefreshList onRefreshList;
 
     LossProtectedWallet lossProtectedWallet;
+    LossProtectedWalletSettings lossProtectedWalletSettings;
     ReferenceAppFermatSession<LossProtectedWallet> appSession;
     Typeface tf;
 
     boolean lossProtectedEnabled;
     BlockchainNetworkType blockchainNetworkType;
+    private String feeLevel = "NORMAL";
 
 
     protected PaymentRequestHistoryAdapter(Context context) {
@@ -55,6 +61,30 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
         this.appSession =referenceWalletSession;
         this.onRefreshList = onRefresh;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+
+        try {
+            lossProtectedWalletSettings = cryptoWallet.loadAndGetSettings(this.appSession.getAppPublicKey());
+            if (lossProtectedWalletSettings.getFeedLevel() == null)
+                lossProtectedWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
+            else
+                feeLevel = lossProtectedWalletSettings.getFeedLevel();
+
+            if (lossProtectedWalletSettings.getBlockchainNetworkType() == null) {
+                lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            }
+            else
+                blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
+
+            this.lossProtectedWallet.persistSettings(referenceWalletSession.getAppPublicKey(), lossProtectedWalletSettings);
+
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantPersistSettingsException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
@@ -225,7 +255,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                             long availableBalance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
 
 
-                            if( data.getAmount() > availableBalance) //the amount is greater than the available
+                            if( (data.getAmount() + BitcoinFee.valueOf(feeLevel).getFee()) > availableBalance) //the amount is greater than the available
                             {
                                 //check loss protected settings
                                 if (!lossProtectedEnabled) {
