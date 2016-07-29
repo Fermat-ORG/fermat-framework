@@ -80,7 +80,7 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
 
         try {
 
-            System.out.println(new StringBuilder().append("************** im in the network service exposing the identities: quantity:").append(cryptoCustomerExposingDataList.size()).toString());
+            System.out.println("************** im in the network service exposing the identities: quantity:" + cryptoCustomerExposingDataList.size());
 
             for (final CryptoCustomerExposingData cryptoCustomer : cryptoCustomerExposingDataList)
                 this.exposeIdentity(cryptoCustomer);

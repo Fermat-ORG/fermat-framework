@@ -206,15 +206,15 @@ public class CreateNewBankAccountFragment
         List<String> data = new ArrayList<>();
 
         for (FiatCurrency country : countries)
-            data.add(new StringBuilder().append(country.getFriendlyName()).append(" (").append(country.getCode()).append(")").toString());
+            data.add(country.getFriendlyName() + " (" + country.getCode() + ")");
 
         return data;
     }
 
     private List<String> getListOfAccountTypeNames() {
         List<String> data = new ArrayList<>();
-        data.add(new StringBuilder().append("Saving (").append(BankAccountType.SAVINGS.getCode()).append(")").toString());
-        data.add(new StringBuilder().append("Current (").append(BankAccountType.CHECKING.getCode()).append(")").toString());
+        data.add("Saving (" + BankAccountType.SAVINGS.getCode() + ")");
+        data.add("Current (" + BankAccountType.CHECKING.getCode() + ")");
 
         return data;
     }

@@ -18,13 +18,13 @@ import java.util.UUID;
 public interface NetworkServiceChatManager extends FermatManager, TransactionProtocolManager<ChatMetadata> {
 
     /**
-     *
      * @return
      */
     String getNetWorkServicePublicKey();
 
     /**
      * Notifies TX that the message had been recieved.
+     *
      * @param localActorPubKey
      * @param senderType
      * @param remoteActorPubKey
@@ -42,14 +42,12 @@ public interface NetworkServiceChatManager extends FermatManager, TransactionPro
 //    void sendOnlineStatus(final String localActorPubKey, final PlatformComponentType senderType, final String remoteActorPubKey, final PlatformComponentType receiverType, UUID chatId) throws CantSendChatMessageNewStatusNotificationException;
 
     /**
-     *
      * @return
      * @throws CantRequestListException
      */
     List<String> getRegisteredPubliKey() throws CantRequestListException;
 
     /**
-     *
      * @param localActorPubKey
      * @param remoteActorPubKey
      * @param chatMetadata
@@ -59,7 +57,6 @@ public interface NetworkServiceChatManager extends FermatManager, TransactionPro
     void sendChatMetadata(String localActorPubKey, String remoteActorPubKey, ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException, IllegalArgumentException;
 
     /**
-     * 
      * @param localActorPubKey
      * @param senderType
      * @param remoteActorPubKey

@@ -49,13 +49,7 @@ public class CustomerBrokerNewSaleNegotiationTransaction {
         try {
 
 
-            System.out.print(new StringBuilder()
-                            .append("\n\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - SALE NEGOTIATION - CREATE SALE NEGOTIATION  ****\n")
-                            .append("\n --- Negotiation Mock XML Date")
-                            .append("\n- NegotiationId = ").append(customerBrokerSaleNegotiation.getNegotiationId())
-                            .append("\n- CustomerPublicKey = ").append(customerBrokerSaleNegotiation.getCustomerPublicKey())
-                            .append("\n- BrokerPublicKey = ").append(customerBrokerSaleNegotiation.getCustomerPublicKey())
-                            .append("\n- Status: = ").append(customerBrokerSaleNegotiation.getStatus()).toString()
+            System.out.print("\n\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - SALE NEGOTIATION - CREATE SALE NEGOTIATION  ****\n" + "\n --- Negotiation Mock XML Date" + "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() + "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() + "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() + "\n- Status: = " + customerBrokerSaleNegotiation.getStatus()
             );
 
             //CREATE NEGOTIATION

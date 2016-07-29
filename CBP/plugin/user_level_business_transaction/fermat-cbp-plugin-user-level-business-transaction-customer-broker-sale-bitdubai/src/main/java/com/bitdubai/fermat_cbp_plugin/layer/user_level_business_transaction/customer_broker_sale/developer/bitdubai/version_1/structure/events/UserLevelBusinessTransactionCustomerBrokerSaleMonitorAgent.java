@@ -787,7 +787,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         cryptoWalletPublicKey = WalletsPublicKeys.CCP_FERMAT_WALLET.getCode();
                         break;
                     default:
-                        throw new UnsupportedOperationException(new StringBuilder().append("The Crypto Restock operation is not supported for the currency ").append(cryptoCurrency.getFriendlyName()).toString());
+                        throw new UnsupportedOperationException("The Crypto Restock operation is not supported for the currency " + cryptoCurrency.getFriendlyName());
                 }
 
                 cryptoMoneyRestockManager.createTransactionRestock(

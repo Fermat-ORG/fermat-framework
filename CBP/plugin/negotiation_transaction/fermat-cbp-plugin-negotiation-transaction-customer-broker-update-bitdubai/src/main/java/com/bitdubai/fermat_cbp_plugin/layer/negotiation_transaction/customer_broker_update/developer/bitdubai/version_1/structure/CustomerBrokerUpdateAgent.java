@@ -230,7 +230,7 @@ public class CustomerBrokerUpdateAgent implements
                 //now I will check if there are pending transactions to raise the event
                 try {
 
-                    logManager.log(NegotiationTransactionCustomerBrokerUpdatePluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
+                    logManager.log(NegotiationTransactionCustomerBrokerUpdatePluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
 
                 } catch (CantSendCustomerBrokerUpdateNegotiationTransactionException | CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException | CantUpdateRecordException e) {
@@ -286,7 +286,7 @@ public class CustomerBrokerUpdateAgent implements
                 if (!negotiationPendingToSubmitList.isEmpty()) {
                     for (CustomerBrokerUpdate negotiationTransaction : negotiationPendingToSubmitList) {
 
-                        System.out.print(new StringBuilder().append("\n\n**** 5) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - NEGOTIATION FOR SEND ").append("\n - TransactionId: ").append(negotiationTransaction.getTransactionId()).append("\n - Status: ").append(negotiationTransaction.getStatusTransaction()).append(" ****\n").toString());
+                        System.out.print("\n\n**** 5) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - NEGOTIATION FOR SEND " + "\n - TransactionId: " + negotiationTransaction.getTransactionId() + "\n - Status: " + negotiationTransaction.getStatusTransaction() + " ****\n");
 
                         negotiationXML = negotiationTransaction.getNegotiationXML();
                         negotiationType = negotiationTransaction.getNegotiationType();
@@ -295,7 +295,7 @@ public class CustomerBrokerUpdateAgent implements
                         switch (negotiationType) {
                             case PURCHASE:
                                 purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
-                                System.out.print(new StringBuilder().append("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): ").append(purchaseNegotiation.getNegotiationId()).append(" ****\n").append("\n - Status :").append(purchaseNegotiation.getStatus().getCode()).toString());
+                                System.out.print("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n" + "\n - Status :" + purchaseNegotiation.getStatus().getCode());
                                 //SEND NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
 
@@ -303,7 +303,7 @@ public class CustomerBrokerUpdateAgent implements
 
                             case SALE:
                                 saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
-                                System.out.print(new StringBuilder().append("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - SALE NEGOTIATION SEND negotiationId(XML): ").append(saleNegotiation.getNegotiationId()).append(" ****\n").append("\n - Status :").append(saleNegotiation.getStatus().getCode()).toString());
+                                System.out.print("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - SALE NEGOTIATION SEND negotiationId(XML): " + saleNegotiation.getNegotiationId() + " ****\n" + "\n - Status :" + saleNegotiation.getStatus().getCode());
                                 //SEND NEGOTIATION TO CUSTOMER
                                 negotiationTransmissionManager.sendNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
 
@@ -314,7 +314,7 @@ public class CustomerBrokerUpdateAgent implements
 //                        System.out.print("\n\n**** 7) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
                         customerBrokerUpdateNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId, NegotiationTransactionStatus.SENDING_NEGOTIATION);
                         CustomerBrokerUpdate transactionDao = customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId);
-                        System.out.print(new StringBuilder().append("\n\n**** 6.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - STATUS TRANSACTION: ").append(transactionDao.getStatusTransaction().getCode()).append(" ****\n").toString());
+                        System.out.print("\n\n**** 6.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - STATUS TRANSACTION: " + transactionDao.getStatusTransaction().getCode() + " ****\n");
 
                     }
                 }
@@ -331,12 +331,12 @@ public class CustomerBrokerUpdateAgent implements
 
                         switch (negotiationType) {
                             case PURCHASE:
-                                System.out.print(new StringBuilder().append("\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND PURCHASE NEGOTIATION negotiationId(XML): ").append(negotiationTransaction.getTransactionId()).append(" ****\n").toString());
+                                System.out.print("\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND PURCHASE NEGOTIATION negotiationId(XML): " + negotiationTransaction.getTransactionId() + " ****\n");
                                 //SEND CONFIRM NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendConfirmNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
                                 break;
                             case SALE:
-                                System.out.print(new StringBuilder().append("\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND SALE NEGOTIATION negotiationId(XML): ").append(negotiationTransaction.getTransactionId()).append(" ****\n").toString());
+                                System.out.print("\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND SALE NEGOTIATION negotiationId(XML): " + negotiationTransaction.getTransactionId() + " ****\n");
                                 //SEND NEGOTIATION TO CUSTOMER
                                 negotiationTransmissionManager.sendConfirmNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
                                 break;
@@ -446,7 +446,7 @@ public class CustomerBrokerUpdateAgent implements
                                                 );
 
                                                 final String purchaseCancelReason = purchaseNegotiation.getCancelReason();
-                                                System.out.println(new StringBuilder().append("CancelReason: ").append(purchaseCancelReason).toString());
+                                                System.out.println("CancelReason: " + purchaseCancelReason);
 
                                                 if (purchaseCancelReason != null && !purchaseCancelReason.isEmpty() && !purchaseCancelReason.equalsIgnoreCase("null")) {
                                                     System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CANCEL PURCHASE NEGOTIATION TRANSACTION  ****\n");
@@ -500,7 +500,7 @@ public class CustomerBrokerUpdateAgent implements
                                                 );
 
                                                 final String saleCancelReason = saleNegotiation.getCancelReason();
-                                                System.out.println(new StringBuilder().append("CancelReason: ").append(saleCancelReason).toString());
+                                                System.out.println("CancelReason: " + saleCancelReason);
 
                                                 if (saleCancelReason != null && !saleCancelReason.isEmpty() && !saleCancelReason.equalsIgnoreCase("null")) {
                                                     System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CANCEL SALE NEGOTIATION TRANSACTION  ****\n");

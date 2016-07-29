@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdu
  * The Class <code>com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolarTodayProviderDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Alejandro Bicelis - (abicelis@gmail.com) on 08/12/15.
  *
  * @version 1.0

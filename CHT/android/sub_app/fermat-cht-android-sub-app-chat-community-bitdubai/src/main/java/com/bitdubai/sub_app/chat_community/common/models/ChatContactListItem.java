@@ -36,7 +36,7 @@ public class ChatContactListItem implements Item {
     public static ArrayList<ChatContactListItem> getTestData(Resources resources) {
         ArrayList<ChatContactListItem> lst = new ArrayList<ChatContactListItem>();
         Drawable d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//profile_image); // the drawable (Captain Obvious, to the rescue!!!)
-                Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
+        Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
         byte[] bitmapdata = stream.toByteArray();
@@ -108,7 +108,7 @@ public class ChatContactListItem implements Item {
 
         d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//kimberly_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
 
-        if(d != null) {
+        if (d != null) {
             bitmap = ((BitmapDrawable) d).getBitmap();
             stream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -118,7 +118,7 @@ public class ChatContactListItem implements Item {
         }
         d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//lucia_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
 
-        if(d != null) {
+        if (d != null) {
             bitmap = ((BitmapDrawable) d).getBitmap();
             stream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -129,7 +129,7 @@ public class ChatContactListItem implements Item {
 
         d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//guillermo_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
 
-        if(d != null) {
+        if (d != null) {
             bitmap = ((BitmapDrawable) d).getBitmap();
             stream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);

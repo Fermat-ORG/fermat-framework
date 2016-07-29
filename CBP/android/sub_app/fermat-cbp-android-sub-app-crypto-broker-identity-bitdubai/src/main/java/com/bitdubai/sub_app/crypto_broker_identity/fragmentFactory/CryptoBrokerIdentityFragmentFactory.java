@@ -27,7 +27,8 @@ public class CryptoBrokerIdentityFragmentFactory extends FermatFragmentFactory<R
     @Override
     public AbstractFermatFragment getFermatFragment(CryptoBrokerIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
         if (fragments == CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT)
-            return CryptoBrokerIdentityListFragment.newInstance();
+            //return CryptoBrokerIdentityListFragment.newInstance();
+            return EditCryptoBrokerIdentityFragment.newInstance();
 
         if (fragments == CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER_FRAGMENT)
             return CryptoBrokerImageCropperFragment.newInstance();

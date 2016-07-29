@@ -186,7 +186,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             CustomerBrokerContractSale saleContract = this.contractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
 
             if (saleContract == null) {
-                throw new CantSubmitMerchandiseException(new StringBuilder().append("The CustomerBrokerContractSale with the contractHash\n").append(contractHash).append("\nis null").toString());
+                throw new CantSubmitMerchandiseException("The CustomerBrokerContractSale with the contractHash\n" + contractHash + "\nis null");
             }
 
             final CustomerBrokerSaleNegotiation saleNegotiation = getCustomerBrokerSaleNegotiation(saleContract.getNegotiatiotId());

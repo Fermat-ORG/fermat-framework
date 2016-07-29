@@ -36,7 +36,7 @@ public enum EarningTransactionState implements FermatEnum {
 
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code Received: ").append(code).toString(),
+                        "Code Received: " + code,
                         "The code received is not valid for the EarningTransactionState enum."
                 );
         }

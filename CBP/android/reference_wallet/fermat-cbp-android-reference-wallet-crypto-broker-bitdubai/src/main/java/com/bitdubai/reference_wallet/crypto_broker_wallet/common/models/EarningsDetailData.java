@@ -49,13 +49,7 @@ public final class EarningsDetailData {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("EarningsDetailData{")
-                .append("amount=")
-                .append(amount)
-                .append(", earningTransactions=")
-                .append(earningTransactions)
-                .append('}').toString();
+        return "EarningsDetailData{" + "amount=" + amount + ", earningTransactions=" + earningTransactions + '}';
     }
 
     public static List<EarningsDetailData> generateEarningsDetailData(List<EarningTransaction> earningTransactionList, TimeFrequency timeFrequency) {

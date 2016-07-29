@@ -100,15 +100,15 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
 
             if (statusTransaction.getCode() == NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode()) {
                 if (negotiation.getStatus().getCode().equals(NegotiationStatus.CANCELLED.getCode())) {
-                    System.out.print(new StringBuilder().append("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - DAO. CONFIRM negotiationType: ").append(negotiationType.getCode()).append(" transactionId: ").append(transactionId).append(" ****\n").toString());
+                    System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
                 } else {
-                    System.out.print(new StringBuilder().append("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. CONFIRM negotiationType: ").append(negotiationType.getCode()).append(" transactionId: ").append(transactionId).append(" ****\n").toString());
+                    System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
                 }
             } else {
                 if (negotiation.getStatus().getCode().equals(NegotiationStatus.CANCELLED.getCode())) {
-                    System.out.print(new StringBuilder().append("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - DAO. NEGOTIATION negotiationType: ").append(negotiationType.getCode()).append(" transactionId: ").append(transactionId).append(" ****\n").toString());
+                    System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
                 } else {
-                    System.out.print(new StringBuilder().append("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. NEGOTIATION negotiationType: ").append(negotiationType.getCode()).append(" transactionId: ").append(transactionId).append(" ****\n").toString());
+                    System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
                 }
             }
 
@@ -173,7 +173,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             return getTransaction;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", "Cant load " + CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction not return register", "unknown failure.");
         }
@@ -204,7 +204,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             return getTransaction;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", "Cant load " + CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction not return register", "unknown failure.");
         }
@@ -234,7 +234,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             return getTransactions;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", "Cant load " + CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction not return register", "unknown failure.");
         }
@@ -266,7 +266,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             return getTransactions;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", "Cant load " + CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction not return register", "unknown failure.");
         }
@@ -307,7 +307,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             return getTransactions;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", "Cant load " + CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction not return register", "unknown failure.");
         }
@@ -362,7 +362,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             return getTransactions;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", new StringBuilder().append("Cant load ").append(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantGetNegotiationTransactionListException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", "Cant load " + CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction not return register", "unknown failure.");
         }
@@ -598,7 +598,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             return table.getRecords().size() > 0;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerUpdateEventException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction Event Id Not Exists", new StringBuilder().append("Cant load ").append(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantRegisterCustomerBrokerUpdateEventException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction Event Id Not Exists", "Cant load " + CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerUpdateEventException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction Event Id Not Exists", "unknown failure.");
         }
@@ -615,7 +615,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             table.loadToMemory();
             return table.getRecords().size() > 0;
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction Id Not Exists", new StringBuilder().append("Cant load ").append(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction Id Not Exists", "Cant load " + CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction Id Not Exists", "unknown failure.");
         }
@@ -660,9 +660,9 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             return negotiationList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE, e, new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(), "Cannot load the table into memory");
+            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE, e, "Getting " + valueColumn + " based on " + key, "Cannot load the table into memory");
         } catch (Exception e) {
-            throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(), "Cannot load the table into memory");
+            throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e), "Getting " + valueColumn + " based on " + key, "Cannot load the table into memory");
         }
     }
 
@@ -695,7 +695,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
         }
         recordsSize = records.size();
         if (recordsSize > validResultsNumber) {
-            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(validResultsNumber).append(", but I got ").append(recordsSize).toString());
+            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + validResultsNumber + ", but I got " + recordsSize);
         }
     }
 }

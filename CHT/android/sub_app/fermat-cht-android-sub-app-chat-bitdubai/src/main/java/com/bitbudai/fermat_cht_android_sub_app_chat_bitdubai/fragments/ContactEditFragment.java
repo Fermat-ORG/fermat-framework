@@ -10,12 +10,10 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AlphabetIndexer;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,6 +24,8 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -35,8 +35,6 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.io.ByteArrayInputStream;
@@ -48,10 +46,9 @@ import java.util.List;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 05/01/16
  * @version 1.0
- *
  */
 public class ContactEditFragment
-        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>{
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
     public List<Contact> contacts;
     // Whether or not this fragment is showing in a two-pane layout
@@ -68,16 +65,17 @@ public class ContactEditFragment
     private Toolbar toolbar;
     //Defines a tag for identifying log entries
     private static final String TAG = "CHT_ContactEditFragment";
-    ArrayList<String> contactname=new ArrayList<>();
-    ArrayList<Bitmap> contacticon=new ArrayList<>();
-    ArrayList<String> contactid=new ArrayList<>();
-    ArrayList<String> contactalias =new ArrayList<>();
+    ArrayList<String> contactname = new ArrayList<>();
+    ArrayList<Bitmap> contacticon = new ArrayList<>();
+    ArrayList<String> contactid = new ArrayList<>();
+    ArrayList<String> contactalias = new ArrayList<>();
     Contact cont;
-    EditText aliasET ;
-    Button saveBtn ;
+    EditText aliasET;
+    Button saveBtn;
 
     public static ContactEditFragment newInstance() {
-        return new ContactEditFragment();}
+        return new ContactEditFragment();
+    }
 
 
     @Override
@@ -91,14 +89,14 @@ public class ContactEditFragment
 
         try {
             //chatSession=((ChatSessionReferenceApp) appSession);
-            chatManager= appSession.getModuleManager();
+            chatManager = appSession.getModuleManager();
             //chatManager=moduleManager.getChatManager();
-            errorManager=appSession.getErrorManager();
+            errorManager = appSession.getErrorManager();
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
         } catch (Exception e) {
-           // CommonLogger.exception(TAG + "oncreate", e.getMessage(), e);
-            if(errorManager != null)
+            // CommonLogger.exception(TAG + "oncreate", e.getMessage(), e);
+            if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
@@ -113,7 +111,7 @@ public class ContactEditFragment
             List<ChatActorCommunityInformation> chatActorCommunityInformations = chatManager.listAllConnectedChatActor(
                     chatManager.newInstanceChatActorCommunitySelectableIdentity((ChatIdentity) chatManager.
                             getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0);
-             for (ChatActorCommunityInformation cont: chatActorCommunityInformations) {
+            for (ChatActorCommunityInformation cont : chatActorCommunityInformations) {
                 if (cont.getPublicKey() == chatSession.getData(ChatSessionReferenceApp.CONTACT_DATA)) {
                     contactname.add(cont.getAlias());
                     contactid.add(cont.getPublicKey());
@@ -136,11 +134,11 @@ public class ContactEditFragment
                     break;
                 }
             }
-            aliasET =(EditText)layout.findViewById(R.id.aliasEdit);
+            aliasET = (EditText) layout.findViewById(R.id.aliasEdit);
             aliasET.setText(contactalias.get(0));
             saveBtn = (Button) layout.findViewById(R.id.saveContactButton);
             RelativeLayout contain = (RelativeLayout) layout.findViewById(R.id.containere);
-        }catch (Exception e){
+        } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }

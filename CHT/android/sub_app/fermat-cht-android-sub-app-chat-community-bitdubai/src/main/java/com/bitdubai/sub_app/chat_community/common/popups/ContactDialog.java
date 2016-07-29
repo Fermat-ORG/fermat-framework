@@ -27,21 +27,21 @@ public class ContactDialog extends FermatDialog implements View.OnClickListener 
     String country;
     Bitmap image;
 
-    public ContactDialog (Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources) {
+    public ContactDialog(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources) {
         super(activity, referenceAppFermatSession, resources);
 
     }
 
 
-    public void setProfilePhoto (Bitmap photo){
+    public void setProfilePhoto(Bitmap photo) {
         image = photo;
     }
 
-    public void setProfileName (String name){
+    public void setProfileName(String name) {
         bodyName = name;
     }
 
-    public void setCountryText (String txt){
+    public void setCountryText(String txt) {
         country = txt;
     }
 

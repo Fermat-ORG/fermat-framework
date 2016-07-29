@@ -88,7 +88,7 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("OF"))
             customerName.setTextColor(Color.RED);
         else if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
-            customerName.setTextColor(Color.GREEN);
+            customerName.setTextColor(Color.parseColor("#3CD84E"));//VERDE NO BRILLANTE
         else if (data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
             customerName.setTextColor(Color.parseColor("#4d4d4d"));//res.getColor(R.color.color_black_light));
 

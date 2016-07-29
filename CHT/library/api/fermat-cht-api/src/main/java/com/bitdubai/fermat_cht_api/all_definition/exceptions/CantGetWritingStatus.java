@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cht_api.all_definition.exceptions;
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 28/04/16.
  */
-public class CantGetWritingStatus extends CHTException  {
+public class CantGetWritingStatus extends CHTException {
 
 
     /**
@@ -31,7 +31,7 @@ public class CantGetWritingStatus extends CHTException  {
      * @param possibleReason
      */
     public CantGetWritingStatus(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

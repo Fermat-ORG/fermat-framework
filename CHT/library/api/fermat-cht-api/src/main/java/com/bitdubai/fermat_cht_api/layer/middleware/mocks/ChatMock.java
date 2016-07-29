@@ -21,6 +21,7 @@ public class ChatMock implements Chat {
 
     private String localActorPubKey;
     private String remoteActorPubKey;
+
     @Override
     public UUID getChatId() {
         return UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f");

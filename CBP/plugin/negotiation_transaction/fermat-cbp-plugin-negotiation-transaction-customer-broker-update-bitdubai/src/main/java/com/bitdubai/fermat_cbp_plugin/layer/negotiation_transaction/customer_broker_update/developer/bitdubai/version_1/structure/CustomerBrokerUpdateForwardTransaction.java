@@ -49,22 +49,18 @@ public class CustomerBrokerUpdateForwardTransaction {
 
                     transactionId = negotiationTransaction.getTransactionId();
 
-                    System.out.print(new StringBuilder()
-                            .append("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - transactionSend ****\n")
-                            .append("\n - transaction id:").append(transactionId)
-                            .append("\n - numberSend: ").append(Integer.toString(getNumberSend(transactionSend, transactionId)))
-                            .append("\n").toString());
+                    System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - transactionSend ****\n" + "\n - transaction id:" + transactionId + "\n - numberSend: " + Integer.toString(getNumberSend(transactionSend, transactionId)) + "\n");
 
                     if (negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode())) {
 
-                        System.out.print(new StringBuilder().append("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - FORWARD TRANSACTION - pendingToConfirmtTransaction").append(transactionId).append(" ****\n").toString());
+                        System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - FORWARD TRANSACTION - pendingToConfirmtTransaction" + transactionId + " ****\n");
 
                         numberSend = getNumberSend(transactionSend, transactionId);
 
                         isValidateSend(transactionId, numberSend);
 
                         if (isValidateSend) {
-                            System.out.print(new StringBuilder().append("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - FORWARD TRANSACTION - pendingToConfirmtTransaction - SEND AGAIN: ").append(numberSend).append(" ****\n").toString());
+                            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - FORWARD TRANSACTION - pendingToConfirmtTransaction - SEND AGAIN: " + numberSend + " ****\n");
                             customerBrokerUpdateNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(
                                     transactionId,
                                     NegotiationTransactionStatus.PENDING_SUBMIT);

@@ -9,7 +9,7 @@ import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 27/01/16.
  */
-public class IncomingChatMessageNotificationEvent implements FermatEvent{
+public class IncomingChatMessageNotificationEvent implements FermatEvent {
 
 
     public IncomingChatMessageNotificationEvent(EventType eventType) {
@@ -28,17 +28,17 @@ public class IncomingChatMessageNotificationEvent implements FermatEvent{
     private String textBody;
 
     /**
-     *  Image
+     * Image
      */
     private byte[] image;
 
     /**
-     *  Screen/activity to show
+     * Screen/activity to show
      */
     private Activities screen;
 
     /**
-     *  Component to show
+     * Component to show
      */
     private String localPublicKey;
 
@@ -125,14 +125,6 @@ public class IncomingChatMessageNotificationEvent implements FermatEvent{
 
     @Override
     public String toString() {
-        return "IncomingChatMessageNotificationEvent{" +
-                "eventType=" + eventType +
-                ", eventSource=" + eventSource +
-                ", alertTitle='" + alertTitle + '\'' +
-                ", textTitle='" + textTitle + '\'' +
-                ", textBody='" + textBody + '\'' +
-                ", localPublicKey='" + localPublicKey + '\'' +
-                ", notificationType='" + notificationType + '\'' +
-                '}';
+        return "IncomingChatMessageNotificationEvent{" + "eventType=" + eventType + ", eventSource=" + eventSource + ", alertTitle='" + alertTitle + '\'' + ", textTitle='" + textTitle + '\'' + ", textBody='" + textBody + '\'' + ", localPublicKey='" + localPublicKey + '\'' + ", notificationType='" + notificationType + '\'' + '}';
     }
 }

@@ -90,12 +90,6 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("CryptoBrokerIdentityExtraData{")
-                .append("merchandise=").append(merchandise)
-                .append(", paymentCurrency=").append(paymentCurrency)
-                .append(", extraText='").append(extraText)
-                .append('\'')
-                .append('}').toString();
+        return "CryptoBrokerIdentityExtraData{" + "merchandise=" + merchandise + ", paymentCurrency=" + paymentCurrency + ", extraText='" + extraText + '\'' + '}';
     }
 }

@@ -8,7 +8,7 @@ public class CantSetObjectException extends CHTException {
     static final String DEFAULT_MESSAGE = "There was an error setting an object.";
 
     public CantSetObjectException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     public CantSetObjectException(final String message) {

@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
+
 /**
  * The Class <code>package com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1.exceptions.CantInitializeDolartodayProviderDatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
- *
+ * <p/>
  * Created by Alejandro Bicelis - (abicelis@gmail.com) on 08/12/15.
  *
  * @version 1.0

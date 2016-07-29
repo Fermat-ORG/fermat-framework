@@ -31,20 +31,19 @@ import java.util.UUID;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/01/16.
  * @version 1.0
- *
  */
 
 public class ChatListAdapter extends ArrayAdapter implements Filterable {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
-    ArrayList<String> contactName=new ArrayList<>();
-    ArrayList<String> message=new ArrayList<>();
-    ArrayList<String> dateMessage=new ArrayList<>();
-    ArrayList<UUID> chatId=new ArrayList<>();
-    ArrayList<String> contactId=new ArrayList<>();
-    ArrayList<String> status=new ArrayList<>();
-    ArrayList<String> typeMessage=new ArrayList<>();
-    ArrayList<Integer> noReadMsgs=new ArrayList<>();
-    ArrayList<Bitmap> imgId=new ArrayList<>();
+    ArrayList<String> contactName = new ArrayList<>();
+    ArrayList<String> message = new ArrayList<>();
+    ArrayList<String> dateMessage = new ArrayList<>();
+    ArrayList<UUID> chatId = new ArrayList<>();
+    ArrayList<String> contactId = new ArrayList<>();
+    ArrayList<String> status = new ArrayList<>();
+    ArrayList<String> typeMessage = new ArrayList<>();
+    ArrayList<Integer> noReadMsgs = new ArrayList<>();
+    ArrayList<Bitmap> imgId = new ArrayList<>();
     private ErrorManager errorManager;
 
     ArrayList<String> filteredData;
@@ -59,7 +58,7 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
                            ArrayList typeMessage,
                            ArrayList noReadMsgs,
                            ArrayList imgId, ErrorManager errorManager) {
-        super(context, R.layout.chat_list_listview, contactName );
+        super(context, R.layout.chat_list_listview, contactName);
         this.contactName = contactName;
         this.message = message;
         this.dateMessage = dateMessage;
@@ -68,9 +67,9 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         this.status = status;
         this.typeMessage = typeMessage;
         this.noReadMsgs = noReadMsgs;
-        this.imgId=imgId;
+        this.imgId = imgId;
         this.filteredData = contactName;
-        this.errorManager=errorManager;
+        this.errorManager = errorManager;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -78,7 +77,7 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         View item = inflater.inflate(R.layout.chat_list_listview, null, true);
         try {
             ImageView imagen = (ImageView) item.findViewById(R.id.image);//imagen.setImageResource(imgid.get(position));
-            if(imgId.get(position)!=null)
+            if (imgId.get(position) != null)
                 imagen.setImageBitmap(Utils.getRoundedShape(imgId.get(position), 400));
             else
                 imagen.setImageResource(R.drawable.cht_center_profile_icon_center);//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
@@ -88,9 +87,9 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
             //contactname.setTypeface(tf, Typeface.NORMAL);
 
             TextView lastmessage = (TextView) item.findViewById(R.id.tvdesc);
-            if(message.get(position).equals("Typing..")) {
+            if (message.get(position).equals("Typing..")) {
                 lastmessage.setTextColor(Color.parseColor("#FF33A900"));
-            }else{
+            } else {
                 lastmessage.setTextColor(Color.parseColor("#757575"));
             }
             lastmessage.setText(message.get(position));
@@ -100,27 +99,28 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
 
             ImageView imagetick = (ImageView) item.findViewById(R.id.imagetick);//imagen.setImageResource(imgid.get(position));
             imagetick.setImageResource(0);
-            if(typeMessage.get(position).equals(TypeMessage.OUTGOING.toString())){
+            if (typeMessage.get(position).equals(TypeMessage.OUTGOING.toString())) {
                 imagetick.setVisibility(View.VISIBLE);
-                if (status.get(position).equals(MessageStatus.SEND.toString()) /*|| status.get(position).equals(MessageStatus.CREATED.toString())*/)
-                {    imagetick.setImageResource(R.drawable.cht_ticksent);}//R.drawable.cht_ticksent
-                else if (status.get(position).equals(MessageStatus.DELIVERED.toString()) || status.get(position).equals(MessageStatus.RECEIVE.toString()))
-                {    imagetick.setImageResource(R.drawable.cht_tickdelivered);}//cht_tickdelivered
-                else if (status.get(position).equals(MessageStatus.READ.toString()))
-                {    imagetick.setImageResource(R.drawable.cht_tickread);}//cht_tickread
-            }else
+                if (status.get(position).equals(MessageStatus.SEND.toString()) /*|| status.get(position).equals(MessageStatus.CREATED.toString())*/) {
+                    imagetick.setImageResource(R.drawable.cht_ticksent);
+                }//R.drawable.cht_ticksent
+                else if (status.get(position).equals(MessageStatus.DELIVERED.toString()) || status.get(position).equals(MessageStatus.RECEIVE.toString())) {
+                    imagetick.setImageResource(R.drawable.cht_tickdelivered);
+                }//cht_tickdelivered
+                else if (status.get(position).equals(MessageStatus.READ.toString())) {
+                    imagetick.setImageResource(R.drawable.cht_tickread);
+                }//cht_tickread
+            } else
                 imagetick.setVisibility(View.GONE);
 
             TextView tvnumber = (TextView) item.findViewById(R.id.tvnumber);
-            if(noReadMsgs.get(position)>0)
-            {
+            if (noReadMsgs.get(position) > 0) {
                 tvnumber.setText(noReadMsgs.get(position).toString());
                 tvnumber.setVisibility(View.VISIBLE);
-            }else
+            } else
                 tvnumber.setVisibility(View.GONE);
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
         return (item);
@@ -143,7 +143,7 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         this.status = status;
         this.typeMessage = typeMessage;
         this.noReadMsgs = noReadMsgs;
-        this.imgId=imgId;
+        this.imgId = imgId;
         notifyDataSetChanged();
     }
 
@@ -151,12 +151,12 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
     public int getCount() {
         if (contactName != null) {
             if (filteredData != null) {
-                if(filteredData.size()<contactName.size()) {
+                if (filteredData.size() < contactName.size()) {
                     return filteredData.size();
-                }else{
+                } else {
                     return contactName.size();
                 }
-            }else{
+            } else {
                 return contactName.size();
             }
         } else {
@@ -188,6 +188,7 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
     public String getStatusItem(int position) {
         return status.get(position);
     }
+
     public String getTypeMessageItem(int position) {
         return typeMessage.get(position);
     }
@@ -223,7 +224,7 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         this.status = status;
         this.typeMessage = typeMessage;
         this.noReadMsgs = noReadMsgs;
-        this.imgId=imgId;
+        this.imgId = imgId;
     }
 
     public Filter getFilter() {

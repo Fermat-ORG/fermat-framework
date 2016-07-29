@@ -173,10 +173,10 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
                 if (providerManagers != null) {
                     for (CurrencyPairAndProvider providerManager : providerManagers) {
 
-                        tempS = new StringBuilder().append(currencyFrom.getCode()).append(" ").append(currencyTo.getCode()).append(" ").append(providerManager.getProviderName()).toString();
+                        tempS = currencyFrom.getCode() + " " + currencyTo.getCode() + " " + providerManager.getProviderName();
 
                         if (!temp.contains(tempS)) {
-                            temp.add(new StringBuilder().append(currencyFrom.getCode()).append(" ").append(currencyTo.getCode()).append(" ").append(providerManager.getProviderName()).toString());
+                            temp.add(currencyFrom.getCode() + " " + currencyTo.getCode() + " " + providerManager.getProviderName());
                             providers.add(providerManager);
                         }
                     }
