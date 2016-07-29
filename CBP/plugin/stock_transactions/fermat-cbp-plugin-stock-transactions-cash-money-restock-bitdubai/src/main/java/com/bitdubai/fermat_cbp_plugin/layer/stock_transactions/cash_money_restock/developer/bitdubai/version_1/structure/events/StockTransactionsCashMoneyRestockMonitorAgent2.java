@@ -77,7 +77,7 @@ public class StockTransactionsCashMoneyRestockMonitorAgent2 extends AbstractAgen
     }
 
     @Override
-    protected void onErrorOccur() {
+    protected void onErrorOccur(Exception e) {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("StockTransactionsCashMoneyRestockMonitorAgent Error"));

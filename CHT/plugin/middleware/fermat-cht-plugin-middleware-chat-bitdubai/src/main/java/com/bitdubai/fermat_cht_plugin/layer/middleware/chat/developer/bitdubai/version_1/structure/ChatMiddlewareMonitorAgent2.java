@@ -166,8 +166,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
     }
 
     @Override
-    protected void onErrorOccur() {
-        chatMiddlewarePluginRoot.reportError(
+    protected void onErrorOccur(Exception e) {        chatMiddlewarePluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 Error"));
     }

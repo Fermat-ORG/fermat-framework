@@ -75,7 +75,7 @@ public class ImportedSeedFundsManagerAgent extends AbstractAgent{
     }
 
     @Override
-    protected void onErrorOccur() {
+    protected void onErrorOccur(Exception e) {
 
     }
 
