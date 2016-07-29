@@ -228,7 +228,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         } else
             holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
 
-//        if (data.getLocation() != null) {
+        if (data.getLocation() != null) {
             if (data.getState().equals("null") || data.getState().equals("")) stateAddress = "";
             else stateAddress = new StringBuilder().append(data.getState()).append(" ").toString();
             if (data.getCity().equals("null") || data.getCity().equals("")) cityAddress = "";
@@ -240,8 +240,8 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 holder.location_text.setText("Not Found");
             } else
                 holder.location_text.setText(new StringBuilder().append(cityAddress).append(stateAddress).append(countryAddress).toString());
-//        } else
-//            holder.location_text.setText("Not Found");
+        } else
+            holder.location_text.setText("Not Found");
 
         if (data.getProfileStatus() == ProfileStatus.ONLINE)
             holder.location_text.setTextColor(Color.parseColor("#47BF73"));//Verde no brillante
