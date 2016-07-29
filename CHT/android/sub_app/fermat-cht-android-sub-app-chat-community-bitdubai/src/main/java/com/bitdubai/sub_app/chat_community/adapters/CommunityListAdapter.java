@@ -247,7 +247,9 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         } else
             holder.location_text.setText("Not Found");
 
-        if(data.getProfileStatus()!= ProfileStatus.ONLINE)
+        if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
+            holder.location_text.setTextColor(Color.GREEN);
+        else
             holder.location_text.setTextColor(Color.RED);
 
         final ChatActorCommunityInformation dat=data;
