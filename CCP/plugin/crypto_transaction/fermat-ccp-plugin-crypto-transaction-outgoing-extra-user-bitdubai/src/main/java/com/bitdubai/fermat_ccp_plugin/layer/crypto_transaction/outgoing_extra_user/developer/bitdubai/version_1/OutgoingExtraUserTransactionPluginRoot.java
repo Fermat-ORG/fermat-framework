@@ -52,6 +52,10 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
     private BlockchainManager bitcoinNetworkManager;
 
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.FERMAT_NETWORK       )
+    private BlockchainManager fermatNetworkManager;
+
+
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
     private CryptoWalletManager cryptoWalletManager;
 
@@ -102,6 +106,7 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
                 cryptoVaultManager  ,
                cryptoFermatVaultManager,
                 bitcoinNetworkManager,
+                fermatNetworkManager,
                 getErrorManager()        ,
                 dao,
                 eventManager,
