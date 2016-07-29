@@ -421,7 +421,8 @@
                     android:paddingBottom="10dip"
                     android:paddingLeft="7dip"
                     android:paddingRight="7dip"
-                    android:paddingTop="3dip">
+                    android:paddingTop="3dip"
+                    android:background="#FFF">
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                         android:id="@+id/send_button"
