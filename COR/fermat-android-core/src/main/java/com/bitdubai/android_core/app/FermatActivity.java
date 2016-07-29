@@ -1298,7 +1298,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 try {
                     Window window = this.getWindow();
                     // clear FLAG_TRANSLUCENT_STATUS flag:
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    try {
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    }catch (Exception e){
+                        Log.e(TAG,"ClearFlag exception");
+                    }
                     // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     // finally change the color

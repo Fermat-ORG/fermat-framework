@@ -846,6 +846,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 positions.put(i, cryptoWalletWalletContact);
 
                             }else if (currentSection.matches(letterRegex)) {
+
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
                                 positions.put(i, cryptoWalletWalletContact);
@@ -861,14 +862,16 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             // add the section position in the list section positions
                             mListSectionPos.add(mListItems.indexOf(symbolCode));
                             // add all the items in this group
-                            mListItems.addAll(symbols);
+                            //mListItems.addAll(symbols);
+                            mListItems.addAll(positions.values());
                         }
 
                         final String numberCode = HeaderTypes.NUMBER.getCode();
                         if (!numbers.isEmpty()) {
                             mListItems.add(numberCode);
                             mListSectionPos.add(mListItems.indexOf(numberCode));
-                            mListItems.addAll(numbers);
+                          //  mListItems.addAll(numbers);
+                            mListItems.addAll(positions.values());
                         }
 
                         // add the letters items in the list and his corresponding sections based on its first letter
