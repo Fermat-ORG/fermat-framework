@@ -258,7 +258,7 @@
     <string name="cancel_label">Cancel</string>
     <array name="items" translatable="false">
         <item>MainNet</item>
-        <item>TestNet</item>
+        <item>>TestNet</item>
     </array>
     <string name="fee_low">Slow</string>
     <string name="fee_Medium">Normal</string>
