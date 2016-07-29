@@ -153,7 +153,6 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     FermatWorker fermatWorker;
 
-    private ExecutorService _executor;
 
     public static ContactsFragment newInstance() {
 
@@ -170,7 +169,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
 
-        _executor = Executors.newFixedThreadPool(2);
+
         try {
             cryptoWallet = appSession.getModuleManager();
             toolbar = getToolbar();
@@ -622,10 +621,9 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     @Override
     public void onStop() {
 
+
         if(fermatWorker != null)
             fermatWorker.shutdownNow();
-
-
         super.onStop();
     }
 
@@ -842,9 +840,11 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         for (int i = 0; i < items.size(); i++) {//) {
                             CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
-                            if (currentSection.matches(numberRegex))
+                            if (currentSection.matches(numberRegex)) {
                                 // is Digit
                                 numbers.add(cryptoWalletWalletContact.getActorName());
+                                positions.put(i, cryptoWalletWalletContact);
+                            }
                             else if (currentSection.matches(letterRegex)) {
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
@@ -861,14 +861,16 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             // add the section position in the list section positions
                             mListSectionPos.add(mListItems.indexOf(symbolCode));
                             // add all the items in this group
-                            mListItems.addAll(symbols);
+                            //mListItems.addAll(symbols);
+                            mListItems.addAll(positions.values());
                         }
 
                         final String numberCode = HeaderTypes.NUMBER.getCode();
                         if (!numbers.isEmpty()) {
                             mListItems.add(numberCode);
                             mListSectionPos.add(mListItems.indexOf(numberCode));
-                            mListItems.addAll(numbers);
+                          //  mListItems.addAll(numbers);
+                            mListItems.addAll(positions.values());
                         }
 
                         // add the letters items in the list and his corresponding sections based on its first letter

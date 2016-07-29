@@ -38,4 +38,8 @@ public class LoaderManager<O extends FermatApplicationSession & FermatContext> {
     public ClassLoader getExternalLoader(String name) {
         return classLoaderManager.getExternalLoader(name);
     }
+
+    public Object loadWithBaseClassLoader(String pluginName, ClassLoader classLoader,Object... args) {
+        return classLoaderManager.load(pluginName, classLoader,args);
+    }
 }

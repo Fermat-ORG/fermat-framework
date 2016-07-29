@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.classes;
+package com.bitdubai.android_core.app.common.version_1.broadcaster;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -7,7 +7,6 @@ import android.util.Log;
 import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.android_core.app.common.version_1.receivers.NotificationReceiver;
 import com.bitdubai.android_core.app.common.version_1.receivers.UpdateViewReceiver;
-import com.bitdubai.android_core.app.common.version_1.util.interfaces.BroadcasterInterface;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -168,44 +167,5 @@ public class BroadcastManager implements BroadcasterInterface {
         return id;
 
     }
-
-//    private void updateView(FermatBundle bundle) {
-//        if(fermatActivity.get() instanceof FermatActivity) {
-//            TabsPagerAdapter adapter = ((FermatActivity)fermatActivity.get()).getAdapter();
-//            if (adapter != null) {
-//                for (AbstractFermatFragment fragment : adapter.getLstCurrentFragments()) {
-//                    fragment.onUpdateView(bundle);
-//                    fragment.onUpdateViewUIThred(bundle);
-//                }
-//            }
-//        }
-//    }
-//
-//    private void updateView(String code){
-//        if(fermatActivity.get() instanceof FermatActivity) {
-//            TabsPagerAdapter adapter = ((FermatActivity) fermatActivity.get()).getAdapter();
-//            if (adapter != null) {
-//                for (AbstractFermatFragment fragment : adapter.getLstCurrentFragments()) {
-//                    fragment.onUpdateView(code);
-//                    fragment.onUpdateViewUIThred(code);
-//                }
-//            }
-//        }
-//    }
-//
-//    //TODO: esto va a ser del codigo de la app, el paquete del intent
-//    private void updateView(String appCode,String code){
-//        if(fermatActivity.get() instanceof FermatActivity) {
-//            TabsPagerAdapter adapter = ((FermatActivity) fermatActivity.get()).getAdapter();
-//            if (adapter != null) {
-//                for (AbstractFermatFragment fragment : adapter.getLstCurrentFragments()) {
-//                    fragment.onUpdateViewHandler(appCode, code);
-//                    fragment.onUpdateView(code);
-//                    fragment.onUpdateViewUIThred(code);
-//                }
-//            }
-//        }
-//    }
-
 
 }

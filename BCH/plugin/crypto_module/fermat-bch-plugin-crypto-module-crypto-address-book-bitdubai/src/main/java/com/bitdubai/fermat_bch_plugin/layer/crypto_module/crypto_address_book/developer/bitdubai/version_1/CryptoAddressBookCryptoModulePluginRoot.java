@@ -92,7 +92,7 @@ public class CryptoAddressBookCryptoModulePluginRoot extends AbstractPlugin impl
         logManager.log(CryptoAddressBookCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Trying to get an specific Crypto Addresses Book...", null, null);
 
         try {
-            return cryptoAddressBookCryptoModuleDao.getCryptoAddressBookRecordByCryptoAddress(cryptoAddress);
+            return getDao().getCryptoAddressBookRecordByCryptoAddress(cryptoAddress);
         } catch (CantGetCryptoAddressBookRecordException | CryptoAddressBookRecordNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
@@ -107,7 +107,7 @@ public class CryptoAddressBookCryptoModulePluginRoot extends AbstractPlugin impl
         logManager.log(CryptoAddressBookCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Listing Crypto Addresses Book...", null, null);
 
         try {
-            return cryptoAddressBookCryptoModuleDao.listCryptoAddressBookRecordsByWalletPublicKey(walletPublicKey);
+            return getDao().listCryptoAddressBookRecordsByWalletPublicKey(walletPublicKey);
         } catch (CantListCryptoAddressBookRecordsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
@@ -122,7 +122,7 @@ public class CryptoAddressBookCryptoModulePluginRoot extends AbstractPlugin impl
         logManager.log(CryptoAddressBookCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Listing Crypto Addresses Book...", null, null);
 
         try {
-            return cryptoAddressBookCryptoModuleDao.listCryptoAddressBookRecordsByDeliveredByActorPublicKey(deliveredByActorPublicKey);
+            return getDao().listCryptoAddressBookRecordsByDeliveredByActorPublicKey(deliveredByActorPublicKey);
         } catch (CantListCryptoAddressBookRecordsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
@@ -137,7 +137,7 @@ public class CryptoAddressBookCryptoModulePluginRoot extends AbstractPlugin impl
         logManager.log(CryptoAddressBookCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Listing Crypto Addresses Book...", null, null);
 
         try {
-            return cryptoAddressBookCryptoModuleDao.listCryptoAddressBookRecordsByDeliveredToActorPublicKey(deliveredToActorPublicKey);
+            return getDao().listCryptoAddressBookRecordsByDeliveredToActorPublicKey(deliveredToActorPublicKey);
         } catch (CantListCryptoAddressBookRecordsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
@@ -173,7 +173,7 @@ public class CryptoAddressBookCryptoModulePluginRoot extends AbstractPlugin impl
                     walletPublicKey,
                     walletType
             );
-            cryptoAddressBookCryptoModuleDao.registerCryptoAddress(cryptoAddressBookRecord);
+            getDao().registerCryptoAddress(cryptoAddressBookRecord);
         } catch (CantRegisterCryptoAddressBookRecordException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
@@ -324,9 +324,26 @@ public class CryptoAddressBookCryptoModulePluginRoot extends AbstractPlugin impl
     @Override
     public List<CryptoAddressBookRecord> listCryptoAddressBookRecordsByDeliveredToActorType(Actors actorType) throws CantRegisterCryptoAddressBookRecordException {
         try {
-            return cryptoAddressBookCryptoModuleDao.listCryptoAddressBookRecordsByDeliveredToActorType(actorType);
+            return getDao().listCryptoAddressBookRecordsByDeliveredToActorType(actorType);
         } catch (CantListCryptoAddressBookRecordsException e) {
             throw new CantRegisterCryptoAddressBookRecordException(CantRegisterCryptoAddressBookRecordException.DEFAULT_MESSAGE, e, "Can't get list of cryptpo addresses from database", "database issue");
         }
+    }
+
+    /**
+     * makes sure we have a dao class instantiated.
+     * @return
+     */
+    private CryptoAddressBookCryptoModuleDao getDao(){
+        if (this.cryptoAddressBookCryptoModuleDao == null){
+            cryptoAddressBookCryptoModuleDao = new CryptoAddressBookCryptoModuleDao(this.pluginDatabaseSystem, this.pluginId);
+
+            try {
+                cryptoAddressBookCryptoModuleDao.initialize();
+            } catch (CantInitializeCryptoAddressBookCryptoModuleDatabaseException e) {
+                //I will ignore this error because it might be already initialized.
+            }
+        }
+        return this.cryptoAddressBookCryptoModuleDao;
     }
 }
