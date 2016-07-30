@@ -1,5 +1,4 @@
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,7 +26,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/cbc_comm_bg_circula_friend_list"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbc_broker_name"
@@ -41,7 +40,7 @@
             android:maxLines="2"
             android:textColor="@color/color_black_light"
             android:textSize="16sp"
-            tools:text="Broker Name"/>
+            tools:text="@string/cbc_broker_name" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbc_merchandises"
@@ -56,7 +55,7 @@
             android:textColor="@color/cbc_color_gray_light"
             android:textSize="14sp"
             android:visibility="visible"
-            tools:text="Merchandises: USD, BTC, VEF"/>
+            tools:text="@string/cbc_merch" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbc_location_text"
@@ -72,7 +71,7 @@
             android:text="Zulia / Parroquia Santa Lucia"
             android:textColor="@color/cbc_location_text"
             android:textSize="12sp"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText" />
 
     </RelativeLayout>
 

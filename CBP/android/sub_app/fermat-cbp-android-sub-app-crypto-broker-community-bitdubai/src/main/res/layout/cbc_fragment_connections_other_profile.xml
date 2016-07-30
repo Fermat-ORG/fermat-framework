@@ -47,7 +47,7 @@
             android:drawableStart="@drawable/ic_profile_connect"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
-            android:text="Connect"
+            android:text="@string/cbc_connect"
             android:textColor="#ffffff"
             android:visibility="gone"
             tools:ignore="HardcodedText" />
@@ -62,7 +62,7 @@
             android:drawableStart="@drawable/ic_profile_disconnect"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
-            android:text="Disconnect"
+            android:text="@string/cbc_disconnect"
             android:textColor="#0072bc"
             tools:ignore="HardcodedText" />
 
@@ -76,7 +76,7 @@
             android:drawableStart="@drawable/ic_profile_disconnect"
             android:paddingLeft="34dp"
             android:paddingRight="34dp"
-            android:text="Cancel"
+            android:text="@string/cbc_cancel"
             android:textColor="#0072bc"
             tools:ignore="HardcodedText" />
 
@@ -96,7 +96,7 @@
             android:layout_marginTop="32dp"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:text="Name"
+            android:text="@string/cbc_name"
             android:textColor="#0072bc"
             android:textSize="12sp"
             tools:ignore="HardcodedText" />
@@ -136,7 +136,7 @@
             android:layout_marginTop="32dp"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:text="Currencies and exchange rates?"
+            android:text="@string/cbc_currency_exchanges"
             android:textColor="#0072bc"
             android:textSize="12sp"
             tools:ignore="HardcodedText" />
