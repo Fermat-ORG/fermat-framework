@@ -1,8 +1,5 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
 
-import java.io.Serializable;
-import java.util.UUID;
-
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
@@ -10,6 +7,10 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
+
+import java.io.Serializable;
+import java.util.UUID;
+
 /**
  * ChatPreferenceSettings
  *
@@ -40,13 +41,14 @@ public class ChatPreferenceSettings implements FermatSettings, Serializable {
     }
 
     public void setProfileSelected(String publicKey, PlatformComponentType localPlatformComponentType) {
-        this.localPlatformComponentType=localPlatformComponentType;
-        this.localPublicKey=publicKey;
+        this.localPlatformComponentType = localPlatformComponentType;
+        this.localPublicKey = publicKey;
     }
 
     public void setIdentitySelected(ChatActorCommunitySelectableIdentity identity) {
-        this.identity=identity;
+        this.identity = identity;
     }
+
     public ChatActorCommunitySelectableIdentity getIdentitySelected() {
         return identity;
     }
@@ -54,6 +56,7 @@ public class ChatPreferenceSettings implements FermatSettings, Serializable {
     public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {
         this.isHomeTutorialDialogEnabled = isHomeTutorialDialogEnabled;
     }
+
     /**
      * This method let us know the default language of a wallet
      *
@@ -100,7 +103,7 @@ public class ChatPreferenceSettings implements FermatSettings, Serializable {
 
     @Override
     public void setIsPresentationHelpEnabled(boolean b) {
-        isHomeTutorialDialogEnabled=b;
+        isHomeTutorialDialogEnabled = b;
     }
 
 

@@ -10,8 +10,8 @@ public enum ContactStatus implements FermatEnum {
     /**
      * Definition types
      */
-    AVAILABLE ("AVA"),
-    BLOCKED  ("BLO");
+    AVAILABLE("AVA"),
+    BLOCKED("BLO");
 
     /**
      * Represent the code of the message status
@@ -21,12 +21,12 @@ public enum ContactStatus implements FermatEnum {
     /**
      * Constructor whit parameter
      *
-     * 
      * @param code the valid code
      */
     ContactStatus(String code) {
         this.code = code;
     }
+
     /**
      * Throw the method <code>getCode</code> you can get the code of the specific element of the enum.
      *
@@ -34,7 +34,7 @@ public enum ContactStatus implements FermatEnum {
      */
     @Override
     public String getCode() {
-        return this.code ;
+        return this.code;
     }
 
     /**

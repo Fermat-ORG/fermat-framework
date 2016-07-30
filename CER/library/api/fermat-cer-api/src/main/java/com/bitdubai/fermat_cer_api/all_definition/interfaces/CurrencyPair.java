@@ -11,5 +11,6 @@ import java.io.Serializable;
  */
 public interface CurrencyPair extends Serializable {
     Currency getFrom();
+
     Currency getTo();
 }

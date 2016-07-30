@@ -18,7 +18,7 @@ import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenc
  * @version 1.0
  */
 
-public class ChatCommunityFragmentFactory extends FermatFragmentFactory<ChatUserSubAppSessionReferenceApp,SubAppResourcesProviderManager,ChatCommunityFragmentsEnumType> {
+public class ChatCommunityFragmentFactory extends FermatFragmentFactory<ChatUserSubAppSessionReferenceApp, SubAppResourcesProviderManager, ChatCommunityFragmentsEnumType> {
 
 
     @Override

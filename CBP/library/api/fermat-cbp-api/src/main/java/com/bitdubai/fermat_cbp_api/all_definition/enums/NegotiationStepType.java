@@ -48,7 +48,7 @@ public enum NegotiationStepType {
             case "EXPDATI":
                 return EXPIRATION_DATE_TIME;
             default:
-                throw new InvalidParameterException(new StringBuilder().append("Code Received: ").append(code).append(" - This Code Is Not Valid for the ClauseType enum").toString());
+                throw new InvalidParameterException("Code Received: " + code + " - This Code Is Not Valid for the ClauseType enum");
         }
     }
 }

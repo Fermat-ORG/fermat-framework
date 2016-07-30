@@ -414,7 +414,7 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
     private void raiseNewContractClosedEvent() {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_CLOSED);
         NewContractClosed newContractClosed = (NewContractClosed) fermatEvent;
-        System.out.println(new StringBuilder().append("Close contract test: ").append(fermatEvent).toString());
+        System.out.println("Close contract test: " + fermatEvent);
         newContractClosed.setSource(EventSource.BUSINESS_TRANSACTION_CLOSE_CONTRACT);
         eventManager.raiseEvent(newContractClosed);
     }

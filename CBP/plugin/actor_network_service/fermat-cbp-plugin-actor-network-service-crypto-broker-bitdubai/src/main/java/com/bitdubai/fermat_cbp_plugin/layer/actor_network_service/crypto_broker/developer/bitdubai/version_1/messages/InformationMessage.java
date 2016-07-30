@@ -68,10 +68,6 @@ public class InformationMessage extends NetworkServiceMessage {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("InformationMessage{")
-                .append("requestId=").append(requestId)
-                .append(", action=").append(action)
-                .append('}').toString();
+        return "InformationMessage{" + "requestId=" + requestId + ", action=" + action + '}';
     }
 }

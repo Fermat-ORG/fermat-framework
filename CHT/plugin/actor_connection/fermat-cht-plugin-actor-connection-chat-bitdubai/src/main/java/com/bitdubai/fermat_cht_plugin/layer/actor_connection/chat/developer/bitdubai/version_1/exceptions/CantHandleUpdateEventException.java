@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 06/04/16.
  */
-public class CantHandleUpdateEventException extends FermatException{
+public class CantHandleUpdateEventException extends FermatException {
     private static final String DEFAULT_MESSAGE = "CAN'T HANDLE UPDATE EVENT EXCEPTION";
 
     public CantHandleUpdateEventException(String message, Exception cause, String context, String possibleReason) {

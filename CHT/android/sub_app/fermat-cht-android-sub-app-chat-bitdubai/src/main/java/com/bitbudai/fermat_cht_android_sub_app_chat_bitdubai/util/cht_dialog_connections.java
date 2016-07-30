@@ -22,19 +22,19 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
-import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-
 import java.util.UUID;
 
 
@@ -54,18 +54,19 @@ public class cht_dialog_connections extends FermatDialog<ReferenceAppFermatSessi
     private SettingsManager<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings> settingsManager;
     private ChatSessionReferenceApp chatSession;
     public List<ContactConnection> contacts;
-    ArrayList<String> contactname=new ArrayList<String>();
-    ArrayList<Bitmap> contacticon=new ArrayList<>();
-    ArrayList<UUID> contactid=new ArrayList<UUID>();
+    ArrayList<String> contactname = new ArrayList<String>();
+    ArrayList<Bitmap> contacticon = new ArrayList<>();
+    ArrayList<UUID> contactid = new ArrayList<UUID>();
     private List<ContactConnection> contactConnectionList;
     Boolean act_vista = false;
     ListView list;
     private AdapterCallbackContacts mAdapterCallback;
-    FermatTextView txt_title,txt_body;
+    FermatTextView txt_title, txt_body;
     TextView text;
-    FermatButton btn_yes,btn_no;
+    FermatButton btn_yes, btn_no;
     Button btn_add, btn_cancel;
     com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.DialogConnectionListAdapter adapter;
+
     public cht_dialog_connections(Activity activity, ReferenceAppFermatSession referenceAppFermatSession, SubAppResourcesProviderManager resources,
                                   ChatManager chatManager, AdapterCallbackContacts mAdapterCallback) {
         super(activity, referenceAppFermatSession, null);
@@ -81,18 +82,17 @@ public class cht_dialog_connections extends FermatDialog<ReferenceAppFermatSessi
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try{
-            chatSession=((ChatSessionReferenceApp) getSession());
-            chatManager= chatSession.getModuleManager();
+        try {
+            chatSession = ((ChatSessionReferenceApp) getSession());
+            chatManager = chatSession.getModuleManager();
             //chatManager=moduleManager.getChatManager();
-            errorManager=getSession().getErrorManager();
+            errorManager = getSession().getErrorManager();
 
-        }catch (Exception e)
-        {
-            if(errorManager!=null)
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
+        } catch (Exception e) {
+            if (errorManager != null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        text=(TextView) findViewById(R.id.text);
+        text = (TextView) findViewById(R.id.text);
         list = (ListView) findViewById(R.id.list);
 
         setUpListeners();
@@ -100,8 +100,8 @@ public class cht_dialog_connections extends FermatDialog<ReferenceAppFermatSessi
         try {
             //final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             //progressDialog.setMessage("Please wait");
-           // progressDialog.setCancelable(false);
-           // progressDialog.show();
+            // progressDialog.setCancelable(false);
+            // progressDialog.show();
             text.setText("Please wait...");
             FermatWorker worker = new FermatWorker() {
                 @Override
@@ -263,23 +263,23 @@ public class cht_dialog_connections extends FermatDialog<ReferenceAppFermatSessi
                 }
             });
             worker.execute();
-        }catch (Exception e){
+        } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
-    public boolean getAct(){
+    public boolean getAct() {
         return act_vista;
-        }
+    }
 
     protected int setLayoutId() {
-            return R.layout.cht_dialog_connections;
+        return R.layout.cht_dialog_connections;
     }
 
     private void setUpListeners() {
-      //  btn_add.setOnClickListener(this);
-        }
+        //  btn_add.setOnClickListener(this);
+    }
 
     public void onClick(View v) {
         int id = v.getId();
@@ -287,6 +287,7 @@ public class cht_dialog_connections extends FermatDialog<ReferenceAppFermatSessi
             dismiss();
         }*/
     }
+
     @Override
     protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
@@ -300,7 +301,7 @@ public class cht_dialog_connections extends FermatDialog<ReferenceAppFermatSessi
             List<ContactConnection> result = null;//chatManager.discoverActorsRegistered();//moduleManager.listWorldCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset);
             dataSet.addAll(result);
             //offset = dataSet.size();
-        }catch (Exception e) {
+        } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 

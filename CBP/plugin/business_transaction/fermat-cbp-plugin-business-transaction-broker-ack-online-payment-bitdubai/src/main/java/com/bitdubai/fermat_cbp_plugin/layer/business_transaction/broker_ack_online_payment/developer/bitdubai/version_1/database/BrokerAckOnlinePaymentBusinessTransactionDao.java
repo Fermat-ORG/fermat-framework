@@ -318,7 +318,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                                           CryptoCurrency paymentCurrency) throws CantInsertRecordException {
         try {
             if (isContractHashInDatabase(contractSale.getContractId())) {
-                System.out.println(new StringBuilder().append("The contract ").append(contractSale).append(" exists in database").toString());
+                System.out.println("The contract " + contractSale + " exists in database");
                 return;
             }
             DatabaseTable databaseTable = getDatabaseContractTable();
@@ -348,7 +348,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     public void persistContractInDatabase(CustomerBrokerContractPurchase contractPurchase) throws CantInsertRecordException {
         try {
             if (isContractHashInDatabase(contractPurchase.getContractId())) {
-                System.out.println(new StringBuilder().append("The contract ").append(contractPurchase).append(" exists in database").toString());
+                System.out.println("The contract " + contractPurchase + " exists in database");
                 return;
             }
             DatabaseTable databaseTable = getDatabaseContractTable();
@@ -555,7 +555,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         } catch (CantLoadTableToMemoryException exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                    new StringBuilder().append("Updating parameter ").append(ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
+                    "Updating parameter " + ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
 
         } catch (Exception exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
@@ -589,7 +589,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         } catch (CantLoadTableToMemoryException exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                    new StringBuilder().append("Updating parameter ").append(ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME).toString(), "");
+                    "Updating parameter " + ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME, "");
 
         } catch (Exception exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
@@ -885,7 +885,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
         int recordsSize = records.size();
         if (recordsSize > VALID_RESULTS_NUMBER)
-            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(VALID_RESULTS_NUMBER).append(", but I got ").append(recordsSize).toString());
+            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
     }
 
     /**
@@ -945,7 +945,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             return eventTypeList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetContractListException(e, new StringBuilder().append("Getting events in EventStatus.PENDING in table ").append(databaseTable.getTableName()).toString(),
+            throw new CantGetContractListException(e, "Getting events in EventStatus.PENDING in table " + databaseTable.getTableName(),
                     "Cannot load the table into memory");
         }
     }
@@ -1001,7 +1001,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             return contractHashList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetContractListException(e, new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(), "Cannot load the table into memory");
+            throw new CantGetContractListException(e, "Getting " + valueColumn + " based on " + key, "Cannot load the table into memory");
         }
     }
 
@@ -1016,7 +1016,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
         } catch (CantLoadTableToMemoryException ex) {
             throw new CantSaveEventException(ex.getMessage(), ex, "Broker Ack Online Payment Transaction Event Id Not Exists",
-                    new StringBuilder().append("Cant load ").append(ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME).append(" table in memory.").toString());
+                    "Cant load " + ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME + " table in memory.");
 
         } catch (Exception ex) {
             throw new CantSaveEventException(ex.getMessage(), FermatException.wrapException(ex),

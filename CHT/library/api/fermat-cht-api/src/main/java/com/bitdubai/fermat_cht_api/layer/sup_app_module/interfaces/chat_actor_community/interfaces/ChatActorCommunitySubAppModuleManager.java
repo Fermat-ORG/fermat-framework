@@ -70,8 +70,8 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Se
 
     ChatActorCommunitySearch searchConnectedChatActor(ChatActorCommunitySelectableIdentity selectedIdentity);
 
-    void requestConnectionToChatActor(ChatActorCommunitySelectableIdentity selectedIdentity     ,
-                                         ChatActorCommunityInformation chatActorLocalToContact) throws CantRequestActorConnectionException,
+    void requestConnectionToChatActor(ChatActorCommunitySelectableIdentity selectedIdentity,
+                                      ChatActorCommunityInformation chatActorLocalToContact) throws CantRequestActorConnectionException,
             ActorChatTypeNotSupportedException,
             ActorChatConnectionAlreadyRequestesException, ConnectionAlreadyRequestedException;
 
@@ -84,18 +84,16 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Se
     void cancelChatActor(UUID requestId) throws ChatActorCancellingFailedException, ActorConnectionRequestNotFoundException, ConnectionRequestNotFoundException;
 
     List<ChatActorCommunityInformation> listAllConnectedChatActor(final ChatActorCommunitySelectableIdentity selectedIdentity,
-                                                                         final int                                     max             ,
-                                                                         final int                                     offset          ) throws CantListChatActorException;
+                                                                  final int max,
+                                                                  final int offset) throws CantListChatActorException;
 
-    List<ChatActorCommunityInformation> listChatActorPendingLocalAction    (final String publicKey, final Actors actorType,                                                                              final int max,
-                                                                               final int offset) throws CantListChatActorException;
-
-
+    List<ChatActorCommunityInformation> listChatActorPendingLocalAction(final String publicKey, final Actors actorType, final int max,
+                                                                        final int offset) throws CantListChatActorException;
 
 
     List<ChatActorCommunityInformation> listChatActorPendingRemoteAction(final ChatActorCommunitySelectableIdentity selectedIdentity,
-                                                                                final int max,
-                                                                                final int offset) throws CantListChatActorException;
+                                                                         final int max,
+                                                                         final int offset) throws CantListChatActorException;
 
     List<ChatActorCommunityInformation> getChatActorWaitingYourAcceptanceCount(String publicKey, int max, int offset) throws CantGetChatActorWaitingException;
 

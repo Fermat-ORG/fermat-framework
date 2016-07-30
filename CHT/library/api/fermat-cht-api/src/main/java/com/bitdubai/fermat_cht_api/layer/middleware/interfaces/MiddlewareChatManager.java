@@ -20,7 +20,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificatio
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +28,7 @@ import java.util.UUID;
  * Created by miguel payarez (miguel_payarez@hotmail.com) on 29/12/15.
  * Update by Manuel Perez on 08/01/2016 (fix naming conventions)
  */
-public interface MiddlewareChatManager extends FermatManager{
+public interface MiddlewareChatManager extends FermatManager {
 
     //Documentar
     List<Chat> getChats() throws CantGetChatException;
@@ -89,6 +88,7 @@ public interface MiddlewareChatManager extends FermatManager{
 
     /**
      * This method sends the message through the Chat Network Service
+     *
      * @param createdMessage
      * @throws CantSendChatMessageException
      */

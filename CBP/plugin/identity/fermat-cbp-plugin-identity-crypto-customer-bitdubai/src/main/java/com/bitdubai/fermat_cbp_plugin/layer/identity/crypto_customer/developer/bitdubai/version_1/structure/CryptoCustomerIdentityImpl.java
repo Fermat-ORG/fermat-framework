@@ -78,7 +78,7 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Seria
             return AsymmetricCryptography.createMessageSignature(message, privateKey);
 
         } catch (Exception ex) {
-            throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, new StringBuilder().append("Message: ").append(message).toString(), "The message could be invalid");
+            throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, "Message: " + message, "The message could be invalid");
         }
     }
 
@@ -111,16 +111,6 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Seria
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("CryptoCustomerIdentityImpl{")
-                .append("alias='").append(alias)
-                .append('\'')
-                .append(", privateKey='").append(privateKey)
-                .append('\'')
-                .append(", publicKey='").append(publicKey)
-                .append('\'')
-                .append(", profileImage=").append(profileImage != null)
-                .append(", published=").append(published)
-                .append('}').toString();
+        return "CryptoCustomerIdentityImpl{" + "alias='" + alias + '\'' + ", privateKey='" + privateKey + '\'' + ", publicKey='" + publicKey + '\'' + ", profileImage=" + (profileImage != null) + ", published=" + published + '}';
     }
 }

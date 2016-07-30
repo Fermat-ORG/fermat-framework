@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -52,10 +53,9 @@ public class CryptoCustomerImageCropperFragment extends AbstractFermatFragment<R
 
         //Capture data from session, then clean it.
         originalImage = (Bitmap) appSession.getData(FragmentsCommons.ORIGINAL_IMAGE);
-        backActivity = (Enum<Activities>) appSession.getData(FragmentsCommons.BACK_ACTIVITY);
 
         appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
-        appSession.removeData(FragmentsCommons.BACK_ACTIVITY);
+
 
     }
 
@@ -63,15 +63,15 @@ public class CryptoCustomerImageCropperFragment extends AbstractFermatFragment<R
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View layout = inflater.inflate(R.layout.cci_fragment_crop_image, container, false);
+        View layout = inflater.inflate(R.layout.cci_fragment_crop_image_v2, container, false);
 
         cropImageView = (CropImageView) layout.findViewById(R.id.cbi_crop_image_view);
         cropImageView.setImageBitmap(originalImage);
         cropImageView.setGuidelines(2);
 
-        Button cropButton = (Button) layout.findViewById(R.id.cbi_crop_button);
-        Button rotateButton = (Button) layout.findViewById(R.id.cbi_rotate_button);
-        Button cancelButton = (Button) layout.findViewById(R.id.cbi_cancel_button);
+        ImageButton cropButton = (ImageButton) layout.findViewById(R.id.cbi_crop_button);
+        ImageButton rotateButton = (ImageButton) layout.findViewById(R.id.cbi_rotate_button);
+        ImageButton cancelButton = (ImageButton) layout.findViewById(R.id.cbi_cancel_button);
 
         cropButton.setOnClickListener(this);
         rotateButton.setOnClickListener(this);
@@ -119,12 +119,6 @@ public class CryptoCustomerImageCropperFragment extends AbstractFermatFragment<R
     }
 
     private void goBackToCallerActivity() {
-        if (backActivity == Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY)
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY, appSession.getAppPublicKey());
-        else if (backActivity == Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY)
-            changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY, appSession.getAppPublicKey());
-        else
-            Toast.makeText(getActivity(), "Error! Wrong back activity!", Toast.LENGTH_SHORT).show();
-
     }
 }

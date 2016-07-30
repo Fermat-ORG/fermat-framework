@@ -32,7 +32,7 @@ public enum BusinessTransactionType implements FermatEnum {
             case "PUR":
                 return BusinessTransactionType.PURCHASE;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the BusinessTransactionType enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the BusinessTransactionType enum");
         }
     }
 }

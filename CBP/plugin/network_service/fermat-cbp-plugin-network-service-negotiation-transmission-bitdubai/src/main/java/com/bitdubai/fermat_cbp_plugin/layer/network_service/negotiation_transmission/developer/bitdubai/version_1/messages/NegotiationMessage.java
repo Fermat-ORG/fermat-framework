@@ -115,21 +115,20 @@ public final class NegotiationMessage extends NegotiationTransmissionMessage {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("NegotiationMessage{")
-                .append("  transmissionId             = ").append(transmissionId)
-                .append(", transactionId              = ").append(transactionId)
-                .append(", negotiationId              = ").append(negotiationId)
-                .append(", negotiationTransactionType = ").append(negotiationTransactionType)
-                .append(", publicKeyActorSend         = ").append(publicKeyActorSend)
-                .append(", actorSendType              = ").append(actorSendType)
-                .append(", publicKeyActorReceive      = ").append(publicKeyActorReceive)
-                .append(", actorReceiveType           = ").append(actorReceiveType)
-                .append(", transmissionType           = ").append(transmissionType)
-                .append(", transmissionState          = ").append(transmissionState)
-                .append(", negotiationXML             = ").append(negotiationXML)
-                .append(", negotiationType            = ").append(negotiationType)
-                .append(", timestamp                  = ").append(timestamp)
-                .append("}").toString();
+        return  "NegotiationMessage{"+
+                "  transmissionId             = " + transmissionId +
+                ", transactionId              = " + transactionId +
+                ", negotiationId              = " + negotiationId +
+                ", negotiationTransactionType = " + negotiationTransactionType +
+                ", publicKeyActorSend         = " + publicKeyActorSend +
+                ", actorSendType              = " + actorSendType +
+                ", publicKeyActorReceive      = " + publicKeyActorReceive +
+                ", actorReceiveType           = " + actorReceiveType +
+                ", transmissionType           = " + transmissionType +
+                ", transmissionState          = " + transmissionState +
+                ", negotiationXML             = " + negotiationXML +
+                ", negotiationType            = " + negotiationType +
+                ", timestamp                  = " + timestamp +
+                "}";
     }
 }

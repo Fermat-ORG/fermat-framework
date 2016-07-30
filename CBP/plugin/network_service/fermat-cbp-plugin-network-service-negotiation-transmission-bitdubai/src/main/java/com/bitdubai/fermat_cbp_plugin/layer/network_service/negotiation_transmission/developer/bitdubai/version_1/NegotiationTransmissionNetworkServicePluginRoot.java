@@ -182,7 +182,7 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public void onSentMessage(NetworkServiceMessage messageSent) {
-        System.out.println(new StringBuilder().append("Negotiation Transmission just sent :").append(messageSent.getId()).toString());
+        System.out.println("Negotiation Transmission just sent :" + messageSent.getId());
         try {
             NegotiationTransmissionImpl negotiationTransmission =
                     NegotiationTransmissionImpl.fronJson(messageSent.getContent());
@@ -314,10 +314,7 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
             System.out.print("\n**** 12) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
 
-            System.out.print(new StringBuilder()
-                            .append("\n**** 12) MOCK NEGOTIATION TRANSMISSION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION DATE: ****\n")
-                            .append("- ActorReceive = ").append(negotiationTransmission.getPublicKeyActorReceive())
-                            .append("- ActorSend = ").append(negotiationTransmission.getPublicKeyActorSend()).toString()
+            System.out.print("\n**** 12) MOCK NEGOTIATION TRANSMISSION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION DATE: ****\n" + "- ActorReceive = " + negotiationTransmission.getPublicKeyActorReceive() + "- ActorSend = " + negotiationTransmission.getPublicKeyActorSend()
             );
 
             if (negotiationTransmission.getNegotiationType().getCode().equals(NegotiationType.PURCHASE.getCode())) {
