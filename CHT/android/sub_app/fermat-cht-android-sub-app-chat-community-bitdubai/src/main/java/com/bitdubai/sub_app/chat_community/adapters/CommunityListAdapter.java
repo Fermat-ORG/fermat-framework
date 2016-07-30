@@ -65,10 +65,11 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     public CommunityListAdapter(Context context, List<ChatActorCommunityInformation> dataSet,
                                 ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
                                 ChatActorCommunitySubAppModuleManager moduleManager,
-                                AdapterCallbackList adapterCallbackList) {
+                                AdapterCallbackList mAdapterCallbackList) {
         super(context, dataSet);
         this.appSession=appSession;
         this.moduleManager=moduleManager;
+        this.mAdapterCallbackList=mAdapterCallbackList;
     }
 
     @Override
