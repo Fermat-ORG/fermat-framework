@@ -180,7 +180,7 @@ public class ActorBrokerExtraDataEventActions {
         }
 
         for (String platform : list) {
-            result += new StringBuilder().append(platform).append(":").toString();
+            result += platform + ":";
         }
 
         return result;

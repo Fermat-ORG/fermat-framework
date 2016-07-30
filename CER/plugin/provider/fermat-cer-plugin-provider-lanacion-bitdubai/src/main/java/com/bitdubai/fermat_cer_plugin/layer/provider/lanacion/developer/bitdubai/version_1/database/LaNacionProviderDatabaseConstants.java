@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cer_plugin.layer.provider.lanacion.developer.bitduba
  * The Class <code>com.bitdubai.fermat_cer_plugin.layer.provider.lanacion.developer.bitdubai.version_1.database.LaNacionProviderDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Alejandro Bicelis - (abicelis@gmail.com) on 08/12/15.
  *
  * @version 1.0

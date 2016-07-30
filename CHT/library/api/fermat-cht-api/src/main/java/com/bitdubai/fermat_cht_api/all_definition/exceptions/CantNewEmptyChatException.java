@@ -30,7 +30,7 @@ public class CantNewEmptyChatException extends CHTException {
      * @param possibleReason
      */
     public CantNewEmptyChatException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

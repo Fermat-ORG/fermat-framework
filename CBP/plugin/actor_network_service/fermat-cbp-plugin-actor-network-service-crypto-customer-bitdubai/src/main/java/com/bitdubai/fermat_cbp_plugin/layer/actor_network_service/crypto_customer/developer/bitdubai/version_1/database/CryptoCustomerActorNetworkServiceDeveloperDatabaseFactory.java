@@ -68,7 +68,7 @@ public final class CryptoCustomerActorNetworkServiceDeveloperDatabaseFactory {
 
                 } catch (CantOpenDatabaseException e) {
 
-                    throw new CantInitializeDatabaseException(e, new StringBuilder().append("tableId: ").append(tableId).toString(), "Error trying to open the database.");
+                    throw new CantInitializeDatabaseException(e, "tableId: " + tableId, "Error trying to open the database.");
 
                 } catch (DatabaseNotFoundException e) {
 
@@ -80,7 +80,7 @@ public final class CryptoCustomerActorNetworkServiceDeveloperDatabaseFactory {
 
                     } catch (CantCreateDatabaseException z) {
 
-                        throw new CantInitializeDatabaseException(z, new StringBuilder().append("tableId: ").append(tableId).toString(), "Error trying to create the database.");
+                        throw new CantInitializeDatabaseException(z, "tableId: " + tableId, "Error trying to create the database.");
                     }
                 }
         }

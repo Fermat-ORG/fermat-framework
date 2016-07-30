@@ -28,7 +28,7 @@ public enum PaymentType implements FermatEnum {
             case "FIAT":
                 return PaymentType.FIAT_MONEY;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the PaymentType enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the PaymentType enum");
         }
     }
 }

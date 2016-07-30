@@ -23,8 +23,8 @@ public enum ChatMessageTransactionType {
      */
     CHAT_METADATA_TRASMIT("CMDT"),
     MESSAGE_METADATA_TRANSMIT("MMDT"),
-    TRANSACTION_STATUS_UPDATE ("TSU"),
-    TRANSACTION_WRITING_STATUS ("TWS");
+    TRANSACTION_STATUS_UPDATE("TSU"),
+    TRANSACTION_WRITING_STATUS("TWS");
 //    TRANSACTION_ONLINE_STATUS ("TOS");
 
     /**
@@ -46,7 +46,9 @@ public enum ChatMessageTransactionType {
      *
      * @return String that represent of the message status
      */
-    public String getCode()   { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
     /**
      * Return the enum by the code

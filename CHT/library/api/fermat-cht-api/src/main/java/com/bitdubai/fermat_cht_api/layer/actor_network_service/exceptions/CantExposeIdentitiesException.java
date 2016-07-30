@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 05/04/16.
  */
-public class CantExposeIdentitiesException extends FermatException{
+public class CantExposeIdentitiesException extends FermatException {
     private static final String DEFAULT_MESSAGE = "CAN'T EXPOSE IDENTITIES CHAT EXCEPTION";
 
     public CantExposeIdentitiesException(String message, Exception cause, String context, String possibleReason) {

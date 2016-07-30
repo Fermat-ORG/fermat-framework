@@ -276,7 +276,7 @@ public class CloseContractBusinessTransactionDao {
             return contractHashList;
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetContractListException(e,
-                    new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(),
+                    "Getting " + valueColumn + " based on " + key,
                     "Cannot load the table into memory");
         }
     }
@@ -453,7 +453,7 @@ public class CloseContractBusinessTransactionDao {
         }
         recordsSize = records.size();
         if (recordsSize > VALID_RESULTS_NUMBER) {
-            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(VALID_RESULTS_NUMBER).append(", but I got ").append(recordsSize).toString());
+            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
         }
     }
 
@@ -510,7 +510,7 @@ public class CloseContractBusinessTransactionDao {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    new StringBuilder().append("Updating parameter ").append(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
+                    "Updating parameter " + CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
         } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new UnexpectedResultReturnedFromDatabaseException(e, "Unexpected Result", "Check the cause");

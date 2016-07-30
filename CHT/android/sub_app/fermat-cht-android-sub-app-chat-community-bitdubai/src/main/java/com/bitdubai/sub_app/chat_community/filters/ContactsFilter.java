@@ -3,7 +3,6 @@ package com.bitdubai.sub_app.chat_community.filters;
 import android.widget.Filter;
 
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
-import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
 import com.bitdubai.sub_app.chat_community.adapters.ContactsListAdapter;
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import java.util.List;
  * @version 1.0
  */
 public class ContactsFilter extends Filter {
-//
+    //
     private List<ChatActorCommunityInformation> data;
     private ContactsListAdapter adapter;
     ArrayList<ChatActorCommunityInformation> nlist = new ArrayList<>();

@@ -46,7 +46,7 @@ public class ChatFermatAppConnection
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return  new PluginVersionReference[]{ new PluginVersionReference(
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.CHAT_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.CHAT_SUP_APP_MODULE,
@@ -76,12 +76,12 @@ public class ChatFermatAppConnection
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle){
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle) {
         int notificationID = fermatBundle.getInt(NotificationBundleConstants.NOTIFICATION_ID);
 
         switch (notificationID) {
             case ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE_NOTIFICATION:
-                return new ChatNotificationPainterBuilder("New Message.","New message in Chat.", "", R.drawable.chat_subapp);
+                return new ChatNotificationPainterBuilder("New Message.", "New message in Chat.", "", R.drawable.chat_subapp);
             default:
                 return null;
         }

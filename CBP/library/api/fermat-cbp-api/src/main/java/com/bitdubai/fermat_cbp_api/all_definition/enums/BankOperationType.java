@@ -30,7 +30,7 @@ public enum BankOperationType implements FermatEnum {
             case "TRA":
                 return BankOperationType.TRANSFER;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the BankOperationType enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the BankOperationType enum");
         }
     }
 

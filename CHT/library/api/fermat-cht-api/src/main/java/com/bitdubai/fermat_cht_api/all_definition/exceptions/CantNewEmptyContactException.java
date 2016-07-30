@@ -30,7 +30,7 @@ public class CantNewEmptyContactException extends CHTException {
      * @param possibleReason
      */
     public CantNewEmptyContactException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

@@ -7,7 +7,6 @@ import com.bitdubai.android_api.BuildConfig;
 
 /**
  * Common Logger Utility
- *
  */
 public class CommonLogger {
 

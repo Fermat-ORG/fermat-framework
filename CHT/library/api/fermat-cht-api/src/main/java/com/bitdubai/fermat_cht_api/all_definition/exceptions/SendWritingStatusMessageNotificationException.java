@@ -31,7 +31,7 @@ public class SendWritingStatusMessageNotificationException extends CHTException 
      * @param possibleReason
      */
     public SendWritingStatusMessageNotificationException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

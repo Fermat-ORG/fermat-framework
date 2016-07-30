@@ -47,7 +47,7 @@ public enum BankCurrencyType implements FermatEnum {
             case "BS":
                 return BOLIVARES;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the BankCurrencyType enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the BankCurrencyType enum");
         }
     }
 }

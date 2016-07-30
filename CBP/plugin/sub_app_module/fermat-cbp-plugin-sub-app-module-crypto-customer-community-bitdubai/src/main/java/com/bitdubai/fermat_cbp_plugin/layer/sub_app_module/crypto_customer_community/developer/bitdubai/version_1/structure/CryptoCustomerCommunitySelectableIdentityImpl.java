@@ -74,14 +74,6 @@ public class CryptoCustomerCommunitySelectableIdentityImpl implements CryptoCust
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("CryptoCustomerCommunitySelectableIdentityImpl{")
-                .append("publicKey='").append(publicKey)
-                .append('\'')
-                .append(", actorType=").append(actorType)
-                .append(", alias='").append(alias)
-                .append('\'')
-                .append(", image=").append(image != null)
-                .append('}').toString();
+        return "CryptoCustomerCommunitySelectableIdentityImpl{" + "publicKey='" + publicKey + '\'' + ", actorType=" + actorType + ", alias='" + alias + '\'' + ", image=" + (image != null) + '}';
     }
 }

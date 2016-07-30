@@ -3,7 +3,6 @@ package com.bitdubai.sub_app.chat_community.holders;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;

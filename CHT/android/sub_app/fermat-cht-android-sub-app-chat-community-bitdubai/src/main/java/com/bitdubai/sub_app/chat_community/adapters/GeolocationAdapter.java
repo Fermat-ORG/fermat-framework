@@ -1,32 +1,20 @@
 package com.bitdubai.sub_app.chat_community.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.GeolocationDialog;
-import com.bitdubai.sub_app.chat_community.holders.CitiesListHolder;
-import com.bitdubai.sub_app.chat_community.holders.ContactsListHolder;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +29,7 @@ public class GeolocationAdapter extends ArrayAdapter {
     private GeolocationDialog locationDialog;
 
     public GeolocationAdapter(Context context, List<ExtendedCity> dataSet, ErrorManager errorManager,
-                              AdapterCallback mAdapterCallback, GeolocationDialog locationDialog){
+                              AdapterCallback mAdapterCallback, GeolocationDialog locationDialog) {
         super(context, R.layout.cht_comm_geolocation_item, dataSet);
         this.dataSet = dataSet;
         this.errorManager = errorManager;
@@ -66,7 +54,7 @@ public class GeolocationAdapter extends ArrayAdapter {
             TextView State = (TextView) item.findViewById(R.id.state_search2);
             Country.setText(dataSet.get(position).getCountryName());
             State.setText(dataSet.get(position).getName());
-            final int pos=position;
+            final int pos = position;
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
