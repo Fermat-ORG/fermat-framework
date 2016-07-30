@@ -1,6 +1,6 @@
 package com.bitdubai.android_core.app.common.version_1.util;
 
-import com.bitdubai.android_core.app.common.version_1.broadcaster.BroadcasterInterface;
+import com.bitdubai.android_core.app.common.version_1.util.interfaces.BroadcasterInterface;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 

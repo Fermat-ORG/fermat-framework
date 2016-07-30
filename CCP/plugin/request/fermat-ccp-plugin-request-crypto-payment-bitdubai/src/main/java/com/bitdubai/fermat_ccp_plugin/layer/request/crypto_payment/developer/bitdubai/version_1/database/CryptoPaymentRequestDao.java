@@ -217,19 +217,26 @@ public class CryptoPaymentRequestDao {
 
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
-            //set upadte filter
             cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            //get record to set new data
+            cryptoPaymentRequestTable.loadToMemory();
 
-            DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
-            record.setStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME, cryptoPaymentState.getCode());
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
 
-            cryptoPaymentRequestTable.updateRecord(record);
+                record.setStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME, cryptoPaymentState.getCode());
 
+                cryptoPaymentRequestTable.updateRecord(record);
+            } else {
+                throw new CryptoPaymentRequestNotFoundException("RequestId: "+requestId, "Cannot find a CryptoPaymentRequest with the given id.");
+            }
 
-      } catch (CantUpdateRecordException exception) {
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantChangeCryptoPaymentRequestStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (CantUpdateRecordException exception) {
 
             throw new CantChangeCryptoPaymentRequestStateException(exception, "", "Cant update record exception.");
         }

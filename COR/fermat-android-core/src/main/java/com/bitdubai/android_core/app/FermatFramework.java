@@ -255,6 +255,12 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>, 
             }
         });
         anrWatchDog.setIgnoreDebugger(false);
+//        anrWatchDog.setInterruptionListener(new ANRWatchDog.InterruptionListener() {
+//            @Override
+//            public void onInterrupted(InterruptedException exception) {
+//                exception.printStackTrace();
+//            }
+//        });
         anrWatchDog.start();
 
 
@@ -290,7 +296,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>, 
         int processId = android.os.Process.myPid();
 
         String myProcessName = application.getPackageName();
-        Log.i(TAG, "context:" + myProcessName);
+        Log.i(TAG, new StringBuilder().append("context:").append(myProcessName).toString());
 
     }
 
@@ -328,7 +334,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>, 
     }
 
     public synchronized void setFermatRunning(boolean fermatRunning) {
-        Log.i(TAG, "Fermat running: " + fermatRunning);
+        Log.i(TAG, new StringBuilder().append("Fermat running: ").append(fermatRunning).toString());
         this.fermatRunning = fermatRunning;
     }
 
@@ -345,10 +351,8 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>, 
     }
 
     public void appOnBackground() {
-        if (!isApplicationInForeground) {
-            Log.i(TAG, "Disconnecting app, onBackground");
-            servicesHelpers.getClientSideBrokerServiceAIDL().disconnect();
-        }
+        Log.i(TAG, "Disconnecting app, onBackground");
+        servicesHelpers.getClientSideBrokerServiceAIDL().disconnect();
     }
 
     public void appOnForeground() {

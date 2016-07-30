@@ -39,6 +39,10 @@ public class FermatApplication extends MultiDexApplication implements FermatAppl
      */
     private FermatFramework fermatFramework;
 
+    public static FermatApplication getInstance() {
+        return instance;
+    }
+
     private Thread.UncaughtExceptionHandler defaultUncaughtHandler = Thread.getDefaultUncaughtExceptionHandler();
 
 
@@ -60,14 +64,6 @@ public class FermatApplication extends MultiDexApplication implements FermatAppl
     public FermatSystem getFermatSystem() {
         return fermatFramework.getFermatSystem();
     }
-
-    /**
-     * Fermat Application instance
-     */
-    public static FermatApplication getInstance() {
-        return instance;
-    }
-
 
     @Override
     public FermatApplicationCaller getApplicationManager() {
@@ -112,6 +108,7 @@ public class FermatApplication extends MultiDexApplication implements FermatAppl
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         fermatFramework = FermatFramework.init(this);
+        // MultiDex.install(this);
     }
 
 
@@ -136,8 +133,9 @@ public class FermatApplication extends MultiDexApplication implements FermatAppl
      */
     private void loadProcessInfo() {
         int processId = android.os.Process.myPid();
+
         String myProcessName = getApplicationContext().getPackageName();
-        Log.i(TAG, "context:" + myProcessName);
+        Log.i(TAG, new StringBuilder().append("context:").append(myProcessName).toString());
 
     }
 

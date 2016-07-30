@@ -17,7 +17,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 /**
- * Created by Matias Furszyfer on 2016.05.03..
+ * Created by mati on 2016.05.03..
  */
 public class UpdateViewReceiver extends BroadcastReceiver {
 
@@ -66,14 +66,12 @@ public class UpdateViewReceiver extends BroadcastReceiver {
     }
 
     private void updateView(String code) {
-        if(code!=null) {
-            if (weakReference.get() instanceof FermatActivity) {
-                FermatScreenAdapter adapter = weakReference.get().getAdapter();
-                if (adapter != null) {
-                    List<AbstractFermatFragmentInterface> list = adapter.getLstCurrentFragments();
-                    for (AbstractFermatFragmentInterface fragment : list) {
-                        fragment.onUpdateViewOnUIThread(code);
-                    }
+        if (weakReference.get() instanceof FermatActivity) {
+            FermatScreenAdapter adapter = weakReference.get().getAdapter();
+            if (adapter != null) {
+                List<AbstractFermatFragmentInterface> list = adapter.getLstCurrentFragments();
+                for (AbstractFermatFragmentInterface fragment : list) {
+                    fragment.onUpdateViewOnUIThread(code);
                 }
             }
         }
@@ -81,14 +79,12 @@ public class UpdateViewReceiver extends BroadcastReceiver {
 
     //TODO: esto va a ser del codigo de la app, el paquete del intent
     private void updateView(String appCode, String code) {
-        if(code!=null) {
-            if (weakReference.get() instanceof FermatActivity) {
-                FermatScreenAdapter adapter = ((FermatActivity) weakReference.get()).getAdapter();
-                if (adapter != null) {
-                    List<AbstractFermatFragmentInterface> list = adapter.getLstCurrentFragments();
-                    for (AbstractFermatFragmentInterface fragment : list) {
-                        fragment.onUpdateViewOnUIThread(code);
-                    }
+        if (weakReference.get() instanceof FermatActivity) {
+            FermatScreenAdapter adapter = ((FermatActivity) weakReference.get()).getAdapter();
+            if (adapter != null) {
+                List<AbstractFermatFragmentInterface> list = adapter.getLstCurrentFragments();
+                for (AbstractFermatFragmentInterface fragment : list) {
+                    fragment.onUpdateViewOnUIThread(code);
                 }
             }
         }

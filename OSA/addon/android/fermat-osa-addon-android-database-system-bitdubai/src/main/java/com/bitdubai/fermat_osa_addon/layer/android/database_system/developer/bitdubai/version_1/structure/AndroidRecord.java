@@ -58,7 +58,7 @@ public class AndroidRecord implements DatabaseRecord {
 
     @Override
     public String toString() {
-        return recordName + "=" + recordValue;
+        return new StringBuilder().append(recordName).append("=").append(recordValue).toString();
     }
 
 }

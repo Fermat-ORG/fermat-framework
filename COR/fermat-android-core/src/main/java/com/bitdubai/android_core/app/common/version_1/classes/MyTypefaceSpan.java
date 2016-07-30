@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.broadcaster;
+package com.bitdubai.android_core.app.common.version_1.classes;
 
 import android.content.Context;
 import android.graphics.Paint;

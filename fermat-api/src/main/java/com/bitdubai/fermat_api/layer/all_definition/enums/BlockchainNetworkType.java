@@ -21,7 +21,7 @@ public enum BlockchainNetworkType implements FermatEnum, Serializable {
     /**
      * sets the default network that will be used at start up.
      */
-    private static final BlockchainNetworkType DEFAULT_BLOCKCHAIN_NETWORK_TYPE = BlockchainNetworkType.PRODUCTION;
+    private static final BlockchainNetworkType DEFAULT_BLOCKCHAIN_NETWORK_TYPE = BlockchainNetworkType.TEST_NET;
 
     private final String code;
 

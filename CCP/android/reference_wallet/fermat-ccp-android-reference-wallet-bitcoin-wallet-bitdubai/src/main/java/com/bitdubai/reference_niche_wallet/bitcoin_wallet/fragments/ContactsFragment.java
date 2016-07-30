@@ -153,6 +153,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     FermatWorker fermatWorker;
 
+    private ExecutorService _executor;
 
     public static ContactsFragment newInstance() {
 
@@ -169,7 +170,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
 
-
+        _executor = Executors.newFixedThreadPool(2);
         try {
             cryptoWallet = appSession.getModuleManager();
             toolbar = getToolbar();
@@ -621,9 +622,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     @Override
     public void onStop() {
 
-
         if(fermatWorker != null)
             fermatWorker.shutdownNow();
+
+
         super.onStop();
     }
 
@@ -840,13 +842,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         for (int i = 0; i < items.size(); i++) {//) {
                             CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
-                            if (currentSection.matches(numberRegex)) {
+                            if (currentSection.matches(numberRegex))
                                 // is Digit
                                 numbers.add(cryptoWalletWalletContact.getActorName());
-                                positions.put(i, cryptoWalletWalletContact);
-
-                            }else if (currentSection.matches(letterRegex)) {
-
+                            else if (currentSection.matches(letterRegex)) {
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
                                 positions.put(i, cryptoWalletWalletContact);
@@ -862,39 +861,32 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             // add the section position in the list section positions
                             mListSectionPos.add(mListItems.indexOf(symbolCode));
                             // add all the items in this group
-                            //mListItems.addAll(symbols);
-                            mListItems.addAll(positions.values());
+                            mListItems.addAll(symbols);
                         }
 
                         final String numberCode = HeaderTypes.NUMBER.getCode();
                         if (!numbers.isEmpty()) {
                             mListItems.add(numberCode);
                             mListSectionPos.add(mListItems.indexOf(numberCode));
-                          //  mListItems.addAll(numbers);
-                            mListItems.addAll(positions.values());
+                            mListItems.addAll(numbers);
                         }
 
                         // add the letters items in the list and his corresponding sections based on its first letter
                         String prevSection = "";
-                        try{
-                            for (int i = 0; i < letters.size(); i++) {//String currentItem : letters) {
-                                String currentItem = letters.get(i);
-                                String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
+                        for (int i = 0; i < letters.size(); i++) {//String currentItem : letters) {
+                            String currentItem = letters.get(i);
+                            String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
 
-                                if (!prevSection.equals(currentSection)) {
-                                    mListItems.add(currentSection);
+                            if (!prevSection.equals(currentSection)) {
+                                mListItems.add(currentSection);
 
-                                    // array list of section positions
-                                    mListSectionPos.add(mListItems.indexOf(currentSection));
-                                    prevSection = currentSection;
-                                }
-
-                                mListItems.add(positions.get(i));
+                                // array list of section positions
+                                mListSectionPos.add(mListItems.indexOf(currentSection));
+                                prevSection = currentSection;
                             }
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
 
+                            mListItems.add(positions.get(i));
+                        }
                     }
 
                 }

@@ -252,15 +252,26 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
             cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-           DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
+            cryptoPaymentRequestTable.loadToMemory();
 
-            record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            if (!records.isEmpty()) {
+
+                DatabaseTableRecord record = records.get(0);
+
+                record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
                 record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTION_COLUMN_NAME        , action       .getCode());
 
                 cryptoPaymentRequestTable.updateRecord(record);
 
+            } else {
+                throw new RequestNotFoundException("RequestId: "+requestId, "Cannot find a CryptoPaymentRequest with the given id.");
+            }
 
+        } catch (CantLoadTableToMemoryException e) {
 
+            throw new CantTakeActionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (CantUpdateRecordException exception) {
 
             throw new CantTakeActionException(exception, "", "Cant update record exception.");
@@ -283,14 +294,24 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
             cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
+            cryptoPaymentRequestTable.loadToMemory();
 
-            record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+
+                record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
 
                 cryptoPaymentRequestTable.updateRecord(record);
+            } else {
+                throw new RequestNotFoundException("RequestId: "+requestId, "Cannot find a CryptoPaymentRequest with the given id.");
+            }
 
+        } catch (CantLoadTableToMemoryException e) {
 
-        }catch (CantUpdateRecordException exception) {
+            throw new CantChangeRequestProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (CantUpdateRecordException exception) {
 
             throw new CantChangeRequestProtocolStateException(exception, "", "Cant update record exception.");
         }
@@ -395,13 +416,24 @@ public final class CryptoPaymentRequestNetworkServiceDao {
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
             cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
-            DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
 
-            record.setIntegerValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_SENT_COUNT_COLUMN_NAME, sentNumber);
+            cryptoPaymentRequestTable.loadToMemory();
 
-            cryptoPaymentRequestTable.updateRecord(record);
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
 
+                record.setIntegerValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_SENT_COUNT_COLUMN_NAME, sentNumber);
+
+                cryptoPaymentRequestTable.updateRecord(record);
+            } else {
+                throw new RequestNotFoundException("RequestId: "+requestId, "Cannot find a CryptoPaymentRequest with the given id.");
+            }
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantChangeRequestSentCountException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (CantUpdateRecordException exception) {
 
             throw new CantChangeRequestSentCountException(exception, "", "Cant update record exception.");
@@ -420,10 +452,21 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
             cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
+            cryptoPaymentRequestTable.loadToMemory();
 
-            cryptoPaymentRequestTable.deleteRecord(record);
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+
+                cryptoPaymentRequestTable.deleteRecord(record);
+            } else {
+                throw new RequestNotFoundException("RequestId: "+requestId, "Cannot find a CryptoPaymentRequest with the given id.");
+            }
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantDeletePaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 
         } catch (CantDeleteRecordException e) {
             throw new CantDeletePaymentRequestException(e, "", "Cant delete record exception.");

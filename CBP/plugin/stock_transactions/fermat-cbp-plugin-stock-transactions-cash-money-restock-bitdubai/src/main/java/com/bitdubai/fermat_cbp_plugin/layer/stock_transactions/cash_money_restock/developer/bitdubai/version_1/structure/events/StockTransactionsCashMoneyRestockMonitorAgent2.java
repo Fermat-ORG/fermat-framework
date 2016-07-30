@@ -72,12 +72,18 @@ public class StockTransactionsCashMoneyRestockMonitorAgent2 extends AbstractAgen
     }
 
     @Override
-    protected void agentJob() {
-        doTheMainTask();
+    protected Runnable agentJob() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                doTheMainTask();
+            }
+        };
+        return runnable;
     }
 
     @Override
-    protected void onErrorOccur(Exception e) {
+    protected void onErrorOccur() {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("StockTransactionsCashMoneyRestockMonitorAgent Error"));
