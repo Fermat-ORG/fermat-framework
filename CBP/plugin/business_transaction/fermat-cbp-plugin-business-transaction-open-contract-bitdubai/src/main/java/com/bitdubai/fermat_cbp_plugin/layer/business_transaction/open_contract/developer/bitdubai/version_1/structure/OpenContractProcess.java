@@ -162,7 +162,7 @@ public class OpenContractProcess {
             openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CHECKING_HASH);
 
             return true;
-
+            
         } catch (Exception e) {
             throw new UnexpectedResultReturnedFromDatabaseException(
                 e,
@@ -216,11 +216,6 @@ public class OpenContractProcess {
                 }
 
                 return true;
-
-            } else {
-
-                return false;
-
             }
 
         } catch (CantConfirmNotificationReceptionException e){
@@ -239,6 +234,8 @@ public class OpenContractProcess {
                     "Checking pending transactions",
                     "Cannot confirm transaction");
         }
+
+        return false;
 
     }
 
@@ -286,13 +283,7 @@ public class OpenContractProcess {
                 }
 
                 return true;
-
-            } else {
-
-                return false;
-
             }
-
 
         } catch (CantConfirmNotificationReceptionException e){
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -310,6 +301,8 @@ public class OpenContractProcess {
                     "Checking pending transactions",
                     "Cannot confirm transaction");
         }
+
+        return false;
 
     }
 
@@ -376,10 +369,6 @@ public class OpenContractProcess {
 
                 return true;
 
-            } else {
-
-                return false;
-
             }
 
         } catch (CantGetListCustomerBrokerContractPurchaseException e){
@@ -409,6 +398,7 @@ public class OpenContractProcess {
                     "Cannot update the database record");
         }
 
+        return false;
     }
 
 
