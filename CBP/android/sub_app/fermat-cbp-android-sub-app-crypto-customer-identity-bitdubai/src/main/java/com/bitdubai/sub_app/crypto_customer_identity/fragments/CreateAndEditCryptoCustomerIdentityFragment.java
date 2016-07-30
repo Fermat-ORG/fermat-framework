@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.crypto_customer_identity.fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -74,7 +73,7 @@ import static android.widget.Toast.makeText;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * Created by Penny, 26/07/2016
  */
 public class CreateAndEditCryptoCustomerIdentityFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerIdentityModuleManager>, ResourceProviderManager>
@@ -131,6 +130,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         super.onCreate(savedInstanceState);
 
         try {
+            //Getting the first Identity since it was implemented for multiples identities before
             customerIdentities = appSession.getModuleManager().getAllCryptoCustomersIdentities(0, 0);
 
             identityInfo = (customerIdentities.size() > 0) ? customerIdentities.get(0) : null;
@@ -224,7 +224,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
                 presentationDialog.show();
             }
         } catch (FermatException e) {
-            makeText(getActivity(), "Error dialogo", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), R.string.crypto_customer_error_dialog, Toast.LENGTH_SHORT).show();
         }
 
         //Check if GPS is on and coordinates are fine
@@ -245,7 +245,6 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         }
 
 
-
         if (identityInfo != null) { //I'm editing the customer
             isEditing = true;
             cryptoCustomerPublicKey = identityInfo.getPublicKey();
@@ -255,9 +254,9 @@ public class CreateAndEditCryptoCustomerIdentityFragment
 
             if (cryptoCustomerName == null) {
                 mCustomerName.setText(identityInfo.getAlias());
-                mCustomerName.selectAll();}
-            if (cryptoCustomerBitmap == null)
-            {
+                mCustomerName.selectAll();
+            }
+            if (cryptoCustomerBitmap == null) {
                 profileImage = identityInfo.getProfileImage();
 
                 if (profileImage.length == 0) {
@@ -311,7 +310,6 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         });
 
 
-
         mCustomerName.requestFocus();
         mCustomerName.performClick();
         mCustomerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
@@ -328,7 +326,6 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         mCustomerName.requestFocus();
 
         textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.length()));
-
 
 
         final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -371,7 +368,6 @@ public class CreateAndEditCryptoCustomerIdentityFragment
                 appSession.setData(FragmentsCommons.CROPPED_IMAGE, identityImageByteArray);
                 appSession.setData(FragmentsCommons.IDENTITY_INFO, identityInfo);
                 appSession.setData(FragmentsCommons.IMAGE_BYTE_ARRAY, identityImageByteArray);
-
 
                 changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_CREATE_IDENTITY, appSession.getAppPublicKey());
                 return true;
@@ -420,7 +416,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.crypto_customer_error_image, Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -435,13 +431,13 @@ public class CreateAndEditCryptoCustomerIdentityFragment
     }
 
     /**
-     * Crea una nueva identidad para un crypto customer
+     * Creates the new identity of the customer in device
      */
     private void createNewIdentityInBackDevice() {
         final String customerAlias = mCustomerName.getText().toString();
 
         if (customerAlias.trim().isEmpty()) {
-            Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.crypto_customer_enter_name_alias, Toast.LENGTH_LONG).show();
 
         } else {
             final int accuracy = getAccuracyData();
@@ -461,10 +457,10 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         final byte[] imgInBytes = (cryptoCustomerBitmap != null) ? ImagesUtils.toByteArray(convertImage(R.drawable.no_profile_image)) : profileImage;
 
         if (customerNameText.trim().equals("")) {
-            Toast.makeText(getActivity(), "Please enter a name", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.crypto_customer_enter_name, Toast.LENGTH_LONG).show();
 
         } else if (imgInBytes == null) {
-            Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.crypto_customer_enter_image, Toast.LENGTH_LONG).show();
 
         } else {
             final int accuracy = getAccuracyData();
@@ -493,12 +489,11 @@ public class CreateAndEditCryptoCustomerIdentityFragment
 
         //progressBar.setVisibility(View.GONE);
         if (!isEditing)
-            Toast.makeText(getActivity(), "Crypto Customer Identity Created.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.crypto_customer_identity_created, Toast.LENGTH_LONG).show();
         else
-            Toast.makeText(getActivity(), "Crypto Customer Identity Updated.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.crypto_customer_identity_updated, Toast.LENGTH_LONG).show();
 
         getActivity().onBackPressed();
-        //changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY, appSession.getAppPublicKey());
     }
 
     @Override
@@ -510,7 +505,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
 
         //progressBar.setVisibility(View.GONE);
 
-        Toast.makeText(getActivity(), "An error occurred trying to create a Crypto Customer Identity", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.crypto_customer_error_create, Toast.LENGTH_SHORT).show();
 
         appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY,
                 UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
@@ -539,7 +534,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
                     imageToUploadUri = Uri.fromFile(f);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 } else {
-                    Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.crypto_customer_error, Toast.LENGTH_LONG).show();
                 }
             }
         } else {
@@ -551,10 +546,6 @@ public class CreateAndEditCryptoCustomerIdentityFragment
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//        }
     }
 
     private void loadImageFromGallery() {
@@ -659,7 +650,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
                 if (Build.VERSION.SDK_INT < 23) {
                     String provider = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if (!provider.contains("gps")) { //if gps is disabled
-                        Toast.makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, R.string.crypto_customer_turnon_gps, Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
@@ -667,7 +658,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
                 } else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if (!provider.contains("gps")) { //if gps is disabled
-                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.crypto_customer_turnon_gps, Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
@@ -675,9 +666,9 @@ public class CreateAndEditCryptoCustomerIdentityFragment
 
             } catch (Exception ex) {
                 if (Build.VERSION.SDK_INT < 23) {
-                    Toast.makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.crypto_customer_turnon_gps, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.crypto_customer_turnon_gps, Toast.LENGTH_SHORT).show();
                 }
             }
         }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -21,6 +20,7 @@ import com.edmodo.cropper.CropImageView;
 
 /**
  * Developed by abicelis on 15/06/16.
+ * Edited by Penny for the new Crypto Customer Design on 26/07/2016
  */
 public class CryptoCustomerImageCropperFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerIdentityModuleManager>, ResourceProviderManager> implements View.OnClickListener {
 
@@ -53,7 +53,6 @@ public class CryptoCustomerImageCropperFragment extends AbstractFermatFragment<R
 
         //Capture data from session, then clean it.
         originalImage = (Bitmap) appSession.getData(FragmentsCommons.ORIGINAL_IMAGE);
-
         appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
 
 
@@ -115,10 +114,9 @@ public class CryptoCustomerImageCropperFragment extends AbstractFermatFragment<R
         if (i == R.id.cbi_cancel_button)
             goBackToCallerActivity();
 
-
     }
 
     private void goBackToCallerActivity() {
-            changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY, appSession.getAppPublicKey());
     }
 }
