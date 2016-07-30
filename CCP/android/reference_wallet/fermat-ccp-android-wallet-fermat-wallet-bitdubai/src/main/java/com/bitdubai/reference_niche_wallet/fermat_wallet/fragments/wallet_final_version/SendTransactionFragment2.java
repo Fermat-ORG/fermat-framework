@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,12 +58,27 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.Blockchain
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.LargeValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -95,6 +111,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     private TextView txt_type_balance;
     private TextView txt_balance_amount;
     private TextView txt_Date_time;
+    private TextView txt_Date_time_hour;
     private TextView txt_rate_amount;
     private long balanceAvailable;
     private View rootView;
@@ -115,6 +132,11 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     private ExecutorService _executor;
     private BalanceType balanceType = BalanceType.AVAILABLE;
     private ShowMoneyType typeAmountSelected = ShowMoneyType.FRMT;
+
+
+    //chart
+    private LineChart chart;
+    private TextView noDataInChart;
 
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
@@ -385,11 +407,14 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         final View header_layout = inflater.inflate(R.layout.fermat_wallet_home_header,container_header_balance,true);
         container_header_balance.setVisibility(View.VISIBLE);
 
+        setUpChart(header_layout);
+
 
         //Select all header Element
         txt_balance_amount      = (TextView) header_layout.findViewById(R.id.txt_balance_amount);
         txt_type_balance_amount = (TextView) header_layout.findViewById(R.id.txt_type_balance_amount);
         txt_type_balance        = (TextView) header_layout.findViewById(R.id.txt_type_balance);
+        txt_Date_time_hour      = (TextView) header_layout.findViewById(R.id.txt_date_time_hour);
         txt_Date_time           = (TextView) header_layout.findViewById(R.id.txt_date_time);
         txt_rate_amount         = (TextView) header_layout.findViewById(R.id.txt_rate_amount);
         ViewPager vpPager       = (ViewPager) header_layout.findViewById(R.id.vpPager);
@@ -397,13 +422,15 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
         final String date;
         final String time;
+
         SimpleDateFormat sdf1 = new SimpleDateFormat("MMM dd, yyyy");
         SimpleDateFormat sdf2 = new SimpleDateFormat("hh:ss a");
 
         date = sdf1.format(System.currentTimeMillis());
         time = sdf2.format(System.currentTimeMillis());
 
-        txt_Date_time.setText(time + " | " + date);
+        txt_Date_time_hour.setText(time);
+        txt_Date_time.setText(date);
 
         //Event Click For change the balance type
         txt_type_balance.setOnClickListener(new View.OnClickListener() {
@@ -440,23 +467,17 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             }
         });
 
-       // moduleManager.getExchangeRateProviders()
-        List<ExchangeRateProvider> exchangeProviderList = new ArrayList<>();
-
         try {
 
             List<ExchangeRateProvider> ProviderList  = moduleManager.getExchangeRateProviders();
+            List<ExchangeRateProvider> exchangeProviderList = new ArrayList<>();
+            Set<UUID> lst2 = new HashSet<UUID>();
 
-            for (ExchangeRateProvider lst : ProviderList) {
-
-                String name = lst.getProviderName();
-                UUID id = lst.getProviderId();
-
-                if (id!=null || name!=null)
+            for( ExchangeRateProvider lst : ProviderList) {
+                if(lst2.add(lst.getProviderId())) {
                     exchangeProviderList.add(lst);
                 }
-
-
+            }
 
             FragmentStatePagerAdapter adapterViewPager;
             adapterViewPager = new ViewPagerAdapter(getFragmentManager(),exchangeProviderList,appSession);
@@ -498,6 +519,148 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
         updateBalances();
     }
+
+    private void setUpChart(View view){
+
+        chart = (LineChart) view.findViewById(R.id.chart);
+        noDataInChart = (TextView) view.findViewById(R.id.noDataInChart);
+
+        getBalanceAverage();
+
+        chart.setDrawGridBackground(false);
+        chart.setDescription("");
+        chart.animateY(2000);
+        chart.setTouchEnabled(true);
+        chart.setDragEnabled(false);
+        chart.setScaleEnabled(false);
+        chart.setPinchZoom(false);
+        chart.setDoubleTapToZoomEnabled(false);
+        chart.setHighlightPerDragEnabled(true);
+        chart.setHighlightPerTapEnabled(true);
+        //chart.setOnChartValueSelectedListener((OnChartValueSelectedListener) this);
+        chart.fitScreen();
+
+        /**HARD CORE DATA FOR CHART**/
+       /* long frmt =  100000000;
+        long date = System.currentTimeMillis();
+        long day = 86400000;
+        Map<Long, Long> dailyHardCore = new HashMap<>();
+        for (int i = 0; i < 6 ; i++) {
+
+            long frm1t =+frmt;
+            long dataPlusday =+ date + day;
+            dailyHardCore.put(dataPlusday,frm1t);
+            dataPlusday++;
+            day++;
+        }*/
+        //LineData data = getData(dailyHardCore);
+        /**END HARD CORE DATA FOR CHART**/
+
+        LineData data = getData(fermatWalletSettings.getRunningDailyBalance());
+
+        //LineData data = new LineData(labels, dataset);
+        chart.setData(data);
+
+
+
+        data.setValueTextSize(12f);
+        data.setValueTextColor(Color.WHITE);
+
+        /*CustomChartMarkerdView mv = new CustomChartMarkerdView(getActivity(),
+                R.layout.loss_custom_marker_view,
+                allWalletSpendingList,
+                appSession,
+                errorManager,
+                lossProtectedWalletmanager);*/
+        //chart.setMarkerView(mv);
+
+        YAxis yAxis = chart.getAxisLeft();
+        yAxis.setEnabled(false);
+        yAxis.setTextColor(Color.TRANSPARENT);
+        yAxis.setGridColor(Color.TRANSPARENT);
+        //yAxis.setStartAtZero(false);
+        //yAxis.setAxisMaxValue(30);
+        //yAxis.setAxisMinValue(-30);
+
+        YAxis yAxis1R = chart.getAxisRight();
+        yAxis1R.setEnabled(false);
+        //yAxis1R.setAxisMaxValue(30);
+        //yAxis1R.setAxisMinValue(-30);
+
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setEnabled(false);
+
+        Legend legend = chart.getLegend();
+        legend.setEnabled(false);
+
+    }
+    /**
+     * Get the LineData for the chart based on the all wallet Daily Balance
+     *
+     * @return the ListData object
+     */
+    private LineData getData(Map<Long, Long> runningDailyBalance) {
+
+        ArrayList<Entry> entryList = new ArrayList<>();
+        ArrayList<String> xValues = new ArrayList<>();
+
+        xValues.add("M");
+        xValues.add("T");
+        xValues.add("W");
+        xValues.add("T");
+        xValues.add("F");
+        xValues.add("S");
+        xValues.add("S");
+
+
+        //ArrayList<Integer> colors = new ArrayList<Integer>();
+
+        //Date format for earned and lost for today
+       // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        //Date actualDate = new Date();
+
+        //if statement for validate if the runningDailyBalance has values
+       if (runningDailyBalance != null) {
+           int i = 0;
+           for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet()) {
+
+                //Set Array Colors
+                //if (valueEntry==0)
+                //    colors.add(Color.parseColor("#E58617"));
+                // else if (valueEntry>0)
+                //    colors.add(Color.GREEN);
+                // else if (valueEntry<0)
+                //    colors.add(Color.RED);
+                final float valuesEntry = Float.parseFloat(WalletUtils.formatBalanceStringNotDecimal(entry.getValue(), ShowMoneyType.FRMT.getCode()));
+               // final int key = Integer.parseInt(String.valueOf(entry.getKey()));
+                //Set entries values for the chart
+                entryList.add(new Entry(valuesEntry,i));
+                //xValues.add("$ "+String.valueOf(valueEntry));
+               i++;
+            }
+            chart.setVisibility(View.VISIBLE);
+       }else{
+
+           chart.setVisibility(View.GONE);
+           noDataInChart.setVisibility(View.VISIBLE);
+        }
+
+        LineDataSet dataset = new LineDataSet(entryList, "");
+        dataset.setColor(Color.WHITE); //
+        dataset.setDrawCubic(true);
+        dataset.setDrawValues(false);
+        dataset.setDrawCircles(true);
+        dataset.setCircleSize(2);
+        dataset.setLineWidth(1);
+        //dataset.setCircleColors(colors);
+        dataset.setDrawCircleHole(false);
+        dataset.setValueFormatter(new LargeValueFormatter());
+        dataset.setDrawHighlightIndicators(false);
+
+        return new LineData(xValues, dataset);
+
+    }
+
 
 
     @Override
@@ -611,7 +774,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 if(!data.isEmpty())
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
-                            //FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
                             emptyListViewsContainer.setVisibility(View.VISIBLE);
                         }
                     });
@@ -786,7 +949,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
                     if(dias > 1) {
                         //if I have 30 days I start counting again
-                        if(runningDailyBalance.size() == 30)
+                        if(runningDailyBalance.size() == 7)
                             runningDailyBalance = new HashMap<>();
 
                         runningDailyBalance.put(currentTime, moduleManager.getBalance(

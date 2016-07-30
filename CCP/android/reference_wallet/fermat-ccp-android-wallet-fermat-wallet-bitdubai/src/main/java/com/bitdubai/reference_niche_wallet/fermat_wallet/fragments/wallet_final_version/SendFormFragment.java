@@ -292,7 +292,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
        // editFeedamount = (EditText) rootView.findViewById(R.id.feed_amount);
 
-
         advances_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
