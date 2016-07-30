@@ -140,7 +140,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 remoteBusinessTransaction);
 
         try {
-            System.out.print(new StringBuilder().append("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - sendContractStatusNotification()").append(remoteBusinessTransaction).append("\n").toString());
+            System.out.print("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - sendContractStatusNotification()" + remoteBusinessTransaction + "\n");
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);
@@ -323,7 +323,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     @Override
     public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
         try {
-            System.out.print(new StringBuilder().append("\n1)transactionId: ").append(transactionID).append("\n").toString());
+            System.out.print("\n1)transactionId: " + transactionID + "\n");
             this.transactionTransmissionContractHashDao.confirmReception(transactionID);
 
         } catch (CantUpdateRecordDataBaseException e) {
@@ -336,7 +336,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             throw new CantConfirmTransactionException(
                     PendingRequestNotFoundException.DEFAULT_MESSAGE,
                     e, "Confirm reception",
-                    new StringBuilder().append("Cannot find the transaction id in database\n").append(transactionID).toString());
+                    "Cannot find the transaction id in database\n" + transactionID);
         } catch (CantGetTransactionTransmissionException e) {
             throw new CantConfirmTransactionException(
                     CantGetTransactionTransmissionException.DEFAULT_MESSAGE,

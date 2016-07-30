@@ -181,18 +181,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("CryptoBrokerCommunitySubAppModuleInformation{")
-                .append("publicKey='").append(publicKey)
-                .append('\'')
-                .append(", alias='").append(alias)
-                .append('\'')
-                .append(", connectionState='").append(connectionState)
-                .append('\'')
-                .append(", connectionId='").append(connectionId)
-                .append('\'')
-                .append(", image=").append(image != null)
-                .append('}').toString();
+        return "CryptoBrokerCommunitySubAppModuleInformation{" + "publicKey='" + publicKey + '\'' + ", alias='" + alias + '\'' + ", connectionState='" + connectionState + '\'' + ", connectionId='" + connectionId + '\'' + ", image=" + (image != null) + '}';
     }
 
     @Override

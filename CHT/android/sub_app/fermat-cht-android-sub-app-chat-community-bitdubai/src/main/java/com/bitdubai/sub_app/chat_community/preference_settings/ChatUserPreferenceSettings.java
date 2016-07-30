@@ -12,7 +12,7 @@ import java.util.UUID;
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 13/04/16.
  * @version 1.0
  */
-public class ChatUserPreferenceSettings implements SubAppSettings  {
+public class ChatUserPreferenceSettings implements SubAppSettings {
     /**
      * This method let us know the default language of a wallet
      *

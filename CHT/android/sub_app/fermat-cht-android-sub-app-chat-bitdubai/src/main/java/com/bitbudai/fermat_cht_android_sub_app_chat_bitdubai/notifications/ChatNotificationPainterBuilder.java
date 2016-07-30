@@ -14,19 +14,20 @@ public class ChatNotificationPainterBuilder extends NotificationPainter {
     private String title;
     private String image;
     private String textBody;
-    private int    icon;
+    private int icon;
 
 
-    public ChatNotificationPainterBuilder( String title,  String textBody, String image, int icon) {
+    public ChatNotificationPainterBuilder(String title, String textBody, String image, int icon) {
         this.title = title;
         this.image = image;
         this.textBody = textBody;
         this.icon = icon;
     }
 
-    public ChatNotificationPainterBuilder( String title,  String textBody, String image) {
+    public ChatNotificationPainterBuilder(String title, String textBody, String image) {
         this(title, textBody, image, 0);
     }
+
     @Override
     public RemoteViews getNotificationView(String code) {
         return remoteViews;

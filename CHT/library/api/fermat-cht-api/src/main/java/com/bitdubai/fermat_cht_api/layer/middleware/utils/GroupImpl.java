@@ -13,11 +13,12 @@ public class GroupImpl implements Group {
     private final String name;
     private final TypeChat typeChat;
 
-    public GroupImpl(UUID groupId, String name, TypeChat typeChat){
-        this.groupId  = groupId;
-        this.name     = name;
+    public GroupImpl(UUID groupId, String name, TypeChat typeChat) {
+        this.groupId = groupId;
+        this.name = name;
         this.typeChat = typeChat;
     }
+
     /**
      * Returns the group id that representing the id of the group to which the user belongs
      *

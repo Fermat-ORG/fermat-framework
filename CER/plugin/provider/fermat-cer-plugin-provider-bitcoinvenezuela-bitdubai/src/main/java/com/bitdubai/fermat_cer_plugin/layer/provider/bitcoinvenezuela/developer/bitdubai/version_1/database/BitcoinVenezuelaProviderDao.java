@@ -190,28 +190,29 @@ public class BitcoinVenezuelaProviderDao {
         List<ExchangeRate> exchangeRates = new ArrayList<>();
 
 
-        String query = "SELECT * FROM " +
-                BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME +
-                " WHERE " +
-                BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME +
-                " = '" +
-                currencyPair.getFrom().getCode() +
-                "' AND " +
-                BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME +
-                " = '" +
-                currencyPair.getTo().getCode() +
-                "' " +
-                " AND " +
-                BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
-                " >= " +
-                startTimestamp +
-                " AND " +
-                BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
-                " <= " +
-                endTimestamp +
-                " ORDER BY " +
-                BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
-                " ASC ";
+        String query = new StringBuilder()
+                .append("SELECT * FROM ")
+                .append(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME)
+                .append(" WHERE ")
+                .append(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME)
+                .append(" = '")
+                .append(currencyPair.getFrom().getCode())
+                .append("' AND ")
+                .append(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME)
+                .append(" = '")
+                .append(currencyPair.getTo().getCode())
+                .append("' ")
+                .append(" AND ")
+                .append(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME)
+                .append(" >= ")
+                .append(startTimestamp)
+                .append(" AND ")
+                .append(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME)
+                .append(" <= ")
+                .append(endTimestamp)
+                .append(" ORDER BY ")
+                .append(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME)
+                .append(" ASC ").toString();
 
 
         DatabaseTable table = this.database.getTable(BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME);
@@ -220,9 +221,9 @@ public class BitcoinVenezuelaProviderDao {
             for (DatabaseTableRecord record : table.customQuery(query, false))
                 exchangeRates.add(constructExchangeRateFromRecord(record));
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rates for period: " + startTimestamp + " to " + endTimestamp, "Couldn't load table to memory");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get daily exchange rates for period: ").append(startTimestamp).append(" to ").append(endTimestamp).toString(), "Couldn't load table to memory");
         } catch (CantCreateExchangeRateException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get daily exchange rates for period: " + startTimestamp + " to " + endTimestamp, "Couldn't create ExchangeRate object");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, new StringBuilder().append("Failed to get daily exchange rates for period: ").append(startTimestamp).append(" to ").append(endTimestamp).toString(), "Couldn't create ExchangeRate object");
         }
 
         return exchangeRates;
@@ -357,8 +358,7 @@ public class BitcoinVenezuelaProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "BitcoinVenezuela provider plugin", "Invalid From Currency value stored in table"
-                    + BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "BitcoinVenezuela provider plugin", "Invalid From Currency value stored in table" + BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
         }
 
         Currency toCurrency;
@@ -372,8 +372,7 @@ public class BitcoinVenezuelaProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "BitcoinVenezuela provider plugin", "Invalid To Currency value stored in table"
-                    + BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "BitcoinVenezuela provider plugin", "Invalid To Currency value stored in table" + BitcoinVenezuelaProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
         }
 
         return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);

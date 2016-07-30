@@ -18,7 +18,7 @@ public class CantGetChatActorWaitingException extends FermatException {
         super(message, cause, context, possibleReason);
     }
 
-    public CantGetChatActorWaitingException (Exception cause, String context, String possibleReason) {
+    public CantGetChatActorWaitingException(Exception cause, String context, String possibleReason) {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }

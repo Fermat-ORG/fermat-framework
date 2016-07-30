@@ -106,20 +106,20 @@ public class SettingsFeeManagementFragment
         radioButtonNormal = (RadioButton) layout.findViewById(R.id.cbw_radio_button_normal);
         radioButtonFast = (RadioButton) layout.findViewById(R.id.cbw_radio_button_fast);
 
-        feeMinerAmount.setText(new StringBuilder().append(satoshiToBtcFormat(BitcoinFee.SLOW.getFee())).append("BTC").toString());
+        feeMinerAmount.setText(satoshiToBtcFormat(BitcoinFee.SLOW.getFee()) + "BTC");
         bitcoinFee = BitcoinFee.SLOW.getFee();
 
         radioButtonGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.cbw_radio_button_slow) {
-                    feeMinerAmount.setText(new StringBuilder().append(" ").append(satoshiToBtcFormat(BitcoinFee.SLOW.getFee())).append(" BTC").toString());
+                    feeMinerAmount.setText(" " + satoshiToBtcFormat(BitcoinFee.SLOW.getFee()) + " BTC");
                     bitcoinFee = BitcoinFee.SLOW.getFee();
                 } else if (checkedId == R.id.cbw_radio_button_normal) {
-                    feeMinerAmount.setText(new StringBuilder().append(" ").append(satoshiToBtcFormat(BitcoinFee.NORMAL.getFee())).append(" BTC").toString());
+                    feeMinerAmount.setText(" " + satoshiToBtcFormat(BitcoinFee.NORMAL.getFee()) + " BTC");
                     bitcoinFee = BitcoinFee.NORMAL.getFee();
                 } else if (checkedId == R.id.cbw_radio_button_fast) {
-                    feeMinerAmount.setText(new StringBuilder().append(" ").append(satoshiToBtcFormat(BitcoinFee.FAST.getFee())).append(" BTC").toString());
+                    feeMinerAmount.setText(" " + satoshiToBtcFormat(BitcoinFee.FAST.getFee()) + " BTC");
                     bitcoinFee = BitcoinFee.FAST.getFee();
                 }
             }
@@ -158,7 +158,7 @@ public class SettingsFeeManagementFragment
         if (feeSettings != null) {
             feeOriginSpinner.setSelection(dataAdapter.getPosition(feeSettings.getFeeOrigin().getCode()));
             blockchainNetworkSpinner.setSelection(dataAdapter.getPosition(feeSettings.getBlockchainNetworkType().getCode()));
-            feeMinerAmount.setText(new StringBuilder().append(satoshiToBtcFormat(feeSettings.getBitcoinFee().getFee())).append(" BTC").toString());
+            feeMinerAmount.setText(satoshiToBtcFormat(feeSettings.getBitcoinFee().getFee()) + " BTC");
             selectRadioButtonsValue(feeSettings.getBitcoinFee().getFee());
         }
 

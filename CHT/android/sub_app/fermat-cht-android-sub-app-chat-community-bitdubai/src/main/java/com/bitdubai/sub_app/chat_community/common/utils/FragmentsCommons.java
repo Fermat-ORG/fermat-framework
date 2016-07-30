@@ -19,7 +19,6 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.views.Utils;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 
 import java.io.ByteArrayInputStream;
 
@@ -42,8 +41,7 @@ public class FragmentsCommons {
         View view = inflater.inflate(R.layout.cht_comm_navigation_drawer_header_item, relativeLayout, true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
         //ImageView imageViewCircle = (ImageView) view.findViewById(R.id.image_view_circle);
-        try
-        {
+        try {
             ChatActorCommunitySelectableIdentity identity = chatUserSubAppSession.getModuleManager().getSelectedActorIdentity();
             if (identity != null) {
                 if (identity.getImage() != null) {
@@ -79,9 +77,9 @@ public class FragmentsCommons {
                     }
                 }
             });
-        }catch(CantGetSelectedActorIdentityException e){
+        } catch (CantGetSelectedActorIdentityException e) {
             //ignore
-        }catch (ActorIdentityNotSelectedException e) {
+        } catch (ActorIdentityNotSelectedException e) {
             //ignore
         }
         return view;

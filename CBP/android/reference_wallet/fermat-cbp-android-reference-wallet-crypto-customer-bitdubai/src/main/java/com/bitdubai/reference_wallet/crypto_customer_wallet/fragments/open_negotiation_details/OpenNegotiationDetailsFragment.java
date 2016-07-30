@@ -196,11 +196,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                     try {
 
                         CustomerBrokerNegotiationInformation negotiation = moduleManager.cancelNegotiation(negotiationInfo, newValue);
-                        Toast.makeText(getActivity(), new StringBuilder().append("NEGOTIATION ").append(negotiationInfo.getNegotiationId()).append(" IS CANCELATED. REASON: ").append(newValue).append(". ").append(negotiation.getCancelReason()).toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "NEGOTIATION " + negotiationInfo.getNegotiationId() + " IS CANCELATED. REASON: " + newValue + ". " + negotiation.getCancelReason(), Toast.LENGTH_LONG).show();
                         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
 
                     } catch (CouldNotCancelNegotiationException | CantCancelNegotiationException e) {
-                        Toast.makeText(getActivity(), new StringBuilder().append("ERROR IN CANCELLATION OF NEGOTIATION: ").append(FermatException.DEFAULT_MESSAGE).toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "ERROR IN CANCELLATION OF NEGOTIATION: " + FermatException.DEFAULT_MESSAGE, Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -875,9 +875,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         String co = "REFERENCE WALLET VALIDATION STATE: ";
         for (ClauseInformation item : clause.values())
-            co = new StringBuilder().append(co).append("\n - ").append(item.getType().getCode()).append(": ").append(item.getStatus().getCode()).toString();
+            co = co + "\n - " + item.getType().getCode() + ": " + item.getStatus().getCode();
 
-        System.out.print(new StringBuilder().append(co).append("\n").toString());
+        System.out.print(co + "\n");
     }
 
     /**

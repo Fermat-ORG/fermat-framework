@@ -11,7 +11,10 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
  */
 public class MiddlewareLayer extends AbstractLayer {
 
-    public MiddlewareLayer(){super(Layers.MIDDLEWARE);}
+    public MiddlewareLayer() {
+        super(Layers.MIDDLEWARE);
+    }
+
     @Override
     public void start() throws CantStartLayerException {
         try {

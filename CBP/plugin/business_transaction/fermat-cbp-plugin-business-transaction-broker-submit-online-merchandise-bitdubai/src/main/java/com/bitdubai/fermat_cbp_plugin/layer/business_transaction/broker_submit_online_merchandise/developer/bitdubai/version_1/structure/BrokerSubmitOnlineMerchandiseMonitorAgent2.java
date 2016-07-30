@@ -484,8 +484,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
      * @param record the Business Transaction record associated with the crypto transaction
      */
     private void raiseIncomingMoneyNotificationEvent(BusinessTransactionRecord record) {
-        System.out.println(new StringBuilder().append("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoCurrency() = ").append(record.getCryptoCurrency()).toString());
-        System.out.println(new StringBuilder().append("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoAmount() = ").append(record.getCryptoAmount()).toString());
+        System.out.println("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoCurrency() = " + record.getCryptoCurrency());
+        System.out.println("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoAmount() = " + record.getCryptoAmount());
 
         FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_MONEY_NOTIFICATION);
         IncomingMoneyNotificationEvent event = (IncomingMoneyNotificationEvent) fermatEvent;

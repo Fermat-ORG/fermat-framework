@@ -367,7 +367,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         } catch (CantLoadTableToMemoryException exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                    new StringBuilder().append("updating parameter ").append(ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME).toString(), "");
+                    "updating parameter " + ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, "");
 
         } catch (Exception exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
@@ -540,7 +540,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
     public void persistContractInDatabase(CustomerBrokerContractSale saleContract) throws CantInsertRecordException {
         try {
             if (isContractHashInDatabase(saleContract.getContractId())) {
-                System.out.println(new StringBuilder().append("The contract ").append(saleContract).append(" exists in database").toString());
+                System.out.println("The contract " + saleContract + " exists in database");
                 return;
             }
             DatabaseTable databaseTable = getAckMerchandiseTable();
@@ -585,7 +585,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         } catch (CantLoadTableToMemoryException exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                    new StringBuilder().append("Updating parameter ").append(ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
+                    "Updating parameter " + ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
 
         } catch (Exception exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
@@ -619,7 +619,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         } catch (CantLoadTableToMemoryException exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                    new StringBuilder().append("Updating parameter ").append(ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
+                    "Updating parameter " + ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
 
         } catch (Exception exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
@@ -641,7 +641,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
 
         try {
             if (isContractHashInDatabase(contractPurchase.getContractId())) {
-                System.out.println(new StringBuilder().append("The contract ").append(contractPurchase).append(" exists in database").toString());
+                System.out.println("The contract " + contractPurchase + " exists in database");
                 return;
             }
             //Get information from negotiation clauses.
@@ -878,7 +878,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         recordsSize = records.size();
 
         if (recordsSize > VALID_RESULTS_NUMBER)
-            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(VALID_RESULTS_NUMBER).append(", but I got ").append(recordsSize).toString());
+            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
     }
 
     /**
@@ -1045,7 +1045,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             return contractHashList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetContractListException(e, new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(), "Cannot load the table into memory");
+            throw new CantGetContractListException(e, "Getting " + valueColumn + " based on " + key, "Cannot load the table into memory");
         }
     }
 
@@ -1078,7 +1078,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             return eventTypeList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetContractListException(e, new StringBuilder().append("Getting events in EventStatus.PENDING in table ").append(databaseTable.getTableName()).toString(),
+            throw new CantGetContractListException(e, "Getting events in EventStatus.PENDING in table " + databaseTable.getTableName(),
                     "Cannot load the table into memory");
         }
     }
@@ -1120,7 +1120,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
 
         } catch (CantLoadTableToMemoryException em) {
             throw new CantSaveEventException(em.getMessage(), em, "Customer Ack Online Merchandise Transaction Event Id Not Exists",
-                    new StringBuilder().append("Cant load ").append(ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_TABLE_NAME).append(" table in memory.").toString());
+                    "Cant load " + ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_TABLE_NAME + " table in memory.");
 
         } catch (Exception e) {
             throw new CantSaveEventException(e.getMessage(), FermatException.wrapException(e),

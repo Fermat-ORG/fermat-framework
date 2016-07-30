@@ -87,6 +87,7 @@ public class OpenContractMonitorAgent2
             // Check if exist in database new contracts to send
             List<OpenContract> contractPendingToSubmitList = openContractBusinessTransactionDao.getPendingToSubmitOpenContract();
             if (!contractPendingToSubmitList.isEmpty()) {
+
                 for (OpenContract openContract : contractPendingToSubmitList) {
 
                     transmissionId  = UUID.randomUUID();
@@ -133,10 +134,10 @@ public class OpenContractMonitorAgent2
                 transmissionId              = record.getTransactionID();
                 Plugins businessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                System.out.println(new StringBuilder().append("OPEN_CONTRACT - remoteBusinessTransaction = ").append(businessTransaction).toString());
+                System.out.println("OPEN_CONTRACT - remoteBusinessTransaction = " + businessTransaction);
                 if (businessTransaction != Plugins.OPEN_CONTRACT)
                     continue;
-                System.out.println(new StringBuilder().append("OPEN_CONTRACT - PASS remoteBusinessTransaction = ").append(businessTransaction).toString());
+                System.out.println("OPEN_CONTRACT - PASS remoteBusinessTransaction = " + businessTransaction);
 
                 OpenContractProcess openProcess = new OpenContractProcess(
                         businessTransactionMetadata,

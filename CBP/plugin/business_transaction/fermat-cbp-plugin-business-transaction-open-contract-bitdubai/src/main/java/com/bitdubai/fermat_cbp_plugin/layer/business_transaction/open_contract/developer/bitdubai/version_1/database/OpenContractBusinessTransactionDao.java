@@ -132,7 +132,7 @@ public class OpenContractBusinessTransactionDao {
     public void persistContractRecord(Contract contractRecord, ContractType contractType) throws CantInsertRecordException {
         try {
             if (isContractHashExists(contractRecord.getContractId())) {
-                System.out.println(new StringBuilder().append("The contract ").append(contractRecord).append(" exists in database").toString());
+                System.out.println("The contract " + contractRecord + " exists in database");
                 return;
             }
             ContractTransactionStatus contractTransactionStatus = ContractTransactionStatus.CREATING_CONTRACT;
@@ -379,9 +379,9 @@ public class OpenContractBusinessTransactionDao {
             return table.getRecords().size() > 0;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new UnexpectedResultReturnedFromDatabaseException(em, "Open Contract, Contract of Negotiation Not Exists", new StringBuilder().append("Cant load ").append(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TABLE_NAME).append(" table in memory.").toString());
+            throw new UnexpectedResultReturnedFromDatabaseException(em, "Open Contract, Contract of Negotiation Not Exists", "Cant load " + OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new UnexpectedResultReturnedFromDatabaseException(e, "Open Contract, Contract of Negotiation", new StringBuilder().append("Cant load ").append(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TABLE_NAME).append(" table in memory.").toString());
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Open Contract, Contract of Negotiation", "Cant load " + OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TABLE_NAME + " table in memory.");
         }
 
     }
@@ -666,7 +666,7 @@ public class OpenContractBusinessTransactionDao {
             return contractHashList;
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetContractListException(e,
-                    new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(),
+                    "Getting " + valueColumn + " based on " + key,
                     "Cannot load the table into memory");
         }
     }
@@ -731,7 +731,7 @@ public class OpenContractBusinessTransactionDao {
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    new StringBuilder().append("Updating parameter ").append(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
+                    "Updating parameter " + OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
         } catch (Exception e) {
             pluginRoot.reportError(
 
@@ -770,7 +770,7 @@ public class OpenContractBusinessTransactionDao {
             record.setStringValue(statusColumnName, newStatus);
             databaseTable.updateRecord(record);
         } catch (CantLoadTableToMemoryException exception) {
-            throw new UnexpectedResultReturnedFromDatabaseException(exception, new StringBuilder().append("Updating parameter ").append(statusColumnName).toString(), "");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Updating parameter " + statusColumnName, "");
         }
     }
 
@@ -791,7 +791,7 @@ public class OpenContractBusinessTransactionDao {
         }
         recordsSize = records.size();
         if (recordsSize > VALID_RESULTS_NUMBER) {
-            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(VALID_RESULTS_NUMBER).append(", but I got ").append(recordsSize).toString());
+            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
         }
     }
 

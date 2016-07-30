@@ -15,13 +15,13 @@ import java.util.ArrayList;
  */
 public class ContactListFilter extends Filter {
 
-    ArrayList<String> contactInfo=new ArrayList<>();
-    ArrayList<Bitmap> contactIcon=new ArrayList<>();
-    ArrayList<String> contactId=new ArrayList<>();
+    ArrayList<String> contactInfo = new ArrayList<>();
+    ArrayList<Bitmap> contactIcon = new ArrayList<>();
+    ArrayList<String> contactId = new ArrayList<>();
     private ContactListAdapter adapter;
-    ArrayList<String> contactInfoDatan=new ArrayList<>();
-    ArrayList<Bitmap> contactIconDatan=new ArrayList<>();
-    ArrayList<String> contactIdDatan=new ArrayList<>();
+    ArrayList<String> contactInfoDatan = new ArrayList<>();
+    ArrayList<Bitmap> contactIconDatan = new ArrayList<>();
+    ArrayList<String> contactIdDatan = new ArrayList<>();
 
 
     public ContactListFilter(ArrayList contactInfo, ArrayList contactIcon, ArrayList contactId, ContactListAdapter adapter) {

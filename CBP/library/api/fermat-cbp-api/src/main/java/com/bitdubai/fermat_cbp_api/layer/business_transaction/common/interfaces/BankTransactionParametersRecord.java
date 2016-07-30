@@ -162,22 +162,7 @@ public class BankTransactionParametersRecord implements BankTransactionParameter
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("BankTransactionParametersRecord{")
-                .append("transactionId=").append(transactionId)
-                .append(", publicKeyPlugin='").append(publicKeyPlugin)
-                .append('\'')
-                .append(", publicKeyWallet='").append(publicKeyWallet)
-                .append('\'')
-                .append(", publicKeyActor='").append(publicKeyActor)
-                .append('\'')
-                .append(", amount=").append(amount)
-                .append(", account='").append(account)
-                .append('\'')
-                .append(", currency=").append(currency)
-                .append(", memo='").append(memo)
-                .append('\'')
-                .append('}').toString();
+        return "BankTransactionParametersRecord{" + "transactionId=" + transactionId + ", publicKeyPlugin='" + publicKeyPlugin + '\'' + ", publicKeyWallet='" + publicKeyWallet + '\'' + ", publicKeyActor='" + publicKeyActor + '\'' + ", amount=" + amount + ", account='" + account + '\'' + ", currency=" + currency + ", memo='" + memo + '\'' + '}';
     }
 
     public void setTransactionType(TransactionType transactionType) {

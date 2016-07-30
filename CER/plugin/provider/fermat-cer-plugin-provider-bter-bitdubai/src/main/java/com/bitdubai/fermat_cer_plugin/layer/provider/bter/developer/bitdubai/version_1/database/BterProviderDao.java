@@ -207,8 +207,7 @@ public class BterProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Bter provider plugin", "Invalid From Currency value stored in table"
-                    + BterProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "Bter provider plugin", "Invalid From Currency value stored in table" + BterProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
         }
 
         Currency toCurrency;
@@ -222,8 +221,7 @@ public class BterProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Bter provider plugin", "Invalid To Currency value stored in table"
-                    + BterProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "Bter provider plugin", "Invalid To Currency value stored in table" + BterProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
         }
 
         return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);
