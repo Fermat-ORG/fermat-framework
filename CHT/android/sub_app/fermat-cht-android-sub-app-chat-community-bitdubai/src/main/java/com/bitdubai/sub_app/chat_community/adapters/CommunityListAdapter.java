@@ -55,6 +55,8 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
     private ChatActorCommunitySubAppModuleManager moduleManager;
     ArrayList<ChatActorCommunityInformation> chatMessages = new ArrayList<>();
+    private AdapterCallbackList mAdapterCallbackList;
+
 
     public CommunityListAdapter(Context context) {
         super(context);
@@ -62,7 +64,8 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
 
     public CommunityListAdapter(Context context, List<ChatActorCommunityInformation> dataSet,
                                 ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
-                                ChatActorCommunitySubAppModuleManager moduleManager) {
+                                ChatActorCommunitySubAppModuleManager moduleManager,
+                                AdapterCallbackList adapterCallbackList) {
         super(context, dataSet);
         this.appSession=appSession;
         this.moduleManager=moduleManager;
@@ -71,6 +74,10 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     @Override
     protected CommunityWorldHolder createHolder(View itemView, int type) {
         return new CommunityWorldHolder(itemView);
+    }
+
+    public static interface AdapterCallbackList {
+        void onMethodCallback(ChatActorCommunityInformation chatActorCommunityInformation);
     }
 
     @Override
@@ -260,7 +267,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 try {
                     connectDialog =
                             new ConnectDialog(context, appSession, null,
-                                    dat, moduleManager.getSelectedActorIdentity());
+                                    dat, moduleManager.getSelectedActorIdentity(), null);
                     connectDialog.setTitle("Connection Request");
                     connectDialog.setDescription("Are you sure you want to send a connection request to this contact?");
                     connectDialog.setUsername(dat.getAlias());
@@ -294,7 +301,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 try {
                     disconnectDialog =
                             new DisconnectDialog(context, appSession, null,
-                                    dat, moduleManager.getSelectedActorIdentity());
+                                    dat, moduleManager.getSelectedActorIdentity(), null);
                     disconnectDialog.setTitle("Disconnect");
                     disconnectDialog.setDescription("Do you want to disconnect from");
                     disconnectDialog.setUsername(dat.getAlias()+"?");
@@ -328,7 +335,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 try {
                     connectDialog =
                             new ConnectDialog(context, appSession, null,
-                                    dat, moduleManager.getSelectedActorIdentity());
+                                    dat, moduleManager.getSelectedActorIdentity(), null);
                     connectDialog.setTitle("Resend Connection Request");
                     connectDialog.setDescription("Do you want to resend ");
                     connectDialog.setUsername(dat.getAlias());

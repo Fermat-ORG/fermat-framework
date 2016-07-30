@@ -233,7 +233,7 @@ public class ConnectionsWorldFragment
             //Set up RecyclerView
             layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
             adapter = new CommunityListAdapter(getActivity(), lstChatUserInformations,
-                    appSession, moduleManager);
+                    appSession, moduleManager, null);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             refreshButtonView = (View) rootView.findViewById(R.id.show_more_layout);
