@@ -539,7 +539,9 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         chart.setHighlightPerTapEnabled(true);
         //chart.setOnChartValueSelectedListener((OnChartValueSelectedListener) this);
         chart.fitScreen();
-        long frmt =  100000000;
+
+        /**HARD CORE DATA FOR CHART**/
+       /* long frmt =  100000000;
         long date = System.currentTimeMillis();
         long day = 86400000;
         Map<Long, Long> dailyHardCore = new HashMap<>();
@@ -550,10 +552,12 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             dailyHardCore.put(dataPlusday,frm1t);
             dataPlusday++;
             day++;
-        }
+        }*/
+        //LineData data = getData(dailyHardCore);
+        /**END HARD CORE DATA FOR CHART**/
 
-        //LineData data = getData(fermatWalletSettings.getRunningDailyBalance());
-        LineData data = getData(dailyHardCore);
+        LineData data = getData(fermatWalletSettings.getRunningDailyBalance());
+
         //LineData data = new LineData(labels, dataset);
         chart.setData(data);
 
