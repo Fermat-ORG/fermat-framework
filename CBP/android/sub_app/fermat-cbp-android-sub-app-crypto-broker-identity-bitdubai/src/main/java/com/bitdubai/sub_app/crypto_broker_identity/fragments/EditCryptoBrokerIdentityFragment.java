@@ -111,6 +111,7 @@ public class EditCryptoBrokerIdentityFragment
 
     private ExecutorService executor;
     private byte[] profileImage;
+    private boolean isEditing;
 
     private final TextWatcher textWatcher = new TextWatcher() {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -304,6 +305,7 @@ public class EditCryptoBrokerIdentityFragment
                 appSession.setData(FragmentsCommons.IDENTITY_INFO, identityInfo);
                 if( identityInfo != null){
                     actualizable = false;
+                    isEditing=true;
                     editIdentityInfoInDevice();
                 }else{
                     createNewIdentityInDevice();
@@ -552,7 +554,14 @@ public class EditCryptoBrokerIdentityFragment
 
         //progressBar.setVisibility(View.GONE);
 
-        makeText(getActivity(), "Crypto Broker Identity Updated.", Toast.LENGTH_LONG).show();
+        if (!isEditing)
+            Toast.makeText(getActivity(), "Crypto Broker Identity Created.", Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(getActivity(), "Crypto Broker Identity Updated.", Toast.LENGTH_LONG).show();
+
+        isEditing=false;
+
+        //makeText(getActivity(), "Crypto Broker Identity Updated.", Toast.LENGTH_LONG).show();
         //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY, appSession.getAppPublicKey());
         getActivity().onBackPressed();
     }
