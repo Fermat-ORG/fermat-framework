@@ -12,12 +12,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="ADD BROADCAST LIST RECIPIENTS"
+            android:text="@string/cht_broadcaster_recipients"
             android:id="@+id/textView"
             android:drawableEnd="@android:drawable/btn_plus"
-            android:textColor="#808080"
+            android:drawableRight="@android:drawable/btn_plus"
+            android:textColor="@color/cht_broadcaster_text"
             android:singleLine="false"
             android:textAlignment="center"
+            android:gravity="center"
             android:layout_marginTop="46dp"
             android:layout_below="@+id/editTextNameBroadcast"
             android:layout_centerHorizontal="true" />
@@ -27,22 +29,24 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:textColor="#000"
+            android:textColor="@color/cht_broadcaster_simple_name"
             android:id="@+id/editTextContacts"
-            android:hint="Type contact name"
+            android:hint="@string/cht_broadcaster_simple_contact_hint"
             android:layout_below="@+id/textView"
             android:layout_alignStart="@+id/textView"
+            android:layout_alignLeft="@+id/textView"
             android:layout_alignEnd="@+id/textView"
-            android:textColorHint="#808080" />
+            android:layout_alignRight="@+id/textView"
+            android:textColorHint="@color/cht_broadcaster_simple_name_hint" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="BROADCAST SIMPLE"
+            android:text="@string/cht_broadcaster_simple_text"
             android:id="@+id/textView3"
             android:layout_gravity="center_horizontal"
-            android:textColor="#000"
+            android:textColor="@color/cht_broadcaster_type_title"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="49dp" />
@@ -52,12 +56,12 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:textColor="#000"
+            android:textColor="@color/cht_broadcaster_simple_name"
             android:id="@+id/editTextNameBroadcast"
-            android:hint="Type name for the broadcast"
+            android:hint="@string/cht_broadcaster_simple_name_hint"
             android:layout_below="@+id/textView3"
             android:layout_centerHorizontal="true"
-            android:textColorHint="#808080" />
+            android:textColorHint="@color/cht_broadcaster_simple_name_hint" />
 
         <ListView
             android:layout_width="wrap_content"
@@ -67,6 +71,7 @@
             android:textColor="#000"
             android:cacheColorHint="#000"
             android:layout_below="@+id/editTextContacts"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"/>
     </RelativeLayout>
 </LinearLayout>

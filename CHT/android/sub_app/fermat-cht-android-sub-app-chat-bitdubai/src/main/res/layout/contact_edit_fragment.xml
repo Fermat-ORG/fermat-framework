@@ -54,16 +54,19 @@
             android:layout_alignParentBottom="true"
             android:autoText="true"
             android:textColor="@color/black"
-            android:hint="User Alias"
+            android:hint="@string/cht_contact_edit_text_hint"
             android:layout_alignBottom="@+id/saveContactButton"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_toStartOf="@+id/saveContactButton"
+            android:layout_toLeftOf="@+id/saveContactButton"
             />
         <Button
             android:id="@+id/saveContactButton"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:background="@drawable/cht_buttom_ok"
             />
     </RelativeLayout>
