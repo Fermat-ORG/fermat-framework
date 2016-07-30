@@ -698,9 +698,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             }
         }else {
             if (Build.VERSION.SDK_INT >= 23) {
-                Toast.makeText(getContext(), "there is no cameras available", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "There is no cameras available", Toast.LENGTH_SHORT).show();
             }else {
-                Toast.makeText(getActivity(), "there is no cameras available", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "There is no cameras available", Toast.LENGTH_SHORT).show();
             }
         }
     }
