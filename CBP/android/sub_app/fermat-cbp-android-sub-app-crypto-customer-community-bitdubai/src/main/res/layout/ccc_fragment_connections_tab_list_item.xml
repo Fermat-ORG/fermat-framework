@@ -44,7 +44,7 @@
         android:maxLines="2"
         android:textColor="@color/color_black_light"
         android:textSize="17sp"
-        tools:text="Broker Name"/>
+        tools:text="@string/ccc_broker_name"/>
 
     <RelativeLayout
         android:id="@+id/ccc_location_container"

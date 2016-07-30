@@ -58,9 +58,5 @@ android:orientation="horizontal" >
             android:textSize="10sp" />
         </RelativeLayout>
     </LinearLayout>
-
-
-
-
 </LinearLayout>
 
