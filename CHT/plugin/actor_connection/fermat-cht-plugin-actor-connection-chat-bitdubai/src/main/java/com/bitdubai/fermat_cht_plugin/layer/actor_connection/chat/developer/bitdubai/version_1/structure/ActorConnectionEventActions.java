@@ -13,6 +13,8 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequ
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -23,7 +25,6 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
-import com.bitdubai.fermat_cht_api.layer.actor_connection.enums.ActorConnectionNotificationType;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantConfirmException;
@@ -35,17 +36,15 @@ import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitd
 import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.database.ChatActorConnectionDao;
 import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.exceptions.CantHandleUpdateEventException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+
+import java.util.List;
+import java.util.UUID;
 
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_ACTIVITY_TO_OPEN_CODE;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_TO_OPEN_PUBLIC_KEY;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 06/04/16.
@@ -135,7 +134,7 @@ public class ActorConnectionEventActions {
                         break;
                     case DISCONNECT:
 //                        if (request.getRequestType() == RequestType.SENT)
-                            this.handleDisconnect(request.getRequestId());
+                        this.handleDisconnect(request.getRequestId());
 
                         break;
 
@@ -169,13 +168,13 @@ public class ActorConnectionEventActions {
 
             ChatActorConnection oldActorConnection = dao.chatActorConnectionExists(linkedIdentity, request.getSenderPublicKey());
             ConnectionState connectionState = null;
-            if(oldActorConnection!=null)
+            if (oldActorConnection != null)
                 connectionState = oldActorConnection.getConnectionState();
 //
-            if(connectionState != null && connectionState.equals(ConnectionState.CONNECTED))
+            if (connectionState != null && connectionState.equals(ConnectionState.CONNECTED))
                 return;
 //            else
-                connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
+            connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
 
             final ChatActorConnection actorConnection = new ChatActorConnection(
                     request.getRequestId(),
@@ -191,7 +190,7 @@ public class ActorConnectionEventActions {
 
             switch (request.getSenderActorType()) {
                 case CHAT:
-                    dao.registerChatActorConnection(actorConnection,oldActorConnection);
+                    dao.registerChatActorConnection(actorConnection, oldActorConnection);
 
                     FermatBundle fermatBundle = new FermatBundle();
                     fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_CONNECTION.getCode());

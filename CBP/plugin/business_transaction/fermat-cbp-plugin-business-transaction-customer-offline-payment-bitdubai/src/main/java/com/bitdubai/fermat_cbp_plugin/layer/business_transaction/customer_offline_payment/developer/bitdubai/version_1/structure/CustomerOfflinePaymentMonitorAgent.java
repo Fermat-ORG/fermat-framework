@@ -203,7 +203,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
 
                 // now I will check if there are pending transactions to raise the event
                 try {
-                    logManager.log(logLevel, new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
+                    logManager.log(logLevel, "Iteration number " + iterationNumber, null, null);
 
                     doTheMainTask();
 

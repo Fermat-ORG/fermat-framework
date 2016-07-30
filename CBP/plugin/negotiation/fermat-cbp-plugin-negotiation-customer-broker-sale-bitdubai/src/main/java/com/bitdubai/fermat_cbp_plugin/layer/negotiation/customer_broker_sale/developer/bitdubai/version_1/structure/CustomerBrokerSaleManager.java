@@ -102,7 +102,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
     @Override
     public boolean closeNegotiation(UUID negotiationId) throws CantUpdateCustomerBrokerSaleException {
         try {
-            System.out.print(new StringBuilder().append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL").append("\n - NEGOTIATION SALE MANAGER closeNegotiation(").append(negotiationId).append(")\n").toString());
+            System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL" + "\n - NEGOTIATION SALE MANAGER closeNegotiation(" + negotiationId + ")\n");
             return this.customerBrokerSaleNegotiationDao.closeNegotiation(negotiationId);
         } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

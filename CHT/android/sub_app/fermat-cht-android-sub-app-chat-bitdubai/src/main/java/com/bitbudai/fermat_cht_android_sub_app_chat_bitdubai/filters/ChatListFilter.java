@@ -16,25 +16,25 @@ import java.util.UUID;
  */
 public class ChatListFilter extends Filter {
 
-    ArrayList<String> contactName=new ArrayList<>();
-    ArrayList<String> message=new ArrayList<>();
-    ArrayList<String> dateMessage=new ArrayList<>();
-    ArrayList<UUID> chatId=new ArrayList<>();
-    ArrayList<String> contactId=new ArrayList<>();
-    ArrayList<String> status=new ArrayList<>();
-    ArrayList<String> typeMessage=new ArrayList<>();
-    ArrayList<Integer> noReadMsgs=new ArrayList<>();
-    ArrayList<Bitmap> imgId=new ArrayList<>();
+    ArrayList<String> contactName = new ArrayList<>();
+    ArrayList<String> message = new ArrayList<>();
+    ArrayList<String> dateMessage = new ArrayList<>();
+    ArrayList<UUID> chatId = new ArrayList<>();
+    ArrayList<String> contactId = new ArrayList<>();
+    ArrayList<String> status = new ArrayList<>();
+    ArrayList<String> typeMessage = new ArrayList<>();
+    ArrayList<Integer> noReadMsgs = new ArrayList<>();
+    ArrayList<Bitmap> imgId = new ArrayList<>();
 
-    ArrayList<String> contactNameDatan=new ArrayList<>();
-    ArrayList<String> messageDatan=new ArrayList<>();
-    ArrayList<String> dateMessageDatan=new ArrayList<>();
-    ArrayList<UUID> chatIdDatan=new ArrayList<>();
-    ArrayList<String> contactIdDatan=new ArrayList<>();
-    ArrayList<String> statusDatan=new ArrayList<>();
-    ArrayList<String> typeMessageDatan=new ArrayList<>();
-    ArrayList<Integer> noReadMsgsDatan=new ArrayList<>();
-    ArrayList<Bitmap> imgIdDatan=new ArrayList<>();
+    ArrayList<String> contactNameDatan = new ArrayList<>();
+    ArrayList<String> messageDatan = new ArrayList<>();
+    ArrayList<String> dateMessageDatan = new ArrayList<>();
+    ArrayList<UUID> chatIdDatan = new ArrayList<>();
+    ArrayList<String> contactIdDatan = new ArrayList<>();
+    ArrayList<String> statusDatan = new ArrayList<>();
+    ArrayList<String> typeMessageDatan = new ArrayList<>();
+    ArrayList<Integer> noReadMsgsDatan = new ArrayList<>();
+    ArrayList<Bitmap> imgIdDatan = new ArrayList<>();
     private ChatListAdapter adapter;
 
     public ChatListFilter(ArrayList contactName,
@@ -54,7 +54,7 @@ public class ChatListFilter extends Filter {
         this.status = status;
         this.typeMessage = typeMessage;
         this.noReadMsgs = noReadMsgs;
-        this.imgId=imgId;
+        this.imgId = imgId;
         this.adapter = adapter;
     }
 

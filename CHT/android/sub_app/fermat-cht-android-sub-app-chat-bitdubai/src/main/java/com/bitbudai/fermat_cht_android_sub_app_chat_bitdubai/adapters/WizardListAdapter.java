@@ -38,17 +38,16 @@ import java.util.UUID;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/01/16.
  * @version 1.0
- *
  */
 
 public class WizardListAdapter extends ArrayAdapter<String> {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
 
     List<ContactList> contactsList = new ArrayList<>();
-    ArrayList<String> contactinfo=new ArrayList<String>();
-    ArrayList<Contact> contactselected=new ArrayList<Contact>();
-    ArrayList<Bitmap> contacticon=new ArrayList<Bitmap>();
-    ArrayList<UUID> contactid=new ArrayList<UUID>();
+    ArrayList<String> contactinfo = new ArrayList<String>();
+    ArrayList<Contact> contactselected = new ArrayList<Contact>();
+    ArrayList<Bitmap> contacticon = new ArrayList<Bitmap>();
+    ArrayList<UUID> contactid = new ArrayList<UUID>();
     private ChatManager chatManager;
     private FermatSession appSession;
     private ErrorManager errorManager;
@@ -71,17 +70,16 @@ public class WizardListAdapter extends ArrayAdapter<String> {//public class Chat
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
         this.contactid = contactid;
-        this.chatManager=chatManager;
-        this.moduleManager=moduleManager;
-        this.errorManager=errorManager;
-        this.chatSession=chatSession;
-        this.appSession=appSession;
-        this.mContext=context;
+        this.chatManager = chatManager;
+        this.moduleManager = moduleManager;
+        this.errorManager = errorManager;
+        this.chatSession = chatSession;
+        this.appSession = appSession;
+        this.mContext = context;
         try {
             this.mAdapterCallback = mAdapterCallback;
-        }catch (Exception e)
-        {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
@@ -103,18 +101,18 @@ public class WizardListAdapter extends ArrayAdapter<String> {//public class Chat
             contactname.setText(contactinfo.get(position));
             //contactname.setTypeface(tf, Typeface.NORMAL);
 
-            final int pos=position;
+            final int pos = position;
             imagen.setOnClickListener(new View.OnClickListener() {
-               // int pos = position;
+                // int pos = position;
                 @Override
                 public void onClick(View v) {
                     try {
                         CheckBox check = (CheckBox) item.findViewById(R.id.checkBoxSelectContact);
                         check.setChecked(true);
 
-                         } catch (Exception e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }
+                    } catch (Exception e) {
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }
                 }
             });
 
@@ -129,13 +127,13 @@ public class WizardListAdapter extends ArrayAdapter<String> {//public class Chat
     }
 
     public void refreshEvents(ArrayList contactinfo, ArrayList contacticon, ArrayList contactid) {
-        this.contactinfo=contactinfo;
-        this.contacticon=contacticon;
-        this.contactid=contactid;
+        this.contactinfo = contactinfo;
+        this.contacticon = contacticon;
+        this.contactid = contactid;
         notifyDataSetChanged();
     }
 
-    public static Bitmap decodeFile(Context context,int resId) {
+    public static Bitmap decodeFile(Context context, int resId) {
         // decode image size
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
@@ -144,8 +142,7 @@ public class WizardListAdapter extends ArrayAdapter<String> {//public class Chat
         final int REQUIRED_SIZE = 300;
         int width_tmp = o.outWidth, height_tmp = o.outHeight;
         int scale = 1;
-        while (true)
-        {
+        while (true) {
             if (width_tmp / 2 < REQUIRED_SIZE
                     || height_tmp / 2 < REQUIRED_SIZE)
                 break;
@@ -159,12 +156,12 @@ public class WizardListAdapter extends ArrayAdapter<String> {//public class Chat
         return BitmapFactory.decodeResource(context.getResources(), resId, o2);
     }
 
-    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int width) {
         // TODO Auto-generated method stub
         int targetWidth = width;
         int targetHeight = width;
         Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
-                targetHeight,Bitmap.Config.ARGB_8888);
+                targetHeight, Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(targetBitmap);
         Path path = new Path();

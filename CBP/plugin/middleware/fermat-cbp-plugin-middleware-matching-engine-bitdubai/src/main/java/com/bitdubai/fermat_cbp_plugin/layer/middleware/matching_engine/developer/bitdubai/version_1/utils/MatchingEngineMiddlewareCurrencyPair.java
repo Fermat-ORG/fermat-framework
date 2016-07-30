@@ -66,10 +66,6 @@ public class MatchingEngineMiddlewareCurrencyPair implements CurrencyPair {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("MatchingEngineMiddlewareCurrencyPair{")
-                .append("from=").append(from)
-                .append(", to=").append(to)
-                .append('}').toString();
+        return "MatchingEngineMiddlewareCurrencyPair{" + "from=" + from + ", to=" + to + '}';
     }
 }

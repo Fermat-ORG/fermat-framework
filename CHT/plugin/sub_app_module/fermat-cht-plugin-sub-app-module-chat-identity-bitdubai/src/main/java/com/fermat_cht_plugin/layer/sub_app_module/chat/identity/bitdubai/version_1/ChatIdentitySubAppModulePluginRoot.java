@@ -18,7 +18,6 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 /**
  * FERMAT-ORG
@@ -48,7 +47,7 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractModule<ChatIdent
      *
      */
     @Override
-    public void start(){
+    public void start() {
         /**
          *
          * Init the plugin manager

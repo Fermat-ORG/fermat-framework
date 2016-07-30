@@ -30,7 +30,7 @@ public enum NegotiationStepStatus {
             case "CONFIR":
                 return CONFIRM;
             default:
-                throw new InvalidParameterException(new StringBuilder().append("Code Received: ").append(code).append(" - This Code Is Not Valid for the ClauseType enum").toString());
+                throw new InvalidParameterException("Code Received: " + code + " - This Code Is Not Valid for the ClauseType enum");
         }
     }
 

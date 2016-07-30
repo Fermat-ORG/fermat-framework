@@ -133,13 +133,13 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            FermatException e = new CantDeliverDatabaseException("I can't open database", cantOpenDatabaseException, new StringBuilder().append("WalletId: ").append(walletId).toString(), "");
+            FermatException e = new CantDeliverDatabaseException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId, "");
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (DatabaseNotFoundException databaseNotFoundException) {
-            FermatException e = new CantDeliverDatabaseException("Database does not exists", databaseNotFoundException, new StringBuilder().append("WalletId: ").append(walletId).toString(), "");
+            FermatException e = new CantDeliverDatabaseException("Database does not exists", databaseNotFoundException, "WalletId: " + walletId, "");
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (Exception exception) {
-            FermatException e = new CantDeliverDatabaseException(CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), new StringBuilder().append("WalletId: ").append(walletId).toString(), "");
+            FermatException e = new CantDeliverDatabaseException(CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "WalletId: " + walletId, "");
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empry list
@@ -213,10 +213,10 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
             cryptoBrokerWallet.put(walletPublicKey, internalWalletId);
         } catch (CantCreateCryptoBrokerWalletException exception) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw new CantCreateCryptoBrokerWalletException("Wallet Creation Failed", exception, new StringBuilder().append("walletId: ").append(walletPublicKey).toString(), "");
+            throw new CantCreateCryptoBrokerWalletException("Wallet Creation Failed", exception, "walletId: " + walletPublicKey, "");
         } catch (Exception exception) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw new CantCreateCryptoBrokerWalletException("Wallet Creation Failed", FermatException.wrapException(exception), new StringBuilder().append("walletId: ").append(walletPublicKey).toString(), "");
+            throw new CantCreateCryptoBrokerWalletException("Wallet Creation Failed", FermatException.wrapException(exception), "walletId: " + walletPublicKey, "");
         }
     }
 

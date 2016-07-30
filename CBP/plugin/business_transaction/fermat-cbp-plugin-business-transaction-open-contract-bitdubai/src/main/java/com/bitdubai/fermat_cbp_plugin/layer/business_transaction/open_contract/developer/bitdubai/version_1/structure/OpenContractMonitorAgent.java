@@ -195,7 +195,7 @@ public class OpenContractMonitorAgent implements
                  */
                 try {
 
-                    logManager.log(OpenContractPluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
+                    logManager.log(OpenContractPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
                     pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -250,7 +250,7 @@ public class OpenContractMonitorAgent implements
                         contractXML = openContractBusinessTransactionDao.getContractXML(hashToSubmit);
                         contractType = openContractBusinessTransactionDao.getContractType(hashToSubmit);
 
-                        System.out.println(new StringBuilder().append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - contractType: ").append(contractType).append("\n").toString());
+                        System.out.println("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - contractType: " + contractType + "\n");
 
                         switch (contractType) {
                             case PURCHASE:
@@ -426,7 +426,7 @@ public class OpenContractMonitorAgent implements
 
                     if (businessTransactionMetadata.getRemoteBusinessTransaction().getCode().equals(Plugins.OPEN_CONTRACT.getCode())) {
 
-                        System.out.print(new StringBuilder().append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - EVENT - TYPE: ").append(eventTypeCode).append("\n").toString());
+                        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - EVENT - TYPE: " + eventTypeCode + "\n");
 
                         //EVENT FOR CONTRACT HASH
                         if (eventTypeCode.equals(EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH.getCode())) {

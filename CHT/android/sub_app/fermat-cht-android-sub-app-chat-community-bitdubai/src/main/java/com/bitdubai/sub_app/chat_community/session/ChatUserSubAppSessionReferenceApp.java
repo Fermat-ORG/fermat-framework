@@ -12,11 +12,12 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  * @version 1.0
  */
 public class ChatUserSubAppSessionReferenceApp extends AbstractReferenceAppFermatSession<InstalledSubApp,
-        ChatActorCommunitySubAppModuleManager,SubAppResourcesProviderManager> {
+        ChatActorCommunitySubAppModuleManager, SubAppResourcesProviderManager> {
 
     public static final String BASIC_DATA = "catalog item";
     public static final String PREVIEW_IMGS = "preview images";
     public static final String DEVELOPER_NAME = "developer name";
 
-    public ChatUserSubAppSessionReferenceApp() {}
+    public ChatUserSubAppSessionReferenceApp() {
+    }
 }

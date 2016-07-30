@@ -1,9 +1,8 @@
 <resources>
-    <string name="app_name">Crypto Customer Wallet</string>
+    <string name="app_name" translatable="false">Crypto Customer Wallet</string>
     <string name="action_settings">Settings</string>
     <string name="action_start_negotiation">Start Negotiation</string>
-    <string name="add_a_note_button">ADD A NOTE</string>
-    <string name="add_cancel_negotiation_button">CANCEL NEGOTIATION</string>
+    <string name="ccw_add_a_note_button">ADD A NOTE</string>
     <string name="amount">Amount</string>
     <string name="arrow" translatable="false">arrow</string>
     <string name="at" translatable="false">\@</string>

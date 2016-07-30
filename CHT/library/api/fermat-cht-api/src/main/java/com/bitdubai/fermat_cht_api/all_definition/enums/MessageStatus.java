@@ -10,13 +10,12 @@ public enum MessageStatus implements FermatEnum {
     /**
      * Definition types
      */
-    CANNOT_SEND ("CSED"),
-    CREATED     ("CRET"),
-    DELIVERED   ("DELR"),
-    READ        ("READ"),
-    RECEIVE     ("RXED"),
-    SEND        ("SEND"),
-    ;
+    CANNOT_SEND("CSED"),
+    CREATED("CRET"),
+    DELIVERED("DELR"),
+    READ("READ"),
+    RECEIVE("RXED"),
+    SEND("SEND"),;
 
     /**
      * Represent the code of the message status
@@ -31,6 +30,7 @@ public enum MessageStatus implements FermatEnum {
     MessageStatus(String code) {
         this.code = code;
     }
+
     /**
      * Throw the method <code>getCode</code> you can get the code of the specific element of the enum.
      *
@@ -38,7 +38,7 @@ public enum MessageStatus implements FermatEnum {
      */
     @Override
     public String getCode() {
-        return this.code ;
+        return this.code;
     }
 
     /**

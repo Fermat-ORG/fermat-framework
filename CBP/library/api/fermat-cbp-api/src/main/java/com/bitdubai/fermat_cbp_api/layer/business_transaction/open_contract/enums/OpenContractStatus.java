@@ -22,12 +22,12 @@ public enum OpenContractStatus implements FermatEnum {
         for (OpenContractStatus value : values()) {
             if (value.getCode().equals(code)) return value;
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the OpenContractStatus enum.");
+        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the OpenContractStatus enum.");
     }
 
     @Override
     public String toString() {
-        return new StringBuilder().append("OpenContractStatus{").append("code='").append(code).append('\'').append('}').toString();
+        return "OpenContractStatus{" + "code='" + code + '\'' + '}';
     }
 
     //GETTER AND SETTERS

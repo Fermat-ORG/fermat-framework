@@ -15,7 +15,8 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNew
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 
-/** The enum <code>com.bitdubai.fermat_cht_api.fermat_chp_api.events.enums.EventType</code>
+/**
+ * The enum <code>com.bitdubai.fermat_cht_api.fermat_chp_api.events.enums.EventType</code>
  * represent the different type of events found on cht platform.<p/>
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/01/16.
  */
@@ -29,34 +30,49 @@ public enum EventType implements FermatEventEnum {
      * ACTOR CONNECTION
      */
     CHAT_ACTOR_CONNECTION_REQUEST_NEW("CACRN") {
-        public final FermatEvent getNewEvent() { return new ChatConnectionRequestNewEvent(this); }
+        public final FermatEvent getNewEvent() {
+            return new ChatConnectionRequestNewEvent(this);
+        }
     },
     CHAT_ACTOR_CONNECTION_UPDATE_CONNECTION("CACUC") {
-        public final FermatEvent getNewEvent() { return new ChatConnectionRequestUpdatesEvent(this); }
+        public final FermatEvent getNewEvent() {
+            return new ChatConnectionRequestUpdatesEvent(this);
+        }
     },
 
     /**
      * NETWORK SERVICES
      */
-    OUTGOING_CHAT("OUTGCHAT"){
-        public final FermatEvent getNewEvent() { return new OutgoingChat(this);}
+    OUTGOING_CHAT("OUTGCHAT") {
+        public final FermatEvent getNewEvent() {
+            return new OutgoingChat(this);
+        }
     },
-    INCOMING_CHAT("INCHAT"){
-        public final FermatEvent getNewEvent()  {   return new IncomingChat(this);}
+    INCOMING_CHAT("INCHAT") {
+        public final FermatEvent getNewEvent() {
+            return new IncomingChat(this);
+        }
     },
-    INCOMING_STATUS("INSTS"){
-        public final FermatEvent getNewEvent()  { return new IncomingNewChatStatusUpdate(this);}
-        },
-    INCOMING_ONLINE_STATUS("INOSTS"){
-        public final FermatEvent getNewEvent()  { return new IncomingNewOnlineStatusUpdate(this);}
+    INCOMING_STATUS("INSTS") {
+        public final FermatEvent getNewEvent() {
+            return new IncomingNewChatStatusUpdate(this);
+        }
     },
-    INCOMING_WRITING_STATUS("INWSTS"){
-        public final FermatEvent getNewEvent()  { return new IncomingNewWritingStatusUpdate(this);}
+    INCOMING_ONLINE_STATUS("INOSTS") {
+        public final FermatEvent getNewEvent() {
+            return new IncomingNewOnlineStatusUpdate(this);
+        }
     },
-    INCOMING_CHAT_MESSAGE_NOTIFICATION("INCCM"){
-        public final FermatEvent getNewEvent() {  return new IncomingChatMessageNotificationEvent(this);}
+    INCOMING_WRITING_STATUS("INWSTS") {
+        public final FermatEvent getNewEvent() {
+            return new IncomingNewWritingStatusUpdate(this);
+        }
     },
-    ;
+    INCOMING_CHAT_MESSAGE_NOTIFICATION("INCCM") {
+        public final FermatEvent getNewEvent() {
+            return new IncomingChatMessageNotificationEvent(this);
+        }
+    },;
 
     private final String code;
 
@@ -75,5 +91,7 @@ public enum EventType implements FermatEventEnum {
     }
 
     @Override// by default
-    public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return new GenericEventListener(this, fermatEventMonitor); }
+    public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+        return new GenericEventListener(this, fermatEventMonitor);
+    }
 }

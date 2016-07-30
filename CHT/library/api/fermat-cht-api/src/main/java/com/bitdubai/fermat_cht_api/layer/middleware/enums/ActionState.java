@@ -10,8 +10,8 @@ public enum ActionState {
      * Definition types
      */
 //    PENDING         ("PEND"),
-    ACTIVE          ("ACTV"),
-    NONE            ("NONE");
+    ACTIVE("ACTV"),
+    NONE("NONE");
 //    DONE            ("DONE");
 
     /**
@@ -33,7 +33,9 @@ public enum ActionState {
      *
      * @return String that represent of the message status
      */
-    public String getCode()   { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
     /**
      * Return the enum by the code

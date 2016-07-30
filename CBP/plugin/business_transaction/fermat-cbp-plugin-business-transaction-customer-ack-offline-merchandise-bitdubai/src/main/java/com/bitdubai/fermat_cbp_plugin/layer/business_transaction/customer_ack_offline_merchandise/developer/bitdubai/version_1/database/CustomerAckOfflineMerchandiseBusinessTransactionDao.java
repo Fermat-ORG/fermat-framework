@@ -295,7 +295,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
         }
         recordsSize = records.size();
         if (recordsSize > VALID_RESULTS_NUMBER) {
-            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(VALID_RESULTS_NUMBER).append(", but I got ").append(recordsSize).toString());
+            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
         }
     }
 
@@ -336,7 +336,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             throws CantInsertRecordException {
         try {
             if (isContractHashInDatabase(customerBrokerContractPurchase.getContractId())) {
-                System.out.println(new StringBuilder().append("The contract ").append(customerBrokerContractPurchase).append(" exists in database").toString());
+                System.out.println("The contract " + customerBrokerContractPurchase + " exists in database");
                 return;
             }
             DatabaseTable databaseTable = getAckMerchandiseTable();
@@ -478,7 +478,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             record.setStringValue(statusColumnName, newStatus);
             databaseTable.updateRecord(record);
         } catch (CantLoadTableToMemoryException exception) {
-            throw new UnexpectedResultReturnedFromDatabaseException(exception, new StringBuilder().append("Updating parameter ").append(statusColumnName).toString(), "");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Updating parameter " + statusColumnName, "");
         }
     }
 
@@ -610,7 +610,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             return contractHashList;
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetContractListException(e,
-                    new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(),
+                    "Getting " + valueColumn + " based on " + key,
                     "Cannot load the table into memory");
         }
     }
@@ -766,7 +766,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             return eventTypeList;
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetContractListException(e,
-                    new StringBuilder().append("Getting events in EventStatus.PENDING in table ").append(databaseTable.getTableName()).toString(),
+                    "Getting events in EventStatus.PENDING in table " + databaseTable.getTableName(),
                     "Cannot load the table into memory");
         }
     }
@@ -842,7 +842,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    new StringBuilder().append("Updating parameter ").append(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
+                    "Updating parameter " + CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
         } catch (Exception exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
@@ -860,7 +860,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             throws CantInsertRecordException {
         try {
             if (isContractHashInDatabase(customerBrokerContractSale.getContractId())) {
-                System.out.println(new StringBuilder().append("The contract ").append(customerBrokerContractSale).append(" exists in database").toString());
+                System.out.println("The contract " + customerBrokerContractSale + " exists in database");
                 return;
             }
             DatabaseTable databaseTable = getAckMerchandiseTable();

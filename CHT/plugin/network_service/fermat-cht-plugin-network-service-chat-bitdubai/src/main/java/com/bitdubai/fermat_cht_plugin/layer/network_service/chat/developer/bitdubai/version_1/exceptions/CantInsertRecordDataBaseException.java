@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions;
 
 
-
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 
 /**

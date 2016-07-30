@@ -62,7 +62,7 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
                  */
                 customerBrokerContractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
                 if (customerBrokerContractPurchase == null) {
-                    throw new CantAckMerchandiseException(new StringBuilder().append("The CustomerBrokerContractPurchase with the hash \n").append(contractHash).append("\nis null").toString());
+                    throw new CantAckMerchandiseException("The CustomerBrokerContractPurchase with the hash \n" + contractHash + "\nis null");
                 }
 
                 System.out.println("ACK_OFFLINE_MERCHANDISE - ackMerchandise() - persistContractInDatabase()");
@@ -83,7 +83,7 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
 
                 } else {
                     try {
-                        throw new CantAckMerchandiseException(new StringBuilder().append("The Ack offline merchandise with the contract ID ").append(contractHash).append(" process has begun").toString());
+                        throw new CantAckMerchandiseException("The Ack offline merchandise with the contract ID " + contractHash + " process has begun");
                     } catch (CantAckMerchandiseException e) {
                         pluginRoot.reportError(NOT_IMPORTANT, e);
                     }

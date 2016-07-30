@@ -2,8 +2,8 @@ package com.bitdubai.fermat_cer_api.layer.provider.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
-import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 
 import java.util.Collection;
 import java.util.Map;
@@ -47,7 +47,7 @@ public interface CurrencyExchangeRateProviderLayerManager extends FermatManager 
      * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair
      *
      * @return a Collection of provider reference pairs
-     * */
+     */
     Collection<CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderException;
 
 }

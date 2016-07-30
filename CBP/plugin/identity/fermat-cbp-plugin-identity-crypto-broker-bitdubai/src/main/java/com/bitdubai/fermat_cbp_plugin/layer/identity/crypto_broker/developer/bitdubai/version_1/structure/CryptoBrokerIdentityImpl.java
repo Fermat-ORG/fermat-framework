@@ -103,7 +103,7 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
         try {
             return AsymmetricCryptography.createMessageSignature(message, this.keyPair.getPrivateKey());
         } catch (Exception ex) {
-            throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, new StringBuilder().append("Message: ").append(message).toString(), "The message could be invalid");
+            throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, "Message: " + message, "The message could be invalid");
         }
     }
 

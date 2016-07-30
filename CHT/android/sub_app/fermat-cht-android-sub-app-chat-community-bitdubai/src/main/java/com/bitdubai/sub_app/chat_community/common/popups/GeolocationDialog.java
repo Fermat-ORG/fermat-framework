@@ -2,30 +2,15 @@ package com.bitdubai.sub_app.chat_community.common.popups;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -38,14 +23,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.GeolocationAdapter;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,8 +60,8 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     String State;
     String Input;
 
-    public GeolocationDialog (Activity activity, ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
-                              ResourceProviderManager resources, AdapterCallback mAdapterCallback){
+    public GeolocationDialog(Activity activity, ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
+                             ResourceProviderManager resources, AdapterCallback mAdapterCallback) {
         super(activity, appSession, null);
         this.appSession = appSession;
         this.activity = activity;
@@ -95,7 +76,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
         void onMethodCallback(ExtendedCity cityFromList);
     }
 
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         try {
@@ -120,26 +101,26 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
 
             adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
             mListView.setAdapter(adapter);
-            lupaButton.setOnClickListener( new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            try {
-                                getMoreData();
+            lupaButton.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View v) {
+                                                  try {
+                                                      getMoreData();
 //                                lstChatUserInformations = mChatActorCommunityManager.getExtendedCitiesByFilter(searchInput.getText().toString());
 //                                adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
 //                                mListView.setAdapter(adapter);
 //                                adapter.refreshEvents(lstChatUserInformations);
 //                              // onRefresh();
-                            }catch (Exception e){
-                                if (getActivity() != null)
-                                    errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
-                                            UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-                            }
-                        }
-                    }
+                                                  } catch (Exception e) {
+                                                      if (getActivity() != null)
+                                                          errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
+                                                                  UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                                                  }
+                                              }
+                                          }
             );
             showEmpty(true, emptyView);
-        }catch (Exception e){
+        } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_COMMUNITY,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -218,7 +199,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                     mListView.setAdapter(adapter);
                     adapter.refreshEvents((List<ExtendedCity>) result[0]);
                     showEmpty(false, emptyView);
-                }else showEmpty(true,emptyView);
+                } else showEmpty(true, emptyView);
             }
 
             @Override

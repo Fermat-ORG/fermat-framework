@@ -36,7 +36,7 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
 
     @Override
     public void updateCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
-        System.out.println(new StringBuilder().append("Mock method updateCustomerBrokerPurchaseNegotiation: ").append(negotiation).toString());
+        System.out.println("Mock method updateCustomerBrokerPurchaseNegotiation: " + negotiation);
     }
 
     @Override

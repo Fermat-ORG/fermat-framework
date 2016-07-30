@@ -1,13 +1,9 @@
 package com.bitdubai.fermat_cer_api.layer.provider.utils;
 
-import org.apache.commons.lang.time.DateUtils;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Created by Alex on 5/1/2016.
