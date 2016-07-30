@@ -20,7 +20,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     private final String publicKey;
     private final String alias    ;
     private final byte[] image    ;
-    private final ConnectionState connectionState;
+    private ConnectionState connectionState;
     private final UUID connectionId;
     private String country  ;
     private String state    ;
@@ -148,6 +148,9 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         return profileStatus;
     }
 
+    public void setConnectionState(ConnectionState connectionState) {
+        this.connectionState=connectionState;
+    }
     public void setCity(String city) {
         this.city=city;
     }

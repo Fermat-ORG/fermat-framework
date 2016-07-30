@@ -77,7 +77,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     }
 
     public static interface AdapterCallbackList {
-        void onMethodCallback(ChatActorCommunityInformation chatActorCommunityInformation);
+        void onMethodCallbackConnectionStatus(int position, ConnectionState state);
     }
 
     @Override
@@ -228,7 +228,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     }
 
     @Override
-    protected void bindHolder(final CommunityWorldHolder holder, ChatActorCommunityInformation data, int position) {
+    protected void bindHolder(final CommunityWorldHolder holder, ChatActorCommunityInformation data, final int position) {
         final ConnectionState connectionState = data.getConnectionState();
         updateConnectionState(connectionState, holder);
         holder.name.setText(data.getAlias());
@@ -267,7 +267,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 try {
                     connectDialog =
                             new ConnectDialog(context, appSession, null,
-                                    dat, moduleManager.getSelectedActorIdentity(), null);
+                                    dat, moduleManager.getSelectedActorIdentity());
                     connectDialog.setTitle("Connection Request");
                     connectDialog.setDescription("Are you sure you want to send a connection request to this contact?");
                     connectDialog.setUsername(dat.getAlias());
@@ -279,6 +279,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                                 ConnectionState cState
                                         = moduleManager.getActorConnectionState(dat.getPublicKey());
                                 updateConnectionState(cState, holder);
+                                mAdapterCallbackList.onMethodCallbackConnectionStatus(position, cState);
                             } catch (CantValidateActorConnectionStateException e) {
                                 e.printStackTrace();
                             }
@@ -301,7 +302,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 try {
                     disconnectDialog =
                             new DisconnectDialog(context, appSession, null,
-                                    dat, moduleManager.getSelectedActorIdentity(), null);
+                                    dat, moduleManager.getSelectedActorIdentity());
                     disconnectDialog.setTitle("Disconnect");
                     disconnectDialog.setDescription("Do you want to disconnect from");
                     disconnectDialog.setUsername(dat.getAlias()+"?");
@@ -335,7 +336,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 try {
                     connectDialog =
                             new ConnectDialog(context, appSession, null,
-                                    dat, moduleManager.getSelectedActorIdentity(), null);
+                                    dat, moduleManager.getSelectedActorIdentity());
                     connectDialog.setTitle("Resend Connection Request");
                     connectDialog.setDescription("Do you want to resend ");
                     connectDialog.setUsername(dat.getAlias());

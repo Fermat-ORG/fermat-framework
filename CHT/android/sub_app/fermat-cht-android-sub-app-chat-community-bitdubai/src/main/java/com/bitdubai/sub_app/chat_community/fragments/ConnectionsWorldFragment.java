@@ -44,6 +44,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -87,7 +88,7 @@ public class ConnectionsWorldFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<ChatActorCommunityInformation>,
-        GeolocationDialog.AdapterCallback , SearchAliasDialog.AdapterCallbackAlias {
+        GeolocationDialog.AdapterCallback , SearchAliasDialog.AdapterCallbackAlias, CommunityListAdapter.AdapterCallbackList {
 
     //Constants
     public static final String CHAT_USER_SELECTED = "chat_user";
@@ -173,6 +174,11 @@ public class ConnectionsWorldFragment
         onRefresh();
     }
 
+    @Override
+    public void onMethodCallbackConnectionStatus(int position, ConnectionState state) {
+       lstChatUserInformations.get(position).setConnectionState(state);
+    }
+
     /**
      * Fragment interface implementation.
      */
@@ -233,7 +239,7 @@ public class ConnectionsWorldFragment
             //Set up RecyclerView
             layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
             adapter = new CommunityListAdapter(getActivity(), lstChatUserInformations,
-                    appSession, moduleManager, null);
+                    appSession, moduleManager, this);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             refreshButtonView = (View) rootView.findViewById(R.id.show_more_layout);

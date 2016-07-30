@@ -57,20 +57,16 @@ public class ConnectDialog
     private final ChatActorCommunityInformation chatUserInformation;
     private final ChatActorCommunitySelectableIdentity identity;
 
-    private AdapterCallbackList mAdapterCallbackList;
-
     public ConnectDialog(final Context a,
                          final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
                          final SubAppResourcesProviderManager subAppResources,
                          final ChatActorCommunityInformation chatUserInformation,
-                         final ChatActorCommunitySelectableIdentity identity,
-                         final AdapterCallbackList adapterCallbackList) {
+                         final ChatActorCommunitySelectableIdentity identity) {
 
         super(a, chatUserSubAppSession, subAppResources);
 
         this.chatUserInformation = chatUserInformation;
         this.identity = identity;
-        this.mAdapterCallbackList = adapterCallbackList;
     }
 
 
@@ -92,11 +88,6 @@ public class ConnectDialog
         mDescription.setText(description != null ? description : "");
 //        mUsername.setText(username != null ? username : "");
         mTitle.setText(title != null ? title : "");
-    }
-
-    public static interface AdapterCallbackList extends CommunityListAdapter.AdapterCallbackList{
-        @Override
-        void onMethodCallback(ChatActorCommunityInformation chatActorCommunityInformation);
     }
 
     public void setSecondDescription(CharSequence secondDescription) {
