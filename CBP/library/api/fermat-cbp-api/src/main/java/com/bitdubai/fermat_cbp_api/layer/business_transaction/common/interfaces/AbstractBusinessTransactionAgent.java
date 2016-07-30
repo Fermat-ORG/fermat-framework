@@ -46,21 +46,15 @@ public abstract class AbstractBusinessTransactionAgent
     }
 
     @Override
-    protected Runnable agentJob() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                doTheMainTask();
-            }
-        };
-        return runnable;
+    protected void agentJob() {
+        doTheMainTask();
     }
 
     @Override
-    protected void onErrorOccur() {
+    protected void onErrorOccur(Exception e) {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                new Exception(new StringBuilder().append(this.getClass().getName()).append(" Error").toString()));
+                new Exception(this.getClass().getName() + " Error"));
     }
 
     /**

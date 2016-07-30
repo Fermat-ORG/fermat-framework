@@ -26,7 +26,7 @@ public class AvailableActorsListAdapter extends FermatAdapter<CryptoBrokerCommun
     public static final int DATA_ITEM = 1;
     public static final int LOADING_ITEM = 2;
     private boolean loadingData = true;
-    LoadingMoreViewHolder loadingMoreViewHolder;
+    private LoadingMoreViewHolder loadingMoreViewHolder;
 
 
     public AvailableActorsListAdapter(Context context, List<CryptoBrokerCommunityInformation> dataSet) {

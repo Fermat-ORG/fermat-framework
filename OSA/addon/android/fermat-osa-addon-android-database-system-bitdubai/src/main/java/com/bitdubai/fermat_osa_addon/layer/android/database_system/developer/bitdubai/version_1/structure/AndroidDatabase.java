@@ -3,6 +3,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bi
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteStatement;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -170,11 +171,11 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
 
             if (updateTables != null)
                 for (int i = 0; i < updateTables.size(); ++i)
-                    updateTransactionRecord(database, updateTables.get(i), updateRecords.get(i), variablesResult);
+                    updateTransactionRecord(database, updateTables.get(i), updateRecords.get(i), variablesResult).executeUpdateDelete();
 
             if (insertTables != null)
                 for (int i = 0; i < insertTables.size(); ++i)
-                    insertTransactionRecord(database, insertTables.get(i), insertRecords.get(i), variablesResult);
+                    insertTransactionRecord(database, insertTables.get(i), insertRecords.get(i), variablesResult).executeInsert();
 
             database.setTransactionSuccessful();
 
@@ -182,7 +183,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
             /**
              * for error not complete transaction
              */
-            String context = new StringBuilder().append("Database Name: ").append(databaseName).toString();
+            String context = "Database Name: " + databaseName;
             context += DatabaseTransactionFailedException.CONTEXT_CONTENT_SEPARATOR;
             context += transaction.toString();
             String possibleReason = "The most reasonable thing to do here is check the cause as this is a triggered exception that can come from many situations";
@@ -205,9 +206,6 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         try {
 
             StringBuilder strRecords = new StringBuilder("");
-
-            StringBuilder query = new StringBuilder("");
-
             List<DatabaseRecord> records = record.getValues();
 
             List<DatabaseAggregateFunction> tableSelectOperator = table.getTableAggregateFunction();
@@ -249,13 +247,8 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 }
             }
 
-            query.append("SELECT ")
-                    .append(strRecords)
-                    .append(" FROM ")
-                    .append(table.getTableName())
-                    .append(table.makeFilter());
 
-            c = database.rawQuery(query.toString(), null);
+            c = database.rawQuery("SELECT " + strRecords + " FROM " + table.getTableName() + table.makeFilter() , null);
             int columnsCant = 0;
 
             if (c.moveToFirst()) {
@@ -634,12 +627,11 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         return new AndroidDatabaseTableFactory(tableName);
     }
 
-    private void updateTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<AndroidVariable> variablesResult) throws CantUpdateRecordException {
+    private SQLiteStatement updateTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<AndroidVariable> variablesResult) throws CantUpdateRecordException {
 
         try {
             List<DatabaseRecord> records = record.getValues();
             StringBuilder strRecords = new StringBuilder();
-            StringBuilder query = new StringBuilder("");
 
             for (DatabaseRecord dbRecord : records) {
 
@@ -667,27 +659,21 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 }
             }
 
-            query.append("UPDATE ")
-                    .append(table.getTableName())
-                    .append(" SET ")
-                    .append(strRecords)
-                    .append(" ")
-                    .append(table.makeFilter());
 
-            database.execSQL(query.toString());
+
+            return database.compileStatement("UPDATE " + table.getTableName() + " SET " + strRecords + " " + " " );
 
         } catch (Exception exception) {
             throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         }
     }
 
-    private void insertTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<AndroidVariable> variableResultList) throws CantInsertRecordException {
+    private SQLiteStatement insertTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<AndroidVariable> variableResultList) throws CantInsertRecordException {
 
         try {
             StringBuilder strRecords = new StringBuilder("");
             StringBuilder strValues = new StringBuilder("");
-            StringBuilder query = new StringBuilder("");
-            List<DatabaseRecord> records = record.getValues();
+             List<DatabaseRecord> records = record.getValues();
 
 
             for (int i = 0; i < records.size(); ++i) {
@@ -715,16 +701,10 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 }
             }
 
-            query.append("INSERT INTO ")
-                    .append(table.getTableName())
-                    .append("( ")
-                    .append(strRecords)
-                    .append(") VALUES (")
-                    .append(strValues)
-                    .append(")");
 
-            database.execSQL(query.toString());
+//            database.execSQL(query.toString());
 
+            return database.compileStatement("INSERT INTO " + table.getTableName() + "( " + strRecords + ") VALUES (" + strValues + ")" );
         } catch (Exception exception) {
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         }

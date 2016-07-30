@@ -301,7 +301,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:text="@string/fee_advances_text"
-                        android:textColor="#12aca1"
+                        android:textColor="#073487"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -315,7 +315,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/feed_advances"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <View
                         android:layout_width="match_parent"
@@ -332,7 +332,7 @@
                             android:layout_marginLeft="16dp"
                             android:paddingTop="10dp"
                             android:text="@string/fee_amount_text"
-                            android:textColor="#12aca1"
+                            android:textColor="#073487"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -375,8 +375,9 @@
                             android:checked="true"
                             android:gravity="center_vertical"
                             android:text="@string/fee_option_text"
-                            android:textColor="#333"
-                            android:textSize="12sp" />
+                            android:textColor="#073487"
+                            android:textSize="12sp"
+                            android:buttonTint="#d55810" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -390,7 +391,7 @@
                             android:layout_marginLeft="16dp"
                             android:paddingTop="0dp"
                             android:text="@string/title_Fee"
-                            android:textColor="#12aca1"
+                            android:textColor="#073487"
                             android:textSize="12sp" />
 
                         <RadioGroup
@@ -409,7 +410,9 @@
                                 android:text="@string/fee_low"
                                 android:layout_marginRight="0dp"
                                 android:textColor="#333"
-                                android:textSize="12sp" />
+                                android:textSize="12sp"
+                                android:buttonTint="#d45811"
+                                android:checked="false" />
 
                             <RadioButton
                                 android:id="@+id/fee_Medium"
@@ -417,7 +420,10 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/fee_Medium"
                                 android:textColor="#333"
-                                android:textSize="12sp" />
+                                android:textSize="12sp"
+                                android:buttonTint="#d45811"
+                                android:checked="false"
+                                 />
 
                             <RadioButton
                                 android:id="@+id/fee_High"
@@ -425,7 +431,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/fee_High"
                                 android:textColor="#333"
-                                android:textSize="12sp" />
+                                android:textSize="12sp"
+                                android:buttonTint="#d45811" />
                         </RadioGroup>
                     </LinearLayout>
 
