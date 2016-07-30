@@ -176,13 +176,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             blockchainNetworkType = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
 
             fermatWallet = appSession.getModuleManager();
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+          //  InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+           // imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-        /*    if (fermatWalletSettings.getFeedLevel()==null)
-                fermatWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
-            else
-                feeLevel = fermatWalletSettings.getFeedLevel(); */
+
 
 
         } catch (CantGetSettingsException e) {

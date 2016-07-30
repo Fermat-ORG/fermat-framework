@@ -1794,9 +1794,9 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
 
 
     @Override
-    public boolean isValidAddress(CryptoAddress cryptoAddress) {
-        //todo natalia corregir
-        return cryptoVaultManager.isValidAddress(cryptoAddress, BlockchainNetworkType.getDefaultBlockchainNetworkType());
+    public boolean isValidAddress(CryptoAddress cryptoAddress,BlockchainNetworkType blockchainNetworkType) {
+
+        return cryptoVaultManager.isValidAddress(cryptoAddress, blockchainNetworkType);
     }
 
     @Override

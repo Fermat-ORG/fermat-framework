@@ -39,6 +39,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantFindWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantRequestFermatAddressException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
@@ -175,7 +176,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
             list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", dataDialog));
 
 
-            list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.parseColor("#54ACEC")));
+            //list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.parseColor("#54ACEC")));
 
             list.add(new PreferenceSettingsLinkText(13, "Received Fermats to Faucet", "", 15, Color.parseColor("#54ACEC")));
 
@@ -236,7 +237,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                 //receive Mainet test fermats
                Log.i("info", "LongPress");
                Toast.makeText(getActivity(), "MainNet download Init", Toast.LENGTH_SHORT).show();
-                GETMainNetFrm(getActivity());
+                GET(getActivity());
             }
 
 
@@ -458,6 +459,10 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                     finalResponse = "transaccion fallida";
                     e.printStackTrace();
                 }
+                catch (Exception e) {
+                    finalResponse = "transaccion fallida";
+                    e.printStackTrace();
+                }
 
 
                 return finalResponse;
@@ -490,80 +495,63 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
     }
 
-   /* public void GET(String url, final Context context){
+    public void GET(final Context context){
         final Handler mHandler = new Handler();
         try {
 
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String receivedAddress = "";
-                    final HttpClient Client = new DefaultHttpClient();
-                    try {
-                        String SetServerString = "";
-
-                        // Create Request to server and get response
-
-                        HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/address/");
-                        ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                        SetServerString = Client.execute(httpget, responseHandler);
-                        // Show response on activity
-
-                        receivedAddress = SetServerString;
-                    } catch (ClientProtocolException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    final String finalReceivedAddress = receivedAddress;
 
                     String response = "";
                     try {
 
+                            CryptoAddress cryptoAddress = new CryptoAddress("pKMqJrEe26Vq8JNV7H7Di7T57Cdb6ntzv3", CryptoCurrency.BITCOIN);
 
-                        String SetServerString = "";
-                        CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.FERMAT);
-                       FermatWalletWalletContact cryptoWalletWalletContact = null;
-                        try {
-                            cryptoWalletWalletContact = fermatWalletModule.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
-
-                        } catch (Exception e) {
-                           // e.printStackTrace();
                             try {
-                                cryptoWalletWalletContact = fermatWalletModule.findWalletContactByName("regtest_bitcoins",appSession.getAppPublicKey(),fermatWalletModule.getSelectedActorIdentity().getPublicKey());
-                            } catch (CantFindWalletContactException e1) {
-                                e1.printStackTrace();
-                            } catch (WalletContactNotFoundException e1) {
-                                e1.printStackTrace();
-                            } catch (CantGetSelectedActorIdentityException e1) {
-                                e1.printStackTrace();
-                            } catch (ActorIdentityNotSelectedException e1) {
-                                e1.printStackTrace();
+                                fermatWalletWalletContact = fermatWalletModule.findWalletContactByName("MainNet_Fermats", appSession.getAppPublicKey(), fermatWalletModule.getSelectedActorIdentity().getPublicKey());
+
+                                if(fermatWalletWalletContact == null)
+                                {
+                                    fermatWalletWalletContact = fermatWalletModule.createWalletContact(
+                                            cryptoAddress, "MainNet_Fermats", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(),blockchainNetworkType);
+
+                                }
+                            } catch (WalletContactNotFoundException e) {
+
+                                fermatWalletWalletContact = fermatWalletModule.createWalletContact(
+                                        cryptoAddress, "MainNet_Fermats", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(),blockchainNetworkType);
+
+
+                            } catch (CantFindWalletContactException e) {
+
+                                response = "transaccion fallida";
+                                e.printStackTrace();
+
+                            } catch (Exception e) {
+                                response = "transaccion fallida";
+                                e.printStackTrace();
                             }
+
+                            if(fermatWalletWalletContact != null)
+                                fermatWalletModule.testNetGiveMeCoins(blockchainNetworkType, getWalletAddress(fermatWalletWalletContact.getActorPublicKey()));
+
+                        } catch (CantGetCoinsFromFaucetException e) {
+                            e.printStackTrace();
+                        } catch (com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantCreateWalletContactException e) {
+                            e.printStackTrace();
+                        } catch (ContactNameAlreadyExistsException e) {
+                            e.printStackTrace();
                         }
 
-                        if (cryptoWalletWalletContact != null) {
-                            String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
-                            HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/hello/?address=" + myCryptoAddress);
-                            ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                            SetServerString = Client.execute(httpget, responseHandler);
-                        }
 
-                        response = SetServerString;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-
-                    }
-
-
-                    final String finalResponse = response;
+                        final String finalResponse = response;
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
 
                             if (!finalResponse.equals("transaccion fallida")) {
-                                Toast.makeText(context, "Regtest bitcoin arrived", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "MainNet Fermats arrived", Toast.LENGTH_SHORT).show();
                             }
 
                         }
@@ -575,7 +563,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
     private CryptoAddress getWalletAddress(String actorPublicKey) {
         CryptoAddress walletAddress = null;
