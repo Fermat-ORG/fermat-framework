@@ -35,12 +35,12 @@ import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -64,11 +64,8 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -201,13 +198,27 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 fermatWalletSettings.setIsBlockchainDownloadEnabled(true);
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                 fermatWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+                fermatWalletSettings.setFiatCurrency(FiatCurrency.US_DOLLAR.getCode());
+
                 if(moduleManager!=null)
                     moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
+
+                appSession.setData(SessionConstant.NOTIFICATION_ENABLED, true);
+                appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, true);
+                appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
+                appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
             } else {
                 if (fermatWalletSettings.getBlockchainNetworkType() == null)
                     fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 else
                     blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
+
+
+                appSession.setData(SessionConstant.FIAT_CURRENCY,  fermatWalletSettings.getFiatCurrency());
+                appSession.setData(SessionConstant.FEE_LEVEL, fermatWalletSettings.getFeedLevel());
+                appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, fermatWalletSettings.isBlockchainDownloadEnabled());
+                appSession.setData(SessionConstant.NOTIFICATION_ENABLED, fermatWalletSettings.getNotificationEnabled());
+                appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, fermatWalletSettings.isPresentationHelpEnabled());
             }
 
             try {
@@ -215,6 +226,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
 
             final FermatWalletSettings bitcoinWalletSettingsTemp = fermatWalletSettings;
             _executor.submit(new Runnable() {
@@ -292,16 +305,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                     if ((Boolean) (o))
                         appSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
                 }
-                //noinspection TryWithIdenticalCatches
-                ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = null;
-                try {
-                    cryptoWalletIntraUserIdentity = moduleManager.getSelectedActorIdentity();
-                } catch (CantGetSelectedActorIdentityException e) {
-                    e.printStackTrace();
-                } catch (ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-                if (cryptoWalletIntraUserIdentity == null) {
+
+                if (intraUserLoginIdentity == null) {
                     getActivity().onBackPressed();
                 } else {
                     invalidate();
