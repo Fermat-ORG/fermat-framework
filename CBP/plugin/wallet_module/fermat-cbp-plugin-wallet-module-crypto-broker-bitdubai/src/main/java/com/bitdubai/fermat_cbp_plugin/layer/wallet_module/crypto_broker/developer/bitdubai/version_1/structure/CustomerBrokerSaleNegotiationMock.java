@@ -1,12 +1,9 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,9 +11,10 @@ import java.util.UUID;
 
 
 /**
- * Created by franklin on 05/01/16.
+ * Created by nelsonalfo on 29/07/16.
+ *
  */
-public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNegotiation {
+public class CustomerBrokerSaleNegotiationMock implements CustomerBrokerSaleNegotiation {
     long startDate;
     Long lastNegotiationUpdateDate;
     Long negotiationExpirationDate;
@@ -31,43 +29,15 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
     boolean dataHasChanged;
 
 
-    public CustomerBrokerSaleNegotiationImpl(UUID negotiationId) {
+    public CustomerBrokerSaleNegotiationMock(String brokerPublicKey, String customerPublicKey, NegotiationStatus negotiationStatus) {
         dataHasChanged = false;
 
-        this.negotiationId = negotiationId;
-        clauses = new ArrayList<>();
-        status = NegotiationStatus.WAITING_FOR_CUSTOMER;
-    }
-
-    public CustomerBrokerSaleNegotiationImpl(UUID negotiationId, String brokerPublicKey, String customerPublicKey) {
-        dataHasChanged = false;
-
-        this.negotiationId = negotiationId;
-        clauses = new ArrayList<>();
-        status = NegotiationStatus.WAITING_FOR_CUSTOMER;
-
-        this.customerPublicKey = customerPublicKey;
         this.brokerPublicKey = brokerPublicKey;
-    }
+        this.customerPublicKey = customerPublicKey;
 
-    public CustomerBrokerSaleNegotiationImpl(CustomerBrokerSaleNegotiation negotiationInfo) {
-        dataHasChanged = false;
-
-        startDate = negotiationInfo.getStartDate();
-        lastNegotiationUpdateDate = negotiationInfo.getLastNegotiationUpdateDate();
-        negotiationExpirationDate = negotiationInfo.getNegotiationExpirationDate();
-        nearExpirationDatetime = negotiationInfo.getNearExpirationDatetime();
-        cancelReason = negotiationInfo.getCancelReason();
-        memo = negotiationInfo.getMemo();
-        customerPublicKey = negotiationInfo.getCustomerPublicKey();
-        brokerPublicKey = negotiationInfo.getBrokerPublicKey();
-        negotiationId = negotiationInfo.getNegotiationId();
-        status = negotiationInfo.getStatus();
-        try {
-            clauses = negotiationInfo.getClauses();
-        } catch (CantGetListClauseException e) {
-            clauses = new ArrayList<>();
-        }
+        this.negotiationId = UUID.randomUUID();
+        clauses = new ArrayList<>();
+        status = negotiationStatus;
     }
 
     /**
@@ -193,39 +163,6 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
         return memo;
     }
 
-    public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo) {
-
-        final String changedCancelReason = negotiationInfo.getCancelReason();
-
-        dataHasChanged = (cancelReason != null && changedCancelReason != null) && (dataHasChanged || !changedCancelReason.equals(cancelReason));
-        dataHasChanged = dataHasChanged || (cancelReason == null && changedCancelReason != null);
-        dataHasChanged = dataHasChanged || (cancelReason != null && changedCancelReason == null);
-        cancelReason = changedCancelReason;
-
-
-        final String changedMemo = negotiationInfo.getMemo();
-        dataHasChanged = (memo != null && changedMemo != null) && (dataHasChanged || !changedMemo.equals(this.memo));
-        dataHasChanged = dataHasChanged || (memo == null && changedMemo != null);
-        dataHasChanged = dataHasChanged || (memo != null && changedMemo == null);
-        this.memo = changedMemo;
-
-
-        Collection<ClauseInformation> values = negotiationInfo.getClauses().values();
-        dataHasChanged = dataHasChanged || (clauses.size() != values.size());
-
-        clauses = new ArrayList<>();
-        for (final ClauseInformation value : values) {
-            dataHasChanged = dataHasChanged || (value.getStatus() == ClauseStatus.CHANGED);
-            clauses.add(new ClauseImpl(value, brokerPublicKey));
-        }
-
-        this.status = dataHasChanged ? NegotiationStatus.SENT_TO_CUSTOMER : NegotiationStatus.WAITING_FOR_CLOSING;
-    }
-
-    public boolean dataHasChanged() {
-        return dataHasChanged;
-    }
-
     @Override
     public String toString() {
         return com.google.common.base.Objects.toStringHelper(this).
@@ -240,5 +177,9 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
                 add("status", status).
                 add("clauses", clauses).
                 toString();
+    }
+
+    public void addClause(Clause clause) {
+        clauses.add(clause);
     }
 }
