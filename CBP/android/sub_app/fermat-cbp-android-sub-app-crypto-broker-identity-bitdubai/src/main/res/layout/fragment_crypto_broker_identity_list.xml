@@ -11,31 +11,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="vertical"
         android:layout_marginBottom="25dp"
+        android:orientation="vertical"
         android:visibility="gone">
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/bi_icon"
-            android:id="@+id/imageView"
             android:layout_alignParentTop="false"
             android:layout_alignWithParentIfMissing="false"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:src="@drawable/bi_icon" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingTop="325dp"
             android:text="@string/empty_identity_list_msg"
             android:textColor="#ffffff"
-            android:textSize="24sp"
-            android:id="@+id/view"
-            android:gravity="center"
-            android:layout_centerInParent="true"
-            android:paddingTop="325dp" />
+            android:textSize="24sp" />
 
     </RelativeLayout>
 
