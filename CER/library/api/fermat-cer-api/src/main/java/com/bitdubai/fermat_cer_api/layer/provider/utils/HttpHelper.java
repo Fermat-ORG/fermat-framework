@@ -9,9 +9,11 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -63,10 +65,16 @@ public class HttpHelper {
             URL url=new URL(receiveurl);
             URLConnection con = url.openConnection();
             con.setConnectTimeout(5000);
-            con.setReadTimeout(5000);
+            con.setReadTimeout(10000);
           //  reader = new BufferedReader(new InputStreamReader(stream, Charset.forName("UTF-8")));
             reader = new BufferedReader(new InputStreamReader(con.getInputStream(), Charset.forName("UTF-8")));
             content = readAll(reader);
+        } catch (UnknownHostException e) {
+            System.out.println("The base url can't be found");
+        }catch (SocketTimeoutException e){
+            System.out.println("The waiting for respond is to long");
+        } catch (MalformedURLException e) {
+            System.out.println("The URL is Malformed");
         } catch (IOException e) {
             e.printStackTrace();
         }

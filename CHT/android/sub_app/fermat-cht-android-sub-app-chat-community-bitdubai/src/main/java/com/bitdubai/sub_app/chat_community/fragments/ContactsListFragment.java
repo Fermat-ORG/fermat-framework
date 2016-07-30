@@ -73,6 +73,7 @@ import static android.widget.Toast.makeText;
 public class ContactsListFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
+        DisconnectDialog.AdapterCallbackList,
         FermatListItemListeners<ChatActorCommunityInformation> {
 
     //Managers
@@ -183,6 +184,11 @@ public class ContactsListFragment
                     UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
         }
         return rootView;
+    }
+
+    @Override
+    public void onMethodCallback(ChatActorCommunityInformation chatActorCommunityInformation){
+
     }
 
     @Override
@@ -347,7 +353,7 @@ public class ContactsListFragment
             try {
                 disconnectDialog =
                         new DisconnectDialog(getActivity(), appSession, null,
-                                data, moduleManager.getSelectedActorIdentity());
+                                data, moduleManager.getSelectedActorIdentity(), null);
                 disconnectDialog.setTitle("Disconnect");
                 disconnectDialog.setDescription("Do you want to disconnect from");
                 disconnectDialog.setUsername(data.getAlias()+"?");
@@ -373,7 +379,7 @@ public class ContactsListFragment
             try {
                 disconnectDialog =
                         new DisconnectDialog(getContext(), appSession, null,
-                                data, moduleManager.getSelectedActorIdentity());
+                                data, moduleManager.getSelectedActorIdentity(), null);
                 disconnectDialog.setTitle("Disconnect");
                 disconnectDialog.setDescription("Do you want to disconnect from");
                 disconnectDialog.setUsername(data.getAlias()+"?");

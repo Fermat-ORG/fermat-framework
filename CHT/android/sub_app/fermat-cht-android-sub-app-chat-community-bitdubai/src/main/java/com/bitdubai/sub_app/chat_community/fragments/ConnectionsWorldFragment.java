@@ -233,7 +233,7 @@ public class ConnectionsWorldFragment
             //Set up RecyclerView
             layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
             adapter = new CommunityListAdapter(getActivity(), lstChatUserInformations,
-                    appSession, moduleManager);
+                    appSession, moduleManager, null);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             refreshButtonView = (View) rootView.findViewById(R.id.show_more_layout);
@@ -567,7 +567,7 @@ public class ConnectionsWorldFragment
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                     UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
+            Toast.makeText(getActivity(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
@@ -679,7 +679,7 @@ public class ConnectionsWorldFragment
                 if (Build.VERSION.SDK_INT < 23) {
                     String provider = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
@@ -687,7 +687,7 @@ public class ConnectionsWorldFragment
                 }else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
@@ -695,9 +695,9 @@ public class ConnectionsWorldFragment
                 }
             }catch(Exception ex){
                 if (Build.VERSION.SDK_INT < 23) {
-                    makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
                 }else{
-                    makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
                 }
             }
         }

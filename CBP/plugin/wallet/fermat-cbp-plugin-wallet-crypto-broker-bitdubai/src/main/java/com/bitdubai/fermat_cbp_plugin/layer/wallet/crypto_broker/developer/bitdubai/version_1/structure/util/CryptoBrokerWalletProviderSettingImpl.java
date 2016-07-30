@@ -18,6 +18,12 @@ public class CryptoBrokerWalletProviderSettingImpl implements CryptoBrokerWallet
     public CryptoBrokerWalletProviderSettingImpl() {
     }
 
+    public CryptoBrokerWalletProviderSettingImpl(UUID providerId, String currencyFrom, String currencyTo) {
+        this.currencyFrom = currencyFrom;
+        this.currencyTo = currencyTo;
+        plugin = providerId;
+    }
+
     /**
      * {@inheritDoc}
      */

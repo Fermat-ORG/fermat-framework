@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.chat_community.R;
@@ -56,17 +57,20 @@ public class ConnectDialog
     private final ChatActorCommunityInformation chatUserInformation;
     private final ChatActorCommunitySelectableIdentity identity;
 
+    private AdapterCallbackList mAdapterCallbackList;
 
     public ConnectDialog(final Context a,
                          final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
                          final SubAppResourcesProviderManager subAppResources,
                          final ChatActorCommunityInformation chatUserInformation,
-                         final ChatActorCommunitySelectableIdentity identity) {
+                         final ChatActorCommunitySelectableIdentity identity,
+                         final AdapterCallbackList adapterCallbackList) {
 
         super(a, chatUserSubAppSession, subAppResources);
 
         this.chatUserInformation = chatUserInformation;
         this.identity = identity;
+        this.mAdapterCallbackList = adapterCallbackList;
     }
 
 
@@ -88,6 +92,11 @@ public class ConnectDialog
         mDescription.setText(description != null ? description : "");
 //        mUsername.setText(username != null ? username : "");
         mTitle.setText(title != null ? title : "");
+    }
+
+    public static interface AdapterCallbackList extends CommunityListAdapter.AdapterCallbackList{
+        @Override
+        void onMethodCallback(ChatActorCommunityInformation chatActorCommunityInformation);
     }
 
     public void setSecondDescription(CharSequence secondDescription) {
