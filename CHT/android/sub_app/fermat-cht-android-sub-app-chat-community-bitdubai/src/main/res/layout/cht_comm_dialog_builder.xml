@@ -132,7 +132,6 @@
                 android:textColor="#47BF73"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />
-
         </LinearLayout>
 
     </LinearLayout>

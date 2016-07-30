@@ -122,20 +122,20 @@ public class ContactsListFragment
             lstChatUserInformations = new ArrayList<>();
             applicationsHelper = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
             //Obtain Settings or create new Settings if first time opening subApp
-            appSettings = null;
-            try {
-                appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-            }catch (Exception e){ appSettings = null; }
-
-            if(appSettings == null){
-                appSettings = new ChatActorCommunitySettings();
-                appSettings.setIsPresentationHelpEnabled(true);
-                try {
-                    moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
+//            appSettings = null;
+//            try {
+//                appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+//            }catch (Exception e){ appSettings = null; }
+//
+//            if(appSettings == null){
+//                appSettings = new ChatActorCommunitySettings();
+//                appSettings.setIsPresentationHelpEnabled(true);
+//                try {
+//                    moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//            }
 
             //Check if a default identity is configured
             try{
@@ -469,7 +469,7 @@ public class ContactsListFragment
 
     private void showDialogHelp() {
         try {
-            moduleManager = appSession.getModuleManager();
+//            moduleManager = appSession.getModuleManager();
             if (identity != null) {
                 if (!identity.getPublicKey().isEmpty()) {
                     PresentationChatCommunityDialog presentationChatCommunityDialog =

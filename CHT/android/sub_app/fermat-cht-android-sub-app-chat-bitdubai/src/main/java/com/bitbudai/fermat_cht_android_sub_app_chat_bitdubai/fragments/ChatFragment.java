@@ -231,7 +231,8 @@ public class ChatFragment
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 try {
-                                    adapterView.refreshEvents();
+//                                    adapterView.refreshEvents();
+                                    adapterView.clean();
                                 }catch (Exception e) {
                                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                 }

@@ -749,6 +749,13 @@ public class ChatAdapterView extends LinearLayout {
         //scroll();
     }
 
+    public void clean() {
+        adapter = new ChatAdapter(this.getContext(), null);
+        messagesContainer.setAdapter(adapter);
+    }
+
+
+
     public void checkStatus() {
         try {
             if (chatId != null) {

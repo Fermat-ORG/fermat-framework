@@ -37,6 +37,8 @@ public interface ChatActorCommunityInformation extends Serializable {
 
     ProfileStatus getProfileStatus();
 
+    void setConnectionState(ConnectionState city);
+
     void setCity(String city);
 
     void setCountry(String country);

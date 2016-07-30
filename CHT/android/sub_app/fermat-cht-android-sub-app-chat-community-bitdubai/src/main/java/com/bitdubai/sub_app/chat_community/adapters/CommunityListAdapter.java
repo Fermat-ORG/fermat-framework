@@ -55,6 +55,8 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
     private ChatActorCommunitySubAppModuleManager moduleManager;
     ArrayList<ChatActorCommunityInformation> chatMessages = new ArrayList<>();
+    private AdapterCallbackList mAdapterCallbackList;
+
 
     public CommunityListAdapter(Context context) {
         super(context);
@@ -62,15 +64,21 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
 
     public CommunityListAdapter(Context context, List<ChatActorCommunityInformation> dataSet,
                                 ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
-                                ChatActorCommunitySubAppModuleManager moduleManager) {
+                                ChatActorCommunitySubAppModuleManager moduleManager,
+                                AdapterCallbackList mAdapterCallbackList) {
         super(context, dataSet);
         this.appSession=appSession;
         this.moduleManager=moduleManager;
+        this.mAdapterCallbackList=mAdapterCallbackList;
     }
 
     @Override
     protected CommunityWorldHolder createHolder(View itemView, int type) {
         return new CommunityWorldHolder(itemView);
+    }
+
+    public static interface AdapterCallbackList {
+        void onMethodCallbackConnectionStatus(int position, ConnectionState state);
     }
 
     @Override
@@ -221,7 +229,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     }
 
     @Override
-    protected void bindHolder(final CommunityWorldHolder holder, ChatActorCommunityInformation data, int position) {
+    protected void bindHolder(final CommunityWorldHolder holder, ChatActorCommunityInformation data, final int position) {
         final ConnectionState connectionState = data.getConnectionState();
         updateConnectionState(connectionState, holder);
         holder.name.setText(data.getAlias());
@@ -274,6 +282,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                                 ConnectionState cState
                                         = moduleManager.getActorConnectionState(dat.getPublicKey());
                                 updateConnectionState(cState, holder);
+                                mAdapterCallbackList.onMethodCallbackConnectionStatus(position, cState);
                             } catch (CantValidateActorConnectionStateException e) {
                                 e.printStackTrace();
                             }
