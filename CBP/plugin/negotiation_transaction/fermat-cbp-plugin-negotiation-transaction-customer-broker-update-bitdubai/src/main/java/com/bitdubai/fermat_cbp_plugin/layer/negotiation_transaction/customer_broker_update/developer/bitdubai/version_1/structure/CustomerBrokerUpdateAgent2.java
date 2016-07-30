@@ -87,21 +87,27 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
     }
 
     @Override
-    protected void agentJob() {
-        try {
+    protected Runnable agentJob() {
+        return new Runnable() {
+            @Override
+            public void run() {
 
-            CustomerBrokerUpdateAgent2.this.doTheMainTask();
+                try {
 
-        } catch (
-                CantSendCustomerBrokerUpdateNegotiationTransactionException |
-                        CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException |
-                        CantUpdateRecordException e) {
-            CustomerBrokerUpdateAgent2.this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }
+                    CustomerBrokerUpdateAgent2.this.doTheMainTask();
+
+                } catch (
+                        CantSendCustomerBrokerUpdateNegotiationTransactionException |
+                                CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException |
+                                CantUpdateRecordException e) {
+                    CustomerBrokerUpdateAgent2.this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                }
+            }
+        };
     }
 
     @Override
-    protected void onErrorOccur(Exception e) {
+    protected void onErrorOccur() {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("CustomerBrokerCloseAgent2 Error"));

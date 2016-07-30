@@ -74,6 +74,27 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
+
+        try {
+
+//            ClassLoaderManager classLoaderManager = new ClassLoaderManager<>(FermatApplication.getInstance());
+//            Object o = classLoaderManager.load("com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.DeveloperBitDubai");
+//            for (Method method : o.getClass().getMethods()) {
+//                Log.i(TAG, method.getName());
+//            }
+//            Method m = o.getClass().getDeclaredMethod("start");
+//            m.invoke(o);
+//
+//            Method getAbstractPlugin = o.getClass().getMethod("getAbstractPlugin");
+//            Object ab = getAbstractPlugin.invoke(o);
+//            Method abstractPluginStart = ab.getClass().getMethod("start");
+//            abstractPluginStart.invoke(ab);
+//
+//        Log.i(TAG,o.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -184,7 +205,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
             if (fragment != null) frgBackType = fragment.getBack();
 
-            if (activity.getBackActivity() != null && activity.getBackAppPublicKey() != null) {
+            if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey() != null) {
                 changeActivity(activity.getBackActivity().getCode(), activity.getBackAppPublicKey());
             } else {
                 finish();

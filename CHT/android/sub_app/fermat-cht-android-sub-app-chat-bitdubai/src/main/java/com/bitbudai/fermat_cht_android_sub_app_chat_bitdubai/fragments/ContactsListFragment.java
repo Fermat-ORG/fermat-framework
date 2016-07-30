@@ -6,10 +6,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
+import android.widget.ProgressBar;
+import android.widget.SearchView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,8 +22,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -408,40 +409,36 @@ public class ContactsListFragment
         MenuItem searchItem = menu.findItem(1);
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            if(searchView!=null) {
-                searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String s) {
-                        return false;
-                    }
+            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
 
-                    @Override
-                    public boolean onQueryTextChange(String s) {
+                @Override
+                public boolean onQueryTextChange(String s) {
 
-                        if (s.equals(searchView.getQuery().toString())) {
-                            updateValues();
-                            adapter.refreshEvents(contactname, contacticon, contactid);
-                            adapter.getFilter().filter(s);
-                        }
-                        return false;
-                    }
-                });
-                if (appSession.getData("filterString") != null) {
-                    String filterString = (String) appSession.getData("filterString");
-                    if (filterString.length() > 0) {
-                        searchView.setQuery(filterString, true);
-                        searchView.setIconified(false);
-                        //getToolbar().setTitle("");
-                    } else {
-                        //getToolbar().setTitle("P2P Chat");
+                    if (s.equals(searchView.getQuery().toString())) {
                         updateValues();
                         adapter.refreshEvents(contactname, contacticon, contactid);
+                        adapter.getFilter().filter(s);
                     }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                    //getToolbar().setTitle("");
+                }else{
+                    //getToolbar().setTitle("P2P Chat");
+                    updateValues();
+                    adapter.refreshEvents(contactname, contacticon, contactid);
                 }
             }
-        }else{
-            Log.e(TAG,"SearchView null, please check itemId");
         }
     }
 

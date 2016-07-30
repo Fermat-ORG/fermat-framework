@@ -1,12 +1,10 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,10 +18,8 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
@@ -46,19 +42,19 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
 
     //Managers
     FermatWallet fermatWalletManager;
-    FermatWalletSettings fermatWalletSettings;
     ErrorManager errorManager;
-    String fiatCurrency;
+    FiatCurrency fiatCurrency;
     private TextView tvLabelRate;
     private ListView lstCurrencyView;
     private static ReferenceAppFermatSession<FermatWallet> fermatSession;
     //newInstance constructor for creating fragment with arguments
-    public static ViewPagerFragment newInstance(int page, String providerName,UUID providerId,ReferenceAppFermatSession<FermatWallet> fermatWalletSession ) {
+    public static ViewPagerFragment newInstance(int page, String providerName,UUID providerId, String fiatCurrency,ReferenceAppFermatSession<FermatWallet> fermatWalletSession ) {
         ViewPagerFragment fragmentFirst = new ViewPagerFragment();
         Bundle args = new Bundle();
         args.putInt("someInt", page);
         args.putString("providerName", providerName);
         args.putString("providerId", String.valueOf(providerId));
+        args.putString("fiatCurrency", fiatCurrency);
         fermatSession = fermatWalletSession;
         fragmentFirst.setArguments(args);
         return fragmentFirst;
@@ -71,17 +67,11 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
 
             fermatWalletManager = fermatSession.getModuleManager();
             errorManager = fermatSession.getErrorManager();
-            fermatWalletSettings = fermatWalletManager.loadAndGetSettings(fermatSession.getAppPublicKey());
             page = getArguments().getInt("someInt", 0);
             providerName = getArguments().getString("providerName");
             providerId = UUID.fromString(getArguments().getString("providerId"));
+            fiatCurrency = FiatCurrency.getByCode(getArguments().getString("fiatCurrency"));
 
-            if (fermatWalletSettings.getFiatCurrency() == null) {
-                fermatWalletSettings.setFiatCurrency(FiatCurrency.US_DOLLAR.getCode());
-                fiatCurrency = fermatWalletSettings.getFiatCurrency();
-            }else{ fiatCurrency = fermatWalletSettings.getFiatCurrency();}
-
-            getAndShowMarketExchangeRateData();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -108,25 +98,17 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
                  lstCurrencies);
 
          lstCurrencyView.setAdapter(arrayAdapter);
+         //StringWheelAdapter wheelAdapter = new StringWheelAdapter(lstCurrencies);
+         //wheel.setAdapter(wheelAdapter);
 
-         lstCurrencyView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /* wheel.addChangingListener(new OnWheelChangedListener() {
              @Override
-             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                 TextView item = (TextView) view.findViewById(R.id.itemText);
-
-                 item.setTextColor(Color.parseColor("#2481BA"));
-                 item.setTextSize(16);
-                 try {
-                     fermatWalletSettings.setFiatCurrency(FiatCurrency.getByCode((String) item.getText()).getCode());
-
-                     getAndShowMarketExchangeRateData();
-                 } catch (InvalidParameterException e) {
-                     e.printStackTrace();
-                 }
+             public void onChanged(WheelView wheel, int oldValue, int newValue) {
+                 Log.i("Valor ","oldValue: "+oldValue+": newValue: "+newValue);
              }
-         });
+         });*/
 
-
+         getAndShowMarketExchangeRateData(container);
 
          return view;
 
@@ -137,7 +119,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
        return null;
     }
 
-    private void getAndShowMarketExchangeRateData() {
+    private void getAndShowMarketExchangeRateData(final View container) {
         final int MAX_DECIMAL_FOR_RATE = 2;
         final int MIN_DECIMAL_FOR_RATE = 2;
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
@@ -145,7 +127,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
             protected Object doInBackground() {
                 ExchangeRate rate = null;
                 try{
-                    rate = fermatWalletManager.getCurrencyExchange(providerId,FiatCurrency.getByCode(fermatWalletSettings.getFiatCurrency()));
+                    rate = fermatWalletManager.getCurrencyExchange(providerId,fiatCurrency);
                 }
                 catch (Exception e) {
                     e.printStackTrace();

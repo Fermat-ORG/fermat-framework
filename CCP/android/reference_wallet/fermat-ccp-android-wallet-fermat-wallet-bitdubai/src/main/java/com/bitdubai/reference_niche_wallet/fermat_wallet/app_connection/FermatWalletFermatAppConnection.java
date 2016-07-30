@@ -17,8 +17,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.header.FermatWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.FermatWalletNavigationViewPainter;
@@ -78,12 +76,9 @@ public class FermatWalletFermatAppConnection extends AppConnections<ReferenceApp
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle){
+    public NotificationPainter getNotificationPainter(String code){
      try
         {
-            int notificationID = fermatBundle.getInt(NotificationBundleConstants.NOTIFICATION_ID);
-            String involvedActor =  fermatBundle.getString("InvolvedActor");
-            long amount = Long.parseLong(String.valueOf(fermatBundle.get("Amount")));
            boolean enabledNotification = true;
             this.referenceWalletSession = this.getFullyLoadedSession();
             if(referenceWalletSession!=  null) {
@@ -92,8 +87,9 @@ public class FermatWalletFermatAppConnection extends AppConnections<ReferenceApp
                     enabledNotification = referenceWalletSession.getModuleManager().loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getNotificationEnabled();
                 }
 
+
                 if (enabledNotification)
-                    return FermatWalletNotificationPainter.getNotification(notificationID, involvedActor,amount, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    return FermatWalletNotificationPainter.getNotification(moduleManager, code, referenceWalletSession.getAppPublicKey(), Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
                 else
                     return new FermatWalletBuildNotificationPainter("", "", "", "", false,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
 

@@ -148,7 +148,6 @@
                         android:layout_margin="0dp"
                         android:padding="0dp"
                         app:tabMode="scrollable"
-                        app:tabIndicatorColor="#FFFFFF"
                         app:tabTextAppearance="@style/AppTabTextAppearance"
                         android:background="@drawable/bg_orange_gradient"/>
 

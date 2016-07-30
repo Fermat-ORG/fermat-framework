@@ -292,12 +292,12 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
 
 
-    @Override
+
     public boolean onQueryTextSubmit(String name) {
         return true;
     }
 
-    @Override
+
     public boolean onQueryTextChange(String s) {
         //Toast.makeText(getActivity(), "Probando busqueda completa", Toast.LENGTH_SHORT).show();
         return s.length() == 0 && isStartList;
@@ -345,7 +345,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
                     Item item = new Item(installedWallet);
                     item.setIconResource(R.drawable.icon_loss_protected);
                     item.setPosition(8);
-                    installedWallet.setAppStatus(AppsStatus.ALPHA);
+                    installedWallet.setAppStatus(AppsStatus.DEV);
                     lstItemsWithIcon.add(item);
                 }
 
@@ -356,7 +356,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
                    item.setIconResource(R.drawable.fermat_wallet_icon);
                    item.setPosition(10);
 
-                   installedWallet.setAppStatus(AppsStatus.ALPHA);
+                   installedWallet.setAppStatus(AppsStatus.DEV);
                    lstItemsWithIcon.add(item);
                }
             }

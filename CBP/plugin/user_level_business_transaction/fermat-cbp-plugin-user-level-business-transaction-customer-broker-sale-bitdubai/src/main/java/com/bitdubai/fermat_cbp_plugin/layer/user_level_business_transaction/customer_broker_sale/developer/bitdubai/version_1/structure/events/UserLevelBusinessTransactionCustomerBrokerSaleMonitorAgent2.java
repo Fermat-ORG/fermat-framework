@@ -146,12 +146,17 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
     }
 
     @Override
-    protected void agentJob() {
-        UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2.this.doTheMainTask();
+    protected Runnable agentJob() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2.this.doTheMainTask();
+            }
+        };
     }
 
     @Override
-    protected void onErrorOccur(Exception e) {
+    protected void onErrorOccur() {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 Error"));
