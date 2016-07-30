@@ -40,8 +40,8 @@
                     android:layout_weight="1"
                     android:gravity="left"
                     android:paddingLeft="5dp"
-                    android:text="Welcome!"
-                    android:textColor="#00a99d"
+                    android:text="@string/cht_dialog_welcome"
+                    android:textColor="@color/cht_dialog_title"
                     android:textSize="25sp"
                     app:typeface="CAVIAR_DREAMS_BOLD"
                     tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
@@ -86,10 +86,9 @@
                 android:paddingRight="30dp"
                 android:paddingStart="20dp"
                 android:paddingTop="7sp"
-                android:text="Welcome to P2P Chat"
-                android:textColor="#1d1d26"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
+                android:text="@string/cht_dialog_subtitle"
+                android:textColor="@color/cht_dialog_text"
+                android:textSize="20sp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -112,10 +111,9 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
                     android:paddingStart="16dp"
-                    android:text="If you do not have any identity registered, please register one in our Chat Community."
-                    android:textColor="#1d1d26"
-                    android:textSize="16sp"
-                    tools:ignore="HardcodedText" />
+                    android:text="@string/cht_dialog_content"
+                    android:textColor="@color/cht_dialog_text"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <View
@@ -134,8 +132,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:buttonTint="@color/black_overlay"
-                    tools:ignore="RtlCompat,UnusedAttribute"
                     android:layout_toRightOf="@+id/view2"
                     android:layout_toEndOf="@+id/view2"
                     />
@@ -144,13 +142,13 @@
                     android:id="@+id/view2"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_marginEnd="32dp"
                     android:layout_marginRight="32dp"
                     android:gravity="center_vertical"
-                    android:text="Don´t show this again"
-                    android:textColor="#7c7c7c"
-                    android:textSize="12dp"
-                    tools:ignore="HardcodedText,RtlCompat,SpUsage" />
+                    android:text="@string/cht_dialog_dont_show"
+                    android:textColor="@color/cht_dont_show"
+                    android:textSize="12sp" />
             </RelativeLayout>
         </LinearLayout>
         <LinearLayout
@@ -163,12 +161,11 @@
                 android:layout_height="40dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:background="#5a595b"
+                android:background="@color/cht_button_background"
                 android:gravity="center"
-                android:text="Close"
+                android:text="@string/cht_dialog_button_close"
                 android:textSize="17sp"
-                android:textColor="#ffffff"
-                tools:ignore="HardcodedText" />
+                android:textColor="@color/cht_button_text" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
