@@ -73,9 +73,12 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -108,6 +111,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     private TextView txt_type_balance;
     private TextView txt_balance_amount;
     private TextView txt_Date_time;
+    private TextView txt_Date_time_hour;
     private TextView txt_rate_amount;
     private long balanceAvailable;
     private View rootView;
@@ -410,6 +414,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         txt_balance_amount      = (TextView) header_layout.findViewById(R.id.txt_balance_amount);
         txt_type_balance_amount = (TextView) header_layout.findViewById(R.id.txt_type_balance_amount);
         txt_type_balance        = (TextView) header_layout.findViewById(R.id.txt_type_balance);
+        txt_Date_time_hour      = (TextView) header_layout.findViewById(R.id.txt_date_time_hour);
         txt_Date_time           = (TextView) header_layout.findViewById(R.id.txt_date_time);
         txt_rate_amount         = (TextView) header_layout.findViewById(R.id.txt_rate_amount);
         ViewPager vpPager       = (ViewPager) header_layout.findViewById(R.id.vpPager);
@@ -417,13 +422,15 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
         final String date;
         final String time;
+
         SimpleDateFormat sdf1 = new SimpleDateFormat("MMM dd, yyyy");
         SimpleDateFormat sdf2 = new SimpleDateFormat("hh:ss a");
 
         date = sdf1.format(System.currentTimeMillis());
         time = sdf2.format(System.currentTimeMillis());
 
-        txt_Date_time.setText(time + " | " + date);
+        txt_Date_time_hour.setText(time);
+        txt_Date_time.setText(date);
 
         //Event Click For change the balance type
         txt_type_balance.setOnClickListener(new View.OnClickListener() {
@@ -460,23 +467,17 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             }
         });
 
-       // moduleManager.getExchangeRateProviders()
-        List<ExchangeRateProvider> exchangeProviderList = new ArrayList<>();
-
         try {
 
             List<ExchangeRateProvider> ProviderList  = moduleManager.getExchangeRateProviders();
+            List<ExchangeRateProvider> exchangeProviderList = new ArrayList<>();
+            Set<UUID> lst2 = new HashSet<UUID>();
 
-            for (ExchangeRateProvider lst : ProviderList) {
-
-                String name = lst.getProviderName();
-                UUID id = lst.getProviderId();
-
-                if (id!=null || name!=null)
+            for( ExchangeRateProvider lst : ProviderList) {
+                if(lst2.add(lst.getProviderId())) {
                     exchangeProviderList.add(lst);
                 }
-
-
+            }
 
             FragmentStatePagerAdapter adapterViewPager;
             adapterViewPager = new ViewPagerAdapter(getFragmentManager(),exchangeProviderList,appSession);
@@ -538,8 +539,21 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         chart.setHighlightPerTapEnabled(true);
         //chart.setOnChartValueSelectedListener((OnChartValueSelectedListener) this);
         chart.fitScreen();
+        long frmt =  100000000;
+        long date = System.currentTimeMillis();
+        long day = 86400000;
+        Map<Long, Long> dailyHardCore = new HashMap<>();
+        for (int i = 0; i < 6 ; i++) {
 
-        LineData data = getData(fermatWalletSettings.getRunningDailyBalance());
+            long frm1t =+frmt;
+            long dataPlusday =+ date + day;
+            dailyHardCore.put(dataPlusday,frm1t);
+            dataPlusday++;
+            day++;
+        }
+
+        //LineData data = getData(fermatWalletSettings.getRunningDailyBalance());
+        LineData data = getData(dailyHardCore);
         //LineData data = new LineData(labels, dataset);
         chart.setData(data);
 
@@ -629,10 +643,11 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
         LineDataSet dataset = new LineDataSet(entryList, "");
         dataset.setColor(Color.WHITE); //
-        dataset.setDrawCubic(false);
+        dataset.setDrawCubic(true);
         dataset.setDrawValues(false);
         dataset.setDrawCircles(true);
-        dataset.setCircleSize(3);
+        dataset.setCircleSize(2);
+        dataset.setLineWidth(1);
         //dataset.setCircleColors(colors);
         dataset.setDrawCircleHole(false);
         dataset.setValueFormatter(new LargeValueFormatter());
