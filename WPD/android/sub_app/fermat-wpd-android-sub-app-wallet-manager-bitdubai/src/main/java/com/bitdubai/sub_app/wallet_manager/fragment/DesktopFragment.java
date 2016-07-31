@@ -349,7 +349,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
                     lstItemsWithIcon.add(item);
                 }
 
-
+                */
 
                if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode())) {
                    Item item = new Item(installedWallet);
@@ -358,7 +358,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
                    installedWallet.setAppStatus(AppsStatus.ALPHA);
                    lstItemsWithIcon.add(item);
-               }*/
+               }
             }
 
             InstalledWallet installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(
