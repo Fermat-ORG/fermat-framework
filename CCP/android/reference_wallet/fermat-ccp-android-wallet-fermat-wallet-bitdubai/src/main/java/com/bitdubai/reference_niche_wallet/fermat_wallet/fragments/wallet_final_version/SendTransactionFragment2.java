@@ -39,6 +39,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
@@ -306,7 +308,15 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         appSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
                 }
 
-                if (intraUserLoginIdentity == null) {
+                ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = null;
+                try {
+                    cryptoWalletIntraUserIdentity = moduleManager.getSelectedActorIdentity();
+                } catch (CantGetSelectedActorIdentityException e) {
+                    e.printStackTrace();
+                } catch (ActorIdentityNotSelectedException e) {
+                    e.printStackTrace();
+                }
+                if (cryptoWalletIntraUserIdentity == null) {
                     getActivity().onBackPressed();
                 } else {
                     invalidate();

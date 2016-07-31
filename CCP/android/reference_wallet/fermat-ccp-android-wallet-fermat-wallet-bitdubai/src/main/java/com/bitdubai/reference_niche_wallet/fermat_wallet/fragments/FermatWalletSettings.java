@@ -207,7 +207,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                 //receive Mainet test fermats
                Log.i("info", "LongPress");
                Toast.makeText(getActivity(), "MainNet download Init", Toast.LENGTH_SHORT).show();
-                GET(getActivity());
+                GETMainNetFrm(getActivity());
             }
 
 
@@ -377,7 +377,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                 String finalResponse = "";
 
                 try {
-                    CryptoAddress cryptoAddress = new CryptoAddress("pKMqJrEe26Vq8JNV7H7Di7T57Cdb6ntzv3", CryptoCurrency.BITCOIN);
+                    CryptoAddress cryptoAddress = new CryptoAddress("pKMqJrEe26Vq8JNV7H7Di7T57Cdb6ntzv3", CryptoCurrency.FERMAT);
 
                     try {
                         fermatWalletWalletContact = fermatWalletModule.findWalletContactByName("MainNet_Fermats", appSession.getAppPublicKey(), fermatWalletModule.getSelectedActorIdentity().getPublicKey());
@@ -403,9 +403,9 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                         finalResponse = "transaccion fallida";
                         e.printStackTrace();
                     }
-
+                    CryptoAddress myAddress = getWalletAddress(fermatWalletWalletContact.getActorPublicKey());
                     if(fermatWalletWalletContact != null)
-                        fermatWalletModule.testNetGiveMeCoins(blockchainNetworkType, getWalletAddress(fermatWalletWalletContact.getActorPublicKey()));
+                        fermatWalletModule.testNetGiveMeCoins(blockchainNetworkType, myAddress);
 
                 }
                 catch (CantGetCoinsFromFaucetException e) {
@@ -452,6 +452,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
         final Handler mHandler = new Handler();
         try {
 
+
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -459,7 +460,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                     String response = "";
                     try {
 
-                            CryptoAddress cryptoAddress = new CryptoAddress("pKMqJrEe26Vq8JNV7H7Di7T57Cdb6ntzv3", CryptoCurrency.BITCOIN);
+                            CryptoAddress cryptoAddress = new CryptoAddress("pKMqJrEe26Vq8JNV7H7Di7T57Cdb6ntzv3", CryptoCurrency.FERMAT);
 
                             try {
                                 fermatWalletWalletContact = fermatWalletModule.findWalletContactByName("MainNet_Fermats", appSession.getAppPublicKey(), fermatWalletModule.getSelectedActorIdentity().getPublicKey());
@@ -487,7 +488,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                             }
 
                             if(fermatWalletWalletContact != null)
-                                fermatWalletModule.testNetGiveMeCoins(blockchainNetworkType, getWalletAddress(fermatWalletWalletContact.getActorPublicKey()));
+                                fermatWalletModule.testNetGiveMeCoins(blockchainNetworkType,getWalletAddress(fermatWalletWalletContact.getActorPublicKey()));
 
                         } catch (CantGetCoinsFromFaucetException e) {
                             e.printStackTrace();
