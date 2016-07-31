@@ -348,10 +348,10 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                     pluginFileSystem);
 
             System.out.println("12345 CHECKING INCOMING CHAT");
-            saveChat(chatMetadata);
-
-            saveMessage(chatMetadata);
-
+                    saveChat(chatMetadata);
+                    //Start: Commented trying to avoid messages in wrong chat
+//                    saveMessage(chatMetadata);
+                    //End: Commented trying to avoid messages in wrong chat
 //            FermatBundle fermatBundle = new FermatBundle();
 //            fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
 //            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
@@ -818,11 +818,8 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             DatabaseOperationException,
             CantSaveMessageException,
             CantGetMessageException, SendStatusUpdateMessageNotificationException {
-        UUID messageId = chatMetadata.getMessageId();
         System.out.println("12345 SAVING MESSAGE");
-//        Message messageRecorded = chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
         Message messageRecorded = null;
-//        if (messageRecorded == null) {
         /**
          * In this case, the message is not created in database, so, is an incoming message,
          * I need to create a new message
@@ -830,7 +827,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
         messageRecorded = getMessageFromChatMetadata(
                 chatMetadata);
         if (messageRecorded == null) return;
-//        }
 
         messageRecorded.setStatus(MessageStatus.RECEIVE);
         chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
@@ -843,32 +839,56 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
      * @param chatMetadata
      * @throws DatabaseOperationException
      */
-    private void saveChat(ChatMetadata chatMetadata) throws DatabaseOperationException, CantGetChatException, CantSaveChatException {
-        String localPublicKey;
-        PlatformComponentType localType;
-        String remotePublicKey;
-        PlatformComponentType remoteType;
+    private void saveChat(ChatMetadata chatMetadata)
+            throws DatabaseOperationException, CantGetChatException,
+            CantSaveChatException,
+            CantSaveMessageException,
+            CantGetMessageException, SendStatusUpdateMessageNotificationException {
+
         System.out.println("12345 SAVING CHAT");
-        Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatMetadata.getChatId());
-        if (chat == null)
+        Chat chat=null;
+        //Start: Commented trying to avoid messages in wrong chat
+        //Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatMetadata.getChatId());
+        //if(chat==null)
+        //End: Commented trying to avoid messages in wrong chat
             chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
 
         // change to put in the remote device in the correct place of table chat
         if (chat == null) {
             chat = getChatFromChatMetadata(chatMetadata);
-        } else {
-            localPublicKey = chatMetadata.getRemoteActorPublicKey();
-            if (!localPublicKey.equals(chat.getRemoteActorPublicKey())) {
-                chat.setLocalActorPublicKey(localPublicKey);
-            }
         }
+        //Start: Commented trying to avoid messages in wrong chat
+        //
+        // else {
+//            localPublicKey = chatMetadata.getRemoteActorPublicKey();
+//            if (!localPublicKey.equals(chat.getRemoteActorPublicKey())) {
+//                chat.setLocalActorPublicKey(localPublicKey);
+//            }
+//        }
+        //End: Commented trying to avoid messages in wrong chat
         chat.setLastMessageDate(new Timestamp(System.currentTimeMillis()));//updating date of last message arrived in chat
 
         chat.setStatus(ChatStatus.VISSIBLE);
 
         chatMiddlewareDatabaseDao.saveChat(chat);
-    }
 
+        //Start: Implementation trying to avoid messages in wrong chat
+        Message messageRecorded = null;
+//        if (messageRecorded == null) {
+        /**
+         * In this case, the message is not created in database, so, is an incoming message,
+         * I need to create a new message
+         */
+        messageRecorded = getMessageFromChatMetadata(
+                chatMetadata);
+        if (messageRecorded == null) return;
+//        }
+        messageRecorded.setChatId(chat.getChatId());
+        messageRecorded.setStatus(MessageStatus.RECEIVE);
+        chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
+        chatMiddlewareManager.sendDeliveredMessageNotification(messageRecorded);
+        //End: Implementation trying to avoid messages in wrong chat
+    }
 
     /**
      * This method creates a new Message from incoming metadata

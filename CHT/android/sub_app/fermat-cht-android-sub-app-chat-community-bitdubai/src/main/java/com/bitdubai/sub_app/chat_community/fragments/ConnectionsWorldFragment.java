@@ -43,6 +43,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -86,7 +87,7 @@ public class ConnectionsWorldFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<ChatActorCommunityInformation>,
-        GeolocationDialog.AdapterCallback, SearchAliasDialog.AdapterCallbackAlias {
+        GeolocationDialog.AdapterCallback , SearchAliasDialog.AdapterCallbackAlias, CommunityListAdapter.AdapterCallbackList {
 
     //Constants
     public static final String CHAT_USER_SELECTED = "chat_user";
@@ -172,6 +173,11 @@ public class ConnectionsWorldFragment
         onRefresh();
     }
 
+    @Override
+    public void onMethodCallbackConnectionStatus(int position, ConnectionState state) {
+       lstChatUserInformations.get(position).setConnectionState(state);
+    }
+
     /**
      * Fragment interface implementation.
      */
@@ -232,7 +238,7 @@ public class ConnectionsWorldFragment
             //Set up RecyclerView
             layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
             adapter = new CommunityListAdapter(getActivity(), lstChatUserInformations,
-                    appSession, moduleManager);
+                    appSession, moduleManager, this);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             refreshButtonView = (View) rootView.findViewById(R.id.show_more_layout);
@@ -565,7 +571,7 @@ public class ConnectionsWorldFragment
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                     UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
+            Toast.makeText(getActivity(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
@@ -675,16 +681,16 @@ public class ConnectionsWorldFragment
                 intent.putExtra("enabled", true);
                 if (Build.VERSION.SDK_INT < 23) {
                     String provider = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-                    if (!provider.contains("gps")) { //if gps is disabled
-                        makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    if(!provider.contains("gps")){ //if gps is disabled
+                        Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
                 } else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-                    if (!provider.contains("gps")) { //if gps is disabled
-                        makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    if(!provider.contains("gps")){ //if gps is disabled
+                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
@@ -692,9 +698,9 @@ public class ConnectionsWorldFragment
                 }
             } catch (Exception ex) {
                 if (Build.VERSION.SDK_INT < 23) {
-                    makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
-                } else {
-                    makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
                 }
             }
         }
