@@ -584,10 +584,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             @Override
                             public void run() {
                                 try {
-//                                    if (!exist){
-//                                        moduleManager.createIdentity("Mati","aaa",null);
-//                                        exist = true;
-//                                    }
                                     if (updateProfileImage)
 
                                         moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray, (long)100, Frequency.NORMAL, moduleManager.getLocationManager());
@@ -601,7 +597,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             }
                         });
                         //todo: sacar
-//                        return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
+                        return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
                     }
 
                  } catch (Exception e) {
@@ -616,7 +612,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
     }
 
-    boolean exist = false;
 
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);

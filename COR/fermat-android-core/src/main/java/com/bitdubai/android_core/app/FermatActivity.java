@@ -1361,10 +1361,14 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 try {
                     Window window = this.getWindow();
                     // clear FLAG_TRANSLUCENT_STATUS flag:
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                    window.setStatusBarColor(Color.TRANSPARENT);
+                    try {
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        window.setStatusBarColor(Color.TRANSPARENT);
+                    }catch (Exception e){
+                        Log.e(TAG,"ClearFlags. furszy things");
+                    }
 
                     MainLayoutHelper.setTranslucentStatusBar(getWindow(), 0);
                 } catch (Exception e) {
@@ -1418,6 +1422,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             if (pagertabs != null) {
                 try {
                     pagertabs.clearOnPageChangeListeners();
+
 //                    pagertabs.setVisibility(View.GONE);
                     pagertabs.removeAllViewsInLayout();
 //                    ((ViewGroup) pagertabs.getParent()).removeView(pagertabs);
