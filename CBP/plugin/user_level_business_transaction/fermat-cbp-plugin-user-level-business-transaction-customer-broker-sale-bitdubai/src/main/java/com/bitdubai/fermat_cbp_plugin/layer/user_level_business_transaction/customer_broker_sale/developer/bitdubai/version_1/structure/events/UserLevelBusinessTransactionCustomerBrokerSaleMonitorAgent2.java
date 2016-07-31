@@ -702,7 +702,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
 
                 if (transactionId.equals(negotiationId) && transactionStatus != IN_PAYMENT_SUBMIT) {
 
-                    applySalePaymentCredit(brokerWalletPublicKey, contract, negotiationId);
+                    //applySalePaymentCredit(brokerWalletPublicKey, contract, negotiationId);
 
                     userLevelTransaction.setTransactionStatus(IN_PAYMENT_SUBMIT);
                     userLevelTransaction.setContractStatus(ContractStatus.PAYMENT_SUBMIT.getCode());
@@ -778,7 +778,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                         cryptoWalletPublicKey = WalletsPublicKeys.CCP_FERMAT_WALLET.getCode();
                         break;
                     default:
-                        throw new UnsupportedOperationException(new StringBuilder().append("The Crypto Restock operation is not supported for the currency ").append(cryptoCurrency.getFriendlyName()).toString());
+                        throw new UnsupportedOperationException("The Crypto Restock operation is not supported for the currency " + cryptoCurrency.getFriendlyName());
                 }
 
                 cryptoMoneyRestockManager.createTransactionRestock(

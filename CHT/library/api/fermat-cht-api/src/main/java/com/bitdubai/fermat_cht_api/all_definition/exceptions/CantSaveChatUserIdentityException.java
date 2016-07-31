@@ -30,7 +30,7 @@ public class CantSaveChatUserIdentityException extends CHTException {
      * @param possibleReason
      */
     public CantSaveChatUserIdentityException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

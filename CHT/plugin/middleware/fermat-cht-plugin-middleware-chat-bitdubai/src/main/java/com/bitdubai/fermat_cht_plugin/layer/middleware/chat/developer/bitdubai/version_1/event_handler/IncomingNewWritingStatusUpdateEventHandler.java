@@ -9,8 +9,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
 
 
 /**
@@ -22,25 +20,25 @@ public class IncomingNewWritingStatusUpdateEventHandler extends AbstractChatMidd
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if(this.chatMiddlewareRecorderService.getStatus()== ServiceStatus.STARTED) {
+        if (this.chatMiddlewareRecorderService.getStatus() == ServiceStatus.STARTED) {
 
             try {
                 this.chatMiddlewareRecorderService.IncomingNewWritingStatusUpdateEventHandler((IncomingNewWritingStatusUpdate) fermatEvent);
-            } catch(CantSaveEventException exception){
+            } catch (CantSaveEventException exception) {
                 errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                throw new CantSaveEventException(exception,"Handling the IncomingNewChatStatusUpdate", "Check the cause");
-            } catch(ClassCastException exception){
+                throw new CantSaveEventException(exception, "Handling the IncomingNewChatStatusUpdate", "Check the cause");
+            } catch (ClassCastException exception) {
                 errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("EXCEPTION DETECTOR----------------------------------");
                 //exception.printStackTrace();
                 throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the IncomingNewChatStatusUpdate", "Cannot cast this event");
-            } catch(Exception exception){
+            } catch (Exception exception) {
                 errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                throw new CantSaveEventException(exception,"Handling the IncomingNewChatStatusUpdate", "Unexpected exception");
+                throw new CantSaveEventException(exception, "Handling the IncomingNewChatStatusUpdate", "Unexpected exception");
             }
 
-        }else {
+        } else {
             throw new TransactionServiceNotStartedException();
         }
     }

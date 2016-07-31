@@ -32,10 +32,9 @@ public class ConfirmMessage extends NegotiationTransmissionMessage {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("ConfirmMessage{")
-                .append("  transmissionId   =").append(transmissionId)
-                .append(", action           =").append(actorReceiveType)
-                .append("}").toString();
+        return  "ConfirmMessage{" +
+                "  transmissionId   =" + transmissionId +
+                ", action           =" + actorReceiveType +
+                "}";
     }
 }

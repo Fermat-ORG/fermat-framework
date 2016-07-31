@@ -30,7 +30,7 @@ public class CantDeleteChatException extends CHTException {
      * @param possibleReason
      */
     public CantDeleteChatException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

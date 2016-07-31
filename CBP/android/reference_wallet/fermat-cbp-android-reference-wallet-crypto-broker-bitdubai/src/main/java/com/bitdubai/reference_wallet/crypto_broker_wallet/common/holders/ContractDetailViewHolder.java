@@ -35,6 +35,8 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
     //Constants
     private static final int PAYMENT_RECEPTION_IN_PROCESS = 1;
     private static final int MERCHANDISE_DELIVERY_IN_PROCESS = 2;
+    private static final int PAYMENT_CONFIRMED = 2;
+    private static final int MERCHANDISE_SENT = 3;
 
     //Managers
     ErrorManager errorManager;
@@ -60,7 +62,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
 
 
     public ContractDetailViewHolder(View itemView, ContractDetailActivityFragment fragment) {
-        super(itemView);
+        super(itemView, 0);
 
         this.cardView = (CardView) itemView.findViewById(R.id.contract_detail_card_view);
         res = itemView.getResources();
@@ -93,22 +95,22 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         try {
 
             switch (contractDetail.getContractStep()) {
-                case 2:
+                case PAYMENT_CONFIRMED:
                     //Confirm the payment from the customer
                     walletManager.ackPayment(contractDetail.getContractId());
 
-//                    Toast.makeText(this.parentFragment.getActivity(), "The payment has been delivered", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this.parentFragment.getActivity(), "The payment has been confirmed", Toast.LENGTH_SHORT).show();
 
                     //Set internal status of this contract to PAYMENT_RECEPTION_IN_PROCESS
                     walletSession.setData(contractDetail.getContractId(), PAYMENT_RECEPTION_IN_PROCESS);
 
                     fragment.goToWalletHome();
                     break;
-                case 3:
+                case MERCHANDISE_SENT:
                     //Send the merchandise to the customer
                     walletManager.submitMerchandise(contractDetail.getContractId());
 
-                    Toast.makeText(this.parentFragment.getActivity(), "The merchandise has been accepted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this.parentFragment.getActivity(), "The merchandise has been sent", Toast.LENGTH_SHORT).show();
 
                     //Set internal status of this contract to MERCHANDISE_DELIVERY_IN_PROCESS
                     walletSession.setData(contractDetail.getContractId(), MERCHANDISE_DELIVERY_IN_PROCESS);
@@ -121,13 +123,10 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
 
             Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
             if (errorManager != null) {
-                errorManager.reportUnexpectedWalletException(
-                        Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                        ex);
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }
         }
-
     }
 
     @SuppressWarnings("deprecation")
@@ -329,9 +328,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
     /* HELPER FUNCTIONS */
     @NonNull
     private String getFormattedAmount(String amount, String currencyCode) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(amount).append(" ").append(currencyCode);
-        return stringBuilder.toString();
+        return amount + " " + currencyCode;
     }
 
     @NonNull

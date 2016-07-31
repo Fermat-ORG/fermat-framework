@@ -410,7 +410,9 @@
                                 android:text="@string/fee_low"
                                 android:layout_marginRight="0dp"
                                 android:textColor="#333"
-                                android:textSize="12sp" />
+                                android:textSize="12sp"
+                                android:buttonTint="#d45811"
+                                android:checked="false" />
 
                             <RadioButton
                                 android:id="@+id/fee_Medium"
@@ -418,7 +420,10 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/fee_Medium"
                                 android:textColor="#333"
-                                android:textSize="12sp" />
+                                android:textSize="12sp"
+                                android:buttonTint="#d45811"
+                                android:checked="false"
+                                 />
 
                             <RadioButton
                                 android:id="@+id/fee_High"
@@ -426,7 +431,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/fee_High"
                                 android:textColor="#333"
-                                android:textSize="12sp" />
+                                android:textSize="12sp"
+                                android:buttonTint="#d45811" />
                         </RadioGroup>
                     </LinearLayout>
 

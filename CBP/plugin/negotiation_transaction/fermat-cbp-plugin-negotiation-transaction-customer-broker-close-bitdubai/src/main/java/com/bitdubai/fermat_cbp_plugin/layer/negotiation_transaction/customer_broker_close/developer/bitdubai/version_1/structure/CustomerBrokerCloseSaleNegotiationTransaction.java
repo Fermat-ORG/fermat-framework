@@ -73,14 +73,9 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
         try {
             UUID transactionId = UUID.randomUUID();
 
-            System.out.println(new StringBuilder().append("**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. transactionId: ").append(transactionId).append(" ****").toString());
+            System.out.println("**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****");
 
-            System.out.println(new StringBuilder()
-                            .append("--- Negotiation Mock XML Date")
-                            .append("\n- NegotiationId = ").append(customerBrokerSaleNegotiation.getNegotiationId())
-                            .append("\n- CustomerPublicKey = ").append(customerBrokerSaleNegotiation.getCustomerPublicKey())
-                            .append("\n- BrokerPublicKey = ").append(customerBrokerSaleNegotiation.getCustomerPublicKey())
-                            .append("\n- Status ").append(customerBrokerSaleNegotiation.getStatus()).toString()
+            System.out.println("--- Negotiation Mock XML Date" + "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() + "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() + "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() + "\n- Status " + customerBrokerSaleNegotiation.getStatus()
             );
 
             String changeClause = "";
@@ -88,7 +83,7 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
                 changeClause = new StringBuilder().append(changeClause).append("\n  - Type = ").append(value.getType()).append(". Value = ").append(value.getValue()).append(". Status = ").append(value.getStatus()).toString();
             }
 
-            System.out.println(new StringBuilder().append(" - Clauses = \n").append(changeClause).toString());
+            System.out.println(" - Clauses = \n" + changeClause);
 
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
                     cryptoAddressBookManager,
@@ -145,19 +140,14 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
                     intraWalletUserIdentityManager
             );
 
-            System.out.print(new StringBuilder()
-                            .append("\n --- Negotiation Mock XML Date")
-                            .append("\n- NegotiationId = ").append(customerBrokerSaleNegotiation.getNegotiationId())
-                            .append("\n- CustomerPublicKey = ").append(customerBrokerSaleNegotiation.getCustomerPublicKey())
-                            .append("\n- BrokerPublicKey = ").append(customerBrokerSaleNegotiation.getCustomerPublicKey())
-                            .append("\n- Status ").append(customerBrokerSaleNegotiation.getStatus()).toString()
+            System.out.print("\n --- Negotiation Mock XML Date" + "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() + "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() + "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() + "\n- Status " + customerBrokerSaleNegotiation.getStatus()
             );
 
             String changeClause = "";
             for (final Clause value : customerBrokerSaleNegotiation.getClauses()) {
                 changeClause = new StringBuilder().append(changeClause).append("\n  - Type = ").append(value.getType()).append(". Value = ").append(value.getValue()).append(". Status = ").append(value.getStatus()).toString();
             }
-            System.out.println(new StringBuilder().append(" - Clauses = \n").append(changeClause).toString());
+            System.out.println(" - Clauses = \n" + changeClause);
 
             if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(), ClauseType.CUSTOMER_PAYMENT_METHOD)) {
 
@@ -215,7 +205,7 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             for (final Clause value : customerBrokerSaleNegotiation.getClauses()) {
                 changeClause = new StringBuilder().append(changeClause).append("\n  - Type = ").append(value.getType()).append(". Value = ").append(value.getValue()).append(". Status = ").append(value.getStatus()).toString();
             }
-            System.out.println(new StringBuilder().append(" - Clauses = \n").append(changeClause).toString());
+            System.out.println(" - Clauses = \n" + changeClause);
 
             if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
 

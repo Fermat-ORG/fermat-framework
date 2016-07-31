@@ -144,14 +144,14 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
                 if (associatedWalletPlatform == merchandiseWalletPlatform && associatedWalletMerchandise == merchandiseCurrency) {
                     offlineWalletPublicKey = cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
 
-                    System.out.println(new StringBuilder().append("SUBMIT_OFFLINE_MERCHANDISE_MANAGER - merchandise wallet public key found: ").append(offlineWalletPublicKey).toString());
+                    System.out.println("SUBMIT_OFFLINE_MERCHANDISE_MANAGER - merchandise wallet public key found: " + offlineWalletPublicKey);
                     break;
                 }
             }
 
             if (offlineWalletPublicKey == null) {
                 // In this case there is no associated wallet, I can't handle this situation.
-                throw new CantSubmitMerchandiseException(new StringBuilder().append("None of the associated wallets is from the platform ").append(merchandiseWalletPlatform).toString());
+                throw new CantSubmitMerchandiseException("None of the associated wallets is from the platform " + merchandiseWalletPlatform);
             }
 
             //Overload the original method
@@ -381,7 +381,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
                 return NumberFormat.getInstance().parse(stringValue).doubleValue();
             } catch (Exception exception) {
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
-                        "Parsing String object to long", new StringBuilder().append("Cannot parse ").append(stringValue).append(" string value to long").toString());
+                        "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
             }
         }
     }

@@ -88,7 +88,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     private int offset = 0;
 
     ActiveActorIdentityInformation intraUserLoginIdentity;
-
+    BitcoinWalletSettings bitcoinWalletSettings;
 
     public static ReceiveTransactionFragment2 newInstance() {
         return new ReceiveTransactionFragment2();
@@ -100,7 +100,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         lstCryptoWalletTransactionsAvailable = new ArrayList<>();
         mHandler = new Handler();
-        BitcoinWalletSettings bitcoinWalletSettings;
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
@@ -131,13 +130,9 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         //noinspection TryWithIdenticalCatches
         try {
-            blockchainNetworkType = (moduleManager!=null) ?
-                    moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType() :
+            blockchainNetworkType = (bitcoinWalletSettings!=null) ?
+                    bitcoinWalletSettings.getBlockchainNetworkType() :
                     BlockchainNetworkType.getDefaultBlockchainNetworkType();
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -20,7 +20,6 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
-import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.fragmentFactory.ChatCommunityFragmentFactory;
 import com.bitdubai.sub_app.chat_community.navigation_drawer.ChatCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.chat_community.notifications.CommunityNotificationPainterBuilder;
@@ -51,12 +50,12 @@ public class ChatCommunityFermatAppConnection
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return new PluginVersionReference[]{ new PluginVersionReference(
-            Platforms.CHAT_PLATFORM,
-            Layers.SUB_APP_MODULE,
-            Plugins.CHAT_COMMUNITY_SUP_APP_MODULE,
-            Developers.BITDUBAI,
-            new Version()
+        return new PluginVersionReference[]{new PluginVersionReference(
+                Platforms.CHAT_PLATFORM,
+                Layers.SUB_APP_MODULE,
+                Plugins.CHAT_COMMUNITY_SUP_APP_MODULE,
+                Developers.BITDUBAI,
+                new Version()
         )};
     }
 
@@ -67,7 +66,7 @@ public class ChatCommunityFermatAppConnection
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        navPainter=new ChatCommunityNavigationViewPainter(getContext(), getFullyLoadedSession(),getApplicationManager());
+        navPainter = new ChatCommunityNavigationViewPainter(getContext(), getFullyLoadedSession(), getApplicationManager());
         return navPainter;
     }
 
@@ -82,7 +81,7 @@ public class ChatCommunityFermatAppConnection
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle){
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle) {
         return CommunityNotificationPainterBuilder.getNotification(fermatBundle);
     }
 

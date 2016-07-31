@@ -153,7 +153,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
 //                                    "Cant create a CurrencyMatching for the given currencies", null,
 //                                    "currencyGiving: " + currencyGiving + "\ncurrencyReceiving: " + currencyReceiving,
 //                                    "Please verify that the credit and debit transactions are correct in the crypto broker transaction database"));
-                            System.out.println(new StringBuilder().append("Cant create a CurrencyMatching for the given currencies\n").append("currencyGiving: ").append(currencyGiving).append("\ncurrencyReceiving: ").append(currencyReceiving).toString());
+                            System.out.println("Cant create a CurrencyMatching for the given currencies\n" + "currencyGiving: " + currencyGiving + "\ncurrencyReceiving: " + currencyReceiving);
                         }
                     }
                 }

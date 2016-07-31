@@ -36,17 +36,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
@@ -61,9 +53,9 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
      */
     private Database database;
 
-    Timer timer = new Timer();
+//    Timer timer = new Timer();
 
-    private long reprocessTimer = 600000; //Ten minutes
+//    private long reprocessTimer = 600000; //Ten minutes
 
     public TransactionTransmissionNetworkServicePluginRoot() {
         super(
@@ -120,53 +112,53 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     protected void onNetworkServiceRegistered() {
-        reprocessPendingMessage();
+//        reprocessPendingMessage();
     }
 
-    private void reprocessPendingMessage() {
-        try {
-            //Check if nay message not sent
-            Map<String, Object> filters = new HashMap<>();
-            filters.put(
-                    CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME,
-                    MessagesStatus.PENDING_TO_SEND.getCode());
-            List<NetworkServiceMessage> networkServiceMessages = getNetworkServiceConnectionManager()
-                    .getOutgoingMessagesDao()
-                    .findAll(filters);
-            System.out.println(new StringBuilder().append("Transaction Transmission found ").append(networkServiceMessages.size()).append(" for sending").toString());
-            for (NetworkServiceMessage networkServiceMessage : networkServiceMessages) {
-                try {
-                    System.out.println(new StringBuilder().append("Trying to send pending message to ").append(networkServiceMessage.getReceiverPublicKey()).toString());
-                    networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.DELIVERED);
-                    getNetworkServiceConnectionManager()
-                            .getOutgoingMessagesDao().update(networkServiceMessage);
-                    final ActorProfile sender = new ActorProfile();
-                    sender.setIdentityPublicKey(networkServiceMessage.getSenderPublicKey());
-                    final ActorProfile receiver = new ActorProfile();
-                    receiver.setIdentityPublicKey(networkServiceMessage.getReceiverPublicKey());
-                    sendNewMessage(sender, receiver, networkServiceMessage.toJson());
-                } catch (Exception e) {
-                    System.out.println("Transaction Transmission found an exception sending pending messages");
-                    e.printStackTrace();
-                }
+//    private void reprocessPendingMessage() {
+//        try {
+//            //Check if nay message not sent
+//            Map<String, Object> filters = new HashMap<>();
+//            filters.put(
+//                    CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME,
+//                    MessagesStatus.PENDING_TO_SEND.getCode());
+//            List<NetworkServiceMessage> networkServiceMessages = getNetworkServiceConnectionManager()
+//                    .getOutgoingMessagesDao()
+//                    .findAll(filters);
+//            System.out.println(new StringBuilder().append("Transaction Transmission found ").append(networkServiceMessages.size()).append(" for sending").toString());
+//            for (NetworkServiceMessage networkServiceMessage : networkServiceMessages) {
+//                try {
+//                    System.out.println(new StringBuilder().append("Trying to send pending message to ").append(networkServiceMessage.getReceiverPublicKey()).toString());
+//                    networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.DELIVERED);
+//                    getNetworkServiceConnectionManager()
+//                            .getOutgoingMessagesDao().update(networkServiceMessage);
+//                    final ActorProfile sender = new ActorProfile();
+//                    sender.setIdentityPublicKey(networkServiceMessage.getSenderPublicKey());
+//                    final ActorProfile receiver = new ActorProfile();
+//                    receiver.setIdentityPublicKey(networkServiceMessage.getReceiverPublicKey())
+//                    sendNewMessage(sender, receiver, networkServiceMessage.getContent());
+//                } catch (Exception e) {
+//                    System.out.println("Transaction Transmission found an exception sending pending messages");
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        } catch (Exception e) {
+//            System.out.println("Transaction Transmission cannot check if there's sending pending messages");
+//            e.printStackTrace();
+//        }
+//
+//    }
 
-            }
-        } catch (Exception e) {
-            System.out.println("Transaction Transmission cannot check if there's sending pending messages");
-            e.printStackTrace();
-        }
-
-    }
-
-    private void startTimer() {
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // change message state to process retry later
-                reprocessPendingMessage();
-            }
-        }, 0, reprocessTimer);
-    }
+//    private void startTimer() {
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                // change message state to process retry later
+////                reprocessPendingMessage();
+//            }
+//        }, 0, reprocessTimer);
+//    }
 
     @Override
     public void onNetworkServiceStart() throws CantStartPluginException {
@@ -198,7 +190,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
             );
 
             //declare a schedule to process waiting request message
-            this.startTimer();
+//            this.startTimer();
 
         } catch (Exception exception) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -342,7 +334,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public void onSentMessage(NetworkServiceMessage fermatMessage) {
-        System.out.println(new StringBuilder().append("Transaction Transmission just sent :").append(fermatMessage.getId()).toString());
+        System.out.println("Transaction Transmission just sent :" + fermatMessage.getId());
         try {
             getNetworkServiceConnectionManager()
                     .getOutgoingMessagesDao().markAsDelivered(fermatMessage);

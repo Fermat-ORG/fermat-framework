@@ -5,9 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
@@ -15,15 +12,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorConnectionRequestNotFoundException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantAcceptChatRequestException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ChatActorConnectionDenialFailedException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
-import com.bitdubai.sub_app.chat_community.session.SessionConstants;
 
 /**
  * SearchAliasDialog
@@ -40,29 +33,29 @@ public class SearchAliasDialog
      * UI components
      */
     private final ChatActorCommunityInformation chatUserInformation;
-    private final ChatActorCommunitySelectableIdentity identity            ;
+    private final ChatActorCommunitySelectableIdentity identity;
     private AdapterCallbackAlias mAdapterCallback;
-    private FermatTextView title      ;
+    private FermatTextView title;
     private FermatTextView description;
-    private FermatTextView userName   ;
-    private FermatButton   positiveBtn;
-    private FermatButton   negativeBtn;
-    private String   alias;
+    private FermatTextView userName;
+    private FermatButton positiveBtn;
+    private FermatButton negativeBtn;
+    private String alias;
 
-    public SearchAliasDialog(final Context activity              ,
+    public SearchAliasDialog(final Context activity,
                              final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
-                             final SubAppResourcesProviderManager subAppResources       ,
-                             final ChatActorCommunityInformation  chatUserInformation  ,
-                             final ChatActorCommunitySelectableIdentity identity   ,
-                             final String alias   ,
-                             AdapterCallbackAlias mAdapterCallback           ) {
+                             final SubAppResourcesProviderManager subAppResources,
+                             final ChatActorCommunityInformation chatUserInformation,
+                             final ChatActorCommunitySelectableIdentity identity,
+                             final String alias,
+                             AdapterCallbackAlias mAdapterCallback) {
 
         super(activity, chatUserSubAppSession, subAppResources);
 
         this.chatUserInformation = chatUserInformation;
-        this.identity            = identity;
-        this.mAdapterCallback            = mAdapterCallback;
-        this.alias            = alias;
+        this.identity = identity;
+        this.mAdapterCallback = mAdapterCallback;
+        this.alias = alias;
     }
 
     public static interface AdapterCallbackAlias {
@@ -74,11 +67,11 @@ public class SearchAliasDialog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        title       = (FermatTextView) findViewById(R.id.title          );
-        description = (FermatTextView) findViewById(R.id.description    );
-        userName    = (FermatTextView) findViewById(R.id.user_name      );
-        positiveBtn = (FermatButton)   findViewById(R.id.positive_button);
-        negativeBtn = (FermatButton)   findViewById(R.id.negative_button);
+        title = (FermatTextView) findViewById(R.id.title);
+        description = (FermatTextView) findViewById(R.id.description);
+        userName = (FermatTextView) findViewById(R.id.user_name);
+        positiveBtn = (FermatButton) findViewById(R.id.positive_button);
+        negativeBtn = (FermatButton) findViewById(R.id.negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);

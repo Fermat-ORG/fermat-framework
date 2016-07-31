@@ -5,8 +5,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,15 +38,14 @@ import java.util.List;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 05/01/16
  * @version 1.0
- *
  */
 public class ContactFragment
-        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>{
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
     public List<Contact> contacts;
     private boolean mIsSearchResultView = false;
     private ChatManager chatManager;
-   // private ChatModuleManager moduleManager;
+    // private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private cht_dialog_connections.AdapterCallbackContacts mAdapterCallback;
     private SettingsManager<ChatSettings> settingsManager;
@@ -56,26 +53,27 @@ public class ContactFragment
     private Toolbar toolbar;
     // Defines a tag for identifying log entries
     String TAG = "CHT_ContactFragment";
-    ArrayList<String> contactname=new ArrayList<>();
-    ArrayList<Bitmap> contacticon=new ArrayList<>();
-    ArrayList<String> contactid=new ArrayList<>();
-    ArrayList<String> contactalias =new ArrayList<>();
+    ArrayList<String> contactname = new ArrayList<>();
+    ArrayList<Bitmap> contacticon = new ArrayList<>();
+    ArrayList<String> contactid = new ArrayList<>();
+    ArrayList<String> contactalias = new ArrayList<>();
 
     public static ContactFragment newInstance() {
-        return new ContactFragment();}
+        return new ContactFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
             //chatSession=((ChatSessionReferenceApp) appSession);
-            chatManager= appSession.getModuleManager();
+            chatManager = appSession.getModuleManager();
             //chatManager=moduleManager.getChatManager();
-            errorManager=appSession.getErrorManager();
+            errorManager = appSession.getErrorManager();
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
         } catch (Exception e) {
-            if(errorManager != null)
+            if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
@@ -90,10 +88,10 @@ public class ContactFragment
         View layout = inflater.inflate(R.layout.contact_detail_fragment, container, false);
 
         try {
-            Contact con= (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA); //hatSession.getSelectedContact();
+            Contact con = (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA); //hatSession.getSelectedContact();
             contactname.add(con.getAlias());
             contactid.add(con.getRemoteActorPublicKey());
-            if(con.getContactStatus() != null) {
+            if (con.getContactStatus() != null) {
                 contactalias.add(con.getContactStatus().toString());
             }
             ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
@@ -102,7 +100,7 @@ public class ContactFragment
 
             ContactAdapter adapter = new ContactAdapter(getActivity(), contactname, contactalias, contactid, "detail", errorManager);
             FermatTextView name = (FermatTextView) layout.findViewById(R.id.contact_name);
-            if(contactalias != null  && !contactalias.isEmpty()) {
+            if (contactalias != null && !contactalias.isEmpty()) {
                 name.setText(contactalias.get(0));
             }
             FermatTextView id = (FermatTextView) layout.findViewById(R.id.uuid);
@@ -120,7 +118,7 @@ public class ContactFragment
                 View item = adapter.getView(i, null, null);
                 detalles.addView(item);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }

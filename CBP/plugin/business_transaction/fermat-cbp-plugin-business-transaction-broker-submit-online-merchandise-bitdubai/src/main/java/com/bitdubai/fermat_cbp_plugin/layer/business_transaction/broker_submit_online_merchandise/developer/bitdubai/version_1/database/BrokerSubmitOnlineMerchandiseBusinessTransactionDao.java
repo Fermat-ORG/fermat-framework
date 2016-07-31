@@ -248,7 +248,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                                           long cryptoAmount) throws CantInsertRecordException {
         try {
             if (isContractHashInDatabase(purchaseContract.getContractId())) {
-                System.out.println(new StringBuilder().append("The contract ").append(purchaseContract).append(" exists in database").toString());
+                System.out.println("The contract " + purchaseContract + " exists in database");
                 return;
             }
             DatabaseTable databaseTable = getDatabaseSubmitTable();
@@ -295,7 +295,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                                           long fee) throws CantInsertRecordException {
         try {
             if (isContractHashInDatabase(saleContract.getContractId())) {
-                System.out.println(new StringBuilder().append("The contract ").append(saleContract).append(" exists in database").toString());
+                System.out.println("The contract " + saleContract + " exists in database");
                 return;
             }
             DatabaseTable databaseTable = getDatabaseSubmitTable();
@@ -759,7 +759,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
 
         } catch (CantLoadTableToMemoryException exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
-            throw new UnexpectedResultReturnedFromDatabaseException(exception, new StringBuilder().append("Updating parameter ").append(SUBMIT_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Updating parameter " + SUBMIT_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
 
         } catch (Exception exception) {
             pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
@@ -1047,7 +1047,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             return contractHashList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetContractListException(e, new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(), "Cannot load the table into memory");
+            throw new CantGetContractListException(e, "Getting " + valueColumn + " based on " + key, "Cannot load the table into memory");
         }
     }
 
@@ -1096,6 +1096,6 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         recordsSize = records.size();
 
         if (recordsSize > VALID_RESULTS_NUMBER)
-            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(VALID_RESULTS_NUMBER).append(", but I got ").append(recordsSize).toString());
+            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
     }
 }

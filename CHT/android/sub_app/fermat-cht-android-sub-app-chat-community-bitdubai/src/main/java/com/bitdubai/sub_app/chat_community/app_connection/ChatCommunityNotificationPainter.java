@@ -19,11 +19,10 @@ public class ChatCommunityNotificationPainter extends NotificationPainter {
 
     //constructor
 
-    public ChatCommunityNotificationPainter(String title, String textBody, String image, String viewCode)
-    {
-        this.title    = title;
+    public ChatCommunityNotificationPainter(String title, String textBody, String image, String viewCode) {
+        this.title = title;
         this.textBody = textBody;
-        this.image    = image;
+        this.image = image;
         remoteViews = null;
     }
 

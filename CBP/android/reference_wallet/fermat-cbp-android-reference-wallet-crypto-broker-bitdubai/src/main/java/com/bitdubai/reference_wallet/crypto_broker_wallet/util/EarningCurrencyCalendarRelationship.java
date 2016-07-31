@@ -92,18 +92,6 @@ public class EarningCurrencyCalendarRelationship implements Comparable<EarningCu
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("EarningCurrencyCalendarRelationship{")
-                .append("year=")
-                .append(year)
-                .append(", month=")
-                .append(month)
-                .append(", day=")
-                .append(day)
-                .append(", timeReference=")
-                .append(timeReference)
-                .append(", currency=")
-                .append(currency)
-                .append('}').toString();
+        return "EarningCurrencyCalendarRelationship{" + "year=" + year + ", month=" + month + ", day=" + day + ", timeReference=" + timeReference + ", currency=" + currency + '}';
     }
 }

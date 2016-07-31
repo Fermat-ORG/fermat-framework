@@ -89,7 +89,7 @@ public abstract class AbstractBusinessTransactionAgent
                         InvalidParameterException.DEFAULT_MESSAGE,
                         FermatException.wrapException(exception),
                         "Parsing String object to double",
-                        new StringBuilder().append("Cannot parse ").append(stringValue).append(" string value to long").toString());
+                        "Cannot parse " + stringValue + " string value to long");
             }
         }
     }
