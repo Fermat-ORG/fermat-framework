@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
@@ -15,16 +14,14 @@ import com.bitdubai.sub_app.crypto_customer_identity.R;
 /**
  * Created by penny on 26/07/16.
  */
-public class DialogSelectCamPic extends FermatDialog implements View.OnClickListener{
+public class DialogSelectCamPic extends FermatDialog implements View.OnClickListener {
 
-    /**
-     * UI components
-     */
     private Button camBtn;
     private Button galleryBtn;
     int BUTTON_TOUCH = 0;
     public int TOUCH_GALLERY = 1;
     public int TOUCH_CAM = 2;
+
     public DialogSelectCamPic(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources) {
         super(activity, referenceAppFermatSession, resources);
     }
@@ -45,7 +42,6 @@ public class DialogSelectCamPic extends FermatDialog implements View.OnClickList
     }
 
 
-
     @Override
     protected int setLayoutId() {
         return R.layout.dialog_cbp_select_cam_or_gallery;
@@ -56,7 +52,7 @@ public class DialogSelectCamPic extends FermatDialog implements View.OnClickList
         return Window.FEATURE_NO_TITLE;
     }
 
-    public int getButtonTouch(){
+    public int getButtonTouch() {
         return BUTTON_TOUCH;
     }
 
@@ -67,7 +63,7 @@ public class DialogSelectCamPic extends FermatDialog implements View.OnClickList
             setButtonTouch(TOUCH_GALLERY);
             dismiss();
         }
-        if(i == R.id.cbp_cam_picture_option){
+        if (i == R.id.cbp_cam_picture_option) {
             setButtonTouch(TOUCH_CAM);
             dismiss();
         }
