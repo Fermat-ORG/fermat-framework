@@ -102,24 +102,23 @@ public class ChatMiddlewareDatabaseDao {
                                      Database database,
                                      ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
                                      PluginFileSystem pluginFileSystem) {
-        this.pluginDatabaseSystem     = pluginDatabaseSystem;
-        this.pluginId                 = pluginId;
-        this.database                 = database;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginId = pluginId;
+        this.database = database;
         this.chatMiddlewarePluginRoot = chatMiddlewarePluginRoot;
-        this.pluginFileSystem         = pluginFileSystem;
+        this.pluginFileSystem = pluginFileSystem;
     }
 
 
-    public List<ContactConnection> getContactConnections(DatabaseTableFilter filter) throws CantGetContactException, DatabaseOperationException
-    {
+    public List<ContactConnection> getContactConnections(DatabaseTableFilter filter) throws CantGetContactException, DatabaseOperationException {
         //if filter is null all records
         Database database = null;
         try {
             database = openDatabase();
             List<ContactConnection> contactConnections = new ArrayList<>();
             // I will add the contact information from the database
-            List<DatabaseTableRecord> records=getContactConnectionData(filter);
-            if(records==null|| records.isEmpty()){
+            List<DatabaseTableRecord> records = getContactConnectionData(filter);
+            if (records == null || records.isEmpty()) {
                 return contactConnections;
             }
             for (DatabaseTableRecord record : records) {
@@ -133,8 +132,7 @@ public class ChatMiddlewareDatabaseDao {
             database.closeDatabase();
 
             return contactConnections;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -149,14 +147,14 @@ public class ChatMiddlewareDatabaseDao {
 
     /**
      * This method returns the contact id by local public key.
+     *
      * @param localPublicKey
      * @return
      * @throws CantGetContactException
      * @throws DatabaseOperationException
      */
     //Revisar este metodo ya que de aca no  se van a sacar los actores, se sacaran de los actor connections
-    public Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException, DatabaseOperationException
-    {
+    public Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException, DatabaseOperationException {
         Database database = null;
         try {
             database = openDatabase();
@@ -175,13 +173,12 @@ public class ChatMiddlewareDatabaseDao {
 
             database.closeDatabase();
 
-            if(contacts.isEmpty()){
+            if (contacts.isEmpty()) {
                 return null;
             }
 
             return contacts.get(0);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -195,8 +192,7 @@ public class ChatMiddlewareDatabaseDao {
     }
 
     public void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException, DatabaseOperationException {
-        try
-        {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -218,7 +214,7 @@ public class ChatMiddlewareDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -233,10 +229,8 @@ public class ChatMiddlewareDatabaseDao {
 
     public void deleteGroupMember(GroupMember groupMember) throws
             CantDeleteGroupMemberException,
-            DatabaseOperationException
-    {
-        try
-        {
+            DatabaseOperationException {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -249,7 +243,7 @@ public class ChatMiddlewareDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -262,15 +256,14 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public List<GroupMember> getGroupsMemberByGroupId(UUID groupId){
+    public List<GroupMember> getGroupsMemberByGroupId(UUID groupId) {
         return null;
     }
 
     public void saveContact(Contact contact) throws
             CantSaveContactException,
             DatabaseOperationException {
-        try
-        {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -294,7 +287,7 @@ public class ChatMiddlewareDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -310,10 +303,8 @@ public class ChatMiddlewareDatabaseDao {
 
     public void deleteContactConnection(ContactConnection contactConnection) throws
             CantDeleteContactConnectionException,
-            DatabaseOperationException
-    {
-        try
-        {
+            DatabaseOperationException {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -326,7 +317,7 @@ public class ChatMiddlewareDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -342,9 +333,9 @@ public class ChatMiddlewareDatabaseDao {
     public List<Chat> getChatListByWriting() throws
             DatabaseOperationException,
             CantGetChatException {
-        DatabaseTable databaseTable=getDatabaseTable(
+        DatabaseTable databaseTable = getDatabaseTable(
                 ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
-        DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
+        DatabaseTableFilter databaseTableFilter = databaseTable.getEmptyTableFilter();
         databaseTableFilter.setColumn(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING);
         databaseTableFilter.setType(DatabaseFilterType.EQUAL);
         databaseTableFilter.setValue(Boolean.toString(true));
@@ -354,9 +345,9 @@ public class ChatMiddlewareDatabaseDao {
     public List<Chat> getChatListByOnline() throws
             DatabaseOperationException,
             CantGetChatException {
-        DatabaseTable databaseTable=getDatabaseTable(
+        DatabaseTable databaseTable = getDatabaseTable(
                 ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
-        DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
+        DatabaseTableFilter databaseTableFilter = databaseTable.getEmptyTableFilter();
         databaseTableFilter.setColumn(ChatMiddlewareDatabaseConstants.CHATS_IS_ONLINE);
         databaseTableFilter.setType(DatabaseFilterType.EQUAL);
         databaseTableFilter.setValue(Boolean.toString(true));
@@ -365,6 +356,7 @@ public class ChatMiddlewareDatabaseDao {
 
     /**
      * This method returns all the chats recorded in database.
+     *
      * @return
      * @throws DatabaseOperationException
      * @throws CantGetChatException
@@ -380,16 +372,15 @@ public class ChatMiddlewareDatabaseDao {
 
     public List<Chat> getChats(DatabaseTableFilter filter) throws
             CantGetChatException,
-            DatabaseOperationException
-    {
+            DatabaseOperationException {
         //if filter is null all records
         Database database = null;
         try {
             database = openDatabase();
             List<Chat> chats = new ArrayList<>();
             // I will add the contact information from the database
-            List<DatabaseTableRecord> records=getChatData(filter);
-            if(records==null|| records.isEmpty()){
+            List<DatabaseTableRecord> records = getChatData(filter);
+            if (records == null || records.isEmpty()) {
                 return chats;
             }
             for (DatabaseTableRecord record : getChatData(filter)) {
@@ -401,8 +392,7 @@ public class ChatMiddlewareDatabaseDao {
             database.closeDatabase();
 
             return chats;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -416,12 +406,9 @@ public class ChatMiddlewareDatabaseDao {
     }
 
 
-
-
     public Chat getChatByChatId(UUID chatId) throws
             CantGetChatException,
-            DatabaseOperationException
-    {
+            DatabaseOperationException {
         Database database = null;
         try {
             database = openDatabase();
@@ -440,13 +427,12 @@ public class ChatMiddlewareDatabaseDao {
 
             database.closeDatabase();
 
-            if(chats.isEmpty()){
+            if (chats.isEmpty()) {
                 return null;
             }
 
             return chats.get(0);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -461,8 +447,7 @@ public class ChatMiddlewareDatabaseDao {
 
     public Chat getChatByRemotePublicKey(String publicKey) throws
             CantGetChatException,
-            DatabaseOperationException
-    {
+            DatabaseOperationException {
         Database database = null;
         try {
             database = openDatabase();
@@ -481,13 +466,12 @@ public class ChatMiddlewareDatabaseDao {
 
             database.closeDatabase();
 
-            if(chats.isEmpty()){
+            if (chats.isEmpty()) {
                 return null;
             }
 
             return chats.get(0);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -500,13 +484,12 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public Chat newEmptyInstanceChat() throws CantNewEmptyChatException
-    {
-        try{
+    public Chat newEmptyInstanceChat() throws CantNewEmptyChatException {
+        try {
             ChatImpl chat = new ChatImpl();
             chat.setChatId(UUID.randomUUID());
             return chat;
-        } catch (Exception e){
+        } catch (Exception e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new CantNewEmptyChatException(
@@ -517,10 +500,8 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public void saveChat(Chat chat) throws CantSaveChatException, DatabaseOperationException
-    {
-        try
-        {
+    public void saveChat(Chat chat) throws CantSaveChatException, DatabaseOperationException {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -538,8 +519,7 @@ public class ChatMiddlewareDatabaseDao {
                 transaction.addRecordToUpdate(table, record);
             }
 
-            if (chat.getGroupMembersAssociated() != null)
-            {
+            if (chat.getGroupMembersAssociated() != null) {
                 for (GroupMember groupMember : chat.getGroupMembersAssociated()) {
                     record = getGroupMemberRecord(groupMember);
                     filter.setType(DatabaseFilterType.EQUAL);
@@ -555,10 +535,8 @@ public class ChatMiddlewareDatabaseDao {
                 }
             }
 
-            if (chat.getMessagesAsociated() != null)
-            {
-                for (Message message : chat.getMessagesAsociated())
-                {
+            if (chat.getMessagesAsociated() != null) {
+                for (Message message : chat.getMessagesAsociated()) {
                     record = getMessageRecord(message);
                     filter.setType(DatabaseFilterType.EQUAL);
                     filter.setValue(message.getMessageId().toString());
@@ -577,7 +555,7 @@ public class ChatMiddlewareDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -590,10 +568,8 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public void deleteChat(Chat chat) throws CantDeleteChatException, DatabaseOperationException
-    {
-        try
-        {
+    public void deleteChat(Chat chat) throws CantDeleteChatException, DatabaseOperationException {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -624,7 +600,7 @@ public class ChatMiddlewareDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -638,17 +614,15 @@ public class ChatMiddlewareDatabaseDao {
     }
 
 
-    public void deleteChats() throws CantDeleteChatException, DatabaseOperationException
-    {
-        try
-        {
+    public void deleteChats() throws CantDeleteChatException, DatabaseOperationException {
+        try {
 //            database = openDatabase();
 //            DatabaseTransaction transaction = database.newTransaction();
 
 //            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
 //            DatabaseTableFilter filter = null;
             List<Chat> chats = getChatList();
-            for(Chat chat : chats){
+            for (Chat chat : chats) {
                 deleteChat(chat);
             }
 
@@ -676,7 +650,7 @@ public class ChatMiddlewareDatabaseDao {
 //            database.executeTransaction(transaction);
 //            database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -689,10 +663,8 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException, DatabaseOperationException
-    {
-        try
-        {
+    public void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException, DatabaseOperationException {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -701,8 +673,8 @@ public class ChatMiddlewareDatabaseDao {
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(chatId.toString());
             filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
-            List<DatabaseTableRecord> records=getMessageData(filter);
-            if(records!=null && !records.isEmpty()){
+            List<DatabaseTableRecord> records = getMessageData(filter);
+            if (records != null && !records.isEmpty()) {
                 for (DatabaseTableRecord record : records) {
                     table.deleteRecord(record);
                 }
@@ -711,7 +683,7 @@ public class ChatMiddlewareDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -728,6 +700,7 @@ public class ChatMiddlewareDatabaseDao {
      * This method returns a message created list.
      * The messages in CREATED status are saved in database, but, are not sent through the Network
      * Service.
+     *
      * @return
      * @throws DatabaseOperationException
      * @throws CantGetMessageException
@@ -735,15 +708,15 @@ public class ChatMiddlewareDatabaseDao {
     public List<Message> getCreatedMessages() throws
             DatabaseOperationException,
             CantGetMessageException {
-        try{
-            DatabaseTable databaseTable=getDatabaseTable(
+        try {
+            DatabaseTable databaseTable = getDatabaseTable(
                     ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
-            DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
+            DatabaseTableFilter databaseTableFilter = databaseTable.getEmptyTableFilter();
             databaseTableFilter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME);
             databaseTableFilter.setType(DatabaseFilterType.EQUAL);
             databaseTableFilter.setValue(MessageStatus.CREATED.getCode());
             return getMessages(databaseTableFilter);
-        } catch (Exception e){
+        } catch (Exception e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new CantGetMessageException(
@@ -757,6 +730,7 @@ public class ChatMiddlewareDatabaseDao {
 
     /**
      * This method returns the full messages list.
+     *
      * @return
      * @throws DatabaseOperationException
      * @throws CantGetMessageException
@@ -770,16 +744,15 @@ public class ChatMiddlewareDatabaseDao {
         return getMessages(null);
     }
 
-    public List<Message> getMessages(DatabaseTableFilter filter) throws CantGetMessageException, DatabaseOperationException
-    {
+    public List<Message> getMessages(DatabaseTableFilter filter) throws CantGetMessageException, DatabaseOperationException {
         //if filter is null all records
         Database database = null;
         try {
             database = openDatabase();
             List<Message> messages = new ArrayList<>();
             // I will add the message information from the database
-            List<DatabaseTableRecord> records=getMessageData(filter);
-            if(records==null|| records.isEmpty()){
+            List<DatabaseTableRecord> records = getMessageData(filter);
+            if (records == null || records.isEmpty()) {
                 return messages;
             }
             for (DatabaseTableRecord record : records) {
@@ -791,41 +764,39 @@ public class ChatMiddlewareDatabaseDao {
             database.closeDatabase();
 
             return messages;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new DatabaseOperationException(
-                    DatabaseOperationException.DEFAULT_MESSAGE, 
-                    e, 
-                    e.getMessage(), 
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    e.getMessage(),
                     null);
         }
     }
 
-    public void purifyMessage(Message message){
+    public void purifyMessage(Message message) {
 //        String text = message.getMessage();
 //        char a = 39;
 //        char b = 182;
 //        text = text.replace(a,b);
 //        message.setMessage(text);
-        message.setMessage(message.getMessage().replace("'","@alt+39#"));
+        message.setMessage(message.getMessage().replace("'", "@alt+39#"));
     }
 
-    public void despurifyMessage(Message message){
+    public void despurifyMessage(Message message) {
 //        String text = message.getMessage();
 //        char a = 39;
 //        char b = 182;
 //        text = text.replace(b,a);
 //        message.setMessage(text);
         //code to decode apostrophe
-        message.setMessage(message.getMessage().replace("@alt+39#","'"));
+        message.setMessage(message.getMessage().replace("@alt+39#", "'"));
     }
 
-    public List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
-    {
+    public List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException {
         Database database = null;
         try {
             database = openDatabase();
@@ -836,8 +807,8 @@ public class ChatMiddlewareDatabaseDao {
             filter.setValue(chatId.toString());
             filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
             // I will add the message information from the database
-            List<DatabaseTableRecord> records=getMessageData(filter);
-            if(records==null|| records.isEmpty()){
+            List<DatabaseTableRecord> records = getMessageData(filter);
+            if (records == null || records.isEmpty()) {
                 return null;
             }
             for (DatabaseTableRecord record : records) {
@@ -848,12 +819,11 @@ public class ChatMiddlewareDatabaseDao {
 
             database.closeDatabase();
 
-            if(messages.isEmpty()){
+            if (messages.isEmpty()) {
                 return null;
             }
             return messages;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -866,8 +836,7 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
-    {
+    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException {
         Database database = null;
         try {
             database = openDatabase();
@@ -882,22 +851,21 @@ public class ChatMiddlewareDatabaseDao {
 
 
             List<DatabaseTableRecord> records = getMessageDataDesceding(filter);
-            if(records == null || records.isEmpty())
+            if (records == null || records.isEmpty())
                 return null;
 
-                final Message message = getMessageTransaction(records.get(0));
+            final Message message = getMessageTransaction(records.get(0));
 
             database.closeDatabase();
 
-            if(message == null){
+            if (message == null) {
                 return null;
             }
 
             despurifyMessage(message);
 
             return message;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -910,8 +878,7 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public int getCountMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
-    {
+    public int getCountMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException {
         int countRecord = 0;
         Database database = null;
         try {
@@ -925,8 +892,8 @@ public class ChatMiddlewareDatabaseDao {
             filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
             //filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME);
             // I will add the message information from the database
-            List<DatabaseTableRecord> records=getMessageData(filter);
-            if(records==null|| records.isEmpty()){
+            List<DatabaseTableRecord> records = getMessageData(filter);
+            if (records == null || records.isEmpty()) {
                 return countRecord;
             }
             for (DatabaseTableRecord record : records) {
@@ -937,23 +904,20 @@ public class ChatMiddlewareDatabaseDao {
 
             database.closeDatabase();
 
-            for (Message message : messages)
-            {
-                if (message.getStatus().getCode() != MessageStatus.READ.getCode())
-                {
-                    if (message.getType().getCode() != TypeMessage.OUTGOING.getCode()){
+            for (Message message : messages) {
+                if (message.getStatus().getCode() != MessageStatus.READ.getCode()) {
+                    if (message.getType().getCode() != TypeMessage.OUTGOING.getCode()) {
                         countRecord++;
                     }
                 }
             }
 
-            if(messages.isEmpty()){
+            if (messages.isEmpty()) {
                 return countRecord;
             }
 
             return countRecord;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -966,8 +930,7 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public Message getMessageByMessageId(UUID messageId) throws CantGetMessageException, DatabaseOperationException
-    {
+    public Message getMessageByMessageId(UUID messageId) throws CantGetMessageException, DatabaseOperationException {
         Database database = null;
         try {
             database = openDatabase();
@@ -986,14 +949,13 @@ public class ChatMiddlewareDatabaseDao {
 
             database.closeDatabase();
 
-            if(messages.isEmpty()){
+            if (messages.isEmpty()) {
                 return null;
             }
             despurifyMessage(messages.get(0));
 
             return messages.get(0);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -1006,17 +968,14 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public Message newEmptyInstanceMessage() throws CantNewEmptyMessageException
-    {
+    public Message newEmptyInstanceMessage() throws CantNewEmptyMessageException {
         MessageImpl message = new MessageImpl();
         message.setMessageId(UUID.randomUUID());
         return message;
     }
 
-    public void saveMessage(Message message) throws CantSaveMessageException, DatabaseOperationException
-    {
-        try
-        {
+    public void saveMessage(Message message) throws CantSaveMessageException, DatabaseOperationException {
+        try {
             System.out.println("*** 12345 case 4:send msg in Dao layer" + new Timestamp(System.currentTimeMillis()));
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
@@ -1033,8 +992,7 @@ public class ChatMiddlewareDatabaseDao {
 
                 record = getMessageRecord(message);
                 transaction.addRecordToInsert(table, record);
-            }
-            else {
+            } else {
                 message.setCount(getMessageByMessageId(message.getMessageId()).getCount());
                 record = getMessageRecord(message);
                 table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
@@ -1045,7 +1003,7 @@ public class ChatMiddlewareDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -1060,10 +1018,8 @@ public class ChatMiddlewareDatabaseDao {
 
     public void deleteMessage(Message message) throws
             CantDeleteMessageException,
-            DatabaseOperationException
-    {
-        try
-        {
+            DatabaseOperationException {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -1076,7 +1032,7 @@ public class ChatMiddlewareDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -1090,8 +1046,7 @@ public class ChatMiddlewareDatabaseDao {
     }
 
     //TODO:Eliminar metodo
-    public List<ChatUserIdentity> getChatUserIdentities(DatabaseTableFilter filter) throws CantGetChatUserIdentityException, DatabaseOperationException
-    {
+    public List<ChatUserIdentity> getChatUserIdentities(DatabaseTableFilter filter) throws CantGetChatUserIdentityException, DatabaseOperationException {
         //if filter is null all records
         Database database = null;
         try {
@@ -1099,7 +1054,7 @@ public class ChatMiddlewareDatabaseDao {
             List<ChatUserIdentity> chatUserIdentities = new ArrayList<>();
             // I will add the message information from the database
             List<DatabaseTableRecord> records = getChatUserIdentityData(filter);
-            if(records==null|| records.isEmpty()){
+            if (records == null || records.isEmpty()) {
                 return chatUserIdentities;
             }
             for (DatabaseTableRecord record : records) {
@@ -1113,8 +1068,7 @@ public class ChatMiddlewareDatabaseDao {
             database.closeDatabase();
 
             return chatUserIdentities;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -1128,8 +1082,7 @@ public class ChatMiddlewareDatabaseDao {
     }
 
 
-    private byte[] getChatUserIdentityProfileImage(String publicKey) throws FileNotFoundException
-    {
+    private byte[] getChatUserIdentityProfileImage(String publicKey) throws FileNotFoundException {
         byte[] profileImage = new byte[0];
 
         PluginBinaryFile file = null;
@@ -1158,7 +1111,7 @@ public class ChatMiddlewareDatabaseDao {
                     FermatException.wrapException(e),
                     "Error Create File.",
                     null);
-        }catch (Exception e) {
+        } catch (Exception e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new FileNotFoundException(
@@ -1171,8 +1124,7 @@ public class ChatMiddlewareDatabaseDao {
         return profileImage;
     }
 
-    private byte[] getContactImage(String publicKey) throws CantPersistFileException
-    {
+    private byte[] getContactImage(String publicKey) throws CantPersistFileException {
         byte[] profileImage = new byte[0];
 
         PluginBinaryFile file = null;
@@ -1201,7 +1153,7 @@ public class ChatMiddlewareDatabaseDao {
                     FermatException.wrapException(e),
                     "Error Create File.",
                     null);
-        }catch (Exception e) {
+        } catch (Exception e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new CantPersistFileException(
@@ -1215,7 +1167,7 @@ public class ChatMiddlewareDatabaseDao {
     }
 
 
-    private void  persistNewChatUserIdentityProfileImage(String publicKey,byte[] profileImage) throws CantPersistFileException {
+    private void persistNewChatUserIdentityProfileImage(String publicKey, byte[] profileImage) throws CantPersistFileException {
 
         PluginBinaryFile file = null;
         try {
@@ -1245,7 +1197,7 @@ public class ChatMiddlewareDatabaseDao {
                     FermatException.wrapException(e),
                     "Error Create File.",
                     null);
-        }catch (Exception e) {
+        } catch (Exception e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new CantPersistFileException(
@@ -1257,7 +1209,7 @@ public class ChatMiddlewareDatabaseDao {
 
     }
 
-    private void  persistNewContactImage(String publicKey,byte[] profileImage) throws CantPersistFileException {
+    private void persistNewContactImage(String publicKey, byte[] profileImage) throws CantPersistFileException {
 
         PluginBinaryFile file = null;
         try {
@@ -1287,7 +1239,7 @@ public class ChatMiddlewareDatabaseDao {
                     FermatException.wrapException(e),
                     "Error Create File.",
                     null);
-        }catch (Exception e) {
+        } catch (Exception e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new CantPersistFileException(
@@ -1321,8 +1273,7 @@ public class ChatMiddlewareDatabaseDao {
         return table.getRecords().isEmpty();
     }
 
-    private DatabaseTableRecord getContactRecord(Contact contact) throws DatabaseOperationException
-    {
+    private DatabaseTableRecord getContactRecord(Contact contact) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -1332,15 +1283,14 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME, contact.getRemoteActorType().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, contact.getRemoteActorPublicKey());
         record.setLongValue(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME, contact.getCreationDate());
-        if(contact.getContactStatus()!=null){
+        if (contact.getContactStatus() != null) {
             record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONTACT_STATUS_COLUMN_NAME, contact.getContactStatus());
         }
 
         return record;
     }
 
-    private DatabaseTableRecord getGroupMemberRecord(GroupMember groupMember) throws DatabaseOperationException
-    {
+    private DatabaseTableRecord getGroupMemberRecord(GroupMember groupMember) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -1352,8 +1302,7 @@ public class ChatMiddlewareDatabaseDao {
         return record;
     }
 
-    private DatabaseTableRecord getContactConnectionRecord(ContactConnection contactConnection) throws DatabaseOperationException
-    {
+    private DatabaseTableRecord getContactConnectionRecord(ContactConnection contactConnection) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -1363,15 +1312,14 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_ACTOR_TYPE_COLUMN_NAME, contactConnection.getRemoteActorType().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, contactConnection.getRemoteActorPublicKey());
         record.setLongValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_CREATION_DATE_COLUMN_NAME, contactConnection.getCreationDate());
-        if(contactConnection.getContactStatus()!=null){
+        if (contactConnection.getContactStatus() != null) {
             record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_CONTACT_STATUS_COLUMN_NAME, contactConnection.getContactStatus());
         }
 
         return record;
     }
 
-    private DatabaseTableRecord getChatUserIdentityRecord(ChatUserIdentity chatUserIdentity, String deviceUserPublicKey) throws DatabaseOperationException
-    {
+    private DatabaseTableRecord getChatUserIdentityRecord(ChatUserIdentity chatUserIdentity, String deviceUserPublicKey) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -1384,8 +1332,7 @@ public class ChatMiddlewareDatabaseDao {
         return record;
     }
 
-    private DatabaseTableRecord getChatRecord(Chat chat) throws DatabaseOperationException
-    {
+    private DatabaseTableRecord getChatRecord(Chat chat) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -1408,7 +1355,7 @@ public class ChatMiddlewareDatabaseDao {
         return record;
     }
 
-    private DatabaseTableRecord getWritingActionRecord(UUID chatId, ActionState writingState) throws DatabaseOperationException{
+    private DatabaseTableRecord getWritingActionRecord(UUID chatId, ActionState writingState) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -1418,7 +1365,7 @@ public class ChatMiddlewareDatabaseDao {
         return record;
     }
 
-    private DatabaseTableRecord getOnlineActionRecord(UUID uuid, String publicKey, ActionState onlineState, Boolean value, String lastConnection) throws DatabaseOperationException{
+    private DatabaseTableRecord getOnlineActionRecord(UUID uuid, String publicKey, ActionState onlineState, Boolean value, String lastConnection) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -1426,13 +1373,13 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_PUBLIC_KEY_COLUMN_NAME, publicKey);
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE, onlineState.getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE, value.toString());
-        if(lastConnection!=null)
+        if (lastConnection != null)
             record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION, lastConnection);
 
         return record;
     }
 
-    private DatabaseTableRecord getOnlineActionRecord(UUID uuid, String publicKey, ActionState onlineState, Boolean value, String lastConnection, Boolean lastOn) throws DatabaseOperationException{
+    private DatabaseTableRecord getOnlineActionRecord(UUID uuid, String publicKey, ActionState onlineState, Boolean value, String lastConnection, Boolean lastOn) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -1441,14 +1388,13 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE, onlineState.getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE, value.toString());
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_LAST_ON, lastOn.toString());
-        if(lastConnection!=null)
-        record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION, lastConnection);
+        if (lastConnection != null)
+            record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION, lastConnection);
 
         return record;
     }
 
-    private DatabaseTableRecord getMessageRecord(Message message) throws DatabaseOperationException
-    {
+    private DatabaseTableRecord getMessageRecord(Message message) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -1464,8 +1410,7 @@ public class ChatMiddlewareDatabaseDao {
         return record;
     }
 
-    private DatabaseTableRecord getCahtUserIdentityRecord(ChatUserIdentity chatUserIdentity) throws DatabaseOperationException
-    {
+    private DatabaseTableRecord getCahtUserIdentityRecord(ChatUserIdentity chatUserIdentity) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -1477,8 +1422,7 @@ public class ChatMiddlewareDatabaseDao {
         return record;
     }
 
-    private List<DatabaseTableRecord> getChatData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException
-    {
+    private List<DatabaseTableRecord> getChatData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
 
         if (filter != null)
@@ -1491,8 +1435,7 @@ public class ChatMiddlewareDatabaseDao {
         return table.getRecords();
     }
 
-    private List<DatabaseTableRecord> getMessageData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException
-    {
+    private List<DatabaseTableRecord> getMessageData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
 
         DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
 
@@ -1505,8 +1448,7 @@ public class ChatMiddlewareDatabaseDao {
         return table.getRecords();
     }
 
-    private List<DatabaseTableRecord> getMessageDataDesceding(DatabaseTableFilter filter) throws CantLoadTableToMemoryException
-    {
+    private List<DatabaseTableRecord> getMessageDataDesceding(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
 
         if (filter != null)
@@ -1521,8 +1463,7 @@ public class ChatMiddlewareDatabaseDao {
         return table.getRecords();
     }
 
-    private List<DatabaseTableRecord> getChatUserIdentityData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException
-    {
+    private List<DatabaseTableRecord> getChatUserIdentityData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME);
 
         if (filter != null)
@@ -1533,8 +1474,7 @@ public class ChatMiddlewareDatabaseDao {
         return table.getRecords();
     }
 
-    private List<DatabaseTableRecord> getContactData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException
-    {
+    private List<DatabaseTableRecord> getContactData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
 
         if (filter != null)
@@ -1546,8 +1486,7 @@ public class ChatMiddlewareDatabaseDao {
     }
 
 
-    private List<DatabaseTableRecord> getContactConnectionData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException
-    {
+    private List<DatabaseTableRecord> getContactConnectionData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_TABLE_NAME);
 
         if (filter != null)
@@ -1576,11 +1515,11 @@ public class ChatMiddlewareDatabaseDao {
         chat.setIsWriting(Boolean.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING)));
         chat.setIsOnline(Boolean.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_IS_ONLINE)));
 
-        try{
+        try {
             chat.setContactAssociated(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST));
         } catch (CantGetContactListException e) {
             //If the contactList String is invalid we need to get to stablest an empty list of contact
-            List<Contact> contactList=new ArrayList<>();
+            List<Contact> contactList = new ArrayList<>();
             chat.setContactAssociated(contactList);
         }
 
@@ -1612,13 +1551,12 @@ public class ChatMiddlewareDatabaseDao {
         actionOnline.setValue(Boolean.valueOf(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE)));
         actionOnline.setLastOn(Boolean.valueOf(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_LAST_ON)));
         String lastConnection = actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION);
-        if(lastConnection!=null) actionOnline.setLastConnection(lastConnection);
+        if (lastConnection != null) actionOnline.setLastConnection(lastConnection);
 
         return actionOnline;
     }
 
-    private ChatUserIdentity getChatUserIdentityTransaction(final DatabaseTableRecord chatUserIdentityTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException
-    {
+    private ChatUserIdentity getChatUserIdentityTransaction(final DatabaseTableRecord chatUserIdentityTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
         ChatUserIdentityImpl chatUserIdentity = null;
         try {
             chatUserIdentity = new ChatUserIdentityImpl(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ALIAS_COLUMN_NAME),
@@ -1628,7 +1566,7 @@ public class ChatMiddlewareDatabaseDao {
                     getChatUserIdentityProfileImage(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                     Actors.getByCode(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ACTOR_TYPE_COLUMN_NAME)),
                     PlatformComponentType.getByCode(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PLATFORM_COMPONENT_TYPE_COLUMN_NAME))
-                    );
+            );
         } catch (FileNotFoundException e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
@@ -1673,19 +1611,20 @@ public class ChatMiddlewareDatabaseDao {
          * I'm gonna set this number in 1 for now, because I want to check the records object has
          * one only result.
          */
-        int VALID_RESULTS_NUMBER=1;
+        int VALID_RESULTS_NUMBER = 1;
         int recordsSize;
-        if(records.isEmpty()){
+        if (records.isEmpty()) {
             return;
         }
-        recordsSize=records.size();
-        if(recordsSize>VALID_RESULTS_NUMBER){
-            throw new UnexpectedResultReturnedFromDatabaseException("I excepted "+VALID_RESULTS_NUMBER+", but I got "+recordsSize);
+        recordsSize = records.size();
+        if (recordsSize > VALID_RESULTS_NUMBER) {
+            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
         }
     }
 
     /**
      * This method returns the event database table
+     *
      * @return
      */
     private DatabaseTable getDatabaseEventsTable() {
@@ -1705,6 +1644,7 @@ public class ChatMiddlewareDatabaseDao {
 
     /**
      * This method returns the chat database table
+     *
      * @return
      */
     private DatabaseTable getDatabaseChatTable() {
@@ -1714,6 +1654,7 @@ public class ChatMiddlewareDatabaseDao {
 
     /**
      * This method returns the chat database table
+     *
      * @return
      */
     private DatabaseTable getDatabaseMessageTable() {
@@ -1723,8 +1664,7 @@ public class ChatMiddlewareDatabaseDao {
 
     public void saveWritingAction(UUID chatId, ActionState writingState) throws CantSaveActionException {
 
-        try
-        {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -1746,7 +1686,7 @@ public class ChatMiddlewareDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -1769,12 +1709,11 @@ public class ChatMiddlewareDatabaseDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records!=null && !records.isEmpty()){
+            if (records != null && !records.isEmpty()) {
                 return ActionState.getByCode(records.get(0).getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_WRITING_STATE));
-            }
-            else return null;
+            } else return null;
 
-        }catch(CantLoadTableToMemoryException e){
+        } catch (CantLoadTableToMemoryException e) {
             throw new CantSaveActionException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
@@ -1789,7 +1728,7 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public List<UUID> getWritingActions() throws CantGetPendingActionListException{
+    public List<UUID> getWritingActions() throws CantGetPendingActionListException {
         try {
             DatabaseTable databaseTable = getDatabaseWritingActionsTable();
             List<EventRecord> eventRecords = new ArrayList<>();
@@ -1801,12 +1740,12 @@ public class ChatMiddlewareDatabaseDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             List<UUID> chatIds = new ArrayList<>();
-            for(DatabaseTableRecord record : records){
+            for (DatabaseTableRecord record : records) {
                 chatIds.add(record.getUUIDValue(ChatMiddlewareDatabaseConstants.ACTIONS_WRITING_ID_CHAT_COLUMN_NAME));
             }
             return chatIds;
 
-        }catch(CantLoadTableToMemoryException e){
+        } catch (CantLoadTableToMemoryException e) {
             throw new CantGetPendingActionListException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
@@ -1815,7 +1754,7 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public List<ActionOnline> getOnlineActionsByActiveState() throws CantGetPendingActionListException{
+    public List<ActionOnline> getOnlineActionsByActiveState() throws CantGetPendingActionListException {
         try {
             DatabaseTable databaseTable = getDatabaseOnlineActionsTable();
             databaseTable.addStringFilter(
@@ -1824,14 +1763,14 @@ public class ChatMiddlewareDatabaseDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            List<ActionOnline> actionOnlines= new ArrayList<>();
-            for(DatabaseTableRecord record : records){
+            List<ActionOnline> actionOnlines = new ArrayList<>();
+            for (DatabaseTableRecord record : records) {
 
                 actionOnlines.add(getActionOnlineTransaction(record));
             }
             return actionOnlines;
 
-        }catch(CantLoadTableToMemoryException e){
+        } catch (CantLoadTableToMemoryException e) {
             throw new CantGetPendingActionListException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
@@ -1852,7 +1791,7 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public List<ActionOnline> getOnlineActionsByOnline() throws CantGetPendingActionListException{
+    public List<ActionOnline> getOnlineActionsByOnline() throws CantGetPendingActionListException {
         try {
             DatabaseTable databaseTable = getDatabaseOnlineActionsTable();
             databaseTable.addStringFilter(
@@ -1861,14 +1800,14 @@ public class ChatMiddlewareDatabaseDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            List<ActionOnline> actionOnlines= new ArrayList<>();
-            for(DatabaseTableRecord record : records){
+            List<ActionOnline> actionOnlines = new ArrayList<>();
+            for (DatabaseTableRecord record : records) {
 
                 actionOnlines.add(getActionOnlineTransaction(record));
             }
             return actionOnlines;
 
-        }catch(CantLoadTableToMemoryException e){
+        } catch (CantLoadTableToMemoryException e) {
             throw new CantGetPendingActionListException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
@@ -1891,13 +1830,12 @@ public class ChatMiddlewareDatabaseDao {
 
     public void saveOnlineAction(ActionOnline actionOnline) throws CantSaveActionException {
 
-        try
-        {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
             DatabaseTable table = getDatabaseOnlineActionsTable();
-            DatabaseTableRecord record = getOnlineActionRecord(actionOnline.getId(), actionOnline.getPublicKey(), actionOnline.getActionState(),actionOnline.getValue(),actionOnline.getLastConnection(),actionOnline.getLastOn());
+            DatabaseTableRecord record = getOnlineActionRecord(actionOnline.getId(), actionOnline.getPublicKey(), actionOnline.getActionState(), actionOnline.getValue(), actionOnline.getLastConnection(), actionOnline.getLastOn());
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(actionOnline.getId().toString());
@@ -1914,7 +1852,7 @@ public class ChatMiddlewareDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -1930,8 +1868,7 @@ public class ChatMiddlewareDatabaseDao {
 
     public void saveOnlineActionState(String publicKey, ActionState actionState) throws CantSaveActionException {
 
-        try
-        {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -1940,21 +1877,20 @@ public class ChatMiddlewareDatabaseDao {
             String lastConnection;
             boolean value;
             boolean lastOn;
-            if(actionOnline==null){
-                actionId=UUID.randomUUID();
+            if (actionOnline == null) {
+                actionId = UUID.randomUUID();
                 value = false;
                 lastConnection = null;
                 lastOn = false;
-            }
-            else {
-                actionId=actionOnline.getId();
+            } else {
+                actionId = actionOnline.getId();
                 value = actionOnline.getValue();
                 lastConnection = actionOnline.getLastConnection();
                 lastOn = actionOnline.getLastOn();
             }
 
             DatabaseTable table = getDatabaseOnlineActionsTable();
-            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState,value,lastConnection,lastOn);
+            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState, value, lastConnection, lastOn);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(actionId.toString());
@@ -1971,7 +1907,7 @@ public class ChatMiddlewareDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -1986,25 +1922,23 @@ public class ChatMiddlewareDatabaseDao {
 
     public void saveOnlineActionValue(String publicKey, boolean value) throws CantSaveActionException {
 
-        try
-        {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
             ActionOnline actionOnline = getOnlineActionByPk(publicKey);
             UUID actionId;
             ActionState actionState;
-            if(actionOnline==null){
-                actionId=UUID.randomUUID();
+            if (actionOnline == null) {
+                actionId = UUID.randomUUID();
                 actionState = ActionState.NONE;
-            }
-            else {
-                actionId=actionOnline.getId();
+            } else {
+                actionId = actionOnline.getId();
                 actionState = actionOnline.getActionState();
             }
 
             DatabaseTable table = getDatabaseOnlineActionsTable();
-            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState, value,actionOnline.getLastConnection(),actionOnline.getLastOn());
+            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState, value, actionOnline.getLastConnection(), actionOnline.getLastOn());
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(actionId.toString());
@@ -2021,7 +1955,7 @@ public class ChatMiddlewareDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -2044,13 +1978,12 @@ public class ChatMiddlewareDatabaseDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records!=null && !records.isEmpty()){
+            if (records != null && !records.isEmpty()) {
                 ActionOnline actionOnline = getActionOnlineTransaction(records.get(0));
                 return actionOnline;
-            }
-            else return null;
+            } else return null;
 
-        }catch(CantLoadTableToMemoryException e){
+        } catch (CantLoadTableToMemoryException e) {
             throw new CantSaveActionException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
@@ -2081,12 +2014,11 @@ public class ChatMiddlewareDatabaseDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records!=null && !records.isEmpty()){
+            if (records != null && !records.isEmpty()) {
                 return ActionState.getByCode(records.get(0).getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE));
-            }
-            else return null;
+            } else return null;
 
-        }catch(CantLoadTableToMemoryException e){
+        } catch (CantLoadTableToMemoryException e) {
             throw new CantSaveActionException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
@@ -2103,6 +2035,7 @@ public class ChatMiddlewareDatabaseDao {
 
     /**
      * This method saves a new event in database
+     *
      * @param eventType
      * @param eventSource
      * @throws CantSaveEventException
@@ -2133,7 +2066,7 @@ public class ChatMiddlewareDatabaseDao {
                     exception,
                     "Saving new event.",
                     "Cannot insert a record in Open Contract database");
-        } catch(Exception exception){
+        } catch (Exception exception) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
             throw new CantSaveEventException(
@@ -2146,8 +2079,8 @@ public class ChatMiddlewareDatabaseDao {
     public List<EventRecord> getPendingEventList() throws
             CantGetPendingEventListException,
             UnexpectedResultReturnedFromDatabaseException {
-        try{
-            DatabaseTable databaseTable=getDatabaseEventsTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
             List<EventRecord> eventRecords = new ArrayList<>();
             EventRecord eventRecord;
             databaseTable.addStringFilter(
@@ -2156,36 +2089,36 @@ public class ChatMiddlewareDatabaseDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 //There is no records in database, I'll return an empty list.
                 return eventRecords;
             }
-            for(DatabaseTableRecord databaseTableRecord : records){
-                String eventTypeString=databaseTableRecord.getStringValue(
+            for (DatabaseTableRecord databaseTableRecord : records) {
+                String eventTypeString = databaseTableRecord.getStringValue(
                         ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_EVENT_COLUMN_NAME);
-                if(eventTypeString==null){
+                if (eventTypeString == null) {
                     throw new UnexpectedResultReturnedFromDatabaseException("The event type is null");
                 }
-                eventRecord=new EventRecord(getEventTypeFromStringCode(eventTypeString));
-                String eventId=databaseTableRecord.getStringValue(
+                eventRecord = new EventRecord(getEventTypeFromStringCode(eventTypeString));
+                String eventId = databaseTableRecord.getStringValue(
                         ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME);
                 eventRecord.setEventId(eventId);
-                String eventSource =databaseTableRecord.getStringValue(
+                String eventSource = databaseTableRecord.getStringValue(
                         ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_SOURCE_COLUMN_NAME);
-                if(eventSource==null){
+                if (eventSource == null) {
                     throw new UnexpectedResultReturnedFromDatabaseException("The event source is null");
                 }
                 eventRecord.setEventSource(EventSource.getByCode(eventSource));
-                String eventStatus=databaseTableRecord.getStringValue(
+                String eventStatus = databaseTableRecord.getStringValue(
                         ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME);
-                if(eventStatus==null){
+                if (eventStatus == null) {
                     throw new UnexpectedResultReturnedFromDatabaseException("The event status is null");
                 }
                 eventRecord.setEventStatus(EventStatus.getByCode(eventStatus));
-                long timestamp=databaseTableRecord.getLongValue(
+                long timestamp = databaseTableRecord.getLongValue(
                         ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
                 eventRecord.setTimestamp(timestamp);
-                UUID chatId=databaseTableRecord.getUUIDValue(
+                UUID chatId = databaseTableRecord.getUUIDValue(
                         ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_CHAT_ID_COLUMN_NAME);
                 eventRecord.setChatId(chatId);
                 eventRecords.add(eventRecord);
@@ -2203,7 +2136,7 @@ public class ChatMiddlewareDatabaseDao {
             throw new CantGetPendingEventListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Invalid parameter in EventStatus enum");
-        } catch (Exception e){
+        } catch (Exception e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new CantGetPendingEventListException(e,
@@ -2214,6 +2147,7 @@ public class ChatMiddlewareDatabaseDao {
 
     /**
      * This method returns the EventType by String code.
+     *
      * @param code
      * @return
      * @throws InvalidParameterException
@@ -2221,20 +2155,21 @@ public class ChatMiddlewareDatabaseDao {
     private EventType getEventTypeFromStringCode(
             String code)
             throws InvalidParameterException {
-        if(code.equals(EventType.INCOMING_CHAT.getCode())){
+        if (code.equals(EventType.INCOMING_CHAT.getCode())) {
             return EventType.INCOMING_CHAT;
         }
-        if(code.equals(EventType.OUTGOING_CHAT.getCode())){
+        if (code.equals(EventType.OUTGOING_CHAT.getCode())) {
             return EventType.OUTGOING_CHAT;
         }
-        if(code.equals(EventType.INCOMING_STATUS.getCode())){
+        if (code.equals(EventType.INCOMING_STATUS.getCode())) {
             return EventType.INCOMING_STATUS;
         }
-        throw new InvalidParameterException("The code "+code+" is not valid in EvenType enum");
+        throw new InvalidParameterException("The code " + code + " is not valid in EvenType enum");
     }
 
     /**
      * This method returns a pending events list from database
+     *
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetPendingEventListException
@@ -2242,9 +2177,9 @@ public class ChatMiddlewareDatabaseDao {
     public List<String> getPendingEvents() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetPendingEventListException {
-        try{
-            DatabaseTable databaseTable=getDatabaseEventsTable();
-            List<String> eventTypeList=new ArrayList<>();
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
+            List<String> eventTypeList = new ArrayList<>();
             String eventId;
             databaseTable.addStringFilter(
                     ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,
@@ -2252,12 +2187,12 @@ public class ChatMiddlewareDatabaseDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 //There is no records in database, I'll return an empty list.
                 return eventTypeList;
             }
-            for(DatabaseTableRecord databaseTableRecord : records){
-                eventId=databaseTableRecord.getStringValue(
+            for (DatabaseTableRecord databaseTableRecord : records) {
+                eventId = databaseTableRecord.getStringValue(
                         ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME);
                 eventTypeList.add(eventId);
             }
@@ -2271,6 +2206,7 @@ public class ChatMiddlewareDatabaseDao {
 
     /**
      * This method updates the event status
+     *
      * @param eventId
      * @param eventStatus
      * @throws UnexpectedResultReturnedFromDatabaseException
@@ -2280,8 +2216,8 @@ public class ChatMiddlewareDatabaseDao {
             String eventId,
             EventStatus eventStatus) throws UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseEventsTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
             databaseTable.addStringFilter(
                     ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
@@ -2289,27 +2225,28 @@ public class ChatMiddlewareDatabaseDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
             record.setStringValue(
                     ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
-        }  catch (CantLoadTableToMemoryException exception) {
+        } catch (CantLoadTableToMemoryException exception) {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    "Updating parameter "+ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+                    "Updating parameter " + ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
         }
     }
 
     /**
      * This method updates an event record by eventId
+     *
      * @param eventRecord
      */
     public void updateEventRecord(EventRecord eventRecord)
             throws UnexpectedResultReturnedFromDatabaseException {
-        try{
-            DatabaseTable databaseTable=getDatabaseEventsTable();
-            String eventId=eventRecord.getEventId();
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
+            String eventId = eventRecord.getEventId();
             databaseTable.addStringFilter(
                     ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
@@ -2317,11 +2254,11 @@ public class ChatMiddlewareDatabaseDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
-                        "This record "+eventRecord+" does not exists in database.");
+                        "This record " + eventRecord + " does not exists in database.");
             }
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
             record.setStringValue(
                     ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventRecord.getEventId());
@@ -2345,31 +2282,32 @@ public class ChatMiddlewareDatabaseDao {
                     FermatException.wrapException(exception));
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    "Updating parameter "+ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
-        } catch (Exception e){
+                    "Updating parameter " + ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
+        } catch (Exception e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new UnexpectedResultReturnedFromDatabaseException(e,
-                        "Updating an event record",
-                        "Unexpected Exception");
+                    "Updating an event record",
+                    "Unexpected Exception");
 
         }
     }
 
     /**
      * This method checks if the chat exists in database.
+     *
      * @param chatId
      * @return
      * @throws CantGetChatException
      */
-    public boolean chatIdExists(UUID chatId) throws CantGetChatException{
-        try{
-            DatabaseTable databaseTable=getDatabaseChatTable();
+    public boolean chatIdExists(UUID chatId) throws CantGetChatException {
+        try {
+            DatabaseTable databaseTable = getDatabaseChatTable();
             return checkIdChatExists(
                     chatId,
                     ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME,
                     databaseTable);
-        } catch (Exception e){
+        } catch (Exception e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new CantGetChatException(e,
@@ -2381,6 +2319,7 @@ public class ChatMiddlewareDatabaseDao {
 
     /**
      * This method checks if the message exists in database.
+     *
      * @param messageId
      * @return
      * @throws CantGetChatException
@@ -2392,7 +2331,7 @@ public class ChatMiddlewareDatabaseDao {
                     messageId,
                     ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME,
                     databaseTable);
-        } catch (Exception e){
+        } catch (Exception e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new CantGetChatException(e,
@@ -2404,6 +2343,7 @@ public class ChatMiddlewareDatabaseDao {
 
     /**
      * This method checks if an Id (UUID) exists in database
+     *
      * @param id
      * @param databaseColumn
      * @param databaseTable
@@ -2415,8 +2355,8 @@ public class ChatMiddlewareDatabaseDao {
             String databaseColumn,
             DatabaseTable databaseTable) throws
             CantGetChatException {
-        try{
-            DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
+        try {
+            DatabaseTableFilter databaseTableFilter = databaseTable.getEmptyTableFilter();
             databaseTableFilter.setType(DatabaseFilterType.EQUAL);
             databaseTableFilter.setValue(id.toString());
             databaseTableFilter.setColumn(databaseColumn);
@@ -2430,13 +2370,14 @@ public class ChatMiddlewareDatabaseDao {
             );
         }
     }
+
     private boolean checkIdMessageExists(
             UUID id,
             String databaseColumn,
             DatabaseTable databaseTable) throws
             CantGetChatException {
-        try{
-            DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
+        try {
+            DatabaseTableFilter databaseTableFilter = databaseTable.getEmptyTableFilter();
             databaseTableFilter.setType(DatabaseFilterType.EQUAL);
             databaseTableFilter.setValue(id.toString());
             databaseTableFilter.setColumn(databaseColumn);
@@ -2451,7 +2392,7 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public long getLastMessageCount(){
+    public long getLastMessageCount() {
         Database database = null;
         try {
             database = openDatabase();
@@ -2469,13 +2410,12 @@ public class ChatMiddlewareDatabaseDao {
 
             database.closeDatabase();
 
-            if(messages.isEmpty()){
+            if (messages.isEmpty()) {
                 return 0;
             }
 
             return messages.get(0).getCount();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,

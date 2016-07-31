@@ -133,7 +133,7 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
             if (!negotiationPendingToSubmitList.isEmpty()) {
                 for (CustomerBrokerClose negotiationTransaction : negotiationPendingToSubmitList) {
 
-                    System.out.print(new StringBuilder().append("\n\n**** 5) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - NEGOTIATION FOR SEND transactionId: ").append(negotiationTransaction.getTransactionId()).append(" ****\n").toString());
+                    System.out.print("\n\n**** 5) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - NEGOTIATION FOR SEND transactionId: " + negotiationTransaction.getTransactionId() + " ****\n");
 
                     negotiationXML = negotiationTransaction.getNegotiationXML();
                     negotiationType = negotiationTransaction.getNegotiationType();
@@ -142,14 +142,14 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
                     switch (negotiationType) {
                         case PURCHASE:
                             purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
-                            System.out.print(new StringBuilder().append("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): ").append(purchaseNegotiation.getNegotiationId()).append(" ****\n").append("\n - Status :").append(purchaseNegotiation.getStatus().getCode()).toString());
+                            System.out.print("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n" + "\n - Status :" + purchaseNegotiation.getStatus().getCode());
                             //SEND NEGOTIATION TO BROKER
                             negotiationTransmissionManager.sendNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
 
                             break;
                         case SALE:
                             saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
-                            System.out.print(new StringBuilder().append("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - SALE NEGOTIATION SEND negotiationId(XML): ").append(saleNegotiation.getNegotiationId()).append(" ****\n").append("\n - Status :").append(saleNegotiation.getStatus().getCode()).toString());
+                            System.out.print("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - SALE NEGOTIATION SEND negotiationId(XML): " + saleNegotiation.getNegotiationId() + " ****\n" + "\n - Status :" + saleNegotiation.getStatus().getCode());
                             //SEND NEGOTIATION TO CUSTOMER
                             negotiationTransmissionManager.sendNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
 
@@ -157,7 +157,7 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
                     }
 
                     //Update the Negotiation Transaction
-                    System.out.print(new StringBuilder().append("\n\n**** 7) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : ").append(NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode()).append(" ****\n").toString());
+                    System.out.print("\n\n**** 7) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
                     dao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(
                             transactionId,
                             NegotiationTransactionStatus.SENDING_NEGOTIATION);
@@ -173,22 +173,22 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
                     transactionId = negotiationTransaction.getTransactionId();
                     negotiationType = negotiationTransaction.getNegotiationType();
 
-                    System.out.print(new StringBuilder().append("\n\n**** 23) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE CONFIRM STATUS SALE NEGOTIATION STATUS : ").append(NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode()).append(" ****\n").toString());
+                    System.out.print("\n\n**** 23) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE CONFIRM STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
 
                     switch (negotiationType) {
                         case PURCHASE:
-                            System.out.print(new StringBuilder().append("\n\n**** 24) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - PURCHASE NEGOTIATION SEND CONFIRM negotiationId(XML): ").append(purchaseNegotiation.getNegotiationId()).append(" ****\n").toString());
+                            System.out.print("\n\n**** 24) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - PURCHASE NEGOTIATION SEND CONFIRM negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n");
                             //SEND CONFIRM NEGOTIATION TO BROKER
                             negotiationTransmissionManager.sendConfirmNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                             break;
                         case SALE:
-                            System.out.print(new StringBuilder().append("\n\n**** 24) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - SALE NEGOTIATION SEND CONFIRM negotiationId(XML): ").append(purchaseNegotiation.getNegotiationId()).append(" ****\n").toString());
+                            System.out.print("\n\n**** 24) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - SALE NEGOTIATION SEND CONFIRM negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n");
                             //SEND NEGOTIATION TO CUSTOMER
                             negotiationTransmissionManager.sendConfirmNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                             break;
                     }
 
-                    System.out.print(new StringBuilder().append("\n\n**** 25) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : ").append(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode()).append(" ****\n").toString());
+                    System.out.print("\n\n**** 25) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode() + " ****\n");
                     //Update the Negotiation Transaction
                     dao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(
                             transactionId,

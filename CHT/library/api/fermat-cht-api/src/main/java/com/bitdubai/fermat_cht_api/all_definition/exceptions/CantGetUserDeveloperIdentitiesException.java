@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by franklin 31-03-2016
- *
  */
 public class CantGetUserDeveloperIdentitiesException extends FermatException {
 

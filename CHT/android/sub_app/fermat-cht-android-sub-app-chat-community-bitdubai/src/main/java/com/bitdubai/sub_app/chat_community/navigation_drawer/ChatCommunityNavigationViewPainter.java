@@ -14,7 +14,6 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.chat_community.adapters.NavigationAdapter;
 import com.bitdubai.sub_app.chat_community.common.utils.FragmentsCommons;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 
 import java.lang.ref.WeakReference;
 
@@ -31,7 +30,7 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
     private WeakReference<FermatApplicationCaller> applicationsHelper;
 
     public ChatCommunityNavigationViewPainter(Context activity,
-                                         ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> subAppSession,
+                                              ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> subAppSession,
                                               FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference(activity);
         this.subAppSession = subAppSession;
@@ -43,7 +42,7 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
         View headerView = null;
         try {
             headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),subAppSession,
+                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), subAppSession,
                     applicationsHelper.get());
         } catch (Exception e) {
             e.printStackTrace();

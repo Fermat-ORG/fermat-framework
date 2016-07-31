@@ -56,6 +56,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -254,24 +255,28 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         //check blockchain progress
 
         try {
-            int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
-            final Toolbar toolBar = getToolbar();
-            int toolbarColor = 0;
-            if (pendingBlocks > 0) {
-                //paint toolbar on red
-                toolbarColor = Color.RED;
-                if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
-                    setUpBlockchainProgress(false);
-            } else {
-                toolbarColor = Color.parseColor("#05CFC2");
-            }
-            final int finalToolbarColor = toolbarColor;
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    toolBar.setBackgroundColor(finalToolbarColor);
+            BlockchainDownloadProgress blockchainDownloadProgress = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType);
+            if(blockchainDownloadProgress!=null) {
+                int pendingBlocks = blockchainDownloadProgress.getPendingBlocks();
+                int toolbarColor = 0;
+                if (pendingBlocks > 0) {
+                    //paint toolbar on red
+                    toolbarColor = Color.RED;
+                    if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
+                        setUpBlockchainProgress(false);
+                } else {
+                    toolbarColor = Color.parseColor("#05CFC2");
                 }
-            });
+                final int finalToolbarColor = toolbarColor;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getToolbar().setBackgroundColor(finalToolbarColor);
+                    }
+                });
+            }else{
+                Log.e(TAG,"blockchainDownloadProgress null");
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -292,39 +297,41 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     (intraUserLoginIdentity == null) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                     checkButton);
 
+            presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    Object o = appSession.getData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
+                    if (o != null) {
+                        if ((Boolean) (o))
+                            appSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
+                    }
+                    //noinspection TryWithIdenticalCatches
+                    ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = null;
+                    try {
+                        cryptoWalletIntraUserIdentity = appSession.getModuleManager().getSelectedActorIdentity();
+                    } catch (CantGetSelectedActorIdentityException e) {
+                        e.printStackTrace();
+                    } catch (ActorIdentityNotSelectedException e) {
+                        e.printStackTrace();
+                    }
+                    if (cryptoWalletIntraUserIdentity == null) {
+                        getActivity().onBackPressed();
+                    } else {
+                        invalidate();
+                    }
+
+                    showBlockchainProgress();
+
+                }
+            });
+            presentationBitcoinWalletDialog.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-        presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                Object o = appSession.getData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
-                if (o != null) {
-                    if ((Boolean) (o))
-                        appSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
-                }
-                //noinspection TryWithIdenticalCatches
-                ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = null;
-                try {
-                    cryptoWalletIntraUserIdentity = appSession.getModuleManager().getSelectedActorIdentity();
-                } catch (CantGetSelectedActorIdentityException e) {
-                    e.printStackTrace();
-                } catch (ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-                if (cryptoWalletIntraUserIdentity == null) {
-                    getActivity().onBackPressed();
-                } else {
-                    invalidate();
-                }
 
-                showBlockchainProgress();
-
-            }
-        });
-        presentationBitcoinWalletDialog.show();
     }
 
     private void setUpBlockchainProgress(final boolean checkButton) {

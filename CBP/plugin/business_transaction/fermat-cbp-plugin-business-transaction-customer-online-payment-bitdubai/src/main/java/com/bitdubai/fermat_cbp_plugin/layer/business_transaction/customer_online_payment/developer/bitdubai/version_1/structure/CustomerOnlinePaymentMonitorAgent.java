@@ -263,7 +263,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                  */
                 try {
 
-                    logManager.log(CustomerOnlinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
+                    logManager.log(CustomerOnlinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
                     pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -481,8 +481,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
          * @param record the Business Transaction record associated with the crypto transaction
          */
         private void raiseIncomingMoneyNotificationEvent(BusinessTransactionRecord record) {
-            System.out.println(new StringBuilder().append("SUBMIT_ONLINE_PAYMENT - raiseIncomingMoneyNotificationEvent - record.getCryptoCurrency() = ").append(record.getCryptoCurrency()).toString());
-            System.out.println(new StringBuilder().append("SUBMIT_ONLINE_PAYMENT - raiseIncomingMoneyNotificationEvent - record.getCryptoAmount() = ").append(record.getCryptoAmount()).toString());
+            System.out.println("SUBMIT_ONLINE_PAYMENT - raiseIncomingMoneyNotificationEvent - record.getCryptoCurrency() = " + record.getCryptoCurrency());
+            System.out.println("SUBMIT_ONLINE_PAYMENT - raiseIncomingMoneyNotificationEvent - record.getCryptoAmount() = " + record.getCryptoAmount());
 
             FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_MONEY_NOTIFICATION);
             IncomingMoneyNotificationEvent event = (IncomingMoneyNotificationEvent) fermatEvent;

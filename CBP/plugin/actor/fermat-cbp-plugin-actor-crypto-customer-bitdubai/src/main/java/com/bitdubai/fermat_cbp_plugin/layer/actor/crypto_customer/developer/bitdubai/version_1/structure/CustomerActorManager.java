@@ -78,7 +78,7 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantCreateNewCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), new StringBuilder().append("identity: ").append(identity).append(" - walletPublicKey: ").append(walletPublicKey).toString(), "Unhandled error.");
+            throw new CantCreateNewCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), "identity: " + identity + " - walletPublicKey: " + walletPublicKey, "Unhandled error.");
         }
     }
 
@@ -119,7 +119,7 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), new StringBuilder().append("publicKey: ").append(publicKey).toString(), "Unhandled error.");
+            throw new CantGetCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), "publicKey: " + publicKey, "Unhandled error.");
         }
     }
 
@@ -138,7 +138,7 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), new StringBuilder().append("walletPublicKey: ").append(walletPublicKey).toString(), "Unhandled error.");
+            throw new CantGetCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), "walletPublicKey: " + walletPublicKey, "Unhandled error.");
         }
     }
 
@@ -162,7 +162,7 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantCreateNewActorExtraDataException(FermatException.wrapException(e), new StringBuilder().append("actorExtraData: ").append(actorExtraData).toString(), "Unhandled error.");
+            throw new CantCreateNewActorExtraDataException(FermatException.wrapException(e), "actorExtraData: " + actorExtraData, "Unhandled error.");
         }
     }
 
@@ -180,7 +180,7 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantUpdateActorExtraDataException(FermatException.wrapException(e), new StringBuilder().append("actorExtraData: ").append(actorExtraData).toString(), "Unhandled error.");
+            throw new CantUpdateActorExtraDataException(FermatException.wrapException(e), "actorExtraData: " + actorExtraData, "Unhandled error.");
         }
     }
 
@@ -235,7 +235,7 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetListActorExtraDataException(FermatException.wrapException(e), new StringBuilder().append("brokerPublicKey: ").append(brokerPublicKey).append(" - customerPublicKey: ").append(customerPublicKey).toString(), "Unhandled error.");
+            throw new CantGetListActorExtraDataException(FermatException.wrapException(e), "brokerPublicKey: " + brokerPublicKey + " - customerPublicKey: " + customerPublicKey, "Unhandled error.");
         }
     }
 
@@ -253,7 +253,7 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         } catch (Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetListActorExtraDataException(FermatException.wrapException(e), new StringBuilder().append("publicKeyBroker: ").append(publicKeyBroker).toString(), "Unhandled error.");
+            throw new CantGetListActorExtraDataException(FermatException.wrapException(e), "publicKeyBroker: " + publicKeyBroker, "Unhandled error.");
         }
     }
 

@@ -76,7 +76,7 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> implements S
             settingsFile.setContent(settingsContent);
 
             settingsFile.persistToMedia();
-
+            if(moduleSettingsMap.containsKey(publicKey)) moduleSettingsMap.remove(publicKey);
             moduleSettingsMap.put(publicKey, settings);
 
         } catch (final CantCreateFileException |

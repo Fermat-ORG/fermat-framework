@@ -6,5 +6,6 @@ package com.bitdubai.sub_app.chat_community.common.models;
 public interface Item {
 
     boolean isSection();
+
     boolean isConnection();
 }

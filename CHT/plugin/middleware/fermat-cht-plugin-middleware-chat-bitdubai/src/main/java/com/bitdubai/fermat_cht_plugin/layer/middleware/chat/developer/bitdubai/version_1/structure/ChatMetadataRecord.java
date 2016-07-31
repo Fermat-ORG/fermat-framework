@@ -10,7 +10,6 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.Distribution
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.google.gson.Gson;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -149,7 +148,7 @@ public class ChatMetadataRecord implements ChatMetadata {
         return gson.toJson(this);
     }
 
-    public static ChatMetadataRecord fromJson(String json){
+    public static ChatMetadataRecord fromJson(String json) {
         Gson gson = new Gson();
         return gson.fromJson(json, ChatMetadataRecord.class);
     }
@@ -209,9 +208,10 @@ public class ChatMetadataRecord implements ChatMetadata {
 
     /**
      * This method returns a XML String with all the objects set in this record
+     *
      * @return
      */
-    public String toString(){
+    public String toString() {
         return XMLParser.parseObject(this);
     }
 }

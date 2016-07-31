@@ -164,7 +164,7 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
                     switch (negotiationType) {
                         case PURCHASE:
                             purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
-                            System.out.print(new StringBuilder().append("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): ").append(purchaseNegotiation.getNegotiationId()).append(" ****\n").toString());
+                            System.out.print("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n");
                             //SEND NEGOTIATION TO BROKER
                             negotiationTransmissionManager.sendNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                             break;
@@ -187,12 +187,12 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
                     negotiationType = negotiationTransaction.getNegotiationType();
                     transactionId = negotiationTransaction.getTransactionId();
 
-                    System.out.print(new StringBuilder().append("\n\n**** 22) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION FOR SEND transactionId: ").append(transactionId).append(" ****\n").toString());
+                    System.out.print("\n\n**** 22) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION FOR SEND transactionId: " + transactionId + " ****\n");
 
                     switch (negotiationType) {
                         case SALE:
                             saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
-                            System.out.print(new StringBuilder().append("\n\n**** 23) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION SEND negotiationId(XML): ").append(transactionId).append(" ****\n").toString());
+                            System.out.print("\n\n**** 23) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION SEND negotiationId(XML): " + transactionId + " ****\n");
                             negotiationTransmissionManager.sendConfirmNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                             break;
                     }

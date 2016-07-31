@@ -170,7 +170,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.print(new StringBuilder().append("-----------------------\n CUSTOMER BROKER CLOSE: SUCCESSFUL START ").append(pluginId.toString()).append(" \n-----------------------\n").toString());
+            System.out.print("-----------------------\n CUSTOMER BROKER CLOSE: SUCCESSFUL START " + pluginId.toString() + " \n-----------------------\n");
 
         } catch (CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);

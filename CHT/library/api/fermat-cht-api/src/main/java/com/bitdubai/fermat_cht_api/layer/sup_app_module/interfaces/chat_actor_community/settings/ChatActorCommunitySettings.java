@@ -23,24 +23,26 @@ public class ChatActorCommunitySettings implements SubAppSettings, Serializable 
     private boolean presentationHelpEnabled;
 
 
-    public ChatActorCommunitySettings() {}
+    public ChatActorCommunitySettings() {
+    }
 
 
+    public String getLastSelectedIdentityPublicKey() {
+        return this.lastSelectedIdentityPublicKey;
+    }
+
+    public void setLastSelectedIdentityPublicKey(String identityPublicKey) {
+        this.lastSelectedIdentityPublicKey = identityPublicKey;
+    }
 
 
+    public Actors getLastSelectedActorType() {
+        return this.lastSelectedActorType;
+    }
 
-    public String getLastSelectedIdentityPublicKey() { return this.lastSelectedIdentityPublicKey; }
-    public void setLastSelectedIdentityPublicKey(String identityPublicKey) { this.lastSelectedIdentityPublicKey = identityPublicKey; }
-
-
-    public Actors getLastSelectedActorType() { return this.lastSelectedActorType; }
-    public void setLastSelectedActorType(Actors actorType) { this.lastSelectedActorType = actorType; }
-
-
-
-
-
-
+    public void setLastSelectedActorType(Actors actorType) {
+        this.lastSelectedActorType = actorType;
+    }
 
 
     @Override
@@ -54,23 +56,32 @@ public class ChatActorCommunitySettings implements SubAppSettings, Serializable 
 
 
     @Override
-    public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException {}
-    @Override
-    public UUID getDefaultLanguage() throws CantGetDefaultLanguageException { return null; }
-
+    public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException {
+    }
 
     @Override
-    public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException { }
-
-    @Override
-    public UUID getDefaultSkin() throws CantGetDefaultSkinException { return null; }
-
+    public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {
+        return null;
+    }
 
 
     @Override
-    public void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveSubAppSettings { }
+    public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException {
+    }
 
     @Override
-    public String getPreferenceSettings(String walletPublicKey) throws CantLoadSubAppSettings { return null; }
+    public UUID getDefaultSkin() throws CantGetDefaultSkinException {
+        return null;
+    }
+
+
+    @Override
+    public void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveSubAppSettings {
+    }
+
+    @Override
+    public String getPreferenceSettings(String walletPublicKey) throws CantLoadSubAppSettings {
+        return null;
+    }
 
 }

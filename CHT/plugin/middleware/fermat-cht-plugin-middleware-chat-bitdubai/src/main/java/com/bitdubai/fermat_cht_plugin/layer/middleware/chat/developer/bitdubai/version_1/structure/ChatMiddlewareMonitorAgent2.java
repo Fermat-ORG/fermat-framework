@@ -113,7 +113,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
     public ChatMiddlewareMonitorAgent2(long sleepTime,
                                        TimeUnit timeUnit,
-                                       long initDelayTime,PluginDatabaseSystem pluginDatabaseSystem,
+                                       long initDelayTime, PluginDatabaseSystem pluginDatabaseSystem,
                                        LogManager logManager,
                                        ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
                                        EventManager eventManager,
@@ -240,7 +240,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                 resetWritingStatus();
                 checkOnlineStatus();
             }
-            if(discoverIteration == 2){
+            if (discoverIteration == 2) {
                 resetOnlineStatus();
             }
             discoverIteration++;
@@ -261,7 +261,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
     }
 
-    private void sendChatBroadcasting(){
+    private void sendChatBroadcasting() {
         Date date = new Date();
         chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
                 pluginDatabaseSystem,
@@ -272,14 +272,12 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
         try {
             List<Chat> chats = chatMiddlewareDatabaseDao.getChats(null);
-            for(Chat chat : chats){
-                if (chat.getTypeChat() == TypeChat.REBROADCASTING)
-                {
+            for (Chat chat : chats) {
+                if (chat.getTypeChat() == TypeChat.REBROADCASTING) {
                     long tsTime1 = chat.getDate().getTime();
                     long tsTime2 = date.getTime();
 
-                    if (tsTime1 >= tsTime2)
-                    {
+                    if (tsTime1 >= tsTime2) {
                         //if (chat.getScheduledDelivery()) {
                         //Enviar el mensaje pasando como argumento el objeto chat con todos los datos
                         //Buscar el mensaje creado de ese chat guardado cuando se creo la redifusion
@@ -299,7 +297,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                                         chat.getRemoteActorPublicKey(),
                                         constructChatMetadata(chat, messages.get(0))
                                 );
-                            }catch (IllegalArgumentException e) {
+                            } catch (IllegalArgumentException e) {
                                 /**
                                  * In this case, any argument in chat or message was null or not properly set.
                                  * I'm gonna change the status to CANNOT_SEND to avoid send this message.
@@ -343,9 +341,9 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                     pluginFileSystem);
 
             System.out.println("12345 CHECKING INCOMING CHAT");
-                    saveChat(chatMetadata);
+            saveChat(chatMetadata);
 
-                    saveMessage(chatMetadata);
+            saveMessage(chatMetadata);
 
 //            FermatBundle fermatBundle = new FermatBundle();
 //            fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
@@ -428,7 +426,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                     chatMiddlewarePluginRoot,
                     pluginFileSystem);
 
-                    System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == "+chatMetadata.getMessage() + " MESSAGE STATUS == "+chatMetadata.getMessageStatus());
+            System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == " + chatMetadata.getMessage() + " MESSAGE STATUS == " + chatMetadata.getMessageStatus());
 
 //                    if (!checkChatMetadata(chatMetadata)) return;
 
@@ -438,7 +436,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 //                Message message = chatMiddlewareDatabaseDao.getMessageByMessageId(chatMetadata.getMessageId());
 //                if(message !=null){
             updateMessageStatus(chatMetadata);
-            if(chatMetadata.getMessageStatus()!=MessageStatus.READ){
+            if (chatMetadata.getMessageStatus() != MessageStatus.READ) {
                 FermatBundle fermatBundle3 = new FermatBundle();
                 fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
                 fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
@@ -495,19 +493,19 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
             List<ActionOnline> onlineActions = chatMiddlewareDatabaseDao.getOnlineActionsByActiveState();
 
-            if(onlineActions==null || onlineActions.isEmpty()) return;
+            if (onlineActions == null || onlineActions.isEmpty()) return;
 
             System.out.println("12345 CHECKING ONLINE STATUS");
 
 //            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
 
-            for(ActionOnline actionOnline : onlineActions){
+            for (ActionOnline actionOnline : onlineActions) {
 //                boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
                 boolean isOnline = chatActorNetworkServiceManager.isActorOnline(actionOnline.getPublicKey());
                 actionOnline.setValue(isOnline);
                 System.out.println("12345 is online " + isOnline);
-                if(isOnline) actionOnline.setLastOn(false);
-                if(!isOnline && actionOnline.getLastOn()!=true){
+                if (isOnline) actionOnline.setLastOn(false);
+                if (!isOnline && actionOnline.getLastOn() != true) {
                     DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm");
                     Date today = Calendar.getInstance().getTime();
                     actionOnline.setLastConnection(df.format(today));
@@ -537,7 +535,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
         }
     }
 
-    public void resetWritingStatus(){
+    public void resetWritingStatus() {
         try {
             chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
                     pluginDatabaseSystem,
@@ -546,13 +544,13 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                     chatMiddlewarePluginRoot,
                     pluginFileSystem);
 
-            boolean changes=false;
+            boolean changes = false;
 
             //Resetear los writing state enviados
             List<UUID> chatsId = chatMiddlewareDatabaseDao.getWritingActions();
 //            System.out.println("12345 Chats to reset enviados "+ chatsId.size());
 
-            if(chatsId != null && !chatsId.isEmpty()) {
+            if (chatsId != null && !chatsId.isEmpty()) {
                 for (UUID chatId : chatsId) {
                     chatMiddlewareDatabaseDao.saveWritingAction(chatId, ActionState.NONE);
 //                    System.out.println("12345 Action writing Updated " + chatId);
@@ -564,16 +562,16 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             List<Chat> chats = chatMiddlewareDatabaseDao.getChatListByWriting();
 //            System.out.println("12345 Chats to reset recibidos "+ chatsId.size());
 
-            if(chats == null && chats.isEmpty()) return;
+            if (chats == null && chats.isEmpty()) return;
 
-            for(Chat chat : chats){
+            for (Chat chat : chats) {
                 chat.setIsWriting(false);
                 chatMiddlewareDatabaseDao.saveChat(chat);
 //                System.out.println("12345 Chat writing Updated "+chat.getChatId());
                 changes = true;
             }
 
-            if(changes){
+            if (changes) {
 
                 FermatBundle fermatBundle2 = new FermatBundle();
                 fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
@@ -590,7 +588,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             }
 
 
-        }catch(DatabaseOperationException e){
+        } catch (DatabaseOperationException e) {
             e.printStackTrace();
         } catch (CantGetChatException e) {
             e.printStackTrace();
@@ -603,7 +601,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
         }
     }
 
-    public void resetOnlineStatus(){
+    public void resetOnlineStatus() {
         try {
             chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
                     pluginDatabaseSystem,
@@ -612,15 +610,15 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                     chatMiddlewarePluginRoot,
                     pluginFileSystem);
 
-            boolean changes=false;
+            boolean changes = false;
 
 
             List<ActionOnline> actionOnlines = null;
-                actionOnlines = chatMiddlewareDatabaseDao.getOnlineActionsByOnline();
+            actionOnlines = chatMiddlewareDatabaseDao.getOnlineActionsByOnline();
 
-            if(actionOnlines == null || actionOnlines.isEmpty()) return;
+            if (actionOnlines == null || actionOnlines.isEmpty()) return;
 
-            for(ActionOnline actionOnline : actionOnlines){
+            for (ActionOnline actionOnline : actionOnlines) {
                 actionOnline.setValue(false);
                 DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm");
                 Date today = Calendar.getInstance().getTime();
@@ -629,7 +627,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                 changes = true;
             }
 
-            if(changes) {
+            if (changes) {
                 FermatBundle fermatBundle2 = new FermatBundle();
                 fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
                 fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
@@ -688,8 +686,8 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                     pluginFileSystem);
 
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
-            if(chat != null) {
-                System.out.println("12345 Saving is writing chat "+chat.getChatId());
+            if (chat != null) {
+                System.out.println("12345 Saving is writing chat " + chat.getChatId());
                 chat.setIsWriting(true);
                 chatMiddlewareDatabaseDao.saveChat(chat);
                 System.out.println("12345 chat saved");
@@ -816,15 +814,15 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
         UUID messageId = chatMetadata.getMessageId();
         System.out.println("12345 SAVING MESSAGE");
 //        Message messageRecorded = chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
-                Message messageRecorded = null;
+        Message messageRecorded = null;
 //        if (messageRecorded == null) {
-            /**
-             * In this case, the message is not created in database, so, is an incoming message,
-             * I need to create a new message
-             */
-            messageRecorded = getMessageFromChatMetadata(
-                    chatMetadata);
-            if (messageRecorded == null) return;
+        /**
+         * In this case, the message is not created in database, so, is an incoming message,
+         * I need to create a new message
+         */
+        messageRecorded = getMessageFromChatMetadata(
+                chatMetadata);
+        if (messageRecorded == null) return;
 //        }
 
         messageRecorded.setStatus(MessageStatus.RECEIVE);
@@ -845,7 +843,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
         PlatformComponentType remoteType;
         System.out.println("12345 SAVING CHAT");
         Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatMetadata.getChatId());
-        if(chat==null)
+        if (chat == null)
             chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
 
         // change to put in the remote device in the correct place of table chat
@@ -881,20 +879,20 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
 
             ChatLinkedActorIdentity chatLinkedActorIdentity = new ChatLinkedActorIdentity(
-                chatFromDatabase.getLocalActorPublicKey(),
-                Actors.CHAT
-                );
+                    chatFromDatabase.getLocalActorPublicKey(),
+                    Actors.CHAT
+            );
             final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(chatLinkedActorIdentity);
             List<ChatActorConnection> chatActorConnections = search.getResult();
             ChatActorConnection actorConnection = null;
 
-            for(ChatActorConnection chatActorConnection : chatActorConnections){
-                if(chatActorConnection.getPublicKey().equals(chatFromDatabase.getRemoteActorPublicKey())) {
+            for (ChatActorConnection chatActorConnection : chatActorConnections) {
+                if (chatActorConnection.getPublicKey().equals(chatFromDatabase.getRemoteActorPublicKey())) {
                     actorConnection = chatActorConnection;
                     break;
                 }
             }
-            if(actorConnection == null){
+            if (actorConnection == null) {
                 return null;
             }
 
@@ -1001,23 +999,23 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
         ChatMetadata chatMetadata;
         Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
         String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(timestamp);
-            chatMetadata = new ChatMetadataRecord(
-                    chat.getChatId(),
-                    chat.getObjectId(),
-                    chat.getLocalActorType(),
-                    chat.getLocalActorPublicKey(),
-                    chat.getRemoteActorType(),
-                    chat.getRemoteActorPublicKey(),
-                    chat.getChatName(),
-                    ChatMessageStatus.READ_CHAT,
-                    MessageStatus.SEND,
-                    timeStamp,
-                    message.getMessageId(),
-                    message.getMessage(),
-                    DistributionStatus.OUTGOING_MSG,
-                    chat.getTypeChat(),
-                    chat.getGroupMembersAssociated()
-            );
+        chatMetadata = new ChatMetadataRecord(
+                chat.getChatId(),
+                chat.getObjectId(),
+                chat.getLocalActorType(),
+                chat.getLocalActorPublicKey(),
+                chat.getRemoteActorType(),
+                chat.getRemoteActorPublicKey(),
+                chat.getChatName(),
+                ChatMessageStatus.READ_CHAT,
+                MessageStatus.SEND,
+                timeStamp,
+                message.getMessageId(),
+                message.getMessage(),
+                DistributionStatus.OUTGOING_MSG,
+                chat.getTypeChat(),
+                chat.getGroupMembersAssociated()
+        );
         return chatMetadata;
     }
 }

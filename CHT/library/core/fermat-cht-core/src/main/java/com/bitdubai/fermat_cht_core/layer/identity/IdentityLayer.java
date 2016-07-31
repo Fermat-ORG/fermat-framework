@@ -11,7 +11,10 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
  */
 public class IdentityLayer extends AbstractLayer {
 
-    public IdentityLayer(){super(Layers.IDENTITY);}
+    public IdentityLayer() {
+        super(Layers.IDENTITY);
+    }
+
     @Override
     public void start() throws CantStartLayerException {
         try {

@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cer_plugin.layer.provider.lanacion.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -9,12 +8,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cer_plugin.layer.provider.lanacion.developer.bitdubai.version_1.exceptions.CantInitializeLaNacionProviderDatabaseException;
 
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_cer_plugin.layer.provider.lanacion.developer.bitdubai.version_1.database.LaNacionProviderDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Alejandro Bicelis - (abicelis@gmail.com) on 08/12/15.
  *
  * @version 1.0
@@ -143,7 +141,6 @@ public class LaNacionProviderDeveloperDatabaseFactory {//implements DealsWithPlu
          */
         DeveloperDatabaseTable queryHistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(LaNacionProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, queryHistoryColumns);
         tables.add(queryHistoryTable);
-
 
 
         return tables;

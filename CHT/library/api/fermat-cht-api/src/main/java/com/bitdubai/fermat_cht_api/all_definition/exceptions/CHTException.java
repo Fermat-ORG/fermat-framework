@@ -15,7 +15,7 @@ public class CHTException extends FermatException {
     }
 
     public CHTException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     public CHTException(final String message, final Exception cause) {

@@ -86,18 +86,6 @@ public final class CryptoBrokerConnectionInformation {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("CryptoBrokerConnectionInformation{")
-                .append("connectionId=").append(connectionId)
-                .append(", senderPublicKey='").append(senderPublicKey)
-                .append('\'')
-                .append(", senderActorType=").append(senderActorType)
-                .append(", senderAlias='").append(senderAlias)
-                .append('\'')
-                .append(", senderImage=").append(Arrays.toString(senderImage))
-                .append(", destinationPublicKey='").append(destinationPublicKey)
-                .append('\'')
-                .append(", sendingTime=").append(sendingTime)
-                .append('}').toString();
+        return "CryptoBrokerConnectionInformation{" + "connectionId=" + connectionId + ", senderPublicKey='" + senderPublicKey + '\'' + ", senderActorType=" + senderActorType + ", senderAlias='" + senderAlias + '\'' + ", senderImage=" + Arrays.toString(senderImage) + ", destinationPublicKey='" + destinationPublicKey + '\'' + ", sendingTime=" + sendingTime + '}';
     }
 }

@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.crypto_customer_community.common.holders;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -43,8 +44,15 @@ public class ConnectionsViewHolder extends FermatViewHolder {
     }
 
     public void bind(CryptoCustomerCommunityInformation data) {
+
         customerName.setText(data.getAlias());
-        customerImage.setImageDrawable(getImgDrawable(data.getImage()));
+        if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("OF"))
+            customerName.setTextColor(Color.RED);
+        else if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
+            customerName.setTextColor(Color.parseColor("#3CD84E"));//VERDE NO BRILLANTE
+        else if (data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
+            customerName.setTextColor(Color.parseColor("#4d4d4d"));//BLACK);//res.getColor(R.color.color_black_light));
+
         if (data.getCountry().equals("null") || data.getCountry().equals("") || data.getCountry().equals("country"))
             countryAddress = "--";
         else countryAddress = data.getCountry();
@@ -52,6 +60,7 @@ public class ConnectionsViewHolder extends FermatViewHolder {
             placeAddress = "--";
         else placeAddress = data.getPlace();
         customerLocation.setText(String.format("%s / %s", placeAddress, countryAddress));
+        customerImage.setImageDrawable(getImgDrawable(data.getImage()));
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {

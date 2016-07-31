@@ -96,11 +96,7 @@ public class CustomerBrokerUpdateServiceEventHandler implements CBPService {
 
     public void incomingNegotiationTransactionEventHandler(IncomingNegotiationTransactionEvent event) throws CantSaveEventException {
 
-        System.out.print(new StringBuilder()
-                .append("\n**** 16) MOCK CUSTOMER BROKER UPDATE - EVENT HANDLER - SAVE UPDATE EVENT  ")
-                .append("\n - EventType = ").append(event.getEventType().getCode())
-                .append("\n - Source = ").append(event.getSource().getCode())
-                .append("****\n").toString());
+        System.out.print("\n**** 16) MOCK CUSTOMER BROKER UPDATE - EVENT HANDLER - SAVE UPDATE EVENT  " + "\n - EventType = " + event.getEventType().getCode() + "\n - Source = " + event.getSource().getCode() + "****\n");
 
         this.customerBrokerUpdateNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
 

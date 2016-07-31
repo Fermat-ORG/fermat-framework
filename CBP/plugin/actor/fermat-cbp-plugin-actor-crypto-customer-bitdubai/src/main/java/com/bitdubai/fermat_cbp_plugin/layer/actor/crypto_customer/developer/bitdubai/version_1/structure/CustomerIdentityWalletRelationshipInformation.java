@@ -65,13 +65,6 @@ public class CustomerIdentityWalletRelationshipInformation implements CustomerId
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("CustomerIdentityWalletRelationshipInformation{")
-                .append("relationshipId=").append(relationshipId)
-                .append(", identity='").append(identity)
-                .append('\'')
-                .append(", wallet='").append(wallet)
-                .append('\'')
-                .append('}').toString();
+        return "CustomerIdentityWalletRelationshipInformation{" + "relationshipId=" + relationshipId + ", identity='" + identity + '\'' + ", wallet='" + wallet + '\'' + '}';
     }
 }

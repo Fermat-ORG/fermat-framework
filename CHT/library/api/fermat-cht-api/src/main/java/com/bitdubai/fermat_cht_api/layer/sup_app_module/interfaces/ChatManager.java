@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -35,7 +34,6 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantGetChtActorSearchResult;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantRequestActorConnectionException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 
 import java.io.Serializable;
 import java.util.List;
@@ -46,7 +44,7 @@ import java.util.UUID;
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
 public interface ChatManager extends ModuleManager, Serializable, ModuleSettingsImpl<ChatPreferenceSettings> {
-//public interface ChatManager extends ModuleManager, Serializable, ModuleSettingsImpl<ChatPreferenceSettings> {
+    //public interface ChatManager extends ModuleManager, Serializable, ModuleSettingsImpl<ChatPreferenceSettings> {
     //TODO: Implementar los metodos que necesiten manejar el module
     //Documentar
     List<Chat> getChats() throws CantGetChatException;
@@ -85,18 +83,19 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
 
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 
-    boolean isIdentityDevice() throws  CantListChatIdentityException;
+    boolean isIdentityDevice() throws CantListChatIdentityException;
 
     List<ChatIdentity> getIdentityChatUsersFromCurrentDeviceUser() throws CantListChatIdentityException;
 
     ChatActorCommunitySearch getChatActorSearch();
 
     List<ChatActorCommunityInformation> listAllConnectedChatActor(final ChatActorCommunitySelectableIdentity selectedIdentity,
-                                                                  final int                                     max             ,
-                                                                  final int                                     offset          ) throws CantListChatActorException;
+                                                                  final int max,
+                                                                  final int offset) throws CantListChatActorException;
 
     /**
      * This method sends the message through the Chat Network Service
+     *
      * @param createdMessage
      * @throws CantSendChatMessageException
      */
@@ -104,6 +103,7 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
 
     /**
      * This method sends the message through the Chat Network Service for view writingStatus
+     *
      * @param chatId
      * @throws CantSendChatMessageException
      */
@@ -113,6 +113,7 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
 
     /**
      * This method check through the Chat Network Service for view onlineStatus
+     *
      * @param contactPublicKey,
      * @throws CantSendChatMessageException
      */
@@ -126,7 +127,7 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
 
     void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException;
 
-    List<GroupMember> getGroupMembersByGroupId(UUID groupId)throws CantListGroupMemberException;
+    List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException;
 
     void clearChatMessageByChatId(UUID chatId) throws CantDeleteMessageException, CantGetMessageException;
 
@@ -143,8 +144,10 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
     SettingsManager<ChatPreferenceSettings> getSettingsManager();
 
     List<ChatActorCommunityInformation> listWorldChatActor(ChatActorCommunitySelectableIdentity selectableIdentity, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException;
+
     void requestConnectionToChatActor(final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity selectedIdentity,
-                                 final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation chatActorToContact) throws CantRequestActorConnectionException, ActorChatTypeNotSupportedException, ActorChatConnectionAlreadyRequestesException;
+                                      final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation chatActorToContact) throws CantRequestActorConnectionException, ActorChatTypeNotSupportedException, ActorChatConnectionAlreadyRequestesException;
+
     public ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException;
 
 }

@@ -25,7 +25,7 @@ public class RequestConnectionTest {
     public void requestConnection() throws CantRequestActorConnectionException, UnsupportedActorTypeException, ConnectionAlreadyRequestedException {
         ActorConnectionManager actorConnectionManager = mock(ActorConnectionManager.class);
 
-        doCallRealMethod().when(actorConnectionManager).requestConnection(Mockito.any(ActorIdentityInformation.class),Mockito.any(ActorIdentityInformation.class));
+        doCallRealMethod().when(actorConnectionManager).requestConnection(Mockito.any(ActorIdentityInformation.class), Mockito.any(ActorIdentityInformation.class));
     }
 
 }

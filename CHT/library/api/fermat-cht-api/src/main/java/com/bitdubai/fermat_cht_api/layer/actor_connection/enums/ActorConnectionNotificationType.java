@@ -6,10 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 05/04/16.
  */
-public enum ActorConnectionNotificationType implements FermatEnum{
-    ACTOR_CONNECTED             ("CTD"),
-    CONNECTION_REQUEST_RECEIVED ("CRR"),
-    ;
+public enum ActorConnectionNotificationType implements FermatEnum {
+    ACTOR_CONNECTED("CTD"),
+    CONNECTION_REQUEST_RECEIVED("CRR"),;
 
 
     private final String code;
@@ -22,8 +21,10 @@ public enum ActorConnectionNotificationType implements FermatEnum{
 
         switch (code) {
 
-            case "CTD": return ACTOR_CONNECTED            ;
-            case "CRR": return CONNECTION_REQUEST_RECEIVED;
+            case "CTD":
+                return ACTOR_CONNECTED;
+            case "CRR":
+                return CONNECTION_REQUEST_RECEIVED;
 
             default:
                 throw new InvalidParameterException(

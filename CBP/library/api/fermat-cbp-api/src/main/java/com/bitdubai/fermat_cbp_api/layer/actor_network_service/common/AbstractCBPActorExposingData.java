@@ -97,17 +97,7 @@ public abstract class AbstractCBPActorExposingData {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("AbstractCBPActorExposingData{")
-                .append("publicKey='").append(publicKey)
-                .append('\'')
-                .append(", alias='").append(alias)
-                .append('\'')
-                .append(", image=").append(Arrays.toString(image))
-                .append(", location=").append(location)
-                .append(", refreshInterval=").append(refreshInterval)
-                .append(", accuracy=").append(accuracy)
-                .append('}').toString();
+        return "AbstractCBPActorExposingData{" + "publicKey='" + publicKey + '\'' + ", alias='" + alias + '\'' + ", image=" + Arrays.toString(image) + ", location=" + location + ", refreshInterval=" + refreshInterval + ", accuracy=" + accuracy + '}';
     }
 
 }
