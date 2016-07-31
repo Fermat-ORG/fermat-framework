@@ -224,8 +224,9 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                 public void onClick(View view) {
                     try {
                         //check amount + fee less than balance
+
                         long availableBalance = cryptoWallet.getBalance(com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(), blockchainNetworkType);
-                        if(data.getAmount() < availableBalance)
+                        if((data.getAmount() + BitcoinFee.valueOf(feeLevel).getFee()) < availableBalance)
                         {
                             cryptoWallet.approveRequest(data.getRequestId()
                                     , referenceWalletSession.getModuleManager().getSelectedActorIdentity().getPublicKey());

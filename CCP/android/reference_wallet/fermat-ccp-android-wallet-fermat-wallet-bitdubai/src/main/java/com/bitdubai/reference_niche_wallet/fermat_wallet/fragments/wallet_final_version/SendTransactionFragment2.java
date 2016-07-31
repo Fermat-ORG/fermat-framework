@@ -374,11 +374,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
     private void setUpHeader(LayoutInflater inflater)  throws CantGetBalanceException {
         final RelativeLayout container_header_balance = getToolbarHeader();
-        try{
-            container_header_balance.removeAllViews();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
         final int sdk = android.os.Build.VERSION.SDK_INT;
         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
             container_header_balance.setBackgroundDrawable( getResources().getDrawable(R.drawable.background_white_gradient) );
@@ -517,7 +513,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if(id == 2){
+            if(id == 1){
                 changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
                 return true;
             }else{
