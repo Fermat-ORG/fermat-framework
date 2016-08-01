@@ -131,21 +131,6 @@ public class ReviewNegotiationNotificationEvent implements FermatEvent {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("ReviewNegotiationNotificationEvent{")
-                .append("eventType=").append(eventType)
-                .append(", eventSource=").append(eventSource)
-                .append(", alertTitle='").append(alertTitle)
-                .append('\'')
-                .append(", textTitle='").append(textTitle)
-                .append('\'')
-                .append(", textBody='").append(textBody)
-                .append('\'')
-                .append(", image=").append(Arrays.toString(image))
-                .append(", screen=").append(screen)
-                .append(", localPublicKey='").append(localPublicKey)
-                .append('\'')
-                .append(", notificationType='").append(notificationType)
-                .append('\'').append('}').toString();
+        return "ReviewNegotiationNotificationEvent{" + "eventType=" + eventType + ", eventSource=" + eventSource + ", alertTitle='" + alertTitle + '\'' + ", textTitle='" + textTitle + '\'' + ", textBody='" + textBody + '\'' + ", image=" + Arrays.toString(image) + ", screen=" + screen + ", localPublicKey='" + localPublicKey + '\'' + ", notificationType='" + notificationType + '\'' + '}';
     }
 }

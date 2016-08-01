@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,7 +13,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:src="@drawable/ccc_no_users"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/search_empty_view"
@@ -28,17 +27,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center_horizontal"
-            android:text="User search don't\nhave results"
+            android:text="@string/ccc_no_results"
             android:textColor="#000000"
             android:textSize="16sp"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 
@@ -52,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible"
-            tools:listitem="@layout/ccc_fragment_browser_tab_list_item"/>
+            tools:listitem="@layout/ccc_fragment_browser_tab_list_item" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -90,7 +89,7 @@
             android:maxLines="1"
             android:textColor="@color/color_white"
             android:textSize="15sp"
-            tools:text="Distrito Capital"/>
+            tools:text="Distrito Capital" />
 
         <ImageView
             android:id="@+id/ccc_location_filter_footer_bar_close_button"
@@ -99,7 +98,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ccc_close_icon_white"/>
+            android:src="@drawable/ccc_close_icon_white" />
     </RelativeLayout>
 
 </FrameLayout>

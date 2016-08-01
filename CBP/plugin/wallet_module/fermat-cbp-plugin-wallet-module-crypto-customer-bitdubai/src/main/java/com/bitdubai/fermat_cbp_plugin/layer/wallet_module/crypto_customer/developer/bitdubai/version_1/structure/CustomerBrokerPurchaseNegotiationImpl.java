@@ -212,11 +212,14 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     }
 
     public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo) {
-        dataHasChanged = dataHasChanged || !negotiationInfo.getCancelReason().equals(cancelReason);
-        cancelReason = negotiationInfo.getCancelReason();
 
-        dataHasChanged = dataHasChanged || !negotiationInfo.getMemo().equals(memo);
-        memo = negotiationInfo.getMemo();
+        final String changedCancelReason = negotiationInfo.getCancelReason();
+        dataHasChanged = (changedCancelReason != null && this.cancelReason != null) && (dataHasChanged || !changedCancelReason.equals(this.cancelReason));
+        this.cancelReason = changedCancelReason;
+
+        final String changedMemo = negotiationInfo.getMemo();
+        dataHasChanged = (changedMemo != null && this.memo != null) && (dataHasChanged || !changedMemo.equals(this.memo));
+        this.memo = changedMemo;
 
         Collection<ClauseInformation> values = negotiationInfo.getClauses().values();
         dataHasChanged = dataHasChanged || (clauses.size() != values.size());

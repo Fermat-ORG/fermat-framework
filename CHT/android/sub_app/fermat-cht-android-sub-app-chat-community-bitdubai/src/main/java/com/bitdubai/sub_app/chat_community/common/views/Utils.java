@@ -77,7 +77,7 @@ public class Utils {
         return output;
     }
 
-    public static Bitmap decodeFile(Context context,int resId) {
+    public static Bitmap decodeFile(Context context, int resId) {
 // decode image size
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
@@ -86,8 +86,7 @@ public class Utils {
         final int REQUIRED_SIZE = 50;
         int width_tmp = o.outWidth, height_tmp = o.outHeight;
         int scale = 1;
-        while (true)
-        {
+        while (true) {
             if (width_tmp / 2 < REQUIRED_SIZE
                     || height_tmp / 2 < REQUIRED_SIZE)
                 break;
@@ -101,12 +100,12 @@ public class Utils {
         return BitmapFactory.decodeResource(context.getResources(), resId, o2);
     }
 
-    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int width) {
         // TODO Auto-generated method stub
         int targetWidth = width;
         int targetHeight = width;
         Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
-                targetHeight,Bitmap.Config.ARGB_8888);
+                targetHeight, Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(targetBitmap);
         Path path = new Path();

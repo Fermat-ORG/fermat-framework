@@ -148,19 +148,6 @@ public class RequestMessage extends NetworkServiceMessage {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("RequestMessage{")
-                .append("requestId=").append(requestId)
-                .append(", senderPublicKey='").append(senderPublicKey)
-                .append('\'')
-                .append(", senderActorType=").append(senderActorType)
-                .append(", senderAlias='").append(senderAlias)
-                .append('\'')
-                .append(", senderImage=").append(senderImage != null)
-                .append(", destinationPublicKey='").append(destinationPublicKey)
-                .append('\'')
-                .append(", requestAction=").append(requestAction)
-                .append(", sentTime=").append(sentTime)
-                .append('}').toString();
+        return "RequestMessage{" + "requestId=" + requestId + ", senderPublicKey='" + senderPublicKey + '\'' + ", senderActorType=" + senderActorType + ", senderAlias='" + senderAlias + '\'' + ", senderImage=" + (senderImage != null) + ", destinationPublicKey='" + destinationPublicKey + '\'' + ", requestAction=" + requestAction + ", sentTime=" + sentTime + '}';
     }
 }

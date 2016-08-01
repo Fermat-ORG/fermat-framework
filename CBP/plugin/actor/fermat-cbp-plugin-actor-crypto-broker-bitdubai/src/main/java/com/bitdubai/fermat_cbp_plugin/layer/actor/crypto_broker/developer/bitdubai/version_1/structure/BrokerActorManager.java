@@ -42,7 +42,7 @@ public class BrokerActorManager implements CryptoBrokerActorExtraDataManager {
         } catch (CantCreateNewBrokerIdentityWalletRelationshipException e) {
             this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateNewBrokerIdentityWalletRelationshipException(e.getMessage(), e,
-                    new StringBuilder().append("identity.getPublicKey()= ").append(identity.getPublicKey()).append("walletPublicKey= ").append(walletPublicKey).toString()
+                    "identity.getPublicKey()= " + identity.getPublicKey() + "walletPublicKey= " + walletPublicKey
                     ,
                     "Invalid Data"
             );
@@ -55,7 +55,7 @@ public class BrokerActorManager implements CryptoBrokerActorExtraDataManager {
             this.dao.clearBrokerIdentityWalletRelationship(walletPublicKey);
         } catch (CantClearBrokerIdentityWalletRelationshipException e) {
             this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantClearBrokerIdentityWalletRelationshipException(e.getMessage(), e, new StringBuilder().append("walletPublicKey= ").append(walletPublicKey).toString(), "");
+            throw new CantClearBrokerIdentityWalletRelationshipException(e.getMessage(), e, "walletPublicKey= " + walletPublicKey, "");
         }
     }
 

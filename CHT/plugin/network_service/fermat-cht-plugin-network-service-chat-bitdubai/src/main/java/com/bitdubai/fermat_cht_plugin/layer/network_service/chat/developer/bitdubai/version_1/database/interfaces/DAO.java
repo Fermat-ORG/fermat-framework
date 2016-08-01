@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.interfaces;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
@@ -32,9 +32,8 @@ public interface DAO {
     ChatMetadataRecord getNotificationById(final UUID transactionID) throws CantGetNotificationException, NotificationNotFoundException, CantReadRecordDataBaseException;
 
 
-
     void changeChatMessageState(final String senderPublicKey,
-                                       final ChatMessageStatus chatMessageStatus) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException, CantReadRecordDataBaseException;
+                                final ChatMessageStatus chatMessageStatus) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException, CantReadRecordDataBaseException;
 
     void changeChatMessageState(final String senderPublicKey,
                                 final MessageStatus messageStatus) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException, CantReadRecordDataBaseException;
@@ -43,7 +42,7 @@ public interface DAO {
                                  final ChatProtocolState protocolState) throws CHTException, CantGetNotificationException, NotificationNotFoundException;
 
 
-  List<ChatMetadataRecord> listRequestsByChatProtocolStateAndDistributionStatus(final ChatProtocolState chatProtocolState, final DistributionStatus distributionStatus) throws CantReadRecordDataBaseException, CantLoadTableToMemoryException;
+    List<ChatMetadataRecord> listRequestsByChatProtocolStateAndDistributionStatus(final ChatProtocolState chatProtocolState, final DistributionStatus distributionStatus) throws CantReadRecordDataBaseException, CantLoadTableToMemoryException;
 
 
     List<ChatMetadata> listUnreadNotifications() throws CHTException;

@@ -10,9 +10,9 @@ public enum TypeChat implements FermatEnum {
     /**
      * Definition types
      */
-    INDIVIDUAL     ("INDI"),
-    REBROADCASTING ("REBR"),
-    GROUP          ("GROU");
+    INDIVIDUAL("INDI"),
+    REBROADCASTING("REBR"),
+    GROUP("GROU");
 
     /**
      * Represent the code of the message status
@@ -27,6 +27,7 @@ public enum TypeChat implements FermatEnum {
     TypeChat(String code) {
         this.code = code;
     }
+
     /**
      * Throw the method <code>getCode</code> you can get the code of the specific element of the enum.
      *
@@ -34,7 +35,7 @@ public enum TypeChat implements FermatEnum {
      */
     @Override
     public String getCode() {
-        return this.code ;
+        return this.code;
     }
 
     /**

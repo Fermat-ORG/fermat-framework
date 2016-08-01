@@ -30,16 +30,16 @@ public enum TransactionTransmissionStates {
             if (transactionTransmissionStates.getCode().equals(code))
                 return transactionTransmissionStates;
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This code is not valid for the TransactionTransmissionStates enum.");
+        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code is not valid for the TransactionTransmissionStates enum.");
     }
 
     public static TransactionTransmissionStates getByTransactionTransmissionStates(TransactionTransmissionStates transactionTransmissionStates) throws InvalidParameterException {
 
         for (TransactionTransmissionStates states : TransactionTransmissionStates.values()) {
-            if (states.getCode().equals(transactionTransmissionStates))
+            if (states.getCode().equals(transactionTransmissionStates.getCode()))
                 return transactionTransmissionStates;
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("cryptoTransmissionStates: ").append(transactionTransmissionStates).toString(), "This cryptoTransmissionStates is not valid for the transactionTransmissionStates enum.");
+        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "cryptoTransmissionStates: " + transactionTransmissionStates, "This cryptoTransmissionStates is not valid for the transactionTransmissionStates enum.");
     }
 
     public String getCode() {

@@ -30,7 +30,7 @@ public class CantStartServiceException extends CHTException {
      * @param possibleReason
      */
     public CantStartServiceException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

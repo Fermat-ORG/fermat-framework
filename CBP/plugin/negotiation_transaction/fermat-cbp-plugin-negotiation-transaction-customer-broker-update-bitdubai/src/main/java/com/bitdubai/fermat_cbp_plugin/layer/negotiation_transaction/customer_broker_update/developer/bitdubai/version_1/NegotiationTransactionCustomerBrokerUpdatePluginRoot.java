@@ -164,7 +164,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot extends Abstra
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.print(new StringBuilder().append("-----------------------\n CUSTOMER BROKER UPDATE: SUCCESSFUL START ").append(pluginId.toString()).append(" \n-----------------------\n").toString());
+            System.out.print("-----------------------\n CUSTOMER BROKER UPDATE: SUCCESSFUL START " + pluginId.toString() + " \n-----------------------\n");
 
         } catch (CantInitializeCustomerBrokerUpdateNegotiationTransactionDatabaseException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);

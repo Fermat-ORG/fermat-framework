@@ -334,7 +334,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public void onSentMessage(NetworkServiceMessage fermatMessage) {
-        System.out.println(new StringBuilder().append("Transaction Transmission just sent :").append(fermatMessage.getId()).toString());
+        System.out.println("Transaction Transmission just sent :" + fermatMessage.getId());
         try {
             getNetworkServiceConnectionManager()
                     .getOutgoingMessagesDao().markAsDelivered(fermatMessage);

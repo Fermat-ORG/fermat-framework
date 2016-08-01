@@ -25,5 +25,34 @@
     <string name="cbi_accuracy_km">Accuracy (Km)</string>
     <string name="cbi_accuracy_hint">0 - 1000</string>
     <string name="cbi_frequency">Frequency</string>
+    <string name="cbi_system_error">Oops! recovering from system error</string>
+
+    <string name="cbi_low_tag">LOW</string>
+    <string name="cbi_visible">Visible</string>
+    <string name="cbi_saxofon">Saxofon</string>
+    <string name="cbi_hint">Enter name or alias</string>
+    <string name="cbi_username">User Name</string>
+    <string name="cbi_name">Name</string>
+    <string name="cbi_status">Status</string>
+    <string name="cbi_visibility">Visibility</string>
+    <string name="cbi_rotate_image">ROTATE IMAGE</string>
+    <string name="cbi_dialog_cam_gallery_title">PROFILE PICTURE</string>
+    <string name="cbi_dialog_cg_take_picture">Take a picture</string>
+    <string name="cbi_dialog_cg_take_gallery">Choose from gallery</string>
+
+    <string name="cbi_error">An error occurred</string>
+    <string name="cbi_turnon_gps">Please, turn on your GPS</string>
+    <string name="cbi_error_dialog">Error in dialog</string>
+    <string name="cbi_error_image">Error loading image</string>
+    <string name="cbi_enter_name_alias">Please enter a name or alias</string>
+    <string name="cbi_enter_name">Please enter a name</string>
+    <string name="cbi_enter_image">You must enter an image</string>
+    <string name="cbi_identity_created">Crypto Broker Identity Created.</string>
+    <string name="cbi_identity_updated">Crypto Broker Identity Updated.</string>
+    <string name="cbi_empty_accuracy">Accuracy is empty, please add a value</string>
+    <string name="cbi_error_create">An error occurred trying to saving the Crypto Broker Identity</string>
+
+
+
 
 </resources>

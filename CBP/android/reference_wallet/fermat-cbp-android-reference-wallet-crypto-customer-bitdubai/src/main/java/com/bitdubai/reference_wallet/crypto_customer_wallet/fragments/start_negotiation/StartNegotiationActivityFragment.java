@@ -600,7 +600,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
             for (Map.Entry<ClauseType, ClauseInformation> clauseInformation : mapClauses.entrySet()) {
 
                 information = clauseInformation.getValue();
-                clauses = new StringBuilder().append(information.getType().getCode()).append(": ").append(information.getValue()).append(", ").append(clauses).toString();
+                clauses = information.getType().getCode() + ": " + information.getValue() + ", " + clauses;
 
             }
 

@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ExposureLevel;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListIdentitiesException;
@@ -29,14 +28,10 @@ import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.ChatIdentityPluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database.ChatIdentityDatabaseDao;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.util.List;
 import java.util.UUID;
@@ -244,7 +239,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
 
         for (int f = 0; f < 100; f++) {
 
-            final ChatExposingData chatExposingData = new ChatExposingData(UUID.randomUUID().toString(), chatExposingDataSingle.getAlias()+ " " + (f + 1), chatExposingDataSingle.getImage(), "", "", "",
+            final ChatExposingData chatExposingData = new ChatExposingData(UUID.randomUUID().toString(), new StringBuilder().append(chatExposingDataSingle.getAlias()).append(" ").append(f + 1).toString(), chatExposingDataSingle.getImage(), "", "", "",
                     "", null, refreshInterval, 0,
                     ProfileStatus.UNKNOWN);
 

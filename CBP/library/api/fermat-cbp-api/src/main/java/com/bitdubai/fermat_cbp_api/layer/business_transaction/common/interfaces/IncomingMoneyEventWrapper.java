@@ -113,20 +113,6 @@ public class IncomingMoneyEventWrapper {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("IncomingMoneyEventWrapper{")
-                .append("eventId='").append(eventId)
-                .append('\'')
-                .append(", receiverPublicKey='").append(receiverPublicKey)
-                .append('\'')
-                .append(", cryptoAmount=").append(cryptoAmount)
-                .append(", cryptoCurrency=").append(cryptoCurrency)
-                .append(", walletPublicKey='").append(walletPublicKey)
-                .append('\'')
-                .append(", senderPublicKey='").append(senderPublicKey)
-                .append('\'')
-                .append(", transactionHash='").append(transactionHash)
-                .append('\'')
-                .append('}').toString();
+        return "IncomingMoneyEventWrapper{" + "eventId='" + eventId + '\'' + ", receiverPublicKey='" + receiverPublicKey + '\'' + ", cryptoAmount=" + cryptoAmount + ", cryptoCurrency=" + cryptoCurrency + ", walletPublicKey='" + walletPublicKey + '\'' + ", senderPublicKey='" + senderPublicKey + '\'' + ", transactionHash='" + transactionHash + '\'' + '}';
     }
 }

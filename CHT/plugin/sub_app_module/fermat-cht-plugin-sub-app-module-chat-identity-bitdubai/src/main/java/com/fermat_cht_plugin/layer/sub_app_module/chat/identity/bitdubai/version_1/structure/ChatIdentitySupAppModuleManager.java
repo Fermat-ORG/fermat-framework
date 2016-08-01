@@ -1,5 +1,6 @@
 package com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -8,7 +9,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -28,18 +28,19 @@ import java.util.UUID;
 public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdentityPreferenceSettings> implements ChatIdentityModuleManager, Serializable {
 
     private ChatIdentityManager chatIdentityManager;
-    private final LocationManager locationManager                       ;
+    private final LocationManager locationManager;
 
     public ChatIdentitySupAppModuleManager(ChatIdentityManager chatIdentityManager,
                                            PluginFileSystem pluginFileSystem,
                                            UUID pluginId,
-                                           LocationManager locationManager){
+                                           LocationManager locationManager) {
 
         super(pluginFileSystem, pluginId);
         this.chatIdentityManager = chatIdentityManager;
         this.locationManager = locationManager;
 
     }
+
     /**
      * The method <code>getIdentityAssetUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
      *

@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -10,8 +12,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -68,16 +68,16 @@ public class ChatIdentityDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, ChatIdentityDatabaseConstants.CHAT_TABLE_NAME);
 
-            table.addColumn(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME,             DatabaseDataType.STRING, 255, Boolean.TRUE);
-            table.addColumn(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME,                  DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
+            table.addColumn(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatIdentityDatabaseConstants.CHAT_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(ChatIdentityDatabaseConstants.CHAT_EXPOSURE_LEVEL_COLUMN_NAME,         DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME,                DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME,                  DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME,                   DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME,       DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME,               DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME,              DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(ChatIdentityDatabaseConstants.CHAT_EXPOSURE_LEVEL_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             table.addIndex(ChatIdentityDatabaseConstants.CHAT_FIRST_KEY_COLUMN);
 

@@ -52,4 +52,20 @@ public final class NegotiationClauseHelper {
 
         return null;
     }
+
+    /**
+     * Get the value of a negotiation clause
+     *
+     * @param negotiationClauses the list of clauses
+     * @param clauseType         the clause to find
+     * @return the clause value or <code>null</code>
+     */
+    public static Clause getNegotiationClause(Collection<Clause> negotiationClauses, ClauseType clauseType) {
+
+        for (Clause clause : negotiationClauses)
+            if (clause.getType().getCode().equals(clauseType.getCode()))
+                return clause;
+
+        return null;
+    }
 }

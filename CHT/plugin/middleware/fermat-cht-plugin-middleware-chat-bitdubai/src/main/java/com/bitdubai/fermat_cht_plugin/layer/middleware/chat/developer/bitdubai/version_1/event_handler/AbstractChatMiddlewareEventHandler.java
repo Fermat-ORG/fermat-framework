@@ -11,9 +11,9 @@ public abstract class AbstractChatMiddlewareEventHandler implements FermatEventH
     public ChatMiddlewareRecorderService chatMiddlewareRecorderService;
 
     public void setChatMiddlewareRecorderService(ChatMiddlewareRecorderService chatMiddlewareRecorderService) throws CantSetObjectException {
-        if(chatMiddlewareRecorderService==null){
+        if (chatMiddlewareRecorderService == null) {
             throw new CantSetObjectException("chatMiddlewareRecorderService is null");
         }
-        this.chatMiddlewareRecorderService =chatMiddlewareRecorderService;
+        this.chatMiddlewareRecorderService = chatMiddlewareRecorderService;
     }
 }

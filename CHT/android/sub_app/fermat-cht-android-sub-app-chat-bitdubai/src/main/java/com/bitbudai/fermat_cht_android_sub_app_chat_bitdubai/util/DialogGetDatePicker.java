@@ -21,6 +21,7 @@ import java.util.Date;
  */
 public class DialogGetDatePicker extends FermatDialog {
     String formatedDate;
+
     public DialogGetDatePicker(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources) {
         super(activity, referenceAppFermatSession, resources);
     }
@@ -30,9 +31,9 @@ public class DialogGetDatePicker extends FermatDialog {
         super.onCreate(savedInstanceState);
         Button btnselect = (Button) findViewById(R.id.buttondialog);
         DatePicker date = (DatePicker) findViewById(R.id.ChtdatePicker);
-        int   day  = date.getDayOfMonth();
-        int   month= date.getMonth();
-        int   year = date.getYear();
+        int day = date.getDayOfMonth();
+        int month = date.getMonth();
+        int year = date.getYear();
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         formatedDate = sdf.format(new Date(year, month, day));
@@ -45,11 +46,18 @@ public class DialogGetDatePicker extends FermatDialog {
         });
     }
 
-    public String getDatePick(){ return formatedDate; }
-    public Boolean isGetDatePick(){if(getDatePick() != null && getDatePick() != "") return true; else return false; }
+    public String getDatePick() {
+        return formatedDate;
+    }
+
+    public Boolean isGetDatePick() {
+        if (getDatePick() != null && getDatePick() != "") return true;
+        else return false;
+    }
+
     @Override
     protected int setLayoutId() {
-       return R.layout.cht_dialog_date_picker;
+        return R.layout.cht_dialog_date_picker;
     }
 
     @Override

@@ -1,6 +1,10 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+
+import java.util.HashMap;
+
 //import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 //import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 //import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
@@ -27,9 +31,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 //import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 //import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 //import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-
-import java.util.HashMap;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 27/01/16.
@@ -42,7 +43,7 @@ public class ChatMiddlewareContactFactory {
      * This object contains the compatible or implemented platforms in this version.
      * To make the code more readable, please keep the compatible platforms. sorted alphabetically.
      */
-    Platforms[] compatiblePlatforms={
+    Platforms[] compatiblePlatforms = {
             Platforms.CRYPTO_CURRENCY_PLATFORM
             //Platforms.DIGITAL_ASSET_PLATFORM
             //Platforms.CRYPTO_BROKER_PLATFORM

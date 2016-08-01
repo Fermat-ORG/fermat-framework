@@ -5,7 +5,7 @@
     <string name="accept">Aceptar</string>
     <string name="action_settings">Configuración</string>
     <string name="action_start_negotiation">Iniciar Negociación</string>
-    <string name="add_a_note_button">AGREGAR NOTA</string>
+    <string name="ccw_add_a_note_button">AGREGAR NOTA</string>
     <string name="add_cancel_negotiation_button">CANCELAR NEGOCIACIÓN</string>
     <string name="amount">Cantidad</string>
     <string name="broker_bank_account_title">Cuentas Bancarias del Vendedor</string>

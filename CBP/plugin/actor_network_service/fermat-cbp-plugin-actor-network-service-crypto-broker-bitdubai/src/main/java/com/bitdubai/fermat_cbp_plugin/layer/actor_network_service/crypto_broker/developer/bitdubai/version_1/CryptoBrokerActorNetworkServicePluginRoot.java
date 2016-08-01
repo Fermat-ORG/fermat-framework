@@ -115,7 +115,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.fromJson(jsonMessage);
 
-            System.out.println(new StringBuilder().append("********************* Message Sent Type:  ").append(networkServiceMessage.getMessageType()).toString());
+            System.out.println("********************* Message Sent Type:  " + networkServiceMessage.getMessageType());
 
             switch (networkServiceMessage.getMessageType()) {
 
@@ -142,7 +142,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
                 default:
                     throw new CantHandleNewMessagesException(
-                            new StringBuilder().append("message type: ").append(networkServiceMessage.getMessageType().name()).toString(),
+                            "message type: " + networkServiceMessage.getMessageType().name(),
                             "Message type not handled."
                     );
             }
@@ -156,21 +156,21 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
     @Override
     public void onNewMessageReceived(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage fermatMessage) {
 
-        System.out.println(new StringBuilder().append("****** CRYPTO BROKER ACTOR NETWORK SERVICE NEW MESSAGE RECEIVED: ").append(fermatMessage).toString());
+        System.out.println("****** CRYPTO BROKER ACTOR NETWORK SERVICE NEW MESSAGE RECEIVED: " + fermatMessage);
         try {
 
             String jsonMessage = fermatMessage.getContent();
 
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.fromJson(jsonMessage);
 
-            System.out.println(new StringBuilder().append("********************* Message Type:  ").append(networkServiceMessage.getMessageType()).toString());
+            System.out.println("********************* Message Type:  " + networkServiceMessage.getMessageType());
 
             switch (networkServiceMessage.getMessageType()) {
 
                 case CONNECTION_INFORMATION:
                     InformationMessage informationMessage = InformationMessage.fromJson(jsonMessage);
 
-                    System.out.println(new StringBuilder().append("********************* Content:  ").append(informationMessage).toString());
+                    System.out.println("********************* Content:  " + informationMessage);
 
                     receiveConnectionInformation(informationMessage);
 
@@ -181,7 +181,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
                     RequestMessage requestMessage = RequestMessage.fromJson(jsonMessage);
 
-                    System.out.println(new StringBuilder().append("********************* Content:  ").append(requestMessage).toString());
+                    System.out.println("********************* Content:  " + requestMessage);
 
                     receiveRequest(requestMessage);
 
@@ -191,7 +191,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
                     CryptoBrokerActorNetworkServiceQuotesRequest quotesRequestMessage = CryptoBrokerActorNetworkServiceQuotesRequest.fromJson(jsonMessage);
 
-                    System.out.println(new StringBuilder().append("********************* Content:  ").append(quotesRequestMessage).toString());
+                    System.out.println("********************* Content:  " + quotesRequestMessage);
 
                     receiveQuotesRequest(quotesRequestMessage);
 
@@ -199,7 +199,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
                 default:
                     throw new CantHandleNewMessagesException(
-                            new StringBuilder().append("message type: ").append(networkServiceMessage.getMessageType().name()).toString(),
+                            "message type: " + networkServiceMessage.getMessageType().name(),
                             "Message type not handled."
                     );
             }
@@ -307,7 +307,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
                 default:
                     throw new CantHandleNewMessagesException(
-                            new StringBuilder().append("action not supported: ").append(informationMessage.getAction()).toString(),
+                            "action not supported: " + informationMessage.getAction(),
                             "action not handled."
                     );
             }

@@ -168,7 +168,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
                 list.add(getIdentityFromRecord(record));
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListCryptoCustomerIdentitiesException(e.getMessage(), e, "Crypto Customer Identity", new StringBuilder().append("Cant load ").append(CRYPTO_CUSTOMER_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantListCryptoCustomerIdentitiesException(e.getMessage(), e, "Crypto Customer Identity", "Cant load " + CRYPTO_CUSTOMER_TABLE_NAME + " table in memory.");
         } catch (CantGetCryptoCustomerIdentityPrivateKeyException e) {
             throw new CantListCryptoCustomerIdentitiesException(e.getMessage(), e, "Crypto Customer Identity", "Can't get private key.");
         } catch (Exception e) {
@@ -196,7 +196,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
                 table.updateRecord(record);
 
             } else
-                throw new IdentityNotFoundException(new StringBuilder().append("publicKey: ").append(publicKey).toString(), "Cannot find an Identity with that publicKey.");
+                throw new IdentityNotFoundException("publicKey: " + publicKey, "Cannot find an Identity with that publicKey.");
 
         } catch (final CantUpdateRecordException e) {
 
@@ -220,7 +220,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
             if (!records.isEmpty())
                 return getIdentityFromRecord(records.get(0));
             else
-                throw new IdentityNotFoundException(new StringBuilder().append("publicKey: ").append(publicKey).toString(), "Cannot find a Customer Identity with that publicKey.");
+                throw new IdentityNotFoundException("publicKey: " + publicKey, "Cannot find a Customer Identity with that publicKey.");
 
         } catch (final CantGetCryptoCustomerIdentityProfileImageException |
                 CantGetCryptoCustomerIdentityPrivateKeyException e) {
@@ -239,7 +239,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -266,7 +266,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PRIVATE_KEYS_FILE_NAME).append("_").append(publicKey).toString(),
+                    CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -286,7 +286,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -307,7 +307,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PRIVATE_KEYS_FILE_NAME).append("_").append(publicKey).toString(),
+                    CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -335,7 +335,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
             table.loadToMemory();
             return table.getRecords().size() > 0;
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantCreateNewDeveloperException(em.getMessage(), em, "Crypto Customer Identity", new StringBuilder().append("Cant load ").append(CRYPTO_CUSTOMER_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantCreateNewDeveloperException(em.getMessage(), em, "Crypto Customer Identity", "Cant load " + CRYPTO_CUSTOMER_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Identity", "unknown failure.");
         }
@@ -374,13 +374,13 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
         try {
             this.pluginFileSystem.deleteBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT);
 
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );

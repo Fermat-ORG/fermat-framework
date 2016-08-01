@@ -76,9 +76,9 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
         if (type.equals(ClauseType.CUSTOMER_CURRENCY) || type.equals(ClauseType.BROKER_CURRENCY)) {
             try {
                 if (FiatCurrency.codeExists(clauseValue))
-                    friendlyValue = new StringBuilder().append(FiatCurrency.getByCode(clauseValue).getFriendlyName()).append("(").append(clauseValue).append(")").toString();
+                    friendlyValue = FiatCurrency.getByCode(clauseValue).getFriendlyName() + "(" + clauseValue + ")";
                 else if (CryptoCurrency.codeExists(clauseValue))
-                    friendlyValue = new StringBuilder().append(CryptoCurrency.getByCode(clauseValue).getFriendlyName()).append("(").append(clauseValue).append(")").toString();
+                    friendlyValue = CryptoCurrency.getByCode(clauseValue).getFriendlyName() + "(" + clauseValue + ")";
 
             } catch (FermatException ignore) {
             }

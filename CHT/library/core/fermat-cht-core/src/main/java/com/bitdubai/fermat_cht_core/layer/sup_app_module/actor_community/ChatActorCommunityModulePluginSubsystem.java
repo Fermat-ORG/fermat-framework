@@ -10,7 +10,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 /**
  * Created by root on 14/04/16.
  */
-public class ChatActorCommunityModulePluginSubsystem extends AbstractPluginSubsystem{
+public class ChatActorCommunityModulePluginSubsystem extends AbstractPluginSubsystem {
 
     public ChatActorCommunityModulePluginSubsystem() {
         super(new PluginReference(Plugins.CHAT_COMMUNITY_SUP_APP_MODULE));

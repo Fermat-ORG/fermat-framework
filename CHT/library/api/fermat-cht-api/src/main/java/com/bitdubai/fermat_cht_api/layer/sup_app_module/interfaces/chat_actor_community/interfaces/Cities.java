@@ -10,42 +10,49 @@ import java.io.Serializable;
 public interface Cities extends Serializable {
     /**
      * This method returns the Country name.
+     *
      * @return
      */
     String getCountryName();
 
     /**
      * This method returns the country short name.
+     *
      * @return
      */
     String getCountryShortName();
 
     /**
      * This method returns the country geo-rectangle.
+     *
      * @return
      */
     GeoRectangle getGeoRectangle();
 
     /**
      * This method returns the city name
+     *
      * @return
      */
     String getName();
 
     /**
      * This method returns the city latitude.
+     *
      * @return
      */
     double getLatitude();
 
     /**
      * This method returns the city longitude.
+     *
      * @return
      */
     double getLongitude();
 
     /**
      * This method returns the country code from a city.
+     *
      * @return
      */
     String getCountryCode();

@@ -58,7 +58,7 @@ public enum NegotiationTransmissionState implements FermatEnum {
             case "SENT":
                 return SENT;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the NegotiationTransmissionState enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the NegotiationTransmissionState enum");
         }
     }
 

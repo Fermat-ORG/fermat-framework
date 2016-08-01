@@ -8,7 +8,7 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorI
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 05/04/16.
  */
-public abstract class ChatActorConnectionSearch extends ActorConnectionSearch<ChatLinkedActorIdentity,ChatActorConnection>{
+public abstract class ChatActorConnectionSearch extends ActorConnectionSearch<ChatLinkedActorIdentity, ChatActorConnection> {
     public ChatActorConnectionSearch(ChatLinkedActorIdentity actorIdentity, ActorConnectionDao<ChatLinkedActorIdentity, ChatActorConnection> dao) {
         super(actorIdentity, dao);
     }

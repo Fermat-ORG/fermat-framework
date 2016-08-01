@@ -60,7 +60,7 @@ public abstract class AbstractBusinessTransactionAgent
     protected void onErrorOccur() {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                new Exception(new StringBuilder().append(this.getClass().getName()).append(" Error").toString()));
+                new Exception(this.getClass().getName() + " Error"));
     }
 
     /**
@@ -97,7 +97,7 @@ public abstract class AbstractBusinessTransactionAgent
                         InvalidParameterException.DEFAULT_MESSAGE,
                         FermatException.wrapException(exception),
                         "Parsing String object to double",
-                        new StringBuilder().append("Cannot parse ").append(stringValue).append(" string value to long").toString());
+                        "Cannot parse " + stringValue + " string value to long");
             }
         }
     }

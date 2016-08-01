@@ -28,8 +28,8 @@ public enum ChatFragmentsEnumType implements FermatFragmentsEnumType<ChatFragmen
     CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT("CHTOCONNLTF");
 
 
-
     private String key;
+
     ChatFragmentsEnumType(String key) {
         this.key = key;
     }

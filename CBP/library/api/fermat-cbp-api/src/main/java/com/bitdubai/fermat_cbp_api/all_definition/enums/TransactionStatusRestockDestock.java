@@ -45,7 +45,7 @@ public enum TransactionStatusRestockDestock implements FermatEnum {
             case "REJECTED":
                 return TransactionStatusRestockDestock.REJECTED;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the TransactionStatusRestockDestock enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransactionStatusRestockDestock enum");
         }
     }
 }

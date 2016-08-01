@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 public interface ChatUserIdentity extends ActiveActorIdentityInformation {
     /**
      * The method <code>getPhrase</code> returns the phrase created by the intra user
+     *
      * @return string phrase object
      */
 
@@ -24,6 +25,7 @@ public interface ChatUserIdentity extends ActiveActorIdentityInformation {
 
     /**
      * This method let an intra user sign a message with his unique private key
+     *
      * @param message the message to sign
      * @return the signature
      * @throws
@@ -32,6 +34,7 @@ public interface ChatUserIdentity extends ActiveActorIdentityInformation {
 
     /**
      * This method let an intra user sign a message with his unique private key
+     *
      * @param
      * @return the platformComponentType
      * @throws

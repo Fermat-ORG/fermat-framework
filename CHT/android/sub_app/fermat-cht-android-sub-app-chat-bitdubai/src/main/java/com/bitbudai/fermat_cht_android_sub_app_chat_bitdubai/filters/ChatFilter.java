@@ -3,11 +3,9 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters;
 import android.widget.Filter;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * ChatFilter
@@ -16,7 +14,7 @@ import java.util.List;
  * @version 1.0
  */
 public class ChatFilter extends
- Filter {
+        Filter {
 
     private ArrayList<ChatMessage> data;
     private ChatAdapter adapter;
