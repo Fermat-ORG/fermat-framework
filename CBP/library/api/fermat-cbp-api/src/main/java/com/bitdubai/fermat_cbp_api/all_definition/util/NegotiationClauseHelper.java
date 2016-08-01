@@ -28,10 +28,13 @@ public final class NegotiationClauseHelper {
         String account = "";
 
         if (value != null && !value.isEmpty()) {
-            String[] split = value.split("\\D+:\\s*");
-            account = split.length == 1 ? split[0] : split[1];
+            if(value.contains("Account Number:") && value.contains("Account Type")) {
+                account=value.split("Account Number:")[1].split("Account Type")[0].replaceAll("\\s", "");
+            }
+        //    String[] split = value.split("\\D+:\\s*");
+        //    account = split.length == 1 ? split[0] : split[1];
 
-            return Pattern.matches("(\\d-?)+", account) ? account : "";
+            return account;
         }
 
         return account;

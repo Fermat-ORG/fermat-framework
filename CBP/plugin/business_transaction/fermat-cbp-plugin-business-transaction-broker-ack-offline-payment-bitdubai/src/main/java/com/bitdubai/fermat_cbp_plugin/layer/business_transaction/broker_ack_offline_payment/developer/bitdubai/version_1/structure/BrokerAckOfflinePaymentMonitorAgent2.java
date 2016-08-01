@@ -500,10 +500,10 @@ public class BrokerAckOfflinePaymentMonitorAgent2 extends AbstractBusinessTransa
                     brokerCurrency = FiatCurrency.getByCode(clause.getValue());
 
                 if (clauseType == ClauseType.BROKER_BANK_ACCOUNT)
-                    System.out.println("LOSTWOOD_BANK_ACOUNT:"+clause);
-                System.out.println("LOSTWOOD_BANK_ACOUNT.getValue:"+clause.getValue());
+                   // System.out.println("LOSTWOOD_BANK_ACOUNT:"+clause);
+                   // System.out.println("LOSTWOOD_BANK_ACOUNT.getValue:"+clause.getValue());
                     account = NegotiationClauseHelper.getAccountNumberFromClause(clause);
-                    System.out.println("LOSTWOOD_BANK_ACOUNT_RESULT:"+account);
+                  //  System.out.println("LOSTWOOD_BANK_ACOUNT_RESULT:"+account);
 
                 if (clauseType == ClauseType.BROKER_CURRENCY_QUANTITY) {
                     brokerAmountDouble = parseToDouble(clause.getValue());
