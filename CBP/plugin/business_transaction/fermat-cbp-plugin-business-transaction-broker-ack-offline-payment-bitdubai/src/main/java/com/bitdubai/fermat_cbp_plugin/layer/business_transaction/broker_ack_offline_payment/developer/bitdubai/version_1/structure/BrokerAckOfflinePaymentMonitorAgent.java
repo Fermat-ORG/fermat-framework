@@ -725,7 +725,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 throw new InvalidParameterException("Cannot parse a null string value to long");
             } else {
                 try {
-                    return NumberFormat.getInstance().parse(stringValue).doubleValue();
+                    System.out.println("LOSTWOOD_BrokerAckOfflinePaymentMonitorAgent PARSE:"+stringValue);
+                    //return NumberFormat.getInstance().parse(stringValue).doubleValue();
+                    return Double.valueOf(stringValue);
                 } catch (Exception exception) {
                     throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
                             "Parsing String object to long", new StringBuilder().append("Cannot parse ").append(stringValue).append(" string value to long").toString());
