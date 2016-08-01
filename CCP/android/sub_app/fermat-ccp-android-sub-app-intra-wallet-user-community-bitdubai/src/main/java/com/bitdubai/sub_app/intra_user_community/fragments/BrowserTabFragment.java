@@ -443,7 +443,7 @@ public class BrowserTabFragment
     public void onItemClickListener(IntraUserInformation data, int position) {
         try {
 
-            if (data.getState().equals(ProfileStatus.ONLINE)) {
+            if (data.getState().equals(ProfileStatus.ONLINE) && data.getConnectionState()==null) {
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
                         appSession.setData(INTRA_USER_SELECTED, data);

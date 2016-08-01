@@ -17,6 +17,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.SquareImageView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
@@ -74,7 +75,14 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
         //  button_add.setVisibility(View.VISIBLE);
         //  }
 
-        if (data.getConnectionState() != null) {
+        if (data.getConnectionState() == ConnectionState.BLOCKED_LOCALLY   || data.getConnectionState() == ConnectionState.BLOCKED_REMOTELY
+        ||  data.getConnectionState() == ConnectionState.CANCELLED_LOCALLY || data.getConnectionState() == ConnectionState.CANCELLED_REMOTELY
+        ||  data.getConnectionState() == ConnectionState.DENIED_LOCALLY    || data.getConnectionState() == ConnectionState.DENIED_REMOTELY
+        ||data.getConnectionState() == ConnectionState.DISCONNECTED_LOCALLY|| data.getConnectionState() == ConnectionState.DISCONNECTED_REMOTELY
+        ||  data.getConnectionState() == ConnectionState.ERROR
+        ||  data.getConnectionState() == ConnectionState.PENDING_LOCALLY_ACCEPTANCE || data.getConnectionState() == ConnectionState.PENDING_REMOTELY_ACCEPTANCE
+        ||  data.getConnectionState() == ConnectionState.INTRA_USER_NOT_FOUND)
+        {
 
             switch (data.getConnectionState()) {
                 case CONNECTED:
@@ -93,7 +101,7 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                        //connectionState.setImageResource(R.drawable.icon_contact_no_conect);
                         response.setText("REQUEST CANCELLED");
                         response.setVisibility(View.VISIBLE);
-                    response.setTextColor(Color.parseColor("#21386D"));
+                        response.setTextColor(Color.parseColor("#21386D"));
                         button_add.setVisibility(View.GONE);
 
                     break;
