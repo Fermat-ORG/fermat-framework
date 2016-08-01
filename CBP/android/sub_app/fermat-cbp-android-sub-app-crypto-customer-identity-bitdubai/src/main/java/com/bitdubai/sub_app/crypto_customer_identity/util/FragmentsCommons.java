@@ -12,6 +12,7 @@ public class FragmentsCommons {
     public static final String FREQUENCY_DATA = "FREQUENCY_DATA";
     public static final String ACCURACY_DATA = "ACCURACY_DATA";
     public static final String CUSTOMER_NAME = "Customer_name";
+    public static final String SETTING_CUSTOMER = "SETTING_CUSTOMER";
 
     public static final int ADD_IDENTITY_OPTION_MENU_ID = 1;
     public static final int HELP_OPTION_MENU_ID = 2;
