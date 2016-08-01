@@ -201,7 +201,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
         } catch (Exception exception) {
             pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
-                    "Parsing String object to long", new StringBuilder().append("Cannot parse ").append(stringValue).append(" string value to long").toString());
+                    "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
         }
     }
 

@@ -2,7 +2,6 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,11 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.SearchView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -24,14 +22,10 @@ import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
@@ -48,11 +42,11 @@ import java.util.List;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 30/12/15.
  * @version 1.0
- * Update by Miguel Payarez on 15/01/2016
+ *          Update by Miguel Payarez on 15/01/2016
  */
 
 public class ChatFragment
-        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>{
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
     // Fermat Managers
     private ChatManager chatManager;
@@ -62,12 +56,14 @@ public class ChatFragment
     ChatActorCommunitySelectableIdentity chatIdentity;
 
     // Defines a tag for identifying log entries
-    String TAG="CHT_ChatFragment";
+    String TAG = "CHT_ChatFragment";
     private ChatAdapterView adapterView;
     private ChatAdapter adapter;
     private SearchView searchView;
 
-    public static ChatFragment newInstance() { return new ChatFragment(); }
+    public static ChatFragment newInstance() {
+        return new ChatFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,9 +96,9 @@ public class ChatFragment
             try {
                 chatIdentity = chatSettings.getIdentitySelected();
                 if (chatIdentity == null) {
-                    List<ChatIdentity> chatIdentityList=chatManager
+                    List<ChatIdentity> chatIdentityList = chatManager
                             .getIdentityChatUsersFromCurrentDeviceUser();
-                    if(chatIdentityList != null && chatIdentityList.size()>0) {
+                    if (chatIdentityList != null && chatIdentityList.size() > 0) {
                         chatIdentity = chatManager
                                 .newInstanceChatActorCommunitySelectableIdentity(
                                         chatIdentityList.get(0));
@@ -150,7 +146,7 @@ public class ChatFragment
 //        });
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        adapterView=new ChatAdapterView.Builder(inflater.getContext())
+        adapterView = new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
                 .addModuleManager(null)
                 .addErrorManager(errorManager)
@@ -163,7 +159,7 @@ public class ChatFragment
         return adapterView;
     }
 
-    public void onStop () {
+    public void onStop() {
         try {
             chatManager.activeOnlineStatus(null);
         } catch (CantGetOnlineStatus cantGetOnlineStatus) {
@@ -175,9 +171,9 @@ public class ChatFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     }
 
-    public void onOptionMenuPrepared(Menu menu){
+    public void onOptionMenuPrepared(Menu menu) {
         MenuItem searchItem = menu.findItem(1);
-        if (searchItem!=null) {
+        if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -213,7 +209,7 @@ public class ChatFragment
                     break;
                 case 2:
                     try {
-                        final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null, chatManager, errorManager);
+                        final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, null, null, null, chatManager, errorManager);
                         alert.setTextTitle("Clean Chat");
                         alert.setTextBody("Do you want to clean this chat? All messages in here will be erased");
                         alert.setType("clean-chat");
@@ -223,12 +219,12 @@ public class ChatFragment
                             public void onDismiss(DialogInterface dialog) {
                                 try {
                                     adapterView.refreshEvents();
-                                }catch (Exception e) {
+                                } catch (Exception e) {
                                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                 }
                             }
                         });
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     }
                     break;
@@ -247,7 +243,7 @@ public class ChatFragment
         @Override
         public void onReceive(FermatBundle fermatBundle) {
             try {
-                if(isAttached){
+                if (isAttached) {
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
@@ -255,7 +251,7 @@ public class ChatFragment
                     }
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE)) {
-    //                    fermatBundle.remove(Broadcaster.NOTIFICATION_TYPE);
+                        //                    fermatBundle.remove(Broadcaster.NOTIFICATION_TYPE);
                     }
                 }
             } catch (ClassCastException e) {

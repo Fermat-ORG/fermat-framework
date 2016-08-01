@@ -48,7 +48,7 @@ public class CryptoBrokerExtraDataUpdateAgent extends AbstractAgent {
     protected void onErrorOccur(Exception e) {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                new Exception(new StringBuilder().append(this.getClass().getName()).append(" Error").toString()));
+                new Exception(this.getClass().getName() + " Error"));
     }
 
     void doTheMainTask() {

@@ -815,7 +815,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)
                     != 0){
                 if (lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
-                    CryptoAddress validAddress = WalletUtils.validateAddress(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWalletManager);
+                    CryptoAddress validAddress = WalletUtils.validateAddress(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWalletManager,blockchainNetworkType);
                     if (validAddress != null) {
                         EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
                         String amount = txtAmount.getText().toString();
@@ -979,6 +979,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             } catch (Exception e) {
                                 appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                                 Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+
                             }
                         } else {
                             Toast.makeText(getActivity(), "Invalid Amount", Toast.LENGTH_LONG).show();

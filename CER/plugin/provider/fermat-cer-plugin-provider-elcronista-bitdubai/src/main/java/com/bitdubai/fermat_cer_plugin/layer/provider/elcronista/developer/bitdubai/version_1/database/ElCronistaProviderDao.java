@@ -60,23 +60,23 @@ public class ElCronistaProviderDao {
             try {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeElCronistaProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
             }
-        }catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeElCronistaProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
         } catch (Exception e) {
-            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeElCronistaProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
         }
     }
 
     public void initializeProvider(String providerName) throws CantInitializeProviderInfoException {
         //Try to get info, if there's no info, populate.
-        try{
+        try {
             this.getProviderInfo();
-        }catch (CantGetProviderInfoException e){
+        } catch (CantGetProviderInfoException e) {
             this.populateProviderInfo(providerName);
         }
     }
@@ -89,13 +89,12 @@ public class ElCronistaProviderDao {
         constructRecordFromExchangeRate(newRecord, exchangeRate);
         try {
             table.insertRecord(newRecord);
-        }catch (CantInsertRecordException e) {
+        } catch (CantInsertRecordException e) {
             throw new CantSaveExchangeRateException(e.getMessage(), e, "ElCronista provider plugin", "Cant save new record in table");
         }
     }
 
-    public List<ExchangeRate> getQueriedExchangeRateHistory(CurrencyPair currencyPair) throws CantGetExchangeRateException
-    {
+    public List<ExchangeRate> getQueriedExchangeRateHistory(CurrencyPair currencyPair) throws CantGetExchangeRateException {
         List<ExchangeRate> exchangeRateList = new ArrayList<>();
 
         DatabaseTable table = this.database.getTable(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
@@ -112,16 +111,12 @@ public class ElCronistaProviderDao {
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't load table to memory");
-        }catch (CantCreateExchangeRateException e) {
+        } catch (CantCreateExchangeRateException e) {
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't create ExchangeRate object");
         }
 
         return exchangeRateList;
     }
-
-
-
-
 
 
     /* PROVIDER INFO GETTERS */
@@ -139,7 +134,7 @@ public class ElCronistaProviderDao {
         List<DatabaseTableRecord> records;
         DatabaseTable table = this.database.getTable(ElCronistaProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
 
-        try{
+        try {
             table.loadToMemory();
             records = table.getRecords();
         } catch (CantLoadTableToMemoryException e) {
@@ -151,6 +146,7 @@ public class ElCronistaProviderDao {
 
         return records.get(0);
     }
+
     private void populateProviderInfo(String providerName) throws CantInitializeProviderInfoException {
         DatabaseTable table = this.database.getTable(ElCronistaProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
         DatabaseTableRecord newRecord = table.getEmptyRecord();
@@ -160,18 +156,16 @@ public class ElCronistaProviderDao {
 
         try {
             table.insertRecord(newRecord);
-        }catch (CantInsertRecordException e) {
+        } catch (CantInsertRecordException e) {
             throw new CantInitializeProviderInfoException(e.getMessage());
         }
     }
-
 
 
     /* INTERNAL HELPER FUNCTIONS */
     private DatabaseTableFilter getEmptyTableFilter() {
         return this.database.getTable(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME).getEmptyTableFilter();
     }
-
 
 
     private List<DatabaseTableRecord> getRecordsByFilter(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
@@ -207,35 +201,32 @@ public class ElCronistaProviderDao {
         try {
             String fromCurrencyStr = record.getStringValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
 
-            if(FiatCurrency.codeExists(fromCurrencyStr))
+            if (FiatCurrency.codeExists(fromCurrencyStr))
                 fromCurrency = FiatCurrency.getByCode(fromCurrencyStr);
-            else if(CryptoCurrency.codeExists(fromCurrencyStr))
+            else if (CryptoCurrency.codeExists(fromCurrencyStr))
                 fromCurrency = CryptoCurrency.getByCode(fromCurrencyStr);
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "ElCronista provider plugin", "Invalid From Currency value stored in table"
-                    + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "ElCronista provider plugin", "Invalid From Currency value stored in table" + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
         }
 
         Currency toCurrency;
         try {
             String toCurrencyStr = record.getStringValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME);
 
-            if(FiatCurrency.codeExists(toCurrencyStr))
+            if (FiatCurrency.codeExists(toCurrencyStr))
                 toCurrency = FiatCurrency.getByCode(toCurrencyStr);
-            else if(CryptoCurrency.codeExists(toCurrencyStr))
+            else if (CryptoCurrency.codeExists(toCurrencyStr))
                 toCurrency = CryptoCurrency.getByCode(toCurrencyStr);
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "ElCronista provider plugin", "Invalid To Currency value stored in table"
-                    + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "ElCronista provider plugin", "Invalid To Currency value stored in table" + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
         }
 
         return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);
     }
-
 
 
 }

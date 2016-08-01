@@ -14,10 +14,10 @@ import java.util.UUID;
 public class MessageMock implements Message {
 
     UUID chatId;
-    String message="Luke, I am not your father!";
+    String message = "Luke, I am not your father!";
 
-    public MessageMock(UUID chatId){
-        this.chatId=chatId;
+    public MessageMock(UUID chatId) {
+        this.chatId = chatId;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class MessageMock implements Message {
 
     @Override
     public void setChatId(UUID chatId) {
-        this.chatId=chatId;
+        this.chatId = chatId;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class MessageMock implements Message {
 
     @Override
     public void setMessage(String message) {
-        this.message=message;
+        this.message = message;
     }
 
     @Override

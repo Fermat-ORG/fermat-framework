@@ -96,7 +96,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                 try {
                     contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
 
-                    System.out.println(new StringBuilder().append("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): ").append(contractHash).append("\n").toString());
+                    System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): " + contractHash + "\n");
 
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),

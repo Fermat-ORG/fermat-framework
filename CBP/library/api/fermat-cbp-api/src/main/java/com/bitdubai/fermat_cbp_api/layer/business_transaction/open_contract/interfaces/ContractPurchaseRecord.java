@@ -206,26 +206,6 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase, S
      */
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("ContractRecord{")
-                .append(", dayTime=").append(dayTime)
-                .append(", merchandiseCurrency=").append(merchandiseCurrency)
-                .append(", merchandiseAmount=").append(merchandiseAmount)
-                .append(", merchandiseDeliveryExpirationDate=").append(merchandiseDeliveryExpirationDate)
-                .append(", negotiationId='").append(negotiationId)
-                .append('\'')
-                .append(", paymentAmount=").append(paymentAmount)
-                .append(", paymentCurrency=").append(paymentCurrency)
-                .append(", paymentExpirationDate=").append(paymentExpirationDate)
-                .append(", publicKeyBroker='").append(publicKeyBroker)
-                .append('\'')
-                .append(", publicKeyCustomer='").append(publicKeyCustomer)
-                .append('\'')
-                .append(", referenceCurrency=").append(referenceCurrency)
-                .append(", status=").append(status)
-                .append(", contractHash='").append(contractHash)
-                .append('\'')
-                .append(", nearExpirationDatetime=").append(nearExpirationDatetime)
-                .append('}').toString();
+        return "ContractRecord{" + ", dayTime=" + dayTime + ", merchandiseCurrency=" + merchandiseCurrency + ", merchandiseAmount=" + merchandiseAmount + ", merchandiseDeliveryExpirationDate=" + merchandiseDeliveryExpirationDate + ", negotiationId='" + negotiationId + '\'' + ", paymentAmount=" + paymentAmount + ", paymentCurrency=" + paymentCurrency + ", paymentExpirationDate=" + paymentExpirationDate + ", publicKeyBroker='" + publicKeyBroker + '\'' + ", publicKeyCustomer='" + publicKeyCustomer + '\'' + ", referenceCurrency=" + referenceCurrency + ", status=" + status + ", contractHash='" + contractHash + '\'' + ", nearExpirationDatetime=" + nearExpirationDatetime + '}';
     }
 }

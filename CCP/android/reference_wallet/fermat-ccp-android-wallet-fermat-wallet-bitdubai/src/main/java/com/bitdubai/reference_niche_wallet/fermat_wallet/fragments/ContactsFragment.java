@@ -198,7 +198,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
-                            boolean isHelpEnabled = fermatWallet.loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
+                            boolean isHelpEnabled = (Boolean)appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED);
 
                             if (isHelpEnabled)
                                 setUpTutorial(true);
@@ -644,6 +644,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void lauchCreateContactDialog(boolean withImage) {
         dialog = new CreateContactFragmentDialog(
                 getActivity(),
+                referenceWalletSession,
+                null,
                 fermatWallet,
                 referenceWalletSession.getAppPublicKey(),
                 walletContact,

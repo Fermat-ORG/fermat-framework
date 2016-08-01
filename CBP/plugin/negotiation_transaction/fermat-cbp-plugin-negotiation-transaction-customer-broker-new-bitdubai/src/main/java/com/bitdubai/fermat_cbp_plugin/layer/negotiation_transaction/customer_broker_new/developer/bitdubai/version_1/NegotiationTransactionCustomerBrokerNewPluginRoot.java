@@ -186,7 +186,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.print(new StringBuilder().append("-----------------------\n CUSTOMER BROKER NEW: SUCCESSFUL START ").append(pluginId.toString()).append(" \n-----------------------\n").toString());
+            System.out.print("-----------------------\n CUSTOMER BROKER NEW: SUCCESSFUL START " + pluginId.toString() + " \n-----------------------\n");
 
         } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);

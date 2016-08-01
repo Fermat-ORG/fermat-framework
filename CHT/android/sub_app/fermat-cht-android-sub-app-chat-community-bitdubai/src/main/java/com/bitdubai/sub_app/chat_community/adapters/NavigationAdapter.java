@@ -80,7 +80,7 @@ public class NavigationAdapter extends FermatAdapter<MenuItem, NavigationHolder>
                     holder.getIcon().setImageResource(R.drawable.chat_subapp);//ic_nav_settings
                     break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

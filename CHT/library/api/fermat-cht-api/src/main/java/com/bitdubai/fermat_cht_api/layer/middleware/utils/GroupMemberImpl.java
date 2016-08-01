@@ -13,11 +13,11 @@ public class GroupMemberImpl implements GroupMember {
     private final String publicKeyActor;
     private final String alias;
 
-    public GroupMemberImpl(UUID groupMemberId, UUID groupId, String publicKeyActor, String alias){
-        this.groupMemberId     = groupMemberId;
-        this.groupId           = groupId;
-        this.publicKeyActor    = publicKeyActor;
-        this.alias             = alias;
+    public GroupMemberImpl(UUID groupMemberId, UUID groupId, String publicKeyActor, String alias) {
+        this.groupMemberId = groupMemberId;
+        this.groupId = groupId;
+        this.publicKeyActor = publicKeyActor;
+        this.alias = alias;
     }
 
     /**

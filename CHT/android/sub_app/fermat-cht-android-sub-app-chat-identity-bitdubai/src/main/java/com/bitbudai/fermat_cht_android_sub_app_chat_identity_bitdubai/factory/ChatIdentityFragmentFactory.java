@@ -2,9 +2,8 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.factory;
 
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.fragments.CreateChatIdentityFragment;
-import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.fragments.GeolocationChatIdentityFragment;
-
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySessionReferenceApp;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;

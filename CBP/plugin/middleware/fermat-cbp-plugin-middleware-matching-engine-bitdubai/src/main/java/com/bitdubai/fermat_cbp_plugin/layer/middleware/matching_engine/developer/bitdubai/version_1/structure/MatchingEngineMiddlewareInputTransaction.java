@@ -105,17 +105,6 @@ public final class MatchingEngineMiddlewareInputTransaction implements InputTran
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("MatchingEngineMiddlewareInputTransaction{")
-                .append("id=").append(id)
-                .append(", originTransactionId='").append(originTransactionId)
-                .append('\'')
-                .append(", currencyGiving=").append(currencyGiving)
-                .append(", amountGiving=").append(amountGiving)
-                .append(", currencyReceiving=").append(currencyReceiving)
-                .append(", amountReceiving=").append(amountReceiving)
-                .append(", type=").append(type)
-                .append(", state=").append(state)
-                .append('}').toString();
+        return "MatchingEngineMiddlewareInputTransaction{" + "id=" + id + ", originTransactionId='" + originTransactionId + '\'' + ", currencyGiving=" + currencyGiving + ", amountGiving=" + amountGiving + ", currencyReceiving=" + currencyReceiving + ", amountReceiving=" + amountReceiving + ", type=" + type + ", state=" + state + '}';
     }
 }

@@ -24,14 +24,14 @@
                     android:layout_height="0dp"
                     android:layout_weight="0.8"
                     android:orientation="vertical"
-                    android:background="#000000"
-                    android:padding="10dp">
+                    android:background="#000000">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="60dp"
-                        android:layout_centerHorizontal="true">
+                        android:layout_marginTop="65dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/fw_backgroung_balance_1">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -51,13 +51,17 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
+
                                 <com.github.mikephil.charting.charts.LineChart
                                     android:id="@+id/chart"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:visibility="visible"
                                     android:focusable="false"
-                                    android:focusableInTouchMode="false"/>
+                                    android:layout_marginTop="77dp"
+                                    android:focusableInTouchMode="false"
+                                    android:layout_marginBottom="15dp"
+                                    />
 
                             </LinearLayout>
 
@@ -80,7 +84,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_alignParentTop="true"
-                        android:layout_marginTop="70dp">
+                        android:layout_marginTop="80dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -121,16 +125,39 @@
 
                     </LinearLayout>
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/txt_date_time"
-                        android:text="00:00 A | Month 00, 0000 "
-                        android:textSize="16sp"
-                        android:textColor="#2FAEDC"
-                        android:layout_marginLeft="5dp"
+                        android:orientation="horizontal"
                         android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true" />
+                        android:layout_centerHorizontal="true">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/txt_date_time_hour"
+                            android:text="00:00 A"
+                            android:textSize="16sp"
+                            android:textColor="#FFFF"
+                            android:layout_marginLeft="5dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/separator"
+                            android:text=" | "
+                            android:textSize="16sp"
+                            android:textColor="#2FAEDC"
+                            android:layout_marginLeft="5dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/txt_date_time"
+                            android:text="Month 00, 0000 "
+                            android:textSize="16sp"
+                            android:textColor="#2FAEDC"
+                            android:layout_marginLeft="5dp"/>
+                    </LinearLayout>
+
+
 
                 </RelativeLayout>
 

@@ -34,11 +34,11 @@ public class ChatHolder extends FermatViewHolder {
     public ChatHolder(View itemView) {
         super(itemView);
 
-        txtMessage         = (TextView)  itemView.findViewById(R.id.txtMessage);
-        content            = (LinearLayout)    itemView.findViewById(R.id.content);
-        contentWithBG      = (LinearLayout)    itemView.findViewById(R.id.contentWithBackground);
-        txtInfo            = (TextView)  itemView.findViewById(R.id.txtInfo);
-        tickstatusimage  = (ImageView)  itemView.findViewById(R.id.tick_status_image);
+        txtMessage = (TextView) itemView.findViewById(R.id.txtMessage);
+        content = (LinearLayout) itemView.findViewById(R.id.content);
+        contentWithBG = (LinearLayout) itemView.findViewById(R.id.contentWithBackground);
+        txtInfo = (TextView) itemView.findViewById(R.id.txtInfo);
+        tickstatusimage = (ImageView) itemView.findViewById(R.id.tick_status_image);
 
     }
 

@@ -20,7 +20,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 /**
- * Created by nelson on 21/10/15.
+ * Created by Nelson Ramirez (nelsonalfo@gmail.com) on 21/10/15.
+ *
  */
 public class ContractExpandableListViewHolder extends ChildViewHolder {
     public ImageView customerImage;
@@ -75,9 +76,10 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
     @NonNull
     private String getContractActionDescription(ContractBasicInformation itemInfo, ContractStatus contractStatus) {
         DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-        return new StringBuilder().append(getReceivingOrSendingText(contractStatus)).append(" ").append(decimalFormat.format(itemInfo.getAmount())).append(" ").append(itemInfo.getMerchandise()).toString();
+        return getReceivingOrSendingText(contractStatus) + " " + decimalFormat.format(itemInfo.getAmount()) + " " + itemInfo.getMerchandise();
     }
 
+    @SuppressWarnings("deprecation")
     private int getStatusBackgroundColor(ContractStatus status) {
         if (status == ContractStatus.PENDING_PAYMENT)
             return res.getColor(R.color.waiting_for_customer_list_item_background);
@@ -111,6 +113,7 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         return R.string.waiting_for_broker;
     }
 
+    @SuppressWarnings("deprecation")
     private int getStatusColor(ContractStatus status, boolean nearExpirationDatetime) {
         if (status == ContractStatus.PENDING_PAYMENT && nearExpirationDatetime)
             return res.getColor(R.color.ccw_contract_status_about_to_expire);

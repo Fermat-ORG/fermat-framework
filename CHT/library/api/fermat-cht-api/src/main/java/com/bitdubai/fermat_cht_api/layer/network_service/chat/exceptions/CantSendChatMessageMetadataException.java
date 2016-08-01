@@ -13,6 +13,7 @@ public class CantSendChatMessageMetadataException extends CHTException {
     public CantSendChatMessageMetadataException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
     public CantSendChatMessageMetadataException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }

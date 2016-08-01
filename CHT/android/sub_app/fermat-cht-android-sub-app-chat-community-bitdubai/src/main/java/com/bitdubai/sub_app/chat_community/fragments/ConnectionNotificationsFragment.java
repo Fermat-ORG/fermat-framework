@@ -94,6 +94,7 @@ public class ConnectionNotificationsFragment
     private ExecutorService executor;
     private boolean launchActorCreationDialog = false;
     private boolean launchListIdentitiesDialog = false;
+
     /**
      * Create a new instance of this fragment
      *
@@ -114,34 +115,36 @@ public class ConnectionNotificationsFragment
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-            applicationsHelper = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
+            applicationsHelper = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
             lstChatUserInformations = new ArrayList<>();
 
             //Obtain Settings or create new Settings if first time opening subApp
             appSettings = null;
             try {
                 appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-            }catch (Exception e){ appSettings = null; }
+            } catch (Exception e) {
+                appSettings = null;
+            }
 
-            if(appSettings == null){
+            if (appSettings == null) {
                 appSettings = new ChatActorCommunitySettings();
                 appSettings.setIsPresentationHelpEnabled(true);
                 try {
                     moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
             //Check if a default identity is configured
-            try{
+            try {
                 identity = moduleManager.getSelectedActorIdentity();
-                if(identity == null)
-                    launchListIdentitiesDialog  = true;
-            }catch (CantGetSelectedActorIdentityException e){
+                if (identity == null)
+                    launchListIdentitiesDialog = true;
+            } catch (CantGetSelectedActorIdentityException e) {
                 //There are no identities in device
                 launchActorCreationDialog = true;
-            }catch (ActorIdentityNotSelectedException e){
+            } catch (ActorIdentityNotSelectedException e) {
                 //There are identities in device, but none selected
                 launchListIdentitiesDialog = true;
             }
@@ -162,7 +165,7 @@ public class ConnectionNotificationsFragment
             rootView = inflater.inflate(R.layout.cht_comm_notifications_fragment, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-            layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             adapter = new NotificationAdapter(getActivity(), lstChatUserInformations);
@@ -188,8 +191,8 @@ public class ConnectionNotificationsFragment
     }
 
     @Override
-    public void onFragmentFocus () {
-        offset=0;
+    public void onFragmentFocus() {
+        offset = 0;
         onRefresh();
     }
 
@@ -197,9 +200,9 @@ public class ConnectionNotificationsFragment
         ArrayList<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
             List<ChatActorCommunityInformation> result;
-            if(identity != null) {
+            if (identity != null) {
                 result = moduleManager.listChatActorPendingLocalAction(identity.getPublicKey(),
-                    identity.getActorType(), MAX, offset);
+                        identity.getActorType(), MAX, offset);
                 dataSet.addAll(result);
                 //offset = dataSet.size();
             }
@@ -210,6 +213,7 @@ public class ConnectionNotificationsFragment
         }
         return dataSet;
     }
+
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetChatUserIdentityException {
     }
 
@@ -263,7 +267,7 @@ public class ConnectionNotificationsFragment
                 });
                 executor = worker.execute();
             }
-        }catch (Exception ignore){
+        } catch (Exception ignore) {
             if (executor != null) {
                 executor.shutdown();
                 executor = null;
@@ -274,27 +278,26 @@ public class ConnectionNotificationsFragment
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         try {
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession , null, data, identity);
-            final ChatActorCommunityInformation dataNow  = data;
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession, null, data, identity);
+            final ChatActorCommunityInformation dataNow = data;
             notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
                     ArrayList<ChatActorCommunityInformation> dataNew = new ArrayList<>();
                     try {
-                        for (ChatActorCommunityInformation dat: lstChatUserInformations){
-                            if(!dataNow.getPublicKey().equals(dat.getPublicKey()))
-                            {
+                        for (ChatActorCommunityInformation dat : lstChatUserInformations) {
+                            if (!dataNow.getPublicKey().equals(dat.getPublicKey())) {
                                 dataNew.add(dat);
                             }
                         }
-                        lstChatUserInformations=dataNew;
+                        lstChatUserInformations = dataNew;
                         adapter.changeDataSet(lstChatUserInformations);
                         if (lstChatUserInformations.isEmpty()) {
                             showEmpty(true, emptyView);
                         } else {
                             showEmpty(false, emptyView);
                         }
-                    }catch (Exception e) {
+                    } catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                                 UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
                     }
@@ -308,7 +311,8 @@ public class ConnectionNotificationsFragment
     }
 
     @Override
-    public void onLongItemClickListener(ChatActorCommunityInformation data, int position) { }
+    public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {
+    }
 
     /**
      * @param show

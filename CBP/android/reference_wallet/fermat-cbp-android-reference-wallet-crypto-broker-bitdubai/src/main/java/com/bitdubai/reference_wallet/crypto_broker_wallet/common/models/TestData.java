@@ -2,6 +2,8 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -13,10 +15,12 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.provisory_data.ClauseInformationImpl;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.provisory_data.ContractBasicInformationImpl;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.provisory_data.CustomerBrokerNegotiationInformationImpl;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.EarningCurrencyCalendarRelationship;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -393,78 +397,114 @@ public class TestData {
 
         return earningsPairs;
     }
-/*
+
     public static List<EarningsDetailData> getEarnings(Currency currency, TimeFrequency frequency) {
         ArrayList<EarningsDetailData> dataArrayList = new ArrayList<>();
-        EarningTestData earningTestData;
+        EarningsDetailData earningTestData;
 
         int timeFilter = Calendar.DATE;
         switch (frequency) {
-            case MONTHLY: timeFilter = Calendar.MONTH; break;
-            case YEARLY: timeFilter = Calendar.YEAR; break;
-            case WEEKLY: timeFilter = Calendar.WEEK_OF_YEAR; break;
-            case DAILY: timeFilter = Calendar.DATE; break;
+            case MONTHLY:
+                timeFilter = Calendar.MONTH;
+                break;
+            case YEARLY:
+                timeFilter = Calendar.YEAR;
+                break;
+            case WEEKLY:
+                timeFilter = Calendar.WEEK_OF_YEAR;
+                break;
+            case DAILY:
+                timeFilter = Calendar.DATE;
+                break;
         }
         Calendar calendar = Calendar.getInstance();
 
         if (currency.equals(CryptoCurrency.BITCOIN)) {
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.1f, 2016);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 26, Calendar.MONTH, CryptoCurrency.BITCOIN));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(0.1f, CryptoCurrency.BITCOIN, 2016, 7, 26));
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.2f, 2016);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 26, Calendar.MONTH, CryptoCurrency.BITCOIN));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(0.2f, CryptoCurrency.BITCOIN, 2016, 7, 26));
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(1.2f, 2016);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 26, Calendar.MONTH, CryptoCurrency.BITCOIN));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(1.2f, CryptoCurrency.BITCOIN, 2016, 7, 26));
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(5.2f, 2016);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 26, Calendar.MONTH, CryptoCurrency.BITCOIN));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(5.2f, CryptoCurrency.BITCOIN, 2016, 7, 26));
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(1.2f, 2016);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 26, Calendar.MONTH, CryptoCurrency.BITCOIN));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(1.2f, CryptoCurrency.BITCOIN, 2016, 7, 26));
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.02f, 2016);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 26, Calendar.MONTH, CryptoCurrency.BITCOIN));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(0.02f, CryptoCurrency.BITCOIN, 2016, 7, 26));
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.122f, 2016);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 26, Calendar.MONTH, CryptoCurrency.BITCOIN));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(0.122f, CryptoCurrency.BITCOIN, 2016, 7, 26));
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.5465482f, 2016);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 26, Calendar.MONTH, CryptoCurrency.BITCOIN));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(0.5465482f, CryptoCurrency.BITCOIN, 2016, 7, 26));
             dataArrayList.add(earningTestData);
 
 
         } else if (currency.equals(FiatCurrency.US_DOLLAR)) {
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.02f, 2016);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 26, Calendar.MONTH, FiatCurrency.US_DOLLAR));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(0.02f, FiatCurrency.US_DOLLAR, 2016, 7, 26));
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.122f, 2016);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 26, Calendar.MONTH, FiatCurrency.US_DOLLAR));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(0.122f, FiatCurrency.US_DOLLAR, 2016, 7, 26));
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.5465482f, 2016);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 26, Calendar.MONTH, FiatCurrency.US_DOLLAR));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(0.5465482f, FiatCurrency.US_DOLLAR, 2016, 7, 26));
             dataArrayList.add(earningTestData);
 
-        } else if (currency.equals(FiatCurrency.VENEZUELAN_BOLIVAR)) {
+        } else if (currency.equals(FiatCurrency.ARGENTINE_PESO)) {
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(60230.112123f, 2016);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 26, Calendar.MONTH, FiatCurrency.ARGENTINE_PESO));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(602.112123f, FiatCurrency.ARGENTINE_PESO, 2016, 7, 26));
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(160230.456456f, 2016);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 25, Calendar.MONTH, FiatCurrency.ARGENTINE_PESO));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(160230.456456f, FiatCurrency.ARGENTINE_PESO, 2016, 7, 25));
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 24, Calendar.MONTH, FiatCurrency.ARGENTINE_PESO));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(160.456456f, FiatCurrency.ARGENTINE_PESO, 2016, 7, 24));
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 23, Calendar.MONTH, FiatCurrency.ARGENTINE_PESO));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(16023.456f, FiatCurrency.ARGENTINE_PESO, 2016, 7, 23));
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningsDetailData(new EarningCurrencyCalendarRelationship(2016, 7, 22, Calendar.MONTH, FiatCurrency.ARGENTINE_PESO));
+            earningTestData.addEarningTransaction(new EarningTransactionMock(786.5465482f, FiatCurrency.ARGENTINE_PESO, 2016, 7, 22));
             dataArrayList.add(earningTestData);
         }
 
         return dataArrayList;
-    }*/
+    }
 }

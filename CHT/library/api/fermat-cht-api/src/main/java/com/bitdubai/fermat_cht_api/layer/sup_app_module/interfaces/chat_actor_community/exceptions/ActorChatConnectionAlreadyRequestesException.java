@@ -13,7 +13,7 @@ public class ActorChatConnectionAlreadyRequestesException extends FermatExceptio
         super(message, cause, context, possibleReason);
     }
 
-    public ActorChatConnectionAlreadyRequestesException (Exception cause, String context, String possibleReason) {
+    public ActorChatConnectionAlreadyRequestesException(Exception cause, String context, String possibleReason) {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }

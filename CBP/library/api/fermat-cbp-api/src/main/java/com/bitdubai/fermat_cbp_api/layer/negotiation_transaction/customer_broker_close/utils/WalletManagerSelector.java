@@ -24,7 +24,7 @@ public class WalletManagerSelector {
                 return walletManagerManager;
 
             default:
-                throw new CantIdentifyWalletManagerException(new StringBuilder().append("CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER CLOSE. Unexpected Platform: ").append(platform.toString()).append(" - ").append(platform.getCode()).toString());
+                throw new CantIdentifyWalletManagerException("CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER CLOSE. Unexpected Platform: " + platform.toString() + " - " + platform.getCode());
 
         }
     }

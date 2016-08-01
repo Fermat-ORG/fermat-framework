@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cht_core.layer.sup_app_module;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_cht_core.layer.sup_app_module.actor_community.ChatActorCommunityModulePluginSubsystem;
 import com.bitdubai.fermat_cht_core.layer.sup_app_module.chat.ChatSupAppModulePluginSubsystem;
-
 import com.bitdubai.fermat_cht_core.layer.sup_app_module.identity.ChatSupAppIdentityModulePluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;

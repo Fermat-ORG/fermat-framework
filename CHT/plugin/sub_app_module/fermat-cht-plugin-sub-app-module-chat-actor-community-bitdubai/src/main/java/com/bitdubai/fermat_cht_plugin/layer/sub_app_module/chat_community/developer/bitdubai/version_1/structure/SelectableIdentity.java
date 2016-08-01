@@ -60,12 +60,7 @@ public final class SelectableIdentity implements ChatActorCommunitySelectableIde
 
     @Override
     public String toString() {
-        return "SelectableIdentity{" +
-                "alias='" + alias + '\'' +
-                ", publicKey='" + publicKey + '\'' +
-
-                ", image=" + (image != null) +
-                '}';
+        return "SelectableIdentity{" + "alias='" + alias + '\'' + ", publicKey='" + publicKey + '\'' + ", image=" + (image != null) + '}';
     }
 
     @Override

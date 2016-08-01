@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:background="@drawable/circle_photo_profile"
+        android:background="@drawable/circle_blue"
         android:gravity="center">
 
         <ImageView
@@ -60,7 +60,6 @@
             android:background="@drawable/bg_v2_create_button"
             android:text="@string/create"
             android:textColor="#CCCCCC"
-            android:textColorHint="#536DFE"
             android:textSize="16sp"
             android:layout_marginBottom="40dp"
             android:layout_alignParentBottom="true"

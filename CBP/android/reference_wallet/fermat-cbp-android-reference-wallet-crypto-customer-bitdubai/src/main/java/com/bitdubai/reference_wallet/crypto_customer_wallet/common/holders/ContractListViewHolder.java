@@ -19,7 +19,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 /**
- * Created by nelson on 21/10/15.
+ * Created by Nelson Ramirez (nelsonalfo@gmail.com) on 21/10/15.
+ *
  */
 public class ContractListViewHolder extends FermatViewHolder {
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
@@ -39,7 +40,7 @@ public class ContractListViewHolder extends FermatViewHolder {
      * @param itemView the child ViewHolder's view
      */
     public ContractListViewHolder(View itemView) {
-        super(itemView);
+        super(itemView, 0);
 
         this.itemView = itemView;
         res = itemView.getResources();

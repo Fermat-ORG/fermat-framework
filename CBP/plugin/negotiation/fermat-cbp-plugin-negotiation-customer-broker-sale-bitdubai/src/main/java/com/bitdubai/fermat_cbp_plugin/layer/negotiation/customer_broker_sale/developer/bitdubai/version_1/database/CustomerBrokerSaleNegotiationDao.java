@@ -124,7 +124,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             SaleNegotiationClauseTable.deleteRecord(recordsToDelete);
 
             for (Clause _clause : negotiation.getClauses()) {
-                System.out.print(new StringBuilder().append("\n - ").append(_clause.getType()).append("").append(_clause.getValue()).append("\n").toString());
+                System.out.print("\n - " + _clause.getType() + "" + _clause.getValue() + "\n");
                 addNewClause(negotiation.getNegotiationId(), _clause);
             }
 
@@ -206,7 +206,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
 
     public boolean closeNegotiation(UUID negotiationId) throws CantUpdateCustomerBrokerSaleException {
         try {
-            System.out.print(new StringBuilder().append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL").append("\n - NEGOTIATION SALE DAO closeNegotiation(").append(negotiationId).append(")\n").toString());
+            System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL" + "\n - NEGOTIATION SALE DAO closeNegotiation(" + negotiationId + ")\n");
             DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
             DatabaseTableRecord recordToUpdate = SaleNegotiationTable.getEmptyRecord();
             SaleNegotiationTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
@@ -690,7 +690,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             return table.getRecords().size() > 0;
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantAddNewClausesException(em.getMessage(), em, "Customer Broker Purchase Negotiation Clause Id Not Exists", new StringBuilder().append("Cant load ").append(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantAddNewClausesException(em.getMessage(), em, "Customer Broker Purchase Negotiation Clause Id Not Exists", "Cant load " + CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantAddNewClausesException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Purchase Negotiation Clause Id Not Exists", "unknown failure.");
         }
