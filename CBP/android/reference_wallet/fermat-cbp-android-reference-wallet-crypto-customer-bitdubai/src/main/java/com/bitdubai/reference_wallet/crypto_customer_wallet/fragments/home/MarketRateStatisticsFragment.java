@@ -53,7 +53,6 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
         } else {
             providerName.setText(this.providerName);
         }
-
         currencies.setText(currencyPair);
         buyPrice.setText(new StringBuilder().append(buyCurrency).append(" ").append(buyWithFormat).toString());
         sellPrice.setText(new StringBuilder().append(sellCurrency).append(" ").append(sellWithFormat).toString());

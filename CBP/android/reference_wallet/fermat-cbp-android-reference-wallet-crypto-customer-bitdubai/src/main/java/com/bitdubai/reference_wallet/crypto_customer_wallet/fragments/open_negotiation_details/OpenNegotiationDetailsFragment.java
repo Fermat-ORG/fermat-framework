@@ -378,11 +378,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         //CLAUSES DATE
         String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
 
-        String exchangeAmount = fixFormat(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+        String exchangeAmount = fixFormat(clauses.get(ClauseType.EXCHANGE_RATE).getValue(),true);
 
 
         String payment = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
-        String amount = fixFormat(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+        String amount = fixFormat(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue(),true);
         Drawable brokerImg = getImgDrawable(broker.getProfileImage());
 
         //LIST MERCHANDISE TYPE
@@ -496,7 +496,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                     //  newValue = getDecimalFormat(getBigDecimal(newValue));
 
 
-                    newValue = fixFormat(newValue);
+                    newValue = fixFormat(newValue,false);
                     //
                     putClause(clause, newValue);
 
@@ -507,7 +507,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
 
                     //ASIGNAMENT CUSTOMER CURRENCY QUANTITY
-                    final String amountToBuyStr = fixFormat(String.valueOf(amountToBuy));
+                    final String amountToBuyStr = fixFormat(String.valueOf(amountToBuy),true);
                     final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
                     putClause(brokerCurrencyQuantity, amountToBuyStr);
 
@@ -688,7 +688,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                 //change lostwood
 
                 // newValue = getDecimalFormat(getBigDecimal(newValue));
-                newValue = fixFormat(newValue);
+                newValue = fixFormat(newValue,false);
                 putClause(clause, newValue);
 
                 //change lostwood
@@ -707,7 +707,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
 
                 //ASSIGN BROKER CURRENCY QUANTITY
-                final String amountToPayStr = fixFormat(String.valueOf(amountToPay.doubleValue()));
+                final String amountToPayStr = fixFormat(String.valueOf(amountToPay.doubleValue()),true);
                 final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
                 putClause(brokerCurrencyQuantityClause, amountToPayStr);
 
@@ -1137,32 +1137,21 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         return numberFormat.format(value.doubleValue());
     }*/
 
-    private BigDecimal convertToBigDecimal(String value) {
 
-        BigDecimal convertion = new BigDecimal(0);
+    private String fixFormat(String value,Boolean stringContainADoubleValue) {
+
         try {
-            if (compareLessThan1(value)) {
+            if (compareLessThan1(value,stringContainADoubleValue)) {
                 numberFormat.setMaximumFractionDigits(8);
             } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
-            convertion = new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(
-                    Double.valueOf(numberFormat.parse(value).toString())))));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return convertion;
-    }
-
-    private String fixFormat(String value) {
-
-        try {
-            if (compareLessThan1(value)) {
-                numberFormat.setMaximumFractionDigits(8);
-            } else {
-                numberFormat.setMaximumFractionDigits(2);
+            if(stringContainADoubleValue){
+                return numberFormat.format(new BigDecimal(Double.valueOf(value).toString()));
+            }else{
+                return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
             }
-            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
+
         } catch (ParseException e) {
             e.printStackTrace();
             return "0";
@@ -1170,10 +1159,17 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
     }
 
-    private Boolean compareLessThan1(String value) {
+    private Boolean compareLessThan1(String value,Boolean StringContainADoubleValue) {
         Boolean lessThan1 = true;
+        Double valueToConvert;
+
         try {
-            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+            if(StringContainADoubleValue){
+                valueToConvert=Double.valueOf(value);
+            }else{
+                valueToConvert=numberFormat.parse(value).doubleValue();
+            }
+            if (BigDecimal.valueOf(valueToConvert).
                     compareTo(BigDecimal.ONE) == -1) {
                 lessThan1 = true;
             } else {
@@ -1183,6 +1179,22 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             e.printStackTrace();
         }
         return lessThan1;
+    }
+
+    private BigDecimal convertToBigDecimal(String value) {
+
+        BigDecimal convertion = new BigDecimal(0);
+        try {
+            if (compareLessThan1(value,true)) {
+                numberFormat.setMaximumFractionDigits(8);
+            } else {
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            convertion = new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value)))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return convertion;
     }
 
     private List<IndexInfoSummary> getActualExchangeRates() {
