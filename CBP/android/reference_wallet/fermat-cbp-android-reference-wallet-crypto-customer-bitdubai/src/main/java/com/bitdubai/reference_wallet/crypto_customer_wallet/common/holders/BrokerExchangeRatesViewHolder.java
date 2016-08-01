@@ -39,7 +39,7 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
     public void bind(MerchandiseExchangeRate data) {
 
 
-        String exchangeRate = fixFormat(String.valueOf(data.getExchangeRate()));
+        String exchangeRate = fixFormat(data.getExchangeRate());
         String merchandiseCurrency = data.getMerchandiseCurrency().getCode();
         String paymentCurrency = data.getPaymentCurrency().getCode();
 
@@ -60,34 +60,28 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
     }
 
 
-    private String fixFormat(String value) {
+    private String fixFormat(Double value) {
 
-        try {
+
             if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
             } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
-            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "0";
-        }
+            return numberFormat.format(new BigDecimal(value));
 
     }
 
-    private Boolean compareLessThan1(String value) {
+    private Boolean compareLessThan1(Double value) {
         Boolean lessThan1 = true;
-        try {
-            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+
+            if (BigDecimal.valueOf(value).
                     compareTo(BigDecimal.ONE) == -1) {
                 lessThan1 = true;
             } else {
                 lessThan1 = false;
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
         return lessThan1;
     }
 

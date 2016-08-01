@@ -23,6 +23,9 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -47,6 +50,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
     protected ContractDetail contractDetail;
     private ContractDetailActivityFragment fragment;
     int inProcessStatus = 0;
+    private NumberFormat numberFormat= DecimalFormat.getInstance();
 
 
     //UI
@@ -149,7 +153,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         final String currencyCode = itemInfo.getPaymentOrMerchandiseCurrencyCode();
         final String typeOfPayment = itemInfo.getPaymentOrMerchandiseTypeOfPayment();
 
-        amountAndMethodTextView.setText(String.format("%1$s %2$s using %3$s", amount, currencyCode, typeOfPayment));
+        amountAndMethodTextView.setText(String.format("%1$s %2$s using %3$s", fixFormat(amount), currencyCode, typeOfPayment));
 
         switch (itemInfo.getContractStep()) {
             case 1:
@@ -354,4 +358,33 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         return Boolean.FALSE;
 
     }
+
+    private String fixFormat(String value) {
+
+
+        if (compareLessThan1(value)) {
+            numberFormat.setMaximumFractionDigits(8);
+        } else {
+            numberFormat.setMaximumFractionDigits(2);
+        }
+        return numberFormat.format(new BigDecimal(Double.valueOf(value)));
+
+
+    }
+
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
+
+        if (BigDecimal.valueOf(Double.valueOf(value)).
+                compareTo(BigDecimal.ONE) == -1) {
+            lessThan1 = true;
+        } else {
+            lessThan1 = false;
+        }
+        return lessThan1;
+    }
+
+
+
 }
+

@@ -500,7 +500,10 @@ public class BrokerAckOfflinePaymentMonitorAgent2 extends AbstractBusinessTransa
                     brokerCurrency = FiatCurrency.getByCode(clause.getValue());
 
                 if (clauseType == ClauseType.BROKER_BANK_ACCOUNT)
+                   // System.out.println("LOSTWOOD_BANK_ACOUNT:"+clause);
+                   // System.out.println("LOSTWOOD_BANK_ACOUNT.getValue:"+clause.getValue());
                     account = NegotiationClauseHelper.getAccountNumberFromClause(clause);
+                  //  System.out.println("LOSTWOOD_BANK_ACOUNT_RESULT:"+account);
 
                 if (clauseType == ClauseType.BROKER_CURRENCY_QUANTITY) {
                     brokerAmountDouble = parseToDouble(clause.getValue());
@@ -746,7 +749,7 @@ public class BrokerAckOfflinePaymentMonitorAgent2 extends AbstractBusinessTransa
 
     private void applySalePaymentCredit(String brokerWalletPublicKey, CustomerBrokerContractSale contractSale, String negotiationId) throws FermatException, ParseException {
 
-        final NumberFormat numberFormat = NumberFormat.getInstance();
+       // final NumberFormat numberFormat = NumberFormat.getInstance();
         final CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.
                 getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
 
@@ -756,10 +759,14 @@ public class BrokerAckOfflinePaymentMonitorAgent2 extends AbstractBusinessTransa
         String clauseValue;
 
         clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.EXCHANGE_RATE);
-        final BigDecimal priceReference = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
+     //   final BigDecimal priceReference = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
+        System.out.println("LOSTWOOD_BAOPMONITORAGENT2_PRICEREFERENCE:"+clauseValue);
+        final BigDecimal priceReference = new BigDecimal(Double.valueOf(clauseValue));
 
         clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_CURRENCY_QUANTITY);
-        BigDecimal amount = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
+    //    BigDecimal amount = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
+        System.out.println("LOSTWOOD_BAOPMONITORAGENT2_AMOUNT:"+clauseValue);
+        BigDecimal amount = new BigDecimal(Double.valueOf(clauseValue));
 
         clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_BANK_ACCOUNT);
         final String bankAccount = NegotiationClauseHelper.getAccountNumberFromString(clauseValue);
