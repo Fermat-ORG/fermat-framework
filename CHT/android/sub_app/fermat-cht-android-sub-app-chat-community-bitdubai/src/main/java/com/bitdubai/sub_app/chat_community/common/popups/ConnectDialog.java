@@ -54,7 +54,6 @@ public class ConnectDialog
     private final ChatActorCommunityInformation chatUserInformation;
     private final ChatActorCommunitySelectableIdentity identity;
 
-
     public ConnectDialog(final Context a,
                          final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
                          final SubAppResourcesProviderManager subAppResources,

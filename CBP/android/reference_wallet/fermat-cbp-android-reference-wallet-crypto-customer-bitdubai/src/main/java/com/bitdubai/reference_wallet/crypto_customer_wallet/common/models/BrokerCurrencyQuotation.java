@@ -6,6 +6,7 @@ import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class BrokerCurrencyQuotation {
     public String getExchangeRate(String currencyOver, String currencyUnder) {
 
         ExchangeRate currencyQuotation = getQuotation(currencyOver, currencyUnder);
-        String exchangeRateStr = "0.0";
+        String exchangeRateStr=defaultValue();
 
         if (currencyQuotation == null) {
             currencyQuotation = getQuotation(currencyUnder, currencyOver);
@@ -39,6 +40,8 @@ public class BrokerCurrencyQuotation {
         return exchangeRateStr;
     }
 
+
+
     private ExchangeRate getQuotation(String currencyAlfa, String currencyBeta) {
 
         if (marketExchangeRates != null)
@@ -52,6 +55,16 @@ public class BrokerCurrencyQuotation {
             }
 
         return null;
+    }
+
+
+    String defaultValue(){
+        DecimalFormatSymbols symbols =((DecimalFormat)DecimalFormat.getInstance()).getDecimalFormatSymbols();
+        if(symbols.getDecimalSeparator()=='.'){
+            return "0.0";
+        }else{
+            return "0,0";
+        }
     }
 
 }
