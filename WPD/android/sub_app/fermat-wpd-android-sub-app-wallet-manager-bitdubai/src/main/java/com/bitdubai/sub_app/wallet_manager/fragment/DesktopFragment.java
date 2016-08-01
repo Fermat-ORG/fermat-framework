@@ -341,7 +341,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
                     }
 
 
-              /*  if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode())) {
+                if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode())) {
                     Item item = new Item(installedWallet);
                     item.setIconResource(R.drawable.icon_loss_protected);
                     item.setPosition(8);
@@ -349,7 +349,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
                     lstItemsWithIcon.add(item);
                 }
 
-                */
+
 
                if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode())) {
                    Item item = new Item(installedWallet);

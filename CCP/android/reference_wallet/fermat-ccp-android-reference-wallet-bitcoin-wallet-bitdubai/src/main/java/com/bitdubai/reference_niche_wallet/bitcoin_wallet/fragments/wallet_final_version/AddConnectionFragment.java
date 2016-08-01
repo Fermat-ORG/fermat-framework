@@ -41,6 +41,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletCo
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.AddConnectionCallback;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,19 +85,11 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             isMenuVisible=false;
             connectionPickCounter = 0;
             hnadler = new Handler();
-            BitcoinWalletSettings bitcoinWalletSettings = null;
-            bitcoinWalletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
 
-            if(bitcoinWalletSettings != null) {
-
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
-
-            }
-
-            blockchainNetworkType = moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
         } catch (Exception ex) {
             ex.printStackTrace();

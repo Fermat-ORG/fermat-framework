@@ -78,7 +78,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
             providerName = getArguments().getString("providerName");
             providerId = UUID.fromString(getArguments().getString("providerId"));
 
-            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+            if(fermatSession.getData(SessionConstant.FIAT_CURRENCY) != null)
                 fiatCurrency = (String)appSession.getData(SessionConstant.FIAT_CURRENCY);
             else
                 fiatCurrency = FiatCurrency.US_DOLLAR.getCode();

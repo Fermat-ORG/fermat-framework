@@ -204,13 +204,12 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
-                            boolean isHelpEnabled = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
+                            boolean isHelpEnabled = (Boolean)appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED);
 
                             if (isHelpEnabled)
                                 setUpTutorial(true);
-                        } catch (CantGetSettingsException e) {
-                            e.printStackTrace();
-                        } catch (SettingsNotFoundException e) {
+
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else {

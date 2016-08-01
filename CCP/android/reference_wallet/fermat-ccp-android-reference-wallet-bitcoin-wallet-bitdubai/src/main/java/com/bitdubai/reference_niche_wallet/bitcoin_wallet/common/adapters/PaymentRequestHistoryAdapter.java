@@ -58,29 +58,17 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 
         try {
 
-            bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(this.referenceWalletSession.getAppPublicKey());
-
-            if (bitcoinWalletSettings.getFeedLevel() == null)
-                bitcoinWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
+            if(referenceWalletSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)referenceWalletSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
             else
-                feeLevel = bitcoinWalletSettings.getFeedLevel();
-
-            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-            }
+
+            if(referenceWalletSession.getData(SessionConstant.FEE_LEVEL) != null)
+                feeLevel = (String)referenceWalletSession.getData(SessionConstant.FEE_LEVEL);
             else
-                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-
-            this.cryptoWallet.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                feeLevel = BitcoinFee.NORMAL.toString();
 
 
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantPersistSettingsException e) {
-            e.printStackTrace();
         }
         catch (Exception e) {
             e.printStackTrace();

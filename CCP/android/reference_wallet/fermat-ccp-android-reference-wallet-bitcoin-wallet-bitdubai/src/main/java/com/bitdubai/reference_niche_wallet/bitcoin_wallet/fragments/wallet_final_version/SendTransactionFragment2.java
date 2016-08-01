@@ -198,11 +198,23 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
                 if(moduleManager!=null)
                     moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+
+                appSession.setData(SessionConstant.NOTIFICATION_ENABLED, true);
+                appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, true);
+                appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
+                appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
+
             } else {
                 if (bitcoinWalletSettings.getBlockchainNetworkType() == null)
                     bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 else
                     blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+
+                appSession.setData(SessionConstant.FEE_LEVEL, bitcoinWalletSettings.getFeedLevel());
+                appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, bitcoinWalletSettings.isBlockchainDownloadEnabled());
+                appSession.setData(SessionConstant.NOTIFICATION_ENABLED, bitcoinWalletSettings.getNotificationEnabled());
+                appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, bitcoinWalletSettings.isPresentationHelpEnabled());
+                appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
             }
 
 
@@ -212,7 +224,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 e.printStackTrace();
             }
 
-            final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
+
             _executor.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -221,7 +233,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             public void run() {
                                 try {
 
-                                    if (bitcoinWalletSettingsTemp.isPresentationHelpEnabled()) {
+                                    if ((Boolean)appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED)) {
                                         setUpPresentation(false);
                                     }
                                     else
@@ -262,7 +274,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 if (pendingBlocks > 0) {
                     //paint toolbar on red
                     toolbarColor = Color.RED;
-                    if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
+                    if ((Boolean)appSession.getData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED))
                         setUpBlockchainProgress(false);
                 } else {
                     toolbarColor = Color.parseColor("#05CFC2");
@@ -770,7 +782,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     return true;
                 }
                 else {
-                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    setUpPresentation((Boolean)appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED));
                     return true;
                 }
 

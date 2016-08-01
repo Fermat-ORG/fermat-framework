@@ -15,6 +15,11 @@ public class SessionConstant {
     public static final String TYPE_BALANCE_SELECTED = "typeBalanceSelected";
     public static final String TYPE_AMOUNT_SELECTED = "typeAmountSelected";
     public static final String BLOCKCHANIN_TYPE = "blockchainNetworkType";
+    public static final String NOTIFICATION_ENABLED = "NotificationEnabled";
+    public static final String BLOCKCHAIN_DOWNLOAD_ENABLED = "BlockchainDownloadEnabled";
+    public static final String FEE_LEVEL = "Feelevel";
+    public static final String FIAT_CURRENCY = "FiatCurrency";
+    public static final String PRESENTATION_HELP_ENABLED = "PresentationHelpEnabled";
 
 
 }
