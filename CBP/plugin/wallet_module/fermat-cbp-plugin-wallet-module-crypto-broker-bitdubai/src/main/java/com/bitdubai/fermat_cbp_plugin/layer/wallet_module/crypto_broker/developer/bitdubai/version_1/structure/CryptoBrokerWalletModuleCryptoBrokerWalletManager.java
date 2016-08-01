@@ -1573,6 +1573,14 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         final EarningExtractorManager earningsExtractorManager = matchingEngineManager.getEarningsExtractorManager();
         CryptoBrokerWalletPreferenceSettings preferenceSettings;
 
+        String associatedIdentityPublicKey;
+        try {
+            CryptoBrokerIdentity associatedIdentity = getAssociatedIdentity(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+            associatedIdentityPublicKey = associatedIdentity.getPublicKey();
+        } catch (Exception e) {
+            associatedIdentityPublicKey = "cryptoBrokerActorPublicKey";
+        }
+
         try {
             preferenceSettings = loadAndGetSettings(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
         } catch (Exception e) {
@@ -1582,7 +1590,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         final FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
         final long fee = preferenceSettings.getBitcoinFee().getFee();
 
-        return earningsExtractorManager.extractEarnings(earningsPair, earningTransactions, fee, feeOrigin);
+
+        return earningsExtractorManager.extractEarnings(associatedIdentityPublicKey, earningsPair, earningTransactions, fee, feeOrigin);
     }
 
     @Override

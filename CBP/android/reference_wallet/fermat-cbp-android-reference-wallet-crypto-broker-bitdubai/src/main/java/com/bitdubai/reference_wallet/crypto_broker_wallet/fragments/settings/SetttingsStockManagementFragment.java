@@ -228,7 +228,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     public void onItemClickListener(CryptoBrokerWalletAssociatedSetting data, int position) {
 
         //Launch Restock/Destock dialog
-        final CreateRestockDestockFragmentDialog dialog = new CreateRestockDestockFragmentDialog(getActivity(), (ReferenceAppFermatSession) appSession, data);
+        final CreateRestockDestockFragmentDialog dialog = new CreateRestockDestockFragmentDialog(getActivity(), appSession, data);
         dialog.setOnDismissListener(this);
         dialog.show();
     }

@@ -60,6 +60,7 @@ import static org.mockito.Mockito.when;
 public class EarningsTransferenceToAssociatedWalletTest {
     private static final String BANK_ACCOUNT_NUMBER_2 = "987654321";
     private static final String BANK_ACCOUNT_NUMBER_1 = "123456789";
+    private static final String BROKER_IDENTITY_PUBLIC_KEY = "brokerIdentityPublicKey";
     private static final String BROKER_WALLET_PUBLIC_KEY = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
 
     @Mock
@@ -147,7 +148,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
+        boolean earningsExtracted = transaction.extractEarnings(BROKER_IDENTITY_PUBLIC_KEY, earningsPair, earningTransactions,
                 BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
         // assertion
@@ -207,7 +208,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
+        boolean earningsExtracted = transaction.extractEarnings(BROKER_IDENTITY_PUBLIC_KEY, earningsPair, earningTransactions,
                 BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
         // assertion
@@ -246,7 +247,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
+        boolean earningsExtracted = transaction.extractEarnings(BROKER_IDENTITY_PUBLIC_KEY, earningsPair, earningTransactions,
                 BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
         // assertion
@@ -291,7 +292,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 System.currentTimeMillis(),
                 dao));
 
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
+        boolean earningsExtracted = transaction.extractEarnings(BROKER_IDENTITY_PUBLIC_KEY, earningsPair, earningTransactions,
                 BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
         // assertion
@@ -327,7 +328,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
+        boolean earningsExtracted = transaction.extractEarnings(BROKER_IDENTITY_PUBLIC_KEY, earningsPair, earningTransactions,
                 BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
         // assertion
@@ -375,7 +376,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
+        boolean earningsExtracted = transaction.extractEarnings(BROKER_IDENTITY_PUBLIC_KEY, earningsPair, earningTransactions,
                 BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
         // assertion
@@ -427,7 +428,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
+        boolean earningsExtracted = transaction.extractEarnings(BROKER_IDENTITY_PUBLIC_KEY, earningsPair, earningTransactions,
                 BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
         // assertion
@@ -456,7 +457,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
 
 
         // exercise
-        earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
+        earningsExtracted = transaction.extractEarnings(BROKER_IDENTITY_PUBLIC_KEY, earningsPair, earningTransactions,
                 BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
         // assertion
@@ -491,7 +492,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
+        boolean earningsExtracted = transaction.extractEarnings(BROKER_IDENTITY_PUBLIC_KEY, earningsPair, earningTransactions,
                 BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
         // assertion
@@ -533,7 +534,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
+        boolean earningsExtracted = transaction.extractEarnings(BROKER_IDENTITY_PUBLIC_KEY, earningsPair, earningTransactions,
                 BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
         // assertion
@@ -572,14 +573,14 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        catchException(transaction).extractEarnings(earningsPair, null,
+        catchException(transaction).extractEarnings(BROKER_IDENTITY_PUBLIC_KEY, earningsPair, null,
                 BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
         // assertions
         assertThat(caughtException()).isInstanceOf(CantExtractEarningsException.class);
 
         // exercise
-        catchException(transaction).extractEarnings(null, earningTransactions,
+        catchException(transaction).extractEarnings(BROKER_IDENTITY_PUBLIC_KEY, null, earningTransactions,
                 BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
         // assertions
@@ -612,7 +613,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
         transaction = new EarningExtractorManagerImpl(cryptoBrokerWalletManager, dao);
 
         // exercise
-        catchException(transaction).extractEarnings(earningsPair, earningTransactions,
+        catchException(transaction).extractEarnings(BROKER_IDENTITY_PUBLIC_KEY, earningsPair, earningTransactions,
                 BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
         // assertions
