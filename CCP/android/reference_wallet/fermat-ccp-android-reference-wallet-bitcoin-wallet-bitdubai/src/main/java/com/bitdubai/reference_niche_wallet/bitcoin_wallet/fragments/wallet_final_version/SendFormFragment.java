@@ -793,7 +793,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                             if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                                newFee = bitcoinConverter.getSathoshisFromBTC(fee);
+                                newFee    = bitcoinConverter.getSathoshisFromBTC(fee);
                                 msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = amount;
