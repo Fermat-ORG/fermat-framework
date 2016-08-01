@@ -141,32 +141,27 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
 
     private String fixFormat(String value) {
 
-        try {
+
             if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
             } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
-            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "0";
-        }
+            return numberFormat.format(new BigDecimal(value));
+
 
     }
 
     private Boolean compareLessThan1(String value) {
         Boolean lessThan1 = true;
-        try {
-            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+
+            if (BigDecimal.valueOf(Double.valueOf(value)).
                     compareTo(BigDecimal.ONE) == -1) {
                 lessThan1 = true;
             } else {
                 lessThan1 = false;
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
         return lessThan1;
     }
 

@@ -23,6 +23,9 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.ContractDetail;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contract_detail.ContractDetailActivityFragment;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -47,6 +50,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
     protected ContractDetail contractDetail;
     private ContractDetailActivityFragment fragment;
     int inProcessStatus = 0;
+    private NumberFormat numberFormat= DecimalFormat.getInstance();
 
     //UI
     private Resources res;
@@ -153,7 +157,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             case 1:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 stepTitle.setText("Payment Delivery");
-                stringBuilder.append(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
+                stringBuilder.append(getFormattedAmount(fixFormat(itemInfo.getPaymentOrMerchandiseAmount()), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
                         .append(", using ")
                         .append(itemInfo.getPaymentOrMerchandiseTypeOfPayment());
                 textAmountAndMethod.setText(stringBuilder.toString());
@@ -178,7 +182,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             case 2:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_02);
                 stepTitle.setText("Payment Reception");
-                stringBuilder.append(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
+                stringBuilder.append(getFormattedAmount(fixFormat(itemInfo.getPaymentOrMerchandiseAmount()), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
                         .append(", using ")
                         .append(itemInfo.getPaymentOrMerchandiseTypeOfPayment());
                 textAmountAndMethod.setText(stringBuilder.toString());
@@ -223,7 +227,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             case 3:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_03);
                 stepTitle.setText("Merchandise Delivery");
-                stringBuilder.append(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
+                stringBuilder.append(getFormattedAmount(fixFormat(itemInfo.getPaymentOrMerchandiseAmount()), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
                         .append(", using ")
                         .append(itemInfo.getPaymentOrMerchandiseTypeOfPayment());
                 textAmountAndMethod.setText(stringBuilder.toString());
@@ -273,7 +277,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             case 4:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_04);
                 stepTitle.setText("Merchandise reception");
-                stringBuilder.append(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
+                stringBuilder.append(getFormattedAmount(fixFormat(itemInfo.getPaymentOrMerchandiseAmount()), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
                         .append(", using ")
                         .append(itemInfo.getPaymentOrMerchandiseTypeOfPayment());
                 textAmountAndMethod.setText(stringBuilder.toString());
@@ -360,5 +364,31 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         return Boolean.FALSE;
 
     }
+
+    private String fixFormat(String value) {
+
+
+        if (compareLessThan1(value)) {
+            numberFormat.setMaximumFractionDigits(8);
+        } else {
+            numberFormat.setMaximumFractionDigits(2);
+        }
+        return numberFormat.format(new BigDecimal(Double.valueOf(value)));
+
+
+    }
+
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
+
+        if (BigDecimal.valueOf(Double.valueOf(value)).
+                compareTo(BigDecimal.ONE) == -1) {
+            lessThan1 = true;
+        } else {
+            lessThan1 = false;
+        }
+        return lessThan1;
+    }
+
 
 }

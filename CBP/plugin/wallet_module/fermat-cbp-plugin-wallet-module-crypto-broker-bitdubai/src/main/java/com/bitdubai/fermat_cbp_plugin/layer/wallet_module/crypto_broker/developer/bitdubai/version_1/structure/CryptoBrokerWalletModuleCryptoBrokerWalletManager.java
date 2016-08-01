@@ -1573,6 +1573,14 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         final EarningExtractorManager earningsExtractorManager = matchingEngineManager.getEarningsExtractorManager();
         CryptoBrokerWalletPreferenceSettings preferenceSettings;
 
+        String associatedIdentityPublicKey;
+        try {
+            CryptoBrokerIdentity associatedIdentity = getAssociatedIdentity(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+            associatedIdentityPublicKey = associatedIdentity.getPublicKey();
+        } catch (Exception e) {
+            associatedIdentityPublicKey = "cryptoBrokerActorPublicKey";
+        }
+
         try {
             preferenceSettings = loadAndGetSettings(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
         } catch (Exception e) {
@@ -1582,7 +1590,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         final FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
         final long fee = preferenceSettings.getBitcoinFee().getFee();
 
-        return earningsExtractorManager.extractEarnings(earningsPair, earningTransactions, fee, feeOrigin);
+
+        return earningsExtractorManager.extractEarnings(associatedIdentityPublicKey, earningsPair, earningTransactions, fee, feeOrigin);
     }
 
     @Override
@@ -1748,7 +1757,9 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
             throw new InvalidParameterException("Cannot parse a null string value to long");
         } else {
             try {
-                return NumberFormat.getInstance().parse(stringValue).doubleValue();
+            //    return NumberFormat.getInstance().parse(stringValue).doubleValue();
+                System.out.println("LOSTOOW_CryptoBrokerWalletModuleCryptoBrokerWalletManager_PARSE"+stringValue);
+                return Double.valueOf(stringValue);
             } catch (Exception exception) {
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
                         "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");

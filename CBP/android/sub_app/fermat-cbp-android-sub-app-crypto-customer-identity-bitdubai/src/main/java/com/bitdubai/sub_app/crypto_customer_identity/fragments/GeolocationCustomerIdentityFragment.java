@@ -139,7 +139,7 @@ public class GeolocationCustomerIdentityFragment
 
     private void saveIdentityGeolocation() {
         if (accuracy.getText().length() == 0) {
-            Toast.makeText(getActivity(), "Accuracy is empty, please add a value", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.crypto_customer_empty_accuracy, Toast.LENGTH_SHORT).show();
         } else {
             accuracyData = Integer.parseInt(accuracy.getText().toString());
 

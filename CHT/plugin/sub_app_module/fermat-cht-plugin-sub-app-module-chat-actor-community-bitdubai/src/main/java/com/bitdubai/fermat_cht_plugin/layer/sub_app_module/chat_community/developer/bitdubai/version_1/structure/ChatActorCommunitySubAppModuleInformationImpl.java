@@ -20,7 +20,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     private final String publicKey;
     private final String alias;
     private final byte[] image;
-    private final ConnectionState connectionState;
+    private ConnectionState connectionState;
     private final UUID connectionId;
     private String country;
     private String state;
@@ -155,6 +155,10 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         return profileStatus;
     }
 
+    public void setConnectionState(ConnectionState connectionState) {
+        this.connectionState=connectionState;
+    }
+
     public void setCity(String city) {
         this.city = city;
     }
@@ -169,6 +173,18 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
 
     @Override
     public String toString() {
-        return "ChatActorCommunitySubAppModuleInformationImpl{" + "publicKey='" + publicKey + '\'' + ", alias='" + alias + '\'' + ", connectionState='" + connectionState + '\'' + ", connectionId='" + connectionId + '\'' + ", image=" + (image != null) + '\'' + ", status=" + status + '\'' + ", country=" + country + '\'' + ", state=" + state + '\'' + ", city=" + city + '\'' + ", location=" + (location != null) + ", profileStatus=" + profileStatus.getCode() + '\'' + '}';
+        return "ChatActorCommunitySubAppModuleInformationImpl{" +
+                "publicKey='" + publicKey + '\'' +
+                ", alias='" + alias + '\'' +
+                ", connectionState='" + connectionState + '\'' +
+                ", connectionId='" + connectionId + '\'' +
+                ", image=" + (image != null) + '\'' +
+                ", status=" + (status) + '\'' +
+                ", country=" + (country) + '\'' +
+                ", state=" + (state) + '\'' +
+                ", city=" + (city) + '\'' +
+                ", location=" + (location!=null) +
+                ", profileStatus=" + (profileStatus.getCode()) + '\'' +
+                '}';
     }
 }
