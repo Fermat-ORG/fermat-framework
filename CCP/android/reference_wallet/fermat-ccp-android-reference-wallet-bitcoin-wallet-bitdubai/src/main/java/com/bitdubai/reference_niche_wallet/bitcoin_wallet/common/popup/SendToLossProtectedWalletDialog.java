@@ -47,6 +47,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.DecimalDigitsInputFilter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReferenceWalletSettings;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 
 import java.io.ByteArrayOutputStream;
@@ -121,18 +122,10 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
         setUpScreenComponents();
         bitcoinConverter = new BitcoinConverter();
 
-
-        try {
-            bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
-            if (bitcoinWalletSettings.getBlockchainNetworkType() == null)
-                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-            else
-                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-        } catch (CantGetSettingsException e) {
-            blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-        } catch (SettingsNotFoundException e) {
-            blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-        }
+        if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+            blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+        else
+            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
 
 

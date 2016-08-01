@@ -125,21 +125,10 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
             errorManager = appSession.getErrorManager();
             cryptoWallet = appSession.getModuleManager();
 
-            BitcoinWalletSettings bitcoinWalletSettings = null;
-
-            bitcoinWalletSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
-
-            if(bitcoinWalletSettings != null) {
-
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
-
-            }
-
-            blockchainNetworkType = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type"+blockchainNetworkType);
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
