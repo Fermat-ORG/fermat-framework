@@ -172,62 +172,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
             intraUserLoginIdentity = appSession.getModuleManager().getSelectedActorIdentity();
 
-            if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
-                balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
-            else
-                appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
-
-            if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
-                typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
-            else
-                appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
-
-            //get wallet settings
-            try {
-                fermatWalletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-            } catch (Exception e) {
-                fermatWalletSettings = null;
-            }
-
-            if (fermatWalletSettings == null) {
-                fermatWalletSettings = new FermatWalletSettings();
-                fermatWalletSettings.setIsContactsHelpEnabled(true);
-                fermatWalletSettings.setIsPresentationHelpEnabled(true);
-                fermatWalletSettings.setNotificationEnabled(true);
-                fermatWalletSettings.setIsBlockchainDownloadEnabled(true);
-                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-                fermatWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
-                fermatWalletSettings.setFiatCurrency(FiatCurrency.US_DOLLAR.getCode());
-
-                if(moduleManager!=null)
-                    moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
-
-                appSession.setData(SessionConstant.NOTIFICATION_ENABLED, true);
-                appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, true);
-                appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
-                appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
-                appSession.setData(SessionConstant.FIAT_CURRENCY, FiatCurrency.US_DOLLAR.getCode());
-            } else {
-                if (fermatWalletSettings.getBlockchainNetworkType() == null)
-                    fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                else
-                    blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
-
-
-                appSession.setData(SessionConstant.FIAT_CURRENCY,  fermatWalletSettings.getFiatCurrency());
-                appSession.setData(SessionConstant.FEE_LEVEL, fermatWalletSettings.getFeedLevel());
-                appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, fermatWalletSettings.isBlockchainDownloadEnabled());
-                appSession.setData(SessionConstant.NOTIFICATION_ENABLED, fermatWalletSettings.getNotificationEnabled());
-                appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, fermatWalletSettings.isPresentationHelpEnabled());
-                appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
-            }
-
-            try {
-                if(moduleManager!=null) moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+          loadSettings();
 
 
             _executor.submit(new Runnable() {
@@ -1078,6 +1023,76 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
     @Override
     public void onLongItemClickListener(FermatWalletTransaction data, int position) {
+
+    }
+
+    private void loadSettings(){
+        try {
+
+            if(appSession.getData(SessionConstant.SETTINGS_LOADED) == null)
+            {
+                if(! (Boolean)appSession.getData(SessionConstant.SETTINGS_LOADED))
+                {
+                    if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                        balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+                    if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                        typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
+
+                    //get wallet settings
+                    try {
+                        fermatWalletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+                    } catch (Exception e) {
+                        fermatWalletSettings = null;
+                    }
+
+                    if (fermatWalletSettings == null) {
+                        fermatWalletSettings = new FermatWalletSettings();
+                        fermatWalletSettings.setIsContactsHelpEnabled(true);
+                        fermatWalletSettings.setIsPresentationHelpEnabled(true);
+                        fermatWalletSettings.setNotificationEnabled(true);
+                        fermatWalletSettings.setIsBlockchainDownloadEnabled(true);
+                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                        fermatWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+                        fermatWalletSettings.setFiatCurrency(FiatCurrency.US_DOLLAR.getCode());
+
+                        if(moduleManager!=null)
+                            moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
+
+                        appSession.setData(SessionConstant.NOTIFICATION_ENABLED, true);
+                        appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, true);
+                        appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
+                        appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
+                        appSession.setData(SessionConstant.FIAT_CURRENCY, FiatCurrency.US_DOLLAR.getCode());
+                    } else {
+                        if (fermatWalletSettings.getBlockchainNetworkType() == null)
+                            fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                        else
+                            blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
+
+
+                        appSession.setData(SessionConstant.FIAT_CURRENCY,  fermatWalletSettings.getFiatCurrency());
+                        appSession.setData(SessionConstant.FEE_LEVEL, fermatWalletSettings.getFeedLevel());
+                        appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, fermatWalletSettings.isBlockchainDownloadEnabled());
+                        appSession.setData(SessionConstant.NOTIFICATION_ENABLED, fermatWalletSettings.getNotificationEnabled());
+                        appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, fermatWalletSettings.isPresentationHelpEnabled());
+                        appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
+                    }
+
+                    if(moduleManager!=null) moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
+                    appSession.setData(SessionConstant.SETTINGS_LOADED, true);
+                }
+            }
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
