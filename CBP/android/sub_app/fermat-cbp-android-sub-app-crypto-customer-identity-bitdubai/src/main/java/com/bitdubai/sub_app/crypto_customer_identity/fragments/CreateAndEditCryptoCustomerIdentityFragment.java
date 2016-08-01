@@ -99,11 +99,12 @@ public class CreateAndEditCryptoCustomerIdentityFragment
     private int maxLenghtTextCount = 30;
     FermatTextView textCount;
     private String cryptoCustomerPublicKey;
+    IdentityCustomerPreferenceSettings subappSettings;
 
     private CryptoCustomerIdentityInformation identityInfo;
     List<CryptoCustomerIdentityInformation> customerIdentities = new ArrayList<>();
 
-    IdentityCustomerPreferenceSettings settings;
+//    IdentityCustomerPreferenceSettings settings;
     boolean isGpsDialogEnable;
 
     private ExecutorService executor;
@@ -183,25 +184,28 @@ public class CreateAndEditCryptoCustomerIdentityFragment
 
         turnGPSOn();
 
-        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_identity_customer)
-                .setBody(R.string.cbp_customer_identity_welcome_body)
-                .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
-                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                .setVIewColor(R.color.ccc_color_dialog_identity)
-                .setIsCheckEnabled(false)
-                .build();
+//        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+//                .setBannerRes(R.drawable.banner_identity_customer)
+//                .setBody(R.string.cbp_customer_identity_welcome_body)
+//                .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
+//                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+//                .setVIewColor(R.color.ccc_color_dialog_identity)
+//                .setIsCheckEnabled(false)
+//                .build();
+//
+//        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                checkGPSOn();
+//            }
+//        });
 
-        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                checkGPSOn();
-            }
-        });
-
-        IdentityCustomerPreferenceSettings subappSettings;
         try {
-            subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            if((appSession.getData(FragmentsCommons.SETTING_CUSTOMER) != null)) {
+                subappSettings = (IdentityCustomerPreferenceSettings) appSession.getData(FragmentsCommons.SETTING_CUSTOMER);
+            } else {
+                subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            }
         } catch (Exception e) {
             subappSettings = null;
         }
@@ -209,21 +213,23 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         if (subappSettings == null) {
             subappSettings = new IdentityCustomerPreferenceSettings();
             subappSettings.setIsPresentationHelpEnabled(true);
+            appSession.setData(FragmentsCommons.SETTING_CUSTOMER, subappSettings);
+        }
             try {
                 appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), subappSettings);
             } catch (Exception e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
-        }
 
         boolean showDialog;
         try {
-            showDialog = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+//            showDialog = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+            showDialog = subappSettings.isHomeTutorialDialogEnabled();
             if (showDialog) {
-                presentationDialog.show();
+                homeTutorialDialog();
             }
-        } catch (FermatException e) {
+        } catch (Exception e) {
             makeText(getActivity(), R.string.crypto_customer_error_dialog, Toast.LENGTH_SHORT).show();
         }
 
@@ -236,11 +242,11 @@ public class CreateAndEditCryptoCustomerIdentityFragment
 
         try {
             isGpsDialogEnable = true;
-            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
-            isGpsDialogEnable = settings.isGpsDialogEnabled();
+//            subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            isGpsDialogEnable = subappSettings.isGpsDialogEnabled();
         } catch (Exception e) {
-            settings = new IdentityCustomerPreferenceSettings();
-            settings.setGpsDialogEnabled(true);
+            subappSettings = new IdentityCustomerPreferenceSettings();
+            subappSettings.setGpsDialogEnabled(true);
             isGpsDialogEnable = true;
         }
 
@@ -705,18 +711,43 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         }
     }
 
+    public void homeTutorialDialog() {
+        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                .setBannerRes(R.drawable.banner_identity_customer)
+                .setBody(R.string.cbp_customer_identity_welcome_body)
+                .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setVIewColor(R.color.ccc_color_dialog_identity)
+                .setIconRes(R.drawable.building)
+                .setIsCheckEnabled(false)
+                .build();
+
+        presentationDialog.show();
+
+        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                checkGPSOn();
+            }
+        });
+    }
+
     public void turnOnGPSDialog() {
         try {
             PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
+                    .setTitle(R.string.cbp_customer_identity_welcome_title_gps)
+                    .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle_gps)
                     .setBody(R.string.cbp_customer_identity_gps)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_identity_customer)
                     .setVIewColor(R.color.ccc_color_dialog_identity)
+                    .setIconRes(R.drawable.building)
+                    .setCheckButtonAndTextVisible(0)
                     .build();
+
             pd.show();
-            settings.setGpsDialogEnabled(false);
-            appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
+            subappSettings.setGpsDialogEnabled(false);
+            appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), subappSettings);
         } catch (Exception e) {
             e.printStackTrace();
         }
