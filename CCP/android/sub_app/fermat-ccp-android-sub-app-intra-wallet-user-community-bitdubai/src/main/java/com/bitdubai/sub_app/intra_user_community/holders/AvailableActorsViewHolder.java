@@ -75,13 +75,7 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
         //  button_add.setVisibility(View.VISIBLE);
         //  }
 
-        if (data.getConnectionState() == ConnectionState.BLOCKED_LOCALLY   || data.getConnectionState() == ConnectionState.BLOCKED_REMOTELY
-        ||  data.getConnectionState() == ConnectionState.CANCELLED_LOCALLY || data.getConnectionState() == ConnectionState.CANCELLED_REMOTELY
-        ||  data.getConnectionState() == ConnectionState.DENIED_LOCALLY    || data.getConnectionState() == ConnectionState.DENIED_REMOTELY
-        ||data.getConnectionState() == ConnectionState.DISCONNECTED_LOCALLY|| data.getConnectionState() == ConnectionState.DISCONNECTED_REMOTELY
-        ||  data.getConnectionState() == ConnectionState.ERROR
-        ||  data.getConnectionState() == ConnectionState.PENDING_LOCALLY_ACCEPTANCE || data.getConnectionState() == ConnectionState.PENDING_REMOTELY_ACCEPTANCE
-        ||  data.getConnectionState() == ConnectionState.INTRA_USER_NOT_FOUND)
+        if (data.getConnectionState() != null)
         {
 
             switch (data.getConnectionState()) {
