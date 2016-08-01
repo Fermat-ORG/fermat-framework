@@ -50,7 +50,7 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 
 /**
- * Created by Yordin Alayn on 29/07/16.
+ * Created by Yordin Alayn on 29.07.16.
  */
 public class OpenContractProcess {
 
@@ -107,6 +107,13 @@ public class OpenContractProcess {
     }
 
 
+    /**
+     * this method, send the contract hash
+     * @param openContract
+     * @param transmissionId
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
     public boolean processPendingToSubmit(OpenContract openContract,UUID transmissionId)  throws UnexpectedResultReturnedFromDatabaseException{
 
         try {
@@ -171,6 +178,11 @@ public class OpenContractProcess {
         }
     }
 
+    /**
+     * this method process received of the contract Hash and send confirmation
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
     public boolean processContractHash() throws UnexpectedResultReturnedFromDatabaseException{
 
         try {
@@ -239,6 +251,11 @@ public class OpenContractProcess {
 
     }
 
+    /**
+     * this method process received of the confirmation contract Hash and send ack
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
     public boolean processConfirmContractHash() throws UnexpectedResultReturnedFromDatabaseException {
 
         try {
@@ -306,6 +323,11 @@ public class OpenContractProcess {
 
     }
 
+    /**
+     * this method process received of the Ack, open contract and close negotiation
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
     public boolean processAckContractHash() throws UnexpectedResultReturnedFromDatabaseException{
 
         try {
@@ -401,7 +423,15 @@ public class OpenContractProcess {
         return false;
     }
 
+    public void processForwardConfirm(){
 
+
+    }
+
+    /**
+     * This method, send event of the contrate opened
+     * @param contractHash
+     */
     private void raiseNewContractEvent(String contractHash) {
         System.out.println(new StringBuilder().append("OPEN_CONTRACT - AGENT - raiseNewContractEvent() - NEW_CONTRACT_OPENED \n - Contract Hash: ").append(contractHash).append("\n").toString());
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_OPENED);
@@ -411,6 +441,12 @@ public class OpenContractProcess {
         eventManager.raiseEvent(newContractOpened);
     }
 
+    /**
+     * This method generates the close negotiation
+     * @param contractType
+     * @param negotiationId
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
     private void closeNegotiation(ContractType contractType, String negotiationId) throws UnexpectedResultReturnedFromDatabaseException {
 
         UUID uuidNegotiationId = UUID.fromString(negotiationId);
@@ -451,6 +487,11 @@ public class OpenContractProcess {
         }
     }
 
+    /**
+     * This method generates the notifcacion the new contract created
+     * @param contractType
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
     private void notificationNewOpenContract(ContractType contractType) throws UnexpectedResultReturnedFromDatabaseException {
 
         if (contractType.equals(ContractType.PURCHASE)) {
