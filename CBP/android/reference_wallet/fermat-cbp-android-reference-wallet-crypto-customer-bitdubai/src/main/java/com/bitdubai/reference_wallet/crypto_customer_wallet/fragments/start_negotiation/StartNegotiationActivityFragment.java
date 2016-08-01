@@ -54,8 +54,10 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -608,12 +610,13 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
     }
 
     private List<Currency> getCurrenciesFromQuotes(List<MerchandiseExchangeRate> quotes) {
-        List<Currency> data = new ArrayList<>();
+        Set<Currency> data = new HashSet<>();
 
-        for (MerchandiseExchangeRate exchangeRate : quotes)
+        for (MerchandiseExchangeRate exchangeRate : quotes) {
             data.add(exchangeRate.getPaymentCurrency());
+        }
 
-        return data;
+        return new ArrayList<>(data);
     }
 
     private double getExchangeRate(String paymentCurrencyCode) {
