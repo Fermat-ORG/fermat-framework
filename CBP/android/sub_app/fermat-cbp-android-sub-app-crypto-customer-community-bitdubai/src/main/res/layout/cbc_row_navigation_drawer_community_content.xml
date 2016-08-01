@@ -8,35 +8,35 @@
     android:paddingLeft="24dp"
     android:paddingRight="24dp">
 
-<LinearLayout
-    android:id="@+id/cbc_row_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-
-    <ImageView
-        android:id="@+id/cbc_imageView_icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_gravity="center"
-        android:background="#0072bb"
-        android:src="@drawable/cbc_ic_nav_connections"
-        tools:ignore="ContentDescription" />
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/cbc_textView_label"
+    <LinearLayout
+        android:id="@+id/cbc_row_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0072bb"
-        android:paddingBottom="14dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="14dp"
-        android:text="Home"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        tools:ignore="HardcodedText" />
+        android:orientation="horizontal">
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/cbc_imageView_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:background="#0072bb"
+            android:src="@drawable/cbc_ic_nav_connections"
+            tools:ignore="ContentDescription" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbc_textView_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#0072bb"
+            android:paddingBottom="14dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="14dp"
+            android:text="@string/cbc_home"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

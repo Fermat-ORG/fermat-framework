@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="280dp"
-android:layout_height="148dp"
-android:background="#FFFFFF"
-android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="280dp"
+    android:layout_height="148dp"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
 
 
     <LinearLayout
@@ -18,67 +18,67 @@ android:orientation="vertical">
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:ellipsize="end"
+            android:padding="8dp"
             android:singleLine="true"
             android:text="@string/profile_picture_dialog_title"
+            android:textAlignment="center"
             android:textColor="#979797"
             android:textSize="12sp"
-            android:textAlignment="center"
-            android:padding="8dp"
-            tools:ignore="HardcodedText"
-            android:layout_gravity="center_horizontal" />
+            tools:ignore="HardcodedText" />
 
         <View
             android:layout_width="248dp"
             android:layout_height="1dp"
-            android:background="#e4007e"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:background="#e4007e" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
-        android:orientation="vertical"
-        android:id="@+id/relativeLayout2">
+        android:orientation="vertical">
 
         <Button
+            android:id="@+id/cbp_cam_picture_option"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="248dp"
             android:layout_height="42dp"
-            android:id="@+id/cbp_cam_picture_option"
-            android:text="@string/profile_picture_dialog_picture"
-            android:textColor="#666666"
-            android:textSize="16sp"
-            android:textAllCaps="false"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/view"
-            android:layout_toLeftOf="@+id/view"
             android:layout_gravity="center_horizontal"
+            android:layout_toLeftOf="@+id/view"
+            android:layout_toStartOf="@+id/view"
             android:background="#ffffff"
-            style="?android:attr/borderlessButtonStyle"
-            />
+            android:text="@string/profile_picture_dialog_picture"
+            android:textAllCaps="false"
+            android:textColor="#666666"
+            android:textSize="16sp" />
+
         <View
+            android:id="@+id/view"
             android:layout_width="248dp"
             android:layout_height="1dp"
-            android:background="#33000000"
-            android:id="@+id/view"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:background="#33000000" />
 
         <Button
+            android:id="@+id/cbp_galery_picture_option"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="248dp"
             android:layout_height="42dp"
-            android:id="@+id/cbp_galery_picture_option"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_toLeftOf="@+id/view"
+            android:layout_toStartOf="@+id/view"
+            android:background="#ffffff"
             android:text="@string/profile_picture_dialog_gallery"
             android:textAllCaps="false"
             android:textColor="#666666"
-            android:textSize="16sp"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/view"
-            android:layout_toLeftOf="@+id/view"
-            android:layout_gravity="center_horizontal"
-            android:background="#ffffff"
-            style="?android:attr/borderlessButtonStyle"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
 
