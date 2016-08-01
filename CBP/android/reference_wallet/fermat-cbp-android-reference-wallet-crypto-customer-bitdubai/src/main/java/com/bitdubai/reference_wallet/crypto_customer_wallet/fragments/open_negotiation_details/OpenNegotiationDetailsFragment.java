@@ -25,8 +25,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -40,6 +38,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListBankAccountsPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.common.exceptions.CantSendNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
@@ -101,9 +100,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     private CustomerBrokerNegotiationInformation negotiationInfo;
 
     private ArrayList<MoneyType> receptionMethods;
-    private List<BankAccountNumber> bankAccountList = new ArrayList<>();
-    ;
-    private List<String> locationList = new ArrayList<>();
+    private List<BankAccountNumber> bankAccountList;
+    private List<String> locationList;
     private NumberFormat numberFormat = DecimalFormat.getInstance();
 
 
@@ -112,7 +110,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -124,35 +121,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             clausesTemp = new HashMap<>();
 
             //Try to load appSession BANK_ACCOUNT_LIST data
-            Object data = appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
-            if (data == null) {
-                if (bankAccountList == null) {
-                    //Get saved locations from settings
-                    bankAccountList = moduleManager.getListOfBankAccounts();
-                }
-//                Save locations to appSession BANK_ACCOUNT_LIST data
-                appSession.setData(FragmentsCommons.BANK_ACCOUNT_LIST, bankAccountList);
-            } else {
-                bankAccountList = (List<BankAccountNumber>) data;
-            }
+            loadBankAccountList();
 
 
             //Try to load appSession LOCATION_LIST data
-            data = appSession.getData(FragmentsCommons.LOCATION_LIST);
-            if (data == null) {
-
-                //Get saved locations from settings
-                Collection<NegotiationLocations> listAux = moduleManager.getAllLocations(NegotiationType.PURCHASE);
-                for (NegotiationLocations locationAux : listAux) {
-                    locationList.add(locationAux.getLocation());
-                }
-
-//                //Save locations to appSession LOCATION_LIST data
-                appSession.setData(FragmentsCommons.LOCATION_LIST, locationList);
-            } else {
-                locationList = (List<String>) data;
-            }
-
+            loadLocationList();
 
         } catch (Exception e) {
             if (errorManager != null)
@@ -313,9 +286,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                     } else
                         Toast.makeText(getActivity(), "Need to register THE WALLET USER for user BTC", Toast.LENGTH_LONG).show();
 
-                } catch (CouldNotUpdateNegotiationException e) {
-                    Toast.makeText(getActivity(), "Error sending the negotiation", Toast.LENGTH_LONG).show();
-                } catch (CantSendNegotiationException e) {
+                } catch (CouldNotUpdateNegotiationException | CantSendNegotiationException e) {
                     Toast.makeText(getActivity(), "Error sending the negotiation", Toast.LENGTH_LONG).show();
                 }
 
@@ -461,6 +432,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
      * Return the {@link Drawable} image representation for the bytes array
      *
      * @param customerImg the bytes array representation of the image
+     *
      * @return the {@link Drawable} image representation for the bytes array or a default image
      */
     private Drawable getImgDrawable(byte[] customerImg) {
@@ -680,23 +652,12 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             @Override
             public void onClick(String newValue) {
 
-
                 //VALIDATE CHANGE
                 putClauseTemp(clause.getType(), clause.getValue());
 
                 //ASSIGN NEW VALUE
-                //change lostwood
-
-                // newValue = getDecimalFormat(getBigDecimal(newValue));
                 newValue = fixFormat(newValue);
                 putClause(clause, newValue);
-
-                //change lostwood
-                //CALCULATE BROKER CURRENCY QUANTITY
-               /* final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue().replace(",", ""));
-                final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue().replace(",", ""));
-                final BigDecimal amountToPay = amountToBuy.multiply(exchangeRate);*/
-
 
                 BigDecimal amountToPay;
 
@@ -726,6 +687,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
      * VALIDATE CLAUSE
      *
      * @param clauses the clause
+     *
      * @return true if valid, false otherwise
      */
     private Boolean validateClauses(Map<ClauseType, ClauseInformation> clauses) {
@@ -798,6 +760,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
      * VALIDATE CLAUSE STATUS
      *
      * @param clauses the list of clauses
+     *
      * @return true if valid, false otherwise
      */
     private boolean validateStatusClause(Map<ClauseType, ClauseInformation> clauses) {
@@ -820,6 +783,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
      * @param clause                the clause
      * @param customerPaymentMethod the payment method
      * @param brokerPaymentMethod   the reception method
+     *
      * @return true if valid, false otherwise
      */
     @SuppressWarnings("RedundantIfStatement")
@@ -836,13 +800,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                 ClauseType.CUSTOMER_TIME_ZONE
         );
 
-//        if (clause.getType().equals(ClauseType.BROKER_BANK_ACCOUNT) ||
-//                clause.getType().equals(ClauseType.BROKER_PAYMENT_METHOD) ||
-//                clause.getType().equals(ClauseType.BROKER_CRYPTO_ADDRESS) ||
-//                clause.getType().equals(ClauseType.CUSTOMER_BANK_ACCOUNT) ||
-//                clause.getType().equals(ClauseType.CUSTOMER_PAYMENT_METHOD) ||
-//                clause.getType().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS)
-//                ) {
         if (evalList.contains(clause.getType())) {
 
             if (clause.getType().equals(ClauseType.BROKER_BANK_ACCOUNT) && (brokerPaymentMethod.equals(MoneyType.BANK.getCode())))
@@ -884,6 +841,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
      * Return the payment method for thew given currency code
      *
      * @param currency the currency code
+     *
      * @return the list of payment methods
      */
     private ArrayList<MoneyType> getPaymentMethod(String currency) {
@@ -905,40 +863,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         } catch (CantGetListActorExtraDataException e) {
             // TODO: revisar el manejo de excepciones
-        }
-
-        /*
-
-        //ADD FIAT CURRENCY IF IS FIAT
-        if (FiatCurrency.codeExists(currency)) {
-            paymentMethods.add(MoneyType.BANK);
-            paymentMethods.add(MoneyType.CASH_DELIVERY);
-            paymentMethods.add(MoneyType.CASH_ON_HAND);
-        }
-
-        //ADD CRYPTO CURRENCY IF IS CRYPTO
-        if (CryptoCurrency.codeExists(currency)) {
-            paymentMethods.add(MoneyType.CRYPTO);
-        }
-        */
-
-        return paymentMethods;
-    }
-
-    private ArrayList<MoneyType> getPaymentMethod2(String currency) {
-
-        ArrayList<MoneyType> paymentMethods = new ArrayList<>();
-
-        //ADD FIAT CURRENCY IF IS FIAT
-        if (FiatCurrency.codeExists(currency)) {
-            paymentMethods.add(MoneyType.BANK);
-            paymentMethods.add(MoneyType.CASH_DELIVERY);
-            paymentMethods.add(MoneyType.CASH_ON_HAND);
-        }
-
-        //ADD CRYPTO CURRENCY IF IS CRYPTO
-        if (CryptoCurrency.codeExists(currency)) {
-            paymentMethods.add(MoneyType.CRYPTO);
         }
 
         return paymentMethods;
@@ -1016,7 +940,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         if (currencyType != null) {
             if (currencyType.equals(MoneyType.CRYPTO.getCode())) {
                 if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) == null) {
-//                    putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
                     putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, ACCEPTED);
                     clauses.remove(ClauseType.CUSTOMER_BANK_ACCOUNT);
                     clauses.remove(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
@@ -1028,7 +951,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
                     if (bankAccountList.size() > 0)
                         bankAccount = bankAccountList.get(0).toString();
-//                    bankAccount = bankAccountList.get(0).getAccount();
                     putClause(ClauseType.CUSTOMER_BANK_ACCOUNT, bankAccount);
                     clauses.remove(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
                     clauses.remove(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
@@ -1121,22 +1043,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         return statusClause;
     }
 
-/*    private BigDecimal getBigDecimal(String value) {
-        //change lostwood
-        //return new BigDecimal(value.replace(",", ""));
-        try {
-            return new BigDecimal(numberFormat.parse(value).toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return new BigDecimal(0);
-        }
-    }
-
-    private String getDecimalFormat(BigDecimal value) {
-
-        return numberFormat.format(value.doubleValue());
-    }*/
-
     private BigDecimal convertToBigDecimal(String value) {
 
         BigDecimal convertion = new BigDecimal(0);
@@ -1173,18 +1079,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     private Boolean compareLessThan1(String value) {
         Boolean lessThan1 = true;
         try {
-            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE) == -1) {
-                lessThan1 = true;
-            } else {
-                lessThan1 = false;
-            }
+            lessThan1 = BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).compareTo(BigDecimal.ONE) == -1;
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return lessThan1;
     }
 
+    @SuppressWarnings("unchecked")
     private List<IndexInfoSummary> getActualExchangeRates() {
         Object data = appSession.getData(FragmentsCommons.EXCHANGE_RATES);
         return (data != null) ? (List<IndexInfoSummary>) data : null;
@@ -1207,5 +1109,32 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         }
 
         return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadBankAccountList() throws CantGetListBankAccountsPurchaseException {
+        Object data = appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
+        if (data != null) {
+            bankAccountList = (List<BankAccountNumber>) data;
+        } else {
+            bankAccountList = moduleManager.getListOfBankAccounts();
+            appSession.setData(FragmentsCommons.BANK_ACCOUNT_LIST, bankAccountList);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadLocationList() throws com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListLocationsSaleException, com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListLocationsPurchaseException {
+        Object data;
+        data = appSession.getData(FragmentsCommons.LOCATION_LIST);
+        if (data != null) {
+            locationList = (List<String>) data;
+        } else {
+            Collection<NegotiationLocations> listAux = moduleManager.getAllLocations(NegotiationType.PURCHASE);
+            locationList = new ArrayList<>();
+            for (NegotiationLocations locationAux : listAux)
+                locationList.add(locationAux.getLocation());
+
+            appSession.setData(FragmentsCommons.LOCATION_LIST, locationList);
+        }
     }
 }

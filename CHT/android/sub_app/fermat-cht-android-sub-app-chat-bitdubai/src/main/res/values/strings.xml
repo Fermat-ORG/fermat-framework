@@ -34,6 +34,39 @@
     <string name="cht_chat_subtitle">Welcome to P2P Chat.</string>
     <string name="cht_chat_body">If you do not have any identity registered, please register one in our Chat Community.</string>
     <string name="cht_chat_footer">P2P Chat</string>
+    <string name="cht_no_chat">No chats</string>
+    <string name="cht_contact_select">Please, tap on contacts and select\na friend to start a P2P Chat.</string>
+    <string name="cht_dialog_welcome">Welcome!</string>
+    <string name="cht_dialog_subtitle">Welcome to P2P Chat</string>
+    <string name="cht_dialog_content">If you do not have any identity registered, please register one in our Chat Community.</string>
+    <string name="cht_dialog_dont_show">Don´t show this again</string>
+    <string name="cht_dialog_button_close">Close</string>
+    <string name="cht_dialog_add_connection">Add connections</string>
+    <string name="cht_yes">Yes</string>
+    <string name="cht_no">No</string>
+
+    <string name="cht_select">Select</string>
+    
+    <string name="cht_broadcaster_simple_text">BROADCAST SIMPLE</string>
+    <string name="cht_broadcaster_scheduled_text">BROADCAST SCHEDULED</string>
+    <string name="cht_broadcaster_button_text">Create</string>
+    <string name="cht_broadcaster_recipients">ADD BROADCAST LIST RECIPIENTS</string>
+    <string name="cht_broadcaster_simple_contact_hint">Type contact name</string>
+    <string name="cht_broadcaster_simple_name_hint">Type name for the broadcast</string>
+    <string name="cht_broadcaster_add_recipients">Add broadcast list recipients</string>
+    <string name="cht_broadcaster_scheduled_text2">Add broadcast list recipients</string>
+    <string name="cht_broadcaster_day_programming">DAY PROGRAMMING</string>
+    <string name="cht_broadcaster_name_hint">Type broadcast name</string>
+    
+    <string name="cht_contact_edit_text_hint">User Alias</string>
+
+    <string name="cht_no_contacts">No contacts</string>
+
+    <string name="cht_send_error_text1">Please, write an email to send us the error report to help fix the problem.</string>
+    <string name="cht_send_error_text2">...Or hold a tap in the empty   box below to load the log and then copy and paste in another place to send it</string>
+    <string name="cht_send_error_hint">Type email of support personal</string>
+    <string name="cht_send_error_hint_hold">Hold a tap here</string>
+
 
     <!-- Used for the AlphabetIndexer in ContactsListFragment to provide quick navigation by
          alphabet using ListView fast scroll. -->
