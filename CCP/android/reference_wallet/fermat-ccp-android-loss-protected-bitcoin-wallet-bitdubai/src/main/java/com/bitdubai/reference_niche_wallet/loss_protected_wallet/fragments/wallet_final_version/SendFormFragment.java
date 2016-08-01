@@ -188,27 +188,25 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             lossProtectedWalletSession = appSession;
 
             lossProtectedWalletManager = appSession.getModuleManager();
-            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey());
-
-            if(lossProtectedWalletSettings != null) {
-
-                blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
-                lossProtectedEnabled = lossProtectedWalletSettings.getLossProtectedEnabled();
-
-                if (lossProtectedWalletSettings.getFeedLevel() == null) {
-                    lossProtectedWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
-                    feeLevel = lossProtectedWalletSettings.getFeedLevel();
-                }
-                else    feeLevel = lossProtectedWalletSettings.getFeedLevel();
-
-            }
 
 
-        } catch (CantGetSettingsException e) {
-            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
-        } catch (SettingsNotFoundException e) {
+            if(appSession.getData(SessionConstant.FEE_LEVEL) != null)
+                feeLevel = (String)appSession.getData(SessionConstant.FEE_LEVEL);
+            else
+                feeLevel = BitcoinFee.NORMAL.toString();
+
+
+            if(appSession.getData(SessionConstant.LOSS_PROTECTED_ENABLED) != null)
+                lossProtectedEnabled = (boolean)appSession.getData(SessionConstant.LOSS_PROTECTED_ENABLED);
+            else
+                lossProtectedEnabled = true;
+
+        } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
 

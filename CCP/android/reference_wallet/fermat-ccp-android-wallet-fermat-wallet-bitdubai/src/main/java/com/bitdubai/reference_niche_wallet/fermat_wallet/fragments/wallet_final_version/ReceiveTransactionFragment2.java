@@ -241,8 +241,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
 
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();
 
-                BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(
-                        moduleManager.loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey()).getBlockchainNetworkType().getCode());
 
                 int MAX_TRANSACTIONS = 20;
                 List<FermatWalletModuleTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(

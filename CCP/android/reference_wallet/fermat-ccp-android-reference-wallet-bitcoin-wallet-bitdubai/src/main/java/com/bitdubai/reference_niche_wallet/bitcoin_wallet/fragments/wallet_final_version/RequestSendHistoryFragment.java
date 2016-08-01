@@ -35,6 +35,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,20 +109,16 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         try {
             cryptoWallet = appSession.getModuleManager();
 
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
+            if(appSession.getData(SessionConstant.FEE_LEVEL) != null)
+                feeLevel = (String)appSession.getData(SessionConstant.FEE_LEVEL);
+            else
+                feeLevel = BitcoinFee.NORMAL.toString();
 
-            BitcoinWalletSettings bitcoinWalletSettings;
-            try {
-                bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
-                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-
-                if (bitcoinWalletSettings.getFeedLevel() == null)
-                    bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
-                else
-                    feeLevel = bitcoinWalletSettings.getFeedLevel();
-            }catch (Exception e){
-
-            }
 
             onRefresh();
 

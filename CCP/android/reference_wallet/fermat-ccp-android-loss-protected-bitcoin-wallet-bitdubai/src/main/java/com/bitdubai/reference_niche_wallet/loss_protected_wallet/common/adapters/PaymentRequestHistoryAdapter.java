@@ -63,26 +63,25 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
 
         try {
-            lossProtectedWalletSettings = cryptoWallet.loadAndGetSettings(this.appSession.getAppPublicKey());
-            if (lossProtectedWalletSettings.getFeedLevel() == null)
-                lossProtectedWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
-            else
-                feeLevel = lossProtectedWalletSettings.getFeedLevel();
 
-            if (lossProtectedWalletSettings.getBlockchainNetworkType() == null) {
-                lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-            }
+
+            if(appSession.getData(SessionConstant.LOSS_PROTECTED_ENABLED) != null)
+                lossProtectedEnabled = (boolean)appSession.getData(SessionConstant.LOSS_PROTECTED_ENABLED);
             else
-                blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
+                lossProtectedEnabled = true;
 
-            this.lossProtectedWallet.persistSettings(referenceWalletSession.getAppPublicKey(), lossProtectedWalletSettings);
+            if(appSession.getData(SessionConstant.FEE_LEVEL) != null)
+                feeLevel = (String)appSession.getData(SessionConstant.FEE_LEVEL);
+            else
+                feeLevel = "NORMAL";
 
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantPersistSettingsException e) {
+
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -245,12 +244,8 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
 
                             lossProtectedWallet = appSession.getModuleManager();
 
-                            LossProtectedWalletSettings bitcoinWalletSettings = null;
-                            bitcoinWalletSettings = lossProtectedWallet.loadAndGetSettings(appSession.getAppPublicKey());;
 
-                            blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
 
-                            lossProtectedEnabled = bitcoinWalletSettings.getLossProtectedEnabled();
 
                             long availableBalance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
 

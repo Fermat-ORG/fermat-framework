@@ -194,7 +194,8 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
 
                   lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(getSession().getAppPublicKey());
                   lossProtectedWalletSettings.setIsPresentationHelpEnabled(false);
-                  lossProtectedWalletManager.persistSettings(getSession().getAppPublicKey(),lossProtectedWalletSettings);
+                getSession().setData(SessionConstant.PRESENTATION_HELP_ENABLED, false);
+                lossProtectedWalletManager.persistSettings(getSession().getAppPublicKey(),lossProtectedWalletSettings);
 
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();

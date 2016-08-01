@@ -844,10 +844,10 @@ public class AndroidDatabaseTable implements DatabaseTable {
         if(record==null) throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, new InvalidParameterException("Record null"), null, "Check the cause for this error");;
         SQLiteDatabase database = null;
         try {
-            database = this.database.getWritableDatabase();
+             database = this.database.getWritableDatabase();
             String filter = makeFilter2();
             int rowDeleted =  database.delete(tableName, (!filter.isEmpty()) ? filter : null, null);
-            Log.i("AndroidDatabase", "Database name:" + tableName + " delete id: " +rowDeleted);
+            //Log.i("AndroidDatabase", "Database name:" + tableName + " delete id: " +rowDeleted);
 
         } catch (Exception exception) {
             throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
