@@ -48,6 +48,7 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
 
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
 
 
     public static CloseContractDetailsFragment newInstance() {
@@ -95,14 +96,14 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
         amountSoldOrToSellTitle.setText(status.equals(ContractStatus.CANCELLED) ? R.string.cbw_amount_to_sell : R.string.cbw_amount_sold);
 
         FermatTextView amountSoldOrToSellValue = (FermatTextView) rootView.findViewById(R.id.cbw_amount_sold_or_to_sell_value);
-        String amountToSell = DecimalFormat.getInstance().format(contractBasicInfo.getAmount());
+        String amountToSell = fixFormat(String.valueOf(contractBasicInfo.getAmount()));
         amountSoldOrToSellValue.setText(String.format("%1$s %2$s", amountToSell, contractBasicInfo.getMerchandise()));
 
         FermatTextView amountReceivedOrToReceiveTitle = (FermatTextView) rootView.findViewById(R.id.cbw_amount_received_to_receive_title);
         amountReceivedOrToReceiveTitle.setText(status.equals(ContractStatus.CANCELLED) ? R.string.cbw_amount_to_receive : R.string.cbw_amount_received);
 
         FermatTextView amountReceivedOrToReceiveValue = (FermatTextView) rootView.findViewById(R.id.cbw_amount_received_to_receive_value);
-        String amountToReceive = getAmountToReceive(contractBasicInfo);
+        String amountToReceive = fixFormat(getAmountToReceive(contractBasicInfo));
         amountReceivedOrToReceiveValue.setText(String.format("%1$s %2$s", amountToReceive, contractBasicInfo.getPaymentCurrency()));
 
         FermatTextView paymentMethod = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_payment_method);
@@ -155,7 +156,33 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
         BigDecimal exchangeRate = BigDecimal.valueOf(contractBasicInfo.getExchangeRateAmount());
 
         double amountToReceive = amountToSell.multiply(exchangeRate).doubleValue();
-        return NumberFormat.getInstance().format(amountToReceive);
+        //return NumberFormat.getInstance().format(amountToReceive);
+       return  String.valueOf(amountToReceive);
+    }
+
+    private String fixFormat(String value) {
+
+
+        if (compareLessThan1(value)) {
+            numberFormat.setMaximumFractionDigits(8);
+        } else {
+            numberFormat.setMaximumFractionDigits(2);
+        }
+        return numberFormat.format(new BigDecimal(Double.valueOf(value)));
+
+
+    }
+
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
+
+        if (BigDecimal.valueOf(Double.valueOf(value)).
+                compareTo(BigDecimal.ONE) == -1) {
+            lessThan1 = true;
+        } else {
+            lessThan1 = false;
+        }
+        return lessThan1;
     }
 
 
