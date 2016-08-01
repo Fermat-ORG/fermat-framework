@@ -149,9 +149,9 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     private String getTransactionButtonText()
     {
         if (transactionType == TransactionType.DEBIT)
-            return resources.getString(R.string.csh_withdrawal_transaction_text_btn_caps);
+            return resources.getString(R.string.csh_withdrawal_transaction_text_action_caps);
         else
-            return resources.getString(R.string.csh_deposit_transaction_text_caps);
+            return resources.getString(R.string.csh_deposit_transaction_text_action_caps);
     }
 
     private int getTransactionTitleColor()
@@ -182,12 +182,12 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             String amount = amountText.getText().toString();
 
             if (amount.equals("")) {
-                Toast.makeText(activity.getApplicationContext(), "Amount cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), resources.getString(R.string.cash_error_msg_amount_empty), Toast.LENGTH_SHORT).show();
                 return;
             }
             if(new BigDecimal(amount).compareTo(new BigDecimal(0)) == 0)
             {
-                Toast.makeText(activity.getApplicationContext(), "Amount cannot be zero", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), resources.getString(R.string.cash_error_msg_amount_zero), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -200,7 +200,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                     cashMoneyWalletSession.getModuleManager().createAsyncCashTransaction(t);
                 }
                 else{
-                    Toast.makeText(activity.getApplicationContext(), "Amount is larger than available funds", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), resources.getString(R.string.cash_error_msg_amount_larger_funds), Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -212,7 +212,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             dismiss();
         } catch (Exception e) {
             cashMoneyWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again. " +  e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getApplicationContext(), resources.getString(R.string.cash_error_msg_std_try_again), Toast.LENGTH_SHORT).show();
         }
     }
 
