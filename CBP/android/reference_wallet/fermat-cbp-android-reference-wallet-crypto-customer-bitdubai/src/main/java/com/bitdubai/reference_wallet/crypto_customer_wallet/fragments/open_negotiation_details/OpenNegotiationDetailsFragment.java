@@ -378,11 +378,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         //CLAUSES DATE
         String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
 
-        String exchangeAmount = fixFormat(clauses.get(ClauseType.EXCHANGE_RATE).getValue(),true);
+        String exchangeAmount = convertToFormat(clauses.get(ClauseType.EXCHANGE_RATE).getValue(),true);
 
 
         String payment = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
-        String amount = fixFormat(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue(),true);
+        String amount = convertToFormat(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue(),true);
         Drawable brokerImg = getImgDrawable(broker.getProfileImage());
 
         //LIST MERCHANDISE TYPE
@@ -1147,9 +1147,33 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                 numberFormat.setMaximumFractionDigits(2);
             }
             if(stringContainADoubleValue){
-                return numberFormat.format(new BigDecimal(Double.valueOf(value).toString()));
+                return String.valueOf(numberFormat.parse(numberFormat.format(
+                        new BigDecimal(value))));
             }else{
-                return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
+                return String.valueOf(numberFormat.parse(numberFormat.format(
+                        new BigDecimal(numberFormat.parse(value).toString()))));
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    private String convertToFormat(String value,Boolean stringContainADoubleValue){
+        try {
+            if (compareLessThan1(value,stringContainADoubleValue)) {
+                numberFormat.setMaximumFractionDigits(8);
+            } else {
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            if(stringContainADoubleValue){
+                return String.valueOf(numberFormat.format(
+                        new BigDecimal(value)));
+            }else{
+                return String.valueOf(numberFormat.format(
+                        new BigDecimal(numberFormat.parse(value).toString())));
             }
 
         } catch (ParseException e) {
