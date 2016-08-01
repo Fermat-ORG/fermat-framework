@@ -55,16 +55,10 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println(new StringBuilder()
-                        .append("************** I\'m a crypto Broker: ")
-                        .append(actorProfile.getAlias())
-                        .append(" - ")
-                        .append(actorProfile.getStatus())
-                        .append(" - ")
-                        .append(actorProfile.getExtraData()).toString());
+                System.out.println("************** I\'m a crypto Broker: " + actorProfile.getAlias() + " - " + actorProfile.getStatus() + " - " + actorProfile.getExtraData());
 
                 cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(actorProfile.getExtraData());
-                System.out.println(new StringBuilder().append("Broker extra data : ").append(cryptoBrokerIdentityExtraData).toString());
+                System.out.println("Broker extra data : " + cryptoBrokerIdentityExtraData);
 
                 if (cryptoBrokerIdentityExtraData == null) {
                     cryptoBrokerExposingDataList.add(
@@ -126,16 +120,10 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println(new StringBuilder()
-                        .append("************** I\'m a crypto Broker: ")
-                        .append(actorProfile.getAlias())
-                        .append(" - ")
-                        .append(actorProfile.getStatus())
-                        .append(" - ")
-                        .append(actorProfile.getExtraData()).toString());
+                System.out.println("************** I\'m a crypto Broker: " + actorProfile.getAlias() + " - " + actorProfile.getStatus() + " - " + actorProfile.getExtraData());
 
                 cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(actorProfile.getExtraData());
-                System.out.println(new StringBuilder().append("Broker extra data : ").append(cryptoBrokerIdentityExtraData).toString());
+                System.out.println("Broker extra data : " + cryptoBrokerIdentityExtraData);
 
                 if (cryptoBrokerIdentityExtraData == null) {
                     cryptoBrokerExposingDataList.add(
@@ -196,16 +184,10 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println(new StringBuilder()
-                        .append("************** I\'m a crypto Broker: ")
-                        .append(actorProfile.getAlias())
-                        .append(" - ")
-                        .append(actorProfile.getStatus())
-                        .append(" - ")
-                        .append(actorProfile.getExtraData()).toString());
+                System.out.println("************** I\'m a crypto Broker: " + actorProfile.getAlias() + " - " + actorProfile.getStatus() + " - " + actorProfile.getExtraData());
 
                 cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(actorProfile.getExtraData());
-                System.out.println(new StringBuilder().append("Broker extra data : ").append(cryptoBrokerIdentityExtraData).toString());
+                System.out.println("Broker extra data : " + cryptoBrokerIdentityExtraData);
 
                 if (cryptoBrokerIdentityExtraData == null) {
                     cryptoBrokerExposingDataList.add(
@@ -266,16 +248,10 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println(new StringBuilder()
-                        .append("************** I\'m a crypto Broker: ")
-                        .append(actorProfile.getAlias())
-                        .append(" - ")
-                        .append(actorProfile.getStatus())
-                        .append(" - ")
-                        .append(actorProfile.getExtraData()).toString());
+                System.out.println("************** I\'m a crypto Broker: " + actorProfile.getAlias() + " - " + actorProfile.getStatus() + " - " + actorProfile.getExtraData());
 
                 cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(actorProfile.getExtraData());
-                System.out.println(new StringBuilder().append("Broker extra data : ").append(cryptoBrokerIdentityExtraData).toString());
+                System.out.println("Broker extra data : " + cryptoBrokerIdentityExtraData);
 
                 if (cryptoBrokerIdentityExtraData == null) {
                     cryptoBrokerExposingDataList.add(
@@ -336,16 +312,10 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println(new StringBuilder()
-                        .append("************** I\'m a crypto Broker: ")
-                        .append(actorProfile.getAlias())
-                        .append(" - ")
-                        .append(actorProfile.getStatus())
-                        .append(" - ")
-                        .append(actorProfile.getExtraData()).toString());
+                System.out.println("************** I\'m a crypto Broker: " + actorProfile.getAlias() + " - " + actorProfile.getStatus() + " - " + actorProfile.getExtraData());
 
                 cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(actorProfile.getExtraData());
-                System.out.println(new StringBuilder().append("Broker extra data : ").append(cryptoBrokerIdentityExtraData).toString());
+                System.out.println("Broker extra data : " + cryptoBrokerIdentityExtraData);
 
                 if (cryptoBrokerIdentityExtraData == null) {
                     cryptoBrokerExposingDataList.add(
@@ -406,16 +376,10 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println(new StringBuilder()
-                        .append("************** I\'m a crypto Broker: ")
-                        .append(actorProfile.getAlias())
-                        .append(" - ")
-                        .append(actorProfile.getStatus())
-                        .append(" - ")
-                        .append(actorProfile.getExtraData()).toString());
+                System.out.println("************** I\'m a crypto Broker: " + actorProfile.getAlias() + " - " + actorProfile.getStatus() + " - " + actorProfile.getExtraData());
 
                 cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(actorProfile.getExtraData());
-                System.out.println(new StringBuilder().append("Broker extra data : ").append(cryptoBrokerIdentityExtraData).toString());
+                System.out.println("Broker extra data : " + cryptoBrokerIdentityExtraData);
 
                 if (cryptoBrokerIdentityExtraData == null) {
                     cryptoBrokerExposingData = new CryptoBrokerExposingData(

@@ -126,7 +126,7 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
     public void incomingMoneyNotification(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
         try {
             Logger LOG = Logger.getGlobal();
-            LOG.info(new StringBuilder().append("EVENT TEST, I GOT AN EVENT:\n").append(event).toString());
+            LOG.info("EVENT TEST, I GOT AN EVENT:\n" + event);
             if (event.getActorType().getCode().equals(Actors.CBP_CRYPTO_BROKER.getCode())) {
                 this.brokerAckOnlinePaymentBusinessTransactionDao.saveIncomingMoneyEvent(event);
             }

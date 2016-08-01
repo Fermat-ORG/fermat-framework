@@ -30,7 +30,7 @@ public class CantDeleteGroupMemberException extends CHTException {
      * @param possibleReason
      */
     public CantDeleteGroupMemberException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

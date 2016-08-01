@@ -13,22 +13,24 @@ import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.develo
 /**
  * Created by root on 14/04/16.
  */
-public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor{
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
-    public DeveloperBitDubai(){super(new PluginDeveloperReference(Developers.BITDUBAI));}
+    public DeveloperBitDubai() {
+        super(new PluginDeveloperReference(Developers.BITDUBAI));
+    }
 
-       @Override
-        public void start() throws CantStartPluginDeveloperException {
-            try {
+    @Override
+    public void start() throws CantStartPluginDeveloperException {
+        try {
 
-                this.registerVersion(new ChatActorCommunitySubAppModulePluginRoot());
+            this.registerVersion(new ChatActorCommunitySubAppModulePluginRoot());
 
 
-            } catch (Exception e) {
+        } catch (Exception e) {
 
-                throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
-            }
+            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
         }
+    }
 
     @Override
     public int getAmountToPay() {

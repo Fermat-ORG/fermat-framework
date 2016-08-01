@@ -149,7 +149,7 @@ public class CryptoCustomerCommunityManager
             customer.setCountry(country);
             customer.setPlace(place);
 
-            System.out.println(new StringBuilder().append("************** Actor Customer Register: ").append(customer.getAlias()).append(" - ").append(customer.getProfileStatus()).append(" - ").append(customer.getConnectionState()).toString());
+            System.out.println("************** Actor Customer Register: " + customer.getAlias() + " - " + customer.getProfileStatus() + " - " + customer.getConnectionState());
         }
 
         return worldCustomerList;
@@ -220,7 +220,7 @@ public class CryptoCustomerCommunityManager
     @Override
     public void acceptCryptoCustomer(UUID connectionId) throws CantAcceptRequestException {
         try {
-            System.out.println(new StringBuilder().append("************* im accepting in module the request: ").append(connectionId).toString());
+            System.out.println("************* im accepting in module the request: " + connectionId);
             this.cryptoCustomerActorConnectionManager.acceptConnection(connectionId);
         } catch (CantAcceptActorConnectionRequestException | ActorConnectionNotFoundException | UnexpectedConnectionStateException e) {
             throw new CantAcceptRequestException("", e, "", "");

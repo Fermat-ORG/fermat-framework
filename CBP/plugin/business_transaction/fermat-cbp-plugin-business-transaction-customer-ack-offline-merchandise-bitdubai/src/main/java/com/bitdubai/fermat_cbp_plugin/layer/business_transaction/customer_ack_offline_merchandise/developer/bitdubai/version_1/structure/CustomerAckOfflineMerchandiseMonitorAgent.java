@@ -215,7 +215,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                  */
                 try {
 
-                    logManager.log(CustomerAckOfflineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
+                    logManager.log(CustomerAckOfflineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
                     pluginRoot.reportError(
@@ -286,7 +286,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
 
                     contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
 
-                    System.out.println(new StringBuilder().append("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): ").append(contractHash).append("\n").toString());
+                    System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): " + contractHash + "\n");
 
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),

@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ActionOnline;
 
-import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -24,7 +23,7 @@ public class ActionOnlineImpl implements ActionOnline {
 
     @Override
     public void setId(UUID actionId) {
-        this.actionId=actionId;
+        this.actionId = actionId;
     }
 
     @Override
@@ -34,7 +33,7 @@ public class ActionOnlineImpl implements ActionOnline {
 
     @Override
     public void setPublicKey(String publicKey) {
-        this.publicKey=publicKey;
+        this.publicKey = publicKey;
     }
 
     @Override
@@ -44,7 +43,7 @@ public class ActionOnlineImpl implements ActionOnline {
 
     @Override
     public void setActionState(ActionState actionState) {
-        this.actionState=actionState;
+        this.actionState = actionState;
     }
 
     @Override
@@ -54,7 +53,7 @@ public class ActionOnlineImpl implements ActionOnline {
 
     @Override
     public void setValue(boolean value) {
-        this.value=value;
+        this.value = value;
     }
 
     @Override

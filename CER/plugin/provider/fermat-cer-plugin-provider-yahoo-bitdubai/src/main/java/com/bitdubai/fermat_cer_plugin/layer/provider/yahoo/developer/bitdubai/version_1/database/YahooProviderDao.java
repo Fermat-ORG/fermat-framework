@@ -209,8 +209,7 @@ public class YahooProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Yahoo provider plugin", "Invalid From Currency value stored in table"
-                    + YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "Yahoo provider plugin", "Invalid From Currency value stored in table" + YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
         }
 
         Currency toCurrency;
@@ -224,8 +223,7 @@ public class YahooProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Yahoo provider plugin", "Invalid To Currency value stored in table"
-                    + YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "Yahoo provider plugin", "Invalid To Currency value stored in table" + YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
         }
 
         return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);

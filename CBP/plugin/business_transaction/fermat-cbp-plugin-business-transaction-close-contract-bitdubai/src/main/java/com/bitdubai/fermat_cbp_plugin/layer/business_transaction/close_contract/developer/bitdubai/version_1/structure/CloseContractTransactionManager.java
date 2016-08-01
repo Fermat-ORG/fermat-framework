@@ -103,7 +103,7 @@ public class CloseContractTransactionManager implements CloseContractManager {
 //            if (contractStatus.getCode().equals(ContractStatus.MERCHANDISE_SUBMIT.getCode()))
                 this.closeContractBusinessTransactionDao.persistContractRecord(customerBrokerContractPurchase, ContractType.PURCHASE);
             } else {
-                throw new CantCloseContractException(new StringBuilder().append("The contract with the hash\n").append(contractHash).append("\n cannot be closed, because the ContractStatus is ").append(contractStatus).toString());
+                throw new CantCloseContractException("The contract with the hash\n" + contractHash + "\n cannot be closed, because the ContractStatus is " + contractStatus);
             }
 
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {

@@ -69,6 +69,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
 
     private final BlockchainManager bitcoinNetworkManager  ;
+    private final BlockchainManager fermatNetworkManager  ;
     private final ErrorManager         errorManager        ;
     private final OutgoingExtraUserDao dao                 ;
     private EventManager eventManager;
@@ -82,6 +83,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
                                                       final CryptoVaultManager cryptoVaultManager  ,
                                                       final CryptoVaultManager cryptoFermatVaultManager,
                                                       final BlockchainManager bitcoinNetworkManager,
+                                                      final BlockchainManager fermatNetworkManager,
                                                       final ErrorManager         errorManager        ,
                                                       final OutgoingExtraUserDao dao                 ,
                                                       final EventManager eventManager,
@@ -92,6 +94,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
         this.cryptoVaultManager   = cryptoVaultManager  ;
         this.cryptoFermatVaultManager = cryptoFermatVaultManager;
         this.bitcoinNetworkManager   = bitcoinNetworkManager  ;
+        this.fermatNetworkManager = fermatNetworkManager;
         this.errorManager         = errorManager        ;
         this.dao                  = dao                 ;
         this.eventManager         = eventManager;
@@ -310,8 +313,18 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
             try {
                 CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(transaction.getWalletPublicKey());
-                CryptoStatus cryptoStatus = this.bitcoinNetworkManager.getCryptoStatus(transaction.getTransactionHash());
-                com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionHandler.handleTransaction(transaction, bitcoinNetworkManager, cryptoStatus, cryptoWalletWallet, this.dao, this.errorManager);
+                CryptoStatus cryptoStatus = null;
+                //we get the status from bitcoinNetwork if this a bitcoin transaction
+                if (transaction.getCryptoCurrency() == CryptoCurrency.BITCOIN){
+                    cryptoStatus = this.bitcoinNetworkManager.getCryptoStatus(transaction.getTransactionHash());
+                    com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionHandler.handleTransaction(transaction, bitcoinNetworkManager, cryptoStatus, cryptoWalletWallet, this.dao, this.errorManager);
+                }
+
+                //we get the status from fermatNetwork if this a fermat transaction
+                if (transaction.getCryptoCurrency() == CryptoCurrency.FERMAT){
+                    cryptoStatus = this.fermatNetworkManager.getCryptoStatus(transaction.getTransactionHash());
+                    com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionHandler.handleTransaction(transaction, fermatNetworkManager, cryptoStatus, cryptoWalletWallet, this.dao, this.errorManager);
+                }
 
             } catch (Exception exception) {
                 reportUnexpectedError(exception);

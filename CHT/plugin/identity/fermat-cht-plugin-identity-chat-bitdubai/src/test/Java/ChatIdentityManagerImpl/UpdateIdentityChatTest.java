@@ -23,7 +23,7 @@ public class UpdateIdentityChatTest {
     public void updateIdentityChat() throws CantUpdateChatIdentityException {
         ChatIdentityManagerImpl chatIdentityManager = mock(ChatIdentityManagerImpl.class);
 
-        doCallRealMethod().when(chatIdentityManager).updateIdentityChat(Mockito.anyString(),Mockito.anyString(), eq(new byte[10]));
+        doCallRealMethod().when(chatIdentityManager).updateIdentityChat(Mockito.anyString(), Mockito.anyString(), eq(new byte[10]));
     }
 
 }

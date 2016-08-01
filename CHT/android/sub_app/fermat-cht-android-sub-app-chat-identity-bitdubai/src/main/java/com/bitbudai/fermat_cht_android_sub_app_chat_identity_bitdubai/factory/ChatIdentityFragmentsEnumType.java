@@ -13,9 +13,6 @@ public enum ChatIdentityFragmentsEnumType implements FermatFragmentsEnumType<Cha
     CHT_CHAT_GEOLOCATION_IDENTITY_FRAGMENT("CHTGIF");
 
 
-
-
-
     private String key;
 
     ChatIdentityFragmentsEnumType(String key) {

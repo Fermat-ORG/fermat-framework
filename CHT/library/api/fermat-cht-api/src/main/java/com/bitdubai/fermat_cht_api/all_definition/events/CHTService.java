@@ -9,10 +9,10 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantStartServiceExc
  */
 public interface CHTService {
 
-    void start () throws CantStartServiceException;
+    void start() throws CantStartServiceException;
 
     void stop();
 
-    ServiceStatus getStatus ();
+    ServiceStatus getStatus();
 
 }

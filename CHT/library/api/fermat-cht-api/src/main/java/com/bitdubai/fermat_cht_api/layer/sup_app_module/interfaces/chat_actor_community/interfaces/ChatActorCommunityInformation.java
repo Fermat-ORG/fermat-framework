@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
-* Created by Eleazar Oroño (eorono@protonmail.com) on 31/03/16.
+ * Created by Eleazar Oroño (eorono@protonmail.com) on 31/03/16.
  */
 public interface ChatActorCommunityInformation extends Serializable {
 

@@ -70,7 +70,7 @@ import java.util.UUID;
  */
 public final class CryptoBrokerActorNetworkServiceDao {
 
-    private static final String PROFILE_IMAGE_DIRECTORY_NAME = new StringBuilder().append(DeviceDirectory.LOCAL_USERS.getName()).append("/CBP/cryptoBrokerActorNS").toString();
+    private static final String PROFILE_IMAGE_DIRECTORY_NAME = DeviceDirectory.LOCAL_USERS.getName() + "/CBP/cryptoBrokerActorNS";
     private static final String PROFILE_IMAGE_FILE_NAME_PREFIX = "profileImage";
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
@@ -413,7 +413,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
                 connectionNewsTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, "requestId: " + requestId, "Cannot find an actor connection request with that requestId.");
 
         } catch (final CantUpdateRecordException e) {
 
@@ -466,7 +466,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
                 connectionNewsTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, "requestId: " + requestId, "Cannot find an actor connection request with that requestId.");
 
         } catch (final CantUpdateRecordException e) {
 
@@ -496,7 +496,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
             if (!records.isEmpty())
                 return buildConnectionNewRecord(records.get(0));
             else
-                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor Connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, "requestId: " + requestId, "Cannot find an actor Connection request with that requestId.");
 
         } catch (final CantLoadTableToMemoryException e) {
 
@@ -543,7 +543,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
                 actorConnectionRequestTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor Connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, "requestId: " + requestId, "Cannot find an actor Connection request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
 
@@ -593,7 +593,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
                 actorConnectionRequestTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an address exchange request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, "requestId: " + requestId, "Cannot find an address exchange request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
 
@@ -657,7 +657,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
                 connectionNewsTable.updateRecord(record);
 
             } else
-                throw new ConnectionRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find an actor connection request with that requestId.");
+                throw new ConnectionRequestNotFoundException(null, "requestId: " + requestId, "Cannot find an actor connection request with that requestId.");
 
         } catch (final CantUpdateRecordException e) {
 
@@ -691,7 +691,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             } else
                 throw new ConnectionRequestNotFoundException(
-                        new StringBuilder().append("connectionId: ").append(connectionId).toString(),
+                        "connectionId: " + connectionId,
                         "Cannot find an actor connection request with that requestId."
                 );
 
@@ -699,7 +699,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             throw new CantListPendingConnectionRequestsException(
                     cantLoadTableToMemoryException,
-                    new StringBuilder().append("connectionId: ").append(connectionId).toString(),
+                    "connectionId: " + connectionId,
                     "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
@@ -1057,7 +1057,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
                 actorConnectionRequestTable.updateRecord(record);
 
             } else
-                throw new QuotesRequestNotFoundException(null, new StringBuilder().append("requestId: ").append(requestId).toString(), "Cannot find a quotes request with that requestId.");
+                throw new QuotesRequestNotFoundException(null, "requestId: " + requestId, "Cannot find a quotes request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
 
@@ -1093,7 +1093,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             // TODO add better error management, "throws CantBuildDatabaseRecordException".
 
-            System.err.println(new StringBuilder().append("error trying to persist image: ").append(e.getMessage()).toString());
+            System.err.println("error trying to persist image: " + e.getMessage());
             return record;
         }
     }
@@ -1226,7 +1226,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
     }
 
     private String buildProfileImageFileName(final String publicKey) {
-        return new StringBuilder().append(PROFILE_IMAGE_FILE_NAME_PREFIX).append("_").append(publicKey).toString();
+        return PROFILE_IMAGE_FILE_NAME_PREFIX + "_" + publicKey;
     }
 
 }

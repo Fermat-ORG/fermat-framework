@@ -14,6 +14,7 @@ public class SessionConstant {
 
     public static final String TYPE_BALANCE_SELECTED = "typeBalanceSelected";
     public static final String TYPE_AMOUNT_SELECTED = "typeAmountSelected";
+    public static final String BLOCKCHANIN_TYPE = "blockchainNetworkType";
 
 
 }

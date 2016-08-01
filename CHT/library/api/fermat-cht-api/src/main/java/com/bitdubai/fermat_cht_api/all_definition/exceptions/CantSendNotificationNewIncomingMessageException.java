@@ -30,7 +30,7 @@ public class CantSendNotificationNewIncomingMessageException extends CHTExceptio
      * @param possibleReason
      */
     public CantSendNotificationNewIncomingMessageException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

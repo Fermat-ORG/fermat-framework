@@ -131,7 +131,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
         //Get fermat FiatCurrencies
         for (FiatCurrency f : FiatCurrency.values()) {
             fiatCurrencies.add(f.getCode());
-            fiatCurrenciesFriendly.add(new StringBuilder().append(f.getFriendlyName()).append(" (").append(f.getCode()).append(")").toString());
+            fiatCurrenciesFriendly.add(f.getFriendlyName() + " (" + f.getCode() + ")");
         }
 
 
@@ -279,7 +279,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
                 walletManager.addNewAccount(createdBankAccount, WalletsPublicKeys.BNK_BANKING_WALLET.getCode());
                 dismiss();
             } catch (Exception e) {
-                Log.e(TAG, new StringBuilder().append("Error on: ").append(e).append(" ------------VALORES DE VARIABLES----------->").append(selectedBankAccountBankName).append("->").append(selectedBankAccountType).append("->").append(selectedBankAccountAlias).append("->").append(selectedBankAccountNumber).append("->").append(selectedBankAccountCurrency).toString());
+                Log.e(TAG, "Error on: " + e + " ------------VALORES DE VARIABLES----------->" + selectedBankAccountBankName + "->" + selectedBankAccountType + "->" + selectedBankAccountAlias + "->" + selectedBankAccountNumber + "->" + selectedBankAccountCurrency);
             }
         }
         if (id == R.id.idcbp_button_action_cash) {
@@ -287,7 +287,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
                 walletManager.createCashMoneyWallet(WalletsPublicKeys.CSH_MONEY_WALLET.getCode(), selectedCashCurrency);
                 dismiss();
             } catch (Exception e) {
-                Log.e(TAG, new StringBuilder().append("Error on: ").append(e).append(" ------------VALORES DE VARIABLES----------->").append(selectedCashCurrency).toString());
+                Log.e(TAG, "Error on: " + e + " ------------VALORES DE VARIABLES----------->" + selectedCashCurrency);
             }
         }
 

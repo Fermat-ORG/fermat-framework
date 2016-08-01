@@ -121,21 +121,6 @@ public final class CryptoBrokerConnectionRequest {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("CryptoBrokerConnectionRequest{")
-                .append("requestId=").append(requestId)
-                .append(", senderPublicKey='").append(senderPublicKey)
-                .append('\'')
-                .append(", senderActorType=").append(senderActorType)
-                .append(", senderAlias='").append(senderAlias)
-                .append('\'')
-                .append(", senderImage=").append(senderImage != null)
-                .append(", destinationPublicKey='").append(destinationPublicKey)
-                .append('\'')
-                .append(", requestType=").append(requestType)
-                .append(", protocolState=").append(protocolState)
-                .append(", requestAction=").append(requestAction)
-                .append(", sentTime=").append(sentTime)
-                .append('}').toString();
+        return "CryptoBrokerConnectionRequest{" + "requestId=" + requestId + ", senderPublicKey='" + senderPublicKey + '\'' + ", senderActorType=" + senderActorType + ", senderAlias='" + senderAlias + '\'' + ", senderImage=" + (senderImage != null) + ", destinationPublicKey='" + destinationPublicKey + '\'' + ", requestType=" + requestType + ", protocolState=" + protocolState + ", requestAction=" + requestAction + ", sentTime=" + sentTime + '}';
     }
 }

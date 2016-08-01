@@ -62,13 +62,7 @@ public final class CryptoBrokerQuote implements CryptoBrokerInfo {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("CryptoBrokerQuote{")
-                .append("merchandise=").append(merchandise)
-                .append(", paymentCurrency=").append(paymentCurrency)
-                .append(", price=").append(price)
-                .append(", supportedPlatforms=").append(supportedPlatforms)
-                .append('}').toString();
+        return "CryptoBrokerQuote{" + "merchandise=" + merchandise + ", paymentCurrency=" + paymentCurrency + ", price=" + price + ", supportedPlatforms=" + supportedPlatforms + '}';
     }
 
 }

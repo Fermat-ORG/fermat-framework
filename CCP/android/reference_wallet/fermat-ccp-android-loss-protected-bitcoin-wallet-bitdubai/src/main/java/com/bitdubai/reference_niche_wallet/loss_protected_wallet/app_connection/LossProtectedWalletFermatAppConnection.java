@@ -19,6 +19,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.header.LossProtectedWalletHeaderPainter;
@@ -78,11 +80,13 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<Refer
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(String code){
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle) {
      try
         {
           LossProtectedWalletSettings lossProtectedWalletSettings;
-            //SettingsManager<LossProtectedWalletSettings> settingsManager = null;
+            int notificationID = fermatBundle.getInt(NotificationBundleConstants.NOTIFICATION_ID);
+            String involvedActor =  fermatBundle.getString("InvolvedActor");
+            long amount = Long.parseLong(String.valueOf(fermatBundle.get("Amount")));
 
             boolean enabledNotification = true;
             this.lossWalletSession = this.getFullyLoadedSession();
@@ -99,7 +103,7 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<Refer
 
 
                 if (enabledNotification)
-                    return LossProtectedWalletBuildNotificationPainter.getNotification(moduleManager, code, walletPublicKey,Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    return LossProtectedWalletBuildNotificationPainter.getNotification( notificationID,involvedActor,amount,Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
                 else
                     return new LossProtectedWalletNotificationPainter("", "", "", "", false,Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
 

@@ -10,5 +10,4 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 public interface ChatCommunityModuleManager extends ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> {
 
 
-
 }

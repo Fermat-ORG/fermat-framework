@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -28,10 +30,12 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.Settings
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.CreateContactDialogCallback;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.contacts_list_adapter.WalletContact;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
 
@@ -41,7 +45,7 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
  * Created by Matias Furszyfer on 2015.08.12..
  */
 
-public class CreateContactFragmentDialog extends Dialog implements
+public class CreateContactFragmentDialog extends FermatDialog<ReferenceAppFermatSession<FermatWallet>,SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
 
@@ -78,6 +82,7 @@ public class CreateContactFragmentDialog extends Dialog implements
     Button cancel_btn;
     AutoCompleteTextView contact_name;
     ImageView take_picture_btn;
+    ReferenceAppFermatSession<FermatWallet> appFermatSession;
 
 
     /**
@@ -94,9 +99,9 @@ public class CreateContactFragmentDialog extends Dialog implements
      */
 
 
-    public CreateContactFragmentDialog(Activity a, FermatWallet fermatWallet, String appPublicKey, WalletContact walletContact, String userId,Bitmap contactImageBitmap,CreateContactDialogCallback createContactDialogCallback) {
+    public CreateContactFragmentDialog(Activity a,ReferenceAppFermatSession<FermatWallet> fermatSession, SubAppResourcesProviderManager resources, FermatWallet fermatWallet, String appPublicKey, WalletContact walletContact, String userId,Bitmap contactImageBitmap,CreateContactDialogCallback createContactDialogCallback) {
 
-        super(a);
+        super(a, fermatSession, resources);
         // TODO Auto-generated constructor stub
         this.activity = a;
         this.fermatWallet = fermatWallet;
@@ -106,48 +111,35 @@ public class CreateContactFragmentDialog extends Dialog implements
         this.contactImageBitmap = contactImageBitmap;
         this.createContactDialogCallback = createContactDialogCallback;
 
+
     }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
         setUpScreenComponents();
-        FermatWalletSettings fermatWalletSettings = null;
-        try {
-            fermatWalletSettings = fermatWallet.loadAndGetSettings(appPublicKey);
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        }
+        if( getSession().getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+            blockchainNetworkType = (BlockchainNetworkType)appFermatSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+        else
+            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
-        if(fermatWalletSettings != null) {
-
-            if (fermatWalletSettings.getBlockchainNetworkType() == null) {
-                fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-            }
-            try {
-                fermatWallet.persistSettings(appPublicKey, fermatWalletSettings);
-            } catch (CantPersistSettingsException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        try {
-            blockchainNetworkType = fermatWallet.loadAndGetSettings(appPublicKey).getBlockchainNetworkType();
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-//        user_address_wallet= getWalletAddress(walletContact.actorPublicKey);
-//
-//        showQRCodeAndAddress();
 
+    }
 
+    @Override
+    protected int setLayoutId() {
+        return 0;
+    }
+
+    @Override
+    protected int setWindowFeature() {
+        return 0;
     }
 
     private void setUpScreenComponents(){

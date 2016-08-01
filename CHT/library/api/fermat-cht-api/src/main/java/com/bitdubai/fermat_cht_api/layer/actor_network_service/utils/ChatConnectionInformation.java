@@ -43,12 +43,6 @@ public class ChatConnectionInformation {
     public ChatConnectionInformation(String A, String stringValue, byte[] image, long longValue, ConnectionState byCode, String stringValue1) {
 
 
-
-
-
-
-
-
     }
 
 
@@ -100,14 +94,6 @@ public class ChatConnectionInformation {
 
     @Override
     public String toString() {
-        return "ChatConnectionInformation{" +
-                "connectionId=" + connectionId +
-                ", senderPublicKey='" + senderPublicKey + '\'' +
-                ", senderActorType=" + senderActorType +
-                ", senderAlias='" + senderAlias + '\'' +
-                ", senderImage=" + Arrays.toString(senderImage) +
-                ", destinationPublicKey='" + destinationPublicKey + '\'' +
-                ", sendingTime=" + sendingTime +
-                '}';
+        return "ChatConnectionInformation{" + "connectionId=" + connectionId + ", senderPublicKey='" + senderPublicKey + '\'' + ", senderActorType=" + senderActorType + ", senderAlias='" + senderAlias + '\'' + ", senderImage=" + Arrays.toString(senderImage) + ", destinationPublicKey='" + destinationPublicKey + '\'' + ", sendingTime=" + sendingTime + '}';
     }
 }

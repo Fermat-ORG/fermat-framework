@@ -35,10 +35,6 @@ public class GenericCBPFermatEvent implements FermatEvent {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("GenericCBPFermatEvent{")
-                .append("eventType=").append(eventType)
-                .append(", eventSource=").append(eventSource)
-                .append('}').toString();
+        return "GenericCBPFermatEvent{" + "eventType=" + eventType + ", eventSource=" + eventSource + '}';
     }
 }

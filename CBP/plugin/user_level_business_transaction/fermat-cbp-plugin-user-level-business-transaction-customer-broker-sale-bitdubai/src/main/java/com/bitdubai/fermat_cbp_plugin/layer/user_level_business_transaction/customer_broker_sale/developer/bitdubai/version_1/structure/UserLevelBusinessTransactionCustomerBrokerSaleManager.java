@@ -29,7 +29,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleManager implements Cu
         event.setNotificationType(NotificationType.REVIEW_NOTIFICATION.getCode());
         event.setSource(UserLevelBusinessTransactionCustomerBrokerSalePluginRoot.EVENT_SOURCE);
         this.userLevelBusinessTransactionCustomerBrokerSalePluginRoot.getEventManager().raiseEvent(event);
-        System.out.println(new StringBuilder().append("UserLevelBusinessTransactionCustomerBrokerSALEPluginRoot - ReviewNegotiationNotificationEvent fired!: ").append(event.toString()).toString());
+        System.out.println("UserLevelBusinessTransactionCustomerBrokerSALEPluginRoot - ReviewNegotiationNotificationEvent fired!: " + event.toString());
     }
 
     private String getSourceString(EventSource eventSource) {
