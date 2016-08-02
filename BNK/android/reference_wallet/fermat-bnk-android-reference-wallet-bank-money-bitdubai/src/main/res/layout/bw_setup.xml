@@ -38,7 +38,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="30dp"
                 android:gravity="center_horizontal"
-                android:text="Set the name of your Bank"
+                android:text="@string/bnk_fragment_setup_text"
                 android:textColor="#fff"
                 android:textSize="@dimen/text_size" />
 
@@ -60,7 +60,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:text="Bank name: "
+                    android:text="@string/bnk_fragment_setup_text_bank_name"
                     android:textColor="#fff"
                     android:textSize="@dimen/text_size" />
 
@@ -72,7 +72,6 @@
                     android:layout_weight="1"
                     android:maxLength="15"
                     android:gravity="center_horizontal"
-                    android:hint="Enter bank name"
                     android:textColor="#fff"
                     android:textSize="@dimen/text_size" />
             </LinearLayout>

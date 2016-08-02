@@ -91,7 +91,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment<ReferenceA
         transactionConcept = (EditText) layout.findViewById(R.id.transaction_concept);
 
         transactionAmount.setText(moneyFormat.format(transactionRecord.getAmount()));
-        transactionType.setText(transactionRecord.getTransactionType().getCode());
+        transactionType.setText(getTransactionTypeText(transactionRecord.getTransactionType()));
         transactionDate.setText(getPrettyTime(transactionRecord.getTimestamp()));
         transactionConcept.setText(transactionRecord.getMemo());
 
@@ -106,6 +106,17 @@ public class TransactionDetailFragment extends AbstractFermatFragment<ReferenceA
         return layout;
     }
 
+    private String getTransactionTypeText(TransactionType transactionType) {
+        if (transactionType == TransactionType.DEBIT)
+            return getResources().getString(R.string.bw_withdrawal_transaction_text);
+        else if (transactionType == TransactionType.CREDIT)
+            return getResources().getString(R.string.bw_deposit_transaction_text);
+        else if (transactionType == TransactionType.HOLD)
+            return getResources().getString(R.string.bnk_hold_transaction_text_caps);
+        else if (transactionType == TransactionType.UNHOLD)
+            return getResources().getString(R.string.bnk_unhold_transaction_text_caps);
+        else return "ERROR";
+    }
 
     private void configureToolbar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
