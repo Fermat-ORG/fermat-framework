@@ -79,7 +79,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
             providerId = UUID.fromString(getArguments().getString("providerId"));
 
             if(fermatSession.getData(SessionConstant.FIAT_CURRENCY) != null)
-                fiatCurrency = (String)appSession.getData(SessionConstant.FIAT_CURRENCY);
+                fiatCurrency = (String) fermatSession.getData(SessionConstant.FIAT_CURRENCY);
             else
                 fiatCurrency = FiatCurrency.US_DOLLAR.getCode();
 
@@ -99,10 +99,9 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
          //WheelView wheel = (WheelView) view.findViewById(R.id.wheel_picker);
 
          List<String> lstCurrencies = new ArrayList<>();
-         lstCurrencies.add(FiatCurrency.US_DOLLAR.getCode());
-         lstCurrencies.add(FiatCurrency.EURO.getCode());
-         lstCurrencies.add(FiatCurrency.ARGENTINE_PESO.getCode());
          lstCurrencies.add(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
+         lstCurrencies.add(FiatCurrency.US_DOLLAR.getCode());
+         lstCurrencies.add(FiatCurrency.BITCOIN.getCode());
 
          ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                  getActivity(),
@@ -118,13 +117,15 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
 
                  item.setTextColor(Color.parseColor("#2481BA"));
                  item.setTextSize(16);
-                 try {
-                     fermatWalletSettings.setFiatCurrency(FiatCurrency.getByCode((String) item.getText()).getCode());
 
-                     getAndShowMarketExchangeRateData();
+                 fiatCurrency = String.valueOf(item.getText());
+                 try {
+                     fermatSession.setData(SessionConstant.FIAT_CURRENCY,FiatCurrency.getByCode(fiatCurrency).getCode());
                  } catch (InvalidParameterException e) {
                      e.printStackTrace();
                  }
+                 getAndShowMarketExchangeRateData();
+
              }
          });
 
@@ -181,7 +182,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
             @Override
             public void onErrorOccurred(Exception ex) {
 // progressBar.setVisibility(View.GONE);
-                ErrorManager errorManager = appSession.getErrorManager();
+
                 if (errorManager != null)
                     errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);

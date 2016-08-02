@@ -570,13 +570,6 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         xValues.add("S");
         xValues.add("S");
 
-
-        //ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        //Date format for earned and lost for today
-       // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        //Date actualDate = new Date();
-
         //if statement for validate if the runningDailyBalance has values
        if (runningDailyBalance != null) {
            int i = 0;
