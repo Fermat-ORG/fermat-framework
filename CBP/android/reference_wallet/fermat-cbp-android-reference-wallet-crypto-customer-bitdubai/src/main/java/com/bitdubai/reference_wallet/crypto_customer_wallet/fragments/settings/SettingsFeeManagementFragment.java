@@ -44,10 +44,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
 public class SettingsFeeManagementFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager> {
 
-    // Constants
     private static final String TAG = "SettingsFeeManagement";
-
-    //
 
     private long bitcoinFee = 0;
     private DecimalFormat df = new DecimalFormat("0.00000000");
@@ -211,7 +208,7 @@ public class SettingsFeeManagementFragment
             moduleManager.persistSettings(appSession.getAppPublicKey(), feeSettings);
 
         } catch (FermatException ex) {
-            Toast.makeText(SettingsFeeManagementFragment.this.getActivity(), "There was a problem saving your settings", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsFeeManagementFragment.this.getActivity(), R.string.ccw_there_was_a_problem_saving_your_settings, Toast.LENGTH_SHORT).show();
 
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,

@@ -13,12 +13,12 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Map;
 
 
 /**
  * Created by nelson on 10/01/16.
+ *
  */
 public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
@@ -50,7 +50,6 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
 
         final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
 
-
         int buyingTextValue = R.string.buying_text;
 
         if (!paymentBuy) {
@@ -63,8 +62,6 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
 
         currencyToBuyTextValue.setText(currencyToBuy.getValue());
         buyingText.setText(buyingTextValue);
-        //    buyingValue.setText(clause.getValue());
-        //lostwood
         if (clause.getValue().equals("0.0") || clause.getValue().equals("0") || clause.getValue().equals("0,0")) {
             buyingValue.setText(defaultValue());
         } else {
@@ -107,37 +104,21 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
 
     private String fixFormat(String value) {
 
-
-            if (compareLessThan1(value)) {
-                numberFormat.setMaximumFractionDigits(8);
-            } else {
-                numberFormat.setMaximumFractionDigits(2);
-            }
-            return numberFormat.format(new BigDecimal(value));
-
-
+        if (compareLessThan1(value)) {
+            numberFormat.setMaximumFractionDigits(8);
+        } else {
+            numberFormat.setMaximumFractionDigits(2);
+        }
+        return numberFormat.format(new BigDecimal(value));
     }
 
     private Boolean compareLessThan1(String value) {
-        Boolean lessThan1 = true;
-
-            if (BigDecimal.valueOf(Double.valueOf(value)).
-                    compareTo(BigDecimal.ONE) == -1) {
-                lessThan1 = true;
-            } else {
-                lessThan1 = false;
-            }
-
-        return lessThan1;
+        return BigDecimal.valueOf(Double.valueOf(value)).compareTo(BigDecimal.ONE) == -1;
     }
 
-    String defaultValue(){
-        DecimalFormatSymbols symbols =((DecimalFormat)  numberFormat).getDecimalFormatSymbols();
-        if(symbols.getDecimalSeparator()=='.'){
-            return "0.0";
-        }else{
-            return "0,0";
-        }
+    String defaultValue() {
+        DecimalFormatSymbols symbols = ((DecimalFormat) numberFormat).getDecimalFormatSymbols();
+        return symbols.getDecimalSeparator() == '.' ? "0.0" : "0,0";
     }
 
 
