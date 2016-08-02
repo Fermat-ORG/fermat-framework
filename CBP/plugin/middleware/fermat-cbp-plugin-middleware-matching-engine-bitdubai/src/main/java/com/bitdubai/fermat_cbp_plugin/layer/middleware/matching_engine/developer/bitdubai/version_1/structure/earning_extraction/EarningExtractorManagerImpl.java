@@ -50,7 +50,7 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
     }
 
     @Override
-    public boolean extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions, long fee, FeeOrigin feeOrigin) throws CantExtractEarningsException {
+    public boolean extractEarnings(String brokerIdentityPublicKey, EarningsPair earningsPair, List<EarningTransaction> earningTransactions, long fee, FeeOrigin feeOrigin) throws CantExtractEarningsException {
 
         if (earningsPair == null)
             throw new CantExtractEarningsException("Verifying parameters", "The earningsPair parameter cannot be null");
@@ -83,7 +83,7 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
                 markEarningTransactionsAsExtracted(earningTransactions, earningCurrency);
 
                 final EarningExtractor earningExtractor = earningExtractors.get(earningWalletPlatform);
-                earningExtractor.applyEarningExtraction(earningsPair, earningsAmount, earningWalletPublicKey, BROKER_WALLET_PUBLIC_KEY, fee, feeOrigin);
+                earningExtractor.applyEarningExtraction(earningsPair, earningsAmount, earningWalletPublicKey, BROKER_WALLET_PUBLIC_KEY, brokerIdentityPublicKey, fee, feeOrigin);
 
                 return true;
             }

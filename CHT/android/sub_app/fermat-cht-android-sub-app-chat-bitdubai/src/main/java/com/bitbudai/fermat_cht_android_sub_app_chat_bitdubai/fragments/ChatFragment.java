@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
@@ -42,7 +43,7 @@ import java.util.List;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 30/12/15.
  * @version 1.0
- *          Update by Miguel Payarez on 15/01/2016
+ * Update by Miguel Payarez on 15/01/2016
  */
 
 public class ChatFragment
@@ -113,6 +114,12 @@ public class ChatFragment
             }
 
             toolbar = getToolbar();
+            toolbar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                }
+            });
 
         } catch (Exception e) {
             if (errorManager != null)
@@ -218,8 +225,8 @@ public class ChatFragment
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 try {
-                                    adapterView.refreshEvents();
-                                } catch (Exception e) {
+                                    adapterView.clean();
+                                }catch (Exception e) {
                                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                 }
                             }

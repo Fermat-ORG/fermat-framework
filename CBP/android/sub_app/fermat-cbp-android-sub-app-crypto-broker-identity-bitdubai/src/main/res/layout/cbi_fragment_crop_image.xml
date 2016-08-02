@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="#000000"
+    android:orientation="vertical">
 
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentTop="true"
+        android:background="#ffffff"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:id="@+id/linearLayout"
-        android:background="#ffffff">
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -66,109 +66,108 @@
 
     </LinearLayout>
 
-    <com.edmodo.cropper.CropImageView
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
+    <com.edmodo.cropper.CropImageView xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cbi_crop_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        custom:fixAspectRatio="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout"
         custom:aspectRatioX="3"
         custom:aspectRatioY="3"
-        custom:scaleType="fitCenter"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/linearLayout" />
+        custom:fixAspectRatio="true"
+        custom:scaleType="fitCenter" />
 
 
 </RelativeLayout>
 
 
-<!--
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000000">
-
-    <com.edmodo.cropper.CropImageView
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/cbi_crop_image_view"
+    <!-- OLD VERSION OF THE FILE. DO NOT DELETE YET
+    <?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        custom:fixAspectRatio="true"
-        custom:aspectRatioX="3"
-        custom:aspectRatioY="3"
-        custom:scaleType="fitCenter"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        />
+        android:background="#000000">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-            android:id="@+id/cbi_cancel_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#ffffff"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:padding="8dp"
-            android:singleLine="true"
-            android:text="Cancel"
-            android:textColor="#2d3e50"
-            android:textSize="14sp"
-
-           />
-        <View
-            android:layout_width="1dp"
+        <com.edmodo.cropper.CropImageView
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cbi_crop_image_view"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#e1e1e1" />
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-            android:id="@+id/cbi_rotate_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#ffffff"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:padding="8dp"
-            android:singleLine="true"
-            android:text="Rotate"
-            android:textColor="#2d3e50"
-            android:textSize="14sp"
+            custom:fixAspectRatio="true"
+            custom:aspectRatioX="3"
+            custom:aspectRatioY="3"
+            custom:scaleType="fitCenter"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#e1e1e1" />
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-            android:id="@+id/cbi_crop_button"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#ffffff"
-            android:ellipsize="end"
+            android:layout_alignParentBottom="true"
             android:gravity="center"
-            android:padding="8dp"
-            android:singleLine="true"
-            android:text="Ok"
-            android:textColor="#2d3e50"
-            android:textSize="14sp"
-           />
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/cbi_cancel_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:text="Cancel"
+                android:textColor="#2d3e50"
+                android:textSize="14sp"
+
+               />
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#e1e1e1" />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/cbi_rotate_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:text="Rotate"
+                android:textColor="#2d3e50"
+                android:textSize="14sp"
+                />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#e1e1e1" />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/cbi_crop_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:text="Ok"
+                android:textColor="#2d3e50"
+                android:textSize="14sp"
+               />
+
+        </LinearLayout>
 
 
-</RelativeLayout>-->
+    </RelativeLayout>-->

@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:background="#000000"
+            android:background="@color/cht_profile_background"
             android:alpha="0.9"
             />
 
@@ -33,7 +33,7 @@
             android:text="John Doe"
             android:textSize="@dimen/chat_list_icon_text_size"
             android:layout_centerVertical="true"
-            android:textColor="@color/color_white"
+            android:textColor="@color/cht_profile_text"
             android:gravity="center_horizontal"
             />
 
@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignBottom="@+id/profile_image_dialog"
-        android:background="#f9f9f9"
+        android:background="@color/cht_profile_image_background"
         >
 
         <ImageView

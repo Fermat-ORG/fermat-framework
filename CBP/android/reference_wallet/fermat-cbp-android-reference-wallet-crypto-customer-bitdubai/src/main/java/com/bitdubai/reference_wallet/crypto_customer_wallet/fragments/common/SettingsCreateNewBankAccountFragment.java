@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common;
 
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -39,17 +40,20 @@ import java.util.List;
 
 /**
  * Created by guillermo on 17/02/16.
+ *
  */
 public class SettingsCreateNewBankAccountFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
         implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+
+    private final String LANGUAGE = Resources.getSystem().getConfiguration().locale.getLanguage();
+
     // Data
     private FiatCurrency[] currencies;
     private FiatCurrency selectedCurrency;
-    private static int MAX_LENGHT_BANK_NAME = 15;
-    private static int MAX_LENGHT_BANK_ALIAS = 10;
-    private static int MAX_LENGHT_BANK_ACCOUNT = 25;
-    private String lastActivity = "";
+    private static int MAX_LENGTH_BANK_NAME = 15;
+    private static int MAX_LENGTH_BANK_ALIAS = 10;
+    private static int MAX_LENGTH_BANK_ACCOUNT = 25;
     private boolean isFromNegDetail = false;
 
     private BankAccountType[] accountTypes;
@@ -66,7 +70,7 @@ public class SettingsCreateNewBankAccountFragment
 
     private final TextWatcher bankNameTextWatcher = new TextWatcher() {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME - s.length()));
+            bankNameCount.setText(String.valueOf(MAX_LENGTH_BANK_NAME - s.length()));
         }
 
         public void afterTextChanged(Editable s) {
@@ -77,7 +81,7 @@ public class SettingsCreateNewBankAccountFragment
     };
     private final TextWatcher accountNumberTextWatcher = new TextWatcher() {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT - s.length()));
+            accountNumberCount.setText(String.valueOf(MAX_LENGTH_BANK_ACCOUNT - s.length()));
         }
 
         public void afterTextChanged(Editable s) {
@@ -88,7 +92,7 @@ public class SettingsCreateNewBankAccountFragment
     };
     private final TextWatcher accountAliasTextWatcher = new TextWatcher() {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS - s.length()));
+            accountAliasCount.setText(String.valueOf(MAX_LENGTH_BANK_ALIAS - s.length()));
         }
 
         public void afterTextChanged(Editable s) {
@@ -131,25 +135,25 @@ public class SettingsCreateNewBankAccountFragment
         accountAliasCount = (FermatTextView) layout.findViewById(R.id.ccw_account_alias_edit_text_count);
         accountNumberCount = (FermatTextView) layout.findViewById(R.id.ccw_account_number_edit_text_count);
 
-        bankNameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_NAME)});
+        bankNameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGTH_BANK_NAME)});
         bankNameEditText.addTextChangedListener(bankNameTextWatcher);
 
         accountNumberEditText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
-        accountNumberEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_ACCOUNT)});
+        accountNumberEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGTH_BANK_ACCOUNT)});
         accountNumberEditText.addTextChangedListener(accountNumberTextWatcher);
 
-        accountAliasEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_ALIAS)});
+        accountAliasEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGTH_BANK_ALIAS)});
         accountAliasEditText.addTextChangedListener(accountAliasTextWatcher);
 
-        bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME));
-        accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT));
-        accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS));
+        bankNameCount.setText(String.valueOf(MAX_LENGTH_BANK_NAME));
+        accountNumberCount.setText(String.valueOf(MAX_LENGTH_BANK_ACCOUNT));
+        accountAliasCount.setText(String.valueOf(MAX_LENGTH_BANK_ALIAS));
 
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            lastActivity = (String) appSession.getData(FragmentsCommons.LAST_ACTIVITY);
+            String lastActivity = (String) appSession.getData(FragmentsCommons.LAST_ACTIVITY);
             setChangeBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS);
             if (lastActivity.equals(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode())) {
                 setChangeBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS);
@@ -158,13 +162,15 @@ public class SettingsCreateNewBankAccountFragment
             appSession.setData(FragmentsCommons.LAST_ACTIVITY, "");
         } catch (Exception e) {
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
         configureToolbar();
 
         return layout;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -192,6 +198,7 @@ public class SettingsCreateNewBankAccountFragment
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onClick(View view) {
         BankAccountData data = new BankAccountData(
                 selectedCurrency,
@@ -218,7 +225,7 @@ public class SettingsCreateNewBankAccountFragment
             else
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS, appSession.getAppPublicKey());
         } else
-            Toast.makeText(getActivity(), "Please fill all the fields", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.ccw_please_fill_all_the_fields, Toast.LENGTH_LONG).show();
 
     }
 
@@ -226,15 +233,23 @@ public class SettingsCreateNewBankAccountFragment
         List<String> data = new ArrayList<>();
 
         for (FiatCurrency country : countries)
-            data.add(new StringBuilder().append(country.getFriendlyName()).append(" (").append(country.getCode()).append(")").toString());
+            data.add(country.getFriendlyName() + " (" + country.getCode() + ")");
 
         return data;
     }
 
     private List<String> getListOfAccountTypeNames() {
         List<String> data = new ArrayList<>();
-        data.add(new StringBuilder().append("Saving (").append(BankAccountType.SAVINGS.getCode()).append(")").toString());
-        data.add(new StringBuilder().append("Current (").append(BankAccountType.CHECKING.getCode()).append(")").toString());
+        final String savingType = LANGUAGE.equalsIgnoreCase("es") ?
+                "Ahorro (" + BankAccountType.SAVINGS.getCode() + ")" :
+                "Saving (" + BankAccountType.SAVINGS.getCode() + ")";
+
+        final String currentType = LANGUAGE.equalsIgnoreCase("es") ?
+                "Corriente (" + BankAccountType.CHECKING.getCode() + ")" :
+                "Current (" + BankAccountType.CHECKING.getCode() + ")";
+
+        data.add(savingType);
+        data.add(currentType);
 
         return data;
     }

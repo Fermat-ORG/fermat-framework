@@ -36,6 +36,7 @@ import java.util.List;
 /**
  * Created by nelson on 22/12/15.
  */
+@Deprecated
 public class WizardPageSetIdentityFragment extends FermatWalletListFragment<CryptoCustomerIdentity, ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<CryptoCustomerIdentity> {
 

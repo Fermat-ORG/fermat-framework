@@ -31,13 +31,13 @@ public class BankEarningExtractor implements EarningExtractor {
     }
 
     @Override
-    public void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey, long fee, FeeOrigin feeOrigin) throws CantExtractEarningsException {
+    public void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey, String brokerIdentityPublicKey, long fee, FeeOrigin feeOrigin) throws CantExtractEarningsException {
         try {
             final Currency earningCurrency = earningsPair.getEarningCurrency();
             final String accountNumber = getAccountNumber(earningCurrency);
 
             bankMoneyDestockManager.createTransactionDestock(
-                    "Actor",
+                    brokerIdentityPublicKey,
                     FiatCurrency.getByCode(earningCurrency.getCode()),
                     brokerWalletPublicKey,
                     earningWalletPublicKey,

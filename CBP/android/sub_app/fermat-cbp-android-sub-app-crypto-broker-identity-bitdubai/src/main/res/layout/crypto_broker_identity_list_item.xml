@@ -5,9 +5,9 @@
     android:layout_height="225dp"
     android:layout_marginBottom="0dp"
     android:layout_marginTop="0dp"
+    android:gravity="center_vertical"
     android:orientation="vertical"
-    android:padding="0dp"
-    android:gravity="center_vertical">
+    android:padding="0dp">
 
     <ImageView
         android:id="@+id/crypto_broker_identity_image"
@@ -21,33 +21,33 @@
         android:id="@+id/crypto_broker_identity_alias"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:singleLine="true"
-        android:textColor="#ffffff"
-        android:textSize="20sp"
-        tools:text="Saxofon"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_gravity="center_vertical"
+        android:layout_toLeftOf="@+id/crypto_broker_identity_status"
+        android:layout_toStartOf="@+id/crypto_broker_identity_status"
         android:background="#96808080"
         android:padding="10dp"
-        android:layout_toLeftOf="@+id/crypto_broker_identity_status"
-        android:layout_toStartOf="@+id/crypto_broker_identity_status" />
+        android:singleLine="true"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        tools:text="@string/cbi_saxofon" />
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/crypto_broker_identity_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_gravity="center_vertical"
+        android:background="#96808080"
+        android:padding="10dp"
         android:singleLine="true"
         android:textColor="#ffffff"
         android:textSize="20sp"
-        tools:text="Visible"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:padding="10dp"
         android:visibility="visible"
-        android:background="#96808080" />
+        tools:text="@string/cbi_visible" />
 
 </RelativeLayout>
