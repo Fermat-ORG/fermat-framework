@@ -80,6 +80,7 @@ import java.util.UUID;
 
 public class ChatAdapterView extends LinearLayout {
 
+    private static final String TAG = "ChatAdapterView";
     private RecyclerView messagesContainer;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ChatAdapter adapter;
@@ -731,9 +732,11 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void displayMessage(ChatMessage message) {
-        adapter.addItem(message);
-        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
-        scroll();
+        if (adapter!=null) {
+            adapter.addItem(message);
+            adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+            scroll();
+        }else Log.e(TAG,"Adapter null");
     }
 
     public void refreshEvents() {

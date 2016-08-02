@@ -657,21 +657,16 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     public synchronized void connect() {
 
         try {
-            if (networkClientCommunicationConnection.isConnected()) throw new RuntimeException("Nodo conectado. Estas usando horrible este plugin...");
-
-            networkClientCommunicationConnection.initializeAndConnect();
-
-
-
+            if (!networkClientCommunicationConnection.isConnected()) {
+                networkClientCommunicationConnection.initializeAndConnect();
              /*
             * Create and Scheduled the supervisorConnectionAgent
             */
-            final NetworkClientCommunicationSupervisorConnectionAgent supervisorConnectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
-            if (scheduledExecutorService==null) scheduledExecutorService = Executors.newScheduledThreadPool(2);
-            scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 7, TimeUnit.SECONDS);
-
-//            executorService = Executors.newSingleThreadExecutor();
-//            executorService.submit(thread);
+                final NetworkClientCommunicationSupervisorConnectionAgent supervisorConnectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
+                if (scheduledExecutorService == null)
+                    scheduledExecutorService = Executors.newScheduledThreadPool(2);
+                scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 7, TimeUnit.SECONDS);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

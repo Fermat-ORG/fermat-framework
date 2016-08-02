@@ -138,7 +138,9 @@ public class ClassLoaderManager<O extends FermatApplicationSession & FermatConte
             for (String title : asset.list("plugins")) {
                 String path = "plugins/" + title;
                 File dexInternalStoragePath = context.getApplicationContext().getDir("dex", Context.MODE_PRIVATE);
-                dexInternalStoragePath.mkdirs();
+                if (dexInternalStoragePath.exists()) {
+                    dexInternalStoragePath.mkdirs();
+                }
                 File f = new File(dexInternalStoragePath, title);
                 InputStream fis = context.getApplicationContext().getAssets().open(path);
                 FileOutputStream fos = new FileOutputStream(f);

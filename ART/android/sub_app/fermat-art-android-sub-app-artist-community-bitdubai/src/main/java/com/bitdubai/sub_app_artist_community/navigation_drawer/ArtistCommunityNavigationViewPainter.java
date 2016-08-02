@@ -24,7 +24,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class ArtistCommunityNavigationViewPainter implements NavigationViewPainter {
+public class ArtistCommunityNavigationViewPainter extends NavigationViewPainter {
 
     private WeakReference<Context> activity;
     private ActiveActorIdentityInformation actorIdentity;
