@@ -991,4 +991,13 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         }
 
     }
+
+    @Override
+    public void onDestroy() {
+        actionButton.detach();
+        actionButton.removeAllViewsInLayout();
+//        button1.removeAllViewsInLayout();
+//        ((ViewGroup)button1.getParent()).removeView(button1);
+        super.onDestroy();
+    }
 }
