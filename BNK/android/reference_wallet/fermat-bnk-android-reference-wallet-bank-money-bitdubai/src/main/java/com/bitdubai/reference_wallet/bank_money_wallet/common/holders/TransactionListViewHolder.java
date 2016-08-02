@@ -89,7 +89,7 @@ public class TransactionListViewHolder extends FermatViewHolder {
         if(itemInfo.getTransactionType() == TransactionType.CREDIT) {
 
             depositItemsVisible();
-            depositText.setText("DEPOSIT");
+            depositText.setText(res.getString(R.string.bnk_deposit_transaction_text_caps));
             depositAmount.setText(moneyFormat.format(itemInfo.getAmount()));
             depositDate.setText(DateUtils.getRelativeTimeSpanString(timestamp).toString());
             depositMemo.setText(itemInfo.getMemo());
@@ -97,7 +97,7 @@ public class TransactionListViewHolder extends FermatViewHolder {
         if(itemInfo.getTransactionType() == TransactionType.UNHOLD) {
 
             depositItemsVisible();
-            depositText.setText("UNHOLD");
+            depositText.setText(res.getString(R.string.bnk_unhold_transaction_text_caps));
             depositAmount.setText(moneyFormat.format(itemInfo.getAmount()));
             depositDate.setText(DateUtils.getRelativeTimeSpanString(timestamp).toString());
             depositMemo.setText(itemInfo.getMemo());
@@ -105,7 +105,7 @@ public class TransactionListViewHolder extends FermatViewHolder {
         if(itemInfo.getTransactionType() == TransactionType.HOLD) {
 
             withdrawalItemsVisible();
-            withdrawalText.setText("HOLD");
+            depositText.setText(res.getString(R.string.bnk_hold_transaction_text_caps));
             withdrawalAmount.setText(moneyFormat.format(itemInfo.getAmount()));
             withdrawalDate.setText(DateUtils.getRelativeTimeSpanString(timestamp).toString());
             withdrawalMemo.setText(itemInfo.getMemo());
@@ -113,7 +113,7 @@ public class TransactionListViewHolder extends FermatViewHolder {
         if(itemInfo.getTransactionType() == TransactionType.DEBIT) {
 
             withdrawalItemsVisible();
-            withdrawalText.setText("WITHDRAWAL");
+            depositText.setText(res.getString(R.string.bnk_withdrawal_transaction_text_caps));
             withdrawalAmount.setText(moneyFormat.format(itemInfo.getAmount()));
             withdrawalDate.setText(DateUtils.getRelativeTimeSpanString(timestamp).toString());
             withdrawalMemo.setText(itemInfo.getMemo());

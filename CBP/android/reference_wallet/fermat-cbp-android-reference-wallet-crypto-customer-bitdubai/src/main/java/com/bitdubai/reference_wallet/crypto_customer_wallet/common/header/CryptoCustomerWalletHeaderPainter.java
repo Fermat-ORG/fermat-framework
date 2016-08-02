@@ -33,6 +33,7 @@ import java.util.List;
 
 /**
  * Created by nelson on 17/12/15.
+ *
  */
 public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
     private final String TAG = "CustomerWalletHeader";
@@ -87,6 +88,7 @@ public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
 
         fermatWorker.setCallBack(new FermatWorkerCallBack() {
             @Override
+            @SuppressWarnings("unchecked")
             public void onPostExecute(Object... result) {
                 if (result != null && result.length > 0) {
                     List<IndexInfoSummary> summaries = (List<IndexInfoSummary>) result[0];

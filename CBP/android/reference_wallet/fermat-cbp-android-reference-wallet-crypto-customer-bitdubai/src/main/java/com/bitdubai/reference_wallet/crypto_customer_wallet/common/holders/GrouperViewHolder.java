@@ -61,6 +61,7 @@ public class GrouperViewHolder extends ParentViewHolder {
         setArrowImage(arrowImageResource);
     }
 
+    @SuppressWarnings("deprecation")
     private void setBackgroundColor(int colorResource) {
         int color;
 
@@ -72,6 +73,7 @@ public class GrouperViewHolder extends ParentViewHolder {
         itemView.setBackgroundColor(color);
     }
 
+    @SuppressWarnings("deprecation")
     private void setTextColor(int colorResource) {
         int color;
 
@@ -83,6 +85,7 @@ public class GrouperViewHolder extends ParentViewHolder {
         mDataTextView.setTextColor(color);
     }
 
+    @SuppressWarnings("deprecation")
     private void setArrowImage(int imageResource) {
         Drawable drawable;
 

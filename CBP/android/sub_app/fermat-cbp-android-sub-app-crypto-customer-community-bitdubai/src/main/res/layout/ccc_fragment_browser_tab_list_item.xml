@@ -1,5 +1,4 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,7 +17,7 @@
         android:background="@drawable/ccc_customer_image_border_background"
         android:padding="2dp"
         android:scaleType="centerCrop"
-        tools:src="@drawable/ic_app"/>
+        tools:src="@drawable/ic_app" />
 
     <ImageView
         android:id="@+id/ccc_status_icon"
@@ -30,15 +29,15 @@
         android:layout_marginTop="-15dp"
         android:layout_toLeftOf="@+id/ccc_connection_text"
         android:layout_toStartOf="@+id/ccc_connection_text"
-        android:visibility="gone"
-        android:src="@drawable/ccc_add_contact"/>
+        android:src="@drawable/ccc_add_contact"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/ccc_status_icon"
         android:layout_marginTop="10dp"
-        android:background="@color/ccc_separator"/>
+        android:background="@color/ccc_separator" />
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/ccc_customer_name"
@@ -57,7 +56,7 @@
         android:maxLines="2"
         android:textColor="@color/color_black_light"
         android:textSize="17sp"
-        tools:text="Broker Name"/>
+        tools:text="@string/ccc_broker_name"/>
 
     <RelativeLayout
         android:id="@+id/ccc_location_container"
@@ -80,7 +79,7 @@
             android:layout_marginRight="8dp"
             android:layout_toLeftOf="@+id/ccc_location_text"
             android:layout_toStartOf="@+id/ccc_location_text"
-            android:src="@drawable/ccc_location_icon_purple"/>
+            android:src="@drawable/ccc_location_icon_purple" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/ccc_location_text"
@@ -95,7 +94,7 @@
             android:text="-- / --"
             android:textColor="@color/ccc_location_text"
             android:textSize="15sp"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText" />
 
 
     </RelativeLayout>
@@ -118,7 +117,7 @@
         android:textColor="@color/ccc_color_gray"
         android:textSize="13sp"
         android:visibility="visible"
-        tools:text="Is now a connection"/>
+        tools:text="@string/ccc_connection_confirm" />
 
 </RelativeLayout>
 

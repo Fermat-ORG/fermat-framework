@@ -23,7 +23,6 @@ import java.text.ParseException;
  */
 public class MarketRateStatisticsFragment extends AbstractFermatFragment {
     private String buy, sell, currencyPair, providerName;
-    private IndexInfoSummary indexInfoSummary;
     private NumberFormat numberFormat = DecimalFormat.getInstance();
 
     public static MarketRateStatisticsFragment newInstance() {
@@ -48,12 +47,11 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
         String buyWithFormat = fixFormat(buyAmount);
         String sellWithFormat = fixFormat(sellAmount);
         if (buyAmount.equals("0") && sellAmount.equals("0")) {
-            providerName.setText(this.providerName + " is down");
+            providerName.setText(getResources().getString(R.string.ccw_exchange_rate_provider_is_down, this.providerName));
             providerName.setTextColor(ContextCompat.getColor(getActivity(), R.color.ccw_provider_is_down));
         } else {
             providerName.setText(this.providerName);
         }
-
         currencies.setText(currencyPair);
         buyPrice.setText(buyCurrency + " " + buyWithFormat);
         sellPrice.setText(sellCurrency + " " + sellWithFormat);
@@ -66,7 +64,6 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
         currencyPair = indexInfo.getCurrencyAndReferenceCurrency();
         buy = indexInfo.getPurchasePriceAndCurrency();
         providerName = indexInfo.getProviderName();
-        indexInfoSummary = indexInfo;
     }
 
     private String fixFormat(String value) {
@@ -88,12 +85,7 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
     private Boolean compareLessThan1(String value) {
         Boolean lessThan1 = true;
         try {
-            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE) == -1) {
-                lessThan1 = true;
-            } else {
-                lessThan1 = false;
-            }
+            lessThan1 = BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).compareTo(BigDecimal.ONE) == -1;
         } catch (ParseException e) {
             e.printStackTrace();
         }

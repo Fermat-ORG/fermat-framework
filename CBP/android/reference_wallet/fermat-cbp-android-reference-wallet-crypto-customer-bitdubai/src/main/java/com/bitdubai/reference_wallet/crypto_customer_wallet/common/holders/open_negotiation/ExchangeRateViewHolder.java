@@ -8,15 +8,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.List;
 import java.util.Map;
 
 
@@ -32,7 +28,6 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private TextView yourExchangeRateValueRightSide;
     private TextView yourExchangeRateText;
     private FermatButton yourExchangeRateValue;
-    private List<IndexInfoSummary> marketRateList;
     private NumberFormat numberFormat;
     private View separatorLineUp;
     private View separatorLineDown;
@@ -52,8 +47,6 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateValue.setOnClickListener(this);
 
         numberFormat = DecimalFormat.getInstance();
-
-        //    formatter.setRoundingMode(RoundingMode.DOWN);
     }
 
     @Override
@@ -64,13 +57,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
-
-        //    BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
-        //    String marketExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue()));
-
-
-        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(),
-                fixFormat(clause.getValue()), currencyToPay.getValue()));
+        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(), fixFormat(clause.getValue()), currencyToPay.getValue()));
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy.getValue()));
         yourExchangeRateValue.setText(fixFormat(clause.getValue()));
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay.getValue()));
@@ -101,10 +88,6 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     protected int getTitleTextViewRes() {
         return R.id.ccw_card_view_title;
-    }
-
-    public void setMarketRateList(List<IndexInfoSummary> marketRateList) {
-        this.marketRateList = marketRateList;
     }
 
     @Override
@@ -140,82 +123,20 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         }
     }
 
-    private String getMarketRate(Map<ClauseType, ClauseInformation> clauses) {
-
-        BrokerCurrencyQuotation brokerCurrencyQuotation = new BrokerCurrencyQuotation(marketRateList);
-        String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(
-                clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
-                clauses.get(ClauseType.BROKER_CURRENCY).getValue()
-        );
-
-        return brokerMarketRate;
-    }
-
-/*    private BigDecimal getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
-
-        String currencyOver = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
-        String currencyUnder = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
-        BigDecimal exchangeRate = new BigDecimal(0);
-
-        ExchangeRate currencyQuotation = getExchangeRate(currencyOver, currencyUnder);
-
-        if (currencyQuotation == null) {
-            currencyQuotation = getExchangeRate(currencyUnder, currencyOver);
-            if (currencyQuotation != null) {
-                exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
-//                exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
-            }
-        } else {
-            exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
-        }
-
-        return exchangeRate;
-    }
-
-    private ExchangeRate getExchangeRate(String currencyAlfa, String currencyBeta) {
-
-        if (marketRateList != null)
-            for (IndexInfoSummary item : marketRateList) {
-                final ExchangeRate exchangeRateData = item.getExchangeRateData();
-                final String toCurrency = exchangeRateData.getToCurrency().getCode();
-                final String fromCurrency = exchangeRateData.getFromCurrency().getCode();
-
-                if (fromCurrency.equals(currencyAlfa) && toCurrency.equals(currencyBeta))
-                    return exchangeRateData;
-            }
-
-        return null;
-    }*/
-
-
     private String fixFormat(String value) {
 
-        try {
+
             if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
             } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
-            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "0";
-        }
+            return numberFormat.format(new BigDecimal(Double.valueOf(value)));
+
 
     }
 
     private Boolean compareLessThan1(String value) {
-        Boolean lessThan1 = true;
-        try {
-            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE) == -1) {
-                lessThan1 = true;
-            } else {
-                lessThan1 = false;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return lessThan1;
+        return BigDecimal.valueOf(Double.valueOf(value)).compareTo(BigDecimal.ONE) == -1;
     }
 }

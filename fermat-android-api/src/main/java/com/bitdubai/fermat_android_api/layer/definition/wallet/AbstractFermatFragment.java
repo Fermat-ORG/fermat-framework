@@ -143,6 +143,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
         isAttached = false;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -398,7 +402,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
 
     protected void destroy() {
         unregisterAllReceivers();
-        onDestroy();
         System.gc();
     }
 

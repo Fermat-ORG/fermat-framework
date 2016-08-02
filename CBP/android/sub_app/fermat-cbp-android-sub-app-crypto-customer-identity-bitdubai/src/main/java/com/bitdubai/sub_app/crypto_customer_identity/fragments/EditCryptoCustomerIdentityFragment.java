@@ -195,7 +195,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
             mCustomerName.setText(cryptoCustomerName);
 
 
-       // mCustomerName.requestFocus();
+        // mCustomerName.requestFocus();
         //mCustomerName.performClick();
         mCustomerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
         mCustomerName.addTextChangedListener(textWatcher);

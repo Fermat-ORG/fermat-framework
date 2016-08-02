@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
+import com.bitdubai.fermat_api.layer.osa_android.ConnectionType;
 import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
 import com.bitdubai.fermat_api.layer.osa_android.DeviceNetwork;
 import com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver;
@@ -55,6 +56,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -269,6 +271,12 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     System.out.println("########################################\n");
                     System.out.println("Netowork available!!!!\n+" + "NetworkType: " + deviceNetwork);
                     System.out.println("########################################\n");
+                    if(deviceNetwork.getType() == ConnectionType.WI_FI || deviceNetwork.getType() == ConnectionType.MOBILE_DATA )
+                        try {
+                            connect();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                 }
 
                 @Override
@@ -276,6 +284,19 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     System.out.println("########################################\n");
                     System.out.println("Netowork UNAVAILABLE!!!!\n");
                     System.out.println("########################################\n");
+                    if (executorService==null) executorService = Executors.newSingleThreadExecutor();
+                        executorService.submit(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    disconnect();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+
                 }
 
             });
@@ -504,15 +525,13 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
         }
 
-        Runnable runnable = new Runnable(){
+        if(executorService==null) executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(new Runnable(){
             @Override
             public void run(){
                 networkClientCommunicationConnection.initializeAndConnect();
             }
-        };
-
-        if(executorService==null) executorService = Executors.newSingleThreadExecutor();
-        executorService.submit(runnable);
+        });
 
     }
 
@@ -635,9 +654,10 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     }
 
     @Override
-    public void connect() {
+    public synchronized void connect() {
 
         try {
+            if (networkClientCommunicationConnection.isConnected()) throw new RuntimeException("Nodo conectado. Estas usando horrible este plugin...");
 
             networkClientCommunicationConnection.initializeAndConnect();
 
@@ -647,6 +667,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             * Create and Scheduled the supervisorConnectionAgent
             */
             final NetworkClientCommunicationSupervisorConnectionAgent supervisorConnectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
+            if (scheduledExecutorService==null) scheduledExecutorService = Executors.newScheduledThreadPool(2);
             scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 7, TimeUnit.SECONDS);
 
 //            executorService = Executors.newSingleThreadExecutor();
@@ -660,6 +681,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     public void disconnect() {
         try {
             scheduledExecutorService.shutdownNow();
+            scheduledExecutorService = null;
         }catch (Exception e){
 
         }

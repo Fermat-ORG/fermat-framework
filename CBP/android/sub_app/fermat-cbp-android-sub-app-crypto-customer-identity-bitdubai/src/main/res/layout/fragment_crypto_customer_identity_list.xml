@@ -4,49 +4,49 @@
     android:id="@+id/activity_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/cci_background_gradient_colors" >
+    android:background="@drawable/cci_background_gradient_colors">
 
     <RelativeLayout
         android:id="@+id/no_crypto_customer_identities"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="vertical"
         android:layout_marginBottom="40dp"
+        android:orientation="vertical"
         android:visibility="gone">
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="180dp"
             android:layout_height="180dp"
-            android:layout_gravity="center"
-            android:src="@drawable/new_identities_icon"
-            android:id="@+id/imageView"
             android:layout_alignParentTop="false"
             android:layout_alignWithParentIfMissing="false"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:src="@drawable/new_identities_icon" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingTop="210dp"
             android:text="@string/not_identities"
             android:textColor="#ffffff"
-            android:textSize="28sp"
-            android:id="@+id/view"
-            android:gravity="center"
-            android:layout_centerInParent="true"
-            android:paddingTop="210dp" />
+            android:textSize="28sp" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/view2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingTop="260dp"
             android:text="@string/create_a_new_one"
             android:textColor="#ffffff"
-            android:textSize="20sp"
-            android:id="@+id/view2"
-            android:gravity="center"
-            android:paddingTop="260dp" />
+            android:textSize="20sp" />
 
     </RelativeLayout>
 
@@ -89,7 +89,7 @@
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
             android:paddingStart="0dp"
-            android:paddingTop="0dp"/>
+            android:paddingTop="0dp" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
