@@ -167,12 +167,12 @@ public class EditAccountFragment extends AbstractFermatFragment<ReferenceAppFerm
 
         //Check that account number is not blank
         if(newAccountNumber.isEmpty()){
-            Toast.makeText(getActivity().getApplicationContext(), "Please enter a valid account number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.bnk_error_msg_invalid_account_number), Toast.LENGTH_SHORT).show();
             return false;
         }
         //Check that alias is not blank
         if(newAlias.isEmpty()){
-            Toast.makeText(getActivity().getApplicationContext(), "Please enter a valid account alias", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.bnk_error_msg_invalid_alias), Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -182,7 +182,7 @@ public class EditAccountFragment extends AbstractFermatFragment<ReferenceAppFerm
             //Check that newAccountNumber is different than every account number saved into database
             for (BankAccountNumber savedAccount : bankAccounts) {
                 if (savedAccount.getAccount().equals(newAccountNumber)) {
-                    Toast.makeText(getActivity().getApplicationContext(), "Account number already exists!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.bnk_error_msg_duplicate_account_number), Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
@@ -202,15 +202,15 @@ public class EditAccountFragment extends AbstractFermatFragment<ReferenceAppFerm
 //                appSession.setData("account_data", newData);
 //                appSession.setData("account_image", AccountListViewHolder.getResource(newImageId));
 
-                Toast.makeText(getActivity().getApplicationContext(), "Account Edited", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.bnk_error_msg_account_edited), Toast.LENGTH_SHORT).show();
             }catch(CantEditAccountException e){
-                Toast.makeText(getActivity().getApplicationContext(), "There was a problem editing the account, try again later", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.bnk_error_msg_std_try_again), Toast.LENGTH_SHORT).show();
                 errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
         }
         else
         {
-            Toast.makeText(getActivity().getApplicationContext(), "Nothing was edited", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.bnk_error_msg_std_try_again), Toast.LENGTH_SHORT).show();
         }
         return true;
     }
@@ -223,7 +223,7 @@ public class EditAccountFragment extends AbstractFermatFragment<ReferenceAppFerm
             super.onActivityCreated(new Bundle());
         } catch (Exception e){
             errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.bnk_error_msg_std), Toast.LENGTH_SHORT).show();
         }
     }
 

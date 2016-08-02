@@ -209,11 +209,11 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             String amount = amountText.getText().toString();
 
             if (amount.equals("")) {
-                Toast.makeText(activity.getApplicationContext(), "Amount cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), resources.getString(R.string.bnk_error_msg_invalid_account_number), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (new BigDecimal(amount).compareTo(new BigDecimal(0)) == 0) {
-                Toast.makeText(activity.getApplicationContext(), "Amount cannot be zero", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), resources.getString(R.string.bnk_error_msg_amount_zero), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -229,7 +229,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                     moduleManager.makeAsyncWithdraw(transactionParameters);
                     
                 } else {
-                    Toast.makeText(activity.getApplicationContext(), "Amount is larger than available funds", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), resources.getString(R.string.bnk_error_msg_amount_larger_funds), Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -241,7 +241,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
             bankMoneyWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getApplicationContext(), resources.getString(R.string.bnk_error_msg_std_try_again), Toast.LENGTH_SHORT).show();
             return;
         }
         dismiss();
