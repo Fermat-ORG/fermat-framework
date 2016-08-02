@@ -17,8 +17,10 @@ public enum NicheWallet implements FermatWalletEnum {
      * <p/>
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    NONE("NONE", null),
-    UNKNOWN_WALLET("UNKW", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+    NONE           ("NONE", null),
+    UNKNOWN_WALLET ("UNKW", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET)
+
+    ;
 
     private final String code;
 
@@ -33,14 +35,12 @@ public enum NicheWallet implements FermatWalletEnum {
 
         switch (code) {
 
-            case "NONE":
-                throw new CallToGetByCodeOnNONEException("method getByCode called by a NONE wallet", null, "", "");
-            case "UNKW":
-                return UNKNOWN_WALLET;
+            case "NONE": throw new CallToGetByCodeOnNONEException("method getByCode called by a NONE wallet", null, "", "");
+            case "UNKW": return UNKNOWN_WALLET;
 
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code Received: ").append(code).toString(),
+                        "Code Received: " + code,
                         "The received code is not valid for the NicheWallet enum"
                 );
         }

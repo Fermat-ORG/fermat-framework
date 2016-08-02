@@ -14,7 +14,6 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantC
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantPublishIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUnHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
@@ -25,7 +24,6 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.e
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantHideCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantPublishCryptoBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantUnHideCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CryptoBrokerNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
@@ -52,10 +50,10 @@ public class CryptoBrokerIdentityModuleManagerImpl
             PluginFileSystem pluginFileSystem,
             UUID pluginId,
             CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot,
-            LocationManager locationManager) {
+            LocationManager locationManager){
         super(pluginFileSystem, pluginId);
-        this.identityManager = identityManager;
-        this.pluginRoot = pluginRoot;
+        this.identityManager        = identityManager;
+        this.pluginRoot           = pluginRoot;
         this.locationManager = locationManager;
     }
 
@@ -75,25 +73,8 @@ public class CryptoBrokerIdentityModuleManagerImpl
     }
 
     @Override
-    public void updateCryptoBrokerIdentity(CryptoBrokerIdentityInformation cryptoBrokerIdentity) throws CantUpdateBrokerIdentityException {
+    public void updateCryptoBrokerIdentity(CryptoBrokerIdentityInformation cryptoBrokerIdentity)  throws CantUpdateBrokerIdentityException {
         this.identityManager.updateCryptoBrokerIdentity(cryptoBrokerIdentity.getAlias(), cryptoBrokerIdentity.getPublicKey(), cryptoBrokerIdentity.getProfileImage(), cryptoBrokerIdentity.getAccuracy(), cryptoBrokerIdentity.getFrequency());
-    }
-
-    @Override
-    public void unHideIdentity(String publicKey) throws CantUnHideCryptoBrokerException, CryptoBrokerNotFoundException {
-
-        try {
-            this.identityManager.unHideIdentity(publicKey);
-        } catch (CantUnHideIdentityException e) {
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantUnHideCryptoBrokerException(e, "", "Problem UNHIDE the identity.");
-        } catch (IdentityNotFoundException e) {
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantUnHideCryptoBrokerException(e, "", "Cannot find the identity.");
-        } catch (Exception e) {
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantUnHideCryptoBrokerException(e, "", "Unhandled Exception.");
-        }
     }
 
     @Override
@@ -139,16 +120,16 @@ public class CryptoBrokerIdentityModuleManagerImpl
     public List<CryptoBrokerIdentityInformation> listIdentities(int max, int offset) throws CantListCryptoBrokersException {
         try {
             List<CryptoBrokerIdentityInformation> cryptoBrokers = new ArrayList<>();
-            for (CryptoBrokerIdentity identity : this.identityManager.listIdentitiesFromCurrentDeviceUser()) {
+            for(CryptoBrokerIdentity identity : this.identityManager.listIdentitiesFromCurrentDeviceUser()){
                 cryptoBrokers.add(converIdentityToInformation(identity));
             }
             return cryptoBrokers;
         } catch (CantListCryptoBrokerIdentitiesException e) {
-            throw new CantListCryptoBrokersException(CantListCryptoBrokersException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantListCryptoBrokersException(CantListCryptoBrokersException.DEFAULT_MESSAGE, e, "","");
         }
     }
 
-    private CryptoBrokerIdentityInformation converIdentityToInformation(final CryptoBrokerIdentity identity) {
+    private CryptoBrokerIdentityInformation converIdentityToInformation(final CryptoBrokerIdentity identity){
         return new CryptoBrokerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getProfileImage(), identity.getExposureLevel(), identity.getAccuracy(), identity.getFrequency());
     }
 

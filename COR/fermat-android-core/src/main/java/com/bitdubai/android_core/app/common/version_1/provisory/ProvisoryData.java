@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
 import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,13 +20,13 @@ import java.util.List;
 public class ProvisoryData {
 
 
-    public static List<Item> getBottomNavigationProvisoryData() {
+    public static List<Item> getBottomNavigationProvisoryData(){
         List<Item> lst = new ArrayList<>();
 
 
         //settings
         InstalledSubApp installedSubApp;
-        installedSubApp = new InstalledSubApp(
+        installedSubApp= new InstalledSubApp(
                 SubApps.SETTINGS,
                 null,
                 null,
@@ -33,7 +34,7 @@ public class ProvisoryData {
                 "Settings",
                 SubAppsPublicKeys.SETTINGS.getCode(),
                 "settings",
-                new Version(1, 0, 0),
+                new Version(1,0,0),
                 null, AppsStatus.DEV);
 
         Item item2 = new Item(installedSubApp);
@@ -59,7 +60,7 @@ public class ProvisoryData {
                 "Wallet Users",
                 SubAppsPublicKeys.CCP_IDENTITY.getCode(),
                 "intra_user_identity_sub_app",
-                new Version(1, 0, 0),
+                new Version(1,0,0),
                 Platforms.CRYPTO_CURRENCY_PLATFORM, AppsStatus.ALPHA);
 
         item2 = new Item(installedSubApp);
@@ -163,6 +164,7 @@ public class ProvisoryData {
         lstIdentities.add(item2);
 
 
+
         //ART Identities
 //        installedSubApp = new InstalledSubApp(
 //                SubApps.ART_ARTIST_IDENTITY,
@@ -237,7 +239,16 @@ public class ProvisoryData {
 //        lstIdentities.add(item2);
 
 
-        FermatFolder fermatFolder = new FermatFolder("Profiles", lstIdentities, 2);
+
+
+
+
+
+
+
+
+
+        FermatFolder fermatFolder = new FermatFolder("Profiles",lstIdentities,2);
         Item identityFolder = new Item(fermatFolder);
         identityFolder.setIconResource(R.drawable.identities72);
         identityFolder.setPosition(2);
@@ -254,7 +265,7 @@ public class ProvisoryData {
                 "Wallet Users",
                 SubAppsPublicKeys.CCP_COMMUNITY.getCode(),
                 "intra_user_community_sub_app",
-                new Version(1, 0, 0),
+                new Version(1,0,0),
                 Platforms.CRYPTO_CURRENCY_PLATFORM, AppsStatus.DEV);
 
         Item item1 = new Item(installedSubApp);
@@ -318,7 +329,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode(),
                 "sub_app_crypto_broker_community",
                 new Version(1, 0, 0)
-                , Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
+                ,Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
 
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.broker_community);
@@ -409,7 +420,13 @@ public class ProvisoryData {
 //        lstCommunities.add(item1);
 
 
-        fermatFolder = new FermatFolder("Communities", lstCommunities, 1);
+
+
+
+
+
+
+        fermatFolder = new FermatFolder("Communities",lstCommunities,1);
         item2 = new Item(fermatFolder);
         item2.setIconResource(R.drawable.communities72);
         item2.setPosition(3);
@@ -422,12 +439,14 @@ public class ProvisoryData {
                 "wallet_store",
                 "App Store",
                 SubAppsPublicKeys.CWP_STORE.getCode(),
-                "wallet_store", new Version(1, 0, 0),
+                "wallet_store",new Version(1,0,0),
                 null, AppsStatus.DEV);
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.store72);
         item2.setPosition(4);
         lst.add(item2);
+
+
 
 
         return lst;

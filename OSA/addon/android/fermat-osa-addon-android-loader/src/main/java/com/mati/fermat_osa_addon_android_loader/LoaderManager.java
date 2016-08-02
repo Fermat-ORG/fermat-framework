@@ -18,16 +18,16 @@ public class LoaderManager<O extends FermatApplicationSession & FermatContext> {
         classLoaderManager = new ClassLoaderManager<>(fermatContext);
     }
 
-    public Object objectProxyFactory(String moduleName, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface, Object... args) {
-        return objectToProxyFactory(load(moduleName, args), interfaceLoader, interfaces, returnInterface);
+    public Object objectProxyFactory(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... args){
+        return objectToProxyFactory(load(moduleName,args),interfaceLoader,interfaces,returnInterface);
     }
 
-    public Object load(String moduleName, Object... args) {
+    public Object load(String moduleName,Object... args){
         return classLoaderManager.load(moduleName, args);
     }
 
     public Object objectToProxyFactory(Object base, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface) {
-        InvocationHandler invocationHandler = new ObjectInvocationHandler(this, base);
+        InvocationHandler invocationHandler = new ObjectInvocationHandler(this,base);
         return Proxy.newProxyInstance(
                 interfaceLoader,
                 interfaces,
@@ -37,9 +37,5 @@ public class LoaderManager<O extends FermatApplicationSession & FermatContext> {
 
     public ClassLoader getExternalLoader(String name) {
         return classLoaderManager.getExternalLoader(name);
-    }
-
-    public Object loadWithBaseClassLoader(String pluginName, ClassLoader classLoader,Object... args) {
-        return classLoaderManager.load(pluginName, classLoader,args);
     }
 }

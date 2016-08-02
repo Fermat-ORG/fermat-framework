@@ -336,16 +336,10 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         try {
             actorLocationUpdaterAgent.start();
         } catch (Exception exception) {
-            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception,"Plugin: "+pluginVersionReference.toString3());
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
 
         onActorNetworkServiceRegistered();
-    }
-
-    @Override
-    public void startConnection() throws CantRegisterProfileException {
-        getConnection().registerProfile(getProfile());
-
     }
 
     public final void onActorRegistered(String publicKey) {

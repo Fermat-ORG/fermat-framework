@@ -14,21 +14,25 @@ import java.util.Map;
 public interface ActorExtraData {
 
     /**
+     *
      * @return basic information Customer
      */
     String getCustomerPublicKey();
 
     /**
+     *
      * @return basic information Customer
      */
     ActorIdentity getBrokerIdentity();
 
     /**
+     *
      * @return all prices of goods Customer
      */
     Collection<QuotesExtraData> getQuotes();
 
     /**
+     *
      * @return all currencies handled with platforms that support them
      */
     Map<Currency, Collection<Platforms>> getCurrencies();

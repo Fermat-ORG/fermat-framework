@@ -20,14 +20,13 @@ public class EnvironmentVariables {
 
     /**
      * Get the path to file system folder
-     *
      * @return String path to file folder
      **/
     public static Object getExternalStorageDirectory() {
 
         //User home directory
         String home = System.getProperty("user.home");
-        File dir = new File(home + "/externalStorage/databases/");
+        File dir = new File(home+"/externalStorage/databases/");
 
         return dir.getAbsolutePath();
 
@@ -35,7 +34,6 @@ public class EnvironmentVariables {
 
     /**
      * Get the path to private internal folders
-     *
      * @return String path to private internal folder
      **/
     // this method is for the private internal files if we have to hidden in the future
@@ -43,7 +41,7 @@ public class EnvironmentVariables {
 
         //User home directory
         String home = System.getProperty("user.home");
-        File dir = new File(home + "/externalStorage/databases/");
+        File dir = new File(home+"/externalStorage/databases/");
 
         return dir.getAbsolutePath();
     }

@@ -146,9 +146,6 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
      */
     public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
         try {
-            if (isContractHashInDatabase(eventId)) {
-                return;
-            }
             DatabaseTable databaseTable = getDatabaseEventsTable();
             DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
             long unixTime = System.currentTimeMillis();
@@ -203,16 +200,15 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method returns the contract transaction status
-     *
      * @param contractHash
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
-        try {
+        try{
 
-            String stringContractTransactionStatus = getValue(
+            String stringContractTransactionStatus=getValue(
                     contractHash,
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
@@ -226,7 +222,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                     e,
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
-        } catch (Exception exception) {
+        }catch (Exception exception) {
             pluginRoot.reportError(
 
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -239,7 +235,6 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method returns a String value from parameters in database.
-     *
      * @param key
      * @param keyColumn
      * @param valueColumn
@@ -251,19 +246,19 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                             String valueColumn)
             throws
             UnexpectedResultReturnedFromDatabaseException {
-        try {
-            DatabaseTable databaseTable = getAckMerchandiseTable();
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
             databaseTable.addStringFilter(
                     keyColumn,
                     key,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if (records.isEmpty()) {
+            if(records.isEmpty()){
                 return null;
             }
             checkDatabaseRecords(records);
-            String value = records
+            String value=records
                     .get(0)
                     .getStringValue(valueColumn);
             return value;
@@ -277,7 +272,6 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method check the database record result.
-     *
      * @param records
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
@@ -288,33 +282,32 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
          * I'm gonna set this number in 1 for now, because I want to check the records object has
          * one only result.
          */
-        int VALID_RESULTS_NUMBER = 1;
+        int VALID_RESULTS_NUMBER=1;
         int recordsSize;
-        if (records.isEmpty()) {
+        if(records.isEmpty()){
             return;
         }
-        recordsSize = records.size();
-        if (recordsSize > VALID_RESULTS_NUMBER) {
-            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(VALID_RESULTS_NUMBER).append(", but I got ").append(recordsSize).toString());
+        recordsSize=records.size();
+        if(recordsSize>VALID_RESULTS_NUMBER){
+            throw new UnexpectedResultReturnedFromDatabaseException("I excepted "+VALID_RESULTS_NUMBER+", but I got "+recordsSize);
         }
     }
 
     /**
      * This method returns TRUE if the contract is persisted in database.
-     *
      * @param contractHash
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public boolean isContractHashInDatabase(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
-        try {
-            String contractHashFromDatabase = getValue(
+        try{
+            String contractHashFromDatabase=getValue(
                     contractHash,
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
-            return contractHashFromDatabase != null;
-        } catch (Exception exception) {
+            return contractHashFromDatabase!=null;
+        }catch (Exception exception) {
             pluginRoot.reportError(
 
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -327,21 +320,16 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
-     *
      * @param customerBrokerContractPurchase
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
             CustomerBrokerContractPurchase customerBrokerContractPurchase)
             throws CantInsertRecordException {
-        try {
-            if (isContractHashInDatabase(customerBrokerContractPurchase.getContractId())) {
-                System.out.println(new StringBuilder().append("The contract ").append(customerBrokerContractPurchase).append(" exists in database").toString());
-                return;
-            }
-            DatabaseTable databaseTable = getAckMerchandiseTable();
-            DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
-            databaseTableRecord = buildDatabaseTableRecord(
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
+            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+            databaseTableRecord= buildDatabaseTableRecord(
                     databaseTableRecord,
                     customerBrokerContractPurchase
             );
@@ -366,15 +354,14 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method creates a database table record in crypto broker side, only for backup
-     *
      * @param record
      * @param customerBrokerContractPurchase
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
-            CustomerBrokerContractPurchase customerBrokerContractPurchase) {
-        UUID transactionId = UUID.randomUUID();
+            CustomerBrokerContractPurchase customerBrokerContractPurchase){
+        UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
                 CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME,
                 transactionId);
@@ -397,7 +384,6 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method updates the ContractTransactionStatus by a contractHash
-     *
      * @param contractHash
      * @param contractTransactionStatus
      * @throws UnexpectedResultReturnedFromDatabaseException
@@ -405,11 +391,11 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
      */
     public void updateContractTransactionStatus(String contractHash, ContractTransactionStatus contractTransactionStatus)
             throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
-        try {
+        try{
 
             ObjectChecker.checkArgument(contractHash);
 
-            DatabaseTable databaseTable = getAckMerchandiseTable();
+            DatabaseTable databaseTable=getAckMerchandiseTable();
 
             databaseTable.addStringFilter(
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
@@ -420,7 +406,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            DatabaseTableRecord record = records.get(0);
+            DatabaseTableRecord record=records.get(0);
 
             record.setStringValue(
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
@@ -428,7 +414,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
             databaseTable.updateRecord(record);
 
-        } catch (CantLoadTableToMemoryException exception) {
+        }  catch (CantLoadTableToMemoryException exception) {
             pluginRoot.reportError(
 
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -437,7 +423,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                     exception,
                     "Updating databaseTableRecord from a BusinessTransactionRecord",
                     "Unexpected results in database");
-        } catch (Exception exception) {
+        }catch (Exception exception) {
             pluginRoot.reportError(
 
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -452,7 +438,6 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method update a database record by contract hash.
-     *
      * @param contractHash
      * @param statusColumnName
      * @param newStatus
@@ -465,8 +450,8 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
 
-        try {
-            DatabaseTable databaseTable = getAckMerchandiseTable();
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
             databaseTable.addStringFilter(
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
@@ -474,17 +459,16 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            DatabaseTableRecord record = records.get(0);
+            DatabaseTableRecord record=records.get(0);
             record.setStringValue(statusColumnName, newStatus);
             databaseTable.updateRecord(record);
-        } catch (CantLoadTableToMemoryException exception) {
-            throw new UnexpectedResultReturnedFromDatabaseException(exception, new StringBuilder().append("Updating parameter ").append(statusColumnName).toString(), "");
+        }  catch (CantLoadTableToMemoryException exception) {
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Updating parameter "+statusColumnName,"");
         }
     }
 
     /**
      * This method returns the pending to submit notifications list
-     *
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
@@ -492,12 +476,12 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
     public List<BusinessTransactionRecord> getPendingToSubmitNotificationList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        try {
+        try{
             return getBusinessTransactionRecordList(
                     ContractTransactionStatus.PENDING_OFFLINE_MERCHANDISE_NOTIFICATION.getCode(),
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
-        } catch (CantGetContractListException exception) {
+        }catch (CantGetContractListException exception) {
             pluginRoot.reportError(
 
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -518,7 +502,6 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method returns the pending to submit notifications list
-     *
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
@@ -526,12 +509,12 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
     public List<BusinessTransactionRecord> getPendingToSubmitConfirmList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        try {
+        try{
             return getBusinessTransactionRecordList(
                     ContractTransactionStatus.PENDING_ACK_OFFLINE_MERCHANDISE.getCode(),
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
-        } catch (CantGetContractListException exception) {
+        }catch (CantGetContractListException exception) {
             pluginRoot.reportError(
 
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -552,9 +535,8 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method returns a CustomerOnlinePaymentRecordList according the arguments.
-     *
-     * @param key         String with the search key.
-     * @param keyColumn   String with the key column name.
+     * @param key String with the search key.
+     * @param keyColumn String with the key column name.
      * @param valueColumn String with the value searched column name.
      * @return List<BusinessTransactionRecord>
      * @throws CantGetContractListException
@@ -564,13 +546,13 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             String key,
             String keyColumn,
             String valueColumn) throws CantGetContractListException, UnexpectedResultReturnedFromDatabaseException {
-        List<String> pendingContractHash = getStringList(
+        List<String> pendingContractHash= getStringList(
                 key,
                 keyColumn,
                 valueColumn);
-        List<BusinessTransactionRecord> businessTransactionRecordList = new ArrayList<>();
+        List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
         BusinessTransactionRecord businessTransactionRecord;
-        for (String contractHash : pendingContractHash) {
+        for(String contractHash : pendingContractHash){
             businessTransactionRecord = getBusinessTransactionRecordByContractHash(contractHash);
             businessTransactionRecordList.add(businessTransactionRecord);
         }
@@ -579,7 +561,6 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method returns a List with the parameter in the arguments.
-     *
      * @param key
      * @param keyColumn
      * @param valueColumn
@@ -589,9 +570,9 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             String key,
             String keyColumn,
             String valueColumn) throws CantGetContractListException {
-        try {
-            DatabaseTable databaseTable = getAckMerchandiseTable();
-            List<String> contractHashList = new ArrayList<>();
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
+            List<String> contractHashList=new ArrayList<>();
             String contractHash;
             databaseTable.addStringFilter(
                     keyColumn,
@@ -599,25 +580,24 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if (records.isEmpty()) {
+            if(records.isEmpty()){
                 //There is no records in database, I'll return an empty list.
                 return contractHashList;
             }
-            for (DatabaseTableRecord databaseTableRecord : records) {
-                contractHash = databaseTableRecord.getStringValue(valueColumn);
+            for(DatabaseTableRecord databaseTableRecord : records){
+                contractHash=databaseTableRecord.getStringValue(valueColumn);
                 contractHashList.add(contractHash);
             }
             return contractHashList;
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetContractListException(e,
-                    new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(),
+                    "Getting "+valueColumn+" based on "+key,
                     "Cannot load the table into memory");
         }
     }
 
     /**
      * This method returns the business transaction record by a contract hash
-     *
      * @param contractHash
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
@@ -626,24 +606,23 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             String contractHash)
             throws
             UnexpectedResultReturnedFromDatabaseException {
-        try {
+        try{
             return getBusinessTransactionRecord(
                     contractHash,
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
                             ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
-        } catch (Exception e) {
+        }catch (Exception e){
             pluginRoot.reportError(
 
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
-            throw new UnexpectedResultReturnedFromDatabaseException(e, "Unexpected Result", "Check the cause");
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
         }
 
     }
 
     /**
      * This method returns a BusinessTransactionRecord by the parameters given.
-     *
      * @param keyValue
      * @param keyColumn
      * @return
@@ -651,13 +630,13 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
     private BusinessTransactionRecord getBusinessTransactionRecord(
             String keyValue,
             String keyColumn) throws UnexpectedResultReturnedFromDatabaseException {
-        try {
-            DatabaseTable databaseTable = getAckMerchandiseTable();
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
             ContractTransactionStatus contractTransactionStatus;
             long paymentAmount;
             MoneyType paymentType;
             FiatCurrency currencyType;
-            BusinessTransactionRecord businessTransactionRecord = new BusinessTransactionRecord();
+            BusinessTransactionRecord businessTransactionRecord =new BusinessTransactionRecord();
             databaseTable.addStringFilter(
                     keyColumn,
                     keyValue,
@@ -665,7 +644,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            if (records.isEmpty()) {
+            if(records.isEmpty()){
                 return null;
             }
             DatabaseTableRecord record = records.get(0);
@@ -682,7 +661,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             businessTransactionRecord.setBrokerPublicKey(record.getStringValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
                     ACK_OFFLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME));
 
-            contractTransactionStatus = ContractTransactionStatus.getByCode(record.getStringValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+            contractTransactionStatus=ContractTransactionStatus.getByCode(record.getStringValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
                     ACK_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
             businessTransactionRecord.setContractTransactionStatus(contractTransactionStatus);
 
@@ -703,14 +682,13 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method returns the recorded pending events
-     *
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
-    public List<String> getPendingEvents() throws CantGetContractListException, UnexpectedResultReturnedFromDatabaseException {
-        try {
-            DatabaseTable databaseTable = getDatabaseEventsTable();
+    public List<String> getPendingEvents() throws CantGetContractListException,UnexpectedResultReturnedFromDatabaseException {
+        try{
+            DatabaseTable databaseTable=getDatabaseEventsTable();
             return getPendingGenericsEvents(
                     databaseTable,
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME,
@@ -737,7 +715,6 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method returns pending generic events by given parameters
-     *
      * @return
      */
     private List<String> getPendingGenericsEvents(
@@ -745,8 +722,8 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             String statusColumn,
             String idColumn) throws
             CantGetContractListException {
-        try {
-            List<String> eventTypeList = new ArrayList<>();
+        try{
+            List<String> eventTypeList=new ArrayList<>();
             String eventId;
             databaseTable.addStringFilter(
                     statusColumn,
@@ -754,26 +731,25 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if (records.isEmpty()) {
+            if(records.isEmpty()){
                 //There is no records in database, I'll return an empty list.
                 return eventTypeList;
             }
-            for (DatabaseTableRecord databaseTableRecord : records) {
-                eventId = databaseTableRecord.getStringValue(
+            for(DatabaseTableRecord databaseTableRecord : records){
+                eventId=databaseTableRecord.getStringValue(
                         idColumn);
                 eventTypeList.add(eventId);
             }
             return eventTypeList;
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetContractListException(e,
-                    new StringBuilder().append("Getting events in EventStatus.PENDING in table ").append(databaseTable.getTableName()).toString(),
+                    "Getting events in EventStatus.PENDING in table "+databaseTable.getTableName(),
                     "Cannot load the table into memory");
         }
     }
 
     /**
      * This method returns the event type by event Id
-     *
      * @param eventId
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
@@ -781,8 +757,8 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
     public String getEventType(String eventId)
             throws
             UnexpectedResultReturnedFromDatabaseException {
-        try {
-            DatabaseTable databaseTable = getDatabaseEventsTable();
+        try{
+            DatabaseTable databaseTable=getDatabaseEventsTable();
             databaseTable.addStringFilter(
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
@@ -799,7 +775,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
-        } catch (Exception exception) {
+        }catch (Exception exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Getting value from database",
@@ -810,7 +786,6 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method updates the event status by an eventId
-     *
      * @param eventId
      * @param eventStatus
      * @throws UnexpectedResultReturnedFromDatabaseException
@@ -821,29 +796,26 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             EventStatus eventStatus) throws
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        try {
-            DatabaseTable databaseTable = getDatabaseEventsTable();
+        try{
+            DatabaseTable databaseTable=getDatabaseEventsTable();
             databaseTable.addStringFilter(
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            //checkDatabaseRecords(records);
-            if (records == null || records.isEmpty()) {
-                return;
-            }
-            DatabaseTableRecord record = records.get(0);
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
             record.setStringValue(
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
-        } catch (CantLoadTableToMemoryException exception) {
+        }  catch (CantLoadTableToMemoryException exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    new StringBuilder().append("Updating parameter ").append(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
-        } catch (Exception exception) {
+                    "Updating parameter "+ CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        }catch (Exception exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
         }
@@ -851,26 +823,21 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
-     *
      * @param customerBrokerContractSale
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
             CustomerBrokerContractSale customerBrokerContractSale)
             throws CantInsertRecordException {
-        try {
-            if (isContractHashInDatabase(customerBrokerContractSale.getContractId())) {
-                System.out.println(new StringBuilder().append("The contract ").append(customerBrokerContractSale).append(" exists in database").toString());
-                return;
-            }
-            DatabaseTable databaseTable = getAckMerchandiseTable();
-            DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
-            databaseTableRecord = buildDatabaseTableRecord(
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
+            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+            databaseTableRecord= buildDatabaseTableRecord(
                     databaseTableRecord,
                     customerBrokerContractSale
             );
             databaseTable.insertRecord(databaseTableRecord);
-        } catch (CantInsertRecordException exception) {
+        }catch (CantInsertRecordException exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception, "Error in persistContractInDatabase", "");
         } catch (Exception exception) {
@@ -881,15 +848,14 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method creates a database table record in crypto broker side, only for backup
-     *
      * @param record
      * @param customerBrokerContractSale
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
-            CustomerBrokerContractSale customerBrokerContractSale) {
-        UUID transactionId = UUID.randomUUID();
+            CustomerBrokerContractSale customerBrokerContractSale){
+        UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
                 CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME,
                 transactionId);
@@ -912,7 +878,6 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method returns the completion date from database.
-     *
      * @param contractHash
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
@@ -920,8 +885,8 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
     public long getCompletionDateByContractHash(
             String contractHash)
             throws UnexpectedResultReturnedFromDatabaseException {
-        try {
-            DatabaseTable databaseTable = getAckMerchandiseTable();
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
             databaseTable.addStringFilter(
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
                             ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
@@ -929,11 +894,11 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if (records.isEmpty()) {
+            if(records.isEmpty()){
                 return 0;
             }
             checkDatabaseRecords(records);
-            long completionDate = records
+            long completionDate=records
                     .get(0)
                     .getLongValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
                             ACK_OFFLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME);
@@ -947,7 +912,6 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
     /**
      * This method sets the completion date in the database.
-     *
      * @param contractHash
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
@@ -957,8 +921,8 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             long completionDate)
             throws UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        try {
-            DatabaseTable databaseTable = getAckMerchandiseTable();
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
             databaseTable.addStringFilter(
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
                             ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
@@ -966,11 +930,11 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if (records.isEmpty()) {
-                return;
+            if(records.isEmpty()){
+                return ;
             }
             checkDatabaseRecords(records);
-            DatabaseTableRecord record = records.get(0);
+            DatabaseTableRecord record=records.get(0);
             record.setLongValue(
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
                             ACK_OFFLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME,

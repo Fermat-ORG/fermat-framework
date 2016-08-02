@@ -17,7 +17,6 @@ public enum FermatMessagesStatus implements FermatEnum {
     /**
      * The enum values
      */
-    FAILED          ("F"),
     PENDING_TO_SEND ("PTS"),
     SENT            ("S"),
     DELIVERED       ("D"),
@@ -61,7 +60,6 @@ public enum FermatMessagesStatus implements FermatEnum {
             case "D":   return DELIVERED;
             case "NR":  return NEW_RECEIVED;
             case "R":   return READ;
-            case "F":   return FAILED;
         }
 
         /**

@@ -10,11 +10,12 @@ public class SharedMemory {
     public static SharedMemory instance;
 
     public static SharedMemory getInstance() {
-        if (instance == null) {
+        if(instance==null){
             instance = new SharedMemory();
         }
         return instance;
     }
+
 
 
     /**
@@ -22,7 +23,7 @@ public class SharedMemory {
      */
     private AppsStatus appsStatus = AppsStatus.ALPHA;
 
-    public void changeAppStatus(AppsStatus appsStatus) {
+    public void changeAppStatus(AppsStatus appsStatus){
         this.appsStatus = appsStatus;
     }
 

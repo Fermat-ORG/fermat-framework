@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
@@ -187,8 +186,7 @@ public class CryptoWalletBasicWallet implements CryptoWalletWallet {
                                                                          final BalanceType balanceType,
                                                                          final TransactionType transactionType,
                                                                          final int max,
-                                                                         final int offset,
-                                                                         final BlockchainNetworkType blockchainNetworkType) throws CantListTransactionsException {
+                                                                         final int offset) throws CantListTransactionsException {
 
         try {
 
@@ -199,8 +197,7 @@ public class CryptoWalletBasicWallet implements CryptoWalletWallet {
                     balanceType,
                     transactionType,
                     max,
-                    offset,
-                    blockchainNetworkType
+                    offset
             );
 
         } catch (CantListTransactionsException exception) {
@@ -218,8 +215,7 @@ public class CryptoWalletBasicWallet implements CryptoWalletWallet {
     public List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(final BalanceType balanceType,
                                                                                      final TransactionType transactionType,
                                                                                      final int max,
-                                                                                     final int offset,
-                                                                                    final BlockchainNetworkType blockchainNetworkType) throws CantListTransactionsException {
+                                                                                     final int offset) throws CantListTransactionsException {
 
         try {
             CryptoWalletBasicWalletDao bitcoinWalletBasicWalletDao = new CryptoWalletBasicWalletDao(database);
@@ -228,8 +224,7 @@ public class CryptoWalletBasicWallet implements CryptoWalletWallet {
                     balanceType,
                     transactionType,
                     max,
-                    offset,
-                    blockchainNetworkType
+                    offset
             );
         } catch (CantListTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));

@@ -12,9 +12,8 @@ public enum ContractDetailType implements FermatEnum {
     CUSTOMER_DETAIL("CDET");
 
     String code;
-
-    ContractDetailType(String code) {
-        this.code = code;
+    ContractDetailType(String code){
+        this.code=code;
     }
 
     //PUBLIC METHODS
@@ -26,13 +25,15 @@ public enum ContractDetailType implements FermatEnum {
         throw new InvalidParameterException(
                 InvalidParameterException.DEFAULT_MESSAGE,
                 null,
-                new StringBuilder().append("Code Received: ").append(code).toString(),
+                "Code Received: " + code,
                 "This Code Is Not Valid for the ContractDetailType enum.");
     }
 
     @Override
     public String toString() {
-        return new StringBuilder().append("ContractDetailType{").append("code='").append(code).append('\'').append('}').toString();
+        return "ContractDetailType{" +
+                "code='" + code + '\'' +
+                '}';
     }
 
     //GETTER AND SETTERS

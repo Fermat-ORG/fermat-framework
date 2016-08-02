@@ -16,6 +16,7 @@ import java.util.Collection;
 public interface CryptoBrokerActorManager extends FermatManager {
 
     /**
+     *
      * @param identity
      * @param walletPublicKey
      * @return
@@ -24,6 +25,7 @@ public interface CryptoBrokerActorManager extends FermatManager {
     BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewBrokerIdentityWalletRelationshipException;
 
     /**
+     *
      * @param walletPublicKey
      * @return
      * @throws CantCreateNewBrokerIdentityWalletRelationshipException
@@ -32,12 +34,14 @@ public interface CryptoBrokerActorManager extends FermatManager {
 
 
     /**
+     *
      * @return
      * @throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException
      */
     Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException;
 
     /**
+     *
      * @param publicKey
      * @return
      * @throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException
@@ -45,6 +49,7 @@ public interface CryptoBrokerActorManager extends FermatManager {
     BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException;
 
     /**
+     *
      * @param walletPublicKey
      * @return
      * @throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException

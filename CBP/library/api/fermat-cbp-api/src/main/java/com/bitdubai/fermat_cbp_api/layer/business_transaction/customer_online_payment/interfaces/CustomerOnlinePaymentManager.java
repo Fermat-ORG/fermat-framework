@@ -20,6 +20,7 @@ public interface CustomerOnlinePaymentManager extends CustomerPaymentManager {
      * @param walletPublicKey the customer wallet public key
      * @param contractHash    the contract Hash/ID
      * @param paymentCurrency the payment crypto currency
+     *
      * @throws CantSendPaymentException
      */
     void sendPayment(
@@ -32,10 +33,11 @@ public interface CustomerOnlinePaymentManager extends CustomerPaymentManager {
     /**
      * This method send a payment according the contract elements.
      *
-     * @param walletPublicKey       the customer wallet public key
-     * @param contractHash          the contract Hash/ID
-     * @param paymentCurrency       the payment crypto currency
+     * @param walletPublicKey the customer wallet public key
+     * @param contractHash    the contract Hash/ID
+     * @param paymentCurrency the payment crypto currency
      * @param blockchainNetworkType the Blockchain Network Type
+     *
      * @throws CantSendPaymentException
      */
     void sendPayment(

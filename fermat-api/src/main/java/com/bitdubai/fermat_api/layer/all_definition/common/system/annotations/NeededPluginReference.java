@@ -22,14 +22,10 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface NeededPluginReference {
 
-    Platforms platform();
-
-    Layers layer();
-
-    Plugins plugin();
-
-    Developers developer() default Developers.BITDUBAI;
-
-    String version() default "1.0.0";
+    Platforms        platform();
+    Layers           layer();
+    Plugins          plugin();
+    Developers       developer()       default Developers.BITDUBAI;
+    String           version()         default "1.0.0";
 
 }

@@ -1,12 +1,9 @@
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
-import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
-import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningPairState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
@@ -28,6 +25,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction.CashEarningExtractor;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction.CryptoEarningExtractor;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction.EarningExtractorManagerImpl;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -147,8 +145,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
-                BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions);
 
         // assertion
         assertThat(earningsExtracted).isTrue();
@@ -207,8 +204,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
-                BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions);
 
         // assertion
         assertThat(earningsExtracted).isFalse();
@@ -246,8 +242,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
-                BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions);
 
         // assertion
         assertThat(earningsExtracted).isTrue();
@@ -291,8 +286,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 System.currentTimeMillis(),
                 dao));
 
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
-                BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions);
 
         // assertion
         assertThat(earningsExtracted).isFalse();
@@ -327,8 +321,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
-                BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions);
 
         // assertion
         assertThat(earningsExtracted).isTrue();
@@ -346,9 +339,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 any(BigDecimal.class),
                 eq(OriginTransaction.EARNING_EXTRACTION),
                 eq(earningsPair.getId().toString()),
-                eq(BlockchainNetworkType.getDefaultBlockchainNetworkType()),
-                eq(BitcoinFee.NORMAL.getFee()),
-                eq(FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT));
+                eq(BlockchainNetworkType.getDefaultBlockchainNetworkType()));
     }
 
     @Test
@@ -375,8 +366,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
-                BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions);
 
         // assertion
         assertThat(earningsExtracted).isFalse();
@@ -427,8 +417,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
-                BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions);
 
         // assertion
         assertThat(earningsExtracted).isTrue();
@@ -456,8 +445,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
 
 
         // exercise
-        earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
-                BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+        earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions);
 
         // assertion
         assertThat(earningsExtracted).isFalse();
@@ -491,8 +479,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
-                BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions);
 
         // assertion
         assertThat(earningsExtracted).isFalse();
@@ -533,8 +520,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions,
-                BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+        boolean earningsExtracted = transaction.extractEarnings(earningsPair, earningTransactions);
 
         // assertion
         assertThat(earningsExtracted).isFalse();
@@ -572,15 +558,13 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 dao));
 
         // exercise
-        catchException(transaction).extractEarnings(earningsPair, null,
-                BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+        catchException(transaction).extractEarnings(earningsPair, null);
 
         // assertions
         assertThat(caughtException()).isInstanceOf(CantExtractEarningsException.class);
 
         // exercise
-        catchException(transaction).extractEarnings(null, earningTransactions,
-                BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+        catchException(transaction).extractEarnings(null, earningTransactions);
 
         // assertions
         assertThat(caughtException()).isInstanceOf(CantExtractEarningsException.class);
@@ -612,8 +596,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
         transaction = new EarningExtractorManagerImpl(cryptoBrokerWalletManager, dao);
 
         // exercise
-        catchException(transaction).extractEarnings(earningsPair, earningTransactions,
-                BitcoinFee.NORMAL.getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+        catchException(transaction).extractEarnings(earningsPair, earningTransactions);
 
         // assertions
         assertThat(caughtException()).isInstanceOf(CantExtractEarningsException.class);

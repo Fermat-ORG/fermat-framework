@@ -1,7 +1,5 @@
 apply plugin: 'java'
 apply plugin: 'maven'
-apply plugin: 'maven-publish'
-
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
@@ -41,7 +39,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
 	testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
-//    deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
+    deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
 }
 
 test {
@@ -52,40 +50,24 @@ test {
 uploadArchives {
                 
     repositories {
-
+   
         flatDir {
-
+            
             dirs 'repos'
         }
-    }
 
-//	mavenDeployer {
-//            configuration = configurations.deployerJars
-//            repository (url: "dav:https://repository-fermat.forge.cloudbees.com/release/") {
-//                authentication(userName: 'raul-pena', password: 'bAvE19G77_')
-//            }
-//        }
-//    }
+	mavenDeployer {
+            configuration = configurations.deployerJars
+            repository (url: "dav:https://repository-fermat.forge.cloudbees.com/release/") {
+                authentication(userName: 'raul-pena', password: 'bAvE19G77_')
+            }
+        }
+    }
 }
 
 tasks.withType(FindBugs) {
     reports {
         xml.enabled = false
         html.enabled = true
-    }
-}
-
-
-publishing {
-    publications {
-        myPublication(MavenPublication) {
-            from components.java
-
-        }
-    }
-    repositories {
-        maven {
-            url "file:/${System.properties['user.home']}/artifacts"
-        }
     }
 }

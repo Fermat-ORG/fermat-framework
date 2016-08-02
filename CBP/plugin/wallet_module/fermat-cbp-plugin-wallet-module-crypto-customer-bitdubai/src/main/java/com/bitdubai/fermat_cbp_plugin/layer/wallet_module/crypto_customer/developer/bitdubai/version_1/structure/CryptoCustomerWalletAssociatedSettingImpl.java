@@ -12,16 +12,15 @@ import java.util.UUID;
  */
 public class CryptoCustomerWalletAssociatedSettingImpl implements CryptoCustomerWalletAssociatedSetting {
 
-    UUID id;
-    String customerPublicKey;
-    Platforms platforms;
-    String walletPublicKey;
-    FermatEnum merchandise;
-    String bankAccount;
+    UUID         id;
+    String       customerPublicKey;
+    Platforms    platforms;
+    String       walletPublicKey;
+    FermatEnum   merchandise;
+    String       bankAccount;
     MoneyType moneyType;
 
-    public CryptoCustomerWalletAssociatedSettingImpl() {
-    }
+    public CryptoCustomerWalletAssociatedSettingImpl(){}
 
     @Override
     public UUID getId() {
@@ -50,7 +49,7 @@ public class CryptoCustomerWalletAssociatedSettingImpl implements CryptoCustomer
 
     @Override
     public void setPlatform(Platforms platform) {
-        this.platforms = platform;
+        this.platforms  = platform;
     }
 
     @Override

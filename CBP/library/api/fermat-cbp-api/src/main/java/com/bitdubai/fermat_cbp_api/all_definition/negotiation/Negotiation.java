@@ -41,6 +41,7 @@ public interface Negotiation extends Serializable {
     Long getLastNegotiationUpdateDate();
 
     /**
+     *
      * @param lastNegotiationUpdateDate
      */
     void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate);
@@ -56,7 +57,8 @@ public interface Negotiation extends Serializable {
     NegotiationStatus getStatus();
 
     /**
-     * @return a Boolean with NearExpirationDatetime
+     *
+     * @return  a Boolean with NearExpirationDatetime
      */
     Boolean getNearExpirationDatetime();
 

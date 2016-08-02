@@ -60,8 +60,8 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                                  String receptorPublicKey, Actors senderActorType,
                                  Actors receptorActorType,ReferenceWallet referenceWallet,
                                  BlockchainNetworkType blockchainNetworkType,
-                                 CryptoCurrency cryptoCurrency,
-                                 long fee, FeeOrigin feeOrigin ) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
+                                 CryptoCurrency cryptoCurrency
+                                   ) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
 
         try {
             long funds = 0;
@@ -93,9 +93,8 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             dao.registerNewTransaction(transactionId, requestId, walletPublicKey,
                     destinationAddress, cryptoAmount, null, description, senderPublicKey,
                     senderActorType, receptorPublicKey, receptorActorType, referenceWallet, false, blockchainNetworkType,
-                    cryptoCurrency,
-                    fee,
-                    feeOrigin);
+                    cryptoCurrency
+                    ,0,FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS);
 
         } catch (OutgoingIntraActorInsufficientFundsException e) {
             throw e;

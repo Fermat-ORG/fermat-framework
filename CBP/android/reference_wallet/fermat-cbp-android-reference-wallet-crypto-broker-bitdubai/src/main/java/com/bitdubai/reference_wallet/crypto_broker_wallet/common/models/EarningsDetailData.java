@@ -19,13 +19,13 @@ import java.util.TreeMap;
  */
 public final class EarningsDetailData {
 
-    private final EarningCurrencyCalendarRelationship relationship;
-    private float amount;
-    private final List<EarningTransaction> earningTransactions;
+    private final EarningCurrencyCalendarRelationship relationship               ;
+    private       float                        amount             ;
+    private final List<EarningTransaction>     earningTransactions;
 
     public EarningsDetailData(EarningCurrencyCalendarRelationship relationship) {
 
-        this.relationship = relationship;
+        this.relationship         = relationship    ;
         this.earningTransactions = new ArrayList<>();
     }
 
@@ -49,13 +49,10 @@ public final class EarningsDetailData {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("EarningsDetailData{")
-                .append("amount=")
-                .append(amount)
-                .append(", earningTransactions=")
-                .append(earningTransactions)
-                .append('}').toString();
+        return "EarningsDetailData{" +
+                "amount=" + amount +
+                ", earningTransactions=" + earningTransactions +
+                '}';
     }
 
     public static List<EarningsDetailData> generateEarningsDetailData(List<EarningTransaction> earningTransactionList, TimeFrequency timeFrequency) {
@@ -65,9 +62,9 @@ public final class EarningsDetailData {
         for (EarningTransaction earningTransaction : earningTransactionList) {
 
             EarningCurrencyCalendarRelationship relationship = new EarningCurrencyCalendarRelationship(
-                    earningTransaction.getYear(),
+                    earningTransaction.getYear()                       ,
                     earningTransaction.getMonth(),
-                    earningTransaction.getDay(),
+                    earningTransaction.getDay() ,
                     getTimeReference(timeFrequency, earningTransaction),
                     earningTransaction.getEarningCurrency()
             );
@@ -107,7 +104,7 @@ public final class EarningsDetailData {
                 return earningTransaction.getMonth();
             case YEARLY:
                 return earningTransaction.getYear();
-            default:
+            default :
                 return 0;
         }
     }

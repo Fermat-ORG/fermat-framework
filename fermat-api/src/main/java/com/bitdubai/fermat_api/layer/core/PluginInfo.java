@@ -18,29 +18,28 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE) //on class level
 public @interface PluginInfo {
 
-    public enum Dificulty {
-        LOW, MEDIUM, HIGH
-    }
+	public enum Dificulty {
+		LOW, MEDIUM, HIGH
+	}
 
-    Dificulty difficulty() default Dificulty.MEDIUM;
+	Dificulty difficulty() default Dificulty.MEDIUM;
 
-    String[] tags() default "";
+	String[] tags() default "";
 
-    String createdBy();
+	String createdBy();
 
-    String maintainerMail();
+	String maintainerMail();
 
-    String lastModified() default "15/03/2016";
+	String lastModified() default "15/03/2016";
 
-    Platforms platform();
+	Platforms platform();
+	Layers layer();
+	Plugins plugin();
+	Developers developer()       default Developers.BITDUBAI;
+	String           version()         default "1.0.0";
 
-    Layers layer();
 
-    Plugins plugin();
 
-    Developers developer() default Developers.BITDUBAI;
-
-    String version() default "1.0.0";
 
 
 }

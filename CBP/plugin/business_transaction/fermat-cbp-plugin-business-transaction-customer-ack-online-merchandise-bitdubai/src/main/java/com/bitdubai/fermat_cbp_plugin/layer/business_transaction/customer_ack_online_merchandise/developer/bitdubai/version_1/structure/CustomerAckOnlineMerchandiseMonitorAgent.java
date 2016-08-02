@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_o
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -64,6 +63,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_on
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.database.CustomerAckOnlineMerchandiseBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.exceptions.IncomingOnlineMerchandiseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -216,7 +216,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                  */
                 try {
 
-                    logManager.log(CustomerAckOnlineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
+                    logManager.log(CustomerAckOnlineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (FermatException e) {
                     pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -367,20 +367,26 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                 long contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
                 if (incomingCryptoAmount != contractCryptoAmount)
                     throw new IncomingOnlineMerchandiseException(
-                            new StringBuilder().append("The incoming crypto amount received is ").append(incomingCryptoAmount).append("\nThe excepted amount in contract ").append(contractHash).append("\nis ").append(contractCryptoAmount).toString());
+                            "The incoming crypto amount received is " + incomingCryptoAmount +
+                                    "\nThe excepted amount in contract " + contractHash +
+                                    "\nis " + contractCryptoAmount);
 
                 // TODO probar esto
                 final CryptoCurrency incomingCryptoCurrency = incomingMoneyEventWrapper.getCryptoCurrency();
                 final CryptoCurrency contractCryptoCurrency = businessTransactionRecord.getCryptoCurrency();
                 if (incomingCryptoCurrency != contractCryptoCurrency)
                     throw new IncomingOnlineMerchandiseException(
-                            new StringBuilder().append("The incoming crypto currency received is ").append(incomingCryptoCurrency.getFriendlyName()).append("\nThe excepted crypto currency in contract ").append(contractHash).append("\nis ").append(contractCryptoCurrency.getFriendlyName()).toString());
+                            "The incoming crypto currency received is " + incomingCryptoCurrency.getFriendlyName() +
+                                    "\nThe excepted crypto currency in contract " + contractHash +
+                                    "\nis " + contractCryptoCurrency.getFriendlyName());
 
                 String receiverActorPublicKey = incomingMoneyEventWrapper.getReceiverPublicKey();
                 String expectedActorPublicKey = businessTransactionRecord.getCustomerPublicKey();
                 if (!receiverActorPublicKey.equals(expectedActorPublicKey))
                     throw new IncomingOnlineMerchandiseException(
-                            new StringBuilder().append("The actor public key that receive the money is ").append(receiverActorPublicKey).append("\nThe broker public key in contract ").append(contractHash).append("\nis ").append(expectedActorPublicKey).toString());
+                            "The actor public key that receive the money is " + receiverActorPublicKey +
+                                    "\nThe broker public key in contract " + contractHash +
+                                    "\nis " + expectedActorPublicKey);
 
                 businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.PENDING_ACK_ONLINE_MERCHANDISE_NOTIFICATION);
                 dao.updateBusinessTransactionRecord(businessTransactionRecord);
@@ -415,7 +421,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                             CustomerBrokerContractSale saleContract = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
                             ObjectChecker.checkArgument(saleContract); //If the contract is null, I cannot handle with this situation
                             System.out.println("ACK_ONLINE_MERCHANDISE [Broker] - INCOMING_NEW_CONTRACT_STATUS_UPDATE - getting saleContract");
-                            System.out.println(new StringBuilder().append("ACK_ONLINE_MERCHANDISE [Broker] - INCOMING_NEW_CONTRACT_STATUS_UPDATE - saleContract.getStatus() = ").append(saleContract.getStatus()).toString());
+                            System.out.println("ACK_ONLINE_MERCHANDISE [Broker] - INCOMING_NEW_CONTRACT_STATUS_UPDATE - saleContract.getStatus() = " + saleContract.getStatus());
 
                             if (saleContract.getStatus() != ContractStatus.COMPLETED) {
                                 dao.persistContractInDatabase(saleContract);
@@ -495,7 +501,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                             long cryptoAmount = getCryptoAmount(amountStr, merchandiseCurrencyCode);
 
                             dao.persistContractInDatabase(purchaseContract, cryptoAmount, merchandiseCurrencyCode);
-                            System.out.println(new StringBuilder().append("ACK_ONLINE_MERCHANDISE [Customer] - BROKER_ACK_PAYMENT_CONFIRMED - persisted purchase contract. cryptoAmount = ").append(cryptoAmount).append(" - merchandiseCurrency = ").append(merchandiseCurrencyCode).toString());
+                            System.out.println("ACK_ONLINE_MERCHANDISE [Customer] - BROKER_ACK_PAYMENT_CONFIRMED - persisted purchase contract. cryptoAmount = " + cryptoAmount + " - merchandiseCurrency = " + merchandiseCurrencyCode);
                         }
                     } catch (Exception e) {
                         System.out.println("ACK_ONLINE_MERCHANDISE - BROKER_ACK_PAYMENT_CONFIRMED - EXCEPTION!! Probably this is been executed in the Broker Side");
@@ -533,6 +539,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
          *
          * @param cryptoAmountString the crypto amount in String
          * @param currencyCode       the crypto currency code
+         *
          * @return the crypto amount in satoshi
          */
         private long getCryptoAmount(String cryptoAmountString, String currencyCode) {

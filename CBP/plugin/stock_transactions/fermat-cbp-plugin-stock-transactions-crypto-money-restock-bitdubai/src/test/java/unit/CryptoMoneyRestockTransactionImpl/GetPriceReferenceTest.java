@@ -8,9 +8,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by Jose Vilchez on 18/01/16.
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class GetPriceReferenceTest {
 
     @Test
-    public void getPriceReference() throws Exception {
+    public void getPriceReference() throws Exception{
         CryptoMoneyRestockTransactionImpl cryptoMoneyDestockTransaction = mock(CryptoMoneyRestockTransactionImpl.class);
         when(cryptoMoneyDestockTransaction.getPriceReference()).thenReturn(BigDecimal.ONE);
         assertThat(cryptoMoneyDestockTransaction.getPriceReference()).isNotNull();

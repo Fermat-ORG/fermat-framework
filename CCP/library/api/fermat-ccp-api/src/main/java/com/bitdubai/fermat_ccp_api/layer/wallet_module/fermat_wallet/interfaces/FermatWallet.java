@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
@@ -66,7 +65,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.FermatWallet</code>
@@ -116,7 +114,6 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      *
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<FermatWalletWalletContact> listWalletContacts(String walletPublicKey, String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException;
 
 
@@ -128,7 +125,6 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * @return
      * @throws CantGetAllWalletContactsException
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<FermatWalletWalletContact> listAllActorContactsAndConnections(String walletPublicKey, String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException;
 
     /**
@@ -325,10 +321,9 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * Throw the method <code>isValidAddress</code> you can validate in the specific vault if a specific crypto address is valid.
      *
      * @param cryptoAddress to validate
-     * @param blockchainNetworkType to validate
      * @return boolean value, true if positive, false if negative.
      */
-    boolean isValidAddress(CryptoAddress cryptoAddress,BlockchainNetworkType blockchainNetworkType);
+    boolean isValidAddress(CryptoAddress cryptoAddress);
     // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
 
@@ -412,7 +407,6 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<FermatWalletModuleTransaction> listTransactionsByActor(BalanceType balanceType,
                                                           String walletPublicKey,
                                                           String actorPublicKey,
@@ -449,7 +443,7 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
     List<FermatWalletModuleTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                              TransactionType transactionType,
                                                                              String walletPublicKey,
@@ -472,7 +466,6 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * @return
      * @throws CantListTransactionsException
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<FermatWalletModuleTransaction> listTransactionsByActorAndType(BalanceType balanceType,
                                                                  TransactionType transactionType,
                                                                  String walletPublicKey,
@@ -502,7 +495,6 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * @param walletPublicKey
      * @return List of PaymentRequest object
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<PaymentRequest> listSentPaymentRequest(String walletPublicKey, BlockchainNetworkType blockchainNetworkType, int max, int offset) throws CantListSentPaymentRequestException;
 
 
@@ -652,5 +644,5 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
 
     void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantLoadExistingVaultSeed;
 
-    void testNetGiveMeCoins(BlockchainNetworkType blockchainNetworkType, CryptoAddress cryptoAddress) throws CantGetCoinsFromFaucetException;
+
 }

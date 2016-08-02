@@ -1,7 +1,11 @@
 package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.Service;/*
+import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer._2_os.DataBaseSystemOs;
+import com.bitdubai.fermat_api.layer._2_os.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;*/
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.DataBaseSystemOs;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
@@ -21,7 +25,7 @@ import com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bit
  * * * *
  */
 
-public class DataBaseSystemOsAddonRoot implements Addon, DataBaseSystemOs, Service {
+public class DataBaseSystemOsAddonRoot  implements Addon,DataBaseSystemOs,Service {
 
     /**
      * DataBaseSystemOsAddonRoot member variables.
@@ -55,7 +59,7 @@ public class DataBaseSystemOsAddonRoot implements Addon, DataBaseSystemOs, Servi
     }
 
     @Override
-    public PlatformDatabaseSystem getPlatformDatabaseSystem() {
+    public PlatformDatabaseSystem getPlatformDatabaseSystem(){
         return this.platformDatabaseSystem;
     }
 
@@ -65,10 +69,12 @@ public class DataBaseSystemOsAddonRoot implements Addon, DataBaseSystemOs, Servi
     *   Method only available for Android OS
     */
     @Override
-    public void setContext(Object context) {
+    public void setContext (Object context)
+    {
         //this.pluginDatabaseSystem.setContext(context);
         //this.platformDatabaseSystem.setContext(context);
     }
+
 
 
     /**
@@ -101,6 +107,7 @@ public class DataBaseSystemOsAddonRoot implements Addon, DataBaseSystemOs, Servi
         this.serviceStatus = ServiceStatus.STOPPED;
 
     }
+
 
 
     @Override

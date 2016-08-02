@@ -15,8 +15,10 @@ public enum InputTransactionType implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
-    ORIGINAL("ORI"),
-    PARTIAL("PAR"),;
+    ORIGINAL   ("ORI"),
+    PARTIAL    ("PAR"),
+
+    ;
 
     private final String code;
 
@@ -28,14 +30,12 @@ public enum InputTransactionType implements FermatEnum {
 
         switch (code) {
 
-            case "ORI":
-                return ORIGINAL;
-            case "PAR":
-                return PARTIAL;
+            case "ORI": return ORIGINAL;
+            case "PAR": return PARTIAL ;
 
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code Received: ").append(code).toString(),
+                        "Code Received: " + code,
                         "The code received is not valid for the InputTransactionType enum."
                 );
         }

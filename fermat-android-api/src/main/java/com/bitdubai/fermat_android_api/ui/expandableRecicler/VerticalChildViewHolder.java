@@ -3,11 +3,13 @@ package com.bitdubai.fermat_android_api.ui.expandableRecicler;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bitdubai.android_api.R;
+
 
 /**
  * Custom child ViewHolder. Any views should be found and set to public variables here to be
  * referenced in your custom ExpandableAdapter later.
- * <p/>
+ *
  * Must extend ChildViewHolder.
  *
  * @author Ryan Brooks

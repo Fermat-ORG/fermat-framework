@@ -9,14 +9,10 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
@@ -49,12 +45,11 @@ import java.util.List;
  * bla bla bla.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
- *
- * @author lnacosta
+
+ * @author  lnacosta
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
-@PluginInfo(createdBy = "lnacosta", maintainerMail = "laion.cj91@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_BROKER)
 public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetworkService implements DatabaseManagerForDevelopers {
 
     /**
@@ -87,11 +82,11 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
             cryptoBrokerActorNetworkServiceDao.initialize();
 
             fermatManager = new CryptoBrokerActorNetworkServiceManager(
-                    cryptoBrokerActorNetworkServiceDao,
+                    cryptoBrokerActorNetworkServiceDao ,
                     this
             );
 
-        } catch (final CantInitializeDatabaseException e) {
+        } catch(final CantInitializeDatabaseException e) {
 
             this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, "", "Problem initializing crypto broker ans dao.");
@@ -115,7 +110,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.fromJson(jsonMessage);
 
-            System.out.println(new StringBuilder().append("********************* Message Sent Type:  ").append(networkServiceMessage.getMessageType()).toString());
+            System.out.println("********************* Message Sent Type:  " + networkServiceMessage.getMessageType());
 
             switch (networkServiceMessage.getMessageType()) {
 
@@ -142,7 +137,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
                 default:
                     throw new CantHandleNewMessagesException(
-                            new StringBuilder().append("message type: ").append(networkServiceMessage.getMessageType().name()).toString(),
+                            "message type: " +networkServiceMessage.getMessageType().name(),
                             "Message type not handled."
                     );
             }
@@ -156,21 +151,21 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
     @Override
     public void onNewMessageReceived(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage fermatMessage) {
 
-        System.out.println(new StringBuilder().append("****** CRYPTO BROKER ACTOR NETWORK SERVICE NEW MESSAGE RECEIVED: ").append(fermatMessage).toString());
+        System.out.println("****** CRYPTO BROKER ACTOR NETWORK SERVICE NEW MESSAGE RECEIVED: " + fermatMessage);
         try {
 
             String jsonMessage = fermatMessage.getContent();
 
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.fromJson(jsonMessage);
 
-            System.out.println(new StringBuilder().append("********************* Message Type:  ").append(networkServiceMessage.getMessageType()).toString());
+            System.out.println("********************* Message Type:  " + networkServiceMessage.getMessageType());
 
             switch (networkServiceMessage.getMessageType()) {
 
                 case CONNECTION_INFORMATION:
                     InformationMessage informationMessage = InformationMessage.fromJson(jsonMessage);
 
-                    System.out.println(new StringBuilder().append("********************* Content:  ").append(informationMessage).toString());
+                    System.out.println("********************* Content:  " + informationMessage);
 
                     receiveConnectionInformation(informationMessage);
 
@@ -181,7 +176,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
                     RequestMessage requestMessage = RequestMessage.fromJson(jsonMessage);
 
-                    System.out.println(new StringBuilder().append("********************* Content:  ").append(requestMessage).toString());
+                    System.out.println("********************* Content:  " + requestMessage);
 
                     receiveRequest(requestMessage);
 
@@ -191,7 +186,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
                     CryptoBrokerActorNetworkServiceQuotesRequest quotesRequestMessage = CryptoBrokerActorNetworkServiceQuotesRequest.fromJson(jsonMessage);
 
-                    System.out.println(new StringBuilder().append("********************* Content:  ").append(quotesRequestMessage).toString());
+                    System.out.println("********************* Content:  " + quotesRequestMessage);
 
                     receiveQuotesRequest(quotesRequestMessage);
 
@@ -199,7 +194,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
                 default:
                     throw new CantHandleNewMessagesException(
-                            new StringBuilder().append("message type: ").append(networkServiceMessage.getMessageType().name()).toString(),
+                            "message type: " +networkServiceMessage.getMessageType().name(),
                             "Message type not handled."
                     );
             }
@@ -307,7 +302,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
                 default:
                     throw new CantHandleNewMessagesException(
-                            new StringBuilder().append("action not supported: ").append(informationMessage.getAction()).toString(),
+                            "action not supported: " +informationMessage.getAction(),
                             "action not handled."
                     );
             }
@@ -316,11 +311,11 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
             eventToRaise.setSource(eventSource);
             eventManager.raiseEvent(eventToRaise);
 
-        } catch (CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException | CantDisconnectException e) {
+        } catch(CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException | CantDisconnectException e) {
             // i inform to error manager the error.
             this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Crypto Broker ANS Dao.");
-        } catch (Exception e) {
+        } catch(Exception e) {
 
             this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
@@ -340,8 +335,8 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
                 return;
 
 
-            final ProtocolState state = ProtocolState.PENDING_LOCAL_ACTION;
-            final RequestType type = RequestType.RECEIVED;
+            final ProtocolState           state  = ProtocolState.PENDING_LOCAL_ACTION;
+            final RequestType             type   = RequestType  .RECEIVED             ;
 
             final CryptoBrokerConnectionInformation connectionInformation = new CryptoBrokerConnectionInformation(
                     requestMessage.getRequestId(),
@@ -364,11 +359,11 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
             eventToRaise.setSource(eventSource);
             eventManager.raiseEvent(eventToRaise);
 
-        } catch (CantRequestConnectionException e) {
+        } catch(CantRequestConnectionException e) {
             // i inform to error manager the error.
             this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Crypto Broker ANS Dao.");
-        } catch (Exception e) {
+        } catch(Exception e) {
 
             this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
@@ -388,7 +383,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(final DeveloperObjectFactory developerObjectFactory,
-                                                             final DeveloperDatabase developerDatabase) {
+                                                             final DeveloperDatabase      developerDatabase     ) {
 
         return new CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(
                 pluginDatabaseSystem,
@@ -401,7 +396,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
-                                                                      final DeveloperDatabase developerDatabase,
+                                                                      final DeveloperDatabase      developerDatabase     ,
                                                                       final DeveloperDatabaseTable developerDatabaseTable) {
 
         return new CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(
@@ -409,7 +404,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractActorNetw
                 pluginId
         ).getDatabaseTableContent(
                 developerObjectFactory,
-                developerDatabase,
+                developerDatabase     ,
                 developerDatabaseTable
         );
     }

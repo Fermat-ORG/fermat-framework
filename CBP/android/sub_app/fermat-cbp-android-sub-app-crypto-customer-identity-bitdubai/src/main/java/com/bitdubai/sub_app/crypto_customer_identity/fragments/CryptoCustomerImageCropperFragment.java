@@ -38,12 +38,8 @@ public class CryptoCustomerImageCropperFragment extends AbstractFermatFragment<R
     Bitmap originalImage;
     Bitmap croppedImage;
 
-    public CryptoCustomerImageCropperFragment() {
-    }
-
-    public static CryptoCustomerImageCropperFragment newInstance() {
-        return new CryptoCustomerImageCropperFragment();
-    }
+    public CryptoCustomerImageCropperFragment() {}
+    public static CryptoCustomerImageCropperFragment newInstance() {return new CryptoCustomerImageCropperFragment();}
 
 
     @Override
@@ -81,6 +77,7 @@ public class CryptoCustomerImageCropperFragment extends AbstractFermatFragment<R
     }
 
 
+
     @Override
     public void onClick(View v) {
         int i = v.getId();
@@ -90,7 +87,7 @@ public class CryptoCustomerImageCropperFragment extends AbstractFermatFragment<R
             //Crop image
             croppedImage = cropImageView.getCroppedImage();
 
-            if (croppedImage.getHeight() >= 80) {
+            if(croppedImage.getHeight() >= 80) {
 
 
                 //Scale it to default size (IMAGE_WIDTH x IMAGE_HEIGHT)
@@ -104,7 +101,8 @@ public class CryptoCustomerImageCropperFragment extends AbstractFermatFragment<R
 
                 goBackToCallerActivity();
 
-            } else
+            }
+            else
                 Toast.makeText(getActivity(), "Cropped image is too small", Toast.LENGTH_SHORT).show();
 
         }
@@ -112,16 +110,17 @@ public class CryptoCustomerImageCropperFragment extends AbstractFermatFragment<R
         if (i == R.id.cbi_rotate_button)
             cropImageView.rotateImage(90);
 
-        if (i == R.id.cbi_cancel_button)
+        if( i == R.id.cbi_cancel_button)
             goBackToCallerActivity();
 
 
     }
 
-    private void goBackToCallerActivity() {
-        if (backActivity == Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY)
+    private void goBackToCallerActivity()
+    {
+        if(backActivity == Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY)
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY, appSession.getAppPublicKey());
-        else if (backActivity == Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY)
+        else if(backActivity == Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY)
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY, appSession.getAppPublicKey());
         else
             Toast.makeText(getActivity(), "Error! Wrong back activity!", Toast.LENGTH_SHORT).show();

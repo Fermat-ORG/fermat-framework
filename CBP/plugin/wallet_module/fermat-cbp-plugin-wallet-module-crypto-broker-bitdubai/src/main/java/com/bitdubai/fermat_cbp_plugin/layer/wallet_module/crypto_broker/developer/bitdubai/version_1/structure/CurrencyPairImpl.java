@@ -13,9 +13,10 @@ public class CurrencyPairImpl implements CurrencyPair, Serializable {
     private Currency currencyFrom;
     private Currency currencyTo;
 
-    public CurrencyPairImpl(Currency currencyFrom, Currency currencyTo) {
+    public CurrencyPairImpl(Currency currencyFrom, Currency currencyTo)
+    {
         this.currencyFrom = currencyFrom;
-        this.currencyTo = currencyTo;
+        this.currencyTo   = currencyTo;
     }
 
     @Override

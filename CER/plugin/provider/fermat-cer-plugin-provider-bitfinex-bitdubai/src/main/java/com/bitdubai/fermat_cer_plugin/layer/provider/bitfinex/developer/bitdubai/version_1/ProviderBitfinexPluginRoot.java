@@ -148,12 +148,11 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException();
 
         //Determine cryptoCurrency base
         String exchangeFrom, exchangeTo;
         boolean invertExchange;
-        boolean providerIsDown = false;
 
 
         if (isAnInvertedCurrencyPair(currencyPair)) {
@@ -179,12 +178,8 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
             salePrice = json.getDouble("ask");
 
         } catch (JSONException e) {
-            //   this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            //   throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Bitfinex CER Provider", "Cant Get exchange rate for " + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
-            purchasePrice = 0;
-            salePrice = 0;
-            invertExchange = false;
-            providerIsDown = true;
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Bitfinex CER Provider", "Cant Get exchange rate for " + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
         }
 
         if (invertExchange) {
@@ -195,12 +190,10 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), salePrice, purchasePrice, (new Date().getTime() / 1000));
 
-        if (!providerIsDown){
-            try {
-                dao.saveCurrentExchangeRate(exchangeRate);
-            } catch (CantSaveExchangeRateException e) {
-                this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
+        try {
+            dao.saveCurrentExchangeRate(exchangeRate);
+        } catch (CantSaveExchangeRateException e) {
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return exchangeRate;
     }
@@ -219,7 +212,7 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException();
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }

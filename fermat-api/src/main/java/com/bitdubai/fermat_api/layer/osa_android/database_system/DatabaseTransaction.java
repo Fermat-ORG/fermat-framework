@@ -6,15 +6,17 @@ import java.util.List;
 
 
 /**
- * <p>The abstract class <code>DatabaseTransaction</code> is a interface
- * that define the methods to manage insert and update transactions on the database.
  *
- * @author Luis
- * @version 1.0.0
- * @since 24/03/15.
- */
+ *  <p>The abstract class <code>DatabaseTransaction</code> is a interface
+ *     that define the methods to manage insert and update transactions on the database.
+ *
+ *
+ *  @author  Luis
+ *  @version 1.0.0
+ *  @since   24/03/15.
+ * */
 
-public interface DatabaseTransaction {
+ public interface DatabaseTransaction {
 
     void execute() throws DatabaseTransactionFailedException;
 

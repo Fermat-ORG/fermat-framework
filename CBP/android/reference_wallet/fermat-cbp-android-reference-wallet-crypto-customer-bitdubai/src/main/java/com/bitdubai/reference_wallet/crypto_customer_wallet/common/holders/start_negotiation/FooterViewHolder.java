@@ -14,23 +14,14 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 public class FooterViewHolder extends FermatViewHolder implements View.OnClickListener {
     OnFooterButtonsClickListener listener;
 
-    CardView addNoteButton;
-    TextView sendButton;
-    CardView addWarningWalletUser;
-
     public FooterViewHolder(View itemView) {
         super(itemView);
 
-        addNoteButton = (CardView) itemView.findViewById(R.id.add_a_note_card_view);
+        CardView addNoteButton = (CardView) itemView.findViewById(R.id.add_a_note_card_view);
         addNoteButton.setVisibility(View.GONE);
 
-        sendButton = (TextView) itemView.findViewById(R.id.send_button);
+        TextView sendButton = (TextView) itemView.findViewById(R.id.send_button);
         sendButton.setOnClickListener(this);
-        sendButton.setVisibility(View.VISIBLE);
-
-        addWarningWalletUser = (CardView) itemView.findViewById(R.id.warning_wallet_user);
-        addWarningWalletUser.setVisibility(View.GONE);
-
     }
 
     @Override
@@ -52,11 +43,5 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
         void onAddNoteButtonClicked();
 
         void onSendButtonClicked();
-    }
-
-    public void HideButtonsWalletUser() {
-        addNoteButton.setVisibility(View.GONE);
-        sendButton.setVisibility(View.GONE);
-        addWarningWalletUser.setVisibility(View.VISIBLE);
     }
 }

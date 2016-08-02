@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantApproveCryptoPaymentRequestException;
@@ -76,7 +75,7 @@ public interface CryptoPaymentRegistry {
      * @throws CryptoPaymentRequestNotFoundException      if we can't find the payment request.
      * @throws InsufficientFundsException                if there's not the enough amount of crypto to complete the request.
      */
-    void approveRequest(UUID requestId,long fee, FeeOrigin feeOrigin) throws CantApproveCryptoPaymentRequestException,
+    void approveRequest(UUID requestId) throws CantApproveCryptoPaymentRequestException,
                                                CryptoPaymentRequestNotFoundException   ,
             InsufficientFundsException;
 

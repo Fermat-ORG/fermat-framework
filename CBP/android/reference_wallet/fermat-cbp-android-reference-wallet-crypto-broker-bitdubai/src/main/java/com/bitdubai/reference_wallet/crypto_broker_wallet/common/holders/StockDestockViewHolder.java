@@ -40,29 +40,20 @@ public class StockDestockViewHolder extends FermatViewHolder {
 
 
     public void bind(CryptoBrokerWalletAssociatedSetting data) {
-        StringBuilder stringBuilder = new StringBuilder();
         walletNameTextView.setText(getPlatformTitle(data.getPlatform()));
 
         try {
             if (data.getPlatform() == Platforms.BANKING_PLATFORM) {
-                stringBuilder.append(moneyFormat.format(moduleManager.getBalanceBankWallet(data.getWalletPublicKey(), data.getBankAccount())))
-                        .append(" ")
-                        .append(data.getMerchandise().getCode());
-                amountTextView.setText(stringBuilder.toString());
+                amountTextView.setText(moneyFormat.format(moduleManager.getBalanceBankWallet(data.getWalletPublicKey(), data.getBankAccount())) + " " + data.getMerchandise().getCode());
             }
             if (data.getPlatform() == Platforms.CASH_PLATFORM) {
-                stringBuilder.append(moneyFormat.format((moduleManager.getBalanceCashWallet(data.getWalletPublicKey()))))
-                        .append(" ")
-                        .append(data.getMerchandise().getCode());
-                amountTextView.setText(stringBuilder.toString());
+                amountTextView.setText(moneyFormat.format((moduleManager.getBalanceCashWallet(data.getWalletPublicKey()))) + " " + data.getMerchandise().getCode());
             }
             if (data.getPlatform() == Platforms.CRYPTO_CURRENCY_PLATFORM) {
                 long bitcoinWalletBalance = moduleManager.getBalanceBitcoinWallet(data.getWalletPublicKey());
                 double availableBalance = BitcoinConverter.convert(bitcoinWalletBalance, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
-                stringBuilder.append(moneyFormat.format((new BigDecimal(availableBalance))))
-                        .append(" ")
-                        .append(data.getMerchandise().getCode());
-                amountTextView.setText(stringBuilder.toString());
+
+                amountTextView.setText(moneyFormat.format((new BigDecimal(availableBalance))) + " " + data.getMerchandise().getCode());
             }
         } catch (Exception e) {
             amountTextView.setText("Balance: --");

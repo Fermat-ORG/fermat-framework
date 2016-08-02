@@ -23,7 +23,6 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGe
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
@@ -36,7 +35,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.ex
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListBankAccountsPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.common.exceptions.CantSendNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetAssociatedIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CBPWalletsModuleManager;
@@ -90,6 +88,7 @@ public interface CryptoCustomerWalletModuleManager
      *
      * @param customer        the Crypto Customer ID who is going to be associated with this wallet
      * @param walletPublicKey the public key of the wallet to associate
+     *
      * @return true if the association was successful false otherwise
      */
     boolean associateIdentity(ActorIdentity customer, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException;
@@ -109,7 +108,9 @@ public interface CryptoCustomerWalletModuleManager
      * Through this method you can get the customer identity associated to any crypto customer wallet.
      *
      * @param walletPublicKey the public key of the crypto customer wallet that we're trying to get the associated identity.
+     *
      * @return an instance of CryptoCustomerIdentity associated to the wallet.
+     *
      * @throws CantGetAssociatedIdentityException  if something goes wrong.
      * @throws IdentityAssociatedNotFoundException if can't find the identity associated with the wallet.
      */
@@ -124,6 +125,7 @@ public interface CryptoCustomerWalletModuleManager
 
     /**
      * @param walletPublicKey the customer wallet public key
+     *
      * @return a summary of the current market rate for the different currencies the customer is interested
      */
     Collection<IndexInfoSummary> getProvidersCurrentExchangeRates(String walletPublicKey)
@@ -144,6 +146,7 @@ public interface CryptoCustomerWalletModuleManager
     void requestQuotes() throws CantGetCryptoBrokerListException;
 
     /**
+     *
      * @param paymentCurrency
      * @return list of platforms supporteds
      */
@@ -153,6 +156,7 @@ public interface CryptoCustomerWalletModuleManager
      * Verify if thew wallet is configured or not
      *
      * @param customerWalletPublicKey the wallet public key
+     *
      * @return true if configure, false otherwise
      */
     boolean isWalletConfigured(String customerWalletPublicKey) throws CantGetSettingsException, SettingsNotFoundException;
@@ -163,6 +167,7 @@ public interface CryptoCustomerWalletModuleManager
      * @param customerPublicKey the crypto customer publicKey
      * @param brokerPublicKey   the crypto broker publicKey
      * @param clauses           the initial and mandatory clauses to start a negotiation
+     *
      * @return true if the association was successful false otherwise
      */
     boolean startNegotiation(String customerPublicKey, String brokerPublicKey, Collection<ClauseInformation> clauses)
@@ -185,6 +190,7 @@ public interface CryptoCustomerWalletModuleManager
      *
      * @param memo the memo
      * @param data the negotiation information
+     *
      * @return the updated negotiation information
      */
     CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data);
@@ -194,6 +200,7 @@ public interface CryptoCustomerWalletModuleManager
      *
      * @param location the location
      * @param uri      the URI for this location, can be <code>null</code>
+     *
      * @throws CantCreateLocationPurchaseException
      */
     void createNewLocation(String location, String uri) throws CantCreateLocationPurchaseException;
@@ -207,6 +214,7 @@ public interface CryptoCustomerWalletModuleManager
 
     /**
      * @return a empty {@link CustomerBrokerNegotiationInformation} to fill
+     *
      * @throws CantNewEmptyCustomerBrokerNegotiationInformationException
      */
     CustomerBrokerNegotiationInformation newEmptyCustomerBrokerNegotiationInformation()
@@ -216,6 +224,7 @@ public interface CryptoCustomerWalletModuleManager
      * Create and add a new bank account in the database
      *
      * @param bankAccount the bank account
+     *
      * @throws CantCreateBankAccountPurchaseException
      */
     void createNewBankAccount(String bankAccount, FiatCurrency currency) throws CantCreateBankAccountPurchaseException;
@@ -224,6 +233,7 @@ public interface CryptoCustomerWalletModuleManager
      * Update a bank account in the database
      *
      * @param bankAccount the bank account with the updated data
+     *
      * @throws CantUpdateBankAccountPurchaseException
      */
     void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountPurchaseException;
@@ -232,6 +242,7 @@ public interface CryptoCustomerWalletModuleManager
      * delete a bank account in the database
      *
      * @param bankAccount the bank account to delete
+     *
      * @throws CantDeleteBankAccountPurchaseException
      */
     void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException;
@@ -254,6 +265,7 @@ public interface CryptoCustomerWalletModuleManager
      * Create a {@link CustomerBrokerNegotiationInformation} in the database
      *
      * @param negotiation the negotiation to add in the database
+     *
      * @throws CantCreateCustomerBrokerPurchaseNegotiationException
      */
     void createCustomerBrokerPurchaseNegotiation(CustomerBrokerNegotiationInformation negotiation)
@@ -262,6 +274,7 @@ public interface CryptoCustomerWalletModuleManager
 
     /**
      * @return a empty {@link CryptoCustomerWalletAssociatedSetting} to fill and add to the database
+     *
      * @throws CantNewEmptyCryptoCustomerWalletAssociatedSettingException
      */
     CryptoCustomerWalletAssociatedSetting newEmptyCryptoBrokerWalletAssociatedSetting()
@@ -272,6 +285,7 @@ public interface CryptoCustomerWalletModuleManager
      *
      * @param setting                 the object with the data of the wallets to associate
      * @param customerWalletPublicKey the customer wallet public key
+     *
      * @throws CantSaveCryptoCustomerWalletSettingException
      * @throws CantCreateFileException
      * @throws CantPersistFileException
@@ -287,17 +301,20 @@ public interface CryptoCustomerWalletModuleManager
      *
      * @param currencyFrom currency from
      * @param currencyTo   currency to
+     *
      * @return a Map of name/provider reference pairs
      */
     Map<String, UUID> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo)
             throws CantGetProviderException, CantGetProviderInfoException;
 
     /**
-     * /**
+
+    /**
      * Create a empty {@link CryptoCustomerWalletProviderSetting} object to fill and can be used
      * to associate a exchange rate provider with a customer wallet
      *
      * @return a empty {@link CryptoCustomerWalletProviderSetting} object
+     *
      * @throws CantNewEmptyCryptoCustomerWalletProviderSettingException
      */
     CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerWalletProviderSetting()
@@ -308,6 +325,7 @@ public interface CryptoCustomerWalletModuleManager
      *
      * @param setting                 the object with the data of the provider to associate
      * @param customerWalletPublicKey the customer wallet public key
+     *
      * @throws CantSaveCryptoCustomerWalletSettingException
      * @throws CantPersistFileException
      * @throws CantCreateFileException
@@ -322,6 +340,7 @@ public interface CryptoCustomerWalletModuleManager
      * clear the exchange rate providers associated with the customer wallet
      *
      * @param customerWalletPublicKey the customer wallet public key
+     *
      * @throws CantClearCryptoCustomerWalletSettingException
      * @throws CantPersistFileException
      * @throws CantCreateFileException
@@ -336,7 +355,9 @@ public interface CryptoCustomerWalletModuleManager
      * Return the list of associated exchange rate providers
      *
      * @param walletPublicKey the customer wallet public key
+     *
      * @return the list of associated exchange rate providers
+     *
      * @throws FileNotFoundException
      * @throws CantCreateFileException
      * @throws CantGetSettingsException
@@ -349,7 +370,9 @@ public interface CryptoCustomerWalletModuleManager
      * This method returns the Contract associated to a negotiation ID
      *
      * @param negotiationId the negotiation ID
+     *
      * @return the associated Contract
+     *
      * @throws CantGetListCustomerBrokerContractPurchaseException
      */
     CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseByNegotiationId(String negotiationId)
@@ -360,7 +383,9 @@ public interface CryptoCustomerWalletModuleManager
      *
      * @param contractPurchase   the contract object
      * @param contractDetailType the detail type
+     *
      * @return the money type
+     *
      * @throws CantGetListPurchaseNegotiationsException
      */
     MoneyType getCurrencyTypeFromContract(CustomerBrokerContractPurchase contractPurchase, ContractDetailType contractDetailType)
@@ -377,6 +402,7 @@ public interface CryptoCustomerWalletModuleManager
      * This method execute a Customer Ack Merchandise Business Transaction
      *
      * @param contractHash the contract Hash/ID
+     *
      * @throws CantAckMerchandiseException
      */
     ContractStatus ackMerchandise(String contractHash) throws CantAckMerchandiseException;
@@ -385,6 +411,7 @@ public interface CryptoCustomerWalletModuleManager
      * This method returns the Contract Status by contractHash/Id
      *
      * @param contractHash the contract Hash/ID
+     *
      * @return the Contract Status
      */
     ContractStatus getContractStatus(String contractHash) throws CantGetListCustomerBrokerContractPurchaseException;
@@ -392,7 +419,9 @@ public interface CryptoCustomerWalletModuleManager
     /**
      * @param brokerPublicKey   the broker wallet public key
      * @param customerPublicKey the customer wallet public key
+     *
      * @return The basic information of the broker whose publickey equals the parameter passed as publickey.
+     *
      * @throws CantListActorConnectionsException
      */
     ActorIdentity getBrokerInfoByPublicKey(String customerPublicKey, String brokerPublicKey) throws CantListActorConnectionsException;
@@ -403,24 +432,9 @@ public interface CryptoCustomerWalletModuleManager
      * @param contractHash   the contract Hash/ID
      * @param contractStatus the Contract Status
      * @param paymentMethod  the Payment Method
+     *
      * @return a Completion Date in millis
      */
     long getCompletionDateForContractStatus(String contractHash, ContractStatus contractStatus, String paymentMethod);
-
-    /**
-     * Return if is create intra user wallet
-     *
-     * @return
-     * @throws CantSendNegotiationException
-     */
-    boolean isCreateIdentityIntraUser() throws CantSendNegotiationException;
-
-    /**
-     * Return if stock in wallet for send payment
-     *
-     * @return
-     * @throws CantSubmitMerchandiseException
-     */
-    boolean stockInTheWallet(String contractHash) throws CantSubmitMerchandiseException;
 
 }

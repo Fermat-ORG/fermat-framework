@@ -120,7 +120,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
     private LossProtectedWalletSettings lossProtectedWalletSettings;
     BlockchainNetworkType blockchainNetworkType;
     private List<WalletContact> walletContactList = new ArrayList<>();
-    private FermatWorker fermatWorker;
+
 
     public static RequestFormFragment newInstance() {
         return new RequestFormFragment();
@@ -361,7 +361,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
 
     private void setUpContactAddapter() {
 
-         fermatWorker = new FermatWorker(getActivity()) {
+        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
                 try{
@@ -771,14 +771,5 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
-    }
-
-    @Override
-    public void onStop() {
-
-
-        if(fermatWorker != null)
-            fermatWorker.shutdownNow();
-        super.onStop();
     }
 }

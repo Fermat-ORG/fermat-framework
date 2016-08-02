@@ -24,6 +24,8 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,15 +38,16 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
@@ -61,8 +64,8 @@ import java.util.concurrent.ExecutorService;
  * A simple {@link Fragment} subclass.
  */
 public class CreateCryptoCustomerIdentityFragment
-        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerIdentityModuleManager>, ResourceProviderManager>
-        implements FermatWorkerCallBack {
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerIdentityModuleManager>, ResourceProviderManager> 
+implements FermatWorkerCallBack{
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
@@ -84,15 +87,9 @@ public class CreateCryptoCustomerIdentityFragment
     private ExecutorService executor;
 
     private final TextWatcher textWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));
-        }
-
-        public void afterTextChanged(Editable s) {
-        }
-
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
+        public void onTextChanged(CharSequence s, int start, int before, int count) {textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));}
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
     };
 
     public static CreateCryptoCustomerIdentityFragment newInstance() {
@@ -104,36 +101,42 @@ public class CreateCryptoCustomerIdentityFragment
         super.onCreate(savedInstanceState);
 
 
-        //If we landed here from CryptoCustomerImageCropperFragment or geo settings fragment
-        //Use the cropped image, if there is one (!=null)
+        //If we landed here from CryptoCustomerImageCropperFragment, save the cropped Image.
         if (appSession.getData(FragmentsCommons.CROPPED_IMAGE) != null) {
             identityImageByteArray = (byte[]) appSession.getData(FragmentsCommons.CROPPED_IMAGE);
             cryptoCustomerBitmap = BitmapFactory.decodeByteArray(identityImageByteArray, 0, identityImageByteArray.length);
             appSession.removeData(FragmentsCommons.CROPPED_IMAGE);
+
+        } else if (appSession.getData(FragmentsCommons.ORIGINAL_IMAGE) != null) {
+            cryptoCustomerBitmap = (Bitmap) appSession.getData(FragmentsCommons.ORIGINAL_IMAGE);
+            identityImageByteArray = ImagesUtils.toByteArray(cryptoCustomerBitmap);
+            appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
         }
 
-        //And the customer name, if there is one (!=null)
         if (appSession.getData(FragmentsCommons.CUSTOMER_NAME) != null) {
             cryptoCustomerName = (String) appSession.getData(FragmentsCommons.CUSTOMER_NAME);
             appSession.removeData(FragmentsCommons.CUSTOMER_NAME);
         }
 
-        //Check if GPS is on and coordinates are fine
-        try {
+        //Check if GPS is on and coordinate are fine
+        try{
             location = appSession.getModuleManager().getLocation();
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
         }
 
         try {
-            isGpsDialogEnable = true;
+            isGpsDialogEnable=true;
             settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
             isGpsDialogEnable = settings.isGpsDialogEnabled();
         } catch (Exception e) {
             settings = new IdentityCustomerPreferenceSettings();
             settings.setGpsDialogEnabled(true);
-            isGpsDialogEnable = true;
+            isGpsDialogEnable=true;
         }
+
+
+
 
         turnGPSOn();
     }
@@ -225,10 +228,8 @@ public class CreateCryptoCustomerIdentityFragment
                 return true;
 
             case FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID:
-
-                //Save customer name and cropped image
                 appSession.setData(FragmentsCommons.CUSTOMER_NAME, mCustomerName.getText().toString());
-                appSession.setData(FragmentsCommons.CROPPED_IMAGE, identityImageByteArray);
+                appSession.setData(FragmentsCommons.ORIGINAL_IMAGE, cryptoCustomerBitmap);
 
                 changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_CREATE_IDENTITY, appSession.getAppPublicKey());
                 return true;
@@ -421,7 +422,7 @@ public class CreateCryptoCustomerIdentityFragment
                     IMAGE_MAX_SIZE) {
                 scale++;
             }
-            Log.d("", new StringBuilder().append("scale = ").append(scale).append(", orig-width: ").append(o.outWidth).append(", orig-height: ").append(o.outHeight).toString());
+            Log.d("", "scale = " + scale + ", orig-width: " + o.outWidth + ", orig-height: " + o.outHeight);
 
             Bitmap b = null;
             in = getActivity().getContentResolver().openInputStream(uri);
@@ -436,7 +437,7 @@ public class CreateCryptoCustomerIdentityFragment
                 // resize to desired dimensions
                 int height = b.getHeight();
                 int width = b.getWidth();
-                Log.d("", new StringBuilder().append("1th scale operation dimenions - width: ").append(width).append(", height: ").append(height).toString());
+                Log.d("", "1th scale operation dimenions - width: " + width + ", height: " + height);
 
                 double y = Math.sqrt(IMAGE_MAX_SIZE
                         / (((double) width) / height));
@@ -453,7 +454,8 @@ public class CreateCryptoCustomerIdentityFragment
             }
             in.close();
 
-            Log.d("", new StringBuilder().append("bitmap size - width: ").append(b.getWidth()).append(", height: ").append(b.getHeight()).toString());
+            Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " +
+                    b.getHeight());
             return b;
         } catch (IOException e) {
             Log.e("", e.getMessage(), e);
@@ -532,15 +534,16 @@ public class CreateCryptoCustomerIdentityFragment
         return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    private void checkGPSOn() {
-        if (location != null) {
-            if (location.getLongitude() == 0 || location.getLatitude() == 0) {
-                if (isGpsDialogEnable) {
+    private void checkGPSOn(){
+        if(location!= null){
+            if(location.getLongitude()==0 || location.getLatitude()==0){
+                if (isGpsDialogEnable ) {
                     turnOnGPSDialog();
                 }
 
             }
-        } else if (isGpsDialogEnable) {
+        }else
+        if (isGpsDialogEnable) {
             turnOnGPSDialog();
         }
     }
@@ -552,7 +555,6 @@ public class CreateCryptoCustomerIdentityFragment
                     .setBody(R.string.cbp_customer_identity_gps)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_identity_customer)
-                    .setVIewColor(R.color.ccc_color_dialog_identity)
                     .build();
             pd.show();
             settings.setGpsDialogEnabled(false);

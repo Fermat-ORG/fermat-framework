@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -33,8 +32,10 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoB
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerPurchaseManager;
+import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.events.UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.events.UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -144,12 +145,20 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return new UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
+        UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory factory;
+
+        factory = new UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory(pluginDatabaseSystem, pluginId);
+
+        return factory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return new UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory factory;
+
+        factory = new UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory(pluginDatabaseSystem, pluginId);
+
+        return factory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
@@ -176,7 +185,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-        try {
+        try{
             agent = new UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2(
                     SLEEP_TIME,
                     TIME_UNIT,

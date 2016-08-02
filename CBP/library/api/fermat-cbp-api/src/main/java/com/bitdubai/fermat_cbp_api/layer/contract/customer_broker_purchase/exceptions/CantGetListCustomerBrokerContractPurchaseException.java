@@ -24,7 +24,6 @@ public class CantGetListCustomerBrokerContractPurchaseException extends FermatEx
 
     /**
      * Constructor with parameters
-     *
      * @param message
      * @param cause
      */
@@ -34,7 +33,6 @@ public class CantGetListCustomerBrokerContractPurchaseException extends FermatEx
 
     /**
      * Constructor with parameters
-     *
      * @param message
      */
     public CantGetListCustomerBrokerContractPurchaseException(final String message) {

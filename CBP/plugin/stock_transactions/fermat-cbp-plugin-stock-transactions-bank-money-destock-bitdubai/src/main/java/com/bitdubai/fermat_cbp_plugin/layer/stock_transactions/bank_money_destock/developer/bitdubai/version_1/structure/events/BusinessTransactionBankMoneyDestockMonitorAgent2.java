@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.AbstractAgent;
+import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -26,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 /**
  * The Class <code>BusinessTransactionBankMoneyRestockMonitorAgent</code>
@@ -82,12 +86,18 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent2 extends AbstractAg
     }
 
     @Override
-    protected void agentJob() {
-        doTheMainTask();
+    protected Runnable agentJob() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                doTheMainTask();
+            }
+        };
+        return runnable;
     }
 
     @Override
-    protected void onErrorOccur(Exception e) {
+    protected void onErrorOccur() {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("BusinessTransactionBankMoneyDestockMonitorAgent2 Error"));

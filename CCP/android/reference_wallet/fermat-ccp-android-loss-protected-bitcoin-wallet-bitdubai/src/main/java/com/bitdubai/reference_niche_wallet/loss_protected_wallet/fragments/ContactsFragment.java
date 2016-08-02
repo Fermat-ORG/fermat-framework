@@ -128,8 +128,6 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     LinearLayout mEmptyView;
     Bundle mSavedInstanceState;
     String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
-
-    FermatWorker fermatWorker;
     /**
      * Resources
      */
@@ -369,7 +367,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     }
 
     private void onRefresh() {
-      fermatWorker = new FermatWorker(getActivity()) {
+        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
                 try {
@@ -921,15 +919,6 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void onStop() {
-
-
-        if(fermatWorker != null)
-            fermatWorker.shutdownNow();
-        super.onStop();
     }
 
     /**

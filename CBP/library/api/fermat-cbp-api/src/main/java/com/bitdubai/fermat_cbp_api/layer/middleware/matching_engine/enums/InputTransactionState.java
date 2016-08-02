@@ -15,9 +15,11 @@ public enum InputTransactionState implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
-    MATCHED("MAT"),
-    SPLIT("SPL"),
-    UNMATCHED("UNM"),;
+    MATCHED   ("MAT"),
+    SPLIT     ("SPL"),
+    UNMATCHED ("UNM"),
+
+    ;
 
     private final String code;
 
@@ -29,16 +31,13 @@ public enum InputTransactionState implements FermatEnum {
 
         switch (code) {
 
-            case "MAT":
-                return MATCHED;
-            case "SPL":
-                return SPLIT;
-            case "UNM":
-                return UNMATCHED;
+            case "MAT": return MATCHED  ;
+            case "SPL": return SPLIT    ;
+            case "UNM": return UNMATCHED;
 
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code Received: ").append(code).toString(),
+                        "Code Received: " + code,
                         "The code received is not valid for the InputTransactionState enum."
                 );
         }

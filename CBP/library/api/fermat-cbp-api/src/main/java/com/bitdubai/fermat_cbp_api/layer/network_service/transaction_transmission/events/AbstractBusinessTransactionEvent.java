@@ -19,7 +19,6 @@ public abstract class AbstractBusinessTransactionEvent extends GenericCBPFermatE
 
     /**
      * This method returns the remote business transaction source of this event
-     *
      * @return
      */
     public Plugins getRemoteBusinessTransaction() {
@@ -28,18 +27,17 @@ public abstract class AbstractBusinessTransactionEvent extends GenericCBPFermatE
 
     /**
      * This method sets the remote business transaction source of this event
-     *
      * @param remoteBusinessTransaction
      */
     public void setRemoteBusinessTransaction(Plugins remoteBusinessTransaction) {
         this.remoteBusinessTransaction = remoteBusinessTransaction;
     }
 
-    public PlatformComponentType getDestinationPlatformComponentType() {
+    public PlatformComponentType getDestinationPlatformComponentType(){
         return destinationPlatformComponentType;
     }
 
-    public void setDestinationPlatformComponentType(PlatformComponentType destinationPlatformComponentType) {
+    public void setDestinationPlatformComponentType(PlatformComponentType destinationPlatformComponentType){
         this.destinationPlatformComponentType = destinationPlatformComponentType;
     }
 

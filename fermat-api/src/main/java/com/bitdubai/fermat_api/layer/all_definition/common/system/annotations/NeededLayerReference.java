@@ -19,7 +19,6 @@ import java.lang.annotation.Target;
 public @interface NeededLayerReference {
 
     Platforms platform();
-
-    Layers layer();
+    Layers    layer   ();
 
 }

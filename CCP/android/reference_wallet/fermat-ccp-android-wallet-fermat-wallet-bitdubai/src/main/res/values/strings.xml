@@ -4,9 +4,9 @@
     <string name="available_balance_text">Available balance</string>
     <string name="touch_to_change_text">Touch to change</string>
     <!-- ccp_grouper_list_item.xml -->
-    <string name="txt_total_balance_15_btc_text">15 FTMS</string>
+    <string name="txt_total_balance_15_btc_text">15 BTC</string>
     <!-- ccp_transaction_list_item.xml -->
-    <string name="txt_amount_btc_text">1.4 FTMS</string>
+    <string name="txt_amount_btc_text">1.4 BTC</string>
     <string name="txt_conference_ticket_text">Conference ticket</string>
     <string name="txt_time_date_text">03 Feb 2014</string>
     <!-- fermat_wallet_connection_with_community_dialogmmunity_dialog.xml -->
@@ -43,7 +43,7 @@
     <string name="connect_text">Connect</string>
     <!-- donut_header.xml -->
     <string name="txt_balance_amount_29_text">0.00</string>
-    <string name="balance_amount_type_text">ftms</string>
+    <string name="balance_amount_type_text">btc</string>
     <!-- fermat_wallet_fragment_add_connections_list.xmltions_list.xml -->
     <string name="click_me_to_search_text">Touch me\nto look for contacts</string>
     <!-- fragment_base_bitcoin_wallet_receive.xml -->
@@ -78,7 +78,7 @@
     <string name="you_need_an_identity_before_you_can_enter_text">You need an identity before\nyou can enter</string>
     <string name="create_text">Create</string>
     <!-- pending_request_row.xml -->
-    <string name="balance_amount_25_btc_text">25 FTMS</string>
+    <string name="balance_amount_25_btc_text">25 btc</string>
     <string name="refuse_text">Refuse</string>
     <!-- fermat_wallet_presentation_bitcoin_wallet_without_identities.xmlidentities.xml -->
     <string name="welcome_text">Welcome!</string>
@@ -248,6 +248,7 @@
     <array name="items" translatable="false">
         <item>MainNet</item>
         <item>TestNet</item>
+        <item>RegTest</item>
     </array>
 
 </resources>

@@ -12,12 +12,8 @@ import java.util.UUID;
  */
 public interface QuotesExtraData extends Serializable {
     UUID getQuoteId();
-
     Currency getMerchandise();
-
     Currency getPaymentCurrency();
-
     Float getPrice();
-
     List<Platforms> getPlatformsSupported();
 }

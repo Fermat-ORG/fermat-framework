@@ -19,8 +19,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.header.BitcoinWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
@@ -77,25 +75,18 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceAp
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle) {
+    public NotificationPainter getNotificationPainter(String code) {
         try {
-            CryptoWallet moduleManager;
-            int notificationID = fermatBundle.getInt(NotificationBundleConstants.NOTIFICATION_ID);
-            String involvedActor =  fermatBundle.getString("InvolvedActor");
-            long amount = Long.parseLong(String.valueOf(fermatBundle.get("Amount")));
-
-
-
             boolean enabledNotification = true;
             this.referenceWalletSession = this.getFullyLoadedSession();
             if (referenceWalletSession != null) {
                 if (referenceWalletSession.getModuleManager() != null) {
-                    moduleManager = referenceWalletSession.getModuleManager();
-                    enabledNotification = moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getNotificationEnabled();
+//                    moduleManager = referenceWalletSession.getModuleManager();
+                    enabledNotification = referenceWalletSession.getModuleManager().loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getNotificationEnabled();
                 }
 
                 if (enabledNotification)
-                    return BitcoinWalletBuildNotificationPainter.getNotification( notificationID,involvedActor,amount, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    return BitcoinWalletBuildNotificationPainter.getNotification(referenceWalletSession.getModuleManager(), code, referenceWalletSession.getAppPublicKey(), Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
                 else
                     return new BitcoinWalletNotificationPainter("", "", "", "", false, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
             } else

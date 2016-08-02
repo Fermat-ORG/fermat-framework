@@ -526,7 +526,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setColor("#011000");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setLabel("Settings");
+        runtimeTitleBar.setLabel("Export Key");
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setTitleColor("#ffffff");
         activity.setTitleBar(runtimeTitleBar);

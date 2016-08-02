@@ -40,10 +40,9 @@ public abstract class AbstractEvent<T extends FermatEventEnum> implements Fermat
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("AbstractEvent{")
-                .append("eventType=").append(eventType)
-                .append(", eventSource=").append(eventSource)
-                .append('}').toString();
+        return "AbstractEvent{" +
+                "eventType=" + eventType +
+                ", eventSource=" + eventSource +
+                '}';
     }
 }

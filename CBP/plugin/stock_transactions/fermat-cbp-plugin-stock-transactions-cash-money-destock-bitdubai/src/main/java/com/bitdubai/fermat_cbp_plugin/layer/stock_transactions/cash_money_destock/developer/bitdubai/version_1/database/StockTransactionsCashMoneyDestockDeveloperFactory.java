@@ -25,13 +25,12 @@ import java.util.UUID;
  * The Class <code>BusinessTransactionBankMoneyDestockDeveloperFactory.java
  * keeps constants the column names of the database.<p/>
  * <p/>
- * <p/>
+ *
  * Created by Franklin Marcano - (franklinmarcano970@gmail.com) on 16/11/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
- */
-public class StockTransactionsCashMoneyDestockDeveloperFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+ */public class StockTransactionsCashMoneyDestockDeveloperFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -66,7 +65,8 @@ public class StockTransactionsCashMoneyDestockDeveloperFactory implements DealsW
         this.pluginId = pluginId;
     }
 
-    public void initializeDatabase() throws CantInitializeCashMoneyDestockDatabaseException {
+    public void initializeDatabase() throws CantInitializeCashMoneyDestockDatabaseException
+    {
         try {
 
              /*
@@ -75,20 +75,20 @@ public class StockTransactionsCashMoneyDestockDeveloperFactory implements DealsW
             database = this.pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_DATABASE_NAME);
             database.closeDatabase();
 
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+        }catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
             throw new CantInitializeCashMoneyDestockDatabaseException(cantOpenDatabaseException.getMessage());
 
-        } catch (DatabaseNotFoundException e) {
+        }catch (DatabaseNotFoundException e) {
 
              /*
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            StockTransactionsCashMoneyDestockDatabaseFactory stockTransactionsCashMoneyDestockDatabaseFactory = new StockTransactionsCashMoneyDestockDatabaseFactory(this.pluginDatabaseSystem);
+            StockTransactionsCashMoneyDestockDatabaseFactory stockTransactionsCashMoneyDestockDatabaseFactory= new StockTransactionsCashMoneyDestockDatabaseFactory(this.pluginDatabaseSystem);
 
             try {
                   /*
@@ -96,7 +96,8 @@ public class StockTransactionsCashMoneyDestockDeveloperFactory implements DealsW
                    */
                 database = stockTransactionsCashMoneyDestockDatabaseFactory.createDatabase(pluginId, StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_DATABASE_NAME);
                 database.closeDatabase();
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+            }
+            catch(CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
@@ -159,12 +160,12 @@ public class StockTransactionsCashMoneyDestockDeveloperFactory implements DealsW
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row : records) {
+            for (DatabaseTableRecord row: records){
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()) {
+                for (DatabaseRecord field : row.getValues()){
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -184,7 +185,7 @@ public class StockTransactionsCashMoneyDestockDeveloperFactory implements DealsW
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e) {
+        } catch (Exception e){
             database.closeDatabase();
             return returnedRecords;
         }

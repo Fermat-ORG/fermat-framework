@@ -102,7 +102,6 @@ public class HomeFragment extends FermatWalletListFragment<CashMoneyWalletTransa
                 .setIconRes(R.drawable.csh_wallet_logo)
                 .setSubTitle(R.string.csh_home_tut_present_dialog_sub_title)
                 .setBody(R.string.csh_home_tut_present_dialog_body)
-                .setVIewColor(R.color.csh_color_dialog)
                 .setIsCheckEnabled(false)
                 .build();
         homeTutorialPresentationDialog.setOnDismissListener(this);

@@ -152,12 +152,11 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException();
 
         //Determine cryptoCurrency base
         String exchangeFrom, exchangeTo;
         boolean invertExchange;
-        boolean providerIsDown = false;
 
         if(CryptoCurrency.codeExists(currencyPair.getFrom().getCode()))
         {
@@ -186,12 +185,8 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
             salePrice = json.getDouble("sell");
 
         }catch (JSONException e) {
-        //    errorManager.reportUnexpectedPluginException(Plugins.CCEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        //    throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"Ccex CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
-            purchasePrice = 0;
-            salePrice = 0;
-            invertExchange = false;
-            providerIsDown = true;
+            errorManager.reportUnexpectedPluginException(Plugins.CCEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"Ccex CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
         }
 
         if(invertExchange){
@@ -200,12 +195,11 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
         }
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), salePrice, purchasePrice, (new Date().getTime() / 1000));
-        if(!providerIsDown) {
-            try {
-                dao.saveCurrentExchangeRate(exchangeRate);
-            } catch (CantSaveExchangeRateException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CCEX, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
+
+        try {
+            dao.saveCurrentExchangeRate(exchangeRate);
+        }catch (CantSaveExchangeRateException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CCEX, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return exchangeRate;
     }
@@ -217,7 +211,7 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
         if(DateHelper.timestampIsInTheFuture(timestamp))
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided timestamp is in the future");
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException();
 
         //Determine if from-to currencies need to be inverted to query API
         boolean invertCurrencies;
@@ -261,7 +255,7 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
         if(DateHelper.timestampIsInTheFuture(startTimestamp))
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided startTimestamp is in the future");
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException();
 
 
         //Determine if from-to currencies need to be inverted to query API
@@ -284,7 +278,7 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException();
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }

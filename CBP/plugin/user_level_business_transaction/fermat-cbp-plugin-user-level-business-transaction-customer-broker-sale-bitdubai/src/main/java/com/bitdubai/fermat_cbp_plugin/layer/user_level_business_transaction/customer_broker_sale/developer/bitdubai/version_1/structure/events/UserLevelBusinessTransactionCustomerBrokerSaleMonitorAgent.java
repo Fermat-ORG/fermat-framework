@@ -204,16 +204,16 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             takeCloseNegotiationsAndCreateTransactionWithStatusInProgress();
 
             // IN_PROCESS -> IN_OPEN_CONTRACT
-            changeTransactionStatusFromInProcessToInOpenContract(transactionStatusColumnName);
+            changeTransactionStatusFromInProcessToInOpenContract(transactionStatusColumnName, brokerWalletPublicKey);
 
             // IN_OPEN_CONTRACT -> IN_CONTRACT_SUBMIT
             changeTransactionStatusFromInOpenContractToInContractSubmit();
 
             // IN_CONTRACT_SUBMIT -> Update Contract Expiration Time and notify
-            updateContractExpirationDateWhitStatusInContractSubmitAndNotify();
+            updateContractExpirationDateWhitStatusInContractSubmitAndNotify(brokerWalletPublicKey);
 
             // IN_CONTRACT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in payment submit
-            changeTransactionStatusFromInContractSubmitToCancelledIfExpirationTimeReached();
+            changeTransactionStatusFromInContractSubmitToCancelledIfExpirationTimeReached(brokerWalletPublicKey);
 
             // IN_CONTRACT_SUBMIT -> IN_PAYMENT_SUBMIT: apply the credit (restock) from the payment to the wallets
             changeTransactionStatusFromInContractSubmitToInPaymentSubmitAndApplyCredit(brokerWalletPublicKey);
@@ -222,16 +222,16 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             changeTransactionStatusFromInPaymentSubmitToInPendingMerchandise();
 
             // IN_PENDING_MERCHANDISE -> Update Contract Expiration Time and notify
-            updateContractExpirationDateWhitInPendingMerchandiseStatusAndNotify();
+            updateContractExpirationDateWhitInPendingMerchandiseStatusAndNotify(brokerWalletPublicKey);
 
             // IN_PENDING_MERCHANDISE -> Update Contract Status to CANCELLED for expiration time in merchandise
-            changeTransactionStatusFromInPendingMerchandiseToCancelledIfExpirationTimeReached();
+            changeTransactionStatusFromInPendingMerchandiseToCancelledIfExpirationTimeReached(brokerWalletPublicKey);
 
             // IN_PENDING_MERCHANDISE -> IN_MERCHANDISE_SUBMIT
             changeTransactionStatusFromInPendingMerchandiseToInMerchandiseSubmitted();
 
             // IN_MERCHANDISE_SUBMIT -> COMPLETED
-            changeTransactionStatusFromInMerchandiseSubmitToCompleted();
+            changeTransactionStatusFromInMerchandiseSubmitToCompleted(brokerWalletPublicKey);
 
         } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -276,9 +276,11 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * Se envia un Broadcast para actualizar la UI y enviar una notificacion
      *
      * @param transactionStatusColumnName the Transaction Status column name
+     * @param brokerWalletPublicKey       the broker wallet public key
+     *
      * @throws FermatException
      */
-    private void changeTransactionStatusFromInProcessToInOpenContract(String transactionStatusColumnName) throws FermatException {
+    private void changeTransactionStatusFromInProcessToInOpenContract(String transactionStatusColumnName, String brokerWalletPublicKey) throws FermatException {
         List<CustomerBrokerSale> customerBrokerSales;
         DatabaseTableFilter filterTable = getFilterTable(IN_PROCESS.getCode(), transactionStatusColumnName);
         customerBrokerSales = dao.getCustomerBrokerSales(filterTable);
@@ -316,10 +318,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
             broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-            fermatBundle = new FermatBundle();
-            fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
         }
     }
 
@@ -328,9 +327,11 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * <p/>
      * If Expiration Time is done, Update the contract status to CANCELLED.
      *
+     * @param brokerWalletPublicKey the broker wallet public key
+     *
      * @throws FermatException
      */
-    private void changeTransactionStatusFromInContractSubmitToCancelledIfExpirationTimeReached() throws FermatException {
+    private void changeTransactionStatusFromInContractSubmitToCancelledIfExpirationTimeReached(String brokerWalletPublicKey) throws FermatException {
         List<CustomerBrokerSale> userLevelTransactions = dao.getCustomerBrokerSales(null);
 
         Collection<CustomerBrokerContractSale> pendingPaymentContracts = customerBrokerContractSaleManager.
@@ -376,10 +377,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                         broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-                        fermatBundle = new FermatBundle();
-                        fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-                        fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
 
                     }
                 }
@@ -412,10 +410,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     userLevelTransaction.setContractStatus(ContractStatus.PENDING_PAYMENT.getCode());
 
                     dao.saveCustomerBrokerSaleTransactionData(userLevelTransaction);
-                    FermatBundle fermatBundle = new FermatBundle();
-                    fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                 }
             }
         }
@@ -427,9 +422,11 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento de notificacion
      * siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
      *
+     * @param brokerWalletPublicKey the broker wallet public key
+     *
      * @throws FermatException
      */
-    private void updateContractExpirationDateWhitStatusInContractSubmitAndNotify() throws FermatException {
+    private void updateContractExpirationDateWhitStatusInContractSubmitAndNotify(String brokerWalletPublicKey) throws FermatException {
         Collection<CustomerBrokerContractSale> pendingPaymentContracts = customerBrokerContractSaleManager.
                 getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_PAYMENT);
 
@@ -451,10 +448,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                     broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-                    fermatBundle = new FermatBundle();
-                    fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                 }
             }
         }
@@ -466,9 +460,11 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * Si se acerca la tiempo límite para recibir la mercadería y esta no ha sido registrada como recibida,
      * se eleva un evento de notificación
      *
+     * @param brokerWalletPublicKey the broker wallet public key
+     *
      * @throws FermatException
      */
-    private void updateContractExpirationDateWhitInPendingMerchandiseStatusAndNotify() throws FermatException {
+    private void updateContractExpirationDateWhitInPendingMerchandiseStatusAndNotify(String brokerWalletPublicKey) throws FermatException {
         Collection<CustomerBrokerContractSale> pendingMerchandiseContracts = customerBrokerContractSaleManager.
                 getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_MERCHANDISE);
 
@@ -490,10 +486,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                     broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-                    fermatBundle = new FermatBundle();
-                    fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                 }
             }
         }
@@ -525,10 +518,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                     dao.saveCustomerBrokerSaleTransactionData(userLevelTransaction);
 
-                    FermatBundle fermatBundle = new FermatBundle();
-                    fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                 }
             }
         }
@@ -539,9 +529,11 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * <p/>
      * If Expiration Time is done, Update the contract status to CANCELLED.
      *
+     * @param brokerWalletPublicKey the broker wallet public key
+     *
      * @throws FermatException
      */
-    private void changeTransactionStatusFromInPendingMerchandiseToCancelledIfExpirationTimeReached() throws FermatException {
+    private void changeTransactionStatusFromInPendingMerchandiseToCancelledIfExpirationTimeReached(String brokerWalletPublicKey) throws FermatException {
         List<CustomerBrokerSale> userLevelTransactions = dao.getCustomerBrokerSales(null);
 
         Collection<CustomerBrokerContractSale> pendingMerchandiseContracts = customerBrokerContractSaleManager.
@@ -587,10 +579,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                         broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-                        fermatBundle = new FermatBundle();
-                        fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-                        fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+
                     }
                 }
             }
@@ -622,10 +612,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                     dao.saveCustomerBrokerSaleTransactionData(userLevelTransaction);
 
-                    FermatBundle fermatBundle = new FermatBundle();
-                    fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                 }
             }
         }
@@ -636,13 +623,15 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * <p/>
      * Se debe enviar un Broadcast para actualizar la UI
      *
+     * @param brokerWalletPublicKey the broker wallet public key
+     *
      * @throws DatabaseOperationException
      * @throws InvalidParameterException
      * @throws CantGetListCustomerBrokerContractSaleException
      * @throws CantCloseContractException
      * @throws MissingCustomerBrokerSaleDataException
      */
-    private void changeTransactionStatusFromInMerchandiseSubmitToCompleted() throws FermatException {
+    private void changeTransactionStatusFromInMerchandiseSubmitToCompleted(String brokerWalletPublicKey) throws FermatException {
         List<CustomerBrokerSale> userLevelTransactions = dao.getCustomerBrokerSales(null);
 
         Collection<CustomerBrokerContractSale> readyToCloseContracts = customerBrokerContractSaleManager.
@@ -673,10 +662,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                     broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-                    fermatBundle = new FermatBundle();
-                    fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                 }
             }
         }
@@ -692,6 +678,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * Se debe enviar un Broadcast para actualizar la UI
      *
      * @param brokerWalletPublicKey the broker wallet public key
+     *
      * @throws FermatException
      * @throws ParseException
      */
@@ -726,10 +713,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                     broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-                    fermatBundle = new FermatBundle();
-                    fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                 }
             }
         }
@@ -741,6 +725,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * @param brokerWalletPublicKey the broker wallet public key
      * @param contractSale          the sale contract information
      * @param negotiationId         the negotiation ID associated with the contract
+     *
      * @throws FermatException
      * @throws ParseException
      */
@@ -787,7 +772,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         cryptoWalletPublicKey = WalletsPublicKeys.CCP_FERMAT_WALLET.getCode();
                         break;
                     default:
-                        throw new UnsupportedOperationException(new StringBuilder().append("The Crypto Restock operation is not supported for the currency ").append(cryptoCurrency.getFriendlyName()).toString());
+                        throw new UnsupportedOperationException("The Crypto Restock operation is not supported for the currency " +
+                                cryptoCurrency.getFriendlyName());
                 }
 
                 cryptoMoneyRestockManager.createTransactionRestock(
@@ -851,6 +837,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      *
      * @param valueFilter the value of the filter
      * @param columnValue the column name which is going to be queried
+     *
      * @return the filter object
      */
     private DatabaseTableFilter getFilterTable(final String valueFilter, final String columnValue) {
@@ -896,7 +883,9 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * Return the market exchange rate for the currency to sell vs USD
      *
      * @param customerCurrency the code of the currency to sell
+     *
      * @return the market exchange rate fot this currency vs USD
+     *
      * @throws CantGetExchangeRateException
      */
     private float getMarketExchangeRate(String customerCurrency) throws CantGetExchangeRateException {

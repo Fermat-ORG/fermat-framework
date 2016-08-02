@@ -16,9 +16,9 @@ import java.util.UUID;
  * The class <code>com.bitdubai.fermat_api.layer.actor_connection.common.database.ActorConnectionDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
- * <p/>
+ *
  * Contains all the basic functionality for an actor connection database factory.
- * <p/>
+ * 
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 04/12/2015.
  *
  * @author lnacosta
@@ -42,10 +42,12 @@ public class ActorConnectionDatabaseFactory {
      *
      * @param ownerId      the owner id.
      * @param databaseName the database name.
+     *
      * @return Database
+     * 
      * @throws CantCreateDatabaseException if something goes wrong.
      */
-    protected Database createDatabase(final UUID ownerId,
+    protected Database createDatabase(final UUID   ownerId     ,
                                       final String databaseName) throws CantCreateDatabaseException {
 
         Database database;
@@ -58,7 +60,7 @@ public class ActorConnectionDatabaseFactory {
 
             throw new CantCreateDatabaseException(
                     e,
-                    new StringBuilder().append("databaseName: ").append(databaseName).toString(),
+                    "databaseName: "+databaseName,
                     "Exception not handled by the plugin, There is a problem and i cannot create the database."
             );
         }
@@ -72,21 +74,21 @@ public class ActorConnectionDatabaseFactory {
              */
             DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
 
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 10, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             , DatabaseDataType.STRING      ,  36, Boolean.TRUE );
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING      , 130, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , DatabaseDataType.STRING      , 130, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     , DatabaseDataType.STRING      , 130, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
             //Location fields
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LATITUDE, DatabaseDataType.REAL, 10, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LONGITUDE, DatabaseDataType.REAL, 10, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACCURACY, DatabaseDataType.LONG_INTEGER, 10, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TIME, DatabaseDataType.LONG_INTEGER, 10, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALTITUDE, DatabaseDataType.REAL, 10, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LOCATION_SOURCE, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LATITUDE                              , DatabaseDataType.REAL        ,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LONGITUDE                             , DatabaseDataType.REAL        ,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACCURACY                              , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TIME                                  , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALTITUDE                              , DatabaseDataType.REAL        ,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LOCATION_SOURCE                       , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
 
             table.addIndex(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_FIRST_KEY_COLUMN);
 
@@ -98,7 +100,7 @@ public class ActorConnectionDatabaseFactory {
 
                 throw new CantCreateDatabaseException(
                         e,
-                        new StringBuilder().append("tableName: ").append(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME).toString(),
+                        "tableName: "+ ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME,
                         "Exception not handled by the plugin, There is a problem and i cannot create the table."
                 );
             }
@@ -109,10 +111,10 @@ public class ActorConnectionDatabaseFactory {
 
             throw new CantCreateDatabaseException(
                     e,
-                    new StringBuilder().append("databaseName: ").append(databaseName).toString(),
+                    "databaseName: "+databaseName,
                     "There is a problem with the ownerId of the database."
             );
         }
     }
-
+    
 }

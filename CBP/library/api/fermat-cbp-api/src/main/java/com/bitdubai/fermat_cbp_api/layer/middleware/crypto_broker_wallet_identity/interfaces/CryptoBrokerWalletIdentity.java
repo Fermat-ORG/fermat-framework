@@ -6,7 +6,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorWalletIdentity;
  * Created by angel on 16/9/15.
  */
 
-public interface CryptoBrokerWalletIdentity extends ActorWalletIdentity {
+public interface CryptoBrokerWalletIdentity extends ActorWalletIdentity{
+
 
 
 }

@@ -302,7 +302,6 @@ public class BrowserTabFragment
                             .setIconRes(R.drawable.crypto_customer)
                             .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
-                            .setVIewColor(R.color.ccc_color_dialog)
                             .setIsCheckEnabled(false)
                             .build();
 
@@ -362,16 +361,15 @@ public class BrowserTabFragment
     @Override
     public List<CryptoCustomerCommunityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoCustomerCommunityInformation> dataSet = new ArrayList<>();
-        if (isVisible) {
-            try {
-                offset = pos;
-                List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), location, distance, alias, MAX, offset);
-                if (result != null)
-                    dataSet.addAll(result);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
+        try {
+            offset = pos;
+            List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), location, distance, alias, MAX, offset);
+            dataSet.addAll(result);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return dataSet;
     }
 
@@ -421,7 +419,7 @@ public class BrowserTabFragment
     }
 
 
-    private void loadSelectedActorIdentityInBackground() {
+    private void loadSelectedActorIdentityInBackground(){
 
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
@@ -437,14 +435,9 @@ public class BrowserTabFragment
             public void onPostExecute(Object... result) {
                 try {
                     selectedActorIdentity = (ActiveActorIdentityInformation) result[0];
-                    if (selectedActorIdentity != null) {
-                        Bitmap image = BitmapFactory.decodeByteArray(selectedActorIdentity.getImage(), 0, selectedActorIdentity.getImage().length);
-                        BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), getRoundedShape(image, 120));
-                        toolbar.setLogo(bitmapDrawable);
-                    }
-//                    else {
-//                        Log.e(TAG, "selectedActorIdentity is null");
-//                    }
+                    Bitmap image = BitmapFactory.decodeByteArray(selectedActorIdentity.getImage(), 0, selectedActorIdentity.getImage().length);
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), getRoundedShape(image, 120));
+                    toolbar.setLogo(bitmapDrawable);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -460,13 +453,12 @@ public class BrowserTabFragment
 
         fermatWorker.execute();
     }
-
-    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int width) {
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
         // TODO Auto-generated method stub
         int targetWidth = width;
         int targetHeight = width;
         Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
-                targetHeight, Bitmap.Config.ARGB_8888);
+                targetHeight,Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(targetBitmap);
         Path path = new Path();
@@ -515,7 +507,6 @@ public class BrowserTabFragment
                         .setTextFooter(R.string.cbp_ccc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_ccc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_ccc_launch_action_creation_name_right)
-                        .setVIewColor(R.color.ccc_color_dialog)
                         .setIsCheckEnabled(false)
                         .build();
 
