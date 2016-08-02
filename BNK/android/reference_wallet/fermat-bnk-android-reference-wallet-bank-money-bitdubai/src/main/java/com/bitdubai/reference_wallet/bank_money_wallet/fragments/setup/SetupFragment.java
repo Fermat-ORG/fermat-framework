@@ -106,7 +106,7 @@ public class SetupFragment extends AbstractFermatFragment<ReferenceAppFermatSess
                 moduleManager.createBankName(bankName.getText().toString());
                 changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
             } else {
-                makeText(getActivity(), "Enter a Name valid Bank", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.bnk_error_msg_invalid_bank_name), Toast.LENGTH_SHORT).show();
             }
         }
     }
