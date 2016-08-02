@@ -98,26 +98,26 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         if(client!=null) throw new IllegalArgumentException("Client already registered");
         client = NetworkChannel;
         client.connect();
-        final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                if (client.isConnected()) {
-                    for (AbstractNetworkService abstractNetworkService : networkServices.values()) {
-                        try {
-                            abstractNetworkService.startConnection();
-                        } catch (CantRegisterProfileException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    try {
-                        scheduledExecutorService.shutdownNow();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, 5, 5, TimeUnit.SECONDS);
+//        final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+//        scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (client.isConnected()) {
+//                    for (AbstractNetworkService abstractNetworkService : networkServices.values()) {
+//                        try {
+//                            abstractNetworkService.startConnection();
+//                        } catch (CantRegisterProfileException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                    try {
+//                        scheduledExecutorService.shutdownNow();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }, 5, 5, TimeUnit.SECONDS);
     }
 
     @Override

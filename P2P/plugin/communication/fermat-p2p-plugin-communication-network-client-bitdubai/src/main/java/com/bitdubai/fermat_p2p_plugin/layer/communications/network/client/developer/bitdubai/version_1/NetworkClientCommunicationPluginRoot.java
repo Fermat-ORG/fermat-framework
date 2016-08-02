@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
+import com.bitdubai.fermat_api.layer.osa_android.ConnectionType;
 import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
 import com.bitdubai.fermat_api.layer.osa_android.DeviceNetwork;
 import com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver;
@@ -55,6 +56,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -269,6 +271,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     System.out.println("########################################\n");
                     System.out.println("Netowork available!!!!\n+" + "NetworkType: " + deviceNetwork);
                     System.out.println("########################################\n");
+                    if(deviceNetwork.getType() == ConnectionType.WI_FI || deviceNetwork.getType() == ConnectionType.MOBILE_DATA )
+                        networkClientCommunicationConnection.initializeAndConnect();
                 }
 
                 @Override
@@ -276,6 +280,11 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     System.out.println("########################################\n");
                     System.out.println("Netowork UNAVAILABLE!!!!\n");
                     System.out.println("########################################\n");
+                    try {
+                            networkClientCommunicationConnection.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
             });

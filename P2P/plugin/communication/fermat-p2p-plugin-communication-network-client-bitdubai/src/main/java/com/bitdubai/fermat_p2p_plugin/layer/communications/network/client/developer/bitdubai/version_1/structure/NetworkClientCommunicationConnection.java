@@ -254,7 +254,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         /*
          * Register the ReconnectHandler
          */
-        container.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
+       // container.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
 
         try {
 
@@ -290,6 +290,10 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setTryToReconnect(boolean tryToReconnect) {
+        this.tryToReconnect = tryToReconnect;
     }
 
     public boolean isConnected() {
@@ -1036,6 +1040,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     public void close() throws IOException {
+     //   container.getProperties().remove(ClientProperties.RECONNECT_HANDLER);
         networkClientCommunicationChannel.getClientConnection().close();
     }
 }
