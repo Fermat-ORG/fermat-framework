@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.makeText;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW;
 
@@ -151,7 +150,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error", LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.ccw_recovering_from_system_error, LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -224,7 +223,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
                 }
             }
         } else {
-            Toast.makeText(getActivity(), "Sorry, an error happened in OpenContractsTabFragment (Module == null)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),R.string.ccw_error_in_the_information_is_empty, Toast.LENGTH_SHORT).show();
         }
 
         return data;
@@ -238,7 +237,6 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
         appSession.setData("contract_data", data);
-        //changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS, appSession.getAppPublicKey());
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 

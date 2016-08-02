@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 
 /**
  * Created by nelson on 10/01/16.
+ *
  */
 public abstract class ClauseViewHolder extends FermatViewHolder {
     protected Button confirmButton;
@@ -23,7 +24,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
     protected int clausePosition;
 
     public ClauseViewHolder(View itemView) {
-        super(itemView);
+        super(itemView, 0);
 
         confirmButton = (Button) itemView.findViewById(getConfirmButtonRes());
         clauseNumberImageView = (ImageView) itemView.findViewById(getClauseNumberImageViewRes());

@@ -10,7 +10,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.NoteViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.NoteViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.AmountToBuyViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.DateTimeViewHolder;
@@ -265,9 +265,5 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
 
     private boolean isHeaderPosition(int position) {
         return (position == 0) && (haveNote);
-    }
-
-    private boolean isFooterPosition(int position) {
-        return position == getItemCount() - 1;
     }
 }
