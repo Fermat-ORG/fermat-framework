@@ -398,7 +398,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
 
     protected void destroy() {
         unregisterAllReceivers();
-        onDestroy();
         System.gc();
     }
 
