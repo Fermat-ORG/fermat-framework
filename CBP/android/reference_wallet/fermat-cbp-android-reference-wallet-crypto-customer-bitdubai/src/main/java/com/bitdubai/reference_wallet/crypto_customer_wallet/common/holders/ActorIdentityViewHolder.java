@@ -23,7 +23,7 @@ public class ActorIdentityViewHolder extends FermatViewHolder {
     private FermatTextView identityAlias;
 
     public ActorIdentityViewHolder(View itemView) {
-        super(itemView);
+        super(itemView, 0);
         res = itemView.getResources();
 
         identityImage = (ImageView) itemView.findViewById(R.id.ccw_identity_image);
@@ -40,6 +40,7 @@ public class ActorIdentityViewHolder extends FermatViewHolder {
         bitmapWorker.execute(data.getProfileImage());
     }
 
+    @SuppressWarnings("deprecation")
     private int getColor(int colorRes) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return res.getColor(colorRes);

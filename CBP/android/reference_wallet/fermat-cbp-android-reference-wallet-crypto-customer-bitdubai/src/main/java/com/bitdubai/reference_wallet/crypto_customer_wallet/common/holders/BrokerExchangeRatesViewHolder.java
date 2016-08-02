@@ -11,7 +11,6 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 
 /**
  * View Holder for the {@link com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerExchangeRatesAdapter}
@@ -29,7 +28,7 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
     public FermatTextView exchangeRateItem;
 
     public BrokerExchangeRatesViewHolder(View itemView) {
-        super(itemView);
+        super(itemView, 0);
         res = itemView.getResources();
 
 
@@ -42,18 +41,6 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
         String exchangeRate = fixFormat(data.getExchangeRate());
         String merchandiseCurrency = data.getMerchandiseCurrency().getCode();
         String paymentCurrency = data.getPaymentCurrency().getCode();
-
-
-        //Verificar si el precio del quote es extremadamente pequeno e invertir el quote
-        //Si el precio es 0, no hacer nada pues dara infinito...
-        //TODO: Revisar este hack (abicelis)
-        //change lostwood
-/*        if(data.getExchangeRate() < 0.5 && data.getExchangeRate() > 0)
-        {
-            exchangeRate = formatter.format(1/data.getExchangeRate());
-            merchandiseCurrency = data.getPaymentCurrency().getCode();
-            paymentCurrency = data.getMerchandiseCurrency().getCode();
-        }*/
 
         String text = res.getString(R.string.ccw_broker_exchange_rate_for_selling_item, merchandiseCurrency, exchangeRate, paymentCurrency);
         exchangeRateItem.setText(text);
@@ -73,16 +60,7 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
     }
 
     private Boolean compareLessThan1(Double value) {
-        Boolean lessThan1 = true;
-
-            if (BigDecimal.valueOf(value).
-                    compareTo(BigDecimal.ONE) == -1) {
-                lessThan1 = true;
-            } else {
-                lessThan1 = false;
-            }
-
-        return lessThan1;
+        return BigDecimal.valueOf(value).compareTo(BigDecimal.ONE) == -1;
     }
 
 }

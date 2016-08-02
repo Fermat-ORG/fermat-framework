@@ -117,7 +117,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return 0;//R.id.swipe_refresh;
+        return 0;
     }
 
     @Override
@@ -162,7 +162,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
             try {
                 progressBar.setVisibility(View.VISIBLE);
                 moduleManager.requestQuotes();
-                Toast.makeText(getActivity(), "Request for quotations sent", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.ccw_request_for_quotations_sent, Toast.LENGTH_LONG).show();
 
             } catch (CantGetCryptoBrokerListException e) {
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
@@ -192,7 +192,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }
         } else {
-            Toast.makeText(getActivity(), "Sorry, an error happened in BrokerListActivityFragment (Module == null)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.ccw_error_happened_in_BrokerListActivityFragment, Toast.LENGTH_SHORT).show();
         }
 
         return data;
@@ -203,7 +203,6 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
-            //swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 brokerList = (ArrayList) result[0];
                 if (adapter != null)
@@ -218,7 +217,6 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     public void onErrorOccurred(Exception ex) {
         isRefreshing = false;
         if (isAttached) {
-            //swipeRefreshLayout.setRefreshing(false);
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
     }

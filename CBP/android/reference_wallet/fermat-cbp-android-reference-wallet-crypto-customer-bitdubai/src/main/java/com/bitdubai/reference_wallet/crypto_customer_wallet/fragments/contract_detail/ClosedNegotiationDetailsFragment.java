@@ -35,7 +35,6 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -125,6 +124,7 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
         return rootView;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -162,16 +162,7 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
     }
 
     private Boolean compareLessThan1(String value) {
-        Boolean lessThan1 = true;
-
-        if (BigDecimal.valueOf(Double.valueOf(value)).
-                compareTo(BigDecimal.ONE) == -1) {
-            lessThan1 = true;
-        } else {
-            lessThan1 = false;
-        }
-
-        return lessThan1;
+        return BigDecimal.valueOf(Double.valueOf(value)).compareTo(BigDecimal.ONE) == -1;
     }
 
 }

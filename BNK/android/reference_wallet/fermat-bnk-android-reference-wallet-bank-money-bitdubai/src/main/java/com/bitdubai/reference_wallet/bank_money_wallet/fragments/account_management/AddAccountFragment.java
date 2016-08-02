@@ -180,13 +180,13 @@ public class AddAccountFragment extends AbstractFermatFragment<ReferenceAppFerma
 
         //Check that account number is not blank
         if(newAccountNumber.isEmpty()){
-            Toast.makeText(getActivity().getApplicationContext(), "Please enter a valid account number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.bnk_error_msg_invalid_account_number), Toast.LENGTH_SHORT).show();
             return false;
         }
 
         //Check that alias is not blank
         if(newAlias.isEmpty()){
-            Toast.makeText(getActivity().getApplicationContext(), "Please enter a valid account alias", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.bnk_error_msg_invalid_alias), Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -194,13 +194,13 @@ public class AddAccountFragment extends AbstractFermatFragment<ReferenceAppFerma
         for(BankAccountNumber savedAccount : bankAccounts){
             if(savedAccount.getAccount().equals(newAccountNumber))
             {
-                Toast.makeText(getActivity().getApplicationContext(), "Account number already exists!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.bnk_error_msg_duplicate_account_number), Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
 
         moduleManager.addNewAccount(BankAccountType.SAVINGS, newAlias, newAccountNumber, selectedCurrency, selectedImageId);
-        Toast.makeText(getActivity().getApplicationContext(), "Account created", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), getResources().getString(R.string.bnk_error_msg_account_created), Toast.LENGTH_SHORT).show();
 
         return true;
     }
@@ -233,7 +233,7 @@ public class AddAccountFragment extends AbstractFermatFragment<ReferenceAppFerma
             super.onActivityCreated(new Bundle());
         } catch (Exception e){
             errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.bnk_error_msg_std), Toast.LENGTH_SHORT).show();
         }
     }
 
