@@ -393,6 +393,7 @@ public class BrowserTabFragment
                     } else {
                         cryptoCustomerCommunityInformationList.addAll((ArrayList) result[0]);
                         adapter.notifyItemRangeInserted(offset, cryptoCustomerCommunityInformationList.size() - 1);
+                        adapter.notifyDataSetChanged();
                     }
 
                 }

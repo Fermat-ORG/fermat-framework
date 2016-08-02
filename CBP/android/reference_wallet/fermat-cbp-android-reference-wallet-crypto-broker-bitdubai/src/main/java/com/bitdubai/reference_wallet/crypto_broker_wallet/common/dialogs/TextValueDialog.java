@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.view.View;
 import android.view.Window;
 
@@ -19,6 +20,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
@@ -87,10 +89,16 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
         this.setTextFree = setTextFree;
 
         if (editTextView != null)
-            if (setTextFree)
+            if (setTextFree) {
                 editTextView.setInputType(TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_MULTI_LINE);
-            else
-                editTextView.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
+            }else{
+                editTextView.setInputType(TYPE_CLASS_NUMBER );
+                if (giveMeDecimalSeparator().equals(".")) {
+                    editTextView.setKeyListener(DigitsKeyListener.getInstance("0123456789."));
+                } else {
+                    editTextView.setKeyListener(DigitsKeyListener.getInstance("0123456789,"));
+                }
+            }
     }
 
     public void setEditTextValue(String editTextValue) {
@@ -135,22 +143,28 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
             //change lostwood
             // editTextView.setText(editTextValue);
 
-            if (editTextValue.equals("0.0")) {
+            if (editTextValue.equals("0.0") ||  editTextValue.equals("0,0") || editTextValue.equals("0")) {
                 editTextView.setText("");
             } else {
                 if (activeTextCount) {
                     editTextView.setText(editTextValue);
                 } else {
-                    editTextView.setText(fixFormat(editTextValue).toString());
+                    editTextView.setText(fixFormat(editTextValue));
                 }
 
             }
 
 
-        if (setTextFree)
+        if (setTextFree) {
             editTextView.setInputType(TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_MULTI_LINE);
-        else
-            editTextView.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
+        }else {
+            editTextView.setInputType(TYPE_CLASS_NUMBER);
+            if (giveMeDecimalSeparator().equals(".")) {
+                editTextView.setKeyListener(DigitsKeyListener.getInstance("0123456789."));
+            } else {
+                editTextView.setKeyListener(DigitsKeyListener.getInstance("0123456789,"));
+            }
+        }
     }
 
     @Override
@@ -170,15 +184,19 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
     }
 
     private String fixFormat(String value) {
-
+        String doubleFormat;
+        String commaOrDotFormat;
         try {
             if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
             } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
-            return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(
-                    Double.valueOf(numberFormat.parse(value).toString()))))));
+
+            doubleFormat= String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(
+                    Double.valueOf(value))))));
+            commaOrDotFormat=doubleFormat.replace(".",giveMeDecimalSeparator());
+            return commaOrDotFormat;
         } catch (ParseException e) {
             e.printStackTrace();
             return "0";
@@ -186,19 +204,23 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
 
     }
 
-
     private Boolean compareLessThan1(String value) {
         Boolean lessThan1 = true;
-        try {
-            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE) == -1) {
-                lessThan1 = true;
-            } else {
-                lessThan1 = false;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (BigDecimal.valueOf(Double.valueOf(value)).
+                compareTo(BigDecimal.ONE) == -1) {
+            lessThan1 = true;
+        } else {
+            lessThan1 = false;
         }
         return lessThan1;
+    }
+
+    String giveMeDecimalSeparator(){
+        DecimalFormatSymbols symbols =((DecimalFormat) numberFormat).getDecimalFormatSymbols();
+        if(symbols.getDecimalSeparator()=='.'){
+            return ".";
+        }else{
+            return ",";
+        }
     }
 }

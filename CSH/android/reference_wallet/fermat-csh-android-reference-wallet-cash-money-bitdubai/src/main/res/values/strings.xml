@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cash Wallet</string>
+    <string name="app_name" translatable="false">Cash Wallet</string>
 
     <!-- Home balances -->
     <string name="csh_home_titlebar_title">CASH WALLET</string>
@@ -8,29 +8,37 @@
     <string name="csh_home_titlebar_book">Book</string>
 
 
+    <!-- Error messages -->
+    <string name="cash_error_msg_std">Sorry, an error has happened. Could not complete action.</string>
+    <string name="cash_error_msg_std_try_again">Sorry, there\'s been an error. Please try again.</string>
+    <string name="cash_error_msg_transaction_failed">Sorry! The transaction failed with an error</string>
+    <string name="cash_error_msg_transaction_failed_insufficient_funds">Sorry! The transaction failed due to insufficient funds</string>
+    <string name="cash_error_msg_wallet_could_not_be_created">Sorry! The Wallet could not be created</string>
+    <string name="cash_error_msg_invalid_currency_selected">Please select a valid Currency!</string>
+    <string name="cash_error_msg_amount_empty">"Amount cannot be empty"</string>
+    <string name="cash_error_msg_amount_zero">Amount cannot be zero</string>
+    <string name="cash_error_msg_amount_larger_funds">Amount cannot be larger than available funds</string>
+
+
     <!-- Home transactions -->
-    <string name="csh_no_transactions">No transactions yet!</string>
-    <string name="csh_transaction_img_desc" translatable="false">transaction_img</string>
-    <string name="csh_hold_transaction_text_caps" translatable="false">HOLD</string>
-    <string name="csh_unhold_transaction_text_caps" translatable="false">UNHOLD</string>
-    <string name="csh_withdrawal_transaction_text_caps" translatable="false">WITHDRAWAL</string>
-    <string name="csh_withdrawal_transaction_text_btn_caps" translatable="false">WITHDRAW</string>
-    <string name="csh_withdrawal_transaction_text" translatable="false">Withdrawal</string>
-    <string name="csh_withdrawal_transaction_text_btn" translatable="false">Withdraw</string>
-    <string name="csh_deposit_transaction_text_caps" translatable="false">DEPOSIT</string>
-    <string name="csh_deposit_transaction_text" translatable="false">Deposit</string>
+    <string name="csh_no_transactions">No transactions</string>
+
+    <string name="csh_deposit_transaction_text">Deposit</string>
+    <string name="csh_withdrawal_transaction_text">Withdrawal</string>
+
+    <string name="csh_hold_transaction_text_caps">HOLD</string>
+    <string name="csh_unhold_transaction_text_caps">UNHOLD</string>
+    <string name="csh_deposit_transaction_text_caps">DEPOSIT</string>
+    <string name="csh_withdrawal_transaction_text_caps">WITHDRAWAL</string>
+
+    <string name="csh_deposit_transaction_text_action">Deposit</string>
+    <string name="csh_withdrawal_transaction_text_action">Withdraw</string>
+
+    <string name="csh_deposit_transaction_text_action_caps">DEPOSIT</string>
+    <string name="csh_withdrawal_transaction_text_action_caps">WITHDRAW</string>
 
 
-    <!-- Transaction Dialogs -->
-    <string name="csh_ctd_title" translatable="false">transact_title_here</string>
-    <string name="csh_ctd_amount_tag" translatable="false">AMOUNT</string>
-    <string name="csh_ctd_amount_hint" translatable="false">Enter an amount</string>
-    <string name="csh_ctd_memo_tag" translatable="false">MEMO</string>
-    <string name="csh_ctd_memo_hint" translatable="false">Enter a memo</string>
-
-    <!-- Home tutorial presentation dialog -->
-    <string name="csh_home_tut_present_dialog_sub_title">This wallet is meant to help you manage your cash.\nWith it you can:</string>
-    <string name="csh_home_tut_present_dialog_body">* See your balances.\n* Deposit funds into wallet.\n* Withdraw funds out of the wallet.\n* Browse your transaction history.</string>
+    <!-- Transaction detail fragment -->
     <string name="cw_memo">MEMO</string>
     <string name="cw_date">DATE</string>
     <string name="cw_amount">AMOUNT</string>
@@ -38,5 +46,18 @@
     <string name="cw_transaction_details">Transaction details</string>
     <string name="csh_delete">Delete</string>
     <string name="csh_update">Update</string>
+
+
+    <!-- Transaction Dialogs -->
+    <string name="csh_ctd_amount_tag">AMOUNT</string>
+    <string name="csh_ctd_amount_hint">Enter an amount</string>
+    <string name="csh_ctd_memo_tag">MEMO</string>
+    <string name="csh_ctd_memo_hint">Enter a memo</string>
+    <string name="csh_ctd_cancel_button_text">CANCEL</string>
+
+
+    <!-- Home tutorial presentation dialog -->
+    <string name="csh_home_tut_present_dialog_sub_title">This wallet is meant to help you manage your cash.\nWith it you can:</string>
+    <string name="csh_home_tut_present_dialog_body">* See your balances.\n* Deposit funds into wallet.\n* Withdraw funds out of the wallet.\n* Browse your transaction history.</string>
 
 </resources>
