@@ -191,10 +191,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
             list.add(new PreferenceSettingsLinkText(11, "Received Testnet Bitcoins", "", 15, Color.GRAY));
 
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
