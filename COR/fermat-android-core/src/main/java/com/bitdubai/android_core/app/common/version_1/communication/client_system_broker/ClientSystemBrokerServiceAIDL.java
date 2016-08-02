@@ -285,13 +285,12 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     @Override
     public boolean isFermatBackgroundServiceRunning() throws FermatPlatformServiceNotConnectedException {
         try {
-            if (iServerBrokerService != null)
+            if (iServerBrokerService != null && mPlatformServiceIsBound)
                 return iServerBrokerService.isFermatSystemRunning();
         } catch (RemoteException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new FermatPlatformServiceNotConnectedException("PlatformService not connected yet", e);
         } catch (Exception e) {
-
             e.printStackTrace();
         }
         return false;
@@ -323,6 +322,8 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 Intent serviceIntent = new Intent(this, PlatformService.class);
                 serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
                 doBindService(serviceIntent);
+            }else{
+                Log.i(TAG,"Platform bounded");
             }
         } catch (Exception e) {
             e.printStackTrace();

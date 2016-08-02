@@ -34,14 +34,13 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
  * Created by mati on 2015.11.24..
  */
 @Deprecated
-public class BrokerCommunityNavigationViewPainter implements NavigationViewPainter {
+public class BrokerCommunityNavigationViewPainter extends NavigationViewPainter {
 
-    private WeakReference<Context> activity;
     ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager> subAppSession;
     private ActiveActorIdentityInformation selectedActorIdentity;
 
     public BrokerCommunityNavigationViewPainter(Context activity, ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager> subAppSession) {
-        this.activity = new WeakReference<>(activity);
+        super(activity);
         this.subAppSession = subAppSession;
 
     }
@@ -50,11 +49,10 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
     public View addNavigationViewHeader() {
         final CryptoBrokerCommunitySubAppModuleManager moduleManager = subAppSession.getModuleManager();
 
-        final Context context = activity.get();
-        final LayoutInflater layoutInflaterService = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater layoutInflaterService = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View headerView = layoutInflaterService.inflate(R.layout.cbc_navigation_view_header, null, false);
 
-        FermatWorker fermatWorker = new FermatWorker(context) {
+        FermatWorker fermatWorker = new FermatWorker(getContext()) {
             @Override
             protected Object doInBackground() throws Exception {
                 if (selectedActorIdentity == null)
@@ -69,13 +67,13 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
                 selectedActorIdentity = (ActiveActorIdentityInformation) result[0];
 
                 try {
-                    FragmentsCommons.setUpHeaderScreen(headerView, context, selectedActorIdentity);
+                    FragmentsCommons.setUpHeaderScreen(headerView, getContext(), selectedActorIdentity);
                     headerView.findViewById(R.id.cbc_progress_bar).setVisibility(View.GONE);
                     headerView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try {
-                                ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(context, subAppSession, null);
+                                ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getContext(), subAppSession, null);
                                 listIdentitiesDialog.setTitle("Connection Request");
                                 listIdentitiesDialog.show();
                             } catch (Exception ignore) {
@@ -102,7 +100,7 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            return new BrokerCommunityWalletNavigationViewAdapter(activity.get());
+            return new BrokerCommunityWalletNavigationViewAdapter(getContext());
         } catch (Exception e) {
             return null;
         }

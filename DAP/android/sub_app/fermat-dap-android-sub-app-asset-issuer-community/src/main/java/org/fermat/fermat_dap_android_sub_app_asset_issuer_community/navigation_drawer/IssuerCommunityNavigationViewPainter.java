@@ -20,7 +20,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Nerio on 24/12/15.
  */
-public class IssuerCommunityNavigationViewPainter implements NavigationViewPainter {
+public class IssuerCommunityNavigationViewPainter extends NavigationViewPainter {
 
     private static final String TAG = "Iss-ComunNavigationView";
 

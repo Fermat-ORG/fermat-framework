@@ -17,16 +17,13 @@ import java.lang.ref.WeakReference;
 /**
  * Created by mati on 2015.11.24..
  */
-public class BankMoneyWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
-
-    private WeakReference<Activity> activity;
+public class BankMoneyWalletNavigationViewPainter extends com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
     public BankMoneyWalletNavigationViewPainter(Activity activity) {
-        this.activity = new WeakReference<>(activity);
+        super(activity);
     }
 
 
-    @Override
     public View addNavigationViewHeader() {
         /*try {
             return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentity);
@@ -36,7 +33,6 @@ public class BankMoneyWalletNavigationViewPainter implements com.bitdubai.fermat
         return null;
     }
 
-    @Override
     public FermatAdapter addNavigationViewAdapter() {
         /*try {
             return new NavigationViewAdapter(activity);
@@ -46,32 +42,26 @@ public class BankMoneyWalletNavigationViewPainter implements com.bitdubai.fermat
         return null;
     }
 
-    @Override
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
         return null;//(RelativeLayout) layoutInflater.inflate(R.layout.cbw_navigation_view_bottom, base, true);
     }
 
-    @Override
     public Bitmap addBodyBackground() {
-        return BitmapFactory.decodeResource(activity.get().getResources(), R.drawable.bnk_navigation_drawer_background);
+        return BitmapFactory.decodeResource(getContext().getResources(), R.drawable.bnk_navigation_drawer_background);
     }
 
-    @Override
     public int addBodyBackgroundColor() {
         return Color.parseColor("#1375a7");
     }
 
-    @Override
     public RecyclerView.ItemDecoration addItemDecoration() {
         return null;
     }
 
-    @Override
     public boolean hasBodyBackground() {
         return false;
     }
 
-    @Override
     public boolean hasClickListener() {
         return false;
     }

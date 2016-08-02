@@ -182,6 +182,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Active type layout
      */
     private int baseLayoutActive;
+    private boolean isLayoutRecicled;
     /**
      * Screen adapters
      */
@@ -1069,6 +1070,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * @param isLayoutRecicled
      */
     private void initMainComponents(boolean isLayoutRecicled){
+        this.isLayoutRecicled = isLayoutRecicled;
         if(!isLayoutRecicled) {
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -1324,10 +1326,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         if (mDrawerLayout != null) mDrawerLayout.setFitsSystemWindows(true);
                         if (appBarLayout != null) appBarLayout.setFitsSystemWindows(true);
 
-                        //todo: provisory...
-                        View v = getToolbar();
-                        v.getLayoutParams().height = v.getLayoutParams().height + 36;
-                        v.setPadding(v.getPaddingLeft(), v.getPaddingTop() + 36, v.getPaddingRight(), v.getPaddingBottom());
+                        //Provisory for testing reasons
+                        if (mToolbar!=null && !isLayoutRecicled) {
+                            mToolbar.getLayoutParams().height = mToolbar.getLayoutParams().height + 36;
+                            mToolbar.setPadding(mToolbar.getPaddingLeft(), mToolbar.getPaddingTop() + 36, mToolbar.getPaddingRight(), mToolbar.getPaddingBottom());
+                        }
                     } catch (Exception e) {
                         getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                         Log.d("WalletActivity", "Sdk version not compatible with status bar color");
