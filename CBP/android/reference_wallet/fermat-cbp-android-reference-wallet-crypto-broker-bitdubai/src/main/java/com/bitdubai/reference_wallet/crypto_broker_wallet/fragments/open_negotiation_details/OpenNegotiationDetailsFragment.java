@@ -155,11 +155,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
 
         final String merchandise = clauses.get(CUSTOMER_CURRENCY).getValue();
-        final String exchangeAmount = fixFormat(clauses.get(EXCHANGE_RATE).getValue());
+        final String exchangeAmount = convertToFormat(clauses.get(EXCHANGE_RATE).getValue(),true);
 
 
         final String paymentCurrency = clauses.get(BROKER_CURRENCY).getValue();
-        final String amount = fixFormat(clauses.get(CUSTOMER_CURRENCY_QUANTITY).getValue());
+        final String amount = convertToFormat(clauses.get(CUSTOMER_CURRENCY_QUANTITY).getValue(),true);
 
         //Negotiation Summary
         customerImage.setImageDrawable(getImgDrawable(customer.getProfileImage()));
@@ -282,20 +282,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
 
         if (type == EXCHANGE_RATE || type == CUSTOMER_CURRENCY_QUANTITY || type == BROKER_CURRENCY_QUANTITY) {
-            try {
-                if (numberFormat.parse(clause.getValue()).doubleValue() < 0)
-                    Toast.makeText(getActivity(), "The value must be higher than 0", Toast.LENGTH_SHORT).show();
-                else {
-                    negotiationWrapper.confirmClauseChanges(clause);
-                    adapter.changeDataSet(negotiationWrapper);
-                }
-            } catch (ParseException e) {
-                if (errorManager != null)
-                    errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET,
-                            DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                else
-                    Log.e(TAG, e.getMessage(), e);
+
+            if (Double.valueOf(clause.getValue()) < 0)
+                Toast.makeText(getActivity(), "The value must be higher than 0", Toast.LENGTH_SHORT).show();
+            else {
+                negotiationWrapper.confirmClauseChanges(clause);
+                adapter.changeDataSet(negotiationWrapper);
             }
+
 
         } else if (type == BROKER_BANK_ACCOUNT || type == BROKER_PLACE_TO_DELIVER) {
             if (clause.getValue() != null && !clause.getValue().isEmpty()) {
@@ -453,6 +447,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             @Override
             public void onClick(String newValue) {
 
+                newValue = fixFormat(newValue, false);
+
 
                 final BigDecimal exchangeRate = convertToBigDecimal(newValue);
 
@@ -463,7 +459,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
 
                 negotiationWrapper.changeClauseValue(clause, newValue);
-                negotiationWrapper.changeClauseValue(amountToReceiveClause, fixFormat(String.valueOf(amountToReceiveValue)));
+                negotiationWrapper.changeClauseValue(amountToReceiveClause, fixFormat(String.valueOf(amountToReceiveValue), true));
 
                 adapter.changeDataSet(negotiationWrapper);
 
@@ -507,6 +503,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
                 final double amountToReceiveValue = exchangeRate.multiply(amountToSell).doubleValue();*/
 
+                newValue = fixFormat(newValue,false);
 
                 final BigDecimal amountToSell = convertToBigDecimal(newValue);
                 final BigDecimal exchangeRate = convertToBigDecimal(String.valueOf(clauses.get(EXCHANGE_RATE).getValue()));
@@ -516,7 +513,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
 
                 negotiationWrapper.changeClauseValue(clause, newValue);
-                negotiationWrapper.changeClauseValue(amountToReceiveClause, fixFormat(String.valueOf(amountToReceiveValue)));
+                negotiationWrapper.changeClauseValue(amountToReceiveClause, fixFormat(String.valueOf(amountToReceiveValue),true));
 
                 adapter.changeDataSet(negotiationWrapper);
             }
@@ -534,7 +531,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             public void onClick(String newValue) {
 
 
-
+                newValue = fixFormat(newValue,false);
               /*  final BigDecimal amountToReceive = MathUtils.getBigDecimal(newValue);
                 final BigDecimal exchangeRate = MathUtils.getBigDecimal(clauses.get(EXCHANGE_RATE));
                 final double amountToSellValue = amountToReceive.divide(exchangeRate, 8, RoundingMode.HALF_UP).doubleValue();*/
@@ -547,7 +544,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
 
                 negotiationWrapper.changeClauseValue(clause, newValue);
-                negotiationWrapper.changeClauseValue(amountToSellClause, fixFormat(String.valueOf(amountToSellValue)));
+                negotiationWrapper.changeClauseValue(amountToSellClause, fixFormat(String.valueOf(amountToSellValue),true));
 
                 adapter.changeDataSet(negotiationWrapper);
             }
@@ -760,33 +757,23 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         return true;
     }
 
-    private BigDecimal convertToBigDecimal(String value) {
 
-        BigDecimal conversion = new BigDecimal(0);
+    private String fixFormat(String value,Boolean stringContainADoubleValue) {
+
         try {
-            if (compareLessThan1(value)) {
+            if (compareLessThan1(value,stringContainADoubleValue)) {
                 numberFormat.setMaximumFractionDigits(8);
             } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
-            conversion = new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(
-                    Double.valueOf(numberFormat.parse(value).toString())))));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return conversion;
-    }
-
-
-    private String fixFormat(String value) {
-
-        try {
-            if (compareLessThan1(value)) {
-                numberFormat.setMaximumFractionDigits(8);
-            } else {
-                numberFormat.setMaximumFractionDigits(2);
+            if(stringContainADoubleValue){
+                return String.valueOf(numberFormat.parse(numberFormat.format(
+                        new BigDecimal(value))));
+            }else{
+                return String.valueOf(numberFormat.parse(numberFormat.format(
+                        new BigDecimal(numberFormat.parse(value).toString()))));
             }
-            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
+
         } catch (ParseException e) {
             e.printStackTrace();
             return "0";
@@ -794,10 +781,39 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
     }
 
-    private Boolean compareLessThan1(String value) {
-        Boolean lessThan1 = true;
+    private String convertToFormat(String value,Boolean stringContainADoubleValue){
         try {
-            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+            if (compareLessThan1(value,stringContainADoubleValue)) {
+                numberFormat.setMaximumFractionDigits(8);
+            } else {
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            if(stringContainADoubleValue){
+                return String.valueOf(numberFormat.format(
+                        new BigDecimal(value)));
+            }else{
+                return String.valueOf(numberFormat.format(
+                        new BigDecimal(numberFormat.parse(value).toString())));
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    private Boolean compareLessThan1(String value,Boolean StringContainADoubleValue) {
+        Boolean lessThan1 = true;
+        Double valueToConvert;
+
+        try {
+            if(StringContainADoubleValue){
+                valueToConvert=Double.valueOf(value);
+            }else{
+                valueToConvert=numberFormat.parse(value).doubleValue();
+            }
+            if (BigDecimal.valueOf(valueToConvert).
                     compareTo(BigDecimal.ONE) == -1) {
                 lessThan1 = true;
             } else {
@@ -807,5 +823,21 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             e.printStackTrace();
         }
         return lessThan1;
+    }
+
+    private BigDecimal convertToBigDecimal(String value) {
+
+        BigDecimal convertion = new BigDecimal(0);
+        try {
+            if (compareLessThan1(value,true)) {
+                numberFormat.setMaximumFractionDigits(8);
+            } else {
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            convertion = new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value)))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return convertion;
     }
 }

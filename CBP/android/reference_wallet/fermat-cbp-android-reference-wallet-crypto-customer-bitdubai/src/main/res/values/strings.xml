@@ -2,8 +2,7 @@
     <string name="app_name">Crypto Customer Wallet</string>
     <string name="action_settings">Settings</string>
     <string name="action_start_negotiation">Start Negotiation</string>
-    <string name="add_a_note_button">ADD A NOTE</string>
-    <string name="add_cancel_negotiation_button">CANCEL NEGOTIATION</string>
+    <string name="ccw_add_a_note_button">ADD A NOTE</string>
     <string name="amount">Amount</string>
     <string name="arrow" translatable="false">arrow</string>
     <string name="at" translatable="false">\@</string>
@@ -228,8 +227,52 @@
     <string name="ccw_you_receive">You receive:</string>
     <string name="ccw_you_received">You received:</string>
     <string name="ccw_please_try_again_an_error_ocurred">Please try again, an error occurred.</string>
-    <string name="ccw_amount_and_method_text">%1$s %2$s using %3$s</string>
+    <string name="ccw_amount_and_method_text"><b>%1$s %2$s</b> using <b>%3$s</b></string>
     <string name="ccw_the_merchandise_has_been_accepted">The merchandise has been accepted</string>
     <string name="ccw_the_payment_has_been_delivered">The payment has been delivered</string>
     <string name="ccw_on_formatted_date_text">on %1$s</string>
+    <string name="add_cancel_negotiation_button">Cancel Negotiation</string>
+
+    <string name="ccw_time_zone">Time Zone: %1$s</string>
+    <string name="ccw_broker_date">Broker Date: %1$s (%2$s)</string>
+    <string name="ccw_currencies">Currencies</string>
+    <string name="ccw_negotiation_sent">Negotiation sent</string>
+    <string name="ccw_error_sending_the_negotiation">Error sending the negotiation</string>
+    <string name="ccw_need_to_register_the_wallet_user_for_user_btc">Need to create a User for the Bitcoin Wallet</string>
+    <string name="ccw_error_in_the_information_is_empty">Error in the information. Is empty.</string>
+    <string name="the_exchange_rate_must_be_greater_than_zero">The exchange rate must be greater than zero.</string>
+    <string name="ccw_negotiation_cancelled_reason">The Negotiation has been is cancelled. Reason: %1$s. %2$s</string>
+    <string name="error_cancelling_the_negotiation">Error un Cancellation of Negotiation:</string>
+    <string name="ccw_not_confirmed_bank_account_list_is_empty_notification">Not Confirmed. The Bank Account List is Empty. Add a Bank Account in the Wallet Settings.</string>
+    <string name="ccw_not_confirmed_location_list_is_empty_notification">Not Confirmed. The Locations List is Empty. Add a Location in the Wallet Settings.</string>
+    <string name="this_is_selected_by_the_broker">This is selected by the Broker</string>
+    <string name="ccw_need_to_confirm_all_the_clauses">Need to confirm ALL the clauses</string>
+    <string name="ccw_reception_methods">Reception Methods</string>
+    <string name="ccw_bank_accounts">Bank Accounts</string>
+    <string name="ccw_bank_account_list_is_empty_notification">The Bank Account List is Empty. Add Your Bank Account in the Settings Wallet.</string>
+    <string name="ccw_place_to_deliver">Place to Deliver</string>
+    <string name="ccw_location_list_is_empty_notification">The Locations List is Empty. Add Your Locations in the Settings Wallet.</string>
+    <string name="ccw_the_echange_rate_must_be_greater_than_zero">The exchange must be greater than zero.</string>
+    <string name="ccw_the_buying_must_be_greater_than_zero">The buying must be greater than zero.</string>
+    <string name="ccw_the_paying_must_be_greater_than_zero">The paying must be greater than zero.</string>
+    <string name="ccw_the_currency_to_pay_is_equal_to_currency_buy">The currency to pay is equal to currency buy.</string>
+    <string name="ccw_request_for_quotations_sent">Request for quotations sent</string>
+    <string name="ccw_error_happened_in_BrokerListActivityFragment">Sorry, an error happened in BrokerListActivityFragment (Module == null)</string>
+    <string name="ccw_need_to_set_the_fields">Need to set the fields</string>
+    <string name="ccw_please_fill_all_the_fields">Please fill all the fields</string>
+    <string name="ccw_selling_details_2">SELLING %1$s</string>
+    <string name="ccw_date_details">Date: %1$s</string>
+    <string name="ccw_error_happened_in_ContractDetailActivityFragment">Sorry, an error happened in ContractDetailActivityFragment (CryptoCustomerWalletModuleManager == null)</string>
+    <string name="ccw_error_happened_in_ContractHistoryActivityFragment">Sorry, an error happened in ContractHistoryActivityFragment (Module == null)</string>
+    <string name="ccw_exchange_rate_provider_is_down"> %1$s is down</string>
+    <string name="ccw_recovering_from_system_error">Recovering from system error</string>
+    <string name="ccw_there_was_a_problem_saving_your_settings">There was a problem saving your settings</string>
+    <string name="ccw_select_a_provider">Select a Provider</string>
+    <string name="ccw_my_locations">My Locations</string>
+    <string name="ccw_exchange_rate_providers">Exchange Rate Providers</string>
+    <string name="ccw_fee_management">Advanced Settings</string>
+    <string name="ccw_slow">Slow</string>
+    <string name="ccw_normal">Normal</string>
+    <string name="ccw_fast">Fast</string>
+    <string name="ccw_negotiation_details">Negotiation Details</string>
 </resources>

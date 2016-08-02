@@ -22,10 +22,12 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventExcept
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.OpenContract;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.OpenContractPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CannotFindKeyValueException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CantInitializeOpenContractBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure.OpenContractImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -473,6 +475,12 @@ public class OpenContractBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
         try {
+
+            System.out.println(new StringBuilder()
+                .append("OPEN_CONTRACT - AGENT - doTheMainTask() - DAO - updateContractTransactionStatus()\n")
+                .append("\n - contractHash: ").append(contractHash)
+                .append("\n - status: ").append(contractTransactionStatus));
+
             updateRecordStatus(contractHash,
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
@@ -520,6 +528,61 @@ public class OpenContractBusinessTransactionDao {
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e, "Unexpected Result", "Check the cause");
         }
+    }
+
+    public List<OpenContract> getPendingToSubmitOpenContract() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
+
+        try {
+
+            List<OpenContract> getTransactions = new ArrayList<>();
+
+            List<DatabaseTableRecord> record;
+            DatabaseTable table = getDatabaseContractTable();
+            if (table == null)
+                throw new CantGetContractListException("Cant check if customer broker new exists");
+
+            table.addStringFilter(
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    ContractTransactionStatus.PENDING_SUBMIT.getCode(), DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+            record = table.getRecords();
+            if (record.isEmpty())
+                return getTransactions;
+
+            for (DatabaseTableRecord records : record) {
+                getTransactions.add(getOpenContractFromRecord(records));
+            }
+
+            return getTransactions;
+
+        } catch (CantLoadTableToMemoryException e) {
+            pluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Unexpected Result", "Check the cause");
+        } catch (Exception e) {
+            pluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Unexpected Result", "Check the cause");
+        }
+    }
+
+    private OpenContract getOpenContractFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
+
+        UUID            transactionId   = record.getUUIDValue(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_ID_COLUMN_NAME);
+        String          contractHash    = record.getStringValue(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
+        ContractType    contractType    = ContractType.getByCode(record.getStringValue(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_TYPE_COLUMN_NAME));
+        String          contractXML     = record.getStringValue(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_XML_COLUMN_NAME);
+
+        return new OpenContractImpl(
+            transactionId,
+            contractHash,
+            contractType,
+            contractXML
+        );
+
     }
 
     public List<String> getPendingToConfirmContractHash() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {

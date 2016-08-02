@@ -50,7 +50,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
     /**
      * Fields
      */
-    String title;
+    int title = -1;
     int subTitle = -1;
     int body = -1;
     int textCheckboxNotShow = -1;
@@ -171,6 +171,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             if (viewColor != -1)
                 btn_right.setBackgroundResource(viewColor);
         }
+        if (txt_title != null) txt_title.setText(title);
         if (txt_sub_title != null) txt_sub_title.setText(subTitle);
         if (txt_body != null) txt_body.setText(body);
         if (footer_title != null) footer_title.setText(textFooter);
@@ -198,7 +199,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             txt_body.setTextColor(color);
             footer_title.setTextColor(color);
         }
-        if (checkButtonAndTextVisible == 0 && checkButton == false) {
+        if (checkButtonAndTextVisible == 0 && !checkButton) {
             checkbox_not_show.setVisibility(View.GONE);
             checkbox_not_show_text.setVisibility(View.GONE);
         } else {
@@ -306,7 +307,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         this.iconRes = iconRes;
     }
 
-    public void setTitle(String title) {
+    public void setResTitle(int title) {
         this.title = title;
     }
 
@@ -346,10 +347,6 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         this.textNameRight = textNameRight;
     }
 
-//    public void setTitleTextColor(int titleTextColor) {
-//        this.titleTextColor = titleTextColor;
-//    }
-
     public void setTextColor(String textColor) {
         this.textColor = textColor;
     }
@@ -377,7 +374,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         private boolean isCheckEnabled;
         private int checkButtonAndTextVisible = -1;
         private PresentationCallback callback;
-        private String title;
+        private int title = -1;
         private int subTitle = -1;
         private int body = -1;
         private int textFooter = -1;
@@ -397,8 +394,10 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             if (body != -1) {
                 presentationDialog.setBody(body);
             }
-            if (title != null) {
-                presentationDialog.setTitle(title);
+            if (title != -1) {
+                presentationDialog.setResTitle(title);
+            } else {
+                presentationDialog.setResTitle(R.string.message_tittle);
             }
             if (subTitle != -1) {
                 presentationDialog.setSubTitle(subTitle);
@@ -432,15 +431,9 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             } else {
                 presentationDialog.setTextNameRight(R.string.name_right);
             }
-            if (title != null) {
-                presentationDialog.setTitle(title);
-            }
             if (iconRes != -1) {
                 presentationDialog.setIconRes(iconRes);
             }
-//            if (titleTextColor != -1) {
-//                presentationDialog.setTitleTextColor(titleTextColor);
-//            }
             if (textColor != null) {
                 presentationDialog.setTextColor(textColor);
             }
@@ -490,7 +483,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             return this;
         }
 
-        public Builder setTitle(String title) {
+        public Builder setTitle(int title) {
             this.title = title;
             return this;
         }
@@ -529,11 +522,6 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             this.templateType = templateType;
             return this;
         }
-
-//        public Builder setTitleTextColor(int TitleTextColorInHexa) {
-//            this.titleTextColor = TitleTextColorInHexa;
-//            return this;
-//        }
 
         public Builder setTextColor(String textColorInHexa) {
             this.textColor = textColorInHexa;

@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
@@ -369,6 +371,7 @@ public class CustomerOnlinePaymentMonitorAgent2
                                 customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, PAYMENT_SUBMIT);
 
                                 raisePaymentConfirmationEvent();
+                                closeNegotiation(saleNegotiation);
                             }
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -463,6 +466,25 @@ public class CustomerOnlinePaymentMonitorAgent2
         event.setTransactionHash(record.getContractHash());
 
         eventManager.raiseEvent(event);
+    }
+
+    private void closeNegotiation(CustomerBrokerSaleNegotiation saleNegotiation) throws UnexpectedResultReturnedFromDatabaseException {
+
+        try {
+
+            if(saleNegotiation.getStatus().equals(NegotiationStatus.WAITING_FOR_CLOSING)) {
+                System.out.println("OFFLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - CLOSE NEGOTIATION" +
+                        "\n - NegotiationId = "+saleNegotiation.getNegotiationId());
+                //CLOSE SALE NEGOTIATION
+                saleNegotiationManager.closeNegotiation(saleNegotiation.getNegotiationId());
+            }
+
+        } catch (CantUpdateCustomerBrokerSaleException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    e,
+                    "Close Negotiation",
+                    "Error Closing negotiation");
+        }
     }
 
 }

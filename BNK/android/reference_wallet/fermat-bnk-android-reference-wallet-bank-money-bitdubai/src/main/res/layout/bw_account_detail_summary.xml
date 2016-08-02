@@ -110,7 +110,7 @@
                     fab:fab_colorNormal="@color/fab_button_color"
                     fab:fab_colorPressed="@color/soft_purple"
                     fab:fab_size="mini"
-                    fab:fab_title="Withdraw"
+                    fab:fab_title="@string/bw_withdrawal_transaction_text"
                     fab:fab_stroke_visible="false"
                     fab:fab_icon="@drawable/bw_fab_withdraw_button"/>
 
@@ -121,7 +121,7 @@
                     fab:fab_colorNormal="@color/fab_button_color"
                     fab:fab_colorPressed="@color/soft_purple"
                     fab:fab_size="mini"
-                    fab:fab_title="Deposit"
+                    fab:fab_title="@string/bw_deposit_transaction_text"
                     fab:fab_stroke_visible="true"
                     fab:fab_icon="@drawable/bw_fab_deposit_button"/>
 

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheckedTextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@android:id/text1"
-    android:gravity="left"
-    android:text="LOW"
-    android:textColor="#616161"
     android:background="#EAEAEA"
-    android:textColorHighlight="#CFCFCF"
+    android:ellipsize="marquee"
+    android:gravity="left"
+    android:paddingBottom="10dip"
     android:paddingLeft="10dip"
     android:paddingTop="10dip"
-    android:paddingBottom="10dip"
     android:singleLine="true"
-    android:ellipsize="marquee"/>
+    android:text="@string/cbi_low_tag"
+    android:textColor="#616161"
+    android:textColorHighlight="#CFCFCF" />

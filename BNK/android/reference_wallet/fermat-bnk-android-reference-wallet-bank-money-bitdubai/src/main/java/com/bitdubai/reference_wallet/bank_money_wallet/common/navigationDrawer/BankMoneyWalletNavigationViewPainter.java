@@ -12,15 +12,17 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by mati on 2015.11.24..
  */
 public class BankMoneyWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
-    private Activity activity;
+    private WeakReference<Activity> activity;
 
     public BankMoneyWalletNavigationViewPainter(Activity activity) {
-        this.activity = activity;
+        this.activity = new WeakReference<>(activity);
     }
 
 
@@ -51,7 +53,7 @@ public class BankMoneyWalletNavigationViewPainter implements com.bitdubai.fermat
 
     @Override
     public Bitmap addBodyBackground() {
-        return BitmapFactory.decodeResource(activity.getResources(), R.drawable.bnk_navigation_drawer_background);
+        return BitmapFactory.decodeResource(activity.get().getResources(), R.drawable.bnk_navigation_drawer_background);
     }
 
     @Override

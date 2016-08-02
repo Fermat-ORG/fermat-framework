@@ -329,7 +329,7 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
     Skype:   franklginmarcano1970
     Github:  https://github.com/franklinmarcano1970
 
-* **Jose Cardozo [Veteran Developer]**<br/>
+* **Jose Cardozo [New Team Leader]**<br/>
 ---
       Email:   josejcb89@gmail.com
       Skype:   josejcb89

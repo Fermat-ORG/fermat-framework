@@ -315,7 +315,8 @@ public abstract class AbstractOpenContract {
             throw new InvalidParameterException("Cannot parse a null string value to float");
         } else {
             try {
-                return DecimalFormat.getInstance().parse(stringValue).floatValue();
+            //    return DecimalFormat.getInstance().parse(stringValue).floatValue();
+                return Float.valueOf(stringValue);
             } catch (Exception exception) {
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,
                         FermatException.wrapException(exception),
