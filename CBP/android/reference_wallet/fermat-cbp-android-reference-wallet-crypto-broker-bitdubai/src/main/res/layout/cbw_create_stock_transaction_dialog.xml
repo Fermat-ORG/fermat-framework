@@ -13,10 +13,20 @@
         android:padding="24dp">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_text_dialog_title"
+            android:id="@+id/cbw_dialog_title_stock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/cbw_stock_tittle"
+            android:textColor="@color/cbw_wizard_color"
+            android:textSize="16sp" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_dialog_title_stock_transaction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:gravity="center_vertical"
             android:text="@string/amount_to_restock_or_destock"
