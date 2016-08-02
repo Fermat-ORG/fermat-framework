@@ -255,6 +255,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
              */
             handleNetworkServiceRegisteredEvent();
 
+
         } catch (Exception exception) {
 
             System.out.println(exception.toString());
@@ -458,10 +459,10 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         /*
          * 1. Listen and handle Network Client Registered Event
          */
-        FermatEventListener networkClientRegistered = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_REGISTERED);
-        networkClientRegistered.setEventHandler(new NetworkClientRegisteredEventHandler(this));
-        eventManager.addListener(networkClientRegistered);
-        listenersAdded.add(networkClientRegistered);
+//        FermatEventListener networkClientRegistered = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_REGISTERED);
+//        networkClientRegistered.setEventHandler(new NetworkClientRegisteredEventHandler(this));
+//        eventManager.addListener(networkClientRegistered);
+//        listenersAdded.add(networkClientRegistered);
 
         /*
          * 2. Listen and handle Network Client Network Service Registered Event
@@ -550,7 +551,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         queriesDao.deleteAll();
     }
 
-    public final void handleNetworkClientRegisteredEvent(final CommunicationChannels communicationChannel) throws FermatException {
+    public final void handleNetworkClientRegisteredEvent() throws FermatException {
 
 //        if(networkServiceRegistrationProcessAgent != null && networkServiceRegistrationProcessAgent.getActive()) {
 //            networkServiceRegistrationProcessAgent.stop();
@@ -1081,8 +1082,11 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         return networkServiceType;
     }
 
-    public void startConnection() throws CantRegisterProfileException {
-        getConnection().registerProfile(getProfile());
+    public synchronized void startConnection() throws FermatException {
+        if (isStarted() && !isRegistered())
+            handleNetworkClientRegisteredEvent();
+        else System.out.println("####################___ALGO__MALO___PASA__#####################");
+//        getConnection().registerProfile(getProfile());
     }
 
 
