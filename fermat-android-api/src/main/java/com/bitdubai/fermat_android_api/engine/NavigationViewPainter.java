@@ -1,7 +1,11 @@
 package com.bitdubai.fermat_android_api.engine;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,8 +58,15 @@ public abstract class NavigationViewPainter implements NavigationViewPainterInte
         return false;
     }
 
-    protected void sendBroadcast(){
-//        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance();
+    protected boolean sendBroadcast(Intent intent){
+        return LocalBroadcastManager.getInstance(context.get()).sendBroadcast(intent);
+    }
+    protected void registerReceiver(BroadcastReceiver receiver,IntentFilter intent){
+        LocalBroadcastManager.getInstance(context.get()).registerReceiver(receiver,intent);
+    }
+
+    protected void unregisterReceiver(BroadcastReceiver receiver){
+        LocalBroadcastManager.getInstance(context.get()).unregisterReceiver(receiver);
     }
 
     public Context getContext() {
