@@ -435,9 +435,10 @@ public class ChatAdapterView extends LinearLayout {
         messagesContainer = (RecyclerView) findViewById(R.id.messagesContainer);
         layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
         messagesContainer.setLayoutManager(layoutManager);
-        if (adapter == null)
-            adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
-
+//        if (adapter == null) {
+//            adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+//            messagesContainer.setAdapter(adapter);
+//        }
             messagesContainer.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -583,9 +584,10 @@ public class ChatAdapterView extends LinearLayout {
                     return;
                 }
 
-                if (adapter == null)
-                    adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
-
+//                if (adapter == null) {
+//                    adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+//                    messagesContainer.setAdapter(adapter);
+//                }
                     messageText = messageText.trim();
 
 //                String text = "";
@@ -701,7 +703,10 @@ public class ChatAdapterView extends LinearLayout {
                     chatMessage.setDate(S);
                     chatMessage.setMe(true);
                     messageET.setText("");
-
+                    if (adapter == null) {
+                        adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+                        messagesContainer.setAdapter(adapter);
+                    }
                     displayMessage(chatMessage);
                     System.out.println("*** 12345 case 1:send msg in android layer" + new Timestamp(System.currentTimeMillis()));
                 } catch (CantSaveMessageException e) {
