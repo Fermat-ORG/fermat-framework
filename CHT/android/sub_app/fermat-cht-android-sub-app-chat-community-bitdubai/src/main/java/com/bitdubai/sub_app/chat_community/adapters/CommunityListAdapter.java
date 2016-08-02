@@ -87,7 +87,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case CONNECTED:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is now a connection");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_now_conn));
                     holder.connectedButton.setVisibility(View.VISIBLE);
                     holder.blockedButton.setVisibility(View.GONE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -96,7 +96,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case BLOCKED_LOCALLY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -105,7 +105,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case BLOCKED_REMOTELY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -114,7 +114,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case CANCELLED_LOCALLY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -123,7 +123,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case CANCELLED_REMOTELY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -140,7 +140,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case DENIED_LOCALLY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -149,7 +149,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case DENIED_REMOTELY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -190,7 +190,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case PENDING_LOCALLY_ACCEPTANCE:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("Pending Acceptance");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_pending));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.GONE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -199,7 +199,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case PENDING_REMOTELY_ACCEPTANCE:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("Request sent");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_sent));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.GONE);
                     holder.pendingButton.setVisibility(View.VISIBLE);

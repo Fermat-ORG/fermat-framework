@@ -178,7 +178,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:textSize="14sp"
-                android:text="Close" />
+                android:text="@string/close_button" />
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

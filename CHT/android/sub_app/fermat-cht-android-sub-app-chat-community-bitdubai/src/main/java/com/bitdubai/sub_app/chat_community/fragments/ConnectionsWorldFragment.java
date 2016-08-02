@@ -296,10 +296,12 @@ public class ConnectionsWorldFragment
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
                     .setBannerRes(R.drawable.chat_banner_community)
                     .setIconRes(R.drawable.chat_subapp)
+                    .setTitle(R.string.cht_comm_welcome)
                     .setSubTitle(R.string.cht_creation_dialog_sub_title)
                     .setBody(R.string.cht_creation_dialog_body)
                     .setTextNameLeft(R.string.cht_creation_name_left)
                     .setTextNameRight(R.string.cht_creation_name_right)
+                    .setCheckboxText(R.string.cht_comm_dont_show_again)
                     .setImageRight(R.drawable.ic_profile_male)
                     .setVIewColor(R.color.cht_color_dialog_community)
                     .build();

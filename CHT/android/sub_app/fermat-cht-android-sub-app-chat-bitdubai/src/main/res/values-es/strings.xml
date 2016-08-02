@@ -44,8 +44,8 @@
     <string name="cht_dialog_welcome">Bienvenido!</string>
     <string name="cht_dialog_subtitle">Bienvenido a P2P Chat</string>
     <string name="cht_dialog_content">Si usted no tiene ninguna identidad registrada, favor registre una en nuestro P2P Chat Identity.</string>
-    <string name="cht_dialog_dont_show">No mostrar esto de nuevo</string>
-    <string name="cht_dialog_button_close">Cerrar</string>
+    <string name="cht_dialog_dont_show">No mostrar de nuevo</string>
+    <string name="cht_dialog_button_close">OK</string>
     <string name="cht_dialog_add_connection">Agregar conexiones</string>
     <string name="cht_yes">Sí</string>
     <string name="cht_no">No</string>

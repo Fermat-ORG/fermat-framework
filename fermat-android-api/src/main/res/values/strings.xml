@@ -3,5 +3,6 @@
     <string name="message_tittle">Welcome!</string>
     <string name="name_left">John Doe</string>
     <string name="name_right">Jane Doe</string>
+    <string name="close_button">Close</string>
 
 </resources>

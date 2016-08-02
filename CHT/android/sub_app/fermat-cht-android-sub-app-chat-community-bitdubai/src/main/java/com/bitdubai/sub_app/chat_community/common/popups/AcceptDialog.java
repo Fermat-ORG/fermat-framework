@@ -75,7 +75,7 @@ public class AcceptDialog
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
-        title.setText(activity.getResources().getString(R.string.cht_comm_not_found));
+        title.setText(activity.getResources().getString(R.string.cht_comm_pending));
         description.setText(chatUserInformation.getAlias() + activity.getResources().getString(R.string.cht_comm_text_accept));
         userName.setText("");
 
