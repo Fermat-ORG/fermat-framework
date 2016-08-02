@@ -67,6 +67,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EncodeException;
@@ -131,6 +133,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      * into table NodeConnectionHistory when the client is connected
      */
     private NodeProfile nodeProfile;
+
+    private Lock lock;
 
     /*
      * Constructor
@@ -261,7 +265,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             container.asyncConnectToServer(networkClientCommunicationChannel, uri);
 
         } catch (Exception e) {
-            System.out.println(e.getCause());
+            e.printStackTrace();
+//            System.out.println(e.getCause());
         }
     }
 
@@ -1039,8 +1044,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         return nodeProfile;
     }
 
-    public void close() throws IOException {
+    public synchronized void close() throws IOException {
      //   container.getProperties().remove(ClientProperties.RECONNECT_HANDLER);
-        networkClientCommunicationChannel.getClientConnection().close();
+        if (networkClientCommunicationChannel.getClientConnection().isOpen())
+            networkClientCommunicationChannel.getClientConnection().close();
     }
 }

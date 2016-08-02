@@ -272,7 +272,11 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     System.out.println("Netowork available!!!!\n+" + "NetworkType: " + deviceNetwork);
                     System.out.println("########################################\n");
                     if(deviceNetwork.getType() == ConnectionType.WI_FI || deviceNetwork.getType() == ConnectionType.MOBILE_DATA )
-                        networkClientCommunicationConnection.initializeAndConnect();
+                        try {
+                            connect();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                 }
 
                 @Override
@@ -280,11 +284,19 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     System.out.println("########################################\n");
                     System.out.println("Netowork UNAVAILABLE!!!!\n");
                     System.out.println("########################################\n");
-                    try {
-                            networkClientCommunicationConnection.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    if (executorService==null) executorService = Executors.newSingleThreadExecutor();
+                        executorService.submit(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    disconnect();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+
                 }
 
             });
@@ -513,15 +525,13 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
         }
 
-        Runnable runnable = new Runnable(){
+        if(executorService==null) executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(new Runnable(){
             @Override
             public void run(){
                 networkClientCommunicationConnection.initializeAndConnect();
             }
-        };
-
-        if(executorService==null) executorService = Executors.newSingleThreadExecutor();
-        executorService.submit(runnable);
+        });
 
     }
 
@@ -644,9 +654,10 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     }
 
     @Override
-    public void connect() {
+    public synchronized void connect() {
 
         try {
+            if (networkClientCommunicationConnection.isConnected()) throw new RuntimeException("Nodo conectado. Estas usando horrible este plugin...");
 
             networkClientCommunicationConnection.initializeAndConnect();
 
@@ -656,6 +667,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             * Create and Scheduled the supervisorConnectionAgent
             */
             final NetworkClientCommunicationSupervisorConnectionAgent supervisorConnectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
+            if (scheduledExecutorService==null) scheduledExecutorService = Executors.newScheduledThreadPool(2);
             scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 7, TimeUnit.SECONDS);
 
 //            executorService = Executors.newSingleThreadExecutor();
@@ -669,6 +681,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     public void disconnect() {
         try {
             scheduledExecutorService.shutdownNow();
+            scheduledExecutorService = null;
         }catch (Exception e){
 
         }
