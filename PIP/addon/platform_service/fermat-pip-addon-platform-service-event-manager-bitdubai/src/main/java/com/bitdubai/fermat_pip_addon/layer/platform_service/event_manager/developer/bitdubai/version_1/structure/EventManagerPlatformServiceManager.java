@@ -94,26 +94,26 @@ public final class EventManagerPlatformServiceManager implements EventManager {
         final List<FermatEventListener> listenersList = listenersMap.get(eventKey);
 
         if (listenersList != null) {
-            for (final FermatEventListener fermatEventListener : listenersList) {
-                execute(fermatEventListener, fermatEvent);
-            }
+                execute(listenersList, fermatEvent);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void execute(final FermatEventListener fermatEventListener,
-                         final FermatEvent fermatEvent) {
+    private void execute(final List<FermatEventListener> listenersList, final FermatEvent fermatEvent) {
 
         executorService.submit(new
-
-                                       Runnable() {
-                                           @Override
-                                           public void run() {
-
-                                               fermatEventListener.raiseEvent(fermatEvent);
-                                           }
-                                       }
-
+                           Runnable() {
+                               @Override
+                               public void run() {
+                                   try{
+                                   for (FermatEventListener fermatEventListener : listenersList) {
+                                       fermatEventListener.raiseEvent(fermatEvent);
+                                   }
+                                   }catch (Exception e){
+                                       e.printStackTrace();
+                                   }
+                               }
+                           }
         );
     }
 
