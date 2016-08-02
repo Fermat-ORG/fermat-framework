@@ -57,6 +57,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -271,6 +272,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     System.out.println("########################################\n");
                     System.out.println("Netowork available!!!!\n+" + "NetworkType: " + deviceNetwork);
                     System.out.println("########################################\n");
+                    networkClientCommunicationConnection.initializeAndConnect();
                 }
 
                 @Override
@@ -278,6 +280,11 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     System.out.println("########################################\n");
                     System.out.println("Netowork UNAVAILABLE!!!!\n");
                     System.out.println("########################################\n");
+                    try {
+                        networkClientCommunicationConnection.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
             });
