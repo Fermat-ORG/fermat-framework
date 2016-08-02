@@ -14,9 +14,15 @@
     <string name="wallet_status_open">UPGRADE</string>
     <string name="wallet_more_details_button">READ MORE</string>
     <string name="no_preview_images">No Preview Images</string>
-    <string name="cht_creation_dialog_sub_title">Esta aplicación le permite encontrar usuarios de P2P Chat en la red de Fermat. \n Sus principales características son:</string>
+    <string name="cht_creation_dialog_sub_title">Esta aplicación le permite:</string>
     <string name="cht_creation_dialog_body">* Buscar usuarios del Chat cerca de tí.\n* Ver sus perfiles.\n* Conectar con ellos.</string>
-    <string name="cht_creation_dialog_footer">Depending on what you are, choose an avatar below.\nYou may change it later.</string>
+    <string name="cht_creation_dialog_footer">Si no tiene una identidad o perfil, favor registre una para utilizar esta comunidad.</string>
+    <string name="cht_comm_dont_show_again">No mostrar de nuevo</string>
+    <string name="cht_comm_welcome">Bienvenido!</string>
+    <string name="cht_comm_connection_request">Solicitud de conexión</string>
+    <string name="cht_comm_resend_toast">The connection request has been sent
+ you need to wait until the user responds</string>
+    <string name="cht_comm_not_found">Ilocalizable</string>
     <string name="cht_creation_name_left">Chat</string>
     <string name="cht_creation_name_right">Usuarios</string>
 </resources>

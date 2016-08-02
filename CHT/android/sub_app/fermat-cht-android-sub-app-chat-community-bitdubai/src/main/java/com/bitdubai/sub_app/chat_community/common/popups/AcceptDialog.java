@@ -13,6 +13,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantAcceptChatRequestException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ChatActorConnectionDenialFailedException;
@@ -39,6 +40,7 @@ public class AcceptDialog
      */
     private final ChatActorCommunityInformation chatUserInformation;
     private final ChatActorCommunitySelectableIdentity identity;
+    private Context activity;
 
     private FermatTextView title;
     private FermatTextView description;
@@ -53,7 +55,7 @@ public class AcceptDialog
                         final ChatActorCommunitySelectableIdentity identity) {
 
         super(activity, chatUserSubAppSession, subAppResources);
-
+        this.activity = activity;
         this.chatUserInformation = chatUserInformation;
         this.identity = identity;
     }
@@ -73,8 +75,8 @@ public class AcceptDialog
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
-        title.setText("Connection Request");
-        description.setText(chatUserInformation.getAlias() + " wants to be your friend in P2P Chat");
+        title.setText(activity.getResources().getString(R.string.cht_comm_not_found));
+        description.setText(chatUserInformation.getAlias() + activity.getResources().getString(R.string.cht_comm_text_accept));
         userName.setText("");
 
     }
@@ -102,7 +104,7 @@ public class AcceptDialog
                             .acceptChatActor(chatUserInformation.getConnectionId());
                     getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED, Boolean.TRUE);
                     Toast.makeText(getContext(),
-                            chatUserInformation.getAlias() + " Accepted connection request",
+                            chatUserInformation.getAlias() + activity.getResources().getString(R.string.cht_comm_text_accpet_toast),
                             Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();

@@ -41,6 +41,7 @@ public class SearchAliasDialog
     private FermatButton positiveBtn;
     private FermatButton negativeBtn;
     private String alias;
+    private Context activity;
 
     public SearchAliasDialog(final Context activity,
                              final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
@@ -55,6 +56,7 @@ public class SearchAliasDialog
         this.chatUserInformation = chatUserInformation;
         this.identity = identity;
         this.mAdapterCallback = mAdapterCallback;
+        this.activity = activity;
         this.alias = alias;
     }
 
@@ -76,8 +78,8 @@ public class SearchAliasDialog
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
-        title.setText("Search a Peer");
-        description.setText("Do you want to search an specific peer in the Community?");
+        title.setText(activity.getResources().getString(R.string.cht_comm_text_location_search));
+        description.setText(activity.getResources().getString(R.string.cht_comm_text_location_search2));
         userName.setText("");
 
     }

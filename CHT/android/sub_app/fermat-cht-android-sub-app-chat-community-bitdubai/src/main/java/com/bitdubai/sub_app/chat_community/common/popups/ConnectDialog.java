@@ -53,6 +53,7 @@ public class ConnectDialog
 
     private final ChatActorCommunityInformation chatUserInformation;
     private final ChatActorCommunitySelectableIdentity identity;
+    private Context activity;
 
     public ConnectDialog(final Context a,
                          final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
@@ -64,6 +65,7 @@ public class ConnectDialog
 
         this.chatUserInformation = chatUserInformation;
         this.identity = identity;
+        this.activity = a;
     }
 
 
@@ -126,7 +128,9 @@ public class ConnectDialog
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);
-                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),
+                            activity.getResources().getString(R.string.cht_comm_text_connect_toast),
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();
                 }
