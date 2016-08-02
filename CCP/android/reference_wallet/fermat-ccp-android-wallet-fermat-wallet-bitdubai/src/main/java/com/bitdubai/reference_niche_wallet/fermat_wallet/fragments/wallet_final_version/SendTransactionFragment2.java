@@ -172,7 +172,17 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
             intraUserLoginIdentity = appSession.getModuleManager().getSelectedActorIdentity();
 
-          loadSettings();
+            //load settings params
+            if(appSession.getData(SessionConstant.SETTINGS_LOADED) != null) {
+                if (!(Boolean) appSession.getData(SessionConstant.SETTINGS_LOADED)) {
+                    loadSettings();
+                }
+            }
+            else
+            {
+                loadSettings();
+            }
+
 
 
             _executor.submit(new Runnable() {
@@ -1022,11 +1032,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     private void loadSettings(){
         try {
 
-            if(appSession.getData(SessionConstant.SETTINGS_LOADED) == null)
-            {
-                if(! (Boolean)appSession.getData(SessionConstant.SETTINGS_LOADED))
-                {
-                    if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+             if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
                         balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
                     else
                         appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
@@ -1061,6 +1067,9 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
                         appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
                         appSession.setData(SessionConstant.FIAT_CURRENCY, FiatCurrency.US_DOLLAR.getCode());
+
+                        appSession.setData(SessionConstant.SETTINGS_LOADED, true);
+
                     } else {
                         if (fermatWalletSettings.getBlockchainNetworkType() == null)
                             fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
@@ -1078,9 +1087,6 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
                     if(moduleManager!=null) moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
                     appSession.setData(SessionConstant.SETTINGS_LOADED, true);
-                }
-            }
-
 
 
         } catch (Exception e) {
