@@ -227,7 +227,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                  /*
                 * get NodesProfile List From Restful in Seed Node
                 */
-                nodesProfileList = getNodesProfileList();
+//                nodesProfileList = getNodesProfileList();
 
                 if (nodesProfileList != null && nodesProfileList.size() > 0) {
 

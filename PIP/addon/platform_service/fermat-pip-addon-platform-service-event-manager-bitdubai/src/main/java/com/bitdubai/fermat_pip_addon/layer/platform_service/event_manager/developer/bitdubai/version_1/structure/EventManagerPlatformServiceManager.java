@@ -36,7 +36,7 @@ public final class EventManagerPlatformServiceManager implements EventManager {
         this.fermatEventMonitor = new EventManagerPlatformServiceEventMonitor(errorManager);
 
         this.listenersMap = new ConcurrentHashMap<>();
-        this.executorService = Executors.newCachedThreadPool();
+        this.executorService = Executors.newFixedThreadPool(3);
 
     }
 

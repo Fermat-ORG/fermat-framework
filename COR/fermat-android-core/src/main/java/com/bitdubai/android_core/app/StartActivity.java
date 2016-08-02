@@ -81,7 +81,7 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
         try {
             AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
 //            AndroidCoreUtils.getInstance().setContextAndResume(this);
-            fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils));
+            fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils),false);
         } catch (FermatException e) {
 
             System.err.println(e.toString());
@@ -202,7 +202,7 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
                         fermatInit();
                     }else{
                         if (TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTime)>60){
-                            Log.e(TAG,"Pasaron mas de 60 seg, chequear si la plataforma está corriendo");
+                            Log.i(TAG,"Checking platform...");
                             FermatApplication.getInstance().reconnect();
                             startTime = System.nanoTime();
                         }
