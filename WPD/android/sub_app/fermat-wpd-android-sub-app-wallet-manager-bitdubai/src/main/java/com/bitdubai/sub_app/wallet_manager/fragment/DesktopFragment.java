@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -76,7 +75,6 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
         OnStartDragListener,
         DesktopHolderClickCallback<Item> {
 
-    private static final String TAG = "DesktopFragment";
     private ItemTouchHelper mItemTouchHelper;
 
     /**
@@ -216,7 +214,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
     }
 
 
-
+    @Override
     public void onRefresh() {
         if(!started) {
             FermatWorker worker = new FermatWorker() {
@@ -340,25 +338,22 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
                     }
 
+//                if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode())) {
+//                    Item item = new Item(installedWallet);
+//                    item.setIconResource(R.drawable.icon_loss_protected);
+//                    item.setPosition(8);
+//                    installedWallet.setAppStatus(AppsStatus.DEV);
+//                    lstItemsWithIcon.add(item);
+//                }
 
-                if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode())) {
-                    Item item = new Item(installedWallet);
-                    item.setIconResource(R.drawable.icon_loss_protected);
-                    item.setPosition(8);
-                    installedWallet.setAppStatus(AppsStatus.ALPHA);
-                    lstItemsWithIcon.add(item);
-                }
-
-
-
-               if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode())) {
-                   Item item = new Item(installedWallet);
-                   item.setIconResource(R.drawable.fermat_wallet_icon);
-                   item.setPosition(10);
-
-                   installedWallet.setAppStatus(AppsStatus.ALPHA);
-                   lstItemsWithIcon.add(item);
-               }
+//
+//                if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode())) {
+//                    Item item = new Item(installedWallet);
+//                    item.setIconResource(R.drawable.fermat_wallet_icon);
+//                    item.setPosition(10);
+//                    installedWallet.setAppStatus(AppsStatus.DEV);
+//                    lstItemsWithIcon.add(item);
+//                }
             }
 
             InstalledWallet installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(
@@ -641,24 +636,20 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
     @Override
     public void onUpdateViewOnUIThread(String code) {
-        try {
-            AppsStatus appsStatus = AppsStatus.getByCode(code);
-            switch (appsStatus) {
-                case RELEASE:
-                    return;
-                case BETA:
-                    return;
-                case ALPHA:
-                    break;
-                case DEV:
-                    break;
-            }
-
-            select(appsStatus);
-            super.onUpdateViewOnUIThread(code);
-        }catch (Exception e){
-            Log.e(TAG,"Desktop. No olvidar mejorar esto. furszy ");
+        AppsStatus appsStatus = AppsStatus.getByCode(code);
+        switch (appsStatus){
+            case RELEASE:
+                return;
+            case BETA:
+                return;
+            case ALPHA:
+                break;
+            case DEV:
+                break;
         }
+
+        select(appsStatus);
+        super.onUpdateViewOnUIThread(code);
     }
 }
 

@@ -5,7 +5,6 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantGetCryptoBrokerSearchResult;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
@@ -44,8 +43,8 @@ public class CryptoBrokerCommunitySubAppModuleCommunitySearch implements CryptoB
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
-            for (CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbed));
+            for(CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbed));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -65,8 +64,8 @@ public class CryptoBrokerCommunitySubAppModuleCommunitySearch implements CryptoB
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
-            for (CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbed));
+            for(CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbed));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -87,8 +86,8 @@ public class CryptoBrokerCommunitySubAppModuleCommunitySearch implements CryptoB
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
-            for (CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbed));
+            for(CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbed));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -109,8 +108,8 @@ public class CryptoBrokerCommunitySubAppModuleCommunitySearch implements CryptoB
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
-            for (CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbed));
+            for(CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbed));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -131,8 +130,8 @@ public class CryptoBrokerCommunitySubAppModuleCommunitySearch implements CryptoB
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
-            for (CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbed));
+            for(CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbed));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -149,7 +148,7 @@ public class CryptoBrokerCommunitySubAppModuleCommunitySearch implements CryptoB
         CryptoBrokerExposingData cryptoBrokerExposingData = null;
 
         try {
-            cryptoBrokerExposingData = cryptoBrokerSearch.getResult(publicKey);
+             cryptoBrokerExposingData = cryptoBrokerSearch.getResult(publicKey);
         } catch (CantListCryptoBrokersException e) {
             throw new CantGetCryptoBrokerSearchResult(e, "", "Unhandled Error.");
         }

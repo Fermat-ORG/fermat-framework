@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -8,11 +9,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- * <p/>
+ *
  * Created by Angel Veloz - (vlzangel91@gmail.com) on 09/01/16.
  *
  * @version 1.0
@@ -67,7 +69,7 @@ public class CustomerBrokerPurchaseNegotiationDeveloperDatabaseFactory {//implem
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerPurchaseNegotiationDatabaseConstants.DATABASE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -88,7 +90,7 @@ public class CustomerBrokerPurchaseNegotiationDeveloperDatabaseFactory {//implem
                   /*
                    * We create the new database
                    */
-                database = customerBrokerPurchaseNegotiationDatabaseFactory.createDatabase(pluginId, CustomerBrokerPurchaseNegotiationDatabaseConstants.DATABASE_NAME);
+                database = customerBrokerPurchaseNegotiationDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -104,7 +106,7 @@ public class CustomerBrokerPurchaseNegotiationDeveloperDatabaseFactory {//implem
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(CustomerBrokerPurchaseNegotiationDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("Customer Broker Purchase", this.pluginId.toString()));
         return databases;
     }
 
@@ -195,6 +197,7 @@ public class CustomerBrokerPurchaseNegotiationDeveloperDatabaseFactory {//implem
         tables.add(bankAccountsCustomerTable);
 
 
+
         return tables;
     }
 
@@ -211,12 +214,12 @@ public class CustomerBrokerPurchaseNegotiationDeveloperDatabaseFactory {//implem
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row : records) {
+            for (DatabaseTableRecord row: records){
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()) {
+                for (DatabaseRecord field : row.getValues()){
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -236,7 +239,7 @@ public class CustomerBrokerPurchaseNegotiationDeveloperDatabaseFactory {//implem
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e) {
+        } catch (Exception e){
             database.closeDatabase();
             return returnedRecords;
         }

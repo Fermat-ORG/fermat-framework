@@ -9,7 +9,6 @@ public enum CryptoVaults {
     ASSETS_OVER_BITCOIN("AOB"),
     BITCOIN_CURRENCY("BTC"),
     BITCOIN_WATCH_ONLY("BWO"),
-    IMPORTED_SEED("IMS"),
     FERMAT_CURRENCY("FER");
 
 
@@ -32,8 +31,6 @@ public enum CryptoVaults {
                 return BITCOIN_CURRENCY;
             case "BWO":
                 return BITCOIN_WATCH_ONLY;
-            case "IMS":
-                return IMPORTED_SEED;
             case "FER":
                 return FERMAT_CURRENCY;
             default:

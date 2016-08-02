@@ -4,8 +4,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
+ *
  * // TODO EXPLANATION OF THE ENUM.
- * <p/>
+ *
  * Created by angel on 18/9/15.
  */
 public enum ReferenceCurrency implements FermatEnum {
@@ -26,16 +27,13 @@ public enum ReferenceCurrency implements FermatEnum {
 
         switch (code) {
 
-            case "DOL":
-                return DOLLAR;
-            case "EUR":
-                return EURO;
+            case "DOL": return DOLLAR;
+            case "EUR": return EURO;
 
-            default:
-                throw new InvalidParameterException(
-                        new StringBuilder().append("Code Received: ").append(code).toString(),
-                        "This Code Is Not Valid for the ContactState enum"
-                );
+            default: throw new InvalidParameterException(
+                    "Code Received: " + code,
+                    "This Code Is Not Valid for the ContactState enum"
+            );
         }
     }
 

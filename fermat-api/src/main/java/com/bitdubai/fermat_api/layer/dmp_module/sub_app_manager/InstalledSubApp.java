@@ -13,7 +13,8 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.08.19..
  */
 
-public interface InstalledSubApp extends Serializable, FermatApp {
+public interface InstalledSubApp extends Serializable,FermatApp{
+
 
 
     /**
@@ -42,7 +43,7 @@ public interface InstalledSubApp extends Serializable, FermatApp {
      * registers the subApp)
      *
      * @return an string that is result of the method getCode of an enum that can be inferred by the
-     * subApp
+     *         subApp
      */
     String getSubAppPlatformIdentifier();
 

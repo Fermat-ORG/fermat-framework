@@ -131,16 +131,13 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException();
 
         String content, aux;
         JSONObject json;
         JSONArray jsonArr;
         double purchasePrice = 0;
         double salePrice = 0;
-        boolean providerIsDown = false;
-        boolean invertExchange=true;
-
         try {
             content = HttpHelper.getHTTPContent("http://api.bluelytics.com.ar/json/last_price");
             json = new JSONObject("{\"indexes\": " + content + "}");
@@ -157,28 +154,21 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
                 }
             }
         } catch (JSONException e) {
-         //   this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-         //   throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "ElCronista CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
-            purchasePrice = 0;
-            salePrice = 0;
-            invertExchange = false;
-            providerIsDown = true;
-
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "ElCronista CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
         }
 
-        if (currencyPair.getTo() == FiatCurrency.US_DOLLAR && invertExchange) {
+        if (currencyPair.getTo() == FiatCurrency.US_DOLLAR) {
             purchasePrice = 1 / purchasePrice;
             salePrice = 1 / salePrice;
         }
 
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), purchasePrice, salePrice, (new Date().getTime() / 1000));
-        if(!providerIsDown) {
-            try {
-                dao.saveExchangeRate(exchangeRate);
-            } catch (CantSaveExchangeRateException e) {
-                this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
+        try {
+            dao.saveExchangeRate(exchangeRate);
+        } catch (CantSaveExchangeRateException e) {
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return exchangeRate;
     }

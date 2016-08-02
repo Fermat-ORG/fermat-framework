@@ -30,7 +30,6 @@ public class ConstructionTest {
     float purchasePriceDownSpread = 1f;
     float priceReference = 1f;
     FiatCurrency fiatCurrency = FiatCurrency.ARGENTINE_PESO;
-    float volatility = 1f;
 
     @Test
     public void Construction_ValidParameters_NewObjectCreated() {
@@ -44,10 +43,8 @@ public class ConstructionTest {
                 this.purchasePriceUpSpread,
                 this.purchasePriceDownSpread,
                 this.priceReference,
-                this.volatility,
                 this.fiatCurrency
         );
-
         assertThat(fiatIndex).isNotNull();
     }
 }

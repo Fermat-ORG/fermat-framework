@@ -9,7 +9,6 @@ import android.graphics.Matrix;
 import android.util.Base64;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantDecryptException;
@@ -44,7 +43,7 @@ public class WalletUtils {
     public static String formatBalanceString(long balance,int typeAmount) {
         String stringBalance = "";
 
-        if(typeAmount== ShowMoneyType.FRMT.getCode()){
+        if(typeAmount== ShowMoneyType.BITCOIN.getCode()){
             DecimalFormat df = new DecimalFormat();
             df.setMaximumFractionDigits(4);
             df.setMinimumFractionDigits(2);
@@ -82,7 +81,7 @@ public class WalletUtils {
     public static String formatBalanceStringNotDecimal(long balance,int typeAmount) {
         String stringBalance = "";
 
-        if(typeAmount== ShowMoneyType.FRMT.getCode()){
+        if(typeAmount== ShowMoneyType.BITCOIN.getCode()){
             DecimalFormat df = new DecimalFormat();
             df.setMaximumFractionDigits(0);
             df.setMinimumFractionDigits(0);
@@ -124,15 +123,15 @@ public class WalletUtils {
      * @param strToValidate
      * @return
      */
-    public static CryptoAddress validateAddress(String strToValidate,FermatWallet fermatWallet,BlockchainNetworkType blockchainNetworkType) {
+    public static CryptoAddress validateAddress(String strToValidate,FermatWallet cryptoWallet) {
         String[] tokens = strToValidate.split("-|\\.|:|,|;| ");
 
-        CryptoAddress cryptoAddress = new CryptoAddress(null, CryptoCurrency.FERMAT);
+        CryptoAddress cryptoAddress = new CryptoAddress(null, CryptoCurrency.BITCOIN);
         for (String token : tokens) {
             token = token.trim();
             if (token.length() > 25 && token.length() < 40) {
                 cryptoAddress.setAddress(token);
-                if (fermatWallet.isValidAddress(cryptoAddress,blockchainNetworkType)) {
+                if (cryptoWallet.isValidAddress(cryptoAddress)) {
                     return cryptoAddress;
                 }
             }
@@ -261,7 +260,7 @@ public class WalletUtils {
 
         String stringAmount = "";
 
-        if(typeAmount== ShowMoneyType.FRMT.getCode()){
+        if(typeAmount== ShowMoneyType.BITCOIN.getCode()){
             DecimalFormat df = new DecimalFormat();
             df.setMaximumFractionDigits(maxDecimal);
             df.setMinimumFractionDigits(minDecimal);

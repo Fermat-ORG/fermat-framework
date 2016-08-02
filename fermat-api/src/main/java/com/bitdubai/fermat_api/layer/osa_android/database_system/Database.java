@@ -6,16 +6,18 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 
 /**
- * <p>The abstract class <code>Database</code> is a interface
- * that define the methods to execute transactions an query on database.
- * Return too an Database Table object.
  *
- * @author Luis
- * @version 1.0.0
- * @since 22/01/15.
- */
+ *  <p>The abstract class <code>Database</code> is a interface
+ *     that define the methods to execute transactions an query on database.
+ *     Return too an Database Table object.
+ *
+ *
+ *  @author  Luis
+ *  @version 1.0.0
+ *  @since   22/01/15.
+ * */
 
-public interface Database {
+ public interface Database {
 
     void executeQuery(String query) throws CantExecuteQueryException;
 
@@ -23,15 +25,13 @@ public interface Database {
 
     DatabaseTransaction newTransaction();
 
-    @Deprecated
-        // execute directly from the transaction object. @see DatabaseTransaction.execute() method.
+    @Deprecated // execute directly from the transaction object. @see DatabaseTransaction.execute() method.
     void executeTransaction(DatabaseTransaction transaction) throws DatabaseTransactionFailedException;
 
     DatabaseFactory getDatabaseFactory();
 
     void openDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException;
 
-    @Deprecated
-        // is not used anymore
+   @Deprecated // is not used anymore
     void closeDatabase();
 }

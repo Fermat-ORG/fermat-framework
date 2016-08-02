@@ -97,7 +97,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     //Confirm the payment from the customer
                     walletManager.ackPayment(contractDetail.getContractId());
 
-//                    Toast.makeText(this.parentFragment.getActivity(), "The payment has been delivered", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this.parentFragment.getActivity(), "The payment has been delivered", Toast.LENGTH_SHORT).show();
 
                     //Set internal status of this contract to PAYMENT_RECEPTION_IN_PROCESS
                     walletSession.setData(contractDetail.getContractId(), PAYMENT_RECEPTION_IN_PROCESS);
@@ -143,7 +143,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
 
         //Locally save contractDetail
         this.contractDetail = itemInfo;
-        StringBuilder stringBuilder = new StringBuilder();
+
         //Get "in_process" internal status of contract
         // This is done because contract status changes do not get processed immediately.
         Object aux = walletSession.getData(contractDetail.getContractId());
@@ -154,10 +154,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             case 1:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 stepTitle.setText("Payment Delivery");
-                stringBuilder.append(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
-                        .append(", using ")
-                        .append(itemInfo.getPaymentOrMerchandiseTypeOfPayment());
-                textAmountAndMethod.setText(stringBuilder.toString());
+                textAmountAndMethod.setText(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()) + ", using " + itemInfo.getPaymentOrMerchandiseTypeOfPayment());
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
                         textAction.setText("Customer sends:");
@@ -169,9 +166,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     default:
                         setTextColorToAccepted();
                         textAction.setText("Customer sent:");
-                        stringBuilder = new StringBuilder();
-                        stringBuilder.append("on ").append(getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
-                        textDescriptionDate.setText(stringBuilder.toString());
+                        textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
                         cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                 }
                 break;
@@ -179,10 +174,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             case 2:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_02);
                 stepTitle.setText("Payment Reception");
-                stringBuilder.append(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
-                        .append(", using ")
-                        .append(itemInfo.getPaymentOrMerchandiseTypeOfPayment());
-                textAmountAndMethod.setText(stringBuilder.toString());
+                textAmountAndMethod.setText(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()) + ", using " + itemInfo.getPaymentOrMerchandiseTypeOfPayment());
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
                         textAction.setText("You receive:");
@@ -214,9 +206,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     default:
                         setTextColorToAccepted();
                         textAction.setText("You received:");
-                        stringBuilder = new StringBuilder();
-                        stringBuilder.append("on ").append(getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
-                        textDescriptionDate.setText(stringBuilder.toString());
+                        textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
                         cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                 }
                 break;
@@ -224,10 +214,8 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             case 3:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_03);
                 stepTitle.setText("Merchandise Delivery");
-                stringBuilder.append(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
-                        .append(", using ")
-                        .append(itemInfo.getPaymentOrMerchandiseTypeOfPayment());
-                textAmountAndMethod.setText(stringBuilder.toString());
+                textAmountAndMethod.setText(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()) + ", using " + itemInfo.getPaymentOrMerchandiseTypeOfPayment());
+
                 if (stockInWallet(contractDetail.getContractId())) {
                     switch (itemInfo.getContractStatus()) {
                         case PENDING_PAYMENT:
@@ -259,9 +247,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         default:
                             setTextColorToAccepted();
                             textAction.setText("You sent:");
-                            stringBuilder = new StringBuilder();
-                            stringBuilder.append("on ").append(getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
-                            textDescriptionDate.setText(stringBuilder.toString());
+                            textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
                             cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                     }
                 } else {
@@ -274,10 +260,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             case 4:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_04);
                 stepTitle.setText("Merchandise reception");
-                stringBuilder.append(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
-                        .append(", using ")
-                        .append(itemInfo.getPaymentOrMerchandiseTypeOfPayment());
-                textAmountAndMethod.setText(stringBuilder.toString());
+                textAmountAndMethod.setText(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()) + ", using " + itemInfo.getPaymentOrMerchandiseTypeOfPayment());
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
                     case PAYMENT_SUBMIT:
@@ -296,9 +279,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     default:
                         setTextColorToAccepted();
                         textAction.setText("Customer received:");
-                        stringBuilder = new StringBuilder();
-                        stringBuilder.append("on ").append(getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
-                        textDescriptionDate.setText(stringBuilder.toString());
+                        textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
                         cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_accepted));
 
                 }
@@ -329,9 +310,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
     /* HELPER FUNCTIONS */
     @NonNull
     private String getFormattedAmount(String amount, String currencyCode) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(amount).append(" ").append(currencyCode);
-        return stringBuilder.toString();
+        return amount + " " + currencyCode;
     }
 
     @NonNull
@@ -355,7 +334,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
             if (errorManager != null) {
                 errorManager.reportUnexpectedWalletException(
-                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                         ex);
             }

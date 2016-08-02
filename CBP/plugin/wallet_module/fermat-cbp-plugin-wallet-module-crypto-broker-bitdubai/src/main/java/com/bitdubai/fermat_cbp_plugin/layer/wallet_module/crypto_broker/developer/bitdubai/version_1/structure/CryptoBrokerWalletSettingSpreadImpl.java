@@ -9,13 +9,12 @@ import java.util.UUID;
  */
 public class CryptoBrokerWalletSettingSpreadImpl implements CryptoBrokerWalletSettingSpread {
 
-    UUID id;
-    String brokerPublicKey;
-    float spread;
-    boolean restockAutomatic;
+    UUID        id;
+    String      brokerPublicKey;
+    float       spread;
+    boolean     restockAutomatic;
 
-    public CryptoBrokerWalletSettingSpreadImpl() {
-    }
+    public CryptoBrokerWalletSettingSpreadImpl(){}
 
     @Override
     public UUID getId() {

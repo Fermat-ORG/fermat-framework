@@ -25,14 +25,13 @@ public interface ResourceProviderManager extends ResourcesManager {
 
     /**
      * This method let us get an skin file referenced by its Id
-     *
      * @param skinId
      * @param walletPublicKey
      * @return
      * @throws CantGetSkinFileException
      * @throws CantGetResourcesException
      */
-    Skin getSkinFile(UUID skinId, String walletPublicKey) throws CantGetSkinFileException, CantGetResourcesException;
+    Skin getSkinFile(UUID skinId, String walletPublicKey) throws CantGetSkinFileException,CantGetResourcesException;
 
     /**
      * This method let us get a language file referenced by a name

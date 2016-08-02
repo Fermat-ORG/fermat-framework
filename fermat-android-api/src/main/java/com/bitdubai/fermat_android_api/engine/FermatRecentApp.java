@@ -7,13 +7,14 @@ import java.io.Serializable;
 /**
  * Created by mati on 2016.03.11..
  */
-public interface FermatRecentApp extends Serializable {
+public interface FermatRecentApp extends Serializable{
 
     String getPublicKey();
 
     FermatApp getFermatApp();
 
     int getTaskStackPosition();
+
 
 
 }

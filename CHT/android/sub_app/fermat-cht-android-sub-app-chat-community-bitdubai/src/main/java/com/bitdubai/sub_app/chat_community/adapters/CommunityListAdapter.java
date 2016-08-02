@@ -32,7 +32,6 @@ import com.bitdubai.sub_app.chat_community.holders.CommunityWorldHolder;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,7 +53,6 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     private final String TAG = "communityadapter";
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
     private ChatActorCommunitySubAppModuleManager moduleManager;
-    ArrayList<ChatActorCommunityInformation> chatMessages = new ArrayList<>();
 
     public CommunityListAdapter(Context context) {
         super(context);
@@ -241,11 +239,11 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
             if (data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
             else countryAddress = data.getCountry();
             if(stateAddress == "" && cityAddress == "" && countryAddress == ""){
-                holder.location_text.setText("Not Found");
+                holder.location_text.setText("Searching...");
             }else
                 holder.location_text.setText(cityAddress + stateAddress + countryAddress);
         } else
-            holder.location_text.setText("Not Found");
+            holder.location_text.setText("Searching...");
 
         if(data.getProfileStatus()!= ProfileStatus.ONLINE)
             holder.location_text.setTextColor(Color.RED);
@@ -397,23 +395,37 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         return 0;
     }
 
-    public void refreshEvents(ArrayList<ChatActorCommunityInformation> chatHistory) {
-        for (int i = 0; i < chatHistory.size(); i++) {
-            ChatActorCommunityInformation message = chatHistory.get(i);
-            add(message);
-            changeDataSet(chatHistory);
-            notifyDataSetChanged();
-        }
-    }
-
-    public void add(ChatActorCommunityInformation message) {
-        chatMessages.add(message);
-    }
-
     public void setData(List<ChatActorCommunityInformation> data) {
         this.filteredData = data;
     }
 
+//    @Override
+//    public int getItemCount() {
+//        if(filterString!=null)
+//            return filteredData == null ? 0 : filteredData.size();
+//        else
+//            return dataSet == null ? 0 : dataSet.size();
+//    }
+//
+//    @Override
+//    public ChatActorCommunityInformation getItem(int position) {
+//        if(filterString!=null)
+//            return filteredData != null ? (!filteredData.isEmpty()
+//                    && position < filteredData.size()) ? filteredData.get(position) : null : null;
+//        else
+//            return dataSet != null ? (!dataSet.isEmpty()
+//                    && position < dataSet.size()) ? dataSet.get(position) : null : null;
+//    }
+
+//    @Override
+//    public long getId(int position) {
+//        return position;
+//    }
+//
+//    public void changeDataSet(List<ChatActorCommunityInformation> data) {
+//        this.filteredData = data;
+//    }
+//
     public Filter getFilter() {
         return new CommunityFilter(dataSet, this);
     }

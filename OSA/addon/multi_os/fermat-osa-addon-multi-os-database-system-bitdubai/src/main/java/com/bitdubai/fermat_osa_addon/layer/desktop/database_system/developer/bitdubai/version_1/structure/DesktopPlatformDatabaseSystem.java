@@ -1,17 +1,20 @@
 package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.structure;
 
 
+
+
+
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
-
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
 //import java.util.Base64;
+
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 
 
 /**
@@ -20,11 +23,12 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * This class define methods to create and open Databases
- * <p/>
+ *
  * *
  */
 
 public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
+
 
 
     /**
@@ -35,21 +39,22 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
      * <p>This method open a specified database file.
      *
      * @param databaseName database name to use
-     * @return Database object
+     * @return  Database object
      * @throws CantOpenDatabaseException
      * @throws DatabaseNotFoundException
      */
 
     @Override
-    public Database openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
-        try {
+    public Database openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException{
+        try{
             DesktopDatabase database;
             String hasDBName = hashDataBaseName(databaseName);
             database = new DesktopDatabase(hasDBName);
             database.openDatabase(hasDBName);
 
             return database;
-        } catch (NoSuchAlgorithmException e) {
+        }
+        catch (NoSuchAlgorithmException e){
             throw new CantOpenDatabaseException();
         }
 
@@ -63,15 +68,16 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
      * @throws CantCreateDatabaseException
      */
     @Override
-    public Database createDatabase(String databaseName) throws CantCreateDatabaseException {
-        try {
+    public Database createDatabase (String databaseName) throws CantCreateDatabaseException{
+        try{
             DesktopDatabase database;
             String hasDBName = hashDataBaseName(databaseName);
             database = new DesktopDatabase(hasDBName);
             database.createDatabase(hasDBName);
 
             return database;
-        } catch (NoSuchAlgorithmException e) {
+        }
+        catch (NoSuchAlgorithmException e){
             throw new CantCreateDatabaseException();
         }
 
@@ -86,14 +92,16 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
      */
     @Override
     public void deleteDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
-        try {
+        try{
             DesktopDatabase database;
 
             database = new DesktopDatabase(databaseName);
             database.deleteDatabase(databaseName);
 
 
-        } catch (DatabaseNotFoundException e) {
+        }
+        catch (DatabaseNotFoundException e)
+        {
             throw new CantOpenDatabaseException();
         }
 
@@ -102,7 +110,7 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
 
     // This method is only for android OS
     @Override
-    public void setContext(Object context) {
+    public void setContext (Object context){   
         //this.context = (Context)context;
     }
 
@@ -116,7 +124,7 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
      */
     private String hashDataBaseName(String databaseName) throws NoSuchAlgorithmException {
         String encryptedString = databaseName;
-        try {
+        try{
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(databaseName.getBytes(Charset.forName("UTF-8")));
             byte[] digest = md.digest();
@@ -124,13 +132,13 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
             //byte[] encoded = Base64.getEncoder().encode(digest);
 
             try {
-                //encryptedString = new String(encoded, "UTF-8");
+            	//encryptedString = new String(encoded, "UTF-8");
             } catch (Exception e) {
-                throw new NoSuchAlgorithmException(e);
+            	throw new NoSuchAlgorithmException (e);
             }
-        } catch (NoSuchAlgorithmException e) {
+        }catch(NoSuchAlgorithmException e){
             throw e;
         }
-        return encryptedString.replace("/", "");
+        return encryptedString.replace("/","");
     }
 }

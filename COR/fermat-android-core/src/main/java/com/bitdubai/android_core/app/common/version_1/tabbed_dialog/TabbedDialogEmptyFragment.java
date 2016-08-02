@@ -3,7 +3,6 @@ package com.bitdubai.android_core.app.common.version_1.tabbed_dialog;
 /**
  * Created by ciencias on 25.11.14.
  */
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -46,7 +45,7 @@ public class TabbedDialogEmptyFragment extends Fragment {
         fl.setLayoutParams(params);
 
         final int margin = 250;//(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources()
-        //  .getDisplayMetrics());
+              //  .getDisplayMetrics());
 
         TextView v = new TextView(getActivity());
         params.setMargins(margin, margin, margin, margin);
@@ -54,7 +53,7 @@ public class TabbedDialogEmptyFragment extends Fragment {
         v.setLayoutParams(params);
         v.setGravity(Gravity.CENTER);
         v.setBackgroundResource(R.drawable.background_card);
-        v.setText(new StringBuilder().append("CARD ").append(position + 1).toString());
+        v.setText("CARD " + (position + 1));
 
         fl.addView(v);
         return fl;

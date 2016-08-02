@@ -49,8 +49,7 @@
             android:id="@+id/cbw_earning_details_view_pager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            tools:background="@color/color_blue"/>
+            android:layout_weight="1"/>
 
         <com.viewpagerindicator.LinePageIndicator
             android:id="@+id/cbw_earning_details_view_pager_indicator"

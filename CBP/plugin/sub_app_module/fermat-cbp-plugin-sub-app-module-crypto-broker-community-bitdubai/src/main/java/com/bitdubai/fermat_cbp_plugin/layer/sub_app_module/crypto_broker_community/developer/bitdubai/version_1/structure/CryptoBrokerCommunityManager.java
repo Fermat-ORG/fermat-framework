@@ -161,8 +161,7 @@ public class CryptoBrokerCommunityManager
                             connectedBroker.getConnectionState(),
                             connectedBroker.getConnectionId(),
                             worldBroker.getLocation(),
-                            worldBroker.getProfileStatus(),
-                            worldBroker.getCryptoBrokerIdentityExtraData()));
+                            worldBroker.getProfileStatus()));
             }
         }
 
@@ -181,7 +180,7 @@ public class CryptoBrokerCommunityManager
             brokerActor.setCountry(country);
             brokerActor.setPlace(place);
 
-            System.out.println(new StringBuilder().append("************** Actor Broker Register: ").append(brokerActor.getAlias()).append(" - ").append(brokerActor.getProfileStatus()).append(" - ").append(brokerActor.getConnectionState()).toString());
+            System.out.println("************** Actor Broker Register: " + brokerActor.getAlias() + " - " + brokerActor.getProfileStatus() + " - " + brokerActor.getConnectionState());
         }
 
         return worldBrokerList;
@@ -421,29 +420,29 @@ public class CryptoBrokerCommunityManager
             CryptoBrokerExposingData cryptoBrokerExposingData;
             CryptoBrokerCommunitySubAppModuleInformation cryptoBrokerCommunitySubAppModuleInformation;
 
-            for (CryptoBrokerActorConnection connectedActor : connectedActors) {
+            for (CryptoBrokerActorConnection connectedActor : connectedActors){
                 cryptoBrokerExposingData = getCryptoBrokerSearch().getResult(connectedActor.getPublicKey());
-                if (cryptoBrokerExposingData != null) {
-
-                    cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData);
-                } else {
+                if (cryptoBrokerExposingData != null){
+                    cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData.getLocation());
+                } else{
                     cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, connectedActor.getLocation());
                 }
 
                 Location actorLocation = cryptoBrokerCommunitySubAppModuleInformation.getLocation();
-
-                try {
-                    final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
-                    cryptoBrokerCommunitySubAppModuleInformation.setCountry(address.getCountry());
-                    cryptoBrokerCommunitySubAppModuleInformation.setPlace(address.getCity().equals("null") ? address.getCounty() : address.getCity());
-
-                } catch (CantCreateAddressException ex) {
-                    cryptoBrokerCommunitySubAppModuleInformation.setCountry("");
-                    cryptoBrokerCommunitySubAppModuleInformation.setPlace("");
+                Address address;
+                try{
+                    address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
+                } catch (CantCreateAddressException ex){
+                    GeoRectangle geoRectangle = geolocationManager.getRandomGeoLocation();
+                    address = geolocationManager.getAddressByCoordinate(geoRectangle.getLatitude(), geoRectangle.getLongitude());
                 }
 
+                cryptoBrokerCommunitySubAppModuleInformation.setCountry(address.getCountry());
+                cryptoBrokerCommunitySubAppModuleInformation.setPlace(address.getCity());
                 filteredConnectedActors.add(cryptoBrokerCommunitySubAppModuleInformation);
+
             }
+
 
             return new ArrayList<>(filteredConnectedActors);
 
@@ -479,7 +478,7 @@ public class CryptoBrokerCommunityManager
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac));
+                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac, null));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -513,8 +512,8 @@ public class CryptoBrokerCommunityManager
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
-            for (CryptoBrokerActorConnection actorConnection : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(actorConnection));
+            for (CryptoBrokerActorConnection cbac : actorConnections)
+                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac, null));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -673,7 +672,7 @@ public class CryptoBrokerCommunityManager
 
         if (name.equals("Customer")) {
             try {
-                final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 10, GeoFrequency.NORMAL);
+                final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 0, GeoFrequency.NONE);
                 createdPublicKey = createdIdentity.getPublicKey();
 
                 new Thread() {

@@ -17,37 +17,33 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Yordin Alayn on 30.09.15.
  */
-public interface CryptoBrokerWallet {
+public interface CryptoBrokerWallet  {
 
     /**
      * This method load the instance the StockBalance
-     *
      * @return StockBalance
-     * @throws CantGetStockCryptoBrokerWalletException
+     * @exception CantGetStockCryptoBrokerWalletException
      */
-    StockBalance getStockBalance() throws CantGetStockCryptoBrokerWalletException;
-
+    StockBalance getStockBalance()  throws CantGetStockCryptoBrokerWalletException;
     /**
      * This method load the instance the CryptoBrokerWalletSetting
-     *
      * @return StockBalance
-     * @throws CantGetCryptoBrokerWalletSettingException
+     * @exception CantGetCryptoBrokerWalletSettingException
      */
     CryptoBrokerWalletSetting getCryptoWalletSetting() throws CantGetCryptoBrokerWalletSettingException;
-
     /**
      * This method load the list CryptoBrokerStockTransaction
-     *
      * @param merchandise
      * @param moneyType
      * @param transactionType
      * @param balanceType
      * @return List<CryptoBrokerStockTransaction>
-     * @throws CantGetCryptoBrokerStockTransactionException
+     * @exception CantGetCryptoBrokerStockTransactionException
      */
     List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(Currency merchandise, MoneyType moneyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException;
 
@@ -59,46 +55,46 @@ public interface CryptoBrokerWallet {
      * @param moneyType
      * @param offset
      * @param timeStamp
+     *
      * @return List<CryptoBrokerStockTransaction>
+     *
      * @throws CantGetCryptoBrokerStockTransactionException
      */
     List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp) throws CantGetCryptoBrokerStockTransactionException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction
-     *
      * @param merchandise
      * @param fiatCurrency
      * @param moneyType
      * @return FiatIndex
-     * @throws CantGetCryptoBrokerMarketRateException
+     * @exception CantGetCryptoBrokerMarketRateException
      */
     FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, MoneyType moneyType) throws CantGetCryptoBrokerMarketRateException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction
-     *
      * @param merchandise
      * @param quantity
      * @param payment
      * @return Quote
-     * @throws CantGetCryptoBrokerQuoteException
+     * @exception CantGetCryptoBrokerQuoteException
      */
     Quote getQuote(Currency merchandise, float quantity, Currency payment) throws CantGetCryptoBrokerQuoteException;
 
     /**
      * Through this method you can mark a transaction as seen by the matching engine plug-in.
      *
-     * @param transactionIds a list with all the ids of the transaction that we want to mark as seen.
+     * @param transactionIds  a list with all the ids of the transaction that we want to mark as seen.
+     *
      * @throws CantMarkAsSeenException if something goes wrong.
      */
     void markAsSeen(List<String> transactionIds) throws CantMarkAsSeenException;
 
     /**
      * This method load the list CurrencyMatching
-     *
      * @return CurrencyMatching
-     * @throws CantGetTransactionCryptoBrokerWalletMatchingException
+     * @exception CantGetTransactionCryptoBrokerWalletMatchingException
      */
     List<CurrencyMatching> getCryptoBrokerTransactionCurrencyInputs() throws CantGetTransactionCryptoBrokerWalletMatchingException;
 

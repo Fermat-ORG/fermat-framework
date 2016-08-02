@@ -4,11 +4,15 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by eze on 11/06/15.
  */
 
-public class CryptoTransaction {
+public class CryptoTransaction{
     private String transactionHash;
     private String blockHash;
     private BlockchainNetworkType blockchainNetworkType;
@@ -24,9 +28,11 @@ public class CryptoTransaction {
     private int blockDepth;
 
 
+
+
+
     /**
      * Overloaded constructor
-     *
      * @param transactionHash
      * @param blockchainNetworkType
      * @param addressFrom
@@ -55,12 +61,11 @@ public class CryptoTransaction {
     /**
      * Default constructor.
      */
-    public CryptoTransaction() {
-    }
+    public CryptoTransaction(){}
 
     /**
      * Getters
-     */
+     * */
 
     public String getTransactionHash() {
         return transactionHash;
@@ -82,9 +87,7 @@ public class CryptoTransaction {
         return addressTo;
     }
 
-    public CryptoCurrency getCryptoCurrency() {
-        return cryptoCurrency;
-    }
+    public CryptoCurrency getCryptoCurrency() {return cryptoCurrency;}
 
     public long getCryptoAmount() {
         return cryptoAmount;
@@ -161,6 +164,7 @@ public class CryptoTransaction {
     public void setFee(long fee) {
         this.fee = fee;
     }
+
 
 
     public long getBtcAmount() {

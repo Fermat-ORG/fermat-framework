@@ -45,8 +45,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#1271A7"
-                android:id="@+id/ccw_line_up" />
+                android:background="#1271A7"/>
 
             <RelativeLayout
                 android:id="@+id/ccw_market_rate_container"
@@ -148,8 +147,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#1271A7"
-                android:id="@+id/ccw_line_down" />
+                android:background="#1271A7"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

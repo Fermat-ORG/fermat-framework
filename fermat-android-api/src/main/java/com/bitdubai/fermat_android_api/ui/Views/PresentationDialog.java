@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -58,7 +57,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
     int textNameLeft = -1;
     int textNameRight = -1;
     private String textColor;
-    //    private int titleTextColor = -1;
+    private int titleTextColor = -1;
     private int viewColor = -1;
     private int resBannerImage = -1;
     private int iconRes = -1;
@@ -85,10 +84,6 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
     private FermatButton btn_dismiss;
     private ImageView img_icon;
     private View view_color;
-    private View view_color1;
-    private View view_color2;
-    private View view_color3;
-    private View view_color4;
 
     /**
      * Constructor using Session and Resources
@@ -118,10 +113,6 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             checkbox_not_show.setChecked(!checkButton);
             img_icon = (ImageView) findViewById(R.id.img_icon);
             view_color = findViewById(R.id.view_color);
-            view_color1 = findViewById(R.id.view_color1);
-            view_color2 = findViewById(R.id.view_color2);
-            view_color3 = findViewById(R.id.view_color3);
-            view_color4 = findViewById(R.id.view_color4);
             setUpBasics();
             switch (type) {
                 case TYPE_PRESENTATION:
@@ -139,12 +130,11 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
                     container_john_doe = (FrameLayout) findViewById(R.id.container_john_doe);
                     btn_left = (Button) findViewById(R.id.btn_left);
                     setUpBasics();
-                    setUpListenersPresentationOneIdenity();
+                    setUpListenersPresentationDAP();
                     break;
                 case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
                     btn_dismiss = (FermatButton) findViewById(R.id.btn_dismiss);
                     btn_dismiss.setOnClickListener(this);
-                    setUpBasics();
                     checkbox_not_show.setOnCheckedChangeListener(this);
                     break;
             }
@@ -161,47 +151,25 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             image_view_left.setImageResource(resImageLeft);
         if (resImageRight != -1 && image_view_right != null)
             image_view_right.setImageResource(resImageRight);
-        if (btn_left != null) {
-            btn_left.setText(textNameLeft);
-            if (viewColor != -1)
-                btn_left.setBackgroundResource(viewColor);
-        }
-        if (btn_right != null) {
-            btn_right.setText(textNameRight);
-            if (viewColor != -1)
-                btn_right.setBackgroundResource(viewColor);
-        }
+        if (btn_left != null) btn_left.setText(textNameLeft);
+        if (btn_right != null) btn_right.setText(textNameRight);
         if (txt_sub_title != null) txt_sub_title.setText(subTitle);
         if (txt_body != null) txt_body.setText(body);
         if (footer_title != null) footer_title.setText(textFooter);
         if (checkbox_not_show_text != null && textCheckboxNotShow != -1)
             checkbox_not_show_text.setText(textCheckboxNotShow);
-        if (viewColor != -1) {
-            view_color.setBackgroundResource(viewColor);
-            view_color1.setBackgroundResource(viewColor);
-            view_color2.setBackgroundResource(viewColor);
-            view_color3.setBackgroundResource(viewColor);
-            if (view_color4 != null)
-                view_color4.setBackgroundResource(viewColor);
-            if (btn_dismiss != null)
-                btn_dismiss.setBackgroundResource(viewColor);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                txt_title.setTextColor(getContext().getResources().getColorStateList(viewColor, getContext().getTheme()));
-            } else {
-                txt_title.setTextColor(getContext().getResources().getColorStateList(viewColor));
-            }
-        }
-//        if (titleTextColor != -1) txt_title.setTextColor(titleTextColor);
+        if (viewColor != -1) view_color.setBackgroundColor(viewColor);
+        if (titleTextColor != -1) txt_title.setTextColor(titleTextColor);
         if (textColor != null) {
             int color = Color.parseColor(textColor);
             txt_sub_title.setTextColor(color);
             txt_body.setTextColor(color);
             footer_title.setTextColor(color);
         }
-        if (checkButtonAndTextVisible == 0 && checkButton == false) {
+        if(checkButtonAndTextVisible==0 && checkButton==false){
             checkbox_not_show.setVisibility(View.GONE);
             checkbox_not_show_text.setVisibility(View.GONE);
-        } else {
+        }else {
             checkbox_not_show.setVisibility(View.VISIBLE);
             checkbox_not_show_text.setVisibility(View.VISIBLE);
         }
@@ -213,7 +181,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         checkbox_not_show.setOnCheckedChangeListener(this);
     }
 
-    private void setUpListenersPresentationOneIdenity() {
+    private void setUpListenersPresentationDAP() {
         btn_left.setOnClickListener(this);
         checkbox_not_show.setOnCheckedChangeListener(this);
     }
@@ -346,9 +314,9 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         this.textNameRight = textNameRight;
     }
 
-//    public void setTitleTextColor(int titleTextColor) {
-//        this.titleTextColor = titleTextColor;
-//    }
+    public void setTitleTextColor(int titleTextColor) {
+        this.titleTextColor = titleTextColor;
+    }
 
     public void setTextColor(String textColor) {
         this.textColor = textColor;
@@ -375,7 +343,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         private final WeakReference<ReferenceAppFermatSession> fermatSession;
         private TemplateType templateType = TemplateType.TYPE_PRESENTATION;
         private boolean isCheckEnabled;
-        private int checkButtonAndTextVisible = -1;
+        private int checkButtonAndTextVisible=-1;
         private PresentationCallback callback;
         private String title;
         private int subTitle = -1;
@@ -389,7 +357,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         private int imageRight = -1;
         private int bannerRes = -1;
         private int iconRes = -1;
-        //        private int titleTextColor = -1;
+        private int titleTextColor = -1;
         private int viewColor = -1;
 
         public PresentationDialog build() {
@@ -438,9 +406,9 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             if (iconRes != -1) {
                 presentationDialog.setIconRes(iconRes);
             }
-//            if (titleTextColor != -1) {
-//                presentationDialog.setTitleTextColor(titleTextColor);
-//            }
+            if (titleTextColor != -1) {
+                presentationDialog.setTitleTextColor(titleTextColor);
+            }
             if (textColor != null) {
                 presentationDialog.setTextColor(textColor);
             }
@@ -530,10 +498,10 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             return this;
         }
 
-//        public Builder setTitleTextColor(int TitleTextColorInHexa) {
-//            this.titleTextColor = TitleTextColorInHexa;
-//            return this;
-//        }
+        public Builder setTitleTextColor(int TitleTextColorInHexa) {
+            this.titleTextColor = TitleTextColorInHexa;
+            return this;
+        }
 
         public Builder setTextColor(String textColorInHexa) {
             this.textColor = textColorInHexa;

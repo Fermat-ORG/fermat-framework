@@ -108,7 +108,7 @@ public class ActorConnectionEventActions {
                 switch (request.getRequestAction()) {
 
                     case ACCEPT:
-                        this.handleAcceptConnection(request.getRequestId());//TODO check this, exception when connectionID is not found
+                        this.handleAcceptConnection(request.getRequestId());
 
                         FermatBundle fermatBundle = new FermatBundle();
                         fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_CONNECTION.getCode());

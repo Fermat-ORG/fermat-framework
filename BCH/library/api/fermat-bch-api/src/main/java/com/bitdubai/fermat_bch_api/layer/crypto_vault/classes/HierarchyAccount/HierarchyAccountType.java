@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum HierarchyAccountType {
     MASTER_ACCOUNT("MASTER"),
-    IMPORTED_ACCOUNT("IMPORTED"),
     REDEEMPOINT_ACCOUNT("RPOINT");
 
     private String code;
@@ -25,8 +24,6 @@ public enum HierarchyAccountType {
         switch (code) {
             case "MASTER":
                 return MASTER_ACCOUNT;
-            case "IMPORTED":
-                return IMPORTED_ACCOUNT;
             case "RPOINT":
                 return REDEEMPOINT_ACCOUNT;
             default:

@@ -7,6 +7,7 @@ import java.util.Collection;
  */
 public interface CryptoBrokerActorExtraData {
     /**
+     *
      * @return
      */
     Collection<CryptoBrokerActorQuotes> quotes();

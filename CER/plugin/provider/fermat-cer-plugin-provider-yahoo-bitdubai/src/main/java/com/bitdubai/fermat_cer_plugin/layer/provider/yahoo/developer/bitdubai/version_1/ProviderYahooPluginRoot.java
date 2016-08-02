@@ -130,7 +130,7 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException();
 
         String url = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20(%22" +
                 currencyPair.getFrom().getCode() + currencyPair.getTo().getCode() +
@@ -138,8 +138,6 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
         double purchasePrice = 0;
         double salePrice = 0;
         String aux;
-        boolean providerIsDown = false;
-
 
         try {
             JSONObject json = new JSONObject(HttpHelper.getHTTPContent(url));
@@ -151,21 +149,16 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
             purchasePrice = Double.valueOf(aux);
 
         } catch (JSONException e) {
-          //  this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-          //  throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Yahoo CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
-            purchasePrice = 0;
-            salePrice = 0;
-            providerIsDown = true;
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Yahoo CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
         }
 
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), purchasePrice, salePrice, (new Date().getTime() / 1000));
-        if(!providerIsDown) {
-            try {
-                dao.saveExchangeRate(exchangeRate);
-            } catch (CantSaveExchangeRateException e) {
-                this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
+        try {
+            dao.saveExchangeRate(exchangeRate);
+        } catch (CantSaveExchangeRateException e) {
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return exchangeRate;
     }
@@ -183,7 +176,7 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException();
 
         return dao.getQueriedExchangeRateHistory(currencyPair);
     }

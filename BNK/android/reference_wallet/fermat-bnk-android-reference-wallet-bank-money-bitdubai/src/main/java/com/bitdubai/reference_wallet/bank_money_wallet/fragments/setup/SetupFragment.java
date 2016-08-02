@@ -10,7 +10,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -22,8 +21,6 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
-
-import static android.widget.Toast.makeText;
 
 
 /**
@@ -102,12 +99,9 @@ public class SetupFragment extends AbstractFermatFragment<ReferenceAppFermatSess
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.bw_setup_ok_btn) {
-            if(!bankName.getText().toString().trim().isEmpty()) {
-                moduleManager.createBankName(bankName.getText().toString());
-                changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
-            } else {
-                makeText(getActivity(), "Enter a Name valid Bank", Toast.LENGTH_SHORT).show();
-            }
+            moduleManager.createBankName(bankName.getText().toString());
+            changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
         }
     }
+
 }

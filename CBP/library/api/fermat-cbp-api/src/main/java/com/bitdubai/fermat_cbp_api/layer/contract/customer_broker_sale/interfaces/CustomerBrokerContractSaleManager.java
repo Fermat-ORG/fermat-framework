@@ -14,12 +14,14 @@ import java.util.Collection;
 public interface CustomerBrokerContractSaleManager extends FermatManager {
 
     /**
-     * @return a list of all contracts
+     *
+     * @return  a list of all contracts
      * @throws CantGetListCustomerBrokerContractSaleException
      */
     Collection<CustomerBrokerContractSale> getAllCustomerBrokerContractSale() throws CantGetListCustomerBrokerContractSaleException;
 
     /**
+     *
      * @param ContractId
      * @return a CustomerBrokerContractSale with information of contract with ContractId
      * @throws CantGetListCustomerBrokerContractSaleException
@@ -27,6 +29,7 @@ public interface CustomerBrokerContractSaleManager extends FermatManager {
     CustomerBrokerContractSale getCustomerBrokerContractSaleForContractId(final String ContractId) throws CantGetListCustomerBrokerContractSaleException;
 
     /**
+     *
      * @param status
      * @return an Collection of CustomerBrokerContractSale with information of contract with status
      * @throws CantGetListCustomerBrokerContractSaleException
@@ -34,11 +37,13 @@ public interface CustomerBrokerContractSaleManager extends FermatManager {
     Collection<CustomerBrokerContractSale> getCustomerBrokerContractSaleForStatus(final ContractStatus status) throws CantGetListCustomerBrokerContractSaleException;
 
     /**
+     *
      * @return an ListsForStatus with separate lists and sorted by status
      */
     ListsForStatusSale getCustomerBrokerContractHistory() throws CantGetListCustomerBrokerContractSaleException;
 
     /**
+     *
      * @param contract
      * @return a CustomerBrokerContractSale with information of contract created
      * @throws CantCreateCustomerBrokerContractSaleException
@@ -46,6 +51,7 @@ public interface CustomerBrokerContractSaleManager extends FermatManager {
     CustomerBrokerContractSale createCustomerBrokerContractSale(CustomerBrokerContractSale contract) throws CantCreateCustomerBrokerContractSaleException;
 
     /**
+     *
      * @param contractId
      * @param status
      * @throws CantUpdateCustomerBrokerContractSaleException
@@ -53,6 +59,7 @@ public interface CustomerBrokerContractSaleManager extends FermatManager {
     void updateStatusCustomerBrokerSaleContractStatus(String contractId, ContractStatus status) throws CantUpdateCustomerBrokerContractSaleException;
 
     /**
+     *
      * @param contractId
      * @param status
      * @throws CantUpdateCustomerBrokerContractSaleException
@@ -60,6 +67,7 @@ public interface CustomerBrokerContractSaleManager extends FermatManager {
     void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantUpdateCustomerBrokerContractSaleException;
 
     /**
+     *
      * @param contractId
      * @param reason
      * @throws CantUpdateCustomerBrokerContractSaleException

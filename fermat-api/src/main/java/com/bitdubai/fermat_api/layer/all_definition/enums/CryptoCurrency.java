@@ -18,11 +18,13 @@ public enum CryptoCurrency implements Currency, Serializable {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    BITCOIN("BTC", "Bitcoin"),
-    FERMAT("FRM", "Fermat"),
-    DOGECOIN("DOGE", "Dogecoin"),
-    ETHEREUM("ETH", "Ethereum"),
-    LITECOIN("LTC", "Litecoin");
+    BITCOIN     ("BTC", "Bitcoin"),
+    FERMAT     ("FRM", "Fermat"),
+    DOGECOIN    ("DOGE", "Dogecoin"),
+    ETHEREUM    ("ETH", "Ethereum"),
+    LITECOIN    ("LTC", "Litecoin")
+
+    ;
 
     private final String code;
     private final String friendlyName;
@@ -39,19 +41,14 @@ public enum CryptoCurrency implements Currency, Serializable {
     public static CryptoCurrency getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "BTC":
-                return CryptoCurrency.BITCOIN;
-            case "DOGE":
-                return CryptoCurrency.DOGECOIN;
-            case "ETH":
-                return CryptoCurrency.ETHEREUM;
-            case "LTC":
-                return CryptoCurrency.LITECOIN;
-            case "FRM":
-                return CryptoCurrency.FERMAT;
+            case "BTC": return CryptoCurrency.BITCOIN;
+            case "DOGE": return CryptoCurrency.DOGECOIN;
+            case "ETH": return CryptoCurrency.ETHEREUM;
+            case "LTC": return CryptoCurrency.LITECOIN;
+            case "FRM": return CryptoCurrency.FERMAT;
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code Received: ").append(code).toString(),
+                        "Code Received: " + code,
                         "This Code Is Not Valid for the CryptoCurrency enum"
                 );
         }
@@ -61,7 +58,7 @@ public enum CryptoCurrency implements Currency, Serializable {
         try {
             getByCode(code);
             return true;
-        } catch (InvalidParameterException e) {
+        } catch(InvalidParameterException e) {
             return false;
         }
     }

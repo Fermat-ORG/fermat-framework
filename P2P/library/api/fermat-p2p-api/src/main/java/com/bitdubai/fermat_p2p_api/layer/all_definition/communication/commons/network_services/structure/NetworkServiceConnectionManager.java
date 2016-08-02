@@ -17,7 +17,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
  * @author  lnacosta
  * @version 1.0
  * @since   Java JDK 1.7
- * //TODO: León esto no tiene nada de manager..., revisá lo que haces.
  */
 public final class NetworkServiceConnectionManager {
 
@@ -63,7 +62,6 @@ public final class NetworkServiceConnectionManager {
                     e
             );
         }
-
 
     }
 

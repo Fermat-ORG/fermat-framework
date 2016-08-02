@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -48,10 +47,12 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_onli
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database.BrokerAckOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.event_handler.BrokerAckOnlinePaymentRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.structure.BrokerAckOnlinePaymentMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.structure.BrokerAckOnlinePaymentMonitorAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.structure.BrokerAckOnlinePaymentTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,8 +115,8 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
     BrokerAckOnlinePaymentMonitorAgent2 processorAgent;
 
     //Agent configuration
-    private final long SLEEP_TIME = 10000;
-    private final long DELAY_TIME = 1000;
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
     private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     public BrokerAckOnlinePaymentPluginRoot() {
@@ -271,9 +272,9 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
              * Init event recorder service.
              */
             BrokerAckOnlinePaymentRecorderService brokerAckOnlinePaymentRecorderService = new BrokerAckOnlinePaymentRecorderService(
-                    brokerAckOnlinePaymentBusinessTransactionDao,
-                    eventManager,
-                    this);
+                            brokerAckOnlinePaymentBusinessTransactionDao,
+                            eventManager,
+                            this);
 
             brokerAckOnlinePaymentRecorderService.start();
 
@@ -374,7 +375,7 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
             String[] correctedClass = className.split((Pattern.quote("$")));
             return BrokerAckOnlinePaymentPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
-            System.err.println(new StringBuilder().append("CantGetLogLevelByClass: ").append(e.getMessage()).toString());
+            System.err.println("CantGetLogLevelByClass: " + e.getMessage());
             return DEFAULT_LOG_LEVEL;
         }
     }
@@ -390,9 +391,9 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
             incomingMoneyNotificationEvent.setCryptoCurrency(CryptoCurrency.BITCOIN);
             incomingMoneyNotificationEvent.setWalletPublicKey("TestWalletPublicKey");
             eventManager.raiseEvent(incomingMoneyNotificationEvent);
-            System.out.println(new StringBuilder().append("Event raised:\n").append(incomingMoneyNotificationEvent.toString()).toString());
+            System.out.println("Event raised:\n" + incomingMoneyNotificationEvent.toString());
         } catch (Exception e) {
-            System.out.println(new StringBuilder().append("Exception in Broker Ack Online Payment Test: ").append(e).toString());
+            System.out.println("Exception in Broker Ack Online Payment Test: " + e);
             e.printStackTrace();
         }
     }
@@ -405,7 +406,7 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
             newContractOpened.setContractHash("888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
             eventManager.raiseEvent(newContractOpened);
         } catch (Exception e) {
-            System.out.println(new StringBuilder().append("Exception in Broker Ack Online Payment Test: ").append(e).toString());
+            System.out.println("Exception in Broker Ack Online Payment Test: " + e);
         }
     }
 

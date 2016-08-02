@@ -98,7 +98,6 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
                 System.out.println("******* Init Chat Identity ******");
                 ChatIdentityDatabaseFactory databaseFactory = new ChatIdentityDatabaseFactory(pluginDatabaseSystem);
                 databaseFactory.createDatabase(this.pluginId, ChatIdentityDatabaseConstants.CHAT_DATABASE_NAME);
-//                chatIdentityManager.registerIdentitiesANSTest();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
@@ -119,7 +118,6 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Cant Update Expose Identity.", FermatException.wrapException(e), null, null);
         }
-
     }
 
     @Override

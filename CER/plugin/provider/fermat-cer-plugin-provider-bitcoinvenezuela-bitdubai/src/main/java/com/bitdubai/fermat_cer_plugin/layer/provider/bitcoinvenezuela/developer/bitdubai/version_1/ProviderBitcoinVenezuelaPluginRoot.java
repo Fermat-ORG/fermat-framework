@@ -148,12 +148,11 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException();
 
         //Determine cryptoCurrency base
         String exchangeFrom, exchangeTo;
         boolean invertExchange;
-        boolean providerIsDown=false;
 
         if (CryptoCurrency.codeExists(currencyPair.getFrom().getCode())) {
             exchangeFrom = currencyPair.getFrom().getCode();
@@ -175,25 +174,20 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
             price = json.getJSONObject(exchangeFrom).getDouble(exchangeTo);
 
         } catch (JSONException e) {
-            price=0;
-            invertExchange=false;
-            providerIsDown=true;
-          //  this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-          //  throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "BitcoinVenezuela CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "BitcoinVenezuela CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
         }
 
         if (invertExchange)
-            price = 1 / (double)price;
+            price = 1 / price;
 
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), price, price, (new Date().getTime() / 1000));
 
-        if(!providerIsDown) {
-            try {
-                dao.saveCurrentExchangeRate(exchangeRate);
-            } catch (CantSaveExchangeRateException e) {
-                this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
+        try {
+            dao.saveCurrentExchangeRate(exchangeRate);
+        } catch (CantSaveExchangeRateException e) {
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return exchangeRate;
     }
@@ -207,7 +201,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided timestamp is in the future");
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException();
 
         ExchangeRate requiredExchangeRate = null;
 
@@ -268,7 +262,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided startTimestamp is in the future");
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException();
 
         long stdStartTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(startTimestamp);
         long stdEndTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(endTimestamp);
@@ -325,7 +319,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
+            throw new UnsupportedCurrencyPairException();
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }

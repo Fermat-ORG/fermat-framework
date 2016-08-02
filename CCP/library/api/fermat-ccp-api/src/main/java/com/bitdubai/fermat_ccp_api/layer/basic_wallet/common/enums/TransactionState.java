@@ -2,13 +2,11 @@ package com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
-import java.io.Serializable;
-
 /**
  * The enum <code>TransactionState</code> is used to list the states of a transaction when it is in
  * the process of going out from the system.
  */
-public enum TransactionState implements Serializable {
+public enum TransactionState {
 
     NEW("NEW"),
     PERSISTED_IN_AVAILABLE ("PIA"),

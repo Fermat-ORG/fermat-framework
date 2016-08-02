@@ -17,6 +17,7 @@ import java.util.UUID;
 
 /**
  * Created by ciencias on 20.01.15.
+ *
  */
 
 /**
@@ -25,7 +26,7 @@ import java.util.UUID;
  * *
  */
 
-public class AndroidPluginDatabaseSystem implements PluginDatabaseSystem {
+public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem {
 
     /**
      * PluginDatabaseSystem Interface member variables.
@@ -41,8 +42,8 @@ public class AndroidPluginDatabaseSystem implements PluginDatabaseSystem {
      */
 
     @Override
-    public final Database openDatabase(final UUID ownerId,
-                                       final String databaseName) throws CantOpenDatabaseException,
+    public final Database openDatabase(final UUID   ownerId     ,
+                                       final String databaseName) throws CantOpenDatabaseException ,
             DatabaseNotFoundException {
 
         try {
@@ -54,11 +55,11 @@ public class AndroidPluginDatabaseSystem implements PluginDatabaseSystem {
 
         } catch (final NoSuchAlgorithmException e) {
 
-            throw new CantOpenDatabaseException(e, new StringBuilder().append("Database Name : ").append(databaseName).toString(), "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
-        } catch (final DatabaseNotFoundException exception) {
+            throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
+        } catch (final DatabaseNotFoundException exception){
 
             throw exception;
-        } catch (final Exception e) {
+        } catch (final Exception e){
 
             throw new CantOpenDatabaseException(e, null, "Unhandled Exception");
         }
@@ -66,8 +67,8 @@ public class AndroidPluginDatabaseSystem implements PluginDatabaseSystem {
     }
 
     @Override
-    public final void deleteDatabase(final UUID ownerId,
-                                     final String databaseName) throws CantOpenDatabaseException,
+    public final void deleteDatabase(final UUID   ownerId     ,
+                                     final String databaseName) throws CantOpenDatabaseException ,
             DatabaseNotFoundException {
 
         try {
@@ -76,13 +77,13 @@ public class AndroidPluginDatabaseSystem implements PluginDatabaseSystem {
             AndroidDatabase database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
             database.deleteDatabase();
 
-        } catch (final NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e){
 
-            throw new CantOpenDatabaseException(e, new StringBuilder().append("Database Name : ").append(databaseName).toString(), "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
-        } catch (final DatabaseNotFoundException exception) {
+            throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
+        } catch (final DatabaseNotFoundException exception){
 
             throw exception;
-        } catch (final Exception e) {
+        } catch (final Exception e){
 
             throw new CantOpenDatabaseException(e, null, "Unhandled Exception");
         }
@@ -90,7 +91,7 @@ public class AndroidPluginDatabaseSystem implements PluginDatabaseSystem {
     }
 
     @Override
-    public final Database createDatabase(final UUID ownerId,
+    public final Database createDatabase(final UUID   ownerId     ,
                                          final String databaseName) throws CantCreateDatabaseException {
 
         try {
@@ -99,12 +100,12 @@ public class AndroidPluginDatabaseSystem implements PluginDatabaseSystem {
             database.createDatabase(hasDBName);
             return database;
 
-        } catch (final NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e){
 
             throw new CantCreateDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
-        } catch (final Exception e) {
+        } catch (final Exception e){
 
-            throw new CantCreateDatabaseException(e, "Context= ownerId: " + ownerId + ", databaseName: " + databaseName, "Unhandled Exception");
+            throw new CantCreateDatabaseException(e, "Context= ownerId: "+ownerId+", databaseName: "+databaseName, "Unhandled Exception");
         }
 
     }
@@ -120,13 +121,13 @@ public class AndroidPluginDatabaseSystem implements PluginDatabaseSystem {
 
             String encryptedString = new String(encoded, "UTF-8");
 
-            encryptedString = encryptedString.replace("/", "");
+            encryptedString = encryptedString.replace("/","");
 
-            return encryptedString.replace("\n", "");
+            return encryptedString.replace("\n","");
 
         } catch (final Exception e) {
 
-            throw new NoSuchAlgorithmException(e);
+            throw new NoSuchAlgorithmException (e);
         }
     }
 }

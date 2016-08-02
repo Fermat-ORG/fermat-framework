@@ -54,7 +54,6 @@ public class CashTransactionParametersRecord implements CashTransactionParameter
 
     /**
      * Constructor with parameters
-     *
      * @param publicKeyWallet
      * @param publicKeyActor
      * @param publicKeyPlugin
@@ -71,7 +70,7 @@ public class CashTransactionParametersRecord implements CashTransactionParameter
             FiatCurrency currency,
             String memo,
             TransactionType transactionType) {
-        this.transactionId = UUID.randomUUID();
+        this.transactionId=UUID.randomUUID();
         this.publicKeyWallet = publicKeyWallet;
         this.publicKeyActor = publicKeyActor;
         this.publicKeyPlugin = publicKeyPlugin;
@@ -155,20 +154,15 @@ public class CashTransactionParametersRecord implements CashTransactionParameter
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("CashTransactionParametersRecord{")
-                .append("transactionId=").append(transactionId)
-                .append(", publicKeyWallet='").append(publicKeyWallet)
-                .append('\'')
-                .append(", publicKeyActor='").append(publicKeyActor)
-                .append('\'')
-                .append(", publicKeyPlugin='").append(publicKeyPlugin)
-                .append('\'')
-                .append(", amount=").append(amount)
-                .append(", currency=").append(currency)
-                .append(", memo='").append(memo)
-                .append('\'')
-                .append(", transactionType=").append(transactionType)
-                .append('}').toString();
+        return "CashTransactionParametersRecord{" +
+                "transactionId=" + transactionId +
+                ", publicKeyWallet='" + publicKeyWallet + '\'' +
+                ", publicKeyActor='" + publicKeyActor + '\'' +
+                ", publicKeyPlugin='" + publicKeyPlugin + '\'' +
+                ", amount=" + amount +
+                ", currency=" + currency +
+                ", memo='" + memo + '\'' +
+                ", transactionType=" + transactionType +
+                '}';
     }
 }

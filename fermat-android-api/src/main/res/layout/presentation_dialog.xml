@@ -11,8 +11,6 @@
         android:id="@+id/view_color"
         android:layout_width="match_parent"
         android:layout_height="4.5dp"
-        android:topLeftRadius="4dp"
-        android:topRightRadius="4dp"
         android:background="@drawable/round_corner_line_dialog"
         android:fitsSystemWindows="true" />
 
@@ -63,7 +61,6 @@
             </RelativeLayout>
 
             <View
-                android:id="@+id/view_color1"
                 android:layout_width="match_parent"
                 android:layout_height="0.7dp"
                 android:layout_marginBottom="12dp"
@@ -102,7 +99,6 @@
                 android:textSize="14sp" />
 
             <View
-                android:id="@+id/view_color2"
                 android:layout_width="match_parent"
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
@@ -133,7 +129,6 @@
             </LinearLayout>
 
             <View
-                android:id="@+id/view_color3"
                 android:layout_width="match_parent"
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
@@ -163,7 +158,6 @@
             </LinearLayout>
 
             <View
-                android:id="@+id/view_color4"
                 android:layout_width="match_parent"
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
@@ -232,8 +226,8 @@
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/btn_left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Be John Doe"
                     android:textSize="12sp" />
@@ -269,8 +263,8 @@
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/btn_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Be Jane Doe"
                     android:textSize="12sp" />

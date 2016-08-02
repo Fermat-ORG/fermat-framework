@@ -28,15 +28,14 @@ import com.bitdubai.android_core.app.common.version_1.communication.client_syste
 import com.bitdubai.android_core.app.common.version_1.communication.platform_service.CommunicationDataKeys;
 import com.bitdubai.android_core.app.common.version_1.communication.platform_service.CommunicationMessages;
 import com.bitdubai.android_core.app.common.version_1.communication.platform_service.IntentServerServiceAction;
-import com.bitdubai.android_core.app.common.version_1.communication.platform_service.aidl.IPlatformService;
 import com.bitdubai.android_core.app.common.version_1.communication.platform_service.aidl.PlatformService;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.aidl.IPlatformService;
 import com.bitdubai.android_core.app.common.version_1.communication.platform_service.structure.FermatModuleObjectWrapper;
 import com.bitdubai.android_core.app.common.version_1.communication.platform_service.structure.ModuleObjectParameterWrapper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.UUID;
@@ -52,7 +51,7 @@ import java.util.concurrent.TimeoutException;
 public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrokerService {
 
     private static final String TAG = "ClientBrokerServiceAIDL";
-    //    private static final String KEY = "s";
+//    private static final String KEY = "s";
     private static final int THREADS_NUM = 5;
 
     private final IBinder localBinder = new LocalBinder();
@@ -74,26 +73,26 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         this.proxyFactory = new ProxyFactory();
     }
 
-    public Object sendMessage(final PluginVersionReference pluginVersionReference, final Object proxy, final Method method, final MethodDetail methodDetail, Object[] args) throws Exception {
+    public Object sendMessage(final PluginVersionReference pluginVersionReference, final Object proxy, final Method method, Object[] args) throws Exception {
         //Log.i(TAG,"SendMessage start");
         ModuleObjectParameterWrapper[] parameters = null;
         Class<?>[] parametersTypes = method.getParameterTypes();
-        if (args != null) {
+        if(args!=null) {
             parameters = new ModuleObjectParameterWrapper[args.length];
 
             for (int i = 0; i < args.length; i++) {
                 try {
-                    ModuleObjectParameterWrapper fermatModuleObjectWrapper = new ModuleObjectParameterWrapper((Serializable) args[i], parametersTypes[i]);
+                    ModuleObjectParameterWrapper fermatModuleObjectWrapper = new ModuleObjectParameterWrapper((Serializable) args[i],parametersTypes[i]);
                     parameters[i] = fermatModuleObjectWrapper;
                 } catch (ClassCastException e) {
                     //e.printStackTrace();
-                    Log.e(TAG, "ERROR: Objeto " + args[i].getClass().getName() + " no implementa interface Serializable");
+                    Log.e(TAG, "ERROR: Objeto "+args[i].getClass().getName()+" no implementa interface Serializable");
                     return null;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        } else {
+        }else{
             parameters = new ModuleObjectParameterWrapper[0];
         }
         /**
@@ -107,6 +106,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
          * Method detail if the developer want something specific
          */
         try {
+            final MethodDetail methodDetail = method.getAnnotation(MethodDetail.class);
             final ModuleObjectParameterWrapper[] parametersTemp = parameters;
             if (methodDetail != null) {
                 long methdTimeout = methodDetail.timeout();
@@ -153,49 +153,46 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 //MethodDetail.LoopType loopType = (Looper.myLooper() == Looper.getMainLooper())? MethodDetail.LoopType.MAIN: MethodDetail.LoopType.BACKGROUND;
                 objectArrived = requestModuleObjetc(dataId, proxy, method, parametersTemp, pluginVersionReference, null);
             }
-        } catch (FermatPlatformServiceNotConnectedException e) {
+        }catch (FermatPlatformServiceNotConnectedException e){
             e.printStackTrace();
             tryReconnect();
         }
-        Log.i(TAG, "SendMessage return from server");
-        if (objectArrived != null) {
-            Log.i(TAG, "Object: " + objectArrived.getObject());
-            if (objectArrived.getE() != null) return objectArrived.getE();
+        Log.i(TAG,"SendMessage return from server");
+        if(objectArrived!=null){
+            Log.i(TAG,"Object: "+objectArrived.getObject());
+            if(objectArrived.getE()!=null) return objectArrived.getE();
             isDataChuncked = objectArrived.isLargeData();
-        } else {
+        }else{
             if (!method.getReturnType().equals(Void.TYPE))
-                Log.i(TAG, "Object arrived null in method: " + method.getName() + ", this happen when an error occur in the module or if you activate the timeout, please check your module and contact furszy if the error persist.");
+                Log.i(TAG,"Object arrived null in method: "+method.getName()+", this happen when an error occur in the module or if you activate the timeout, please check your module and contact furszy if the error persist.");
             return null;
         }
         Object o = null;
         //Log.i(TAG,"SendMessage almost end");
-        if (isDataChuncked) {
+        if(isDataChuncked){
             // Check if the data is on main thread or in background.
-            if (Looper.myLooper() == Looper.getMainLooper())
-                return new LargeWorkOnMainThreadException(proxy, method);
+            if(Looper.myLooper() == Looper.getMainLooper()) return new LargeWorkOnMainThreadException(proxy,method);
             //test reason
-//            mReceiverSocketSession.addWaitingMessage(dataId);
+            mReceiverSocketSession.addWaitingMessage(dataId);
 
             o = bufferChannelAIDL.getBufferObject(dataId);
-            return (o instanceof EmptyObject) ? null : o;
-        } else {
-            Object o1 = objectArrived.getObject();
-            ;
+            return (o instanceof EmptyObject)?null:o;
+        }else{
+            Object o1 = objectArrived.getObject();;
             return o1;
         }
     }
 
 
-    private FermatModuleObjectWrapper requestModuleObjetc(String dataId, Object proxy, Method method, ModuleObjectParameterWrapper[] parameters, PluginVersionReference pluginVersionReference, MethodDetail.LoopType loopType) {
+    private FermatModuleObjectWrapper requestModuleObjetc(String dataId,Object proxy,Method method,ModuleObjectParameterWrapper[] parameters,PluginVersionReference pluginVersionReference,MethodDetail.LoopType loopType){
         FermatModuleObjectWrapper objectArrived = null;
-        if (iServerBrokerService == null) {
+        if(iServerBrokerService==null) {
             Log.e(TAG, "FermatPlatformService is not connected");
             throw new FermatPlatformServiceNotConnectedException();
         }
-        if (loopType != null) {
+        if(loopType!=null) {
             if (loopType == MethodDetail.LoopType.BACKGROUND) {
-                if (Looper.myLooper() == Looper.getMainLooper())
-                    return new FermatModuleObjectWrapper(dataId, null, true, new InvalidMethodExecutionException(proxy, method, "The MethodDetail annotation have background thread value and this method is invoqued in the main thread."));
+                if(Looper.myLooper() == Looper.getMainLooper()) return new FermatModuleObjectWrapper(dataId,null,true,new InvalidMethodExecutionException(proxy,method,"The MethodDetail annotation have background thread value and this method is invoqued in the main thread."));
                 Log.i(TAG, "Sending background request");
                 try {
                     objectArrived = iServerBrokerService.invoqueModuleLargeDataMethod(
@@ -208,10 +205,10 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                             pluginVersionReference.getVersion().toString(),
                             method.getName(),
                             parameters);
-                } catch (TransactionTooLargeException t1) {
+                }catch (TransactionTooLargeException t1){
                     Log.e(TAG, "Method send too much data, remove large data from method's parameters, minimize data returned by the module or check the android framework documentation for make a large data background request, method=" + method.getName() + " at pluginVersionReference=" + pluginVersionReference.toString3());
-                    objectArrived = new FermatModuleObjectWrapper(new LargeDataRequestException(proxy, method, t1));
-                } catch (RemoteException e) {
+                    objectArrived = new FermatModuleObjectWrapper(new LargeDataRequestException(proxy,method,t1));
+                }  catch (RemoteException e) {
                     e.printStackTrace();
                 } catch (RuntimeException e) {
                     Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in class " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
@@ -220,16 +217,16 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                     e.printStackTrace();
                 }
                 Log.i(TAG, "Sending background return");
-            } else {
-                objectArrived = fastModuleObjectRequest(dataId, proxy, method, parameters, pluginVersionReference);
+            }else{
+                objectArrived = fastModuleObjectRequest(dataId,proxy,method,parameters,pluginVersionReference);
             }
         } else {
-            objectArrived = fastModuleObjectRequest(dataId, proxy, method, parameters, pluginVersionReference);
+            objectArrived = fastModuleObjectRequest(dataId,proxy,method,parameters,pluginVersionReference);
         }
         return objectArrived;
     }
 
-    private FermatModuleObjectWrapper fastModuleObjectRequest(String dataId, Object proxy, Method method, ModuleObjectParameterWrapper[] parameters, PluginVersionReference pluginVersionReference) {
+    private FermatModuleObjectWrapper fastModuleObjectRequest(String dataId,Object proxy,Method method,ModuleObjectParameterWrapper[] parameters,PluginVersionReference pluginVersionReference){
         FermatModuleObjectWrapper fermatModuleObjectWrapper = null;
         try {
             fermatModuleObjectWrapper = iServerBrokerService.invoqueModuleMethod(
@@ -254,16 +251,15 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                         pluginVersionReference.getVersion().toString(),
                         method.getName(),
                         parameters);
-            } catch (TransactionTooLargeException t1) {
-                Log.e(TAG, "Method request too much data on the main thread, method=" + method.getName() + " at pluginVersionReference=" + pluginVersionReference.toString3());
-                fermatModuleObjectWrapper = new FermatModuleObjectWrapper(new LargeWorkOnMainThreadException(proxy, method, t1));
+            } catch (TransactionTooLargeException t1){
+                Log.e(TAG,"Method request too much data on the main thread, method="+method.getName()+" at pluginVersionReference="+pluginVersionReference.toString3());
+                fermatModuleObjectWrapper = new FermatModuleObjectWrapper(new LargeWorkOnMainThreadException(proxy,method,t1));
             } catch (RemoteException e) {
-                Log.e(TAG,"Explota acá");
                 e.printStackTrace();
             } catch (RuntimeException e) {
                 Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
                 e.printStackTrace();
-            } catch (Exception e) {
+            }catch (Exception e) {
                 e.printStackTrace();
             }
         } catch (RemoteException e) {
@@ -276,55 +272,23 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     }
 
     @Override
-    public boolean isFermatBackgroundServiceRunning() throws FermatPlatformServiceNotConnectedException {
+    public boolean isFermatBackgroundServiceRunning() throws FermatPlatformServiceNotConnectedException{
         try {
-            if (iServerBrokerService != null)
+            if(iServerBrokerService!=null)
                 return iServerBrokerService.isFermatSystemRunning();
         } catch (RemoteException e) {
             e.printStackTrace();
-            throw new FermatPlatformServiceNotConnectedException("PlatformService not connected yet", e);
-        } catch (Exception e) {
+            throw new FermatPlatformServiceNotConnectedException("PlatformService not connected yet",e);
+        } catch (Exception e){
 
             e.printStackTrace();
         }
         return false;
     }
 
-    @Override
-    public void disconnect() {
-        try {
-            if (mPlatformServiceIsBound) {
-                doUnbindService();
-            }
-//            if (mReceiverSocketSession.isConnected()) {
-//                mReceiverSocketSession.stopReceiver();
-                try {
-                    mReceiverSocketSession.destroy();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-//            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void connect() {
-        try {
-            if (!mPlatformServiceIsBound) {
-                Intent serviceIntent = new Intent(this, PlatformService.class);
-                serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
-                doBindService(serviceIntent);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public class LocalBinder extends Binder {
 
-        public ClientSystemBrokerServiceAIDL getService() {
+        public ClientSystemBrokerServiceAIDL getService(){
             return ClientSystemBrokerServiceAIDL.this;
         }
 
@@ -338,20 +302,19 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             poolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS_NUM);
             bufferChannelAIDL = new BufferChannelAIDL();
 
-//            Intent serviceIntent = new Intent(this, PlatformService.class);
-//            serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
-//            doBindService(serviceIntent);
-
-            connect();
+            Intent serviceIntent = new Intent(this, PlatformService.class);
+            serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
+            doBindService(serviceIntent);
 
 //        Intent serviceIntent2 = new Intent(this, PlatformService.class);
 //        serviceIntent2.setAction(IntentServerServiceAction.ACTION_BIND_MESSENGER);
 //        doBindMessengerService(serviceIntent2);
-        } catch (Exception e) {
-            Log.e(TAG, "Error creating client, please contact to Furszy");
+        }catch (Exception e){
+            Log.e(TAG,"Error creating client, please contact to Furszy");
             e.printStackTrace();
         }
     }
+
 
 
     @Nullable
@@ -362,7 +325,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     @Override
     public void onDestroy() {
-        if (mPlatformServiceIsBound) {
+        if(mPlatformServiceIsBound){
             doUnbindService();
         }
 
@@ -373,9 +336,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     }
 
     private IPlatformService iServerBrokerService = null;
-    /**
-     * Flag indicating whether we have called bind on the service.
-     */
+    /** Flag indicating whether we have called bind on the service. */
     boolean mPlatformServiceIsBound;
 
     /**
@@ -387,7 +348,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             iServerBrokerService = IPlatformService.Stub.asInterface(service);
             Log.d(TAG, "Attached.");
             mPlatformServiceIsBound = true;
-            Log.i(TAG, "Registering client");
+            Log.i(TAG,"Registering client");
             try {
                 serverIdentificationKey = iServerBrokerService.register();
 //                try {
@@ -403,14 +364,14 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 //running socket receiver
                 Log.i(TAG, "Starting socket receiver");
                 LocalSocket localSocket = new LocalSocket();
-                mReceiverSocketSession = new LocalClientSocketSession(serverIdentificationKey, localSocket, bufferChannelAIDL);
+                mReceiverSocketSession = new LocalClientSocketSession(serverIdentificationKey,localSocket,bufferChannelAIDL);
                 mReceiverSocketSession.connect();
                 mReceiverSocketSession.startReceiving();
 
             } catch (RemoteException e) {
                 e.printStackTrace();
-                Log.e(TAG, "Cant run socket, register to server fail");
-            } catch (Exception e) {
+                Log.e(TAG,"Cant run socket, register to server fail");
+            } catch (Exception e){
                 e.printStackTrace();
             }
 
@@ -437,14 +398,14 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         try {
             //Log.d(TAG, "Before init intent.componentName");
             //Log.d(TAG, "Before bindService");
-            if (bindService(intent, mPlatformServiceConnection, BIND_AUTO_CREATE)) {
+            if (bindService(intent, mPlatformServiceConnection, BIND_AUTO_CREATE)){
                 Log.d(TAG, "Binding to ISERVERBROKERSERVICE returned true");
             } else {
                 Log.d(TAG, "Binding to ISERVERBROKERSERVICE returned false");
             }
         } catch (SecurityException e) {
             Log.e(TAG, "can't bind to ISERVERBROKERSERVICE, check permission in Manifest");
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
         }
         //mPlatformServiceIsBound = true;
@@ -472,9 +433,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
      * Service server messenger
      */
     private Messenger mServiceMcu = null;
-    /**
-     * Flag indicating whether we have called bind on the service.
-     */
+    /** Flag indicating whether we have called bind on the service. */
     boolean mMessengerIsBound;
 
 
@@ -512,10 +471,10 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         }
     }
 
-    private void onChuckedDateRecieve(String id, byte[] chunkedData, boolean isFinishData) {
+    private void onChuckedDateRecieve(String id, byte[] chunkedData,boolean isFinishData) {
         try {
             //bufferChannel.notificateObject(id,data);
-            //   bufferChannelAIDL.addChunkedData(id,chunkedData,isFinishData);
+         //   bufferChannelAIDL.addChunkedData(id,chunkedData,isFinishData);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -559,6 +518,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 //
 
 
+
 //                Message msg = Message.obtain(null,
 //                        CommunicationMessages.MSG_REGISTER_CLIENT);
 //                msg.replyTo = mMessenger;
@@ -576,7 +536,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 //                }
 
 
-            } catch (Exception e) {
+            } catch (Exception e){
                 e.printStackTrace();
             }
         }
@@ -594,16 +554,16 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     void doBindMessengerService(Intent intent) {
         try {
-            // Log.d(TAG, "Before init intent.componentName");
+           // Log.d(TAG, "Before init intent.componentName");
             //Log.d(TAG, "Before bindService");
-            if (bindService(intent, mMessengerConnection, BIND_AUTO_CREATE)) {
+            if (bindService(intent, mMessengerConnection, BIND_AUTO_CREATE)){
                 Log.d(TAG, "Binding to ISERVERBROKERSERVICE MESSENGER returned true");
             } else {
                 Log.d(TAG, "Binding to ISERVERBROKERSERVICE MESSENGER returned false");
             }
         } catch (SecurityException e) {
             Log.e(TAG, "can't bind to ISERVERBROKERSERVICE MESSENGER, check permission in Manifest");
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
         }
         //mPlatformServiceIsBound = true;
@@ -621,32 +581,32 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
 
     private void tryReconnect() {
-        if (!mPlatformServiceIsBound) {
+        if(!mPlatformServiceIsBound){
             Intent serviceIntent = new Intent(this, PlatformService.class);
             serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
             doBindService(serviceIntent);
-        } else {
-            Log.e(TAG, "Trying to reconnect when the PlatformService is connected, contact to furszy");
+        }else{
+            Log.e(TAG,"Trying to reconnect when the PlatformService is connected, contact to furszy");
         }
     }
 
 
     /**
-     * Proxy methods
+     *  Proxy methods
      */
 
     public ModuleManager getModuleManager(PluginVersionReference pluginVersionReference) throws CantCreateProxyException {
         //Log.i(TAG,"creating proxy");
-        ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this, pluginVersionReference);
-        return proxyFactory.createModuleManagerProxy(pluginVersionReference, mInvocationHandler);
+        ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this,pluginVersionReference);
+        return proxyFactory.createModuleManagerProxy(pluginVersionReference,mInvocationHandler);
     }
 
     @Override
     public ModuleManager[] getModuleManager(PluginVersionReference[] pluginVersionReference) throws CantCreateProxyException {
         ModuleManager[] moduleManagers = new ModuleManager[pluginVersionReference.length];
         for (int i = 0; i < pluginVersionReference.length; i++) {
-            ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this, pluginVersionReference[i]);
-            moduleManagers[i] = proxyFactory.createModuleManagerProxy(pluginVersionReference[i], mInvocationHandler);
+            ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this,pluginVersionReference[i]);
+            moduleManagers[i] = proxyFactory.createModuleManagerProxy(pluginVersionReference[i],mInvocationHandler);
         }
         return moduleManagers;
     }

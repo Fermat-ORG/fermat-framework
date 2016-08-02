@@ -17,14 +17,12 @@ import java.util.UUID;
  */
 public interface CryptoMoneyTransaction {
     //TODO: Documentar
-
     /**
      * The property <code>TransactionId</code>  represented identifier the record
      *
      * @return the UUID
      */
     UUID getTransactionId();
-
     void setTransactionId(UUID transactionId);
 
     /**
@@ -33,7 +31,6 @@ public interface CryptoMoneyTransaction {
      * @return the Sting
      */
     String getActorPublicKey();
-
     void setActorPublicKey(String actorPublicKey);
 
     /**
@@ -42,7 +39,6 @@ public interface CryptoMoneyTransaction {
      * @return the CryptoCurrency
      */
     CryptoCurrency getCryptoCurrency();
-
     void setCryptoCurrency(CryptoCurrency cryptoCurrency);
 
     /**
@@ -51,7 +47,6 @@ public interface CryptoMoneyTransaction {
      * @return the Sting
      */
     String getCbpWalletPublicKey();
-
     void setCbpWalletPublicKey(String cbpWalletPublicKey);
 
     /**
@@ -60,7 +55,6 @@ public interface CryptoMoneyTransaction {
      * @return the Sting
      */
     String getCryWalletPublicKey();
-
     void setCryWalletPublicKey(String cryWalletPublicKey);
 
     /**
@@ -69,7 +63,6 @@ public interface CryptoMoneyTransaction {
      * @return the Sting
      */
     String getConcept();
-
     void setConcept(String concept);
 
     /**
@@ -78,7 +71,6 @@ public interface CryptoMoneyTransaction {
      * @return the BigDecimal
      */
     BigDecimal getAmount();
-
     void setAmount(BigDecimal amount);
 
     /**
@@ -87,7 +79,6 @@ public interface CryptoMoneyTransaction {
      * @return the Timestamp
      */
     Timestamp getTimeStamp();
-
     void setTimeStamp(Timestamp timeStamp);
 
     /**
@@ -96,7 +87,6 @@ public interface CryptoMoneyTransaction {
      * @return the Sting
      */
     String getMemo();
-
     void setMemo(String memo);
 
     /**
@@ -105,17 +95,14 @@ public interface CryptoMoneyTransaction {
      * @return the Sting
      */
     TransactionStatusRestockDestock getTransactionStatus();
-
     void setTransactionStatus(TransactionStatusRestockDestock transactionStatus);
 
 
     /**
      * The property <code>PriceReference</code>  represented the Price Reference
-     *
      * @return BigDecimal
      */
     BigDecimal getPriceReference();
-
     void setPriceReference(BigDecimal priceReference);
 
     /**
@@ -124,7 +111,6 @@ public interface CryptoMoneyTransaction {
      * @return the OriginTransaction
      */
     OriginTransaction getOriginTransaction();
-
     void setOriginTransaction(OriginTransaction originTransaction);
 
     /**
@@ -133,38 +119,29 @@ public interface CryptoMoneyTransaction {
      * @return the String
      */
     String getOriginTransactionId();
-
     void setOriginTransactionId(String originTransactionId);
 
     /**
      * Returns the blockchainNetworkType of the transaction
-     *
-     * @return BlockchainNetworkType of the transaction
+     * @return      BlockchainNetworkType of the transaction
      */
     BlockchainNetworkType getBlockchainNetworkType();
-
     void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType);
 
     //Fee Values
-
     /**
      * Returns the transaction fee
-     *
      * @return
      */
     long getFee();
-
     void setFee(long fee);
-
     void setFee(BitcoinFee bitcoinFee);
 
     /**
      * Returns the transaction FeeOrigin
-     *
      * @return
      */
     FeeOrigin getFeeOrigin();
-
     void setFeeOrigin(FeeOrigin feeOrigin);
 
 }

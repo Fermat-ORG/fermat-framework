@@ -82,7 +82,6 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET    , plugin = Plugins.BITCOIN_WALLET)
     private CryptoWalletManager cryptoWalletManager;
 
-
 //    @NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.FERMAT_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 

@@ -177,7 +177,9 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
      *
      * @param stringValue the value
      * @param currency    the crypto currency which is going to be parsed to Satoshi
+     *
      * @return the value in long representation
+     *
      * @throws InvalidParameterException
      */
     public long parseToCryptoAmountFormat(String stringValue, CryptoCurrency currency) throws InvalidParameterException {
@@ -201,7 +203,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
         } catch (Exception exception) {
             pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
-                    "Parsing String object to long", new StringBuilder().append("Cannot parse ").append(stringValue).append(" string value to long").toString());
+                    "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
         }
     }
 
@@ -209,6 +211,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
      * This method returns a CustomerBrokerPurchaseNegotiation by negotiationId.
      *
      * @param negotiationId the negotiation ID
+     *
      * @return the purchase negotiation object
      */
     private CustomerBrokerPurchaseNegotiation getCustomerBrokerPurchaseNegotiation(String negotiationId)
@@ -222,7 +225,9 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
      * This method returns the crypto address from a CustomerBrokerPurchaseNegotiation
      *
      * @param purchaseNegotiation the purchase negotiation
+     *
      * @return the crypto address
+     *
      * @throws CantGetCryptoAddressException
      */
     private String getBrokerCryptoAddressString(CustomerBrokerPurchaseNegotiation purchaseNegotiation) throws CantGetCryptoAddressException {

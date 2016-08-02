@@ -28,7 +28,6 @@ public abstract class AbstractBusinessTransactionAgent
 
     /**
      * Default constructor with parameters
-     *
      * @param sleepTime
      * @param timeUnit
      * @param initDelayTime
@@ -46,15 +45,21 @@ public abstract class AbstractBusinessTransactionAgent
     }
 
     @Override
-    protected void agentJob() {
-        doTheMainTask();
+    protected Runnable agentJob() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                doTheMainTask();
+            }
+        };
+        return runnable;
     }
 
     @Override
-    protected void onErrorOccur(Exception e) {
+    protected void onErrorOccur() {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                new Exception(this.getClass().getName() + " Error"));
+                new Exception(this.getClass().getName()+" Error"));
     }
 
     /**
@@ -64,7 +69,6 @@ public abstract class AbstractBusinessTransactionAgent
 
     /**
      * This method must implement the checked the pending events.
-     *
      * @param eventId
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
@@ -75,7 +79,9 @@ public abstract class AbstractBusinessTransactionAgent
      * This method parse a String object to a long object
      *
      * @param stringValue
+     *
      * @return
+     *
      * @throws InvalidParameterException
      */
     protected double parseToDouble(String stringValue) throws InvalidParameterException {
@@ -89,7 +95,7 @@ public abstract class AbstractBusinessTransactionAgent
                         InvalidParameterException.DEFAULT_MESSAGE,
                         FermatException.wrapException(exception),
                         "Parsing String object to double",
-                        new StringBuilder().append("Cannot parse ").append(stringValue).append(" string value to long").toString());
+                        "Cannot parse " + stringValue + " string value to long");
             }
         }
     }
@@ -99,6 +105,7 @@ public abstract class AbstractBusinessTransactionAgent
      *
      * @param cryptoAmountString the crypto amount in String
      * @param currencyCode       the crypto currency code
+     *
      * @return the crypto amount in satoshi
      */
     protected long getCryptoAmount(String cryptoAmountString, String currencyCode) {
@@ -123,7 +130,7 @@ public abstract class AbstractBusinessTransactionAgent
         return 0;
     }
 
-    protected void reportError(Exception e) {
+    protected void reportError(Exception e){
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 e);
@@ -134,6 +141,7 @@ public abstract class AbstractBusinessTransactionAgent
      * Return the reference wallet associated with the crypto currency
      *
      * @param cryptoCurrency the crypto currency
+     *
      * @return the reference wallet or null
      */
     protected ReferenceWallet getReferenceWallet(CryptoCurrency cryptoCurrency) {

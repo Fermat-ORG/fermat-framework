@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
@@ -97,7 +96,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      * List all wallet contact related to an specific wallet.
      *
      * @param walletPublicKey public key of the wallet in which we are working.
-     * @param intraUserLoggedInPublicKey public key of the wallet intra user identity.
+    * @param intraUserLoggedInPublicKey public key of the wallet intra user identity.
      * @param max             quantity of instance you want to return
      * @param offset          the point of start in the list you're trying to bring.
      *
@@ -355,10 +354,10 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      * @throws CantListTransactionsException if something goes wrong.
      */
     List<CryptoWalletTransaction> getTransactions(String intraUserLoggedInPublicKey,BalanceType balanceType,
-                                                  TransactionType transactionType,
-                                                  String walletPublicKey,
-                                                  int max,
-                                                  int offset) throws CantListTransactionsException;
+                                                                                                             TransactionType transactionType,
+                                                                                                             String walletPublicKey,
+                                                                                                             int max,
+                                                                                                             int offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>listTransactionsByActor</code> you cant get all the transactions related with an specific actor.
@@ -409,7 +408,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
     List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                              TransactionType transactionType,
                                                                              String walletPublicKey,
@@ -432,7 +431,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      * @return
      * @throws CantListTransactionsException
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
     List<CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
                                                                  TransactionType transactionType,
                                                                  String walletPublicKey,
@@ -493,7 +492,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      * @throws com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException
      */
 
-    void approveRequest(UUID requestId,String intraUserLoggedInPublicKey,long fee, FeeOrigin feeOrigin) throws CantApproveRequestPaymentException,PaymentRequestNotFoundException,RequestPaymentInsufficientFundsException;
+    void approveRequest(UUID requestId,String intraUserLoggedInPublicKey) throws CantApproveRequestPaymentException,PaymentRequestNotFoundException,RequestPaymentInsufficientFundsException;
 
     /**
      *
@@ -520,23 +519,23 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      *
      * @throws CantSendCryptoPaymentRequestException  if something goes wrong.
      */
-    void sendCryptoPaymentRequest(final String                walletPublicKey  ,
-                                  final String                identityPublicKey,
-                                  final Actors                identityType     ,
-                                  final String                actorPublicKey   ,
-                                  final Actors                actorType        ,
-                                  final CryptoAddress         cryptoAddress    ,
-                                  final String                description      ,
-                                  final long                  amount           ,
-                                  final BlockchainNetworkType networkType      ,
-                                  final ReferenceWallet       referenceWallet,
-                                  final CryptoCurrency         cryptoCurrency) throws CantSendCryptoPaymentRequestException;
+     void sendCryptoPaymentRequest(final String                walletPublicKey  ,
+                                   final String                identityPublicKey,
+                                   final Actors                identityType     ,
+                                   final String                actorPublicKey   ,
+                                   final Actors                actorType        ,
+                                   final CryptoAddress         cryptoAddress    ,
+                                   final String                description      ,
+                                   final long                  amount           ,
+                                   final BlockchainNetworkType networkType      ,
+                                   final ReferenceWallet       referenceWallet,
+                                   final CryptoCurrency         cryptoCurrency) throws CantSendCryptoPaymentRequestException;
 
     void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException;
 
-    void registerIdentities();
+     void registerIdentities();
 
-    CryptoWalletWalletContact findWalletContactByName(String alias,String walletPublicKey,String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException;
+     CryptoWalletWalletContact findWalletContactByName(String alias,String walletPublicKey,String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException;
 
     /**
      *
@@ -582,7 +581,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      * @throws CantGetBlockchainDownloadProgress
      */
 
-    BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress;
+     BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress;
 
     /**
      *The method <code>getInstalledWallets</code> return the list of installed wallets on platform.
@@ -614,6 +613,4 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
 
 
     void launchNotification();
-
-    void testNetGiveMeCoins(BlockchainNetworkType blockchainNetworkType, CryptoAddress cryptoAddress) throws CantGetCoinsFromFaucetException;
 }

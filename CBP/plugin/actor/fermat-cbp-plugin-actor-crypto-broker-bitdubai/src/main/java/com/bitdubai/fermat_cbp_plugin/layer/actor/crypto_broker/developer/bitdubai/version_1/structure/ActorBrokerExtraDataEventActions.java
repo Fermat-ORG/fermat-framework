@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetExtraDataActorException;
@@ -24,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.exceptions.CantHandleExtraDataRequestEventException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,14 +66,10 @@ public class ActorBrokerExtraDataEventActions {
                 String brokerPublicKey = null;
 
                 for (CryptoBrokerExtraData<CryptoBrokerQuote> extraData : dataNS) {
-                    //if(brokerPublicKey == null){
-                    brokerPublicKey = extraData.getCryptoBrokerPublicKey();
-                    //}
-                    final List<CryptoBrokerQuote> quotes = getQuotes(brokerPublicKey);
-                    if (quotes == null || quotes.isEmpty()) {
-                        //Don't have any quotes to answer
-                        continue;
+                    if(brokerPublicKey == null){
+                        brokerPublicKey = extraData.getCryptoBrokerPublicKey();
                     }
+                    final List<CryptoBrokerQuote> quotes = getQuotes(brokerPublicKey);
                     final long updateTime = System.currentTimeMillis();
 
                     cryptoBrokerANSManager.answerQuotesRequest(extraData.getRequestId(), updateTime, quotes);
@@ -111,9 +107,6 @@ public class ActorBrokerExtraDataEventActions {
         List<CryptoBrokerQuote> quotes = new ArrayList<>();
         try {
             final BrokerIdentityWalletRelationship relationship = this.cryptoBrokerActorDao.getBrokerIdentityWalletRelationshipByIdentity(brokerPublicKey);
-            if (relationship == null) {
-                return quotes;
-            }
             final String wallerPublicKey = relationship.getWallet();
 
             final CryptoBrokerWallet wallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(wallerPublicKey);
@@ -163,7 +156,7 @@ public class ActorBrokerExtraDataEventActions {
         return quotes;
     }
 
-    public String supportedPlatforms(Currency merchandise) {
+    public String supportedPlatforms(Currency merchandise){
 
         String result = "";
 
@@ -173,14 +166,14 @@ public class ActorBrokerExtraDataEventActions {
             Currency currency = paymentWallet.getMerchandise();
 
             if (merchandise == currency) {
-                if (!list.contains(paymentWallet.getPlatform().getCode())) {
+                if(!list.contains(paymentWallet.getPlatform().getCode())){
                     list.add(paymentWallet.getPlatform().getCode());
                 }
             }
         }
 
-        for (String platform : list) {
-            result += new StringBuilder().append(platform).append(":").toString();
+        for(String platform : list){
+            result += platform+":";
         }
 
         return result;
