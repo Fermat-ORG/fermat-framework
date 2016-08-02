@@ -167,9 +167,9 @@
     <!--Fee setting -->
 
 
-    <string name="cbw_fee_miner_speed_1"> SLOW</string>
-    <string name="cbw_fee_miner_speed_2"> NORMAL</string>
-    <string name="cbw_fee_miner_speed_3"> FAST</string>
+    <string name="cbw_fee_miner_speed_1">SLOW</string>
+    <string name="cbw_fee_miner_speed_2">NORMAL</string>
+    <string name="cbw_fee_miner_speed_3">FAST</string>
     <string name="cbw_fee_miner_value">Fee miner:</string>
 
     <string name="cbw_fee_speed_text">Select the confirmation speed for a bitcoin transaction. More speed means more fee</string>
@@ -241,4 +241,52 @@
     <string name="cbw_blockchain_network_description">Select the Blockchain Network where you want to send and receive the bitcoins</string>
     <string name="cbw_network">Network</string>
 
+    <string name="amount_buy">Amount to Buy</string>
+    <string name="selected_rate">Selected Rate:</string>
+    <string name="exchange_rate">Your Exchange Rate:</string>
+    <string name="single_choice_item">Single Choice Item</string>
+    <string name="title_may">TITLE</string>
+    <string name="crypto_transfer">Crypto Transfer</string>
+    <string name="detail_step">Contract Detail Step</string>
+    <string name="your_recieve">You receive:</string>
+    <string name="sucess">success</string>
+    <string name="send">send</string>
+    <string name="bitcoins" translatable="false">Bitcoins</string>
+    <string name="country">Country:</string>
+    <string name="zip_code">Zip Code:</string>
+    <string name="state_province">State/Province:</string>
+    <string name="city">City:</string>
+    <string name="address_line_1">Address Line 1:</string>
+    <string name="address_line_2">Address Line 2:</string>
+    <string name="ok">ok</string>
+    <string name="today">Today</string>
+    <string name="no_earnings">No Earnings</string>
+    <string name="last_month">Last Month</string>
+    <string name="month">Month</string>
+    <string name="sell">Sell</string>
+    <string name="buy_2">Buy</string>
+    <string name="no_data">No Data</string>
+    <string name="my_locations">My Locations</string>
+    <string name="bank_accounts">Bank Accounts</string>
+    <string name="stock_management">Stock Management</string>
+    <string name="fee_management">Fee Management</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="btc" translatable="false">BTC</string>
+    <string name="home">Home</string>
+    <string name="current_stock">Current Stock</string>
+    <string name="transfer_to_bank">Transfer to Bank</string>
+    <string name="bank_wallet">Bank Wallet</string>
+    <string name="set_spread">Set a Spread</string>
+    <string name="location">Location</string>
+    <string name="spread">Spread</string>
+    <string name="new_bank_wallet">NEW BANK WALLET</string>
+    <string name="currency">Currency</string>
+    <string name="account_type">Account type</string>
+    <string name="bank_name">Bank name</string>
+    <string name="alias">Alias</string>
+    <string name="account">Account</string>
+    <string name="account_number">Account Number</string>
+    <string name="new_cash_wallet">NEW CASH WALLET</string>
+    <string name="currency2">Currency:</string>
 </resources>

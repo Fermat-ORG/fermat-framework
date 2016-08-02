@@ -45,7 +45,7 @@
         android:textColor="@color/dark_grey"
         android:textSize="@dimen/cbw_subtitle_text"
         android:visibility="gone"
-        tools:text="Crypto Transfer"/>
+        tools:text="@string/crypto_transfer"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbw_buying_text"
@@ -73,7 +73,7 @@
         android:paddingTop="4dp"
         android:textColor="@color/waiting_for_text"
         android:textSize="@dimen/cbw_regular_text_size"
-        tools:text="Waiting for Customer"/>
+        tools:text="@string/waiting_for_the_customer"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/cbw_update_date"

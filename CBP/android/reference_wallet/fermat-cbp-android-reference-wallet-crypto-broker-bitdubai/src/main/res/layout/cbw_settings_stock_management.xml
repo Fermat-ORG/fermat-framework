@@ -180,7 +180,7 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Set a Spread"
+            android:text="@string/set_spread"
             android:layout_marginTop="4dp"
             android:textColor="@color/cbw_wizard_color"
             android:textAllCaps="true"/>
