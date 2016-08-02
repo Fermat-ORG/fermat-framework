@@ -378,11 +378,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         //CLAUSES DATE
         String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
 
-        String exchangeAmount = convertToFormat(clauses.get(ClauseType.EXCHANGE_RATE).getValue(),true);
+        String exchangeAmount = clauses.get(ClauseType.EXCHANGE_RATE).getValue();
 
 
         String payment = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
-        String amount = convertToFormat(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue(),true);
+        String amount = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
         Drawable brokerImg = getImgDrawable(broker.getProfileImage());
 
         //LIST MERCHANDISE TYPE
@@ -437,8 +437,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         brokerImage.setImageDrawable(brokerImg);
         brokerName.setText(broker.getAlias());
-        sellingDetails.setText(getResources().getString(R.string.ccw_selling_details, amount, merchandise));
-        exchangeRateSummary.setText(getResources().getString(R.string.ccw_exchange_rate_summary, merchandise, exchangeAmount, payment));
+        sellingDetails.setText(getResources().getString(R.string.ccw_selling_details, convertToFormat(amount,true), merchandise));
+        exchangeRateSummary.setText(getResources().getString(R.string.ccw_exchange_rate_summary, merchandise,convertToFormat(exchangeAmount,true), payment));
 
 
         //PRINT CLAUSE STATUS TEST
@@ -494,7 +494,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                     //ASIGNAMENT NEW VALUE
                     //Change lostwood
                     //  newValue = getDecimalFormat(getBigDecimal(newValue));
-
+                    if(newValue.equals("")){
+                        newValue="0";
+                    }
 
                     newValue = fixFormat(newValue,false);
                     //
@@ -686,7 +688,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
                 //ASSIGN NEW VALUE
                 //change lostwood
-
+                if(newValue.equals("")){
+                    newValue="0";
+                }
                 // newValue = getDecimalFormat(getBigDecimal(newValue));
                 newValue = fixFormat(newValue,false);
                 putClause(clause, newValue);

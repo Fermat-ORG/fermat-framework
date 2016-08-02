@@ -389,6 +389,9 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
             /*if (newValue.equals("") || newValue.equals("0")) {
                 newValue = "0.0";
             }*/
+            if(newValue.equals("")){
+                newValue="0";
+            }
 
             newValue = fixFormat(newValue,false);
 
