@@ -1,6 +1,7 @@
 package com.fermat_p2p_layer.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
@@ -8,6 +9,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageTransmitEvent;
@@ -15,6 +18,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkChannel;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.P2PLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientRegisteredEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
@@ -60,6 +65,25 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         this.listenersAdded        = new CopyOnWriteArrayList<>();
 
 
+        FermatEventListener networkClientRegistered = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_REGISTERED);
+        networkClientRegistered.setEventHandler(new FermatEventHandler() {
+            @Override
+            public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+                if (client.isConnected()) {
+                    for (AbstractNetworkService abstractNetworkService : networkServices.values()) {
+                        try {
+                            System.out.println(abstractNetworkService.getProfile().getNetworkServiceType() + ": se está por registrar...");
+                            abstractNetworkService.startConnection();
+                        } catch (CantRegisterProfileException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+        eventManager.addListener(networkClientRegistered);
+        listenersAdded.add(networkClientRegistered);
+
 //        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_NEW_MESSAGE_TRANSMIT);
 //        fermatEventListener.setEventHandler(new FermatEventHandler() {
 //            @Override
@@ -89,7 +113,14 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
     }
 
     @Override
-    public void register(AbstractNetworkService abstractNetworkService) {
+    public synchronized void register(AbstractNetworkService abstractNetworkService) {
+        if (client.isConnected()) {
+            try {
+                abstractNetworkService.startConnection();
+            } catch (FermatException e) {
+                e.printStackTrace();
+            }
+        }
         networkServices.put(abstractNetworkService.getNetworkServiceType().getCode(), abstractNetworkService);
     }
 
@@ -98,6 +129,11 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         if(client!=null) throw new IllegalArgumentException("Client already registered");
         client = NetworkChannel;
         client.connect();
+    }
+
+    @Override
+    public void registerReconnect(NetworkChannel networkChannel) {
+        client = networkChannel;
 //        final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 //        scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
 //            @Override
@@ -118,31 +154,6 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
 //                }
 //            }
 //        }, 5, 5, TimeUnit.SECONDS);
-    }
-
-    @Override
-    public void registerReconnect(NetworkChannel networkChannel) {
-        client = networkChannel;
-        final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                if (client.isConnected()) {
-                    for (AbstractNetworkService abstractNetworkService : networkServices.values()) {
-                        try {
-                            abstractNetworkService.startConnection();
-                        } catch (CantRegisterProfileException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    try {
-                        scheduledExecutorService.shutdownNow();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, 5, 5, TimeUnit.SECONDS);
     }
 
     /**
