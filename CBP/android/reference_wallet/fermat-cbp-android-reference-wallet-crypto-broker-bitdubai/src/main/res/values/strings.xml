@@ -2,15 +2,15 @@
 
     <string name="app_name">Crypto Broker Wallet</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="action_settings">Settings</string>
     <string name="no_new_open_negotiations">No New\nOpen Negotiations</string>
     <string name="no_new_open_contracts">No New\nOpen Contracts</string>
     <string name="no_contracts">No Contracts</string>
     <string name="identity_img" translatable="false">person_img</string>
-    <string name="arrow" translatable="false">arrow</string>
+    <string name="arrow">arrow</string>
     <string name="at">\@</string>
-    <string name="cbw_unit_number">1</string>
+    <string name="cbw_unit_number" translatable="false">1</string>
     <string name="cbw_no_market_exchange_rates_to_show">No Market Exchange Rates to Show</string>
     <string name="buy">Buying</string>
     <string name="unit_number" translatable="false">1</string>
@@ -31,13 +31,13 @@
     <string name="buy_text_and_price">Buy: %1$s</string>
     <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
     <string name="market_exchange_rate_text">Market Exchange Rate</string>
-    <string name="cbw_exchange_rate_summary">1 %1$s @ %2$s %3$s</string>
+    <string name="cbw_exchange_rate_summary" translatable="false">1 %1$s @ %2$s %3$s</string>
     <string name="cbw_buying_details">Buying %1$s %2$s</string>
-    <string name="cbw_sold_quantity_and_currency">%1$s %2$s %3$s</string>
+    <string name="cbw_sold_quantity_and_currency" translatable="false">%1$s %2$s %3$s</string>
     <string name="cbw_contract_history_action_no_filter_text">No filter</string>
     <string name="cbw_contract_history_action_filter_succeed_text">Succeed</string>
     <string name="cbw_contract_history_action_filter_canceled_text">Canceled</string>
-    <string name="title_activity_broker_list">BrokerListActivity</string>
+    <string name="title_activity_broker_list" translatable="false">BrokerListActivity</string>
     <string name="delivery_date_title">Customer Delivery Date</string>
     <string name="delivery_date_text">Delivery Date: </string>
     <string name="notes">Notes</string>
@@ -136,8 +136,8 @@
     <string name="wizard_locations_title">Add Your Locations</string>
     <string name="cbw_contract_details_contract_title">SELLING BTC</string>
     <string name="cbw_contract_details_negotiation_details">NEGOTIATION DETAILS</string>
-    <string name="cbw_contract_history_sold_quantity_and_currency">%1$s %2$s %3$s</string>
-    <string name="cbw_contract_history_exchange_rate_amount_and_currency">1 %1$s @ %2$s %3$s</string>
+    <string name="cbw_contract_history_sold_quantity_and_currency" translatable="false">%1$s %2$s %3$s</string>
+    <string name="cbw_contract_history_exchange_rate_amount_and_currency" translatable="false">1 %1$s @ %2$s %3$s</string>
     <string name="bought">Bought</string>
     <string name="cbw_current_earings_title">Current Earnings:</string>
     <string name="cbw_earning_wizard_item_msg">Assign a wallet here</string>
