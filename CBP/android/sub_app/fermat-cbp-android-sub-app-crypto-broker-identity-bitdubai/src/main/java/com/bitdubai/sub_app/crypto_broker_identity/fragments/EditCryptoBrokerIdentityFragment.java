@@ -212,11 +212,11 @@ public class EditCryptoBrokerIdentityFragment
 
 
         try {
-            if ((appSession.getData(FragmentsCommons.SETTING_BROKER) != null)) {
-                subappSettings = (IdentityBrokerPreferenceSettings) appSession.getData(FragmentsCommons.SETTING_BROKER);
-            } else {
+//            if ((appSession.getData(FragmentsCommons.SETTING_BROKER) != null)) {
+//                subappSettings = (IdentityBrokerPreferenceSettings) appSession.getData(FragmentsCommons.SETTING_BROKER);
+//            } else {
                 subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
-            }
+//            }
         } catch (Exception e) {
             subappSettings = null;
         }
@@ -227,7 +227,7 @@ public class EditCryptoBrokerIdentityFragment
             if (subappSettings == null) {
                 subappSettings = new IdentityBrokerPreferenceSettings();
                 subappSettings.setIsPresentationHelpEnabled(true);
-                appSession.setData(FragmentsCommons.SETTING_BROKER, subappSettings);
+//                appSession.setData(FragmentsCommons.SETTING_BROKER, subappSettings);
             }
 
             showDialog = subappSettings.isHomeTutorialDialogEnabled();
