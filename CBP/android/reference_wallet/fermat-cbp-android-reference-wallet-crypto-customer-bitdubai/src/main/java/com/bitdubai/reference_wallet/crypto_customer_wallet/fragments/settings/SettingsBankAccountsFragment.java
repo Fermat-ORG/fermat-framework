@@ -47,23 +47,21 @@ public class SettingsBankAccountsFragment
     private BankAccountsAdapter adapter;
     private View emptyView;
 
-    // Fermat Managers
-    private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
 
     public static SettingsBankAccountsFragment newInstance() {
-        SettingsBankAccountsFragment fragment = new SettingsBankAccountsFragment();
-        return fragment;
+        return new SettingsBankAccountsFragment();
     }
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = appSession.getModuleManager();
+            CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             //Try to load appSession data
@@ -90,17 +88,6 @@ public class SettingsBankAccountsFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
-        /*PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBody(R.string.cbw_wizard_accounts_dialog_body)
-                .setSubTitle(R.string.cbw_wizard_accounts_dialog_sub_title)
-                .setTextFooter(R.string.cbw_wizard_accounts_dialog_footer)
-                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
-                .setIconRes(R.drawable.cbp_crypto_customer)
-                .build();
-
-        presentationDialog.show();*/
 
         View layout = inflater.inflate(R.layout.ccw_settings_bank_accounts, container, false);
         configureToolbar();
@@ -134,6 +121,7 @@ public class SettingsBankAccountsFragment
         return layout;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -171,7 +159,6 @@ public class SettingsBankAccountsFragment
     }
 
     private void saveSettingAndGoNextStep() {
-        appSession.setData(FragmentsCommons.CONFIGURED_DATA, true); // TODO: solo para testing, quitar despues
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS, appSession.getAppPublicKey());
     }
 

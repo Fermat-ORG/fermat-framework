@@ -105,6 +105,8 @@ public class OpenContractMonitorAgent2
                 }
             }
 
+
+
             // Check if pending events
             List<String> pendingEventsIdList = openContractBusinessTransactionDao.getPendingEvents();
             for (String eventId : pendingEventsIdList) {

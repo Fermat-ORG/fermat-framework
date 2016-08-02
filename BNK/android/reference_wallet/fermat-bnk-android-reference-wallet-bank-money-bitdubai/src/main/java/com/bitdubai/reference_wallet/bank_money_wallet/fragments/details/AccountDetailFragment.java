@@ -126,7 +126,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                 .setBannerRes(R.drawable.bw_banner_bank)
                 .setBody(R.string.bnk_bank_money_wallet_account_body)
-                .setTitle("prueba Title")
+//                .setTitle("prueba Title")
                 .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)
                 .setTextFooter(R.string.bnk_bank_money_wallet_account_footer).setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setVIewColor(R.color.bnk_gradient_end_background)
@@ -320,7 +320,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
                     errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }
         } else {
-            Toast.makeText(getActivity(), "Sorry, an error happened in BalanceSummaryFragment (Module == null)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.bnk_error_msg_std), Toast.LENGTH_SHORT).show();
         }
         return data;
 
@@ -343,7 +343,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
             //    onRefresh();
             //    break;
             case BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_ERROR:
-                Toast.makeText(getActivity(), "An error ocurred while applying the transaction, please try again later", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.bnk_error_msg_std_try_again), Toast.LENGTH_SHORT).show();
                 onRefresh();
                 break;
             default:

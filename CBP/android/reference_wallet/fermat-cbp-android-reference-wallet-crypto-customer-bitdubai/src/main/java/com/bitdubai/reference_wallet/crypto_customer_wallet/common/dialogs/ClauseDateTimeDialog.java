@@ -32,9 +32,6 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
 
     @Override
     public void getDate(int year, int monthOfYear, int dayOfMonth) {
-//        if (!valuesHasChanged) valuesHasChanged = this.year != year;
-//        if (!valuesHasChanged) valuesHasChanged = this.monthOfYear != monthOfYear;
-//        if (!valuesHasChanged) valuesHasChanged = this.dayOfMonth != dayOfMonth;
 
         this.year = year;
         this.monthOfYear = monthOfYear;
@@ -47,8 +44,6 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
 
     @Override
     public void getTime(int hourOfDay, int minute) {
-//        if (!valuesHasChanged) valuesHasChanged = this.hourOfDay != hourOfDay;
-//        if (!valuesHasChanged) valuesHasChanged = this.minute != minute;
 
         this.hourOfDay = hourOfDay;
         this.minute = minute;

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Home balances -->
+    <string name="csh_home_titlebar_title">CASH WALLET</string>
+    <string name="csh_home_titlebar_balance">BALANCE</string>
+    <string name="csh_home_titlebar_available">Disponible</string>
+    <string name="csh_home_titlebar_book">Diferido</string>
+
+
+    <!-- Error messages -->
+    <string name="cash_error_msg_std">Disculpe, un error ha ocurrido. No se pudo completar la acción</string>
+    <string name="cash_error_msg_std_try_again">Disculpe, un error ha ocurrido. Favor intente de nuevo.</string>
+
+    <string name="cash_error_msg_transaction_failed">Disculpe! La transacción fallo con un error</string>
+    <string name="cash_error_msg_transaction_failed_insufficient_funds">Disculpe! La transaccion fallo, no hay fondos suficientes</string>
+    <string name="cash_error_msg_wallet_could_not_be_created">Disculpe! La cartera no pudo ser creada</string>
+    <string name="cash_error_msg_invalid_currency_selected">Favor seleccione una Moneda valida!</string>
+    <string name="cash_error_msg_amount_empty">"El monto no puede estar vacío"</string>
+    <string name="cash_error_msg_amount_zero">El monto no puede ser cero</string>
+    <string name="cash_error_msg_amount_larger_funds">El monto no puede ser mayor al disponible en la cartera</string>
+
+
+    <!-- Home transactions -->
+    <string name="csh_no_transactions">No hay transacciones</string>
+
+    <string name="csh_deposit_transaction_text">Depósito</string>
+    <string name="csh_withdrawal_transaction_text">Retiro</string>
+
+    <string name="csh_hold_transaction_text_caps">RETENCION</string>
+    <string name="csh_unhold_transaction_text_caps">LIBERACION</string>
+    <string name="csh_deposit_transaction_text_caps">DEPOSITO</string>
+    <string name="csh_withdrawal_transaction_text_caps">RETIRO</string>
+
+    <string name="csh_deposit_transaction_text_action">Depositar</string>
+    <string name="csh_withdrawal_transaction_text_action">Retirar</string>
+
+    <string name="csh_deposit_transaction_text_action_caps">DEPOSITAR</string>
+    <string name="csh_withdrawal_transaction_text_action_caps">RETIRAR</string>
+
+
+    <!-- Transaction detail fragment -->
+    <string name="cw_memo">NOTA</string>
+    <string name="cw_date">FECHA</string>
+    <string name="cw_amount">MONTO</string>
+    <string name="cw_type">TIPO</string>
+    <string name="cw_transaction_details">Detalles de Transacción</string>
+    <string name="csh_delete">Eliminar</string>
+    <string name="csh_update">Editar</string>
+
+
+    <!-- Transaction Dialogs -->
+    <string name="csh_ctd_amount_tag">MONTO</string>
+    <string name="csh_ctd_amount_hint">Ingrese un monto</string>
+    <string name="csh_ctd_memo_tag">NOTA</string>
+    <string name="csh_ctd_memo_hint">Ingrese una nota</string>
+    <string name="csh_ctd_cancel_button_text">CANCELAR</string>
+
+
+    <!-- Home tutorial presentation dialog -->
+    <string name="csh_home_tut_present_dialog_sub_title">Esta cartera sirve para manejar dinero en efectivo.\nCon ella se puede:</string>
+    <string name="csh_home_tut_present_dialog_body">* Ver sus Balances.\n* Depositar dinero en la cartera.\n* Retirar dinero de la cartera.\n* Ver el histórico de transacciones.</string>
+
+</resources>

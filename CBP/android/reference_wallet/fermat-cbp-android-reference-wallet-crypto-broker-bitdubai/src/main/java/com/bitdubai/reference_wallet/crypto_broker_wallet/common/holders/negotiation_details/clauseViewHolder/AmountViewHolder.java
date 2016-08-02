@@ -11,6 +11,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.Negotiat
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Map;
@@ -53,8 +54,8 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
         final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
         currencyTextValue.setText(clauses.get(clauseType).getValue());
 
-        if (clause.getValue().equals("0.0") || clause.getValue().equals("0")) {
-            amountValue.setText("0.0");
+        if (clause.getValue().equals("0.0") || clause.getValue().equals("0") || clause.getValue().equals("0,0")) {
+            amountValue.setText(defaultValue());
         } else {
             amountValue.setText(fixFormat(clause.getValue()));
         }
@@ -112,35 +113,38 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
     }
 
 
+    private String fixFormat(String value) {
+
+        if (compareLessThan1(value)) {
+            numberFormat.setMaximumFractionDigits(8);
+        } else {
+            numberFormat.setMaximumFractionDigits(2);
+        }
+        return numberFormat.format(new BigDecimal(Double.valueOf(value)));
+
+    }
+
+
     private Boolean compareLessThan1(String value) {
         Boolean lessThan1 = true;
-        try {
-            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE) == -1) {
-                lessThan1 = true;
-            } else {
-                lessThan1 = false;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+        if (BigDecimal.valueOf(Double.valueOf(value)).
+                compareTo(BigDecimal.ONE) == -1) {
+            lessThan1 = true;
+        } else {
+            lessThan1 = false;
         }
+
         return lessThan1;
     }
 
-    private String fixFormat(String value) {
-
-        try {
-            if (compareLessThan1(value)) {
-                numberFormat.setMaximumFractionDigits(8);
-            } else {
-                numberFormat.setMaximumFractionDigits(2);
-            }
-            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "0";
+    String defaultValue(){
+        DecimalFormatSymbols symbols =((DecimalFormat)  numberFormat).getDecimalFormatSymbols();
+        if(symbols.getDecimalSeparator()=='.'){
+            return "0.0";
+        }else{
+            return "0,0";
         }
-
     }
 
 

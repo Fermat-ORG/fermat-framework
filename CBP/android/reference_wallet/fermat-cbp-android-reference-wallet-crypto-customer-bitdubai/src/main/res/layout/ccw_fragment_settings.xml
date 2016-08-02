@@ -2,12 +2,10 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
-
-
+    android:background="@color/white"
+    android:orientation="vertical">
 
 
     <LinearLayout
@@ -17,6 +15,8 @@
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:paddingStart="16dp"
         android:paddingTop="8dp">
 
@@ -25,9 +25,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="7"
-            android:text="My Locations"
-            android:textSize="20sp"
-            android:textColor="#949494"/>
+            android:text="@string/ccw_my_locations"
+            android:textColor="#949494"
+            android:textSize="20sp"/>
 
         <ImageView
             android:layout_width="0dp"
@@ -38,13 +38,11 @@
             tools:ignore="contentDescription"/>
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#CCCCCC"/>
-
-
-
 
 
     <LinearLayout
@@ -54,6 +52,8 @@
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:paddingStart="16dp"
         android:paddingTop="8dp">
 
@@ -62,9 +62,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="7"
-            android:text="Bank Accounts"
-            android:textSize="20sp"
-            android:textColor="#949494"/>
+            android:text="@string/ccw_bank_accounts"
+            android:textColor="#949494"
+            android:textSize="20sp"/>
 
         <ImageView
             android:layout_width="0dp"
@@ -82,10 +82,6 @@
         android:background="#CCCCCC"/>
 
 
-
-
-
-
     <LinearLayout
         android:id="@+id/settings_providers"
         android:layout_width="match_parent"
@@ -93,6 +89,8 @@
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:paddingStart="16dp"
         android:paddingTop="8dp">
 
@@ -101,9 +99,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="7"
-            android:text="Exchange Rate Providers"
-            android:textSize="20sp"
-            android:textColor="#949494"/>
+            android:text="@string/ccw_exchange_rate_providers"
+            android:textColor="#949494"
+            android:textSize="20sp"/>
 
         <ImageView
             android:layout_width="0dp"
@@ -127,6 +125,8 @@
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:paddingStart="16dp"
         android:paddingTop="8dp">
 
@@ -135,9 +135,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="7"
-            android:text="Fee Management"
-            android:textSize="20sp"
-            android:textColor="#949494"/>
+            android:text="@string/ccw_fee_management"
+            android:textColor="#949494"
+            android:textSize="20sp"/>
 
         <ImageView
             android:layout_width="0dp"
@@ -153,9 +153,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#CCCCCC"/>
-
-
-
 
 
 </LinearLayout>
