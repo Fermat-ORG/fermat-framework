@@ -26,6 +26,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Created by nelson on 16/02/16.
+ *
  */
 public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseInformation, FermatViewHolder> {
 
@@ -36,7 +37,6 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
     private static final int TYPE_SINGLE_CHOICE = 1;
     private static final int TYPE_DATE_TIME = 2;
     private static final int TYPE_EXCHANGE_RATE = 3;
-    private static final int TYPE_FOOTER = 5;
 
     private CustomerBrokerNegotiationInformation negotiationInfo;
 

@@ -274,4 +274,5 @@
     <string name="ccw_slow">Slow</string>
     <string name="ccw_normal">Normal</string>
     <string name="ccw_fast">Fast</string>
+    <string name="ccw_negotiation_details">Negotiation Details</string>
 </resources>
