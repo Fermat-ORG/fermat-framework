@@ -1446,6 +1446,15 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 mToolbar.removeAllViewsInLayout();
             }
 
+            try{
+                if (navigationViewPainter!=null) {
+                    navigationViewPainter.onDestroy();
+                    navigationViewPainter = null;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
             final io.codetail.widget.RevealFrameLayout mRevealView = (io.codetail.widget.RevealFrameLayout) findViewById(R.id.reveal);
             if (mRevealView != null) {
                 mRevealView.removeAllViews();
@@ -1779,13 +1788,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         try {
-
-            try{
-                navigationViewPainter.onDestroy();
-                navigationViewPainter = null;
-            }catch (Exception e){
-                e.printStackTrace();
-            }
 
             wizards = null;
 //            Intent intent = new Intent(this, NotificationService.class);
