@@ -57,6 +57,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
     int textFooter = -1;
     int textNameLeft = -1;
     int textNameRight = -1;
+    int textCloseButton = -1;
     private String textColor;
     //    private int titleTextColor = -1;
     private int viewColor = -1;
@@ -177,6 +178,8 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         if (footer_title != null) footer_title.setText(textFooter);
         if (checkbox_not_show_text != null && textCheckboxNotShow != -1)
             checkbox_not_show_text.setText(textCheckboxNotShow);
+        if (textCloseButton != -1 && btn_dismiss != null)
+            btn_dismiss.setText(textCloseButton);
         if (viewColor != -1) {
             view_color.setBackgroundResource(viewColor);
             view_color1.setBackgroundResource(viewColor);
@@ -313,6 +316,10 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         this.title = title;
     }
 
+    public void setTextCloseButton(int textCloseButton) {
+        this.textCloseButton = textCloseButton;
+    }
+
     public void setSubTitle(int subTitle) {
         this.subTitle = subTitle;
     }
@@ -379,6 +386,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         private int title = -1;
         private int subTitle = -1;
         private int body = -1;
+        private int textCloseButton = -1;
         private int textFooter = -1;
         private int textCheckbox = -1;
         private String textColor;
@@ -439,6 +447,11 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
                 else if (templateType.equals(TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES))
                     presentationDialog.setTextNameLeft(R.string.dialog_button_close);
             }
+            if (textCloseButton != -1) {
+                presentationDialog.setTextCloseButton(textCloseButton);
+            } else {
+                presentationDialog.setTextCloseButton(R.string.close_button);
+            }
             if (iconRes != -1) {
                 presentationDialog.setIconRes(iconRes);
             }
@@ -468,6 +481,11 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
 
         public Builder setImageLeft(int imageLeft) {
             this.imageLeft = imageLeft;
+            return this;
+        }
+
+        public Builder setTextCloseButton(int textCloseButton) {
+            this.textCloseButton = textCloseButton;
             return this;
         }
 
