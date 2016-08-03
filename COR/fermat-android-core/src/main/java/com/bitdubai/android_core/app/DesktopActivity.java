@@ -275,6 +275,34 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     }
 
     @Override
+    public void changeActivity(String activityName, String appPublicKey, String appBackPublicKey, Object... objects) {
+        try {
+            Activities activities = Activities.getValueFromString(activityName);
+            if (!activities.equals(Activities.CCP_DESKTOP)) {
+                getDesktopRuntimeManager().getLastDesktopObject().getActivity(activities);
+                resetThisActivity();
+                loadUI();
+            } else {
+                try {
+                    resetThisActivity();
+                    getDesktopRuntimeManager().getLastApp().getActivity(activities);
+
+                    Intent intent = new Intent(this, DesktopActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                    startActivity(intent);
+                } catch (Exception e) {
+                    getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
+                    Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+                }
+            }
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void connectWithOtherApp(String fermatAppPublicKey, Object[] objectses) {
 
     }
@@ -465,7 +493,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             if (activityCode.equals("develop_mode")) {
                 onBackPressed();
             } else
-                changeActivity(activityCode, data.getAppLinkPublicKey());
+                changeActivity(activityCode, data.getAppLinkPublicKey(),null,null);
         } catch (Exception e) {
             e.printStackTrace();
         }

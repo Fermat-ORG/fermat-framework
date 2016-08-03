@@ -330,9 +330,14 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     /**
      * Change activity
      */
-    protected final void changeActivity(Activities activity) {
+    protected final void changeActivityOld(Activities activity) {
         destroy();
         getFermatScreenSwapper().changeActivity(activity.getCode(), appSession.getAppPublicKey());
+    }
+
+    protected final void changeActivity(Activities activity) {
+        destroy();
+        getFermatScreenSwapper().changeActivity(activity.getCode(),appSession.getAppPublicKey(),null,null);
     }
 
     /**
