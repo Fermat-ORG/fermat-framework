@@ -249,11 +249,12 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
 //                                }
 //                            }
                             changeStartActivity(Activities.CCP_DESKTOP.getCode());
+                            changeActivity(Activities.CCP_DESKTOP);
                         }
                     }
                 }).start();
 
-                home();
+//                home();
             }else {
                 doNext();
 

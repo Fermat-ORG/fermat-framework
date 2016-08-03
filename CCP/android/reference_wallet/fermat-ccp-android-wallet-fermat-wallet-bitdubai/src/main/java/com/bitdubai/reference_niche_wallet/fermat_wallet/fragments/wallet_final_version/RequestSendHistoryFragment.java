@@ -160,6 +160,12 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         }
     }
 
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+        isRefreshing = false;
+        onRefresh();
+    }
 
     @Override
     protected boolean hasMenu() {

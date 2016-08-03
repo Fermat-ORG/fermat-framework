@@ -194,7 +194,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Handlers
      */
     private final Handler mDrawerActionHandler = new Handler();
-    private final Handler refreshHandler = new Handler();
 
     /**
      * UI
@@ -230,7 +229,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     /**
      * receivers
      */
-    UpdateViewReceiver updateViewReceiver;
+    private UpdateViewReceiver updateViewReceiver;
 
 
     /**
@@ -307,46 +306,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
             if (optionsMenu != null) {
                 List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
                 loadMenu(menu, optionsMenuItems);
-//                for (int i=0;i< optionsMenuItems.size();i++) {
-//                    OptionMenuItem menuItem = optionsMenuItems.get(i);
-//                    int id = menuItem.getId();
-//                    int groupId = menuItem.getGroupId();
-//                    int order = menuItem.getOrder();
-//                    int showAsAction = menuItem.getShowAsAction();
-//                    MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
-//                    FermatDrawable icon = menuItem.getFermatDrawable();
-//                    if(icon!=null) {
-//                        int iconRes = ResourceLocationSearcherHelper.obtainRes(this,icon.getId(),icon.getSourceLocation(),icon.getOwner().getOwnerAppPublicKey());
-//                        item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//
-//                    }
-//                    if(showAsAction!=-1)item.setShowAsAction(menuItem.getShowAsAction());
-//                    int actionViewClass = menuItem.getActionViewClass();
-//                    if(actionViewClass!=-1){
-//                        item.setActionView(OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this,actionViewClass));
-//                    }
-//                    if(menuItem.getOptionMenuPressEvent()!=null){
-//                        final OptionMenuPressEvent optionMenuPressEvent = menuItem.getOptionMenuPressEvent();
-//                        if(optionMenuPressEvent instanceof OptionMenuChangeActivityOnPressEvent) {
-//                            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//                                @Override
-//                                public boolean onMenuItemClick(MenuItem item) {
-//                                    changeActivity(((OptionMenuChangeActivityOnPressEvent) optionMenuPressEvent).getActivityCode(),null);
-//                                    //return true because i want to cancell the rest of the callback if this is an activity change
-//                                    return true;
-//                                }
-//                            });
-//                        }
-//                    }
-//                }
             }
             return true;
 
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-//            makeText(getApplicationContext(), "Oooops! recovering from system error",
-//                    LENGTH_LONG).show();
             e.printStackTrace();
         }
         return true;
@@ -409,17 +374,14 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
                 for (int i = 0; i < optionsMenuItems.size(); i++) {
                     OptionMenuItem menuItem = optionsMenuItems.get(i);
-                    int id = menuItem.getId();
-                    int groupId = menuItem.getGroupId();
-                    int order = menuItem.getOrder();
-                    int showAsAction = menuItem.getShowAsAction();
-                    MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+                    MenuItem item = menu.add(menuItem.getGroupId(), menuItem.getId(), menuItem.getOrder(), menuItem.getLabel());
                     FermatDrawable icon = menuItem.getFermatDrawable();
                     if (icon != null) {
                         int iconRes = ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE, this, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
                         item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
                     }
+                    int showAsAction = menuItem.getShowAsAction();
                     if (showAsAction != -1) item.setShowAsAction(menuItem.getShowAsAction());
                     int actionViewClass = menuItem.getActionViewClass();
                     if (actionViewClass != -1) {
@@ -650,7 +612,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 Typeface typeface = null;
                 try {
                     if (titleBar.getFont() != null)
-                        typeface = Typeface.createFromAsset(getApplicationContext().getAssets(), new StringBuilder().append("fonts/").append(titleBar.getFont()).toString());
+                        typeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/" + titleBar.getFont());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -843,7 +805,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     addOptionMenuItems(fragment.getOptionsMenu());
                 Owner owner = fragment.getOwner();
                 if (owner == null)
-                    throw new NullPointerException(new StringBuilder().append("Owner null on fragment: ").append(fragment.getType()).append(" in app: ").append(session.getAppPublicKey()).append(", Please check your App structure").toString());
+                    throw new NullPointerException("Owner null on fragment: " + fragment.getType() + " in app: " + session.getAppPublicKey() + ", Please check your App structure");
                 String appPublicKey = owner.getOwnerAppPublicKey().equals(session.getAppPublicKey()) ? session.getAppPublicKey() : fragment.getOwner().getOwnerAppPublicKey();
                 AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(appPublicKey, this);
                 if (session instanceof ComboAppType2FermatSession) {
@@ -852,7 +814,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 try {
                     fragments[i] = appConnections.getFragmentFactory().getFragment(fragment.getType(), session, null, fragment);
                 } catch (FragmentNotFoundException e) {
-                    throw new InvalidParameterException(e, new StringBuilder().append("Fragment not found: ").append(fragment.getType()).append(" with owner: ").append(fragment.getOwner()).toString(), "Framework building tabs");
+                    throw new InvalidParameterException(e, "Fragment not found: " + fragment.getType() + " with owner: " + fragment.getOwner(), "Framework building tabs");
                 }
                 tabTitles[i] = tab.getLabel();
                 tabsDrawables[i] = tab.getDrawable();
@@ -924,7 +886,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             e.printStackTrace();
             handleExceptionAndRestart();
         } catch (Resources.NotFoundException e) {
-            Log.e(TAG, new StringBuilder().append("Resource not found exception, ").append(e.getMessage()).toString());
+            Log.e(TAG, "Resource not found exception, " + e.getMessage());
             e.printStackTrace();
             handleExceptionAndRestart();
         } catch (Exception e) {
@@ -997,7 +959,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 try {
                     fragments[i] = appConnections.getFragmentFactory().getFragment(fragment.getType(), session, null, fragment);
                 } catch (FragmentNotFoundException e) {
-                    throw new InvalidParameterException(e, new StringBuilder().append("Fragment not found: ").append(fragment.getType()).append(" with owner: ").append(fragment.getOwner()).toString(), "Framework building tabs");
+                    throw new InvalidParameterException(e, "Fragment not found: " + fragment.getType() + " with owner: " + fragment.getOwner(), "Framework building tabs");
                 }
             } catch (InvalidParameterException e) {
                 e.printStackTrace();
@@ -1411,20 +1373,20 @@ public abstract class FermatActivity extends AppCompatActivity implements
             //clean page adapter
 
             if (pagertabs != null) {
-                pagertabs.removeAllViews();
-                pagertabs.removeAllViewsInLayout();
-                pagertabs.clearOnPageChangeListeners();
-                pagertabs.setVisibility(View.GONE);
-                ((ViewGroup) pagertabs.getParent()).removeView(pagertabs);
-                pagertabs = null;
+                try {
+                    pagertabs.clearOnPageChangeListeners();
+                    pagertabs.setVisibility(View.GONE);
+                    pagertabs.removeAllViews();
+                    ((ViewGroup) pagertabs.getParent()).removeView(pagertabs);
+                    pagertabs = null;
+                }catch (Exception e){
+                    Log.e(TAG,"Removing views");
+                }
             }
             System.gc();
-
-            //TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
             if (tabLayout != null) {
                 tabLayout.removeAllTabs();
                 tabLayout.removeAllViews();
-                tabLayout.removeAllViewsInLayout();
             }
 
             final io.codetail.widget.RevealFrameLayout mRevealView = (io.codetail.widget.RevealFrameLayout) findViewById(R.id.reveal);
@@ -1462,8 +1424,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             }
 
-            Fragment[] fragments = null;
-
             elementsWithAnimation = new ArrayList<>();
             if (bottomNavigation != null) {
                 bottomNavigation.reset();
@@ -1474,10 +1434,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 pagertabs.removeAllViews();
                 pagertabs = null;
             }
-
-
-//            this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
-
             System.gc();
             closeContextMenu();
             closeOptionsMenu();
@@ -1678,7 +1634,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         try {
                             FermatApplication.getInstance().getAppManager().getAppStructure(fermatApp.getAppPublicKey()).getActivity(Activities.valueOf(activityCode));
                         } catch (IllegalArgumentException e) {
-                            Log.e(TAG, new StringBuilder().append("Error: illegalArgumentException, Activity code: ").append(activityCode).append(" not founded in App: ").append(fermatApp.getAppName()).toString());
+                            Log.e(TAG, "Error: illegalArgumentException, Activity code: " + activityCode + " not founded in App: " + fermatApp.getAppName());
                         }
                 }
             }
@@ -1779,8 +1735,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             wizards = null;
 //            Intent intent = new Intent(this, NotificationService.class);
 //            stopService(intent);
-
-            //navigationDrawerFragment.onDetach();
 
             if (runtimeStructureManager != null) {
                 runtimeStructureManager.clear();
@@ -1920,7 +1874,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                             }
                         });
                     } else {
-                        Log.e(TAG, new StringBuilder().append("ActivityObject null, line:").append(new Throwable().getStackTrace()[0].getLineNumber()).toString());
+                        Log.e(TAG, "ActivityObject null, line:" + new Throwable().getStackTrace()[0].getLineNumber());
                     }
                 }
 
@@ -2326,7 +2280,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             optionMenu.getItem(id).setVisibility(isVisible);
             getToolbar().getMenu().findItem(id).setVisible(isVisible);
         } else {
-            throw new InvalidParameterException(new StringBuilder().append("OptionMenu in activity: ").append(activity.getType().getCode()).append(" in app: ").append(appPublicKey).toString());
+            throw new InvalidParameterException("OptionMenu in activity: " + activity.getType().getCode() + " in app: " + appPublicKey);
         }
     }
 

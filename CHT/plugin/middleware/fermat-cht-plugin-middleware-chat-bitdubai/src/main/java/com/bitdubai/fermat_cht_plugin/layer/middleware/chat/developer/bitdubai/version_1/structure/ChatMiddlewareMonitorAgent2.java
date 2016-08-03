@@ -155,30 +155,23 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
 
     @Override
-    protected Runnable agentJob() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    //logManager.log(null,
-                    logManager.log(ChatMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()),
-                            "Iteration number " + iterationNumber, null, null);
-                    doTheMainTask();
-                } catch (DatabaseOperationException e) {
-                    chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                            e);
-                } catch (CantSendChatMessageException e) {
-                    chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                            e);
-                }
-            }
-        };
-        return runnable;
+    protected void agentJob() {
+        try {
+            //logManager.log(null,
+            logManager.log(ChatMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()),
+                    "Iteration number " + iterationNumber, null, null);
+            doTheMainTask();
+        } catch (DatabaseOperationException e) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+        } catch (CantSendChatMessageException e) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+        }
     }
 
     @Override
-    protected void onErrorOccur() {
-        chatMiddlewarePluginRoot.reportError(
+    protected void onErrorOccur(Exception e) {        chatMiddlewarePluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 Error"));
     }

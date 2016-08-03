@@ -232,11 +232,10 @@ public class IntraWalletUserActorDao {
             if (table == null)
                 throw new CantGetUserDeveloperIdentitiesException("Cant get intra user actor list, table not found.", "Intra User Actor", "");
 
-            // 2) Find the Intra User , filter by keys.
+            // 2) set filter by keys.
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
 
-            table.loadToMemory();
 
             /**
              * Get actual date
@@ -244,19 +243,15 @@ public class IntraWalletUserActorDao {
             Date d = new Date();
             long milliseconds = d.getTime();
 
-            // 3) Get Intra user record and update state.
-            for (DatabaseTableRecord record : table.getRecords()) {
+            // 3) Get a record to set data
+            DatabaseTableRecord record =  table.getEmptyRecord();
 
-                record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode());
-                record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
-                table.updateRecord(record);
-            }
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode());
+             record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
+             table.updateRecord(record);
 
-        } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantUpdateConnectionException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
-
-        } catch (CantUpdateRecordException e) {
+        }  catch (CantUpdateRecordException e) {
 
             throw new CantUpdateConnectionException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
 

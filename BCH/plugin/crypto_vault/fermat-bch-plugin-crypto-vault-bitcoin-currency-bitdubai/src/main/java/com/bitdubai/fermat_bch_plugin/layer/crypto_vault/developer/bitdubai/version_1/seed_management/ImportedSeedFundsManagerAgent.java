@@ -13,7 +13,6 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSe
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDao;
-import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCurrencyCryptoVaultManager;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.VaultKeyHierarchyGenerator;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.util.BitcoinBlockchainNetworkSelector;
 
@@ -71,12 +70,12 @@ public class ImportedSeedFundsManagerAgent extends AbstractAgent{
 
 
     @Override
-    protected Runnable agentJob() {
-        return this.agent;
+    protected void agentJob() {
+        this.agent.run();
     }
 
     @Override
-    protected void onErrorOccur() {
+    protected void onErrorOccur(Exception e) {
 
     }
 
