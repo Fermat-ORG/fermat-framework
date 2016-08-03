@@ -3,7 +3,6 @@ package com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pr
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-//import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 
 /**
  * Created by eze on 11/06/15.
@@ -23,7 +22,6 @@ public class CryptoTransaction {
     private String op_Return;
     private CryptoTransactionType cryptoTransactionType;
     private int blockDepth;
-    private long Total;
 
 
     /**
@@ -53,24 +51,7 @@ public class CryptoTransaction {
         this.cryptoStatus = cryptoStatus;
     }
 
-    //CONSTRUCTOR para BitcoinLossProtectedWalletTransactionExecutor
-    public CryptoTransaction(String transactionHash,
-                             BlockchainNetworkType blockchainNetworkType,
-                             CryptoAddress addressFrom,
-                             CryptoAddress addressTo,
-                             CryptoCurrency cryptoCurrency,
-                             long cryptoAmount,
-                             long total,
-                             CryptoStatus cryptoStatus) {
-        this.transactionHash = transactionHash;
-        this.blockchainNetworkType = blockchainNetworkType;
-        this.addressFrom = addressFrom;
-        this.addressTo = addressTo;
-        this.cryptoCurrency = cryptoCurrency;
-        this.cryptoAmount = cryptoAmount;
-        this.Total = total;
-        this.cryptoStatus = cryptoStatus;
-    }
+
     /**
      * Default constructor.
      */
@@ -181,12 +162,12 @@ public class CryptoTransaction {
         this.fee = fee;
     }
 
-        public long getTotal() {
-            return Total;
-        }
 
-        public void setTotal(long total) {
-            this.Total = total;
-        }
+    public long getBtcAmount() {
+        return btcAmount;
+    }
 
+    public void setBtcAmount(long btcAmount) {
+        this.btcAmount = btcAmount;
+    }
 }

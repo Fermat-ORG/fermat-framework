@@ -119,8 +119,10 @@ public class BitcoinLossProtectedWalletTransactionExecutor implements com.bitdub
             bitcoinWalletTransactionRecord.setActorToPublicKey(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
             bitcoinWalletTransactionRecord.setActorToType(cryptoAddressBookRecord.getDeliveredToActorType());
             bitcoinWalletTransactionRecord.setBlockchainNetworkType(cryptoTransaction.getBlockchainNetworkType());
-            bitcoinWalletTransactionRecord.setTotal(cryptoTransaction.getTotal());
+
             bitcoinWalletTransactionRecord.setCryptoCurrency(CryptoCurrency.BITCOIN);
+
+            bitcoinWalletTransactionRecord.setTotal(cryptoTransaction.getCryptoAmount());
 
             return bitcoinWalletTransactionRecord;
 
