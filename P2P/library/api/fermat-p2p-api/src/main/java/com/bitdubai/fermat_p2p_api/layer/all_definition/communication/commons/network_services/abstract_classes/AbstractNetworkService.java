@@ -253,7 +253,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             /**
              * Register Elements after Start
              */
-            handleNetworkServiceRegisteredEvent();
+           // handleNetworkServiceRegisteredEvent();
 
 
         } catch (Exception exception) {
