@@ -2,6 +2,8 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.start_neg
 
 import android.app.Fragment;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -24,6 +26,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -39,14 +42,17 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Merchan
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.StartNegotiationAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.IdentityDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.TextValueDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.IntraUserIdentity;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -185,12 +191,17 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
             Collection<ClauseInformation> clauses;
             String customerPublicKey = negotiationInfo.getCustomer().getPublicKey();
             String brokerPublicKey = negotiationInfo.getBroker().getPublicKey();
+            IntraUserIdentity intraUserIdentity = new IntraUserIdentity(
+                    moduleManager,
+                    errorManager,
+                    TAG,
+                    getActivity());
 
             if (mapClauses != null) {
 
-                if (validateClauses(mapClauses)) {
+                if (intraUserIdentity.isCreateIdentityIntraUser(mapClauses)) {
 
-                    if (isCreateIdentityIntraUser(mapClauses)) {
+                    if (validateClauses(mapClauses)) {
 
                         clauses = getClause(mapClauses);
 
@@ -200,22 +211,24 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
                         } else {
                             Toast.makeText(getActivity(), "Error sending the negotiation", Toast.LENGTH_LONG).show();
                         }
-
-                    } else {
-                        Toast.makeText(getActivity(), "Need to register THE WALLET USER for user BTC", Toast.LENGTH_LONG).show();
                     }
+
+                } else {
+
+                    intraUserIdentity.dialogCreateIdentityIntraUser(appSession, appResourcesProviderManager);
+
                 }
 
             } else {
                 Toast.makeText(getActivity(), "Error in the information. Is null.", Toast.LENGTH_LONG).show();
             }
 
-        } catch (FermatException ex) {
+        } catch (FermatException e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             else
-                Log.e(TAG, ex.getMessage(), ex);
+                Log.e(TAG, e.getMessage(), e);
         }
     }
 
@@ -280,14 +293,8 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
         final ClauseInformation exchangeRate = clauses.get(ClauseType.EXCHANGE_RATE);
         negotiationInfo.putClause(exchangeRate, brokerMarketRate);
 
-        try {
-            this.walletUser = isCreateIdentityIntraUser(clauses);
-        } catch (CantSendNegotiationException e) {
-
-        }
-
         //ADAPTER
-        adapter = new StartNegotiationAdapter(getActivity(), negotiationInfo, walletUser);
+        adapter = new StartNegotiationAdapter(getActivity(), negotiationInfo);
         adapter.setFooterListener(this);
         adapter.setClauseListener(this);
         adapter.setMarketRateList(getActualExchangeRates());
@@ -492,18 +499,11 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
         //ASIGNAMENT NEW PAY
         // final String amountToPayStr = numberFormat.format(amountToPay);
 
-
         final String amountToPayStr = fixFormat(String.valueOf(amountToPay),true);
         final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
         negotiationInfo.putClause(brokerCurrencyQuantityClause, amountToPayStr);
 
-        try {
-            this.walletUser = isCreateIdentityIntraUser(clauses);
-        } catch (CantSendNegotiationException e) {
-
-        }
-
-        adapter.changeDataSet(negotiationInfo, walletUser);
+        adapter.changeDataSet(negotiationInfo);
 
 
     }
@@ -709,7 +709,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
     }
 
 
-    private boolean isCreateIdentityIntraUser(Map<ClauseType, ClauseInformation> clauses) throws CantSendNegotiationException {
+    /*private boolean isCreateIdentityIntraUser(Map<ClauseType, ClauseInformation> clauses) throws CantSendNegotiationException {
 
         String customerCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         String brokerCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
@@ -728,9 +728,50 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
         return true;
     }
 
+    private void createIdentityIntraUser(String alias) throws CantSendNegotiationException{
+
+        byte[] profileImage =  convertImage(R.drawable.ic_profile_male);
+        moduleManager.createIdentityIntraUser(alias, profileImage);
+
+    }
+
+    private void dialogCreateIdentityIntraUser(){
+
+        IdentityDialog identityDialog = new IdentityDialog(getActivity(), appSession, appResourcesProviderManager);
+        identityDialog.setAcceptBtnListener(new IdentityDialog.OnClickAcceptListener() {
+            @Override
+            public void onClick(String newValue) {
+                try {
+                    createIdentityIntraUser(newValue);
+                } catch (CantSendNegotiationException e) {
+                    if (errorManager != null)
+                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    else
+                        Log.e(TAG, e.getMessage(), e);
+                }
+            }
+        });
+
+        identityDialog.configure(
+                R.string.ccw_identity_dialog_title_btc,
+                R.string.ccw_identity_dialog_description_btc,
+                R.string.ccw_identity_dialog_description2_btc);
+
+        identityDialog.show();
+
+    }*/
+
     /*------------------------------------------ OTHER METHODS ---------------------------------------------*/
 
 
+    /*private byte[] convertImage(int resImage){
+        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,50,stream);
+        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+    }*/
 
     String defaultValue(){
         DecimalFormatSymbols symbols =((DecimalFormat)  numberFormat).getDecimalFormatSymbols();

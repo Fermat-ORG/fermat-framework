@@ -195,13 +195,14 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                             textDescriptionDate.setTextColor(res.getColor(R.color.description_text_status_accepted));
                             amountAndMethodTextView.setTextColor(res.getColor(R.color.description_text_status_accepted));
                     }
-                    break;
                 } else {
                     textDescription.setText("You send:");
                     textDescriptionPending.setVisibility(View.VISIBLE);
                     textDescriptionPending.setText("NOT HAD ENOUGH STOCK IN THE WALLET");
                     cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_inactive));
                 }
+
+                break;
             case 2:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_02);
                 stepTitle.setText("Payment Reception");

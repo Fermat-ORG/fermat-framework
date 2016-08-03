@@ -28,6 +28,10 @@
     <string name="ccw_amount_title">Cantidad:</string>
     <string name="ccw_amount_to_buy">Cantidad a Comprar</string>
     <string name="ccw_amount_to_pay">Cantidad a Pagar</string>
+    <string name="ccw_identity_wallet_user">Intra User Identity</string>
+    <string name="ccw_identity_dialog_title_btc">Intra User Identity</string>
+    <string name="ccw_identity_dialog_description_btc">Para recibir o enviar BTC debe crear una identidad de Intra User Identity</string>
+    <string name="ccw_identity_dialog_description2_btc">Si Desea crear la identidad ahora?\nIndique su nombre de usuario y pulse el botón Crear.</string>
     <string name="ccw_automatic_restock">Restock Automatico</string>
     <string name="ccw_bank">Banco</string>
     <string name="ccw_bank_account_broker">Cuenta Bancaria del Vendedor</string>
