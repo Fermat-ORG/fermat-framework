@@ -23,7 +23,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by frank on 12/9/15.
  */
-public class AssetFactoryNavigationViewPainter implements NavigationViewPainter {
+public class AssetFactoryNavigationViewPainter extends NavigationViewPainter {
 
     private static final String TAG = "FactoryNavigationView";
 

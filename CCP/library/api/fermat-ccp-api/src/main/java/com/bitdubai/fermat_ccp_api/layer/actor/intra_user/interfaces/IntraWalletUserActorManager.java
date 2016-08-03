@@ -35,7 +35,9 @@ public interface IntraWalletUserActorManager extends FermatManager {
                                          String intraWalletUserToAddName              ,
                                          String intraUserPhrase                       ,
                                          String intraWalletUserToAddPublicKey         ,
-                                         byte[] profileImage                          ) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException,RequestAlreadySendException;
+                                         byte[] profileImage  ,
+                                         String city,
+                                         String country) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException,RequestAlreadySendException;
 
 
     /**
@@ -67,7 +69,7 @@ public interface IntraWalletUserActorManager extends FermatManager {
     void disconnectIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantDisconnectIntraWalletUserException;
 
 
-    void receivingIntraWalletUserRequestConnection(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserPhrase,String intraUserToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException;
+    void receivingIntraWalletUserRequestConnection(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserPhrase,String intraUserToAddPublicKey, byte[] profileImage,String city, String country) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException;
 
     /**
      * The method <code>cancelIntraWalletUser</code> cancels an intra user from the connections registry

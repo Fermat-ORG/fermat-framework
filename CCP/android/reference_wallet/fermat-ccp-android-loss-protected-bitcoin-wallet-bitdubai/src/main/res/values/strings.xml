@@ -233,9 +233,9 @@
     <string name="title_activity_activity_main">Main Activity</string>
     <string name="empty_view">Empty List view</string>
     <!-- TAB BALANCE STRINGS -->
-    <string name="available_balance">available balance</string>
+    <string name="available_balance">Available balance</string>
     <string name="book_balance">book balance</string>
-    <string name="real_balance">real balance</string>
+    <string name="real_balance">Real balance</string>
     <string name="search_hint">Contact name</string>
     <string name="empty_list_msg">No contacts</string>
     <!-- TAB TRANSACTIONS -->
@@ -266,7 +266,6 @@
     <array name="items" translatable="false">
         <item>MainNet</item>
         <item>TestNet</item>
-        <item>RegTest</item>
     </array>
 
     <string name="exchange_title_label">Exchange Rate Providers</string>

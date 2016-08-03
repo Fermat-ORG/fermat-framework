@@ -253,7 +253,6 @@
     <array name="items" translatable="false">
         <item>MainNet</item>
         <item>TestNet</item>
-        <item>RegTest</item>
     </array>
     <string name="fee_low">Slow</string>
     <string name="fee_Medium">Normal</string>

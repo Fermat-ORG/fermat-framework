@@ -360,7 +360,8 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
     @Override
     public void stop() {
         try {
-            processorAgent.stop();
+            if (processorAgent!=null)
+                processorAgent.stop();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception exception) {
             reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));

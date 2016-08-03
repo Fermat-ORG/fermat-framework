@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
@@ -22,10 +23,14 @@ public class IntraUserModuleInformation implements IntraUserInformation,Serializ
     private ConnectionState connectionState;
     private ProfileStatus state;
     private long registrationDate;
+    private String city;
+    private String country;
+    private Location location;
 
 
 
-    public IntraUserModuleInformation(String name,String phrase,String publicKey,byte[] profileImage, ConnectionState connectionState,ProfileStatus state,long registrationDate)
+    public IntraUserModuleInformation(String name,String phrase,String publicKey,byte[] profileImage, ConnectionState connectionState,ProfileStatus state,long registrationDate,
+                                      String city, String country,Location location)
     {
         this.name = name;
         this.publicKey = publicKey;
@@ -34,6 +39,9 @@ public class IntraUserModuleInformation implements IntraUserInformation,Serializ
         this.phrase = phrase;
         this.state = state;
         this.registrationDate = registrationDate;
+        this.city = city;
+        this.country = country;
+        this.location = location;
 
     }
     /**
@@ -62,6 +70,16 @@ public class IntraUserModuleInformation implements IntraUserInformation,Serializ
     @Override
     public String getPhrase() {
         return this.phrase;
+    }
+
+    @Override
+    public String getCity() {
+        return city;
+    }
+
+    @Override
+    public String getCountry() {
+        return country;
     }
 
     /**
@@ -98,5 +116,10 @@ public class IntraUserModuleInformation implements IntraUserInformation,Serializ
     public long getContactRegistrationDate(){
 
         return this.registrationDate;
+    }
+
+    @Override
+    public Location getLocation() {
+        return location;
     }
 }

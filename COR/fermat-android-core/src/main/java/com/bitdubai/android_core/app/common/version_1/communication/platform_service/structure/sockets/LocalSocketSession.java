@@ -262,7 +262,7 @@ public abstract class LocalSocketSession {
                 }
 
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG,"SessionRunner IOException. Message"+e.getMessage()+". This is only for debug (no jode en absoluto)");
                 if(isReceiverActive) {
                     try {
                         reconnect(false, true);

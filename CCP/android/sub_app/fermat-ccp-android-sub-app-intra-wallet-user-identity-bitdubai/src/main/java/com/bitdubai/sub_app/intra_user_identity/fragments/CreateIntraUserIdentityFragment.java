@@ -596,6 +596,8 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                 }
                             }
                         });
+                        //todo: sacar
+                        return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
                     }
 
                  } catch (Exception e) {
@@ -609,6 +611,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
 
     }
+
 
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);

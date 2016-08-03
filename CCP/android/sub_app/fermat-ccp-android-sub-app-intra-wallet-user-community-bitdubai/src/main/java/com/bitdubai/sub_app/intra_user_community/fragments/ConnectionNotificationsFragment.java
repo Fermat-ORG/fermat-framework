@@ -260,16 +260,20 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    Object o = appSession.getData(SessionConstants.NOTIFICATION_ACCEPTED);
-                    try {
-                        if ((Boolean) o) {
+                    if(appSession.getData(SessionConstants.NOTIFICATION_ACCEPTED) != null)
+                    {
+                        Object o = appSession.getData(SessionConstants.NOTIFICATION_ACCEPTED);
+                        try {
+                            if ((Boolean) o) {
+                                onRefresh();
+                                appSession.removeData(SessionConstants.NOTIFICATION_ACCEPTED);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                             onRefresh();
-                            appSession.removeData(SessionConstants.NOTIFICATION_ACCEPTED);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        onRefresh();
                     }
+
                 }
             });
             notificationAcceptDialog.show();

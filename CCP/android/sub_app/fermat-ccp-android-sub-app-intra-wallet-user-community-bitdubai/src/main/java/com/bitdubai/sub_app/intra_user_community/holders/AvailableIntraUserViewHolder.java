@@ -37,7 +37,7 @@ public class AvailableIntraUserViewHolder extends FermatViewHolder {
     public void bind (IntraUserInformation data){
         if (data.getPublicKey() != null) {
             username.setText(data.getName());
-            location.setText("Not Location");
+            location.setText("No Location");
             if (data.getProfileImage() != null && data.getProfileImage().length > 0) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);

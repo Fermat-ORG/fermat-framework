@@ -117,7 +117,7 @@ public class ConnectDialog extends FermatDialog<ReferenceAppFermatSession<IntraU
             try {
                 //image null
                 if (intraUserInformation != null && identity != null) {
-                    getSession().getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPhrase(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(), identity.getProfileImage(), identity.getPublicKey(), identity.getAlias());
+                    getSession().getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPhrase(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(), identity.getProfileImage(), identity.getPublicKey(), identity.getAlias(),  identity.getLocation());
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);

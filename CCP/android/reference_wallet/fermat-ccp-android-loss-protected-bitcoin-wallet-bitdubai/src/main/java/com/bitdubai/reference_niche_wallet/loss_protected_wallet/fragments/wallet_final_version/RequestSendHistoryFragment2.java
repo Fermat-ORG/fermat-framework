@@ -109,12 +109,10 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
         try {
             lossProtectedWalletManager = referenceWalletSession.getModuleManager();
 
-            try {
-                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
-                this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
-            } catch (Exception e) {
-
-            }
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
             onRefresh();
         } catch (Exception ex) {

@@ -336,7 +336,8 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements 
     @Override
     public void stop() {
         try {
-            processorAgent.stop();
+            if (processorAgent!=null)
+                processorAgent.stop();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception exception) {
             this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));

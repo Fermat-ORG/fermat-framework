@@ -68,7 +68,7 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_VAULT   , plugin = Plugins.BITCOIN_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 
-//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.FERMAT_VAULT)
+    //@NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.FERMAT_VAULT)
     private CryptoVaultManager cryptoFermatVaultManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
