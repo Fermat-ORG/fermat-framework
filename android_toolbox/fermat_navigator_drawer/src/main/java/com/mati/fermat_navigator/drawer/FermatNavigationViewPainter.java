@@ -21,20 +21,19 @@ import com.mati.fermat_navigator_drawer.R;
 /**
  * Created by natalia on 26/02/16.
  */
-public abstract class FermatNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
+public abstract class FermatNavigationViewPainter extends com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
     private final ActiveActorIdentityInformation intraUserLoginIdentity;
-    private Activity activity;
     public FermatNavigationViewPainter(Activity activity, ActiveActorIdentityInformation intraUserLoginIdentity) {
-
-        this.activity = activity;
+        super(activity);
         this.intraUserLoginIdentity = intraUserLoginIdentity;
 
     }
     @Override
     public View addNavigationViewHeader() {
             //todo: a menos que lo cargues el intraUserLoginIdentity va a ser siempre null
-            return this.setUpHeaderScreen(activity.getLayoutInflater(), activity, intraUserLoginIdentity);
+        return null;
+//            return this.setUpHeaderScreen(getContext().getLayoutInflater(), getContext(), intraUserLoginIdentity);
     }
 
     @Override

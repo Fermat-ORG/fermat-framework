@@ -460,6 +460,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
     @Override
     public void importMnemonicCode(List<String> mnemonicCode,long date,BlockchainNetworkType blockchainNetworkType) throws Exception {
+
         CryptoAddress cryptoAddress = cryptoVaultManager.getCryptoAddress(blockchainNetworkType);
         cryptoAddressBookManager.registerCryptoAddress(cryptoAddress, "", Actors.EXTRA_USER, "", Actors.EXTRA_USER, Platforms.CRYPTO_CURRENCY_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, VaultType.CRYPTO_CURRENCY_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
@@ -756,7 +757,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                         WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
-                        AppsStatus.DEV);
+                        AppsStatus.ALPHA);
                 break;
             case "fermat_wallet":
                 installedWallet = new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
@@ -768,7 +769,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                         WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
-                        AppsStatus.DEV);
+                        AppsStatus.ALPHA);
                 break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);

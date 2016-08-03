@@ -82,7 +82,8 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET    , plugin = Plugins.BITCOIN_WALLET)
     private CryptoWalletManager cryptoWalletManager;
 
-//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.FERMAT_VAULT)
+
+    //@NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.FERMAT_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API     , layer = Layers.SYSTEM          , addon = Addons.LOG_MANAGER)
@@ -138,7 +139,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
 
     private String appPublicKey;
 
-//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.FERMAT_NETWORK       )
+    //@NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.FERMAT_NETWORK       )
     private BlockchainManager<ECKey, Transaction> fermatNetworkManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)

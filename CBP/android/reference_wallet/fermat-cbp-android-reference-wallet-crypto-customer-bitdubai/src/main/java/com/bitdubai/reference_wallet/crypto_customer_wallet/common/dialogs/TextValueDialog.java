@@ -26,7 +26,6 @@ import java.text.ParseException;
 
 import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static android.text.InputType.TYPE_CLASS_TEXT;
-import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
 import static android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE;
 
 
@@ -47,14 +46,14 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
 
     //TEXT COUNT
     private boolean activeTextCount = false;
-    private int maxLenghtTextCount = 100;
+    private int maxLengthTextCount = 100;
     FermatTextView textCount;
 
 
     //TEXT COUNT
     private final TextWatcher textWatcher = new TextWatcher() {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));
+            textCount.setText(String.valueOf(maxLengthTextCount - s.length()));
         }
 
         public void afterTextChanged(Editable s) {
@@ -102,6 +101,7 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
             }
         }
     }
+
     public void setEditTextValue(String editTextValue) {
         this.editTextValue = editTextValue;
     }
@@ -135,19 +135,16 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
         //TEXT COUNT
         if (activeTextCount) {
             textCount = (FermatTextView) findViewById(R.id.ccw_text_dialog_edit_text_count);
-            editTextView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
+            editTextView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLengthTextCount)});
             editTextView.addTextChangedListener(textWatcher);
-            textCount.setText(String.valueOf(maxLenghtTextCount));
+            textCount.setText(String.valueOf(maxLengthTextCount));
             textCount.setVisibility(View.VISIBLE);
         }
 
         numberFormat.setMaximumFractionDigits(8);
 
         if (editTextValue != null) {
-            //change lostwood
-            // editTextView.setText(editTextValue);
-
-            if (editTextValue.equals("0.0") ||  editTextValue.equals("0,0") || editTextValue.equals("0")) {
+            if (editTextValue.equals("0.0") || editTextValue.equals("0,0") || editTextValue.equals("0")) {
                 editTextView.setText("");
             } else {
                 if (activeTextCount) {
@@ -161,11 +158,11 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
 
         if (setTextFree) {
             editTextView.setInputType(TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_MULTI_LINE);
-        }else {
+        } else {
             editTextView.setInputType(TYPE_CLASS_NUMBER);
-            if(giveMeDecimalSeparator().equals(".")) {
+            if (giveMeDecimalSeparator().equals(".")) {
                 editTextView.setKeyListener(DigitsKeyListener.getInstance("0123456789."));
-            }else{
+            } else {
                 editTextView.setKeyListener(DigitsKeyListener.getInstance("0123456789,"));
             }
         }
@@ -182,8 +179,8 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
     }
 
     //TEXT COUNT
-    public void setTextCount(int maxLenghtText) {
-        this.maxLenghtTextCount = maxLenghtText;
+    public void setTextCount(int maxLengthText) {
+        this.maxLengthTextCount = maxLengthText;
         this.activeTextCount = true;
     }
 
@@ -198,10 +195,17 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
                 numberFormat.setMaximumFractionDigits(2);
             }
 
-            doubleFormat= String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(
-                    Double.valueOf(value))))));
-            commaOrDotFormat=doubleFormat.replace(".",giveMeDecimalSeparator());
+            final Double doubleValue = Double.valueOf(value);
+            final String formattedDouble = numberFormat.format(doubleValue);
+            final Number parsedDouble = numberFormat.parse(formattedDouble);
+            final String parsedDoubleString = String.valueOf(parsedDouble);
+            final BigDecimal bigDecimalDouble = new BigDecimal(parsedDoubleString);
+
+            doubleFormat = String.valueOf(bigDecimalDouble);
+            commaOrDotFormat = doubleFormat.replace(".", giveMeDecimalSeparator());
+
             return commaOrDotFormat;
+
         } catch (ParseException e) {
             e.printStackTrace();
             return "0";
@@ -210,21 +214,14 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
     }
 
     private Boolean compareLessThan1(String value) {
-        Boolean lessThan1 = true;
-            if (BigDecimal.valueOf(Double.valueOf(value)).
-                    compareTo(BigDecimal.ONE) == -1) {
-                lessThan1 = true;
-            } else {
-                lessThan1 = false;
-            }
-        return lessThan1;
+        return BigDecimal.valueOf(Double.valueOf(value)).compareTo(BigDecimal.ONE) == -1;
     }
 
-    String giveMeDecimalSeparator(){
-        DecimalFormatSymbols symbols =((DecimalFormat) numberFormat).getDecimalFormatSymbols();
-        if(symbols.getDecimalSeparator()=='.'){
+    String giveMeDecimalSeparator() {
+        DecimalFormatSymbols symbols = ((DecimalFormat) numberFormat).getDecimalFormatSymbols();
+        if (symbols.getDecimalSeparator() == '.') {
             return ".";
-        }else{
+        } else {
             return ",";
         }
     }

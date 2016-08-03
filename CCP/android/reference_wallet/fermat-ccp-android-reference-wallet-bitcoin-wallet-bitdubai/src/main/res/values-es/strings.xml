@@ -18,7 +18,7 @@
     <string name="add_fermat_user_text">Contacto fermat</string>
     <string name="add_user_in_your_contact_list_text">Anadir usuario a la lista de contactos o\nbuscarlo en la comunidad</string>
     <string name="address_text">Direccion</string>
-    <string name="advertisement_text">Publicidad!</string>
+    <string name="advertisement_text">Noticia!</string>
     <string name="alias_text">Sufijo de alias</string>
     <string name="amount_text">Cantidad</string>
     <string name="available_balance">Balance actual</string>
@@ -109,7 +109,7 @@
     <string name="share_address_text">Compartir direccion</string>
     <string name="store_wallet">Tienda</string>
     <string name="swype_refresh">Deslice hacia abajo para refrescar</string>
-    <string name="the_process_of_downloading_text">Se estan bajando los bloques de\nla  Blockchain.\n  Mientras esto ocurreis, la barra superior se mostrara en rojo.</string>
+    <string name="the_process_of_downloading_text">Se estan bajando los bloques de\nla  Blockchain.\n  Mientras esto ocurre, la barra superior se mostrara en rojo.</string>
     <string name="this_is_a_simple_bitcoin_only_wallet_text">Esta cartera maneja bitcoins\nCon ella se puede:</string>
     <string name="title_Fee">Configuracion de fees</string>
     <string name="title_activity_blank">Administrador de Carteras</string>
@@ -154,4 +154,8 @@
     <string name="request_sent">Solicitud enviada</string>
     <string name="success_msg_address_copied_clipboard">Direccion copiada al portapapeles</string>
     <string name="success_msg_address_sent_wait">Direccion enviada, por favor espere 2 minutos</string>
+    <string name="settings_fee_level">Nivel de Fee</string>
+    <string name="settings_notifications">Notificaciones</string>
+    <string name="settings_select_network">Seleccionar una Red</string>
+    <string name="settings_send_error_report">Envair reporte de Error</string>
 </resources>

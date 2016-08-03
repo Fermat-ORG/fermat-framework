@@ -64,7 +64,7 @@ public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, 
                 if (Actualdate.getDay() == date.getDay()){
                     if (Actualdate.getHours() == date.getHours()){
                         if (Actualdate.getMinutes() == date.getMinutes()){
-                            ago = "moments ago"; //less than 1 minute
+                            ago = "a few moments ago"; //less than 1 minute
                         }else{
                             diff = Actualdate.getMinutes() - date.getMinutes();
                             if (diff >1)

@@ -178,12 +178,10 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
 
 
-            try {
-                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
-                this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
-            }catch (Exception e){
-
-            }
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
             onRefresh();
         } catch (Exception ex) {
@@ -444,10 +442,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                 return true;
             }else {
 
-                setUpPresentation(lossProtectedWalletSettings.isPresentationHelpEnabled());
-
-
-                setUpPresentation(lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation((Boolean)appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED));
 
                 return true;
             }

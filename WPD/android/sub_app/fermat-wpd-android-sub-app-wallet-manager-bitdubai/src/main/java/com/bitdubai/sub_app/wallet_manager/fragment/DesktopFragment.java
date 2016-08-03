@@ -216,7 +216,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
     }
 
 
-    @Override
+
     public void onRefresh() {
         if(!started) {
             FermatWorker worker = new FermatWorker() {
@@ -340,23 +340,25 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
                     }
 
+
               /*  if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode())) {
                     Item item = new Item(installedWallet);
                     item.setIconResource(R.drawable.icon_loss_protected);
                     item.setPosition(8);
-                    installedWallet.setAppStatus(AppsStatus.DEV);
+                    installedWallet.setAppStatus(AppsStatus.ALPHA);
                     lstItemsWithIcon.add(item);
                 }
 
 
-                if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode())) {
-                    Item item = new Item(installedWallet);
-                    item.setIconResource(R.drawable.fermat_wallet_icon);
-                    item.setPosition(10);
-                    installedWallet.setAppStatus(AppsStatus.DEV);
-                    lstItemsWithIcon.add(item);
-                }
-                */
+
+               if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode())) {
+                   Item item = new Item(installedWallet);
+                   item.setIconResource(R.drawable.fermat_wallet_icon);
+                   item.setPosition(10);
+
+                   installedWallet.setAppStatus(AppsStatus.ALPHA);
+                   lstItemsWithIcon.add(item);
+               }*/
             }
 
             InstalledWallet installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(

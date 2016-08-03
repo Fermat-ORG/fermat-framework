@@ -58,7 +58,7 @@
             android:maxLines="3"
             android:textColor="#7DD5CA"
             android:textSize="14sp"
-            tools:text="### - ###"/>
+            tools:text="No location"/>
     </LinearLayout>
 
 </LinearLayout>

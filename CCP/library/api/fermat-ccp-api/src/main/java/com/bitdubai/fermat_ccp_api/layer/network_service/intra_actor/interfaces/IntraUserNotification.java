@@ -47,4 +47,17 @@ public interface IntraUserNotification {
 
     long getSentDate();
 
+    /**
+     * The method <code>getCity</code> returns the City of the represented intra user
+     *
+     * @return the name of the intra user
+     */
+    public String getCity();
+    /**
+     * The method <code>getCountry</code> returns the Country of the represented intra user
+     *
+     * @return the name of the intra user
+     */
+    public String getCountry();
+
 }

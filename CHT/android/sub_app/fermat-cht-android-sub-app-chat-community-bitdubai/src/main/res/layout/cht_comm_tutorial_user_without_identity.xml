@@ -44,7 +44,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="Welcome!"
+                    android:text="@string/cht_comm_welcome"
                     android:textColor="#47BF73"
                     android:textSize="20sp"
                     app:typeface="CAVIAR_DREAMS_BOLD" />
@@ -98,7 +98,7 @@
                 android:paddingRight="30dp"
                 android:paddingStart="20dp"
                 android:paddingTop="7sp"
-                android:text="This app will allow you:"
+                android:text="@string/cht_creation_dialog_sub_title"
                 android:textColor="#1d1d26"
                 android:textSize="14sp" />
 
@@ -128,7 +128,7 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
                     android:paddingStart="16dp"
-                    android:text="* Browsing users nearby \n* Looking for users anywhere \n* Seeing other users profiles \n* Sending connection requests"
+                    android:text="@string/cht_creation_dialog_body"
                     android:textColor="#1d1d26"
                     android:textSize="12sp" />
 
@@ -163,7 +163,7 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
                     android:paddingStart="16dp"
-                    android:text="If you do not have an identity or profile, please create one to manage the community."
+                    android:text="@string/cht_creation_dialog_footer"
                     android:textColor="#1d1d26"
                     android:textSize="12sp"/>
             </LinearLayout>
@@ -199,7 +199,7 @@
                     android:layout_marginEnd="32dp"
                     android:layout_marginRight="32dp"
                     android:gravity="center_vertical"
-                    android:text="Don´t show this again"
+                    android:text="@string/cht_comm_dont_show_again"
                     android:textColor="#7c7c7c"
                     android:textSize="12dp" />
             </RelativeLayout>

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.
 
 /**
  * Created by eze on 2015.06.23..
+ * updated by Andres Abreu aabreu1 2016.08.01..
  */
 public class BitcoinLossProtectedWalletDatabaseConstants {
 
@@ -31,6 +32,9 @@ public class BitcoinLossProtectedWalletDatabaseConstants {
     public static final String LOSS_PROTECTED_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME ="transactionstateenv";
     public static final String LOSS_PROTECTED_WALLET_TABLE_EXCHANGE_RATE_COLUMN_NAME ="dollarexchangerate";
 
+    public static final String LOSS_PROTECTED_WALLET_TABLE_TRANSACTION_FEE_COLUMN_NAME ="transactionFee";
+    public static final String LOSS_PROTECTED_WALLET_TABLE_TRANSACTION_FEE_ORIGIN_COLUMN_NAME ="transactionFeeOrigin";
+    public static final String LOSS_PROTECTED_WALLET_TRANSACTION_TOTAL_COLUMN_NAME ="transactionTotal";
 
     // tabla movimientos- balance y book balance, id
 

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_corners"
     android:gravity="center"
-    android:orientation="vertical"
-    android:background="@drawable/rounded_corners">
+    android:orientation="vertical">
 
     <View
+        android:id="@+id/view_color"
         android:layout_width="match_parent"
         android:layout_height="4.5dp"
         android:background="@drawable/round_corner_line_dialog"
         android:fitsSystemWindows="true"
-        android:id="@+id/top_line"
-        />
+        android:topLeftRadius="4dp"
+        android:topRightRadius="4dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -27,7 +27,6 @@
         android:paddingStart="1dp"
         android:paddingTop="20dp">
 
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,118 +34,111 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp">
 
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:orientation="horizontal">
 
-
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/txt_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txt_title"
-                    android:text="Welcome!"
-                    android:paddingLeft="5dp"
-                    android:layout_weight="1"
-                    android:textSize="20sp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/dialog_title"
                     android:textColor="#00a99d"
-                    app:typeface="CAVIAR_DREAMS_BOLD"
-                    android:gravity="left"
-                    android:layout_gravity="center"
-
-                    />
+                    android:textSize="20sp"
+                    app:typeface="CAVIAR_DREAMS_BOLD" />
 
                 <ImageView
+                    android:id="@+id/img_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_weight="0.4"
-                    android:id="@+id/img_icon"
-                    android:paddingBottom="2dp"/>
-
-            </LinearLayout>
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp" />
+            </RelativeLayout>
 
             <View
+                android:id="@+id/view_color1"
                 android:layout_width="match_parent"
                 android:layout_height="0.7dp"
+                android:layout_marginBottom="12dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/round_corner_line_dialog"
-                android:layout_marginBottom="12dp"
-                />
-
+                android:background="@drawable/round_corner_line_dialog" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp">
+
                 <ImageView
+                    android:id="@+id/image_banner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scaleType="fitCenter"
                     android:adjustViewBounds="true"
-                    android:id="@+id/banner"
-                    />
+                    android:scaleType="fitCenter" />
             </RelativeLayout>
 
-
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/txt_sub_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:paddingBottom="5dp"
-                android:paddingTop="7sp"
-                android:text="This is a simple bitcoin only wallet. It's main features are:"
-                android:gravity="center_horizontal"
                 android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:paddingBottom="5dp"
+                android:paddingEnd="30dp"
                 android:paddingLeft="20dp"
-                android:textColor="#1d1d26"
                 android:paddingRight="30dp"
-                />
+                android:paddingStart="20dp"
+                android:paddingTop="7sp"
+                android:text="@string/text_subtitle"
+                android:textColor="#1d1d26"
+                android:textSize="14sp" />
 
             <View
+                android:id="@+id/view_color2"
                 android:layout_width="match_parent"
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/round_corner_line_dialog"
-                />
-
+                android:background="@drawable/round_corner_line_dialog" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="12dp"
                 android:paddingBottom="7dp"
-                >
-
+                android:paddingTop="12dp">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/txt_body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:paddingBottom="5dp"
-                    android:text="* See your balance.\n* Send and receive bitcoins.\n* Request bitcoins.\n* Browse your transaction history."
-                    android:gravity="left"
                     android:layout_gravity="center_horizontal"
+                    android:gravity="start"
+                    android:paddingBottom="5dp"
+                    android:paddingEnd="30dp"
                     android:paddingLeft="16dp"
-                    android:textColor="#1d1d26"
                     android:paddingRight="30dp"
-                    />
-
-
+                    android:paddingStart="16dp"
+                    android:text="@string/text_body"
+                    android:textColor="#1d1d26"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <View
+                android:id="@+id/view_color3"
                 android:layout_width="match_parent"
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/round_corner_line_dialog"
-                />
-
+                android:background="@drawable/round_corner_line_dialog" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -155,141 +147,134 @@
                 android:paddingTop="10dp">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/footer_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:paddingBottom="10dp"
-                    android:text="To begin, choose an avatar below. You might change it later with any picture and your own alias."
-                    android:gravity="center"
                     android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="30dp"
                     android:paddingLeft="16dp"
+                    android:paddingRight="30dp"
+                    android:paddingStart="16dp"
+                    android:text="@string/text_footer"
                     android:textColor="#1d1d26"
-                    android:paddingRight="30dp"/>
-
-
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <View
+                android:id="@+id/view_color4"
                 android:layout_width="match_parent"
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/round_corner_line_dialog"
-                />
+                android:background="@drawable/round_corner_line_dialog" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                >
+                android:gravity="center_horizontal">
+
                 <CheckBox
+                    android:id="@+id/checkbox_not_show"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:id="@+id/checkbox_not_show"
-                    android:buttonTint="#1d1d26"
-                    />
+                    android:layout_alignParentRight="true" />
+                <!--android:buttonTint="@color/black_overlay"-->
+
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/checkbox_not_show_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Don´t show this again"
                     android:layout_alignParentEnd="true"
-                    android:textColor="#7c7c7c"
-                    android:textSize="12dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="32dp"
                     android:layout_marginRight="32dp"
-                    android:gravity="center_vertical"/>
+                    android:gravity="center_vertical"
+                    android:text="@string/checkbox_show"
+                    android:textColor="#7c7c7c"
+                    android:textSize="12sp" />
             </RelativeLayout>
-
-
         </LinearLayout>
-
 
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="15dp"
-            >
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <FrameLayout
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
                     android:id="@+id/container_john_doe"
-                    android:layout_gravity="center_horizontal"
-                    >
-
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal">
 
                     <ImageView
+                        android:id="@+id/image_view_left"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_profile_male"
-                        android:id="@+id/img_male"
                         android:layout_gravity="center_horizontal"
                         android:padding="6dp"
-                        />
+                        android:src="@drawable/ic_profile_male" />
+
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/image_round_corners"/>
-
+                        android:src="@drawable/image_round_corners" />
                 </FrameLayout>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
                     android:id="@+id/btn_left"
-                    android:text="Be John Doe"
-                    android:textSize="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_gravity="center_horizontal"
-                    />
+                    android:text="@string/name_left"
+                    android:textSize="12sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginLeft="16dp"
-                >
+                android:layout_marginStart="16dp"
+                android:orientation="vertical">
 
                 <FrameLayout
+                    android:id="@+id/container_jane_doe"
                     android:layout_width="100dp"
                     android:layout_height="60dp"
-                    android:id="@+id/container_jane_doe"
-                    android:layout_gravity="center_horizontal"
-                    >
-
+                    android:layout_gravity="center_horizontal">
 
                     <ImageView
+                        android:id="@+id/image_view_right"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/img_profile_female"
                         android:layout_gravity="center_horizontal"
                         android:padding="6dp"
-                        />
+                        android:src="@drawable/img_profile_female" />
+
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/image_round_corners"/>
-
+                        android:src="@drawable/image_round_corners" />
                 </FrameLayout>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
                     android:id="@+id/btn_right"
-                    android:text="Be Jane Doe"
-                    android:textSize="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_gravity="center_horizontal"
-                    />
+                    android:text="@string/name_right"
+                    android:textSize="12sp" />
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>
