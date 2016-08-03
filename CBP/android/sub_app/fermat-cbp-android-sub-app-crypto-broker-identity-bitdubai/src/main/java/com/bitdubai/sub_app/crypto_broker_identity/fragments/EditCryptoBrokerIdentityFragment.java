@@ -384,19 +384,8 @@ public class EditCryptoBrokerIdentityFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == FragmentsCommons.HELP_OPTION_MENU_ID) {
-            new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
-                    .setBannerRes(R.drawable.banner_identity)
-                    .setBody(R.string.cbp_broker_identity_welcome_body)
-                    .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
-                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                    .setVIewColor(R.color.background_toolbar)
-                    .setIsCheckEnabled(false)
-                    .build().show();
-
-
+            homeTutorialDialog();
             return true;
-
-
         }
         if (item.getItemId() == FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID) {
             appSession.setData(FragmentsCommons.BROKER_NAME, mBrokerName.getText().toString());
@@ -449,7 +438,7 @@ public class EditCryptoBrokerIdentityFragment
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        makeText(getActivity().getApplicationContext(), R.string.cbi_error_image, Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -745,11 +734,12 @@ public class EditCryptoBrokerIdentityFragment
 
         try {
             PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setTitle(R.string.cbp_broker_identity_welcome_title_gps)
+                    .setTitle(R.string.advertisement_text)
                     .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle_gps)
                     .setBody(R.string.cbp_broker_identity_gps)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIconRes(R.drawable.bi_icon)
+//                    .setTextNameLeft(R.string.dialog_button_close)
                     .setBannerRes(R.drawable.banner_identity)
                     .setVIewColor(R.color.background_toolbar)
                     .setCheckButtonAndTextVisible(0)
@@ -765,10 +755,12 @@ public class EditCryptoBrokerIdentityFragment
         presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                 .setBannerRes(R.drawable.banner_identity)
                 .setBody(R.string.cbp_broker_identity_welcome_body)
+                .setTitle(R.string.dialog_title)
                 .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setVIewColor(R.color.background_toolbar)
                 .setIconRes(R.drawable.bi_icon)
+//                .setTextNameLeft(R.string.dialog_button_close)
                 .setIsCheckEnabled(false)
                 .build();
         presentationDialog.show();
