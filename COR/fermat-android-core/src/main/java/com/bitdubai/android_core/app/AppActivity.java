@@ -302,7 +302,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     loadUI(FermatApplication.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
                 }
             } else {
-                Log.e(TAG, "Method: New,  nextActivity null, activity code: " + activityName + ". AppPublicKey:"+appBackPublicKey+" Please verify that the activity code exist in the fermat structure: " + fermatStructure.getPublicKey() + " \n Extra info: \n LastActivity: " + lastActivity + " FermatStructure: " + fermatStructure + " AppBackPublicKey: " + appBackPublicKey + "\n" + Arrays.toString(FermatApplication.getInstance().getAppManager().getRecentsAppsStack().toArray()));
+                Log.e(TAG, "Method: New,  nextActivity null Don't be afraid. Contact furszy., activity code: " + activityName + ". AppPublicKey:"+appBackPublicKey+" Please verify that the activity code exist in the fermat structure: " + fermatStructure.getPublicKey() + " \n Extra info: \n LastActivity: " + lastActivity + " FermatStructure: " + fermatStructure + " AppBackPublicKey: " + appBackPublicKey + "\n" + Arrays.toString(FermatApplication.getInstance().getAppManager().getRecentsAppsStack().toArray()));
                 Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
                 handleExceptionAndRestart();
             }
@@ -351,7 +351,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     loadUI(FermatApplication.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
                 }
             } else {
-                Log.e(TAG, "nextActivity null, activity code: " + activityName + ". Please verify that the activity code exist in the fermat structure: " + fermatStructure.getPublicKey() + " \n Extra info: \n LastActivity: " + lastActivity + " FermatStructure: " + fermatStructure + " AppBackPublicKey: " + appBackPublicKey + "\n" + Arrays.toString(FermatApplication.getInstance().getAppManager().getRecentsAppsStack().toArray()));
+                Log.e(TAG, "nextActivity null, Don't be afraid. Contact furszy. activity code: " + activityName + ". Please verify that the activity code exist in the fermat structure: " + fermatStructure.getPublicKey() + " \n Extra info: \n LastActivity: " + lastActivity + " FermatStructure: " + fermatStructure + " AppBackPublicKey: " + appBackPublicKey + "\n" + Arrays.toString(FermatApplication.getInstance().getAppManager().getRecentsAppsStack().toArray()));
                 Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
                 handleExceptionAndRestart();
             }
