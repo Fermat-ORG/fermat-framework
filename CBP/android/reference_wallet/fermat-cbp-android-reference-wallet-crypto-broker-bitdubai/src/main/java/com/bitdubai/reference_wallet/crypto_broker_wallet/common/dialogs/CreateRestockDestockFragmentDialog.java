@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -40,7 +41,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
     public static final String TRANSACTION_APPLIED = "transaction_applied";
 
     private Activity activity;
-
+    private FermatTextView tittle_dialog_stock;
     private ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session;
     private CryptoBrokerWalletAssociatedSetting setting;
 
@@ -74,6 +75,14 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             else
                 amountText.setFilters(new InputFilter[]{new NumberInputFilter(11, 2)});
 
+            tittle_dialog_stock = (FermatTextView) findViewById(R.id.cbw_dialog_title_stock);
+
+            if (setting.getPlatform().equals(Platforms.BANKING_PLATFORM))
+                tittle_dialog_stock.setText("Bank Wallet");
+            else if (setting.getPlatform().equals(Platforms.CASH_PLATFORM))
+                tittle_dialog_stock.setText("Cash Wallet");
+            else if (setting.getPlatform().equals(Platforms.CRYPTO_CURRENCY_PLATFORM))
+                tittle_dialog_stock.setText("Crypto Wallet");
 
             final View restockBtn = findViewById(R.id.cbw_ctd_restock_transaction_btn);
             final View destockBtn = findViewById(R.id.cbw_ctd_destock_transaction_btn);
