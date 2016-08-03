@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -44,7 +45,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
     private EventManager eventManager;
 
 
-    private Map<String,AbstractNetworkService> networkServices;
+    private ConcurrentHashMap<String,AbstractNetworkService> networkServices;
     private NetworkChannel client;
 
     /**
@@ -61,7 +62,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
 
     @Override
     public void start() throws CantStartPluginException {
-        networkServices = new HashMap<>();
+        networkServices = new ConcurrentHashMap<>();
         this.listenersAdded        = new CopyOnWriteArrayList<>();
 
 
@@ -69,15 +70,33 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         networkClientRegistered.setEventHandler(new FermatEventHandler() {
             @Override
             public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+
                 if (client.isConnected()) {
-                    for (AbstractNetworkService abstractNetworkService : networkServices.values()) {
+                    System.out.println("NETWORK SERVICES STARTED:"+networkServices.size());
+                    final ScheduledExecutorService scheduledExecutorService =  Executors.newScheduledThreadPool(networkServices.size());
                         try {
-                            System.out.println(abstractNetworkService.getProfile().getNetworkServiceType() + ": se está por registrar...");
-                            abstractNetworkService.startConnection();
-                        } catch (CantRegisterProfileException e) {
+                            scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int registered = 0;
+                                    for (final AbstractNetworkService abstractNetworkService : networkServices.values()) {
+                                        try{
+                                            System.out.println(abstractNetworkService.getProfile().getNetworkServiceType() + ": se está por registrar..." + abstractNetworkService.isRegistered());
+                                           if (!abstractNetworkService.isRegistered())
+                                                abstractNetworkService.startConnection();
+                                            else
+                                                registered++;
+                                            if(registered == networkServices.size())
+                                                scheduledExecutorService.shutdown();
+                                        } catch (FermatException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }, 10, 5, TimeUnit.SECONDS);
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
                 }
             }
         });
@@ -121,7 +140,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
                 e.printStackTrace();
             }
         }
-        networkServices.put(abstractNetworkService.getNetworkServiceType().getCode(), abstractNetworkService);
+        networkServices.putIfAbsent(abstractNetworkService.getNetworkServiceType().getCode(), abstractNetworkService);
     }
 
     @Override
