@@ -22,7 +22,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by frank on 12/9/15.
  */
-public class IssuerWalletNavigationViewPainter implements NavigationViewPainter {
+public class IssuerWalletNavigationViewPainter extends NavigationViewPainter {
 
     private static final String TAG = "IssuerNavigationView";
 

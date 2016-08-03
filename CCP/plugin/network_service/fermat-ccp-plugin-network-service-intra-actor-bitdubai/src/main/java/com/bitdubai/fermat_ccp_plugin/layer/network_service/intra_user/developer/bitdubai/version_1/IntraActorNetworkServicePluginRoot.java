@@ -383,7 +383,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     protocolState,
                     false,
                     1,
-                    actorNetworkServiceRecord.getId()
+                    actorNetworkServiceRecord.getId(),
+                    actorNetworkServiceRecord.getCity(),
+                    actorNetworkServiceRecord.getCountry()
             );
         } catch (CantCreateNotificationException e) {
             e.printStackTrace();
@@ -569,7 +571,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     }
                 }
 
-                lstIntraUser.add(new IntraUserNetworkService(actorProfile.getIdentityPublicKey(), actorProfile.getPhoto(), actorProfile.getAlias(), actorPhrase,actorProfile.getStatus()));
+
+                lstIntraUser.add(new IntraUserNetworkService(actorProfile.getIdentityPublicKey(), actorProfile.getPhoto(), actorProfile.getAlias(), actorPhrase,actorProfile.getStatus(),actorProfile.getLocation()));
             }
 
 
@@ -613,7 +616,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                                           final String intraUserToAddPhrase,
                                           final String intraUserToAddPublicKey,
                                           final Actors destinationType,
-                                          final byte[] myProfileImage) throws CantAskIntraUserForAcceptanceException {
+                                          final byte[] myProfileImage,
+                                          final String city,
+                                          final String country) throws CantAskIntraUserForAcceptanceException {
 
         try {
 
@@ -635,7 +640,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     currentTime,
                     protocolState,
                     false, 1,
-                    null
+                    null,
+                    city,
+                    country
             );
 
             sendMessage(
@@ -687,7 +694,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     actorNetworkServiceRecord.getActorProtocolState(),
                     false,
                     1,
-                    actorNetworkServiceRecord.getResponseToNotificationId()
+                    actorNetworkServiceRecord.getResponseToNotificationId(),
+                    actorNetworkServiceRecord.getCity(),
+                    actorNetworkServiceRecord.getCountry()
             );
 
             sendMessage(
@@ -756,7 +765,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     protocolState,
                     false,
                     1,
-                    null
+                    null,
+                    "",
+                    ""
             );
 
             sendMessage(

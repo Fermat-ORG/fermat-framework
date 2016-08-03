@@ -2,35 +2,49 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/transacion_form"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:background="@drawable/background_white_gradient">
 
-    <LinearLayout
-        android:id="@+id/send_form"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:orientation="horizontal"
-        android:paddingLeft="7dip"
-        android:paddingRight="7dip">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
 
-            <ImageView
-                android:id="@+id/frame_tx_record"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                />
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/send_form"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:orientation="horizontal"
+            android:paddingLeft="7dip"
+            android:paddingRight="7dip">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:background="@android:color/transparent"
                 android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/frame_tx_record"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:background="@android:color/transparent"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -39,34 +53,34 @@
                         android:paddingBottom="16dp"
                         android:paddingTop="16dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="16dp"
-                                android:text="@string/name_text"
-                                android:textColor="#F78803"
-                                android:textSize="12sp"
-                                />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:text="@string/name_text"
+                            android:textColor="#F78803"
+                            android:textSize="12sp"
+                            />
 
-                            <AutoCompleteTextView
-                                android:id="@+id/contact_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="left"
-                                android:paddingBottom="7dip"
-                                android:paddingLeft="14dip"
-                                android:paddingRight="14dip"
-                                android:paddingTop="7dip"
-                                android:ems="10"
-                                android:hint="@string/enter_name_here_text"
-                                android:textColor="#1d1d26"
-                                android:textColorHint="#9a9a9c"
-                                android:textSize="14sp"
-                                android:textStyle="normal"
-                                android:contextClickable="false"
-                                android:textIsSelectable="false"
-                                android:background="@null"
-                                />
+                        <AutoCompleteTextView
+                            android:id="@+id/contact_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:paddingBottom="7dip"
+                            android:paddingLeft="14dip"
+                            android:paddingRight="14dip"
+                            android:paddingTop="7dip"
+                            android:ems="10"
+                            android:hint="@string/enter_name_here_text"
+                            android:textColor="#1d1d26"
+                            android:textColorHint="#9a9a9c"
+                            android:textSize="14sp"
+                            android:textStyle="normal"
+                            android:contextClickable="false"
+                            android:textIsSelectable="false"
+                            android:background="@null"
+                            />
                     </LinearLayout>
 
                     <!--LinearLayout
@@ -267,147 +281,155 @@
                         android:layout_height="1.5dp"
                         android:background="@drawable/gradient" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:id="@+id/advances_btn">
-
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:text="Advance configuration"
-                        android:textColor="#12aca1"
-                        android:textSize="12sp" />
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:src="@drawable/ic_arrow_down_expanded"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/feed_advances"
-                    android:orientation="vertical"
-                    android:visibility="visible"
-                    >
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1.5dp"
-                        android:background="@drawable/gradient"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
-                            android:paddingTop="10dp"
-                            android:text="Fee"
-                            android:textColor="#12aca1"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingBottom="3dip"
-                        android:paddingLeft="7dip"
-                        android:paddingRight="7dip"
-                        android:paddingTop="3dip">
-
-                        <EditText
-                            android:id="@+id/feed_amount"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.2"
-                            android:background="@null"
-                            android:gravity="left"
-                            android:inputType="numberDecimal"
-                            android:paddingBottom="7dip"
-                            android:paddingLeft="14dip"
-                            android:paddingRight="14dip"
-                            android:paddingTop="7dip"
-                            android:state_selected="false"
-                            android:textColor="#1d1d26"
-                            android:textColorHint="#9a9a9c"
-                            android:textSize="16sp"
-                            android:textStyle="normal"
-                            android:maxLength="12"
-                            android:editable="false"
-                            android:text= "0.0001"
-                            />
-
-                        <CheckBox
-                            android:layout_width="wrap_content"
-                            android:layout_height="25dp"
-                            android:layout_marginRight="5dp"
-                            android:layout_marginEnd="5dp"
-                            android:id="@+id/checkBoxSubstract"
-                            android:checked="true"
-                            android:gravity="center_vertical"
-                            android:text="Substract fee from amount"
-                            android:textColor="#333"
-                            android:textSize="12sp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:gravity="center_vertical"
+                        android:id="@+id/advances_btn">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="16dp"
-                            android:paddingTop="0dp"
-                            android:text="Fee Level Settings"
-                            android:textColor="#12aca1"
+                            android:text="Advance configuration"
+                            android:textColor="#F78803"
                             android:textSize="12sp" />
 
-                        <RadioGroup
-                            android:id="@+id/feeGroup"
-                            android:orientation="horizontal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
-                            android:layout_column="0"
-                            android:layout_span="3">
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:src="@drawable/ic_arrow_down_expanded"/>
 
-                            <RadioButton
-                                android:id="@+id/fee_low"
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/feed_advances"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1.5dp"
+                            android:background="@drawable/gradient"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Low"
-                                android:layout_marginRight="0dp"
+                                android:layout_marginLeft="16dp"
+                                android:paddingTop="10dp"
+                                android:text="Fee"
+                                android:textColor="#F78803"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingBottom="3dip"
+                            android:paddingLeft="7dip"
+                            android:paddingRight="7dip"
+                            android:paddingTop="3dip">
+
+                            <EditText
+                                android:id="@+id/fee_amount"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.2"
+                                android:background="@null"
+                                android:gravity="left"
+                                android:inputType="numberDecimal"
+                                android:paddingBottom="7dip"
+                                android:paddingLeft="14dip"
+                                android:paddingRight="14dip"
+                                android:paddingTop="7dip"
+                                android:state_selected="false"
+                                android:textColor="#1d1d26"
+                                android:textColorHint="#9a9a9c"
+                                android:textSize="16sp"
+                                android:textStyle="normal"
+                                android:maxLength="12"
+                                android:text= "0.0001"
+                                android:clickable="false"
+                                android:cursorVisible="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"/>
+
+                            <CheckBox
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginEnd="5dp"
+                                android:id="@+id/checkBoxSubstract"
+                                android:checked="true"
+                                android:gravity="center_vertical"
+                                android:text="Substract fee from amount"
                                 android:textColor="#333"
                                 android:textSize="12sp"
+                                android:buttonTint="#F78803"
                                 />
-                            <RadioButton
-                                android:id="@+id/fee_Medium"
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Normal"
-                                android:textColor="#333"
-                                android:textSize="12sp"/>
-                            <RadioButton
-                                android:id="@+id/fee_High"
+                                android:layout_marginLeft="16dp"
+                                android:paddingTop="0dp"
+                                android:text="Fee Level Settings"
+                                android:textColor="#F78803"
+                                android:textSize="12sp" />
+
+                            <RadioGroup
+                                android:id="@+id/feeGroup"
+                                android:orientation="horizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Fast"
-                                android:textColor="#333"
-                                android:textSize="12sp"/>
-                        </RadioGroup>
+                                android:layout_marginLeft="16dp"
+                                android:layout_column="0"
+                                android:layout_span="3">
+
+                                <RadioButton
+                                    android:id="@+id/fee_low"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Low"
+                                    android:layout_marginRight="0dp"
+                                    android:textColor="#333"
+                                    android:textSize="12sp"
+                                    android:buttonTint="#F78803"/>
+                                <RadioButton
+                                    android:id="@+id/fee_Medium"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Normal"
+                                    android:textColor="#333"
+                                    android:textSize="12sp"
+                                    android:buttonTint="#F78803"/>
+                                <RadioButton
+                                    android:id="@+id/fee_High"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Fast"
+                                    android:textColor="#333"
+                                    android:textSize="12sp"
+                                    android:buttonTint="#F78803"/>
+                            </RadioGroup>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -415,35 +437,33 @@
 
             </LinearLayout>
 
+        </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linear_send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="10dip"
+        android:paddingLeft="7dip"
+        android:paddingRight="7dip"
+        android:paddingTop="3dip"
+        android:background="#FFF"
+        >
 
-            <LinearLayout
-                android:id="@+id/linear_send"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:paddingBottom="10dip"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
-                android:paddingTop="3dip"
-                android:layout_alignParentBottom="true">
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:id="@+id/send_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="#54ACEC"
-                    android:clickable="true"
-                    android:padding="3dp"
-                    android:src="@drawable/ic_action_send_now_grey"
-                    android:text="@string/send_text"
-                    android:textColor="#fff"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-        </RelativeLayout>
-
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+            android:id="@+id/send_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#54ACEC"
+            android:clickable="true"
+            android:padding="3dp"
+            android:src="@drawable/ic_action_send_now_grey"
+            android:text="@string/send_text"
+            android:textColor="#fff"
+            android:textSize="14sp" />
     </LinearLayout>
-
+        </LinearLayout>
+</ScrollView>
 </RelativeLayout>

@@ -34,10 +34,12 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
     private int sentCount;
 
     private UUID responseToNotificationId;
+    private String city;
+    private String country;
 
 
 
-    public ActorNetworkServiceRecord(UUID id, String actorSenderAlias,String actorSenderPhrase, byte[] actorSenderProfileImage, NotificationDescriptor notificationDescriptor, Actors actorDestinationType, Actors actorSenderType, String actorSenderPublicKey, String actorDestinationPublicKey,long sentDate,ActorProtocolState actorProtocolState,boolean flagReadead, int sendCount,UUID responseToNotificationId) {
+    public ActorNetworkServiceRecord(UUID id, String actorSenderAlias,String actorSenderPhrase, byte[] actorSenderProfileImage, NotificationDescriptor notificationDescriptor, Actors actorDestinationType, Actors actorSenderType, String actorSenderPublicKey, String actorDestinationPublicKey,long sentDate,ActorProtocolState actorProtocolState,boolean flagReadead, int sendCount,UUID responseToNotificationId,String city, String country) {
         this.id = id;
         this.actorSenderAlias = actorSenderAlias;
         this.actorSenderProfileImage = actorSenderProfileImage;
@@ -52,6 +54,8 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         this.sentCount = sendCount;
         this.actorSenderPhrase = actorSenderPhrase;
         this.responseToNotificationId = responseToNotificationId;
+        this.city = city;
+        this.country = country;
     }
 
 
@@ -70,6 +74,8 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         this.flagReadead               = jsonObject.get("flagReadead").getAsBoolean();
         this.sentCount                 = jsonObject.get("sentCount").getAsInt();
         this.actorSenderPhrase         = jsonObject.get("actorSenderPhrase").getAsString();
+        this.country         = jsonObject.get("country").getAsString();
+        this.city         = jsonObject.get("city").getAsString();
         if(jsonObject.get("responseToNotificationId")!=null)this.responseToNotificationId  = UUID.fromString(jsonObject.get("responseToNotificationId").getAsString());
 
     }
@@ -124,6 +130,16 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
     @Override
     public long getSentDate() {
         return sentDate;
+    }
+
+    @Override
+    public String getCity() {
+        return city;
+    }
+
+    @Override
+    public String getCountry() {
+        return country;
     }
 
     public ActorProtocolState getActorProtocolState() {
@@ -194,6 +210,8 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         jsonObject.addProperty("notificationDescriptor",    notificationDescriptor.toString());
         jsonObject.addProperty("sentDate",                  sentDate);
         jsonObject.addProperty("actorProtocolState",        actorProtocolState.toString());
+        jsonObject.addProperty("city",        city.toString());
+        jsonObject.addProperty("country",        country.toString());
         jsonObject.addProperty("flagReadead",               flagReadead);
         jsonObject.addProperty("sentCount",                 sentCount);
         if(responseToNotificationId!=null)jsonObject.addProperty("responseToNotificationId", responseToNotificationId.toString());
@@ -225,6 +243,8 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
                 ", notificationDescriptor=" + notificationDescriptor +
                 ", sentDate=" + sentDate +
                 ", actorProtocolState=" + actorProtocolState +
+                ", city=" + city +
+                ", country=" + country +
                 ", flagReadead=" + flagReadead +
                 ", sentCount=" + sentCount +
                 '}';

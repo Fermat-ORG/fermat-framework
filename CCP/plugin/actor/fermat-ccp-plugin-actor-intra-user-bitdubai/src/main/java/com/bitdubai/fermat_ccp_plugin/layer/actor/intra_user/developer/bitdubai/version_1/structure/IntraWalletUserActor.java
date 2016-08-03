@@ -22,13 +22,17 @@ public class IntraWalletUserActor implements com.bitdubai.fermat_ccp_api.layer.a
     private final long            registrationDate;
     private final ConnectionState contactState    ;
     private final String          phrase          ;
+    private final String          city          ;
+    private final String          country          ;
 
     public IntraWalletUserActor(final String          name            ,
                                 final String          publicKey       ,
                                 final byte[]          profileImage    ,
                                 final long            registrationDate,
                                 final ConnectionState contactState,
-                                final String           phrase) {
+                                final String           phrase,
+                                final String          city,
+                                final String          country) {
 
         this.name             = name                ;
         this.publicKey        = publicKey           ;
@@ -36,6 +40,8 @@ public class IntraWalletUserActor implements com.bitdubai.fermat_ccp_api.layer.a
         this.registrationDate = registrationDate    ;
         this.contactState     = contactState        ;
         this.phrase           = phrase              ;
+        this.country = country;
+        this.city  = city;
 
     }
 
@@ -68,6 +74,16 @@ public class IntraWalletUserActor implements com.bitdubai.fermat_ccp_api.layer.a
     @Override
     public ConnectionState getContactState() {
         return this.contactState;
+    }
+
+    @Override
+    public String getCity() {
+        return city;
+    }
+
+    @Override
+    public String getCountry() {
+        return country;
     }
 
     @Override

@@ -21,27 +21,27 @@ public class BitcoinWalletBuildNotificationPainter {
                  //find last transaction
                 switch (code){
                     case CCPBroadcasterConstants.TRANSACTION_ARRIVE:
-                       notification = new BitcoinWalletNotificationPainter("Received money",  WalletUtils.formatBalanceStringNotDecimal(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC Arrived","","",true,codeReturn);
+                       notification = new BitcoinWalletNotificationPainter("Received money",  WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC Arrived","","",true,codeReturn);
 
                         break;
                     case CCPBroadcasterConstants.TRANSACTION_REVERSE:
-                       notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceStringNotDecimal(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC could not be completed.", "", "",true,codeReturn);
+                       notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC could not be completed.", "", "",true,codeReturn);
 
                         break;
 
 
                     case CCPBroadcasterConstants.PAYMENT_REQUEST_ARRIVE:
-                       notification = new BitcoinWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceStringNotDecimal(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC","","",true,codeReturn);
+                       notification = new BitcoinWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC","","",true,codeReturn);
 
                         break;
 
                     case CCPBroadcasterConstants.PAYMENT_DENIED:
-                       notification = new BitcoinWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceStringNotDecimal(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC was deny.","","",true,codeReturn);
+                       notification = new BitcoinWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC was deny.","","",true,codeReturn);
                         break;
 
                     case CCPBroadcasterConstants.PAYMENT_ERROR:
 
-                            notification = new BitcoinWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceStringNotDecimal(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC was reverted.","","",true,codeReturn);
+                            notification = new BitcoinWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC was reverted.","","",true,codeReturn);
 
                         break;
 
@@ -56,3 +56,4 @@ public class BitcoinWalletBuildNotificationPainter {
         return notification;
     }
 }
+

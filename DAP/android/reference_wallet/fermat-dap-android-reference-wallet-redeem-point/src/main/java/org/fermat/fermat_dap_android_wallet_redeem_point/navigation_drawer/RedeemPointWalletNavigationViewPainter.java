@@ -23,7 +23,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by frank on 12/9/15.
  */
-public class RedeemPointWalletNavigationViewPainter implements NavigationViewPainter {
+public class RedeemPointWalletNavigationViewPainter extends NavigationViewPainter {
 
     private static final String TAG = "RedeemNavigationView";
 

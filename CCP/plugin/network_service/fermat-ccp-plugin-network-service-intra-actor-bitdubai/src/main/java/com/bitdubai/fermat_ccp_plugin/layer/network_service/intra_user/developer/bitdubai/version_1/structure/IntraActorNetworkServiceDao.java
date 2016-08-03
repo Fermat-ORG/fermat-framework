@@ -277,8 +277,7 @@ public class IntraActorNetworkServiceDao {
             String intraUserAlias              = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_ALIAS_COLUMN_NAME);
             String intraUserPublicKey          = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME);
             String intraUserPhrase             = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHRASE_COLUMN_NAME);
-
-            byte[] profileImage = null;
+             byte[] profileImage = null;
 
             try {
                 profileImage = getIntraUserProfileImagePrivateKey(record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME));
@@ -286,7 +285,7 @@ public class IntraActorNetworkServiceDao {
                 profileImage = new  byte[0];
             }
 
-            return new IntraUserNetworkService(intraUserPublicKey, profileImage,intraUserAlias, intraUserPhrase, ProfileStatus.OFFLINE);
+            return new IntraUserNetworkService(intraUserPublicKey, profileImage,intraUserAlias, intraUserPhrase, ProfileStatus.OFFLINE,null);
         }
         catch(Exception e)
         {
