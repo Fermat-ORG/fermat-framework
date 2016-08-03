@@ -116,7 +116,7 @@
                     android:paddingBottom="5dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
-                    android:text="@string/see_your_balance_text"
+                    android:text="@string/text_body"
                     android:textColor="#1d1d26"
                     android:textSize="12sp" />
             </LinearLayout>
