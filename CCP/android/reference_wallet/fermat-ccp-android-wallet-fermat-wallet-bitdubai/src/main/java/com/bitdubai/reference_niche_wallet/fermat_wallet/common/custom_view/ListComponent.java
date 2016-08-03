@@ -32,7 +32,7 @@ public class ListComponent implements CustomComponentsObjects{
             } else if (fermatWalletTransaction.getTransactionType().equals(TransactionType.DEBIT)) {
                 titleTransaction += "Send from " + fermatWalletTransaction.getInvolvedActor().getName();
             }
-            titleTransaction+= " "+formatBalanceString(fermatWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode());
+            titleTransaction+= " "+formatBalanceString(fermatWalletTransaction.getAmount(), ShowMoneyType.FRMT.getCode());
         }catch (Exception e){
             e.printStackTrace();
         }

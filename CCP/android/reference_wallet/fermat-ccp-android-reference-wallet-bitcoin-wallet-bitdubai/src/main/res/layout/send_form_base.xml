@@ -275,8 +275,6 @@
                         android:layout_height="25dp"
                         android:src="@drawable/ic_arrow_down_expanded"/>
 
-
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -284,7 +282,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/feed_advances"
                     android:orientation="vertical"
-                    android:visibility="gone"
+                    android:visibility="visible"
+
                     >
 
                     <View
@@ -305,8 +304,7 @@
                             android:paddingTop="10dp"
                             android:text="@string/fee_amount_text"
                             android:textColor="#12aca1"
-                            android:textSize="12sp" />
-
+                            android:textSize="12sp"/>
 
                     </LinearLayout>
 
@@ -407,7 +405,6 @@
                     </LinearLayout>
 
                 </LinearLayout>
-
 
 
 

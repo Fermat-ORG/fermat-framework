@@ -11,13 +11,16 @@ public interface FermatContext {
 
     Object loadObject(String pluginName);
 
-    Object objectToProxyfactory(Object base, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface);
+    Object loadObject(String pluginName,ClassLoader classLoader);
 
-    Object loadProxyObject(String moduleName, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface, Object... parameters);
+    Object objectToProxyfactory(Object base,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface);
 
-    void registerReceiver(FermatIntentFilter filter, FermatBroadcastReceiver fermatBroadcastReceiver, String appPublicKey);
+    Object loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... parameters);
 
-    void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver, String appPublicKey);
+    void registerReceiver(FermatIntentFilter filter,FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey);
+
+    void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey);
+
 
 
 }

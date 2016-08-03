@@ -1,9 +1,5 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.common.custom_view;
 
-import java.text.DecimalFormat;
-import java.util.LinkedList;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +16,10 @@ import android.widget.ScrollView;
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.interfaces.OnWheelChangedListener;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.interfaces.WheelAdapter;
+
+import java.text.DecimalFormat;
+import java.util.LinkedList;
+import java.util.List;
 
 public class WheelView extends View {
 	private static final String TAG = "WHEELSPINNER";
