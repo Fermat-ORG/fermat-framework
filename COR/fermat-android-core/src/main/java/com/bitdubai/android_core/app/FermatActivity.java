@@ -1895,9 +1895,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
         try {
             if (!(this instanceof DesktopActivity)) {
                 final FermatStructure fermatStructure = FermatApplication.getInstance().getAppManager().getLastAppStructure();
-                final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
-                if (viewPainter != null) {
-                    final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
+                //final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
+                if (navigationViewPainter != null) {
+                    final FermatAdapter mAdapter = navigationViewPainter.addNavigationViewAdapter();
                     Activity activity = fermatStructure.getLastActivity();
                     if (activity != null) {
                         SideMenu sideMenu = activity.getSideMenu();
@@ -1907,12 +1907,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                FrameLayout frameLayout = SideMenuBuilder.setHeader(FermatActivity.this, viewPainter);
+                                FrameLayout frameLayout = SideMenuBuilder.setHeader(FermatActivity.this, navigationViewPainter);
                                 try {
                                     SideMenuBuilder.setAdapter(
                                             navigation_recycler_view,
                                             mAdapter,
-                                            viewPainter.addItemDecoration(),
+                                            navigationViewPainter.addItemDecoration(),
                                             finalLstItems,
                                             FermatActivity.this,
                                             fermatStructure.getLastActivity().getActivityType()
