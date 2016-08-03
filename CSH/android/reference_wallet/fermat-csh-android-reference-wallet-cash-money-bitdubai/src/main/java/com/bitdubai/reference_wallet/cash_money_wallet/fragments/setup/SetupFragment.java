@@ -151,11 +151,11 @@ public class SetupFragment extends AbstractFermatFragment<ReferenceAppFermatSess
                     moduleManager.createCashMoneyWallet(appSession.getAppPublicKey(), selectedCurrency);
                     changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
                 } catch (CantCreateCashMoneyWalletException e) {
-                    Toast.makeText(getActivity(), "Error! The Wallet could not be created.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.cash_error_msg_wallet_could_not_be_created), Toast.LENGTH_SHORT).show();
                 }
             }
             else
-                Toast.makeText(getActivity(), "Please select a valid currency.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.cash_error_msg_invalid_currency_selected), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -19,7 +19,6 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantValidateActorConnectionStateException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
@@ -51,6 +50,8 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
     private ChatActorCommunitySubAppModuleManager moduleManager;
     ArrayList<ChatActorCommunityInformation> chatMessages = new ArrayList<>();
+    private AdapterCallbackList mAdapterCallbackList;
+
 
     public CommunityListAdapter(Context context) {
         super(context);
@@ -58,15 +59,21 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
 
     public CommunityListAdapter(Context context, List<ChatActorCommunityInformation> dataSet,
                                 ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
-                                ChatActorCommunitySubAppModuleManager moduleManager) {
+                                ChatActorCommunitySubAppModuleManager moduleManager,
+                                AdapterCallbackList mAdapterCallbackList) {
         super(context, dataSet);
         this.appSession = appSession;
         this.moduleManager = moduleManager;
+        this.mAdapterCallbackList = mAdapterCallbackList;
     }
 
     @Override
     protected CommunityWorldHolder createHolder(View itemView, int type) {
         return new CommunityWorldHolder(itemView);
+    }
+
+    public static interface AdapterCallbackList {
+        void onMethodCallbackConnectionStatus(int position, ConnectionState state);
     }
 
     @Override
@@ -216,7 +223,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     }
 
     @Override
-    protected void bindHolder(final CommunityWorldHolder holder, ChatActorCommunityInformation data, int position) {
+    protected void bindHolder(final CommunityWorldHolder holder, ChatActorCommunityInformation data, final int position) {
         final ConnectionState connectionState = data.getConnectionState();
         updateConnectionState(connectionState, holder);
         holder.name.setText(data.getAlias());
@@ -228,27 +235,22 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         } else
             holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
 
-        if (data.getLocation() != null) {
-            if (data.getState().equals("null") || data.getState().equals("")) stateAddress = "";
-            else stateAddress = new StringBuilder().append(data.getState()).append(" ").toString();
+//            if (data.getState().equals("null") || data.getState().equals(""))
+                stateAddress = "";
+//            else stateAddress = data.getState() + " ";
             if (data.getCity().equals("null") || data.getCity().equals("")) cityAddress = "";
-            else cityAddress = new StringBuilder().append(data.getCity()).append(" ").toString();
-            if (data.getCountry().equals("null") || data.getCountry().equals(""))
-                countryAddress = "";
+            else cityAddress = data.getCity() + ", ";
+            if (data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
             else countryAddress = data.getCountry();
-            if (stateAddress.equalsIgnoreCase("") && cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
+            if (/*stateAddress.equalsIgnoreCase("") &&*/ cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
                 holder.location_text.setText("Not Found");
-            } else
-                holder.location_text.setText(new StringBuilder().append(cityAddress).append(stateAddress).append(countryAddress).toString());
-        } else
-            holder.location_text.setText("Not Found");
+            }else
+                holder.location_text.setText(cityAddress + countryAddress);//+ stateAddress
 
-        if (data.getProfileStatus() == ProfileStatus.ONLINE)
-            holder.location_text.setTextColor(Color.parseColor("#47BF73"));//Verde no brillante
-        else if (data.getProfileStatus() == ProfileStatus.OFFLINE)
+        if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
+            holder.location_text.setTextColor(Color.parseColor("#47BF73"));
+        else
             holder.location_text.setTextColor(Color.RED);
-        else if (data.getProfileStatus() == ProfileStatus.UNKNOWN)
-            holder.location_text.setTextColor(Color.BLACK);
 
         final ChatActorCommunityInformation dat = data;
         holder.add_contact_button.setOnClickListener(new View.OnClickListener() {
@@ -272,6 +274,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                                 ConnectionState cState
                                         = moduleManager.getActorConnectionState(dat.getPublicKey());
                                 updateConnectionState(cState, holder);
+                                mAdapterCallbackList.onMethodCallbackConnectionStatus(position, cState);
                             } catch (CantValidateActorConnectionStateException e) {
                                 e.printStackTrace();
                             }

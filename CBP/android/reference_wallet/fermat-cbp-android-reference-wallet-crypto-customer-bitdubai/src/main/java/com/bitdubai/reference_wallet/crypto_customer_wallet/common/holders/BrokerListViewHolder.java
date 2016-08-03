@@ -37,7 +37,7 @@ public class BrokerListViewHolder extends FermatViewHolder {
      * @param itemView the item view
      */
     public BrokerListViewHolder(View itemView) {
-        super(itemView);
+        super(itemView, 0);
         res = itemView.getResources();
 
         brokerImage = (ImageView) itemView.findViewById(R.id.ccw_broker_image);
