@@ -253,7 +253,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             /**
              * Register Elements after Start
              */
-            handleNetworkServiceRegisteredEvent();
+           // handleNetworkServiceRegisteredEvent();
 
 
         } catch (Exception exception) {
@@ -467,18 +467,18 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         /*
          * 2. Listen and handle Network Client Network Service Registered Event
          */
-        FermatEventListener networkServiceProfileRegisteredListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_NETWORK_SERVICE_PROFILE_REGISTERED);
-        networkServiceProfileRegisteredListener.setEventHandler(new NetworkClientNetworkServiceRegisteredEventHandler(this));
-        eventManager.addListener(networkServiceProfileRegisteredListener);
-        listenersAdded.add(networkServiceProfileRegisteredListener);
+//        FermatEventListener networkServiceProfileRegisteredListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_NETWORK_SERVICE_PROFILE_REGISTERED);
+//        networkServiceProfileRegisteredListener.setEventHandler(new NetworkClientNetworkServiceRegisteredEventHandler(this));
+//        eventManager.addListener(networkServiceProfileRegisteredListener);
+//        listenersAdded.add(networkServiceProfileRegisteredListener);
 
         /*
          * 3. Listen and handle Network Client Connection Closed Event
          */
-        FermatEventListener connectionClosedListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_CONNECTION_CLOSED);
-        connectionClosedListener.setEventHandler(new NetworkClientConnectionClosedEventHandler(this));
-        eventManager.addListener(connectionClosedListener);
-        listenersAdded.add(connectionClosedListener);
+//        FermatEventListener connectionClosedListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_CONNECTION_CLOSED);
+//        connectionClosedListener.setEventHandler(new NetworkClientConnectionClosedEventHandler(this));
+//        eventManager.addListener(connectionClosedListener);
+//        listenersAdded.add(connectionClosedListener);
 
         /*
          * 4. Listen and handle Network Client Connection Lost Event
@@ -787,7 +787,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     public final void handleNetworkClientConnectionClosedEvent(final CommunicationChannels communicationChannel) {
 
         try {
-
+            this.registered = Boolean.FALSE;
             if(!networkClientManager.getConnection().isRegistered()) {
 
                 try {
@@ -797,7 +797,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
                     System.out.println("Failed to pause the messages supervisor agent - > NS: "+this.getProfile().getNetworkServiceType());
                 }
 
-                this.registered = Boolean.FALSE;
 
                 onNetworkClientConnectionClosed();
 
@@ -1083,7 +1082,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     }
 
     public synchronized void startConnection() throws FermatException {
-        if (isStarted() && !isRegistered())
+        if (!isRegistered())
             handleNetworkClientRegisteredEvent();
         else System.out.println("####################___ALGO__MALO___PASA__#####################");
 //        getConnection().registerProfile(getProfile());

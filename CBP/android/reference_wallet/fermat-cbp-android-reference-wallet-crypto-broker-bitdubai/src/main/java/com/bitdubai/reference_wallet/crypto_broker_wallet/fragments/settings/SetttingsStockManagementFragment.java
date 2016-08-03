@@ -45,7 +45,9 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
 /**
  * Created by nelson on 22/12/15.
  */
-public class SetttingsStockManagementFragment extends FermatWalletListFragment<CryptoBrokerWalletAssociatedSetting, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager> implements FermatListItemListeners<CryptoBrokerWalletAssociatedSetting>, DialogInterface.OnDismissListener, CBPBroadcasterConstants {
+public class SetttingsStockManagementFragment extends FermatWalletListFragment<CryptoBrokerWalletAssociatedSetting,
+        ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager> implements
+        FermatListItemListeners<CryptoBrokerWalletAssociatedSetting>, DialogInterface.OnDismissListener, CBPBroadcasterConstants {
 
     // Constants
     private static final String TAG = "SettingsStockManagement";
@@ -161,8 +163,8 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             }
         });
 
-        merchandisesAdapter = new SettingsStockManagementMerchandisesAdapter(getActivity(), merchandises, moduleManager);
-        //merchandisesAdapter.setFermatListEventListener(this);
+        merchandisesAdapter = new SettingsStockManagementMerchandisesAdapter(getActivity(), associatedSettings, moduleManager);
+        merchandisesAdapter.setFermatListEventListener(this);
 
         merchandisesRecyclerView = (RecyclerView) layout.findViewById(R.id.cbw_settings_current_merchandises);
         merchandisesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -285,7 +287,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
                 }
 
                 if (merchandisesAdapter != null) {
-                    merchandisesAdapter.changeDataSet(merchandises);
+                    merchandisesAdapter.changeDataSet(associatedSettings);
 
                     //This line is a hack, needed (don't know why) so that the merchandises get refreshed.
                     merchandisesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));

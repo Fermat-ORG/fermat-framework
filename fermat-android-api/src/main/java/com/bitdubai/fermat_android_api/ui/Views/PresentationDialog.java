@@ -57,6 +57,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
     int textFooter = -1;
     int textNameLeft = -1;
     int textNameRight = -1;
+    int textCloseButton = -1;
     private String textColor;
     //    private int titleTextColor = -1;
     private int viewColor = -1;
@@ -177,6 +178,8 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         if (footer_title != null) footer_title.setText(textFooter);
         if (checkbox_not_show_text != null && textCheckboxNotShow != -1)
             checkbox_not_show_text.setText(textCheckboxNotShow);
+        if (textCloseButton != -1 && btn_dismiss != null)
+            btn_dismiss.setText(textCloseButton);
         if (viewColor != -1) {
             view_color.setBackgroundResource(viewColor);
             view_color1.setBackgroundResource(viewColor);
@@ -184,8 +187,10 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             view_color3.setBackgroundResource(viewColor);
             if (view_color4 != null)
                 view_color4.setBackgroundResource(viewColor);
-            if (btn_dismiss != null)
+            if (btn_dismiss != null) {
                 btn_dismiss.setBackgroundResource(viewColor);
+                btn_dismiss.setText(textNameLeft);
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 txt_title.setTextColor(getContext().getResources().getColorStateList(viewColor, getContext().getTheme()));
             } else {
@@ -311,6 +316,10 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         this.title = title;
     }
 
+    public void setTextCloseButton(int textCloseButton) {
+        this.textCloseButton = textCloseButton;
+    }
+
     public void setSubTitle(int subTitle) {
         this.subTitle = subTitle;
     }
@@ -377,6 +386,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         private int title = -1;
         private int subTitle = -1;
         private int body = -1;
+        private int textCloseButton = -1;
         private int textFooter = -1;
         private int textCheckbox = -1;
         private String textColor;
@@ -397,7 +407,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             if (title != -1) {
                 presentationDialog.setResTitle(title);
             } else {
-                presentationDialog.setResTitle(R.string.message_tittle);
+                presentationDialog.setResTitle(R.string.dialog_title);
             }
             if (subTitle != -1) {
                 presentationDialog.setSubTitle(subTitle);
@@ -424,12 +434,23 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             if (textNameLeft != -1) {
                 presentationDialog.setTextNameLeft(textNameLeft);
             } else {
-                presentationDialog.setTextNameLeft(R.string.name_left);
+                if (templateType.equals(TemplateType.TYPE_PRESENTATION) || templateType.equals(TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY))
+                    presentationDialog.setTextNameLeft(R.string.name_left);
+                else if (templateType.equals(TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES))
+                    presentationDialog.setTextNameLeft(R.string.dialog_button_close);
             }
             if (textNameRight != -1) {
                 presentationDialog.setTextNameRight(textNameRight);
             } else {
-                presentationDialog.setTextNameRight(R.string.name_right);
+                if (templateType.equals(TemplateType.TYPE_PRESENTATION) || templateType.equals(TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY))
+                    presentationDialog.setTextNameRight(R.string.name_right);
+                else if (templateType.equals(TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES))
+                    presentationDialog.setTextNameLeft(R.string.dialog_button_close);
+            }
+            if (textCloseButton != -1) {
+                presentationDialog.setTextCloseButton(textCloseButton);
+            } else {
+                presentationDialog.setTextCloseButton(R.string.dialog_button_close);
             }
             if (iconRes != -1) {
                 presentationDialog.setIconRes(iconRes);
@@ -460,6 +481,11 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
 
         public Builder setImageLeft(int imageLeft) {
             this.imageLeft = imageLeft;
+            return this;
+        }
+
+        public Builder setTextCloseButton(int textCloseButton) {
+            this.textCloseButton = textCloseButton;
             return this;
         }
 

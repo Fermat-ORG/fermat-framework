@@ -55,6 +55,7 @@ public class DisconnectDialog
 
     private final ChatActorCommunityInformation chatUserInformation;
     private final ChatActorCommunitySelectableIdentity identity;
+    private Context activity;
 
     public DisconnectDialog(final Context activity,
                             final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
@@ -66,6 +67,7 @@ public class DisconnectDialog
 
         this.chatUserInformation = chatUserInformation;
         this.identity = identity;
+        this.activity = activity;
     }
 
     @SuppressLint("SetTextI18n")
@@ -81,7 +83,7 @@ public class DisconnectDialog
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
         if (chatUserInformation != null) {
-            setDescription("Do you want to be disconnected from " + chatUserInformation.getAlias() + "?");
+            setDescription(activity.getResources().getString(R.string.cht_comm_text_disconnect2)+ chatUserInformation.getAlias() + "?");
         }
         mDescription.setText(description != null ? description : "");
         mUsername.setText(username != null ? username : "");
@@ -124,7 +126,7 @@ public class DisconnectDialog
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_DISCONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);
-                    Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), activity.getResources().getString(R.string.cht_comm_text_disconnect3), Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();
                 }

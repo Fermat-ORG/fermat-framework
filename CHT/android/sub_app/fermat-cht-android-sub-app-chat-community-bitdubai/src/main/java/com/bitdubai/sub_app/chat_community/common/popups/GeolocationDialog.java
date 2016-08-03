@@ -178,10 +178,10 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
 //    }
 
     private void getMoreData() {
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Please wait");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+//        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+//        progressDialog.setMessage("Please wait");
+//        progressDialog.setCancelable(false);
+//        progressDialog.show();
 
         final FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
@@ -193,7 +193,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
         fermatWorker.setCallBack(new FermatWorkerCallBack() {
             @Override
             public void onPostExecute(Object... result) {
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
                 if (result != null && result.length > 0) {
                     adapter = new GeolocationAdapter(getActivity(), (List<ExtendedCity>) result[0], errorManager, mAdapterCallback, GeolocationDialog.this);
                     mListView.setAdapter(adapter);
@@ -204,7 +204,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
 
             @Override
             public void onErrorOccurred(Exception ex) {
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_COMMUNITY,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }

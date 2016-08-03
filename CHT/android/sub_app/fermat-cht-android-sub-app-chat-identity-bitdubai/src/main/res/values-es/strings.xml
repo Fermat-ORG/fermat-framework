@@ -3,75 +3,37 @@
 <resources>
 
     <string name="app_name">CHT</string>
-    <string name="activity_contacts_list">Contacts List</string>
-    <string name="activity_contact_detail">Contact Detail</string>
-    <string name="contacts_list_search_results_title">Contacts List Search for \"%s\"</string>
+    <string name="create">CREAR</string>
+    <string name="rotate">ROTAR IMAGEN</string>
+    <string name="help">Ayuda</string>
+    <string name="update">ACTUALIZAR</string>
+    <string name="activity_contacts_list">Lista de contactos</string>
+    <string name="activity_contact_detail">Detalle de contacto</string>
+    <string name="contacts_list_search_results_title">Lista de contactos Buscar por \"%s\"</string>
     <string name="app_description">This is a sample app, demonstrating use of the Android system Contacts Provider.</string>
     <string name="imageview_description">Contact Thumbnail</string>
     <string name="address_button_description">View Address</string>
-    <string name="menu_search">Search</string>
-    <string name="menu_add_contact">Add Contact</string>
+    <string name="menu_search">Buscar</string>
+    <string name="menu_add_contact">Agregar Contacto</string>
     <string name="menu_open_chat">Open Chat</string>
-    <string name="menu_create_group">Create Group</string>
-    <string name="menu_create_broadcasting">Create Broadcasting</string>
-    <string name="menu_delete_all_chats">Delete All Chats</string>
     <string name="menu_switch_profile">Switch Profile</string>
     <string name="menu_settings">Error Report</string>
-    <string name="menu_block_contact">Block Contact</string>
-    <string name="cht_chat_body_broadcast_step_one">Body of step one broadcast chat dialog</string>
-    <string name="cht_chat_subtitle_broadcast_step_one">Subtitle of step one broadcast chat dialog</string>
-    <string name="cht_chat_footer_broadcast_step_one">Footer of step one broadcast chat dialog</string>
-    <string name="menu_view_contact">View Contact</string>
-    <string name="menu_clean_chat">Clear Chat</string>
-    <string name="menu_send_chat_email">Send Chat by Email</string>
     <string name="menu_edit_contact">Edit Contact</string>
-    <string name="menu_delete_chat">Delete Chat</string>
-    <string name="menu_delete_contact">Delete Contact</string>
     <string name="no_contacts">No Contacts Found</string>
     <string name="no_contact_selected">No Contact Selected</string>
-    <string name="cht_search_hint">Search...</string>
+    <string name="search_hint">Find contacts</string>
     <string name="defaulttext">Type a message</string>
-    <string name="cht_chat_subtitle">Welcome to P2P Chat.</string>
-    <string name="cht_chat_body">If you do not have any identity registered, please register one in our Chat Community.</string>
-    <string name="cht_chat_footer">P2P Chat</string>
-    <string name="cht_no_chat">No chats</string>
-    <string name="cht_contact_select">Please, tap on contacts and select\na friend to start a P2P Chat.</string>
-    <string name="cht_contact_select1">Please, tap on contacts and select</string>
-    <string name="cht_contact_select2">a friend to start a P2P Chat.</string>
-    <string name="cht_contact_list_select1">To add contacts, go to P2P Chat</string>
-    <string name="cht_contact_list_select2">Community and send a connection</string>
-    <string name="cht_contact_list_select3">request to a friend.</string>
-    <string name="cht_dialog_welcome">Welcome!</string>
-    <string name="cht_dialog_subtitle">Welcome to P2P Chat</string>
-    <string name="cht_dialog_content">If you do not have any identity registered, please register one in our Chat Community.</string>
-    <string name="cht_dialog_dont_show">Don´t show this again</string>
-    <string name="cht_dialog_button_close">OK</string>
-    <string name="cht_dialog_add_connection">Add connections</string>
-    <string name="cht_yes">Yes</string>
-    <string name="cht_no">No</string>
+    <string name="dialog_title_select_gallery_picture">Avatar</string>
+    <string name="cht_identity_welc">Bienvenido!</string>
+    <string name="cht_identity_close">OK</string>
+    <string name="cht_identity_dont_show_again">No mostrar de nuevo</string>
+    <string name="cht_chat_subtitle">Bienvenido a Fermat P2P Chat.</string>
+    <string name="cht_chat_identity_subtitle">Bienvenido to Fermat P2P Chat Identity.</string>
+    <string name="cht_chat_body">Si no tiene una identidad creada, favor registre una.</string>
+    <string name="cht_chat_identity_body">Si no tiene una identidad creada, registre su identidad aquí!</string>
+    <string name="cht_chat_identity_gps">Favor, encienda su GPS para registrar su ubicación, así luego otros pueden encontrarlo y puede encontrar otros usuarios cerca de usted.</string>
 
-    <string name="cht_select">Select</string>
-    
-    <string name="cht_broadcaster_simple_text">BROADCAST SIMPLE</string>
-    <string name="cht_broadcaster_scheduled_text">BROADCAST SCHEDULED</string>
-    <string name="cht_broadcaster_button_text">Create</string>
-    <string name="cht_broadcaster_recipients">ADD BROADCAST LIST RECIPIENTS</string>
-    <string name="cht_broadcaster_simple_contact_hint">Type contact name</string>
-    <string name="cht_broadcaster_simple_name_hint">Type name for the broadcast</string>
-    <string name="cht_broadcaster_add_recipients">Add broadcast list recipients</string>
-    <string name="cht_broadcaster_scheduled_text2">Add broadcast list recipients</string>
-    <string name="cht_broadcaster_day_programming">DAY PROGRAMMING</string>
-    <string name="cht_broadcaster_name_hint">Type broadcast name</string>
-    
-    <string name="cht_contact_edit_text_hint">User Alias</string>
-
-    <string name="cht_no_contacts">No contacts</string>
-
-    <string name="cht_send_error_text1">Please, write an email to send us the error report to help fix the problem.</string>
-    <string name="cht_send_error_text2">...Or hold a tap in the empty   box below to load the log and then copy and paste in another place to send it</string>
-    <string name="cht_send_error_hint">Type email of support personal</string>
-    <string name="cht_send_error_hint_hold">Hold a tap here</string>
-
+    <string name="cht_chat_footer">Fermat P2P Chat</string>
 
     <!-- Used for the AlphabetIndexer in ContactsListFragment to provide quick navigation by
          alphabet using ListView fast scroll. -->
@@ -119,12 +81,14 @@
     <string name="text_internal_storage">Internal Storage</string>
     <string name="text_root">/</string>
     <string name="text_system_root">System Root</string>
+    <string name="text_mobigram">MobiGram</string>
     <string name="text_to_send_images_without_compression">To send images without compression</string>
     <string name="text_nearest_checkpoints">Nearest checkpoints</string>
     <string name="text_map">Map</string>
     <string name="text_satellite">Satellite</string>
     <string name="text_hybrid">Hybrid</string>
     <string name="text_send_selected_location">Send your current location</string>
+    <string name="text_test_mobigram">MobiGram - jkdksafkfsmskjsa</string>
     <string name="text_test_number">100000</string>
     <string name="new_message_fragment_title">New message</string>
     <string name="select_chat_fragment_title">Select chat</string>

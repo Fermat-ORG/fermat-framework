@@ -201,11 +201,11 @@ public class CreateAndEditCryptoCustomerIdentityFragment
 //        });
 
         try {
-            if((appSession.getData(FragmentsCommons.SETTING_CUSTOMER) != null)) {
-                subappSettings = (IdentityCustomerPreferenceSettings) appSession.getData(FragmentsCommons.SETTING_CUSTOMER);
-            } else {
+//            if((appSession.getData(FragmentsCommons.SETTING_CUSTOMER) != null)) {
+//                subappSettings = (IdentityCustomerPreferenceSettings) appSession.getData(FragmentsCommons.SETTING_CUSTOMER);
+//            } else {
                 subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
-            }
+//            }
         } catch (Exception e) {
             subappSettings = null;
         }
@@ -213,7 +213,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         if (subappSettings == null) {
             subappSettings = new IdentityCustomerPreferenceSettings();
             subappSettings.setIsPresentationHelpEnabled(true);
-            appSession.setData(FragmentsCommons.SETTING_CUSTOMER, subappSettings);
+//            appSession.setData(FragmentsCommons.SETTING_CUSTOMER, subappSettings);
         }
             try {
                 appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), subappSettings);
