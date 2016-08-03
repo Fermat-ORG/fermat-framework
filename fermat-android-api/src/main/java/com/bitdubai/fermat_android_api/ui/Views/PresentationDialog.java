@@ -450,7 +450,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             if (textCloseButton != -1) {
                 presentationDialog.setTextCloseButton(textCloseButton);
             } else {
-                presentationDialog.setTextCloseButton(R.string.close_button);
+                presentationDialog.setTextCloseButton(R.string.dialog_button_close);
             }
             if (iconRes != -1) {
                 presentationDialog.setIconRes(iconRes);
