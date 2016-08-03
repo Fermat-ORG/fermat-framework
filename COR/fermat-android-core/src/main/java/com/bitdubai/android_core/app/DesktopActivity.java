@@ -402,6 +402,8 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                     findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
 
+                    findViewById(R.id.radiogroup).setVisibility(View.GONE);
+
                     if (activity.getFragments().size() == 1) {
                         setOneFragmentInScreen(fermatAppConnection.getFragmentFactory(), FermatApplication.getInstance().getAppManager().lastAppSession(), activity.getLastFragment());
                     }
