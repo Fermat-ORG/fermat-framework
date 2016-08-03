@@ -19,7 +19,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:typeface="ROBOTO_REGULAR"
-        tools:text="Title"/>
+        tools:text="@string/confirm_dialog_title"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/confirmDialogContentText"
@@ -32,7 +32,7 @@
         android:layout_marginTop="26dp"
         android:textColor="#1d1d26"
         android:textSize="16sp"
-        android:text=""
+        android:text="@string/confirm_dialog_body"
         app:typeface="ROBOTO_REGULAR"/>
 
     <View
@@ -53,7 +53,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/color_white"
-            android:text="No"
+            android:text="@string/confirm_dialog_no"
             android:textColor="#5C6E81"
             android:textSize="14sp"
             app:typeface="ROBOTO_REGULAR"/>
@@ -69,7 +69,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/color_white"
-            android:text="Yes"
+            android:text="@string/confirm_dialog_yes"
             android:textColor="#5C6E81"
             android:textSize="14sp"
             app:typeface="ROBOTO_REGULAR"
