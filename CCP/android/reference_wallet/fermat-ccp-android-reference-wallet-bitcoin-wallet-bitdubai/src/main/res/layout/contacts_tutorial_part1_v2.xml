@@ -202,7 +202,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="@string/no_id_dont_show_this_again_text"
+                        android:text="@string/checkbox_show"
                         android:textColor="@color/grey_600"
                         android:textSize="12sp" />
                 </LinearLayout>
