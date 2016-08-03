@@ -374,7 +374,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             animationManager = new AnimationManager(rootView,emptyListViewsContainer);
             getPaintActivtyFeactures().addCollapseAnimation(animationManager);
         } catch (Exception e){
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
@@ -653,7 +653,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             walletAddress = cryptoAddress;
         } catch (CantRequestCryptoAddressException e) {
             // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
 
 
@@ -771,7 +771,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
         } catch (Exception e) {
             // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         return super.onOptionsItemSelected(item);
@@ -1001,7 +1001,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedUIException(
                     UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
 
     }

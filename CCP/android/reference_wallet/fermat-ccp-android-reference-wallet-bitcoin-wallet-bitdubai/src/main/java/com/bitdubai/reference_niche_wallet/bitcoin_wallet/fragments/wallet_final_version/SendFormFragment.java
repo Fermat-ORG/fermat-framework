@@ -248,7 +248,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             return rootView;
         } catch (Exception e) {
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
@@ -270,7 +270,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 errorConnectingFermatNetworkDialog.dismiss();
                 try {
                     if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
-                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_trying_to_reconnect), Toast.LENGTH_SHORT).show();
                         getActivity().onBackPressed();
                     }
                 } catch (CantGetCommunicationNetworkStatusException e) {
@@ -745,7 +745,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             if (cryptoWalletWalletContact != null) {
                 sendCrypto();
             } else
-                Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_contact_not_found), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.imageView_contact) {
             // if user press the profile image
         } else if (id == R.id.btn_expand_send_form) {
@@ -856,32 +856,32 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     });
                                 }
                                 else{
-                                    Toast.makeText(getActivity(), "Insufficient funds.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_insufficient_funds), Toast.LENGTH_SHORT).show();
                                 }
 
                            }else{
-                                Toast.makeText(getActivity(), "Invalid Amount, must be greater than " +msg, Toast.LENGTH_LONG).show();
+                               Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_invalid_amount) + " " + msg, Toast.LENGTH_SHORT).show();
                            }
 
 
 
                         } catch (Exception e) {
                             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                            Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(getActivity(), "Invalid Amount", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_invalid_amount_2), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Contact don't have an valid Address", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_invalid_address), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(getActivity(), "Contact don't have an Address from red "+ blockchainNetworkType.getCode() + "\nplease wait 2 minutes", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message) + " - " + blockchainNetworkType.getCode(), Toast.LENGTH_SHORT).show();
             }
 
 
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 

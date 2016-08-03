@@ -128,7 +128,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -145,7 +145,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             setUp();
             return rootView;
         }catch (Exception e){
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
         return container;
     }
@@ -296,12 +296,12 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             if(id == R.id.btn_refuse_request){
 
                 cryptoWallet.refuseRequest(paymentRequest.getRequestId());
-                Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.denied), Toast.LENGTH_SHORT).show();
             }
             else if ( id == R.id.btn_accept_request){
                 cryptoWallet.approveRequest(paymentRequest.getRequestId(),cryptoWallet.getSelectedActorIdentity().getPublicKey(),
                         BitcoinFee.valueOf(feeLevel).getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
-                Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.accepted), Toast.LENGTH_SHORT).show();
             }
 
         } catch (Exception e) {
@@ -334,7 +334,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             }
         } catch (Exception e) {
             // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         return super.onOptionsItemSelected(item);

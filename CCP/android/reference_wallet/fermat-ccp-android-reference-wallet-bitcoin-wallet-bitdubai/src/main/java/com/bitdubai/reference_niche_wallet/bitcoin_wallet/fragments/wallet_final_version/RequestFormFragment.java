@@ -203,7 +203,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
             });
             return rootView;
         } catch (Exception e) {
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
         return null;
@@ -631,11 +631,11 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
         try {
 
             if (cryptoWalletWalletContact == null) {
-                Toast.makeText(getActivity(), "Contact not found, please add it first.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_contact_not_found), Toast.LENGTH_SHORT).show();
             } else if (cryptoWalletWalletContact.getCompatibility().equals(Compatibility.INCOMPATIBLE)) {
-                Toast.makeText(getActivity(), "The user doesn't have a compatible wallet.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_incompatible_wallet), Toast.LENGTH_SHORT).show();
             } else if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
-                Toast.makeText(getActivity(), "We can't find an address for the contact yet.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_address_not_found), Toast.LENGTH_SHORT).show();
             } else {
 
                 String amount = editTextAmount.getText().toString();
@@ -698,7 +698,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                    CryptoCurrency.BITCOIN
 
                            );
-                           Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.request_sent), Toast.LENGTH_SHORT).show();
                            if (isFragmentFromDetail) onBack(null);
                            else
                                onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
