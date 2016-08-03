@@ -173,15 +173,10 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             intraUserLoginIdentity = appSession.getModuleManager().getSelectedActorIdentity();
 
             //load settings params
-            if(appSession.getData(SessionConstant.SETTINGS_LOADED) != null) {
-                if (!(Boolean) appSession.getData(SessionConstant.SETTINGS_LOADED)) {
-                    loadSettings();
-                }
-            }
-            else
-            {
+            if(appSession.getData(SessionConstant.SETTINGS_LOADED)!=false)
                 loadSettings();
-            }
+            else loadSettings();
+
 
 
 
@@ -363,14 +358,21 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
 
     private void setUpHeader(LayoutInflater inflater)  throws CantGetBalanceException {
+
         final RelativeLayout container_header_balance = getToolbarHeader();
 
-        final int sdk = android.os.Build.VERSION.SDK_INT;
+        try {
+            container_header_balance.removeAllViews();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        /*final int sdk = android.os.Build.VERSION.SDK_INT;
         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
             container_header_balance.setBackgroundDrawable( getResources().getDrawable(R.drawable.background_white_gradient) );
         } else {
             container_header_balance.setBackground( getResources().getDrawable(R.drawable.background_white_gradient));
-        }
+        }*/
 
         final View header_layout = inflater.inflate(R.layout.fermat_wallet_home_header,container_header_balance,true);
         container_header_balance.setVisibility(View.VISIBLE);
@@ -524,8 +526,13 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         //LineData data = getData(dailyHardCore);
         /**END HARD CORE DATA FOR CHART**/
 
-        LineData data = getData(fermatWalletSettings.getRunningDailyBalance());
+        LineData data = null;
 
+        try{
+            data = getData(fermatWalletSettings.getRunningDailyBalance());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         //LineData data = new LineData(labels, dataset);
         chart.setData(data);
 
