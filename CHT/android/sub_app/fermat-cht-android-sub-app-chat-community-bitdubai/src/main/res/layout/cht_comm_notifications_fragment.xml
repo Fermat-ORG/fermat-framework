@@ -52,7 +52,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No Notifications"
+                android:text="@string/cht_comm_empty_not"
                 android:id="@+id/nodatalabel"
                 android:textColor="#BCBEC0"
                 android:textStyle="normal"

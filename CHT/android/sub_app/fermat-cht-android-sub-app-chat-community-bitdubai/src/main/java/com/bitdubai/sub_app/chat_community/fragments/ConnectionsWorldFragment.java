@@ -296,11 +296,12 @@ public class ConnectionsWorldFragment
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
                     .setBannerRes(R.drawable.chat_banner_community)
                     .setIconRes(R.drawable.chat_subapp)
+                    .setTitle(R.string.cht_comm_welcome)
                     .setSubTitle(R.string.cht_creation_dialog_sub_title)
                     .setBody(R.string.cht_creation_dialog_body)
-                    .setTextFooter(R.string.cht_creation_dialog_footer)
                     .setTextNameLeft(R.string.cht_creation_name_left)
                     .setTextNameRight(R.string.cht_creation_name_right)
+                    .setCheckboxText(R.string.cht_comm_dont_show_again)
                     .setImageRight(R.drawable.ic_profile_male)
                     .setVIewColor(R.color.cht_color_dialog_community)
                     .build();
@@ -682,7 +683,7 @@ public class ConnectionsWorldFragment
                 if (Build.VERSION.SDK_INT < 23) {
                     String provider = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),getResources().getString(R.string.cht_comm_text_gps), Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
@@ -690,7 +691,7 @@ public class ConnectionsWorldFragment
                 } else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getResources().getString(R.string.cht_comm_text_gps), Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
@@ -698,9 +699,9 @@ public class ConnectionsWorldFragment
                 }
             } catch (Exception ex) {
                 if (Build.VERSION.SDK_INT < 23) {
-                    Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),getResources().getString(R.string.cht_comm_text_gps), Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),getResources().getString(R.string.cht_comm_text_gps), Toast.LENGTH_SHORT).show();
                 }
             }
         }

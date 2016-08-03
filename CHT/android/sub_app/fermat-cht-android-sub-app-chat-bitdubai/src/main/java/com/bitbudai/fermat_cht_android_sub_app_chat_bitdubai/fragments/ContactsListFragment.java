@@ -452,6 +452,9 @@ public class ContactsListFragment
                             .setSubTitle(R.string.cht_chat_subtitle)
                             .setBody(R.string.cht_chat_body)
                             .setTextFooter(R.string.cht_chat_footer)
+                            .setTitle(R.string.cht_dialog_welcome)
+                            .setTextCloseButton(R.string.cht_dialog_button_close)
+                            .setCheckboxText(R.string.cht_dialog_dont_show)
                             .setVIewColor(R.color.cht_color_dialog)
                             .build();
                     presentationDialog.show();
