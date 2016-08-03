@@ -46,7 +46,7 @@ public class FermatWalletSettings implements WalletSettings,Serializable {
         return null;
     }
 
-    public Map<Long, Long> getRunningDailyBalance()  {
+    public Map<Long, Long> getRunningDailyBalance(){
         return this.runningDailyBalance ;
     }
 
