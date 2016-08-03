@@ -130,9 +130,11 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
                 System.out.println("NETWORK SERVICES STARTED:" + networkServices.size());
                 for (final AbstractNetworkService abstractNetworkService : networkServices.values()) {
                     try {
-                        System.out.println(abstractNetworkService.getProfile().getNetworkServiceType() + ": se registró...");
-                        if (abstractNetworkService.getProfile().getIdentityPublicKey().equals(((NetworkClientProfileRegisteredEvent) fermatEvent).getPublicKey()))
+                        if (abstractNetworkService.getProfile().getIdentityPublicKey().equals(((NetworkClientProfileRegisteredEvent) fermatEvent).getPublicKey())){
+                            System.out.println(abstractNetworkService.getProfile().getNetworkServiceType() + ": se registró...");
                             abstractNetworkService.handleNetworkServiceRegisteredEvent();
+                        }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
