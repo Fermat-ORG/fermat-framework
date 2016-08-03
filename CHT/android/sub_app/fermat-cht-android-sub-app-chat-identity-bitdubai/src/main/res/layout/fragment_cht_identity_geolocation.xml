@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ACCURACY (km)"
+        android:text="@string/cht_identity_accuracy"
         android:id="@+id/textView"
         android:textColor="#838383"
         android:textStyle="bold"
@@ -39,7 +39,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="FREQUENCY"
+        android:text="@string/cht_identity_frequency"
         android:textStyle="bold"
         android:id="@+id/textView2"
         android:textColor="#838383"
