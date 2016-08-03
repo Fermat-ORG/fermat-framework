@@ -273,6 +273,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     System.out.println("########################################\n");
                     if(deviceNetwork.getType() == ConnectionType.WI_FI || deviceNetwork.getType() == ConnectionType.MOBILE_DATA )
                         try {
+                            networkClientCommunicationConnection.setTryToReconnect(Boolean.TRUE);
                             connect();
                         }catch (Exception e){
                             e.printStackTrace();
@@ -289,6 +290,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                             @Override
                             public void run() {
                                 try {
+                                    networkClientCommunicationConnection.setTryToReconnect(Boolean.FALSE);
                                     disconnect();
                                 } catch (Exception e) {
                                     e.printStackTrace();
