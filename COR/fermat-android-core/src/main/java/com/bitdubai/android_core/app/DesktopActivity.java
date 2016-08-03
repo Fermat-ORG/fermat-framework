@@ -370,7 +370,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
 
                 FermatApplication.getInstance().getAppManager().openApp(getDesktopManager(), fermatAppConnection);
-                //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
                 /**
                  *
                  * Get current activity to paint
