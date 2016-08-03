@@ -172,7 +172,12 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
             intraUserLoginIdentity = appSession.getModuleManager().getSelectedActorIdentity();
 
-          loadSettings();
+            //load settings params
+            if(appSession.getData(SessionConstant.SETTINGS_LOADED)!=false)
+                loadSettings();
+            else loadSettings();
+
+
 
 
             _executor.submit(new Runnable() {
@@ -353,14 +358,21 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
 
     private void setUpHeader(LayoutInflater inflater)  throws CantGetBalanceException {
+
         final RelativeLayout container_header_balance = getToolbarHeader();
 
-        final int sdk = android.os.Build.VERSION.SDK_INT;
+        try {
+            container_header_balance.removeAllViews();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        /*final int sdk = android.os.Build.VERSION.SDK_INT;
         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
             container_header_balance.setBackgroundDrawable( getResources().getDrawable(R.drawable.background_white_gradient) );
         } else {
             container_header_balance.setBackground( getResources().getDrawable(R.drawable.background_white_gradient));
-        }
+        }*/
 
         final View header_layout = inflater.inflate(R.layout.fermat_wallet_home_header,container_header_balance,true);
         container_header_balance.setVisibility(View.VISIBLE);
@@ -514,8 +526,13 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         //LineData data = getData(dailyHardCore);
         /**END HARD CORE DATA FOR CHART**/
 
-        LineData data = getData(fermatWalletSettings.getRunningDailyBalance());
+        LineData data = null;
 
+        try{
+            data = getData(fermatWalletSettings.getRunningDailyBalance());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         //LineData data = new LineData(labels, dataset);
         chart.setData(data);
 
@@ -569,13 +586,6 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         xValues.add("F");
         xValues.add("S");
         xValues.add("S");
-
-
-        //ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        //Date format for earned and lost for today
-       // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        //Date actualDate = new Date();
 
         //if statement for validate if the runningDailyBalance has values
        if (runningDailyBalance != null) {
@@ -1029,11 +1039,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     private void loadSettings(){
         try {
 
-            if(appSession.getData(SessionConstant.SETTINGS_LOADED) == null)
-            {
-                if(! (Boolean)appSession.getData(SessionConstant.SETTINGS_LOADED))
-                {
-                    if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+             if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
                         balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
                     else
                         appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
@@ -1068,6 +1074,9 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
                         appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
                         appSession.setData(SessionConstant.FIAT_CURRENCY, FiatCurrency.US_DOLLAR.getCode());
+
+                        appSession.setData(SessionConstant.SETTINGS_LOADED, true);
+
                     } else {
                         if (fermatWalletSettings.getBlockchainNetworkType() == null)
                             fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
@@ -1085,9 +1094,6 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
                     if(moduleManager!=null) moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
                     appSession.setData(SessionConstant.SETTINGS_LOADED, true);
-                }
-            }
-
 
 
         } catch (Exception e) {

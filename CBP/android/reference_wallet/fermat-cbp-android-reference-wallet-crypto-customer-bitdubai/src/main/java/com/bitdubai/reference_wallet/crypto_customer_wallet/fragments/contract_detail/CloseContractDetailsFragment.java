@@ -29,14 +29,12 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CloseContractDetailsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager> {
-    private static final String TAG = "CloseContractDetails";
 
     private NumberFormat numberFormat = DecimalFormat.getInstance();
 
@@ -56,6 +54,7 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
         return rootView;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -97,7 +96,7 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
         String typeOfPaymentStr = "";
         try {
             typeOfPaymentStr = MoneyType.getByCode(contractBasicInfo.getTypeOfPayment()).getFriendlyName();
-        } catch (InvalidParameterException e) {
+        } catch (InvalidParameterException ignore) {
         }
         paymentMethod.setText(typeOfPaymentStr);
 
@@ -124,33 +123,11 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
 
 
     private String fixFormat(String value) {
-
-        try {
-            if (compareLessThan1(value)) {
-                numberFormat.setMaximumFractionDigits(8);
-            } else {
-                numberFormat.setMaximumFractionDigits(2);
-            }
-            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "0";
-        }
-
+        numberFormat.setMaximumFractionDigits(compareLessThan1(value) ? 8 : 2);
+        return numberFormat.format(new BigDecimal(Double.valueOf(value)));
     }
 
     private Boolean compareLessThan1(String value) {
-        Boolean lessThan1 = true;
-        try {
-            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE) == -1) {
-                lessThan1 = true;
-            } else {
-                lessThan1 = false;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return lessThan1;
+        return BigDecimal.valueOf(Double.valueOf(value)).compareTo(BigDecimal.ONE) == -1;
     }
 }

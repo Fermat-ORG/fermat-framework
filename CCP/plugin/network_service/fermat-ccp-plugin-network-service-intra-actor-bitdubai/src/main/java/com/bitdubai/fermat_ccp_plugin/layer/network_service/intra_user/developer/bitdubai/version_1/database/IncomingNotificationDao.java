@@ -82,7 +82,8 @@ public class IncomingNotificationDao implements DAO {
                                                         final ActorProtocolState              protocolState       ,
                                                         final boolean                         flagReaded ,
                                                         int sentCount,
-                                                        UUID responseToNotificationId) throws CantCreateNotificationException {
+                                                        UUID responseToNotificationId,
+                                                        String city, String country) throws CantCreateNotificationException {
 
         try {
 
@@ -108,7 +109,9 @@ public class IncomingNotificationDao implements DAO {
                         protocolState       ,
                         flagReaded,
                         0,
-                        responseToNotificationId
+                        responseToNotificationId,
+                        city,
+                        country
 
                 );
 
@@ -473,14 +476,17 @@ public class IncomingNotificationDao implements DAO {
             dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME, record.getActorSenderAlias());
 
             dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, record.getNotificationDescriptor().getCode());
-            dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME      , record.getActorDestinationType().getCode());
-            dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME        , record.getActorSenderType().getCode());
-            dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME  , record.getActorSenderPublicKey());
+            dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME, record.getActorDestinationType().getCode());
+            dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME, record.getActorSenderType().getCode());
+            dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, record.getActorSenderPublicKey());
             dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, record.getActorDestinationPublicKey());
             dbRecord.setLongValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, record.getSentDate());
             dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, record.getActorProtocolState().getCode());
             dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(record.isFlagReadead()));
             dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME          , record.getActorSenderPhrase());
+            dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_COUNTRY_COLUMN_NAME          , record.getCountry());
+            dbRecord.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_CITY_COLUMN_NAME          , record.getCity());
+
             if(record.getResponseToNotificationId()!=null)
             dbRecord.setUUIDValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, record.getResponseToNotificationId());
 
@@ -518,12 +524,15 @@ public class IncomingNotificationDao implements DAO {
         String senderPhrase = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME);
         UUID   responseToNotificationId            = record.getUUIDValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
 
+        String city = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_CITY_COLUMN_NAME);
+        String country = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_COUNTRY_COLUMN_NAME);
+
         ActorProtocolState  actorProtocolState = ActorProtocolState .getByCode(protocolState);
         Boolean readed =Boolean.valueOf(flagReaded);
         NotificationDescriptor notificationDescriptor = NotificationDescriptor.getByCode(descriptor);
 
-        Actors actorDestinationType = Actors.getByCode(destinationType);
-        Actors actorSenderType    = Actors.getByCode(senderType   );
+        Actors actorDestinationType = (destinationType == null) ? Actors.INTRA_USER : Actors.getByCode(destinationType) ;
+        Actors actorSenderType    = (senderType == null) ? Actors.INTRA_USER : Actors.getByCode(senderType);
 
         byte[] profileImage;
 
@@ -547,7 +556,10 @@ public class IncomingNotificationDao implements DAO {
                 actorProtocolState             ,
                 readed,
                 0,
-                responseToNotificationId
+                responseToNotificationId,
+                city,
+                country
+
 
         );
         }

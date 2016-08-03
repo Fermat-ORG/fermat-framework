@@ -67,6 +67,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EncodeException;
@@ -131,6 +133,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      * into table NodeConnectionHistory when the client is connected
      */
     private NodeProfile nodeProfile;
+
+    private Lock lock;
 
     /*
      * Constructor
@@ -254,14 +258,15 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         /*
          * Register the ReconnectHandler
          */
-        container.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
+       // container.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
 
         try {
 
             container.asyncConnectToServer(networkClientCommunicationChannel, uri);
 
         } catch (Exception e) {
-            System.out.println(e.getCause());
+            e.printStackTrace();
+//            System.out.println(e.getCause());
         }
     }
 
@@ -290,6 +295,10 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setTryToReconnect(boolean tryToReconnect) {
+        this.tryToReconnect = tryToReconnect;
     }
 
     public boolean isConnected() {
@@ -1035,7 +1044,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         return nodeProfile;
     }
 
-    public void close() throws IOException {
-        networkClientCommunicationChannel.getClientConnection().close();
+    public synchronized void close() throws IOException {
+     //   container.getProperties().remove(ClientProperties.RECONNECT_HANDLER);
+        if (networkClientCommunicationChannel.getClientConnection().isOpen())
+            networkClientCommunicationChannel.getClientConnection().close();
     }
 }

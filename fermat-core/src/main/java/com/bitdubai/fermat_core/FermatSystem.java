@@ -51,6 +51,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * starts all the component of the platform and manage it.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/10/2015.
+ * Modified by Matias Furszyfer
  */
 public final class FermatSystem {
 
@@ -88,7 +89,8 @@ public final class FermatSystem {
      * @throws CantStartSystemException if something goes wrong.
      */
     public void start(final Object osContext,
-                      final AbstractPlatform osaPlatform) throws CantStartSystemException {
+                      final AbstractPlatform osaPlatform,
+                      boolean isPlatformStart) throws CantStartSystemException {
 
         this.fermatSystemContext = new FermatSystemContext(osContext, fermatContext);
         this.fermatAddonManager = new FermatAddonManager(fermatSystemContext);
@@ -105,19 +107,30 @@ public final class FermatSystem {
 
         try {
 
-            // fermatSystemContext.registerPlatform(new ARTPlatform());
-            fermatSystemContext.registerPlatform(new BCHPlatform(fermatContext));
-            fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
-            fermatSystemContext.registerPlatform(new CBPPlatform());
-            fermatSystemContext.registerPlatform(new CCPPlatform());
-            fermatSystemContext.registerPlatform(new CERPlatform());
-            fermatSystemContext.registerPlatform(new CHTPlatform());
-            fermatSystemContext.registerPlatform(new CSHPlatform());
-            //fermatSystemContext.registerPlatform(new DAPPlatform());
-            fermatSystemContext.registerPlatform(new P2PPlatform());
-            fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));
-            // fermatSystemContext.registerPlatform(new TKYPlatform());
-            fermatSystemContext.registerPlatform(new WPDPlatform());
+            if(isPlatformStart) {
+                // fermatSystemContext.registerPlatform(new ARTPlatform());
+                fermatSystemContext.registerPlatform(new BCHPlatform(fermatContext));
+                fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
+                fermatSystemContext.registerPlatform(new CBPPlatform());
+                fermatSystemContext.registerPlatform(new CCPPlatform());
+                fermatSystemContext.registerPlatform(new CERPlatform());
+                fermatSystemContext.registerPlatform(new CHTPlatform());
+                fermatSystemContext.registerPlatform(new CSHPlatform());
+                //fermatSystemContext.registerPlatform(new DAPPlatform());
+                fermatSystemContext.registerPlatform(new P2PPlatform());
+                fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));
+                // fermatSystemContext.registerPlatform(new TKYPlatform());
+                fermatSystemContext.registerPlatform(new WPDPlatform());
+            }else{
+                fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
+                fermatSystemContext.registerPlatform(new CBPPlatform());
+                fermatSystemContext.registerPlatform(new CCPPlatform());
+                fermatSystemContext.registerPlatform(new CHTPlatform());
+                fermatSystemContext.registerPlatform(new CSHPlatform());
+                fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));
+                // fermatSystemContext.registerPlatform(new TKYPlatform());
+                fermatSystemContext.registerPlatform(new WPDPlatform());
+            }
 
         } catch (CantRegisterPlatformException e) {
             throw new CantStartSystemException(e, "", "There was a problem registering a Platform.");

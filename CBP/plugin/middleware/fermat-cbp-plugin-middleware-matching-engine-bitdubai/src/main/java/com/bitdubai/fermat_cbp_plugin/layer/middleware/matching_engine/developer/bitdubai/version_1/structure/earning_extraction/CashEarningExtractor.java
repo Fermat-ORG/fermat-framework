@@ -24,10 +24,10 @@ public class CashEarningExtractor implements EarningExtractor {
     }
 
     @Override
-    public void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey, long fee, FeeOrigin feeOrigi) throws CantExtractEarningsException {
+    public void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey, String brokerIdentityPublicKey, long fee, FeeOrigin feeOrigi) throws CantExtractEarningsException {
         try {
             cashMoneyDestockManager.createTransactionDestock(
-                    "Actor",
+                    brokerIdentityPublicKey,
                     FiatCurrency.getByCode(earningsPair.getEarningCurrency().getCode()),
                     brokerWalletPublicKey,
                     earningWalletPublicKey,

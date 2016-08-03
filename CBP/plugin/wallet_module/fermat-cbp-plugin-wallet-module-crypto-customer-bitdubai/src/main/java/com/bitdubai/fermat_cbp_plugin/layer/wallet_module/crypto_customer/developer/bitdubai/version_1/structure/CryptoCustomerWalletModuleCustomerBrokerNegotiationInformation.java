@@ -53,14 +53,21 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
             long expirationDatetime,
             String cancelReason
     ) {
-        numberFormat.setMaximumFractionDigits(8);
-
 
         this.customerIdentity = customerIdentity;
         this.brokerIdentity = brokerIdentity;
 
-        String currencyQty = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()));
-        String exchangeRate = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue()));
+        String currencyQty = String.valueOf(getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()));
+
+        System.out.println("LOSTWOOD_NegotiationInformation_currencyQty:"+clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+        System.out.println("LOSTWOOD_NegotiationInformation_currencyQty2:" + currencyQty);
+
+        String exchangeRate =String.valueOf(getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue()));
+
+        System.out.println("LOSTWOOD_NegotiationInformation_exchangeRate:"+clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+        System.out.println("LOSTWOOD_NegotiationInformation_exchangeRate2:"+exchangeRate);
+
+
         String merchandise = "";
         String paymentMethod = "";
         String paymentCurrency = "";
@@ -101,8 +108,8 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         this.customerIdentity = negotiationInformation.getCustomer();
         this.brokerIdentity = negotiationInformation.getBroker();
 
-        String currencyQty = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()));
-        String exchangeRate = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue()));
+        String currencyQty = String.valueOf(getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()));
+        String exchangeRate = String.valueOf(getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue()));
         String merchandise = "";
         String paymentMethod = "";
         String paymentCurrency = "";
@@ -230,7 +237,12 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
     private BigDecimal getBigDecimal(String value) {
 
         try {
-            return new BigDecimal(numberFormat.parse(value).toString());
+            if(compareLessThan1(value)){
+                numberFormat.setMaximumFractionDigits(8);
+            }else{
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value)))));
         } catch (ParseException e) {
             e.printStackTrace();
             return new BigDecimal(0);
@@ -239,7 +251,17 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         // return new BigDecimal(value.replace(",", ""));
     }
 
-    private String getDecimalFormat(BigDecimal value) {
-        return numberFormat.format(value.doubleValue());
+    private Boolean compareLessThan1(String value){
+        Boolean lessThan1=true;
+
+            if(BigDecimal.valueOf(Double.valueOf(value)).
+                    compareTo(BigDecimal.ONE)==-1){
+                lessThan1=true;
+            }else{
+                lessThan1=false;
+            }
+
+        return lessThan1;
     }
+
 }

@@ -80,6 +80,7 @@ import java.util.UUID;
 
 public class ChatAdapterView extends LinearLayout {
 
+    private static final String TAG = "ChatAdapterView";
     private RecyclerView messagesContainer;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ChatAdapter adapter;
@@ -414,18 +415,16 @@ public class ChatAdapterView extends LinearLayout {
     public void ChangeStatusOnTheSubtitleBar(int state, String date) {
         switch (state) {
             case ConstantSubtitle.IS_OFFLINE:
-
                 if (date != null && !date.equals("no record")) {
                     toolbar.setSubtitle(Html.fromHtml("<small><small>Last time " + setFormatLastTime(date) + "</small></small>"));
+                    appSession.setData("DATELASTCONNECTION", setFormatLastTime(date));
                 } else {
-
                     Log.i("159753**LastTimeOnChat", "No show");
                 }
                 break;
             case ConstantSubtitle.IS_ONLINE:
                 toolbar.setSubtitle("Online");
                 break;
-
             case ConstantSubtitle.IS_WRITING:
                 // toolbar.setSubtitleTextColor(Color.parseColor("#fff"));
                 toolbar.setSubtitle("Typing...");
@@ -733,9 +732,11 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void displayMessage(ChatMessage message) {
-        adapter.addItem(message);
-        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
-        scroll();
+        if (adapter!=null) {
+            adapter.addItem(message);
+            adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+            scroll();
+        }else Log.e(TAG,"Adapter null");
     }
 
     public void refreshEvents() {
@@ -744,6 +745,11 @@ public class ChatAdapterView extends LinearLayout {
         findMessage();
         checkStatus();
         //scroll();
+    }
+
+    public void clean() {
+        adapter = new ChatAdapter(this.getContext(), null);
+        messagesContainer.setAdapter(adapter);
     }
 
     public void checkStatus() {

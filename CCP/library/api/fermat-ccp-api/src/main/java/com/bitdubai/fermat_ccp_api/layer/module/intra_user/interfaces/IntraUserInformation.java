@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
 /**
@@ -33,13 +34,13 @@ public interface IntraUserInformation extends IdentityUserInformation {
      *
      * @return the name of the intra user
      */
-   // public String getCity();
+   public String getCity();
     /**
      * The method <code>getCountry</code> returns the Country of the represented intra user
      *
      * @return the name of the intra user
      */
-   // public String getCountry();
+   public String getCountry();
 
     /**
      * The method <code>getProfileImage</code> returns the profile image of the represented intra user
@@ -63,4 +64,6 @@ public interface IntraUserInformation extends IdentityUserInformation {
      * @return
      */
     long getContactRegistrationDate();
+
+    Location getLocation();
 }

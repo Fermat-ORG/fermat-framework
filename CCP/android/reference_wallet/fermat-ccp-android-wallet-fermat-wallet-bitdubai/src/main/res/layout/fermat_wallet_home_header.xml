@@ -58,7 +58,9 @@
                                     android:layout_height="match_parent"
                                     android:visibility="visible"
                                     android:focusable="false"
-                                    android:layout_marginTop="77dp"
+                                    android:layout_marginTop="80dp"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
                                     android:focusableInTouchMode="false"
                                     android:layout_marginBottom="15dp"
                                     />

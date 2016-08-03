@@ -24,6 +24,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
 /**
  * Created by Yordin Alayn on 29.01.16.
  */
+@Deprecated
 public class OpenNegotiationAddNoteFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager> {
 
     private CustomerBrokerNegotiationInformation negotiationInfo;

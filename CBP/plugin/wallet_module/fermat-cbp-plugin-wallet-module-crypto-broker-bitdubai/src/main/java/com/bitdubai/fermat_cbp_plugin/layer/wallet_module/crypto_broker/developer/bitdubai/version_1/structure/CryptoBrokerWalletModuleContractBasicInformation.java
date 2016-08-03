@@ -235,10 +235,13 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
 
     private float toFloatValue(CustomerBrokerSaleNegotiation saleNegotiation, ClauseType clauseType) {
         final String clauseValue = getClauseValue(saleNegotiation, clauseType);
-        try {
+  /*      try {
             return numberFormat.parse(clauseValue).floatValue();
+
         } catch (ParseException e) {
             return 0.0f;
-        }
+        }*/
+        System.out.println("LOSTOOW_CryptoBrokerWalletModuleContractBasicInformation_PARSE:"+clauseValue);
+       return  Float.valueOf(clauseValue);
     }
 }

@@ -1,11 +1,10 @@
 package com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
@@ -35,7 +34,6 @@ import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantRegisterCashMoneyWalletTransactionException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CashMoneyWalletInconsistentTableStateException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure.CashMoneyWalletTransactionImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -45,6 +43,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
 
 /**
  * Created by Alejandro Bicelis on 11/23/2015.
@@ -86,7 +85,7 @@ public class CashMoneyWalletDao {
 
     public void createCashMoneyWallet(String walletPublicKey, FiatCurrency fiatCurrency) throws CantCreateCashMoneyWalletException {
 
-        if(walletExists(walletPublicKey))
+        if (walletExists(walletPublicKey))
             throw new CantCreateCashMoneyWalletException(CantCreateCashMoneyWalletException.DEFAULT_MESSAGE, null, "Cant create Cash Money Wallet", "Cash Wallet already exists! publicKey:" + walletPublicKey);
 
         try {
@@ -156,7 +155,7 @@ public class CashMoneyWalletDao {
         } catch (CantLoadTableToMemoryException e) {
             throw new CantRegisterCreditException(e.getMessage(), e, "Credit in Cash wallet", "Cant credit balance. Cant load table to memory");
         } catch (CashMoneyWalletDoesNotExistException e) {
-        throw new CantRegisterCreditException(e.getMessage(), e, "Credit in Cash wallet", "Cant credit balance. Wallet does not exist");
+            throw new CantRegisterCreditException(e.getMessage(), e, "Credit in Cash wallet", "Cant credit balance. Wallet does not exist");
         }
     }
 
@@ -282,9 +281,9 @@ public class CashMoneyWalletDao {
         if (records.size() != 1)
             throw new CantGetCashMoneyWalletTransactionsException("Inconsistent (" + records.size() + ") number of fetched records, should be between 0 and 1.", null, "The id is: " + transactionId, "");
 
-        try{
+        try {
             transaction = constructCashMoneyWalletTransactionFromRecord(records.get(0));
-        }catch(CantCreateCashMoneyWalletTransactionException e){
+        } catch (CantCreateCashMoneyWalletTransactionException e) {
             throw new CantGetCashMoneyWalletTransactionsException(CantCreateCashMoneyWalletTransactionException.DEFAULT_MESSAGE, null, "getTransaction", "Error creating transaction from record");
 
         }
@@ -296,11 +295,11 @@ public class CashMoneyWalletDao {
         List<CashMoneyWalletTransaction> transactions = new ArrayList<>();
 
         List<String> transactionTypesString = new ArrayList<>();
-        for(TransactionType t : transactionTypes)
+        for (TransactionType t : transactionTypes)
             transactionTypesString.add(t.getCode());
 
         List<String> balanceTypesString = new ArrayList<>();
-        for(BalanceType b : balanceTypes)
+        for (BalanceType b : balanceTypes)
             balanceTypesString.add(b.getCode());
 
         String query = "SELECT * FROM " +
@@ -345,76 +344,50 @@ public class CashMoneyWalletDao {
     public BigDecimal getHeldFunds(String walletPublicKey, String actorPublicKey) throws CantGetHeldFundsException {
         List<DatabaseTableRecord> records;
         BigDecimal heldFunds = new BigDecimal(0);
-        BigDecimal unheldFunds = new BigDecimal(0);
+        BigDecimal unHeldFunds = new BigDecimal(0);
 
-        //List<DatabaseTableFilter> filtersTable = new ArrayList<>();
-        //DatabaseTableFilter walletFilter, actorFilter;
         DatabaseTable table = this.database.getTable(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME);
 
-        /*walletFilter = getEmptyTransactionsTableFilter();
-        walletFilter.setColumn(CashMoneyWalletDatabaseConstants.TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME);
-        walletFilter.setValue(walletPublicKey);
-        walletFilter.setType(DatabaseFilterType.EQUAL);
-        filtersTable.add(walletFilter);
-
-        actorFilter = getEmptyTransactionsTableFilter();
-        actorFilter.setColumn(CashMoneyWalletDatabaseConstants.TRANSACTIONS_ACTOR_PUBLIC_KEY_COLUMN_NAME);
-        actorFilter.setValue(actorPublicKey);
-        actorFilter.setType(DatabaseFilterType.EQUAL);
-        filtersTable.add(actorFilter);
-
-        table.setFilterGroup(filtersTable, null, DatabaseFilterOperator.AND);*/
-        table.addStringFilter(
-                CashMoneyWalletDatabaseConstants.TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME,
-                walletPublicKey,
-                DatabaseFilterType.EQUAL);
+        table.addStringFilter(CashMoneyWalletDatabaseConstants.TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME,
+                walletPublicKey, DatabaseFilterType.EQUAL);
 
         String transactionTypeString;
         TransactionType transactionType;
         String amountString;
         BigDecimal recordAmount;
+
         try {
             table.loadToMemory();
             records = table.getRecords();
+
         } catch (CantLoadTableToMemoryException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetHeldFundsException(CantGetHeldFundsException.DEFAULT_MESSAGE, e, "getHeldFunds", "Cant load table into memory");
         }
 
         for (DatabaseTableRecord record : records) {
-            /*if (record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME).equals(TransactionType.HOLD.getCode()))
-                heldFunds.add(new BigDecimal(record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_AMOUNT_COLUMN_NAME)));
-            else if (record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME).equals(TransactionType.UNHOLD.getCode()))
-                unheldFunds.add(new BigDecimal(record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_AMOUNT_COLUMN_NAME)));*/
-            if(record
-                    .getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_ACTOR_PUBLIC_KEY_COLUMN_NAME)
-                    .equals(actorPublicKey)){
-                transactionTypeString = record.getStringValue(
-                        CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME);
-                try {
-                    transactionType = TransactionType.getByCode(transactionTypeString);
-                    amountString = record.getStringValue(
-                            CashMoneyWalletDatabaseConstants
-                                    .TRANSACTIONS_AMOUNT_COLUMN_NAME);
-                    recordAmount = new BigDecimal(amountString);
-                    switch (transactionType){
-                        case HOLD:
-                            heldFunds = heldFunds.add(recordAmount);
-                            break;
-                        case UNHOLD:
-                            unheldFunds = unheldFunds.add(recordAmount);
-                            break;
-                        default:
-                            continue;
-                    }
-                } catch (InvalidParameterException e) {
-                    //Invalid parameter in this record, we'll continue.
-                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,e);
-                    continue;
+            transactionTypeString = record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME);
+
+            try {
+                transactionType = TransactionType.getByCode(transactionTypeString);
+                amountString = record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_AMOUNT_COLUMN_NAME);
+                recordAmount = new BigDecimal(amountString);
+                switch (transactionType) {
+                    case HOLD:
+                        heldFunds = heldFunds.add(recordAmount);
+                        break;
+                    case UNHOLD:
+                        unHeldFunds = unHeldFunds.add(recordAmount);
+                        break;
+                    default:
                 }
+            } catch (InvalidParameterException e) {
+                //Invalid parameter in this record, we'll continue.
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
             }
         }
-        heldFunds = heldFunds.subtract(unheldFunds);
+
+        heldFunds = heldFunds.subtract(unHeldFunds);
 
         if (heldFunds.compareTo(new BigDecimal(0)) < 0)
             throw new CantGetHeldFundsException(CantGetHeldFundsException.DEFAULT_MESSAGE, null, "Held funds calculates to a negative value", "Unheld funds are higher than held funds, invalid table state");

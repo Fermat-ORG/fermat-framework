@@ -159,7 +159,16 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             lossProtectedWalletmanager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-           loadSettings();
+            //load settings params
+            if(appSession.getData(SessionConstant.SETTINGS_LOADED) != null) {
+                if (!(Boolean) appSession.getData(SessionConstant.SETTINGS_LOADED)) {
+                    loadSettings();
+                }
+            }
+            else
+            {
+                loadSettings();
+            }
 
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable() {
@@ -928,10 +937,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
     private void loadSettings(){
         try {
 
-            if(appSession.getData(SessionConstant.SETTINGS_LOADED) == null)
-            {
-                if(! (Boolean)appSession.getData(SessionConstant.SETTINGS_LOADED))
-                {
+
                     lossProtectedWalletSettings = lossProtectedWalletmanager.loadAndGetSettings(appSession.getAppPublicKey());
 
 
@@ -979,13 +985,11 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                         appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, lossProtectedWalletSettings.isPresentationHelpEnabled());
                         appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
                         appSession.setData(SessionConstant.LOSS_PROTECTED_ENABLED, lossProtectedWalletSettings.getLossProtectedEnabled());
+
                     }
 
                    lossProtectedWalletmanager.persistSettings(appSession.getAppPublicKey(), lossProtectedWalletSettings);
                     appSession.setData(SessionConstant.SETTINGS_LOADED, true);
-                }
-            }
-
 
 
         } catch (Exception e) {

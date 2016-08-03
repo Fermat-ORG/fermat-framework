@@ -28,10 +28,13 @@ public final class NegotiationClauseHelper {
         String account = "";
 
         if (value != null && !value.isEmpty()) {
-            String[] split = value.split("\\D+:\\s*");
-            account = split.length == 1 ? split[0] : split[1];
+            if(value.contains("Account Number:") && value.contains("Account Type")) {
+                account=value.split("Account Number:")[1].split("Account Type")[0].replaceAll("\\s", "");
+            }
+        //    String[] split = value.split("\\D+:\\s*");
+        //    account = split.length == 1 ? split[0] : split[1];
 
-            return Pattern.matches("(\\d-?)+", account) ? account : "";
+            return account;
         }
 
         return account;
@@ -49,6 +52,22 @@ public final class NegotiationClauseHelper {
         for (Clause clause : negotiationClauses)
             if (clause.getType().getCode().equals(clauseType.getCode()))
                 return clause.getValue();
+
+        return null;
+    }
+
+    /**
+     * Get the value of a negotiation clause
+     *
+     * @param negotiationClauses the list of clauses
+     * @param clauseType         the clause to find
+     * @return the clause value or <code>null</code>
+     */
+    public static Clause getNegotiationClause(Collection<Clause> negotiationClauses, ClauseType clauseType) {
+
+        for (Clause clause : negotiationClauses)
+            if (clause.getType().getCode().equals(clauseType.getCode()))
+                return clause;
 
         return null;
     }
