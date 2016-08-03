@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Crypto Broker Identity</string>
+    <string name="app_name">Crypto Broker Profile</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -23,9 +23,9 @@
     <string name="cbp_broker_identity_welcome_subTitle_gps">Important Announcement.</string>
     <string name="cbp_broker_identity_welcome_subTitle">Welcome to the Broker Identity.</string>
     <string name="cbp_broker_identity_welcome_body">From here you will be able to create an Broker type identity.\n\nThis Identity, will identify you in the system as an broker, and give you access to all tasks and applications you need.\n\nOther broker or customer will be able to request connection to you by finding you with the information you provide here.</string>
-    <string name="cbp_broker_identity_gps">Please, turn on your GPS to register your location, then others can find you and you can find peers near to you.</string>
-    <string name="cbi_accuracy_km">Accuracy (Km)</string>
-    <string name="cbi_accuracy_hint">0 - 1000</string>
+    <string name="cbp_broker_identity_gps">Please, turn on your GPS to register your location, then others can find you and you can find peers near to you&#8230;</string>
+    <string name="cbi_accuracy_km">Accuracy (km)</string>
+    <string name="cbi_accuracy_hint">0 &#8211; 1000</string>
     <string name="cbi_frequency">Frequency</string>
     <string name="cbi_system_error">Oops! recovering from system error</string>
 
@@ -51,10 +51,10 @@
     <string name="cbi_enter_image">You must enter an image</string>
     <string name="cbi_identity_created">Crypto Broker Identity Created.</string>
     <string name="cbi_identity_updated">Crypto Broker Identity Updated.</string>
-    <string name="cbi_empty_accuracy">Accuracy is empty, please add a value</string>
+    <string name="cbi_empty_accuracy">Accuracy is empty</string>
     <string name="cbi_error_create">An error occurred trying to saving the Crypto Broker Identity</string>
 
-
-
-
+    <!--<string name="cbi_title_dialog_presentation">Welcome!</string>-->
+    <!--<string name="cbi_button_dialog_presentation">Close</string>-->
+    <!--<string name="cbi_show_dialog_presentation">Don\&#39;t show this again</string>-->
 </resources>
