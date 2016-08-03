@@ -64,13 +64,13 @@ public class EarningsDetailsFragment extends AbstractFermatFragment<ReferenceApp
         final EarningsDetailData previousEarning = (!data.isEmpty() && data.size() > 1) ? data.get(1) : null;
 
         final FermatTextView currentEarningValue = (FermatTextView) layout.findViewById(R.id.cbw_current_earning_value);
-        currentEarningValue.setText(getFormattedEarningAmount(currentEarning, "No current earnings"));
+        currentEarningValue.setText(getFormattedEarningAmount(currentEarning, getResources().getString(R.string.no_current_earnings)));
 
         final FermatTextView currentEarningText = (FermatTextView) layout.findViewById(R.id.cbw_current_earning_text);
         currentEarningText.setText(getCurrentEarningText(frequency));
 
         final FermatTextView previousEarningValue = (FermatTextView) layout.findViewById(R.id.cbw_previous_earning_value);
-        previousEarningValue.setText(getFormattedEarningAmount(previousEarning, "No previous earnings"));
+        previousEarningValue.setText(getFormattedEarningAmount(previousEarning, getResources().getString(R.string.no_previous_earnings)));
 
         final FermatTextView previousEarningText = (FermatTextView) layout.findViewById(R.id.cbw_previous_earning_text);
         previousEarningText.setText(getPreviousEarningText(frequency));
@@ -99,7 +99,7 @@ public class EarningsDetailsFragment extends AbstractFermatFragment<ReferenceApp
             if (earningCurrency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(earningCurrencyCode))
                 amount = BitcoinConverter.convert(amount, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
-            return String.format("%1$s %2$s", numberFormat.format(amount), earningCurrencyCode);
+            return String.format(getResources().getString(R.string.cbw_earning_amount), numberFormat.format(amount), earningCurrencyCode);
         }
         return message;
     }
@@ -128,13 +128,13 @@ public class EarningsDetailsFragment extends AbstractFermatFragment<ReferenceApp
     private String getCurrentEarningText(TimeFrequency frequency) {
         switch (frequency) {
             case DAILY:
-                return "Today";
+                return getResources().getString(R.string.today);
             case WEEKLY:
-                return "This Week";
+                return getResources().getString(R.string.this_week);
             case MONTHLY:
-                return "This Month";
+                return getResources().getString(R.string.this_month);
             case YEARLY:
-                return "This Year";
+                return getResources().getString(R.string.this_year);
         }
         return "";
     }
@@ -142,13 +142,13 @@ public class EarningsDetailsFragment extends AbstractFermatFragment<ReferenceApp
     private String getPreviousEarningText(TimeFrequency frequency) {
         switch (frequency) {
             case DAILY:
-                return "Yesterday";
+                return getResources().getString(R.string.yesterday);
             case WEEKLY:
-                return "Last Week";
+                return getResources().getString(R.string.last_week);
             case MONTHLY:
-                return "Last Month";
+                return getResources().getString(R.string.last_month);
             case YEARLY:
-                return "Last Year";
+                return getResources().getString(R.string.last_year);
         }
         return "";
     }

@@ -210,7 +210,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment<Referen
 
             }
         } catch (FermatException ex) {
-            Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), getResources().getString(R.string.error_opps2), Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
@@ -247,7 +247,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment<Referen
                 showBankAccountsDialog(filteredList);
             }
         } catch (CantListWalletsException ex) {
-            Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), getResources().getString(R.string.error_opps2), Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
@@ -269,7 +269,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment<Referen
             }
 
             SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
-            accountsDialog.configure("Select an Account", viewAccounts);
+            accountsDialog.configure(getResources().getString(R.string.select_account), viewAccounts);
             accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
                 @Override
                 public void onItemSelected(BankAccountNumber selectedAccount) {
@@ -279,7 +279,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment<Referen
                         adapter.changeDataSet(accounts);
                         showOrHideRecyclerView();
                     } else {
-                        Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), "Account already exists", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), getResources().getString(R.string.account_exists), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -287,7 +287,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment<Referen
             accountsDialog.show(getFragmentManager(), "accountsDialog");
 
         } catch (FermatException ex) {
-            Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), getResources().getString(R.string.error_opps2), Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {

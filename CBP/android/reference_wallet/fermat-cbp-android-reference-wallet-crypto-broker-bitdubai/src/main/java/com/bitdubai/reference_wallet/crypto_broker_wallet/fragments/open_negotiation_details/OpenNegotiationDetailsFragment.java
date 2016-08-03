@@ -218,7 +218,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
 
                     } catch (FermatException e) {
-                        Toast.makeText(getActivity(), "Oopss, an error ocurred", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.error_opps2), Toast.LENGTH_SHORT).show();
                         if (errorManager != null)
                             errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET,
                                     DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -258,13 +258,13 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                 brokerLocationsEventAction(clause);
                 break;
             case BROKER_PAYMENT_METHOD:
-                Toast.makeText(getActivity(), "This is selected by the Customer", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.selected_by_customer), Toast.LENGTH_SHORT).show();
                 break;
             case CUSTOMER_BANK_ACCOUNT:
-                Toast.makeText(getActivity(), "This is selected by the Customer", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.selected_by_customer), Toast.LENGTH_SHORT).show();
                 break;
             case CUSTOMER_PLACE_TO_DELIVER:
-                Toast.makeText(getActivity(), "This is selected by the Customer", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.selected_by_customer), Toast.LENGTH_SHORT).show();
                 break;
             case CUSTOMER_DATE_TIME_TO_DELIVER:
                 datetimeToPayEventAction(triggerView, clause);
@@ -284,7 +284,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         if (type == EXCHANGE_RATE || type == CUSTOMER_CURRENCY_QUANTITY || type == BROKER_CURRENCY_QUANTITY) {
 
             if (Double.valueOf(clause.getValue()) < 0)
-                Toast.makeText(getActivity(), "The value must be higher than 0", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.value_higher_zero), Toast.LENGTH_SHORT).show();
             else {
                 negotiationWrapper.confirmClauseChanges(clause);
                 adapter.changeDataSet(negotiationWrapper);
@@ -296,7 +296,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                 negotiationWrapper.confirmClauseChanges(clause);
                 adapter.changeDataSet(negotiationWrapper);
             } else {
-                String msg = type == BROKER_BANK_ACCOUNT ? "Need to select a bank account" : "Need to select a location";
+                String msg = type == BROKER_BANK_ACCOUNT ? getResources().getString(R.string.need_select_account) : getResources().getString(R.string.need_select_location);
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
             }
 
@@ -307,9 +307,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             final Calendar calendar = Calendar.getInstance();
 
             if (deliveryDatetimeValue < calendar.getTimeInMillis()) {
-                Toast.makeText(getActivity(), "Merchandise delivery date must be in the future", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.merchandise_delivery_future), Toast.LENGTH_SHORT).show();
             } else if (deliveryDatetimeValue < paymentDatetimeValue) {
-                Toast.makeText(getActivity(), "The Merchandise Delivery date must be after the Payment date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.merchandise_delivery_payment_date), Toast.LENGTH_SHORT).show();
             } else {
                 negotiationWrapper.confirmClauseChanges(clause);
                 adapter.changeDataSet(negotiationWrapper);
@@ -322,9 +322,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             final Calendar calendar = Calendar.getInstance();
 
             if (paymentDatetimeValue < calendar.getTimeInMillis()) {
-                Toast.makeText(getActivity(), "Payment date must be in the future", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.payment_future), Toast.LENGTH_SHORT).show();
             } else if (paymentDatetimeValue > deliverDatetimeValue) {
-                Toast.makeText(getActivity(), "The Payment date must be before the Merchandise Delivery Date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.payment_date_delivery), Toast.LENGTH_SHORT).show();
             } else {
                 negotiationWrapper.confirmClauseChanges(clause);
                 adapter.changeDataSet(negotiationWrapper);
@@ -366,11 +366,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
 
                 } else {
-                    Toast.makeText(getActivity(), "Need to register THE WALLET USER for user BTC ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.need_register), Toast.LENGTH_LONG).show();
                 }
 
             } else
-                Toast.makeText(getActivity(), "Need to confirm ALL the clauses", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.need_confirm), Toast.LENGTH_LONG).show();
 
         } catch (CantSendNegotiationToCryptoCustomerException | CantSendNegotiationException e) {
             errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET,
@@ -474,7 +474,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
                             getActivity(),
 
-                            "Warning: Selected Rate is higher than suggested!", Toast.LENGTH_LONG).
+                            getResources().getString(R.string.warning_selected_rate_higher), Toast.LENGTH_LONG).
 
                             show();
 
@@ -483,7 +483,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
                             getActivity(),
 
-                            "Warning: Selected Rate is lower than suggested!", Toast.LENGTH_LONG).
+                            getResources().getString(R.string.warning_selected_rate_lower), Toast.LENGTH_LONG).
 
                             show();
 
@@ -567,7 +567,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             List<MoneyType> paymentMethods = moduleManager.getPaymentMethods(brokerCurrency.getValue(), appSession.getAppPublicKey());
 
             dialogFragment = new SimpleListDialogFragment<>();
-            dialogFragment.configure("Payment Methods", paymentMethods);
+            dialogFragment.configure(getResources().getString(R.string.payment_methods), paymentMethods);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<MoneyType>() {
                 @Override
                 public void onItemSelected(MoneyType selectedPaymentMethod) {
@@ -630,7 +630,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         if (locations.isEmpty()) {
             appSession.setData(FragmentsCommons.LAST_ACTIVITY, Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode());
-            Toast.makeText(getActivity(), "You don't have Locations. Add one in the Wallet Settings.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.dont_have_locations), Toast.LENGTH_LONG).show();
             changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS, appSession.getAppPublicKey());
         } else {
             final SimpleListDialogFragment<NegotiationLocations> dialogFragment = new SimpleListDialogFragment<>();
@@ -657,7 +657,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         }
 
         if (bankAccounts.isEmpty())
-            Toast.makeText(getActivity(), "You don't have Bank Accounts. Add one in the Wallet Settings.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.dont_have_accounts), Toast.LENGTH_LONG).show();
         else {
             final SimpleListDialogFragment<String> dialogFragment = new SimpleListDialogFragment<>();
             dialogFragment.configure("bankAccount", bankAccounts);
@@ -750,7 +750,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         String customerCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         String brokerCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
-        String currencyBTC = "BTC";
+        String currencyBTC = getResources().getString(R.string.btc);
 
         if (customerCurrency != null) {
             if (currencyBTC.equals(customerCurrency))
