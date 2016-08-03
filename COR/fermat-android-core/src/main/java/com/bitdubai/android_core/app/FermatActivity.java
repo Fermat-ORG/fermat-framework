@@ -243,6 +243,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * OptionMenu
      */
     private OptionsMenu optionsMenu;
+    private NavigationViewPainter navigationViewPainter;
 
     /**
      * Called when the activity is first created
@@ -571,22 +572,22 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         mToolbar.setNavigationIcon(R.drawable.ic_actionbar_menu);
                     }
 
-                final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
+                navigationViewPainter = appConnections.getNavigationViewPainter();
                 /**
                  * Set header
                  */
-                FrameLayout frameLayout = SideMenuBuilder.setHeader(this, viewPainter);
+                FrameLayout frameLayout = SideMenuBuilder.setHeader(this, navigationViewPainter);
                 /**
                  * Set adapter
                  */
                 List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = sideMenu.getMenuItems();
                 //todo: mejorar esto
-                FermatAdapter mAdapter = (viewPainter != null) ? viewPainter.addNavigationViewAdapter() : new NavMenuBasicAdapter(this, lstItems, ((FermatBasicNavigationMenu) sideMenu).getBody());
+                FermatAdapter mAdapter = (navigationViewPainter != null) ? navigationViewPainter.addNavigationViewAdapter() : new NavMenuBasicAdapter(this, lstItems, ((FermatBasicNavigationMenu) sideMenu).getBody());
                 SideMenuBuilder.setAdapter(
                         navigation_recycler_view,
                         mAdapter,
-                        (viewPainter != null) ? viewPainter.addItemDecoration() : null,
-                        (viewPainter != null) ? lstItems : ((FermatBasicNavigationMenu) sideMenu).getBody().getMenuItems(),
+                        (navigationViewPainter != null) ? navigationViewPainter.addItemDecoration() : null,
+                        (navigationViewPainter != null) ? lstItems : ((FermatBasicNavigationMenu) sideMenu).getBody().getMenuItems(),
                         this,
                         activity.getActivityType()
                 );
@@ -594,12 +595,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
                  * Body
                  */
                 RelativeLayout navigation_view_footer = (RelativeLayout) findViewById(R.id.navigation_view_footer);
-                SideMenuBuilder.setBody(navigation_view_footer, sideMenu.hasFooter(), viewPainter, getLayoutInflater());
+                SideMenuBuilder.setBody(navigation_view_footer, sideMenu.hasFooter(), navigationViewPainter, getLayoutInflater());
                 /**
                  * Background color
                  */
                 final RelativeLayout navigation_view_body_container = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
-                SideMenuBuilder.setBackground(navigation_view_body_container, viewPainter, getResources());
+                SideMenuBuilder.setBackground(navigation_view_body_container, navigationViewPainter, getResources());
 
                 /**
                  * Background drawable
@@ -1445,6 +1446,15 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 mToolbar.removeAllViewsInLayout();
             }
 
+            try{
+                if (navigationViewPainter!=null) {
+                    navigationViewPainter.onDestroy();
+                    navigationViewPainter = null;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
             final io.codetail.widget.RevealFrameLayout mRevealView = (io.codetail.widget.RevealFrameLayout) findViewById(R.id.reveal);
             if (mRevealView != null) {
                 mRevealView.removeAllViews();
@@ -1778,6 +1788,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         try {
+
             wizards = null;
 //            Intent intent = new Intent(this, NotificationService.class);
 //            stopService(intent);
@@ -1886,9 +1897,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
         try {
             if (!(this instanceof DesktopActivity)) {
                 final FermatStructure fermatStructure = FermatApplication.getInstance().getAppManager().getLastAppStructure();
-                final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
-                if (viewPainter != null) {
-                    final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
+                //final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
+                if (navigationViewPainter != null) {
+                    final FermatAdapter mAdapter = navigationViewPainter.addNavigationViewAdapter();
                     Activity activity = fermatStructure.getLastActivity();
                     if (activity != null) {
                         SideMenu sideMenu = activity.getSideMenu();
@@ -1898,12 +1909,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                FrameLayout frameLayout = SideMenuBuilder.setHeader(FermatActivity.this, viewPainter);
+                                FrameLayout frameLayout = SideMenuBuilder.setHeader(FermatActivity.this, navigationViewPainter);
                                 try {
                                     SideMenuBuilder.setAdapter(
                                             navigation_recycler_view,
                                             mAdapter,
-                                            viewPainter.addItemDecoration(),
+                                            navigationViewPainter.addItemDecoration(),
                                             finalLstItems,
                                             FermatActivity.this,
                                             fermatStructure.getLastActivity().getActivityType()

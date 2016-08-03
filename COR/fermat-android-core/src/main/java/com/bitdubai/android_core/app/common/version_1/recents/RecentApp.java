@@ -56,4 +56,13 @@ public class RecentApp implements FermatRecentApp, Serializable {
     public int hashCode() {
         return publicKey.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "RecentApp{" +
+                "publicKey='" + publicKey + '\'' +
+                ", fermatApp=" + fermatApp +
+                ", taskStackPosition=" + taskStackPosition +
+                '}';
+    }
 }

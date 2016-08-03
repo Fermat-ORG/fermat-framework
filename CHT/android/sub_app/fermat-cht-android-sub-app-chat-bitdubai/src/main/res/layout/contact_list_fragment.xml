@@ -41,7 +41,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="To add contacts, go to P2P Chat"
+                android:text="@string/cht_contact_list_select1"
                 android:id="@+id/nochatssubtitle"
                 android:textColor="#D1D3D4"
                 android:textStyle="normal"
@@ -53,7 +53,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Community and send a connection"
+                android:text="@string/cht_contact_list_select2"
                 android:id="@+id/nochatssubtitle1"
                 android:textColor="#D1D3D4"
                 android:textStyle="normal"
@@ -64,7 +64,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="request to a friend."
+                android:text="@string/cht_contact_list_select3"
                 android:id="@+id/nochatssubtitle2"
                 android:textColor="#D1D3D4"
                 android:textStyle="normal"

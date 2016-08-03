@@ -116,7 +116,6 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         this.outgoingIntraActorDao                   = outgoingIntraActorDao;
         this.transactionHandlerFactory               = transactionHandlerFactory;
         this.errorManager = errorManager;
-        this.cryptoVaultManager = cryptoVaultManager;
         this.cryptoWalletManager = cryptoWalletManager;
         this.outgoingIntraActorDao = outgoingIntraActorDao;
         this.transactionHandlerFactory = transactionHandlerFactory;
