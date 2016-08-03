@@ -44,6 +44,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.FermatWalletCons
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.AddConnectionCallback;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -93,20 +94,10 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
             isMenuVisible=false;
             connectionPickCounter = 0;
             hnadler = new Handler();
-            FermatWalletSettings fermatWalletSettings = null;
-            fermatWalletSettings = moduleManager.loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
-
-            if(fermatWalletSettings != null) {
-
-                if (fermatWalletSettings.getBlockchainNetworkType() == null) {
-                    fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                moduleManager.persistSettings(fermatWalletSessionReferenceApp.getAppPublicKey(), fermatWalletSettings);
-
-            }
-
-            blockchainNetworkType = moduleManager.loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey()).getBlockchainNetworkType();
-
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
             getActivity().getWindow().setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
             );
@@ -311,7 +302,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
                                     Actors.INTRA_USER,
                                     moduleManager.getSelectedActorIdentity().getPublicKey()
                                     , fermatWalletSessionReferenceApp.getAppPublicKey(),
-                                    CryptoCurrency.BITCOIN,
+                                    CryptoCurrency.FERMAT,
                                     blockchainNetworkType);
                             Toast.makeText(getActivity(),"Contact Created",Toast.LENGTH_SHORT).show();
                         }

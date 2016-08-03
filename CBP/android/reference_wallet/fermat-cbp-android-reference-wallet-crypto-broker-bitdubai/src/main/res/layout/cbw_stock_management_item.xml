@@ -1,13 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton--><!--xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:id="@+id/cbw_stock_management_button"--><!--android:layout_width="match_parent"--><!--android:layout_height="40dp"--><!--android:layout_marginBottom="4dp"--><!--android:background="#EEE"--><!--android:textSize="14sp"--><!--android:textColor="@color/cbw_wizard_color"--><!--android:singleLine="true"--><!--tools:text="10,000.00 BTC"/>-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cbw_stock_management_button"
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:layout_marginBottom="4dp"
     android:background="#EEE"
-    android:textSize="14sp"
-    android:textColor="@color/cbw_wizard_color"
-    android:singleLine="true"
-    tools:text="10,000.00 BTC"/>
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_settings_wallet_stock_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingTop="3dp"
+        android:textColor="@color/cbw_wizard_color"
+        android:textSize="14sp"
+        tools:text="Bank Wallet" />
+
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_settings_stock_amount"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:gravity="bottom|end"
+        android:paddingBottom="3dp"
+        android:textColor="@color/cbw_wizard_color"
+        android:textSize="14sp"
+        tools:text="10,000.00 BTC" />
+
+</RelativeLayout>

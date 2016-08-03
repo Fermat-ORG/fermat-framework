@@ -456,6 +456,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             @Override
             public void onClick(String newValue) {
 
+                if(newValue.equals("")){
+                    newValue="0";
+                }
                 newValue = fixFormat(newValue, false);
 
 
@@ -512,6 +515,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
                 final double amountToReceiveValue = exchangeRate.multiply(amountToSell).doubleValue();*/
 
+                if(newValue.equals("")){
+                    newValue="0";
+                }
                 newValue = fixFormat(newValue,false);
 
                 final BigDecimal amountToSell = convertToBigDecimal(newValue);
@@ -539,7 +545,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             @Override
             public void onClick(String newValue) {
 
-
+                if(newValue.equals("")){
+                    newValue="0";
+                }
                 newValue = fixFormat(newValue,false);
               /*  final BigDecimal amountToReceive = MathUtils.getBigDecimal(newValue);
                 final BigDecimal exchangeRate = MathUtils.getBigDecimal(clauses.get(EXCHANGE_RATE));

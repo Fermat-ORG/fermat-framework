@@ -844,6 +844,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param keyList
      * @throws CantExecuteDatabaseOperationException
      */
+    //todo: ver esto rodri, está muy feo
     public void updateDetailedCryptoStats(CryptoVaults cryptoVault, BlockchainNetworkType blockchainNetworkType, List<ECKey> keyList)  throws CantExecuteDatabaseOperationException {
         /**
          * If we are not allowed to save detailed information then we will exit

@@ -1,9 +1,9 @@
-package com.bitdubai.android_core.app.common.version_1.classes;
+package com.bitdubai.android_core.app.common.version_1.broadcaster;
 
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
 /**
- *
+ * This version is Deprecated,use BroadcasterInterface instead
  */
 public interface BroadcastInterface {
 

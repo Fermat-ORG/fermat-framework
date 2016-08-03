@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
-public class BitcoinWalletSettings extends LossProtectedWalletSettings implements WalletSettings, Serializable {
+public class BitcoinWalletSettings implements WalletSettings, Serializable {
 
     private IntraUserLoginIdentity lastSelectedIdentity;
     private boolean isPresentationHelpEnabled;

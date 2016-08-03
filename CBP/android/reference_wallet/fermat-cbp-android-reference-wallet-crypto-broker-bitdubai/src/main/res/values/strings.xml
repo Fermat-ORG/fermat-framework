@@ -219,6 +219,7 @@
     <string name="cbw_wizard_stock_merchandise_description">Associate at least <b>two</b> of your wallets, from which you can withdraw funds to use as stock.</string>
     <string name="cbw_select_stock_merchandise">YOUR WALLETS</string>
     <string name="cbw_your_stock">YOUR STOCK</string>
+    <string name="cbw_stock_tittle">STOCK</string>
     <string name="cbw_associated_wallets">ASSOCIATED WALLETS</string>
 
     <!-- Earnings Wizard and Settings pages-->

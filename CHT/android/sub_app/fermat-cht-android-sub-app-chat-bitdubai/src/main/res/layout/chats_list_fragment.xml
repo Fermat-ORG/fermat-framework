@@ -36,7 +36,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Please, tap on contacts and select"
+            android:text="@string/cht_contact_select1"
             android:id="@+id/nochatssubtitle"
             android:textColor="@color/cht_no_chat"
             android:textStyle="normal"
@@ -48,7 +48,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="a friend to start a P2P Chat."
+            android:text="@string/cht_contact_select2"
             android:id="@+id/nochatssubtitle1"
             android:textColor="#D1D3D4"
             android:textStyle="normal"

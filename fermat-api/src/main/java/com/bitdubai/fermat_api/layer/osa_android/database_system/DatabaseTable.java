@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantTruncateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseRecordExistException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 import java.util.List;
@@ -98,4 +99,13 @@ public interface DatabaseTable {
 
     List<DatabaseAggregateFunction> getTableAggregateFunction();
 
+    void insertRecordIfNotExist(DatabaseTableRecord record,List<DatabaseTableFilter> filters,DatabaseTableFilterGroup databaseTableFilterGroup) throws DatabaseRecordExistException, CantInsertRecordException;
+
+    /**
+     * Cantidad de records con esos filtros
+     * @return
+     */
+    long numRecords();
+
+    DatabaseTableFilter buildFilter(String columnName, String value, DatabaseFilterType type);
 }
