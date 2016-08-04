@@ -111,7 +111,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
 
 
         if (!this.directoryName.isEmpty())
-            path += new StringBuilder().append("/").append(this.ownerId).append("/").append(this.directoryName).toString();
+            path += "/" + this.ownerId + "/" + this.directoryName;
 
         /**
          * If the directory does not exist the I create it.
@@ -137,7 +137,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         } catch (Exception e) {
             String message = CantCreateFileException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
-            String context = new StringBuilder().append("File Info: ").append(toString()).toString();
+            String context = "File Info: " + toString();
             String possibleCause = "This is a problem in the outputstream, check the cause message to see what happened";
             throw new CantPersistFileException(message, cause, context, possibleCause);
         }
@@ -148,7 +148,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
     public void loadFromMedia() throws CantLoadFileException {
 
         FileInputStream binaryStream = null;
-
+        ByteArrayOutputStream buffer = null;
         try {
             /**
              *  Evaluate privacyLevel to determine the location of directory - external or internal
@@ -162,7 +162,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             /**
              * Get the file handle.
              */
-            File file = new File(new StringBuilder().append(path).append("/").append(this.ownerId).append("/").append(this.directoryName).append("/").append(this.fileName).toString());
+            File file = new File(path + "/" + this.ownerId + "/" + this.directoryName + "/" + this.fileName);
 
 
             /**
@@ -170,7 +170,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
              */
             if (file.exists()) {
                 binaryStream = new FileInputStream(file);
-                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                buffer = new ByteArrayOutputStream();
 
                 int nRead;
                 byte[] data = new byte[16384];
@@ -188,17 +188,20 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             } else {
                 this.content = new byte[0];
             }
-
-
         } catch (Exception e) {
             throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, e, "", "Check the cause of this error");
 
         } finally {
             try {
-                if (binaryStream != null)
-                    binaryStream.close();
-            } catch (Exception e) {
-                throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause of this error");
+                binaryStream.close();
+            }catch (Exception e){
+                //nothing
+            }
+
+            try{
+                buffer.close();
+            }catch (Exception e){
+                //nothing
             }
 
         }
@@ -215,7 +218,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
                 path = Environment.getExternalStorageDirectory().toString();
             else
                 path = contextPath;
-            File file = new File(new StringBuilder().append(path).append("/").append(this.directoryName).toString(), this.fileName);
+            File file = new File(path + "/" + this.directoryName, this.fileName);
             file.delete();
         } catch (Exception e) {
             throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause of this error");
@@ -247,7 +250,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             path = Environment.getExternalStorageDirectory().toString();
         else
             path = contextPath;
-        return new StringBuilder().append(path).append("/").append(this.directoryName).append("/").append(fileName).toString();
+        return path + "/" + this.directoryName + "/" + fileName;
     }
 
 

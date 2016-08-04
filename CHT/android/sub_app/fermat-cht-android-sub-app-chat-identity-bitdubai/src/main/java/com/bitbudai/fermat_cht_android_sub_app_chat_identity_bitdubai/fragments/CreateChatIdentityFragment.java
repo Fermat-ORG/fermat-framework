@@ -258,12 +258,15 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     public void setUpDialog() {
         try {
             PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTitle(R.string.cht_identity_welc)
                     .setSubTitle(R.string.cht_chat_identity_subtitle)
                     .setBody(R.string.cht_chat_identity_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIconRes(R.drawable.chat_identity_subapp)
                     .setBannerRes(R.drawable.banner_identity_chat)
                     .setVIewColor(R.color.cht_color_dialog_identity)
+                    .setTextCloseButton(R.string.cht_identity_close)
+                    .setCheckboxText(R.string.cht_identity_dont_show_again)
                     .setIsCheckEnabled(false)
                     .setTextFooter(R.string.cht_chat_footer)
                     .build();
@@ -277,6 +280,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     public void turnOnGPSDialog() {
         try {
             PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTitle(R.string.cht_identity_welc)
                     .setSubTitle(R.string.cht_chat_identity_subtitle)
                     .setBody(R.string.cht_chat_identity_gps)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
@@ -284,6 +288,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                     .setCheckButtonAndTextVisible(0)
                     .setIsCheckEnabled(false)
                     .setBannerRes(R.drawable.banner_identity_chat)
+                    .setTextCloseButton(R.string.cht_identity_close)
                     .setVIewColor(R.color.cht_color_dialog_identity)
                     .setTextFooter(R.string.cht_chat_footer).build();
             pd.show();

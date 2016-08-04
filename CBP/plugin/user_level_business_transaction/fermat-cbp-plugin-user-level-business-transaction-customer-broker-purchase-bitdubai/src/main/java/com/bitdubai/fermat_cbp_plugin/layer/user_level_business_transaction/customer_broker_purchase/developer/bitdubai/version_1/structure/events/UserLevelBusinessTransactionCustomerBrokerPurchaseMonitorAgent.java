@@ -700,11 +700,9 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
         final DatabaseTableFilter tableFilter = getFilterTable(
                 negotiationId.toString(),
                 UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_ID_COLUMN_NAME);
-
-        final List<CustomerBrokerPurchase> transactions = dao.getCustomerBrokerPurchases(tableFilter);
-
-        return transactions.isEmpty();
+        return dao.isEmptyTable();
     }
+
 
     /**
      * Return a database filter object filled with the given parameters

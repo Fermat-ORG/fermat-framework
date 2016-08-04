@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginObjectFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
@@ -173,6 +174,47 @@ public class AndroidPluginFileSystem implements PluginFileSystem, Serializable {
                     ownerId,
                     context.getFilesDir().getPath(),
                     directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
+                    lifeSpan
+            );
+
+        } catch (Exception e) {
+
+            throw new CantCreateFileException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
+    public PluginObjectFile getObjectFile(UUID pluginId, String path, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException {
+        try {
+            final ObjectFile newFile = new ObjectFile(
+                    pluginId,
+                    context.getFilesDir().getPath(),
+                    path,
+                    hashFileName(fileName),
+                    privacyLevel,
+                    lifeSpan
+            );
+            if (!newFile.exist()) throw new FileNotFoundException("File not exist");
+            return newFile;
+//        } catch (Exception e) {
+//
+//            throw new CantCreateFileException(e, "", "Unhandled error.");
+//        }
+        } catch (CantHashFileNameException e) {
+            throw new CantCreateFileException(e, "", "Unhandled error.");
+        }
+    }
+
+        @Override
+    public PluginObjectFile createObjectFile(UUID pluginId, String path, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException {
+        try {
+
+            return new ObjectFile(
+                    pluginId,
+                    context.getFilesDir().getPath(),
+                    path,
                     hashFileName(fileName),
                     privacyLevel,
                     lifeSpan

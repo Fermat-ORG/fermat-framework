@@ -13,7 +13,9 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionClosedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageTransmitEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientProfileRegisteredEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkChannel;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.P2PLayerManager;
@@ -30,6 +32,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -44,7 +47,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
     private EventManager eventManager;
 
 
-    private Map<String,AbstractNetworkService> networkServices;
+    private ConcurrentHashMap<String,AbstractNetworkService> networkServices;
     private NetworkChannel client;
 
     /**
@@ -61,7 +64,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
 
     @Override
     public void start() throws CantStartPluginException {
-        networkServices = new HashMap<>();
+        networkServices = new ConcurrentHashMap<>();
         this.listenersAdded        = new CopyOnWriteArrayList<>();
 
 
@@ -69,21 +72,77 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         networkClientRegistered.setEventHandler(new FermatEventHandler() {
             @Override
             public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+
                 if (client.isConnected()) {
-                    for (AbstractNetworkService abstractNetworkService : networkServices.values()) {
-                        try {
-                            System.out.println(abstractNetworkService.getProfile().getNetworkServiceType() + ": se está por registrar...");
-                            abstractNetworkService.startConnection();
-                        } catch (CantRegisterProfileException e) {
-                            e.printStackTrace();
-                        }
+                    System.out.println("NETWORK SERVICES STARTED:" + networkServices.size());
+                    final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(networkServices.size());
+                    try {
+                        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+                            @Override
+                            public void run() {
+                                int registered = 0;
+                                for (final AbstractNetworkService abstractNetworkService : networkServices.values()) {
+                                    try {
+                                        System.out.println(abstractNetworkService.getProfile().getNetworkServiceType() + ": se está por registrar..." + abstractNetworkService.isRegistered());
+                                        if (!abstractNetworkService.isRegistered())
+                                            abstractNetworkService.startConnection();
+                                        else
+                                            registered++;
+                                        if (registered == networkServices.size())
+                                            scheduledExecutorService.shutdown();
+                                    } catch (FermatException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }, 10, 5, TimeUnit.SECONDS);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }
         });
+        //TODO implemented estos listener acá porque en el template no funcionaban correctamente al entrar en el handler no se ejecutaba por que el plugin estaba STOPPED
         eventManager.addListener(networkClientRegistered);
         listenersAdded.add(networkClientRegistered);
 
+        FermatEventListener connectionClosed = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_CONNECTION_CLOSED);
+        connectionClosed.setEventHandler(new FermatEventHandler() {
+            @Override
+            public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+                System.out.println("NETWORK SERVICES STARTED:" + networkServices.size());
+                for (final AbstractNetworkService abstractNetworkService : networkServices.values()) {
+                    try {
+                        abstractNetworkService.handleNetworkClientConnectionClosedEvent(null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        eventManager.addListener(connectionClosed);
+        listenersAdded.add(connectionClosed);
+
+        FermatEventListener networkCLientProfileRegistered = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_NETWORK_SERVICE_PROFILE_REGISTERED);
+        networkCLientProfileRegistered.setEventHandler(new FermatEventHandler() {
+            @Override
+            public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+                System.out.println("NETWORK SERVICES STARTED:" + networkServices.size());
+                for (final AbstractNetworkService abstractNetworkService : networkServices.values()) {
+                    try {
+                        if (abstractNetworkService.getProfile().getIdentityPublicKey().equals(((NetworkClientProfileRegisteredEvent) fermatEvent).getPublicKey())){
+                            System.out.println(abstractNetworkService.getProfile().getNetworkServiceType() + ": se registró...");
+                            abstractNetworkService.handleNetworkServiceRegisteredEvent();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        eventManager.addListener(networkCLientProfileRegistered);
+        listenersAdded.add(networkCLientProfileRegistered);
 //        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_NEW_MESSAGE_TRANSMIT);
 //        fermatEventListener.setEventHandler(new FermatEventHandler() {
 //            @Override
@@ -121,7 +180,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
                 e.printStackTrace();
             }
         }
-        networkServices.put(abstractNetworkService.getNetworkServiceType().getCode(), abstractNetworkService);
+        networkServices.putIfAbsent(abstractNetworkService.getNetworkServiceType().getCode(), abstractNetworkService);
     }
 
     @Override

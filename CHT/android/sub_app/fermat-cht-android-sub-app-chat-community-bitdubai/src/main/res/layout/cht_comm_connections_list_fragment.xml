@@ -51,7 +51,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No Contacts"
+                android:text="@string/cht_comm_empty_conn"
                 android:id="@+id/nodatalabel"
                 android:textColor="#BCBEC0"
                 android:textStyle="normal"
