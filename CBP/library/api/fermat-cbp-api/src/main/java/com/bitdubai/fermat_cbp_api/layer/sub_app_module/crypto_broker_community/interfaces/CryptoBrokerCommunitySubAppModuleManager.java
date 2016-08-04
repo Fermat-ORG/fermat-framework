@@ -153,6 +153,9 @@ public interface CryptoBrokerCommunitySubAppModuleManager
      */
     void cancelCryptoBroker(UUID requestId) throws CryptoBrokerCancellingFailedException, ConnectionRequestNotFoundException;
 
+    @Override
+    void createIdentity(String name, String phrase, byte[] profile_img) throws Exception;
+
     /**
      * The method <code>listAllConnectedCryptoBrokers</code> returns the list of all crypto brokers registered by the
      * logged in crypto broker

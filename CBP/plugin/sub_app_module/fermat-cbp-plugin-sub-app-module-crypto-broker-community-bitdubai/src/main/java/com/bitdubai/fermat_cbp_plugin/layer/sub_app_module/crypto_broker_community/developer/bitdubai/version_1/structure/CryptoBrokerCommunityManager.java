@@ -692,7 +692,7 @@ public class CryptoBrokerCommunityManager
 
         String createdPublicKey = null;
 
-        if (name.equals("Customer")) {
+
             try {
                 final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 10, GeoFrequency.NORMAL);
                 createdPublicKey = createdIdentity.getPublicKey();
@@ -712,26 +712,7 @@ public class CryptoBrokerCommunityManager
                 this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 return;
             }
-        } else if (name.equals("Broker")) {
-            try {
-                final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, GeoFrequency.NONE);
-                createdPublicKey = createdIdentity.getPublicKey();
 
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            cryptoBrokerIdentityManager.publishIdentity(createdIdentity.getPublicKey());
-                        } catch (Exception e) {
-                            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                        }
-                    }
-                }.start();
-            } catch (Exception e) {
-                this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                return;
-            }
-        }
 
 
         //Try to get appSettings
@@ -745,11 +726,10 @@ public class CryptoBrokerCommunityManager
         if (createdPublicKey != null)
             appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
 
-        if (name.equals("Customer"))
+
             appSettings.setLastSelectedActorType(Actors.CBP_CRYPTO_CUSTOMER);
 
-        else if (name.equals("Broker"))
-            appSettings.setLastSelectedActorType(Actors.CBP_CRYPTO_BROKER);
+
 
         try {
             persistSettings(this.subAppPublicKey, appSettings);
