@@ -56,6 +56,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -197,11 +198,23 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
                 if(moduleManager!=null)
                     moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+
+                appSession.setData(SessionConstant.NOTIFICATION_ENABLED, true);
+                appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, true);
+                appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
+                appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
+
             } else {
                 if (bitcoinWalletSettings.getBlockchainNetworkType() == null)
                     bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 else
                     blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+
+                appSession.setData(SessionConstant.FEE_LEVEL, bitcoinWalletSettings.getFeedLevel());
+                appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, bitcoinWalletSettings.isBlockchainDownloadEnabled());
+                appSession.setData(SessionConstant.NOTIFICATION_ENABLED, bitcoinWalletSettings.getNotificationEnabled());
+                appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, bitcoinWalletSettings.isPresentationHelpEnabled());
+                appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
             }
 
 
@@ -211,7 +224,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 e.printStackTrace();
             }
 
-            final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
+
             _executor.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -220,7 +233,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             public void run() {
                                 try {
 
-                                    if (bitcoinWalletSettingsTemp.isPresentationHelpEnabled()) {
+                                    if ((Boolean)appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED)) {
                                         setUpPresentation(false);
                                     }
                                     else
@@ -254,24 +267,28 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         //check blockchain progress
 
         try {
-            int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
-            final Toolbar toolBar = getToolbar();
-            int toolbarColor = 0;
-            if (pendingBlocks > 0) {
-                //paint toolbar on red
-                toolbarColor = Color.RED;
-                if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
-                    setUpBlockchainProgress(false);
-            } else {
-                toolbarColor = Color.parseColor("#05CFC2");
-            }
-            final int finalToolbarColor = toolbarColor;
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    toolBar.setBackgroundColor(finalToolbarColor);
+            BlockchainDownloadProgress blockchainDownloadProgress = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType);
+            if(blockchainDownloadProgress!=null) {
+                int pendingBlocks = blockchainDownloadProgress.getPendingBlocks();
+                int toolbarColor = 0;
+                if (pendingBlocks > 0) {
+                    //paint toolbar on red
+                    toolbarColor = Color.RED;
+                    if ((Boolean)appSession.getData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED))
+                        setUpBlockchainProgress(false);
+                } else {
+                    toolbarColor = Color.parseColor("#05CFC2");
                 }
-            });
+                final int finalToolbarColor = toolbarColor;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getToolbar().setBackgroundColor(finalToolbarColor);
+                    }
+                });
+            }else{
+                Log.e(TAG,"blockchainDownloadProgress null");
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -292,39 +309,41 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     (intraUserLoginIdentity == null) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                     checkButton);
 
+            presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    Object o = appSession.getData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
+                    if (o != null) {
+                        if ((Boolean) (o))
+                            appSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
+                    }
+                    //noinspection TryWithIdenticalCatches
+                    ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = null;
+                    try {
+                        cryptoWalletIntraUserIdentity = appSession.getModuleManager().getSelectedActorIdentity();
+                    } catch (CantGetSelectedActorIdentityException e) {
+                        e.printStackTrace();
+                    } catch (ActorIdentityNotSelectedException e) {
+                        e.printStackTrace();
+                    }
+                    if (cryptoWalletIntraUserIdentity == null) {
+                        getActivity().onBackPressed();
+                    } else {
+                        invalidate();
+                    }
+
+                    showBlockchainProgress();
+
+                }
+            });
+            presentationBitcoinWalletDialog.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-        presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                Object o = appSession.getData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
-                if (o != null) {
-                    if ((Boolean) (o))
-                        appSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
-                }
-                //noinspection TryWithIdenticalCatches
-                ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = null;
-                try {
-                    cryptoWalletIntraUserIdentity = appSession.getModuleManager().getSelectedActorIdentity();
-                } catch (CantGetSelectedActorIdentityException e) {
-                    e.printStackTrace();
-                } catch (ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-                if (cryptoWalletIntraUserIdentity == null) {
-                    getActivity().onBackPressed();
-                } else {
-                    invalidate();
-                }
 
-                showBlockchainProgress();
-
-            }
-        });
-        presentationBitcoinWalletDialog.show();
     }
 
     private void setUpBlockchainProgress(final boolean checkButton) {
@@ -374,7 +393,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             animationManager = new AnimationManager(rootView,emptyListViewsContainer);
             getPaintActivtyFeactures().addCollapseAnimation(animationManager);
         } catch (Exception e){
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
@@ -653,7 +672,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             walletAddress = cryptoAddress;
         } catch (CantRequestCryptoAddressException e) {
             // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
 
 
@@ -763,7 +782,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     return true;
                 }
                 else {
-                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    setUpPresentation((Boolean)appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED));
                     return true;
                 }
 
@@ -771,7 +790,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
         } catch (Exception e) {
             // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         return super.onOptionsItemSelected(item);
@@ -1001,7 +1020,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedUIException(
                     UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
 
     }

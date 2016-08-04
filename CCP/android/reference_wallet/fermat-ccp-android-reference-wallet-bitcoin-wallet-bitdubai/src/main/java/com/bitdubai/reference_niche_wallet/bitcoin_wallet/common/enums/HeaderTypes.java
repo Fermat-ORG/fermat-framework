@@ -7,7 +7,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums;
  */
 public enum HeaderTypes {
     /** Numbers type. Code: "#" - Regex: "\d" */
-    NUMBER("#", "\\d"),
+    NUMBER("#", "\\d+"),
     /** Symbols type. Code: "@" - Regex: "[^a-zA-Z0-9]" */
     SYMBOL("@", "[^a-zA-Z0-9]"),
     /** Letters type. Code: "a" - Regex: "[a-zA-Z]" */

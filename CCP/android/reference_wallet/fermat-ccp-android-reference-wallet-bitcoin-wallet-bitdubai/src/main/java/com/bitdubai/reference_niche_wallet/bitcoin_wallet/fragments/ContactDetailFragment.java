@@ -125,25 +125,14 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
             errorManager = appSession.getErrorManager();
             cryptoWallet = appSession.getModuleManager();
 
-            BitcoinWalletSettings bitcoinWalletSettings = null;
-
-            bitcoinWalletSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
-
-            if(bitcoinWalletSettings != null) {
-
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
-
-            }
-
-            blockchainNetworkType = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type"+blockchainNetworkType);
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            makeText(getActivity(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
 //        /* Load Wallet Contact */
 //        walletContact = CollectionUtils.find(getWalletContactList(), new Predicate<WalletContact>() {
@@ -170,7 +159,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
             return mFragmentView;
         }catch (Exception e){
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
         return container;
     }
@@ -186,7 +175,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                     appSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
                     changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
                 }else{
-                    Toast.makeText(getActivity(),"You don't have address to send\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),getResources().getString(R.string.error_msg_no_address),Toast.LENGTH_SHORT).show();
                 }
             }
             else if( id == R.id.receive_button){
@@ -195,7 +184,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                     appSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
                     changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, appSession.getAppPublicKey());
                 }else{
-                    Toast.makeText(getActivity(),"You don't have address to request\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),getResources().getString(R.string.error_msg_no_address),Toast.LENGTH_SHORT).show();
                 }
             }
             else if ( id == R.id.linear_layout_extra_user_receive){
@@ -212,7 +201,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
 
         }catch (Exception e){
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -262,7 +251,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
 
                             delayHandler.postDelayed(delay, TimeUnit.MINUTES.toMillis(DELAY_TIME));
                         }else{
-                            Toast.makeText(getActivity(),"Address exchange sent, wait 2 minutes please",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),getResources().getString(R.string.success_msg_address_sent_wait),Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -277,7 +266,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                     try {
 
                         setClipboard(getActivity(), text_view_address.getText().toString());
-                        Toast.makeText(getActivity(),"Address copied to clipbooard",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),getResources().getString(R.string.success_msg_address_copied_clipboard),Toast.LENGTH_SHORT).show();
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -312,7 +301,8 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                         bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
                 }catch (Exception e){
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        Toast.makeText(getContext(),"Loading image error",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),R.string.error_msg_loading_img,Toast.LENGTH_SHORT).show();
+
                     }
                     e.printStackTrace();
                 }

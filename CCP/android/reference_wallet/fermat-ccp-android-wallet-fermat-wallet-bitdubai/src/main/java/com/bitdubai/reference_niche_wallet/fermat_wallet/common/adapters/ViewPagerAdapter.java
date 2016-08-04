@@ -45,7 +45,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                     position,
                     exchangeRateProvidersList.get(position).getProviderName(),
                     exchangeRateProvidersList.get(position).getProviderId(),
-                    FiatCurrency.US_DOLLAR.getCode(),
                     this.fermatWalletSession
                     );
         else return null;

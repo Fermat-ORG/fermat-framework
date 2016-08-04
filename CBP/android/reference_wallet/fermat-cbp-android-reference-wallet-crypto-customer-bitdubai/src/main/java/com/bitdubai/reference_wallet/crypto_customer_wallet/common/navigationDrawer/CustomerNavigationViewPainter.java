@@ -34,18 +34,17 @@ import java.lang.ref.WeakReference;
 /**
  * Created by mati on 2015.11.24..
  */
-public class CustomerNavigationViewPainter implements NavigationViewPainter {
+public class CustomerNavigationViewPainter extends NavigationViewPainter {
 
     private static final String TAG = "CustomerNavigationView";
 
     private CryptoCustomerIdentity actorIdentity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
     private CryptoCustomerWalletModuleManager moduleManager;
-    private WeakReference<Context> activity;
 
     public CustomerNavigationViewPainter(Context activity, ReferenceAppFermatSession<CryptoCustomerWalletModuleManager> session,
                                          FermatApplicationCaller applicationsHelper) {
-        this.activity = new WeakReference<>(activity);
+        super(activity);
 
         ErrorManager errorManager = session.getErrorManager();
 
@@ -66,8 +65,8 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     @Override
     public View addNavigationViewHeader() {
         try {
-            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentity, applicationsHelper.get());
+            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) getContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), getContext(), actorIdentity, applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -77,7 +76,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            return new CryptoCustomerWalletNavigationViewAdapter(activity.get());
+            return new CryptoCustomerWalletNavigationViewAdapter(getContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,7 +109,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.get().getResources(), R.drawable.ccw_navigation_drawer_background, options);
+                    getContext().getResources(), R.drawable.ccw_navigation_drawer_background, options);
         } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }

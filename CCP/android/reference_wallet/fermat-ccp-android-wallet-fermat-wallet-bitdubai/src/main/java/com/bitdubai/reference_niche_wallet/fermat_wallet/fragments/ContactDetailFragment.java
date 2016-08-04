@@ -127,38 +127,16 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
             errorManager = appSession.getErrorManager();
             cryptoWallet = appSession.getModuleManager();
 
-            FermatWalletSettings fermatWalletSettings = null;
-
-            fermatWalletSettings = fermatWalletSessionReferenceApp.getModuleManager().loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
-
-            if(fermatWalletSettings != null) {
-
-                if (fermatWalletSettings.getBlockchainNetworkType() == null) {
-                    fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                fermatWalletSessionReferenceApp.getModuleManager().persistSettings(fermatWalletSessionReferenceApp.getAppPublicKey(), fermatWalletSettings);
-
-            }
-
-            blockchainNetworkType = fermatWalletSessionReferenceApp.getModuleManager().loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type"+blockchainNetworkType);
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             makeText(getActivity(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
         }
-//        /* Load Wallet Contact */
-//        walletContact = CollectionUtils.find(getWalletContactList(), new Predicate<WalletContact>() {
-//            @Override
-//            public boolean evaluate(WalletContact walletContact) {
-//                try {
-//                    return walletContact.name.equalsIgnoreCase(accountName);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//                return false;
-//            }
-//        });
+
     }
 
     @Nullable
@@ -330,8 +308,6 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                 edit_text_name.setText(cryptoWalletWalletContact.getActorName());
             if (text_view_address != null) {
                 if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
-
-
 
                        try {
 

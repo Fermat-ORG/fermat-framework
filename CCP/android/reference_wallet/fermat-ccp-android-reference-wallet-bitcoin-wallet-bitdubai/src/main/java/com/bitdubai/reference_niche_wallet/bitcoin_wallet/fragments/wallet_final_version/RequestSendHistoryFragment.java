@@ -35,6 +35,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,27 +109,23 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         try {
             cryptoWallet = appSession.getModuleManager();
 
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
+            if(appSession.getData(SessionConstant.FEE_LEVEL) != null)
+                feeLevel = (String)appSession.getData(SessionConstant.FEE_LEVEL);
+            else
+                feeLevel = BitcoinFee.NORMAL.toString();
 
-            BitcoinWalletSettings bitcoinWalletSettings;
-            try {
-                bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
-                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-
-                if (bitcoinWalletSettings.getFeedLevel() == null)
-                    bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
-                else
-                    feeLevel = bitcoinWalletSettings.getFeedLevel();
-            }catch (Exception e){
-
-            }
 
             onRefresh();
 
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -145,7 +142,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             setUp();
             return rootView;
         }catch (Exception e){
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
         return container;
     }
@@ -296,12 +293,12 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             if(id == R.id.btn_refuse_request){
 
                 cryptoWallet.refuseRequest(paymentRequest.getRequestId());
-                Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.denied), Toast.LENGTH_SHORT).show();
             }
             else if ( id == R.id.btn_accept_request){
                 cryptoWallet.approveRequest(paymentRequest.getRequestId(),cryptoWallet.getSelectedActorIdentity().getPublicKey(),
                         BitcoinFee.valueOf(feeLevel).getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
-                Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.accepted), Toast.LENGTH_SHORT).show();
             }
 
         } catch (Exception e) {
@@ -334,7 +331,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             }
         } catch (Exception e) {
             // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         return super.onOptionsItemSelected(item);

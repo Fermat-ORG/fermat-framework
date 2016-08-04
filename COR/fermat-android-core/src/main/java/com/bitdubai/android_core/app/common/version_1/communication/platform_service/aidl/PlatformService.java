@@ -560,7 +560,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
             AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
             if (!AndroidCoreUtils.getInstance().isStarted())
                 AndroidCoreUtils.getInstance().setStarted(true);
-            fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils));
+            fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils),true);
         } catch (FermatException e) {
             System.err.println(e.toString());
         } catch (Exception e) {

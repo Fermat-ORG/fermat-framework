@@ -91,6 +91,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.SendConfi
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.DecimalDigitsInputFilter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 import com.squareup.picasso.Picasso;
 
 
@@ -172,39 +173,24 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             cryptoWallet = appSession.getModuleManager();
 
-            bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
-            if(bitcoinWalletSettings != null) {
-
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                    blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-                }
-                else
-                    blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-
-                if (bitcoinWalletSettings.getFeedLevel() == null)
-                    bitcoinWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
-                else
-                    feeLevel = bitcoinWalletSettings.getFeedLevel();
-
-                cryptoWallet.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
-
-            }
+            if(appSession.getData(SessionConstant.FEE_LEVEL) != null)
+                feeLevel = (String)appSession.getData(SessionConstant.FEE_LEVEL);
+            else
+                feeLevel = BitcoinFee.NORMAL.toString();
 
 
             availableBalance = cryptoWallet.getBalance(com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType);
 
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
+           // InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            //imm.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
 
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantPersistSettingsException e) {
-            e.printStackTrace();
-        } catch (CantGetBalanceException e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -245,7 +231,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             return rootView;
         } catch (Exception e) {
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
@@ -267,7 +253,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 errorConnectingFermatNetworkDialog.dismiss();
                 try {
                     if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
-                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_trying_to_reconnect), Toast.LENGTH_SHORT).show();
                         getActivity().onBackPressed();
                     }
                 } catch (CantGetCommunicationNetworkStatusException e) {
@@ -300,7 +286,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         fee_low_btn = (RadioButton) rootView.findViewById(R.id.fee_low);
         fee_medium_btn = (RadioButton) rootView.findViewById(R.id.fee_Medium);
         fee_high_btn = (RadioButton) rootView.findViewById(R.id.fee_High);
-
 
         advances_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -338,11 +323,18 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     feeLevel = String.valueOf(BitcoinFee.FAST);
                 }
 
-                bitcoinWalletSettings.setFeedLevel(feeLevel);
-
                 try {
+                    cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
+
+                    bitcoinWalletSettings.setFeedLevel(feeLevel);
+
+
                     cryptoWallet.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
                 } catch (CantPersistSettingsException e) {
+                    e.printStackTrace();
+                } catch (CantGetSettingsException e) {
+                    e.printStackTrace();
+                } catch (SettingsNotFoundException e) {
                     e.printStackTrace();
                 }
 
@@ -741,7 +733,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             if (cryptoWalletWalletContact != null) {
                 sendCrypto();
             } else
-                Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_contact_not_found), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.imageView_contact) {
             // if user press the profile image
         } else if (id == R.id.btn_expand_send_form) {
@@ -801,7 +793,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                             if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                                newFee = bitcoinConverter.getSathoshisFromBTC(fee);
+                                newFee    = bitcoinConverter.getSathoshisFromBTC(fee);
                                 msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = amount;
@@ -852,32 +844,32 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     });
                                 }
                                 else{
-                                    Toast.makeText(getActivity(), "Insufficient funds.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_insufficient_funds), Toast.LENGTH_SHORT).show();
                                 }
 
                            }else{
-                                Toast.makeText(getActivity(), "Invalid Amount, must be greater than " +msg, Toast.LENGTH_LONG).show();
+                               Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_invalid_amount) + " " + msg, Toast.LENGTH_SHORT).show();
                            }
 
 
 
                         } catch (Exception e) {
                             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                            Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(getActivity(), "Invalid Amount", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_invalid_amount_2), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Contact don't have an valid Address", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_invalid_address), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(getActivity(), "Contact don't have an Address from red "+ blockchainNetworkType.getCode() + "\nplease wait 2 minutes", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message) + " - " + blockchainNetworkType.getCode(), Toast.LENGTH_SHORT).show();
             }
 
 
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 

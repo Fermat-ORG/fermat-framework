@@ -32,6 +32,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.TransactionsHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
 
 import java.util.ArrayList;
@@ -96,14 +97,10 @@ public class SendTransactionHistoryFragment
             lossProtectedWalletManager = appSession.getModuleManager();
 
 
-            try {
-                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey());
-                this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
-
-            } catch (CantGetSettingsException e) {
-                makeText(getActivity(), "Oooops! recovering from system error: CantGetSettingsException", Toast.LENGTH_SHORT).show();
-                lossProtectedWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
-            }
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
             onRefresh();
 
