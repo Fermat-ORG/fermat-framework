@@ -636,11 +636,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 //                    if (titleBar.getTitleColor() != null)
 //                        txt_title.setTextColor(Color.parseColor(titleBar.getTitleColor()));
-                    try {
-                        mToolbar.addView(toolabarContainer);
-                    }catch (Exception e){
-
-                    }
+                    if(!isLayoutRecicled) mToolbar.addView(toolabarContainer);
                 } else {
 
                     if (collapsingToolbarLayout != null) {
