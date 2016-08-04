@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.osa_android.file_system;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
@@ -28,6 +29,10 @@ public interface PluginFileSystem extends FermatManager, Serializable {
     PluginBinaryFile getBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException;
 
     PluginBinaryFile createBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException;
+
+    PluginObjectFile getObjectFile(UUID pluginId, String settingsDirectoryName, String s, FilePrivacy aPrivate, FileLifeSpan permanent) throws FileNotFoundException, CantCreateFileException;
+
+    PluginObjectFile createObjectFile(UUID pluginId, String settingsDirectoryName, String s, FilePrivacy aPrivate, FileLifeSpan permanent) throws CantCreateFileException;
 
     void deleteTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException;
 
