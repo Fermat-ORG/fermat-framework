@@ -3,6 +3,7 @@ package com.bitdubai.android_core.app.common.version_1.builders.toolbar;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -13,10 +14,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import java.lang.ref.WeakReference;
 
 /**
+ * //todo: mejorar...
  * Created by mati on 03/08/16.
  */
 public class ToolbarBuilder {
 
+    private static final String TAG = "ToolbarBuilder";
     private WeakReference<FermatActivity> fermatActivity;
     private WeakReference<Toolbar> mToolbar;
 
@@ -32,12 +35,28 @@ public class ToolbarBuilder {
 
     public View buildTitle(String title, Typeface typeface, float textSize, String titleColor){
         if (toolabarContainer==null)toolabarContainer = (ViewGroup) fermatActivity.get().getLayoutInflater().inflate(R.layout.text_view, null);
+        else Log.e(TAG,"error title container");
         if (txtTitle==null)txtTitle = (FermatTextView) toolabarContainer.findViewById(R.id.txt_title);
+        else Log.e(TAG,"error txtTitle");
         txtTitle.setText(title);
-        txtTitle.setTypeface(typeface);
+        if (typeface!=null) txtTitle.setTypeface(typeface);
         txtTitle.setTextSize(textSize);
-        if (titleColor != null) txtTitle.setTextColor(Color.parseColor(titleColor));
+        if (titleColor != null && !titleColor.equals("")) txtTitle.setTextColor(Color.parseColor(titleColor));
         return toolabarContainer;
+    }
+
+    public void clearToolbarViews(){
+        if (toolabarContainer!=null) {
+            try {
+                mToolbar.get().removeView(toolabarContainer);
+            }catch (Exception e){
+                //nothing
+            }
+            toolabarContainer.removeAllViewsInLayout();
+            toolabarContainer = null;
+            txtTitle = null;
+        }
+
     }
 
     public void clear(){
@@ -49,5 +68,24 @@ public class ToolbarBuilder {
     }
 
 
+    public void setTextTitle(String textTitle) {
+        txtTitle.setText(textTitle);
+    }
 
+    public void setTypeface(Typeface typeface) {
+        if (typeface!=null)
+        txtTitle.setTypeface(typeface);
+    }
+
+    public void setTextSize(float textSize) {
+        txtTitle.setTextSize(textSize);
+    }
+
+    public void setTextColor(String textColor) {
+        if (textColor != null && !textColor.equals("")) txtTitle.setTextColor(Color.parseColor(textColor));
+    }
+
+    public void invalidate() {
+        txtTitle.invalidate();
+    }
 }

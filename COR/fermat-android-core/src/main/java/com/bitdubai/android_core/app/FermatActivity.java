@@ -630,13 +630,27 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //                    txt_title.setTypeface(typeface);
 //                    txt_title.setTextSize(titleBar.getLabelSize());
 
-                    if (toolbarBuilder==null)toolbarBuilder = new ToolbarBuilder(this,mToolbar);
                     //todo: esto tiene que estar mejor..
-                    View toolabarContainer = toolbarBuilder.buildTitle(title, typeface, titleBar.getLabelSize(),titleBar.getTitleColor());
+
 
 //                    if (titleBar.getTitleColor() != null)
 //                        txt_title.setTextColor(Color.parseColor(titleBar.getTitleColor()));
-                    if(!isLayoutRecicled) mToolbar.addView(toolabarContainer);
+                    View toolabarContainer = null;
+                    if (isLayoutRecicled){
+//                        toolbarBuilder.setTextTitle(title);
+//                        toolbarBuilder.setTypeface(typeface);
+//                        toolbarBuilder.setTextSize(titleBar.getLabelSize());
+//                        toolbarBuilder.setTextColor(titleBar.getTitleColor());
+                        toolabarContainer = toolbarBuilder.buildTitle(title, typeface, titleBar.getLabelSize(),titleBar.getTitleColor());
+                    } else{
+                        if (toolbarBuilder==null)toolbarBuilder = new ToolbarBuilder(this,mToolbar);
+                        toolabarContainer = toolbarBuilder.buildTitle(title, typeface, titleBar.getLabelSize(),titleBar.getTitleColor());
+                    }
+                    try {
+                        mToolbar.addView(toolabarContainer);
+                    }catch (Exception e){
+                        Log.e(TAG,"Toolbar addView exception (not important)");
+                    }
                 } else {
 
                     if (collapsingToolbarLayout != null) {
@@ -1425,8 +1439,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //                tabLayout = null;
             }
 
-            if (mToolbar!=null){
-
+            if (mToolbar!=null) {
+                if (toolbarBuilder != null) toolbarBuilder.clearToolbarViews();
 //
 //                try {
 //                    Field field = mToolbar.getClass().getDeclaredField("mMenuView");
@@ -1794,7 +1808,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 runtimeStructureManager.clear();
             }
 
-            if (toolbarBuilder!=null)toolbarBuilder.clear();
+            if (toolbarBuilder!=null){
+                toolbarBuilder.clear();
+                toolbarBuilder = null;
+            }
 
             resetThisActivity();
 
