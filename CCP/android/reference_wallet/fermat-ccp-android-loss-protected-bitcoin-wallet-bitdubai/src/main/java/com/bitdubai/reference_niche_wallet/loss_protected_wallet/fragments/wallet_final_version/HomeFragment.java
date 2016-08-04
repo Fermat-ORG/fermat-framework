@@ -941,7 +941,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             try {
                 lossProtectedWalletSettings = lossProtectedWalletmanager.loadAndGetSettings(appSession.getAppPublicKey());
 
-            } catch ( CantGetSettingsException|SettingsNotFoundException e) {
+            } catch (Exception e) {
                 lossProtectedWalletSettings = null;
             }
 
