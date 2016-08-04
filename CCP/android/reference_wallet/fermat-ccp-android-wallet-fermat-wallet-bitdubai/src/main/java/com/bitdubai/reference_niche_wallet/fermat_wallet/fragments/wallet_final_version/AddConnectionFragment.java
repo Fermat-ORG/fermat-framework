@@ -402,7 +402,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         if(!isMenuVisible){
             isMenuVisible = true;
             menu.add(0, FermatWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
-                    .setIcon(R.drawable.add_contact_icon.png)
+                    .setIcon(R.drawable.add_contact_icon)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
     }

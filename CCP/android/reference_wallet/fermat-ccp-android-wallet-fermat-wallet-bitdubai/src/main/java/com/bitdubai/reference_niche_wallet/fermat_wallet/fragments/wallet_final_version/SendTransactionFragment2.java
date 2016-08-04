@@ -568,7 +568,10 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         //yAxis1R.setAxisMinValue(-30);
 
         XAxis xAxis = chart.getXAxis();
-        xAxis.setEnabled(false);
+        xAxis.setEnabled(true);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setTextColor(Color.parseColor("#2FAEDC"));
 
         Legend legend = chart.getLegend();
         legend.setEnabled(false);
