@@ -3,6 +3,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot;
@@ -30,17 +31,22 @@ public class NetworkClientConnectionsManager {
     private LocationManager                      locationManager;
 
     private Map<String, NetworkClientCommunicationConnection> activeConnectionsToExternalNodes;
+    private ConnectivityManager connectivityManager;
+
 
     public NetworkClientConnectionsManager(final ECCKeyPair                           identity       ,
                                            final EventManager                         eventManager   ,
                                            final LocationManager                      locationManager,
-                                           final NetworkClientCommunicationPluginRoot pluginRoot     ) {
+                                           final NetworkClientCommunicationPluginRoot pluginRoot,
+                                           ConnectivityManager connectivityManager) {
 
         this.activeConnectionsToExternalNodes = new HashMap<>();
         this.pluginRoot      = pluginRoot     ;
         this.identity        = identity       ;
         this.eventManager    = eventManager   ;
         this.locationManager = locationManager;
+        this.connectivityManager = connectivityManager;
+
     }
 
     public Map<String, NetworkClientCommunicationConnection> getActiveConnectionsToExternalNodes() {
@@ -61,7 +67,8 @@ public class NetworkClientConnectionsManager {
                     pluginRoot,
                     -1,
                     Boolean.TRUE,
-                    null // it should stablished to null to be save when is connected in ConneciontHistory
+                    null, // it should stablished to null to be save when is connected in ConneciontHistory,
+                    connectivityManager
             );
 
             activeConnectionsToExternalNodes.put(uriToNode, networkClientCommunicationConnection);
