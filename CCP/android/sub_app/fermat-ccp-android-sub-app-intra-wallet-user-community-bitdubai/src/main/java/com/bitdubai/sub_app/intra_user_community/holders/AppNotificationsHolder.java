@@ -9,13 +9,14 @@ import com.bitdubai.sub_app.intra_user_community.R;
 
 /**
  * @author Jose Manuel De Sousa.
+ * updated Andres Abreu aabreu 2016.08.03..
  */
 public class AppNotificationsHolder extends FermatViewHolder {
 
     public ImageView userAvatar;
     public FermatTextView userName;
     public FermatTextView receptionTime;
-    public FermatTextView userLocation;
+    public FermatTextView notification_location;
     /**
      * Constructor
      *
@@ -26,6 +27,6 @@ public class AppNotificationsHolder extends FermatViewHolder {
         userName = (FermatTextView) itemView.findViewById(R.id.username);
         userAvatar = (ImageView)itemView.findViewById(R.id.imageView_avatar);
         receptionTime = (FermatTextView) itemView.findViewById(R.id.reception_time);
-        userLocation = (FermatTextView) itemView.findViewById(R.id.notification_location);
+        notification_location = (FermatTextView) itemView.findViewById(R.id.notification_location);
     }
 }

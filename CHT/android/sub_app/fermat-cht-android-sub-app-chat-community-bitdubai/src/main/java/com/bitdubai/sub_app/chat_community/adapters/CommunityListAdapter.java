@@ -87,7 +87,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case CONNECTED:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is now a connection");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_now_conn));
                     holder.connectedButton.setVisibility(View.VISIBLE);
                     holder.blockedButton.setVisibility(View.GONE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -96,7 +96,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case BLOCKED_LOCALLY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -105,7 +105,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case BLOCKED_REMOTELY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -114,7 +114,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case CANCELLED_LOCALLY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -123,7 +123,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case CANCELLED_REMOTELY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -140,7 +140,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case DENIED_LOCALLY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -149,7 +149,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case DENIED_REMOTELY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -190,7 +190,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case PENDING_LOCALLY_ACCEPTANCE:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("Pending Acceptance");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_pending));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.GONE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -199,7 +199,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case PENDING_REMOTELY_ACCEPTANCE:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("Request sent");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_sent));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.GONE);
                     holder.pendingButton.setVisibility(View.VISIBLE);
@@ -243,7 +243,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
             if (data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
             else countryAddress = data.getCountry();
             if (/*stateAddress.equalsIgnoreCase("") &&*/ cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
-                holder.location_text.setText("Not Found");
+                holder.location_text.setText(context.getResources().getString(R.string.cht_comm_not_found));
             }else
                 holder.location_text.setText(cityAddress + countryAddress);//+ stateAddress
 
@@ -256,15 +256,15 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         holder.add_contact_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonLogger.info(TAG, "User connection state " +
+                CommonLogger.info(TAG, context.getResources().getString(R.string.cht_comm_text_state) +
                         dat.getConnectionState());
                 ConnectDialog connectDialog;
                 try {
                     connectDialog =
                             new ConnectDialog(context, appSession, null,
                                     dat, moduleManager.getSelectedActorIdentity());
-                    connectDialog.setTitle("Connection Request");
-                    connectDialog.setDescription("Are you sure you want to send a connection request to this contact?");
+                    connectDialog.setTitle(context.getResources().getString(R.string.cht_comm_connection_request));
+                    connectDialog.setDescription(context.getResources().getString(R.string.cht_comm_text_connect));
                     connectDialog.setUsername(dat.getAlias());
 //                    connectDialog.setSecondDescription("a connection request?");
                     connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -291,15 +291,15 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         holder.connectedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonLogger.info(TAG, "User connection state " +
+                CommonLogger.info(TAG, context.getResources().getString(R.string.cht_comm_text_state) +
                         dat.getConnectionState());
                 final DisconnectDialog disconnectDialog;
                 try {
                     disconnectDialog =
                             new DisconnectDialog(context, appSession, null,
                                     dat, moduleManager.getSelectedActorIdentity());
-                    disconnectDialog.setTitle("Disconnect");
-                    disconnectDialog.setDescription("Do you want to disconnect from");
+                    disconnectDialog.setTitle(context.getResources().getString(R.string.cht_comm_disconnection_request));
+                    disconnectDialog.setDescription(context.getResources().getString(R.string.cht_comm_text_disconnect));
                     disconnectDialog.setUsername(dat.getAlias() + "?");
                     disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
@@ -324,18 +324,18 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         holder.pendingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonLogger.info(TAG, "User connection state "
+                CommonLogger.info(TAG, context.getResources().getString(R.string.cht_comm_text_state)
                         + dat.getConnectionState());
-                Toast.makeText(context, "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.cht_comm_text_resend_toast), Toast.LENGTH_SHORT).show();
                 ConnectDialog connectDialog;
                 try {
                     connectDialog =
                             new ConnectDialog(context, appSession, null,
                                     dat, moduleManager.getSelectedActorIdentity());
-                    connectDialog.setTitle("Resend Connection Request");
-                    connectDialog.setDescription("Do you want to resend ");
+                    connectDialog.setTitle( context.getResources().getString(R.string.cht_comm_resend_request));
+                    connectDialog.setDescription( context.getResources().getString(R.string.cht_comm_text_resend));
                     connectDialog.setUsername(dat.getAlias());
-                    connectDialog.setSecondDescription("a connection request?");
+                    connectDialog.setSecondDescription(context.getResources().getString(R.string.cht_comm_text_resend2));
                     connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
@@ -359,9 +359,9 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         holder.blockedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonLogger.info(TAG, "User connection state "
+                CommonLogger.info(TAG, context.getResources().getString(R.string.cht_comm_text_state)
                         + dat.getConnectionState());
-                Toast.makeText(context, "The connection request has been rejected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.cht_comm_text_block_toast), Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -37,7 +37,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletIntraUserActor;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.FermatWalletConstants;
@@ -74,6 +73,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
     private boolean connectionDialogIsShow=false;
     Handler hnadler;
     BlockchainNetworkType blockchainNetworkType;
+
+    FloatingActionMenu actionMenu;
 
     public static AddConnectionFragment newInstance() {
         return new AddConnectionFragment();
@@ -164,7 +165,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
                 .setContentView(frameLayout).setBackgroundDrawable(R.drawable.fermat_add_connection_selector)
                 .build();
 
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+         actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .attachTo(actionButton)
                 .build();
     }
@@ -345,6 +346,20 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         return data;
     }
 
+
+    @Override
+    public void onDestroy() {
+        try {
+
+            FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+            actionMenu = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+//        ((ViewGroup)button1.getParent()).removeView(button1);
+        super.onDestroy();
+    }
+
     private void runThread(){
         Thread timer = new Thread() {
             public void run() {
@@ -386,7 +401,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         if(!isMenuVisible){
             isMenuVisible = true;
             menu.add(0, FermatWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
-                    .setIcon(R.drawable.fermat_button_add_connection)
+                    .setIcon(R.drawable.add_contact_icon)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
     }

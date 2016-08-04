@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f7f7f7">
@@ -45,14 +44,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textViewCbpTitle"
         android:layout_centerHorizontal="true"
-        android:drawableTint="#808080"
         android:ems="10"
-        android:foregroundTint="#808080"
         android:gravity="center"
         android:hint="@string/crypto_customer_hint"
         android:inputType="textPersonName"
         android:maxLength="25"
-        android:textColor="#808080" />
+        android:textColor="#808080"
+        android:textColorHint="#B2B2B2" />
 
     <TextView
         android:id="@+id/statusView"

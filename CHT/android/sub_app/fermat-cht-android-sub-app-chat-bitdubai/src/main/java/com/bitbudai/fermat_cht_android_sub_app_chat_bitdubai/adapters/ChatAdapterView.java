@@ -80,7 +80,6 @@ import java.util.UUID;
 
 public class ChatAdapterView extends LinearLayout {
 
-    private static final String TAG = "ChatAdapterView";
     private RecyclerView messagesContainer;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ChatAdapter adapter;
@@ -436,7 +435,11 @@ public class ChatAdapterView extends LinearLayout {
         messagesContainer = (RecyclerView) findViewById(R.id.messagesContainer);
         layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
         messagesContainer.setLayoutManager(layoutManager);
-        messagesContainer.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//        if (adapter == null) {
+//            adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+//            messagesContainer.setAdapter(adapter);
+//        }
+            messagesContainer.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 
@@ -527,7 +530,7 @@ public class ChatAdapterView extends LinearLayout {
 
                 for (int i = 0; i < toolbar.getChildCount(); i++) {
                     View child = toolbar.getChildAt(i);
-                    if (child != null)
+                    if (child != null) {
                         if (child.getClass() == ImageView.class) {
                             ImageView iv2 = (ImageView) child;
                             if (iv2.getDrawable() == contactIconCircular) {
@@ -537,6 +540,7 @@ public class ChatAdapterView extends LinearLayout {
                                 break;
                             }
                         }
+                    }
                 }
             }
         }
@@ -579,7 +583,12 @@ public class ChatAdapterView extends LinearLayout {
                 if (TextUtils.isEmpty(messageText) || messageText.trim().length() == 0) {
                     return;
                 }
-                messageText = messageText.trim();
+
+//                if (adapter == null) {
+//                    adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+//                    messagesContainer.setAdapter(adapter);
+//                }
+                    messageText = messageText.trim();
 
 //                String text = "";
 //                char c = 39; // char ' in ASCII code
@@ -694,6 +703,10 @@ public class ChatAdapterView extends LinearLayout {
                     chatMessage.setDate(S);
                     chatMessage.setMe(true);
                     messageET.setText("");
+                    if (adapter == null) {
+                        adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+                        messagesContainer.setAdapter(adapter);
+                    }
                     displayMessage(chatMessage);
                     System.out.println("*** 12345 case 1:send msg in android layer" + new Timestamp(System.currentTimeMillis()));
                 } catch (CantSaveMessageException e) {
@@ -732,11 +745,11 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void displayMessage(ChatMessage message) {
-        if (adapter!=null) {
+        if(adapter != null && message != null) {
             adapter.addItem(message);
             adapter.notifyItemRangeChanged(0, adapter.getItemCount());
             scroll();
-        }else Log.e(TAG,"Adapter null");
+        }
     }
 
     public void refreshEvents() {

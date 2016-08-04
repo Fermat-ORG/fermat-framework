@@ -32,6 +32,7 @@
         android:hint="@string/cbi_accuracy_hint"
         android:inputType="number"
         android:textColor="#616161"
+        android:textColorHint="#B2B2B2"
         android:theme="@style/Base.V7.Widget.AppCompat.EditText" />
 
     <TextView

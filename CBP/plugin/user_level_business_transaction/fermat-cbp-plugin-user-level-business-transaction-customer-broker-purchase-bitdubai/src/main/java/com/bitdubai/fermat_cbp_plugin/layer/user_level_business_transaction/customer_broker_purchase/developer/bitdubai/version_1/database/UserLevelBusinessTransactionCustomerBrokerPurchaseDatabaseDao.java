@@ -218,4 +218,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
 
         return record;
     }
+
+    public boolean isEmptyTable() {
+        return getDatabaseTable(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_EVENTS_RECORDED_TABLE_NAME).numRecords()==0;
+    }
 }

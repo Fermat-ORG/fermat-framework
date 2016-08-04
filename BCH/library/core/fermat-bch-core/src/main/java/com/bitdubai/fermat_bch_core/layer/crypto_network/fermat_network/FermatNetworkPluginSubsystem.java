@@ -32,8 +32,7 @@ public class FermatNetworkPluginSubsystem extends AbstractPluginSubsystem {
                 e.printStackTrace();
                 System.err.println("##############################################\n");
                 System.err.println("##############################################\n");
-            }
-        } catch (Exception e) {
+            }        } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);
         }

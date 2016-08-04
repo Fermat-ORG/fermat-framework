@@ -71,7 +71,7 @@
                         android:layout_height="24dp"
                         android:id="@+id/notification_location"
                         android:layout_gravity="center"
-                        android:text="No     Location"
+                        android:text="No Location"
                         android:textSize="12dp"
                         android:textColor="#aaaaab"
                         android:layout_weight="0.70"

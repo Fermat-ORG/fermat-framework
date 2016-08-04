@@ -150,10 +150,14 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 connectionState = null;
                 final Location location = worldActor.getLocation();
                 try {
-                    final Address address = geolocationManager.getAddressByCoordinate(location.getLatitude(), location.getLongitude());
-                    country = address.getCountry();
-                    city = address.getCity().equals("null") ? address.getCounty() : address.getCity();
-                    state = address.getState().equals("null") ? address.getCounty() : address.getState();
+                    if(location!=null) {
+                        if(location.getLatitude() != null && location.getAltitude() != null) {
+                            final Address address = geolocationManager.getAddressByCoordinate(location.getLatitude(), location.getLongitude());
+                            country = address.getCountry();
+                            city = address.getCity().equals("null") ? address.getCounty() : address.getCity();
+                            state = address.getState().equals("null") ? address.getCounty() : address.getState();
+                        }
+                    }
                 } catch (CantCreateAddressException ignore) {
                 }
                 if (actorConnections != null && actorConnections.size() > 0) {

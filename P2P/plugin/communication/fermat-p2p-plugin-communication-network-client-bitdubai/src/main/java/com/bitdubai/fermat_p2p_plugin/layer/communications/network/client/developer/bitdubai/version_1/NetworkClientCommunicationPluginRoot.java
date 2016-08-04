@@ -56,7 +56,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -273,6 +272,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     System.out.println("########################################\n");
                     if(deviceNetwork.getType() == ConnectionType.WI_FI || deviceNetwork.getType() == ConnectionType.MOBILE_DATA )
                         try {
+                            networkClientCommunicationConnection.setTryToReconnect(Boolean.TRUE);
                             connect();
                         }catch (Exception e){
                             e.printStackTrace();
@@ -289,6 +289,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                             @Override
                             public void run() {
                                 try {
+                                    networkClientCommunicationConnection.setTryToReconnect(Boolean.FALSE);
                                     disconnect();
                                 } catch (Exception e) {
                                     e.printStackTrace();
