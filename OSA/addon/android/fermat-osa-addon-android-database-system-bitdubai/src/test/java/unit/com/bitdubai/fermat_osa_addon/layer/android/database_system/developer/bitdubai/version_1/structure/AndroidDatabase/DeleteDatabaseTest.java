@@ -1,8 +1,6 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
@@ -16,11 +14,11 @@ import org.robolectric.annotation.Config;
 
 import java.util.UUID;
 
+import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
+
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.robolectric.Shadows.shadowOf;
-import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
 /**
  * Created by jorgegonzalez on 2015.06.27..
@@ -36,13 +34,13 @@ public class DeleteDatabaseTest {
     private String testDatabaseName = "testDatabase";
 
     @Before
-    public void setUpContext(){
+    public void setUpContext() {
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
     }
 
     @Test
-    public void DeleteDatabase_DatabaseInPath_InvokedSuccesfully() throws Exception{
+    public void DeleteDatabase_DatabaseInPath_InvokedSuccesfully() throws Exception {
         testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
         testDatabase.createDatabase(testDatabaseName);
         catchException(testDatabase).deleteDatabase();
@@ -50,7 +48,7 @@ public class DeleteDatabaseTest {
     }
 
     @Test
-    public void DeleteDatabase_NoDatabaseInPath_ThrowException() throws Exception{
+    public void DeleteDatabase_NoDatabaseInPath_ThrowException() throws Exception {
         testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
         catchException(testDatabase).deleteDatabase();
         caughtException().printStackTrace();

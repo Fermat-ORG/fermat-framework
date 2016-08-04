@@ -18,5 +18,5 @@ public interface LinkedChatActorIdentity {
 
     byte[] getImage();
 
-   
+
 }

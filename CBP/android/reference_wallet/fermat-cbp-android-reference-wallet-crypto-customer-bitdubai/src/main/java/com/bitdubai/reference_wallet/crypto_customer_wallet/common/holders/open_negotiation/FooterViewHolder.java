@@ -8,8 +8,8 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 /**
- *Created by Yordin Alayn on 22.01.16.
- * Based in FooterViewHolder of Star_negotiation by nelson
+ * Created by Yordin Alayn on 22.01.16.
+ *
  */
 public class FooterViewHolder extends FermatViewHolder implements View.OnClickListener {
     OnFooterButtonsClickListener listener;
@@ -17,8 +17,7 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
     TextView sendButton;
 
     public FooterViewHolder(View itemView) {
-
-        super(itemView);
+        super(itemView, 0);
 
         addNoteButton = (CardView) itemView.findViewById(R.id.add_a_note_card_view);
         addNoteButton.setVisibility(View.VISIBLE);
@@ -39,7 +38,7 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
         }
     }
 
-    public void HideButtons(){
+    public void HideButtons() {
         addNoteButton.setVisibility(View.GONE);
         sendButton.setVisibility(View.GONE);
     }

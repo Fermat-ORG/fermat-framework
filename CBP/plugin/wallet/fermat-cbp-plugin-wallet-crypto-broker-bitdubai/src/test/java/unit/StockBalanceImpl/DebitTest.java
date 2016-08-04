@@ -23,7 +23,7 @@ public class DebitTest {
     @Test
     public void DebitTest() throws CantAddDebitCryptoBrokerWalletException, CantStartPluginException {
         StockBalanceImpl stockBalance = mock(StockBalanceImpl.class, Mockito.RETURNS_DEEP_STUBS);
-        doCallRealMethod().when(stockBalance).debit(Mockito.any(CryptoBrokerStockTransactionRecord.class),Mockito.any(BalanceType.class));
+        doCallRealMethod().when(stockBalance).debit(Mockito.any(CryptoBrokerStockTransactionRecord.class), Mockito.any(BalanceType.class));
     }
 
 }

@@ -76,7 +76,7 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
                 NegotiationLocations location = (NegotiationLocations) choice;
                 data.add(location.getLocation());
 
-            }else {
+            } else {
                 data.add(choice.toString());
             }
         }

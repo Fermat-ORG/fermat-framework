@@ -28,10 +28,10 @@ public class CryptoEarningExtractor implements EarningExtractor {
     }
 
     @Override
-    public void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey, long fee, FeeOrigin feeOrigin) throws CantExtractEarningsException {
+    public void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey, String brokerIdentityPublicKey, long fee, FeeOrigin feeOrigin) throws CantExtractEarningsException {
         try {
             cryptoMoneyDestockManager.createTransactionDestock(
-                    "Actor",
+                    brokerIdentityPublicKey,
                     CryptoCurrency.getByCode(earningsPair.getEarningCurrency().getCode()),
                     brokerWalletPublicKey,
                     earningWalletPublicKey,
@@ -40,7 +40,7 @@ public class CryptoEarningExtractor implements EarningExtractor {
                     BigDecimal.ZERO,
                     OriginTransaction.EARNING_EXTRACTION,
                     earningsPair.getId().toString(),
-                    BlockchainNetworkType.getDefaultBlockchainNetworkType(),fee,feeOrigin);
+                    BlockchainNetworkType.getDefaultBlockchainNetworkType(), fee, feeOrigin);
 
         } catch (CantCreateCryptoMoneyDestockException e) {
             throw new CantExtractEarningsException(e, "Trying to make the Crypto Destock of the merchandise",

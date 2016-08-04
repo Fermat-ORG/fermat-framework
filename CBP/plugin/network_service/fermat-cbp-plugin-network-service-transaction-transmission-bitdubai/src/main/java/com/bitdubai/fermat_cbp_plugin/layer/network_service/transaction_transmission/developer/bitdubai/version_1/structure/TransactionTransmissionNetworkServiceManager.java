@@ -140,7 +140,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 remoteBusinessTransaction);
 
         try {
-            System.out.print("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - sendContractStatusNotification()" +remoteBusinessTransaction+"\n");
+            System.out.print("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - sendContractStatusNotification()" + remoteBusinessTransaction + "\n");
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);
@@ -205,7 +205,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                     "Cannot persists the contract hash in table",
                     "database corrupted");
         } catch (Exception e) {
-                throw new CantConfirmNotificationReceptionException(
+            throw new CantConfirmNotificationReceptionException(
                     CantConfirmNotificationReceptionException.DEFAULT_MESSAGE,
                     e,
                     "Cannot persists the contract hash in table",
@@ -422,9 +422,12 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
 
         switch (type) {
 
-            case ACTOR_CRYPTO_BROKER: return Actors.CBP_CRYPTO_BROKER;
-            case ACTOR_CRYPTO_CUSTOMER: return Actors.CBP_CRYPTO_CUSTOMER;
-            default: return null;
+            case ACTOR_CRYPTO_BROKER:
+                return Actors.CBP_CRYPTO_BROKER;
+            case ACTOR_CRYPTO_CUSTOMER:
+                return Actors.CBP_CRYPTO_CUSTOMER;
+            default:
+                return null;
         }
     }
 }

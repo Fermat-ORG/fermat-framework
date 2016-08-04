@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class WizardPage implements FermatWizardPage,Serializable{
+public class WizardPage implements FermatWizardPage, Serializable {
 
     private WizardPageTypes type;
 

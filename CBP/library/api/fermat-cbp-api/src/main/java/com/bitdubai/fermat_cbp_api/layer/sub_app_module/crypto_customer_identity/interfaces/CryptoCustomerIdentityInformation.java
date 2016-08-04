@@ -12,7 +12,7 @@ import java.io.Serializable;
  * The interface <code>CryptoCustomerIdentityInformation</code>
  * provides the method to extract information about an crypto Customer identity.
  */
-public interface CryptoCustomerIdentityInformation extends Serializable{
+public interface CryptoCustomerIdentityInformation extends Serializable {
 
     String getAlias();
 

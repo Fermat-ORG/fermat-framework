@@ -9,7 +9,7 @@ public interface ParentListItem<ITEM> {
 
     /**
      * Getter for the list of this parent list item's child list items.
-     * <p>
+     * <p/>
      * If list is empty, the parent list item has no children.
      *
      * @return A {@link List} of the children of this {@link ParentListItem}

@@ -80,7 +80,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     private ProgressDialog dialog;
     private FermatWorker worker;
     private FermatApplicationCaller fermatApplicationCaller;
-
+     private  AcceptDialog notificationAcceptDialog;
 
     /**
      * Create a new instance of this fragment
@@ -186,6 +186,9 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
                 @Override
                 public void onPostExecute(Object... result) {
                     //notificationsProgressDialog.dismiss();
+
+                  //  showEmpty(notificationAcceptDialog.getResultado(), connectionSuccess);
+                   // notificationAcceptDialog.setResultado(false);
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -202,6 +205,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
                         }
                     } else
                         showEmpty(adapter.getSize() < 0, emptyView);
+
                 }
 
                 @Override
@@ -252,26 +256,29 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
         try {
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession,null, data, moduleManager.getActiveIntraUserIdentity());
+            notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession, null, data, moduleManager.getActiveIntraUserIdentity());
             notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    Object o = appSession.getData(SessionConstants.NOTIFICATION_ACCEPTED);
-                    try {
-                        if ((Boolean) o) {
+                    if(appSession.getData(SessionConstants.NOTIFICATION_ACCEPTED) != null)
+                    {
+                        Object o = appSession.getData(SessionConstants.NOTIFICATION_ACCEPTED);
+                        try {
+                            if ((Boolean) o) {
+                                onRefresh();
+                                appSession.removeData(SessionConstants.NOTIFICATION_ACCEPTED);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                             onRefresh();
-                            appSession.removeData(SessionConstants.NOTIFICATION_ACCEPTED);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        onRefresh();
                     }
+
                 }
             });
             notificationAcceptDialog.show();
 
-                textConnectionSuccess.setText("You're now connected with "+ data.getName());
-                showEmpty(notificationAcceptDialog.getResultado(), connectionSuccess);
+
         } catch (CantGetActiveLoginIdentityException e) {e.printStackTrace();
         }
     }

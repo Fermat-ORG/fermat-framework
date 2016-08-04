@@ -13,7 +13,7 @@ public abstract class AbstractCustomerBrokerNewEventHandler implements FermatEve
 
     public void setCustomerBrokerNewService(CustomerBrokerNewServiceEventHandler customerBrokerNewServiceEventHandler) throws CantSetObjectException {
 //        System.out.print("\n\n**** 6.0.1) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
-        if(customerBrokerNewServiceEventHandler==null){
+        if (customerBrokerNewServiceEventHandler == null) {
 //            System.out.print("\n\n**** 6.0.2) MOCK CUSTOMER BROKER NEW RECEIVE, EVENT HANDLER - LISTENER EVENT ****\n");
             throw new CantSetObjectException("CustomerBrokerNewServiceEventHandler is null");
         }

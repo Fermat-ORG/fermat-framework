@@ -337,21 +337,21 @@ public class CryptoCustomerCommunityManager
             CryptoCustomerExposingData cryptoBrokerExposingData;
             CryptoCustomerCommunitySubAppModuleInformation cryptoCustomerCommunitySubAppModuleInformation;
 
-            for (CryptoCustomerActorConnection connectedActor : connectedActors){
+            for (CryptoCustomerActorConnection connectedActor : connectedActors) {
                 cryptoBrokerExposingData = getCryptoCustomerSearch().getResult(connectedActor.getPublicKey());
-                if (cryptoBrokerExposingData != null){
+                if (cryptoBrokerExposingData != null) {
                     cryptoCustomerCommunitySubAppModuleInformation = new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData.getLocation());
-                } else{
+                } else {
                     cryptoCustomerCommunitySubAppModuleInformation = new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, connectedActor.getLocation());
                 }
 
                 Location actorLocation = cryptoCustomerCommunitySubAppModuleInformation.getLocation();
                 Address address;
-                try{
+                try {
                     address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
                     cryptoCustomerCommunitySubAppModuleInformation.setCountry(address.getCountry());
                     cryptoCustomerCommunitySubAppModuleInformation.setPlace(address.getCity());
-                } catch (CantCreateAddressException ex){
+                } catch (CantCreateAddressException ex) {
 //                    GeoRectangle geoRectangle = geolocationManager.getRandomGeoLocation();
 //                    address = geolocationManager.getAddressByCoordinate(geoRectangle.getLatitude(), geoRectangle.getLongitude());
                     cryptoCustomerCommunitySubAppModuleInformation.setCountry("");
@@ -449,7 +449,7 @@ public class CryptoCustomerCommunityManager
         String createdPublicKey;
 
         try {
-            final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, GeoFrequency.NONE);
+            final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 10, GeoFrequency.NORMAL);
             createdPublicKey = createdIdentity.getPublicKey();
 
             new Thread() {

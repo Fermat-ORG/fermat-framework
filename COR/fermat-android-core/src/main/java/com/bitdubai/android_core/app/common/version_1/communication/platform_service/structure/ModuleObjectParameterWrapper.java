@@ -8,12 +8,12 @@ import java.io.Serializable;
 /**
  * Created by Matias Furszyfer on 2016.05.12..
  */
-public class ModuleObjectParameterWrapper implements Parcelable,Serializable{
+public class ModuleObjectParameterWrapper implements Parcelable, Serializable {
 
     private Serializable object;
     private Class parameterType;
 
-    public ModuleObjectParameterWrapper(Serializable object,Class parameterType) {
+    public ModuleObjectParameterWrapper(Serializable object, Class parameterType) {
         this.object = object;
         this.parameterType = parameterType;
     }
@@ -52,19 +52,17 @@ public class ModuleObjectParameterWrapper implements Parcelable,Serializable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        try{
+        try {
             dest.writeSerializable(object);
             dest.writeSerializable(parameterType);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public String toString() {
-        String o = (object!=null)?object.toString():"null";
-        return "FermatModuleObjectWrapper{" +
-                "object=" +o+
-                '}';
+        String o = (object != null) ? object.toString() : "null";
+        return new StringBuilder().append("FermatModuleObjectWrapper{").append("object=").append(o).append('}').toString();
     }
 }

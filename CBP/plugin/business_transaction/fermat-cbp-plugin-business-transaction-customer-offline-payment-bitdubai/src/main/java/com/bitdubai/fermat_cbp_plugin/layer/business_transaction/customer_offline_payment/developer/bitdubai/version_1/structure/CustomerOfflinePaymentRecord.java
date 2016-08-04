@@ -80,14 +80,6 @@ public class CustomerOfflinePaymentRecord {
 
     @Override
     public String toString() {
-        return "CustomerOfflinePaymentRecord{" +
-                "brokerPublicKey='" + brokerPublicKey + '\'' +
-                ", contractHash='" + contractHash + '\'' +
-                ", contractTransactionStatus=" + contractTransactionStatus +
-                ", customerPublicKey='" + customerPublicKey + '\'' +
-                ", timestamp=" + timestamp +
-                ", transactionHash='" + transactionHash + '\'' +
-                ", transactionId='" + transactionId + '\'' +
-                '}';
+        return "CustomerOfflinePaymentRecord{" + "brokerPublicKey='" + brokerPublicKey + '\'' + ", contractHash='" + contractHash + '\'' + ", contractTransactionStatus=" + contractTransactionStatus + ", customerPublicKey='" + customerPublicKey + '\'' + ", timestamp=" + timestamp + ", transactionHash='" + transactionHash + '\'' + ", transactionId='" + transactionId + '\'' + '}';
     }
 }

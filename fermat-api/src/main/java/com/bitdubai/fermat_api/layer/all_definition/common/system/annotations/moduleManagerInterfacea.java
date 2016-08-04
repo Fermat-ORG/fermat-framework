@@ -15,8 +15,9 @@ import java.lang.annotation.Target;
 public @interface moduleManagerInterfacea {
 
     /**
-     *  Interface implemented by the module manager,
-     *  this interface has to be the same class that the developer will have in his android plugin to consume methods.
+     * Interface implemented by the module manager,
+     * this interface has to be the same class that the developer will have in his android plugin to consume methods.
+     *
      * @return
      */
     Class moduleManager();

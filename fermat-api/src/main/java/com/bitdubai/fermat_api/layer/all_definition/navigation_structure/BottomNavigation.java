@@ -9,5 +9,5 @@ import java.io.Serializable;
  */
 
 //TODO: completar
-public class BottomNavigation implements FermatBottomNavigation,Serializable {
+public class BottomNavigation implements FermatBottomNavigation, Serializable {
 }

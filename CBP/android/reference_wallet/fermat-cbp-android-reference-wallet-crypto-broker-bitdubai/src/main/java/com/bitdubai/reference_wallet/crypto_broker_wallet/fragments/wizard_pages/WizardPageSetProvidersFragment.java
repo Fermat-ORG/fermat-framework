@@ -322,7 +322,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
     private List<String> getFormattedCurrencies(List<Currency> currencies) {
         ArrayList<String> data = new ArrayList<>();
         for (Currency currency : currencies) {
-            data.add(currency.getFriendlyName() + " (" + currency.getCode() + ")");
+            data.add(new StringBuilder().append(currency.getFriendlyName()).append(" (").append(currency.getCode()).append(")").toString());
         }
 
         return data;

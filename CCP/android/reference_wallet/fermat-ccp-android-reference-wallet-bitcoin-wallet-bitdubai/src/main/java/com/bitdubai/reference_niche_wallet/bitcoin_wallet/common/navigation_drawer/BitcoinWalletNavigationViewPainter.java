@@ -20,17 +20,15 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Matias Furszyfer on 2015.11.24..
  */
-public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
+public class BitcoinWalletNavigationViewPainter extends com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
     //private final ActiveActorIdentityInformation intraUserLoginIdentity;
-    private WeakReference<Context> activity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
 
     private ReferenceAppFermatSession referenceWalletSession;
 
     public BitcoinWalletNavigationViewPainter(Context activity, ReferenceAppFermatSession referenceWalletSession, FermatApplicationCaller applicationsHelper) {
-
-        this.activity = new WeakReference<Context>(activity);
+        super(activity);
         this.referenceWalletSession = referenceWalletSession;
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
     }
@@ -38,8 +36,8 @@ public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_a
     @Override
     public View addNavigationViewHeader() {
         try {
-            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),referenceWalletSession,applicationsHelper.get());
+            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) getContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), getContext(),referenceWalletSession,applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -49,7 +47,7 @@ public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_a
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(activity.get());
+            NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getContext());
             return navigationViewAdapter;
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,7 +70,7 @@ public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_a
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.get().getResources(), R.drawable.bg_drawer_body,options);
+                    getContext().getResources(), R.drawable.bg_drawer_body,options);
             //drawable = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.bg_drawer_body);
         }catch (OutOfMemoryError error){
             error.printStackTrace();

@@ -4,12 +4,12 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerManager;
@@ -39,29 +39,29 @@ import java.util.List;
 /**
  * Created by Yordin Alayn on 12.05.16.
  */
-public class CryptoCustomerIdentityManagerImpl implements CryptoCustomerIdentityManager{
-    
-    private CryptoCustomerIdentityDatabaseDao   cryptoCustomerIdentityDatabaseDao;
-    private DeviceUserManager                   deviceUserManager;
-    private Broadcaster                         broadcaster;
-    private CryptoCustomerManager               cryptoCustomerANSManager;
-    private CryptoCustomerIdentityPluginRoot    pluginRoot;
-    private LocationManager                     locationManager;
-    
+public class CryptoCustomerIdentityManagerImpl implements CryptoCustomerIdentityManager {
+
+    private CryptoCustomerIdentityDatabaseDao cryptoCustomerIdentityDatabaseDao;
+    private DeviceUserManager deviceUserManager;
+    private Broadcaster broadcaster;
+    private CryptoCustomerManager cryptoCustomerANSManager;
+    private CryptoCustomerIdentityPluginRoot pluginRoot;
+    private LocationManager locationManager;
+
     public CryptoCustomerIdentityManagerImpl(
-            CryptoCustomerIdentityDatabaseDao   cryptoCustomerIdentityDatabaseDao,
-            DeviceUserManager                   deviceUserManager,
-            Broadcaster                         broadcaster,
-            CryptoCustomerManager               cryptoCustomerANSManager,
-            CryptoCustomerIdentityPluginRoot    pluginRoot,
-            LocationManager                     locationManager
-    ){
-        this.cryptoCustomerIdentityDatabaseDao  = cryptoCustomerIdentityDatabaseDao;
-        this.deviceUserManager                  = deviceUserManager;
-        this.broadcaster                        = broadcaster;
-        this.cryptoCustomerANSManager           = cryptoCustomerANSManager;
-        this.pluginRoot                         = pluginRoot;
-        this.locationManager                    = locationManager;
+            CryptoCustomerIdentityDatabaseDao cryptoCustomerIdentityDatabaseDao,
+            DeviceUserManager deviceUserManager,
+            Broadcaster broadcaster,
+            CryptoCustomerManager cryptoCustomerANSManager,
+            CryptoCustomerIdentityPluginRoot pluginRoot,
+            LocationManager locationManager
+    ) {
+        this.cryptoCustomerIdentityDatabaseDao = cryptoCustomerIdentityDatabaseDao;
+        this.deviceUserManager = deviceUserManager;
+        this.broadcaster = broadcaster;
+        this.cryptoCustomerANSManager = cryptoCustomerANSManager;
+        this.pluginRoot = pluginRoot;
+        this.locationManager = locationManager;
     }
 
     /*CryptoCustomerIdentityManager Interface implementation.*/
@@ -136,8 +136,8 @@ public class CryptoCustomerIdentityManagerImpl implements CryptoCustomerIdentity
             Location location = locationManager.getLocation();
             CryptoCustomerIdentity customer = cryptoCustomerIdentityDatabaseDao.getIdentity(publicKey);
             long refreshInterval = customer.getFrequency().getRefreshInterval();
-            if( customer.isPublished() ){
-                cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile, location,  refreshInterval, customer.getAccuracy(), ProfileStatus.UNKNOWN));
+            if (customer.isPublished()) {
+                cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile, location, refreshInterval, customer.getAccuracy(), ProfileStatus.UNKNOWN));
             }
         } catch (CantGetIdentityException e) {
 

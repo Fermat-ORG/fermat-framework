@@ -13,8 +13,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.exceptions.CantInitializeFermatExchangeProviderDatabaseException;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.database.FermatExchangeProviderDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Alejandro Bicelis - (abicelis@gmail.com) on 23/05/16.
  *
  * @version 1.0
@@ -160,7 +160,6 @@ public class FermatExchangeProviderDeveloperDatabaseFactory implements DealsWith
          */
         DeveloperDatabaseTable dailyExchangeRatesTable = developerObjectFactory.getNewDeveloperDatabaseTable(FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, dailyExchangeRatesColumns);
         tables.add(dailyExchangeRatesTable);
-
 
 
         return tables;

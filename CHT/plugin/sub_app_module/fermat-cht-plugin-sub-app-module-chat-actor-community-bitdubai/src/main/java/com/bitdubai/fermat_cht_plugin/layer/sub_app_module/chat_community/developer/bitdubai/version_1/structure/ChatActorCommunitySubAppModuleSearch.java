@@ -2,7 +2,6 @@ package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.devel
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
@@ -31,7 +30,6 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
     }
 
 
-
     @Override
     public void addActorAlias(String alias) {
 
@@ -49,7 +47,7 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
 
             final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
 
-            for(ChatExposingData ced : chatActorConnections)
+            for (ChatExposingData ced : chatActorConnections)
                 chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
 
             return chatActorLocalCommunityInformationList;
@@ -70,7 +68,7 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
 
             final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
 
-            for(ChatExposingData ced : chatActorConnections)
+            for (ChatExposingData ced : chatActorConnections)
                 chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
 
             return chatActorLocalCommunityInformationList;
@@ -91,7 +89,7 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
 
             final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
 
-            for(ChatExposingData ced : chatActorConnections)
+            for (ChatExposingData ced : chatActorConnections)
                 chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
 
             return chatActorLocalCommunityInformationList;
@@ -112,7 +110,7 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
 
             final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
 
-            for(ChatExposingData ced : chatActorConnections)
+            for (ChatExposingData ced : chatActorConnections)
                 chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
 
             return chatActorLocalCommunityInformationList;
@@ -133,7 +131,7 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
 
             final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
 
-            for(ChatExposingData ced : chatActorConnections)
+            for (ChatExposingData ced : chatActorConnections)
                 chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
 
             return chatActorLocalCommunityInformationList;

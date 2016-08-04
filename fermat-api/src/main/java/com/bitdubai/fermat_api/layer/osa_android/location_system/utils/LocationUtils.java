@@ -13,7 +13,7 @@ import java.util.Random;
 public class LocationUtils {
 
     public static Location getRandomLocation(final Location location,
-                                             final long     radius  ) {
+                                             final long radius) {
 
         if (location == null)
             return null;

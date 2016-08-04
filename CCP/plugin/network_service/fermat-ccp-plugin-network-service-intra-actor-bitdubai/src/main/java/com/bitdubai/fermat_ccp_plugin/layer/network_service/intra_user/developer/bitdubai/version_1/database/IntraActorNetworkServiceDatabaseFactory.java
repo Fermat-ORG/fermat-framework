@@ -60,6 +60,8 @@ public class IntraActorNetworkServiceDatabaseFactory {
             table.addColumn(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME, DatabaseDataType.INTEGER, 6, Boolean.FALSE);
             table.addColumn(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
             table.addColumn(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_CITY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_COUNTRY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
 
 
             table.addIndex(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_FIRST_KEY_COLUMN);
@@ -87,6 +89,8 @@ public class IntraActorNetworkServiceDatabaseFactory {
             table.addColumn(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME, DatabaseDataType.STRING, 6, Boolean.FALSE);
             table.addColumn(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
             table.addColumn(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_COUNTRY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_CITY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
 
             table.addIndex(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_FIRST_KEY_COLUMN);
 

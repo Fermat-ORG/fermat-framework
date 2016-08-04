@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
@@ -35,7 +34,11 @@ import java.util.UUID;
 
 import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN;
 import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN;
-import static com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus.*;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus.PENDING_ONLINE_PAYMENT_NOTIFICATION;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus.PENDING_PAYMENT;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus.getByCode;
 import static com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME;
 import static com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME;
 import static com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BROKER_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME;
@@ -122,9 +125,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * Return the transaction status of a contract
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return the contract transaction status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
@@ -150,7 +151,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * Return list of event IDs with PENDING event status
      *
      * @return list of event status IDs
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -188,9 +188,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * return the event type of the given event ID
      *
      * @param eventId the event ID
-     *
      * @return a String with event type code
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public String getEventType(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
@@ -218,7 +216,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * Return a list of Business transaction IDs with Contract Transaction Status PENDING_PAYMENT
      *
      * @return a list of Business transaction IDs
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -245,7 +242,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * Return a list of Business Transaction with Contract Transaction Status PENDING_ONLINE_PAYMENT_NOTIFICATION
      *
      * @return a list of Business Transaction
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -273,7 +269,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * Return a list of Business Transaction with Contract Transaction Status PENDING_ONLINE_PAYMENT_CONFIRMATION
      *
      * @return a list of Business Transaction
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -302,7 +297,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * Return a list of Business Transaction with Contract Transaction Status ONLINE_PAYMENT_SUBMITTED
      *
      * @return a list of Business Transaction
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -329,7 +323,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * Return a list of Business Transaction with Crypto Status PENDING_SUBMIT
      *
      * @return a list of Business Transaction records
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -357,7 +350,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * Return a list of Business Transaction with Crypto Status ON_CRYPTO_NETWORK
      *
      * @return a list of Business Transaction records
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -386,7 +378,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * Return a list of Business Transaction with Crypto Status ON_BLOCKCHAIN
      *
      * @return a list of Business Transaction records
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -416,9 +407,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * check if the contract hash is in database
      *
      * @param contractHash the contract hash to check
-     *
      * @return <code>true</code> if contract hash is in database. <code>false</code> otherwise
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public boolean isContractHashInDatabase(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
@@ -447,7 +436,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @param paymentCurrency             the currency to pay
      * @param blockchainNetworkType       the Blockchain Network Type
      * @param intraActorReceiverPublicKey the intra actor public key
-     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(CustomerBrokerContractPurchase contractPurchase,
@@ -460,8 +448,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                                           FeeOrigin feeOrigin,
                                           long fee) throws CantInsertRecordException {
         try {
-            if(isContractHashInDatabase(contractPurchase.getContractId())){
-                System.out.println("The contract "+contractPurchase+" exists in database");
+            if (isContractHashInDatabase(contractPurchase.getContractId())) {
+                System.out.println("The contract " + contractPurchase + " exists in database");
                 return;
             }
             DatabaseTable databaseTable = getDatabaseContractTable();
@@ -495,9 +483,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * This method returns a BusinessTransactionRecord by a contract hash.
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return the Business Transaction record
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public BusinessTransactionRecord getCustomerOnlinePaymentRecord(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
@@ -544,13 +530,13 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             businessTransactionRecord.setFee(record.getLongValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_MERCHANDISE_FEE_COLUMN_NAME));
             String feeOriginString = record.getStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_MERCHANDISE_ORIGIN_FEE_COLUMN_NAME);
             FeeOrigin feeOrigin;
-            if(feeOriginString==null||feeOriginString.isEmpty()){
-                feeOrigin=FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+            if (feeOriginString == null || feeOriginString.isEmpty()) {
+                feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
             } else {
-                try{
+                try {
                     feeOrigin = FeeOrigin.getByCode(feeOriginString);
-                } catch (InvalidParameterException ex){
-                    feeOrigin=FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+                } catch (InvalidParameterException ex) {
+                    feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
                 }
             }
             businessTransactionRecord.setFeeOrigin(feeOrigin);
@@ -577,7 +563,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * Update in database the information of a business transaction
      *
      * @param businessTransactionRecord the Business Transaction record with the updated information to persist in database
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -615,14 +600,13 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @param saleContract the sale contract with the information to persist
      * @param currencyCode the crypto currency to send to the broker
      * @param cryptoAmount the crypto amount to send to the broker
-     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(CustomerBrokerContractSale saleContract, String currencyCode, long cryptoAmount)
             throws CantInsertRecordException, UnexpectedResultReturnedFromDatabaseException {
         try {
-            if(isContractHashInDatabase(saleContract.getContractId())){
-                System.out.println("The contract "+saleContract+" exists in database");
+            if (isContractHashInDatabase(saleContract.getContractId())) {
+                System.out.println("The contract " + saleContract + " exists in database");
                 return;
             }
             DatabaseTable databaseTable = getDatabaseContractTable();
@@ -650,7 +634,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @param contractHash          the contract Hash/ID
      * @param cryptoTransactionUUID the crypto transaction ID
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -686,7 +669,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @param contractHash              the contract hash
      * @param contractTransactionStatus the new contract status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -720,7 +702,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @param eventId     the event ID
      * @param eventStatus the new event status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -754,7 +735,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @param eventType   the event type code
      * @param eventSource the event source code
-     *
      * @throws CantSaveEventException
      */
     public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
@@ -786,9 +766,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * This method returns the completion date from database.
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return the completion date in millis
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public long getCompletionDateByContractHash(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
@@ -816,7 +794,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @param contractHash   the contract Hash/ID
      * @param completionDate the completion date in millis
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public void setCompletionDateByContractHash(String contractHash, long completionDate) throws UnexpectedResultReturnedFromDatabaseException,
@@ -876,7 +853,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @param record       the record to fill
      * @param contractSale the sale contract where to extract the information
      * @param cryptoAmount the crypto amount to send to the broker
-     *
      * @return the filled database record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record,
@@ -902,7 +878,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @param record                    the database record to fill
      * @param businessTransactionRecord the business transaction record where to extract the information
-     *
      * @return the filled database record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, BusinessTransactionRecord businessTransactionRecord) {
@@ -940,7 +915,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @param paymentCurrency             the currency to pay
      * @param blockchainNetworkType       the Blockchain Network Type
      * @param intraActorReceiverPublicKey the intra actor public key
-     *
      * @return the filled record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record,
@@ -986,7 +960,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * This method check the database record result.
      *
      * @param records list of database records
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private void checkDatabaseRecords(List<DatabaseTableRecord> records) throws UnexpectedResultReturnedFromDatabaseException {
@@ -1009,9 +982,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @param key         String with the search key.
      * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
-     *
      * @return List<BusinessTransactionRecord>
-     *
      * @throws CantGetContractListException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
@@ -1035,7 +1006,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @param key         String with the search key.
      * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
-     *
      * @return list of string values
      */
     private List<String> getStringList(String key, String keyColumn, String valueColumn) throws CantGetContractListException {
@@ -1069,9 +1039,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @param key         String with the search key.
      * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
-     *
      * @return the string value
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private String getValue(String key, String keyColumn, String valueColumn) throws UnexpectedResultReturnedFromDatabaseException {

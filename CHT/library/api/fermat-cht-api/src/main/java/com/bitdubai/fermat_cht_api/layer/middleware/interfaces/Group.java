@@ -10,9 +10,11 @@ import java.util.UUID;
 public interface Group {
     /**
      * Returns the group id that representing the id of the group to which the user belongs
+     *
      * @return groupId
      */
     UUID getGroupId();
+
     /**
      * The method <code>getNameGroup</code> gives us the public key of the represented a Actor
      *

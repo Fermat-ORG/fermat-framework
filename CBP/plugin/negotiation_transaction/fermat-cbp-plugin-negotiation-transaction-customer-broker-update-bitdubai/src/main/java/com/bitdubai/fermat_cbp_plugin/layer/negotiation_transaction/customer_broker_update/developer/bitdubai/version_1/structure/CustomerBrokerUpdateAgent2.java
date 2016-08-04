@@ -55,7 +55,6 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
 
 /**
  * Created by Yordin Alayn on 05.07.16.
- *
  */
 public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
 
@@ -88,27 +87,21 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
     }
 
     @Override
-    protected Runnable agentJob() {
-        return new Runnable() {
-            @Override
-            public void run() {
+    protected void agentJob() {
+        try {
 
-                try {
+            CustomerBrokerUpdateAgent2.this.doTheMainTask();
 
-                    CustomerBrokerUpdateAgent2.this.doTheMainTask();
-
-                } catch (
-                        CantSendCustomerBrokerUpdateNegotiationTransactionException |
-                                CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException |
-                                CantUpdateRecordException e) {
-                    CustomerBrokerUpdateAgent2.this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-            }
-        };
+        } catch (
+                CantSendCustomerBrokerUpdateNegotiationTransactionException |
+                        CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException |
+                        CantUpdateRecordException e) {
+            CustomerBrokerUpdateAgent2.this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
 
     @Override
-    protected void onErrorOccur() {
+    protected void onErrorOccur(Exception e) {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("CustomerBrokerCloseAgent2 Error"));
@@ -133,10 +126,7 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
             if (!negotiationPendingToSubmitList.isEmpty()) {
                 for (CustomerBrokerUpdate negotiationTransaction : negotiationPendingToSubmitList) {
 
-                    System.out.print("\n\n**** 5) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - NEGOTIATION FOR SEND " +
-                            "\n - TransactionId: " + negotiationTransaction.getTransactionId() +
-                            "\n - Status: " + negotiationTransaction.getStatusTransaction() +
-                            " ****\n");
+                    System.out.print("\n\n**** 5) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - NEGOTIATION FOR SEND " + "\n - TransactionId: " + negotiationTransaction.getTransactionId() + "\n - Status: " + negotiationTransaction.getStatusTransaction() + " ****\n");
 
                     negotiationXML = negotiationTransaction.getNegotiationXML();
                     negotiationType = negotiationTransaction.getNegotiationType();
@@ -145,8 +135,7 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
                     switch (negotiationType) {
                         case PURCHASE:
                             purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
-                            System.out.print("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n" +
-                                    "\n - Status :" + purchaseNegotiation.getStatus().getCode());
+                            System.out.print("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n" + "\n - Status :" + purchaseNegotiation.getStatus().getCode());
                             //SEND NEGOTIATION TO BROKER
                             negotiationTransmissionManager.sendNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
 
@@ -154,8 +143,7 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
 
                         case SALE:
                             saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
-                            System.out.print("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - SALE NEGOTIATION SEND negotiationId(XML): " + saleNegotiation.getNegotiationId() + " ****\n" +
-                                    "\n - Status :" + saleNegotiation.getStatus().getCode());
+                            System.out.print("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - SALE NEGOTIATION SEND negotiationId(XML): " + saleNegotiation.getNegotiationId() + " ****\n" + "\n - Status :" + saleNegotiation.getStatus().getCode());
                             //SEND NEGOTIATION TO CUSTOMER
                             negotiationTransmissionManager.sendNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
 
@@ -267,13 +255,13 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
 
             //EVENT - RECEIVE NEGOTIATION
             if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE.getCode())) {
-
                 List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                 for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                     negotiationTransmission = record.getInformation();
 
-                    if (negotiationTransmission.getNegotiationTransactionType().getCode().equals(NegotiationTransactionType.CUSTOMER_BROKER_UPDATE.getCode())) {
+                    final NegotiationTransactionType negotiationTransactionType = negotiationTransmission.getNegotiationTransactionType();
+                    if (negotiationTransactionType == NegotiationTransactionType.CUSTOMER_BROKER_UPDATE) {
 
                         negotiationXML = negotiationTransmission.getNegotiationXML();
                         transmissionId = negotiationTransmission.getTransmissionId();

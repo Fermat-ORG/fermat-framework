@@ -37,7 +37,7 @@ public class ConstructionTest {
     String originTransactionId = new String();
 
     @Test
-    public void Construction_ValidParameters_NewObjectCreated(){
+    public void Construction_ValidParameters_NewObjectCreated() {
 
         CashMoneyRestockTransactionImpl cashMoneyRestockTransaction = new CashMoneyRestockTransactionImpl(
                 this.transactionId,

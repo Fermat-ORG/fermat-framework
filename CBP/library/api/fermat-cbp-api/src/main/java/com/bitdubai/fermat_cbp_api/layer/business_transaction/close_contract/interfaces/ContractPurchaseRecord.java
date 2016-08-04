@@ -49,10 +49,16 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase, S
         return this.status;
     }
 
-    public Collection<ContractClause> getContractClause() {return clause; }
+    public Collection<ContractClause> getContractClause() {
+        return clause;
+    }
 
-    public Boolean getNearExpirationDatetime() { return this.nearExpirationDatetime; }
+    public Boolean getNearExpirationDatetime() {
+        return this.nearExpirationDatetime;
+    }
 
-    public String getCancelReason() { return this.cancelReason; }
+    public String getCancelReason() {
+        return this.cancelReason;
+    }
 
 }

@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.sub_app.chat_community.R;
@@ -20,8 +19,7 @@ import java.util.List;
  * @version 1.0
  */
 public class NotificationAdapter
-        extends FermatAdapter<ChatActorCommunityInformation, NotificationHolder>
-         {
+        extends FermatAdapter<ChatActorCommunityInformation, NotificationHolder> {
 
     public NotificationAdapter(Context context, List<ChatActorCommunityInformation> lst) {
         super(context, lst);

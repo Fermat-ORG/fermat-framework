@@ -5,19 +5,12 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
-import org.bitcoin.protocols.payments.Protos;
-
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
 
 /**
  * View Holder for the {@link com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerExchangeRatesAdapter}
@@ -28,16 +21,15 @@ import java.util.Locale;
  */
 public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
 
-    private NumberFormat numberFormat=DecimalFormat.getInstance();
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
 
     private final Resources res;
 
     public FermatTextView exchangeRateItem;
 
     public BrokerExchangeRatesViewHolder(View itemView) {
-        super(itemView);
+        super(itemView, 0);
         res = itemView.getResources();
-
 
 
         exchangeRateItem = (FermatTextView) itemView.findViewById(R.id.ccw_broker_exchange_rate_item);
@@ -46,57 +38,29 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
     public void bind(MerchandiseExchangeRate data) {
 
 
-
-        String exchangeRate = fixFormat(String.valueOf(data.getExchangeRate()));
+        String exchangeRate = fixFormat(data.getExchangeRate());
         String merchandiseCurrency = data.getMerchandiseCurrency().getCode();
         String paymentCurrency = data.getPaymentCurrency().getCode();
-
-
-        //Verificar si el precio del quote es extremadamente pequeno e invertir el quote
-        //Si el precio es 0, no hacer nada pues dara infinito...
-        //TODO: Revisar este hack (abicelis)
-        //change lostwood
-/*        if(data.getExchangeRate() < 0.5 && data.getExchangeRate() > 0)
-        {
-            exchangeRate = formatter.format(1/data.getExchangeRate());
-            merchandiseCurrency = data.getPaymentCurrency().getCode();
-            paymentCurrency = data.getMerchandiseCurrency().getCode();
-        }*/
 
         String text = res.getString(R.string.ccw_broker_exchange_rate_for_selling_item, merchandiseCurrency, exchangeRate, paymentCurrency);
         exchangeRateItem.setText(text);
     }
 
 
-    private String fixFormat(String value){
+    private String fixFormat(Double value) {
 
-        try {
-            if(compareLessThan1(value)){
+
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
-            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "0";
-        }
+            return numberFormat.format(new BigDecimal(value));
 
     }
 
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
-        try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return lessThan1;
+    private Boolean compareLessThan1(Double value) {
+        return BigDecimal.valueOf(value).compareTo(BigDecimal.ONE) == -1;
     }
 
 }

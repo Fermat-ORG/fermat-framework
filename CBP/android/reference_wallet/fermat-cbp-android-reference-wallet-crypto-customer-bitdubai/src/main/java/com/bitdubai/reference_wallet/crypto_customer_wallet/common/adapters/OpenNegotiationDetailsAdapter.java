@@ -14,7 +14,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.AmountToBuyViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
@@ -49,7 +48,6 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapter<ClauseInformati
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private OpenNegotiationDetailsFragment footerListener;
     private ClauseViewHolder.Listener clauseListener;
-    private List<IndexInfoSummary> marketRateList;
 
     private boolean haveNote;
 
@@ -102,9 +100,7 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapter<ClauseInformati
                 return new SingleChoiceViewHolder(itemView);
 
             case TYPE_ITEM_EXCHANGE_RATE:
-                final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
-                exchangeRateViewHolder.setMarketRateList(marketRateList);
-                return exchangeRateViewHolder;
+                return new ExchangeRateViewHolder(itemView);
 
             case TYPE_ITEM_AMOUNT_TO_BUY:
                 return new AmountToBuyViewHolder(itemView);
@@ -118,7 +114,7 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapter<ClauseInformati
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView);
                 footerViewHolder.setListener(footerListener);
 
-                if(negotiationInformation.getStatus() == NegotiationStatus.SENT_TO_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_BROKER  || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_CLOSING){
+                if (negotiationInformation.getStatus() == NegotiationStatus.SENT_TO_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_CLOSING) {
                     footerViewHolder.HideButtons();
                 }
 
@@ -212,7 +208,7 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapter<ClauseInformati
         clauseViewHolder.getConfirmButton().setVisibility(View.VISIBLE);
         clauseViewHolder.setListener(clauseListener);
 
-        if(negotiationInformation.getStatus() == NegotiationStatus.SENT_TO_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_BROKER  || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_CLOSING){
+        if (negotiationInformation.getStatus() == NegotiationStatus.SENT_TO_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_CLOSING) {
             clauseViewHolder.getConfirmButton().setVisibility(View.INVISIBLE);
         }
 
@@ -279,10 +275,6 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapter<ClauseInformati
 
     public void setClauseListener(ClauseViewHolder.Listener clauseListener) {
         this.clauseListener = clauseListener;
-    }
-
-    public void setMarketRateList(List<IndexInfoSummary> marketRateList) {
-        this.marketRateList = marketRateList;
     }
 
     private List<ClauseInformation> buildListOfItems() {

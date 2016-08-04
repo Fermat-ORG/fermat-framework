@@ -8,7 +8,6 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -19,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class IsPendingToReadTest {
 
     @Test
-    public void isPendingToRead() throws Exception{
+    public void isPendingToRead() throws Exception {
 
         BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class, Mockito.RETURNS_DEEP_STUBS);
         when(businessTransactionMetadataRecord.isPendingToRead()).thenReturn(true).thenCallRealMethod();

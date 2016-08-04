@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7f7f7">
+
+    <RelativeLayout
+        android:id="@+id/cbp_customer_image_background"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/picture_frame"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/crypto_customer_image"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="#00000000"
+            android:contentDescription="ignore"
+            android:src="@drawable/default_image" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/textViewCbpTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cbp_customer_image_background"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:fontFamily="h"
+        android:text="@string/crypto_customer_username"
+        android:textColor="#0f74a7" />
+    <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+
+    <EditText
+        android:id="@+id/crypto_customer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewCbpTitle"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/crypto_customer_hint"
+        android:inputType="textPersonName"
+        android:maxLength="25"
+        android:textColor="#808080"
+        android:textColorHint="#B2B2B2" />
+
+    <TextView
+        android:id="@+id/statusView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/crypto_customer_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/crypto_customer_status"
+        android:textColor="#0f74a7"
+        android:visibility="invisible" />
+
+    <EditText
+        android:id="@+id/crypto_customer_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/statusView"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:foregroundTint="#808080"
+        android:gravity="center"
+        android:hint="@string/crypto_customer_status"
+        android:inputType="textPersonName"
+        android:textColor="#808080"
+        android:textColorHint="#808080"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:id="@+id/cbp_customer_button"
+        android:layout_width="188dp"
+        android:layout_height="38dp"
+        android:layout_alignEnd="@+id/crypto_customer_status"
+        android:layout_alignLeft="@+id/crypto_customer_status"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/crypto_customer_status"
+        android:layout_alignStart="@+id/crypto_customer_status"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:background="#e4007e"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/cc_check_cion" />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/placeholdImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/statusView"
+        android:layout_alignRight="@+id/statusView"
+        android:layout_alignTop="@+id/cbp_customer_image_background"
+        android:visibility="gone" />
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/crypto_customer_name_text_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="-14dp"
+        android:gravity="right"
+        android:text="@string/crypto_customer_name_text_count_text"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:visibility="gone" />
+</RelativeLayout>

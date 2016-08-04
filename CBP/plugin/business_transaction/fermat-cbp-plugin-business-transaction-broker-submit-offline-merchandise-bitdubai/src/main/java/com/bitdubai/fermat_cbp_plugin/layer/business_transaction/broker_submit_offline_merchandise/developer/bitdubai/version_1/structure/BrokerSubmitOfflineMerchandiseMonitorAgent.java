@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -79,7 +80,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_o
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -131,7 +131,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
             CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
             CashMoneyDestockManager cashMoneyDestockManager,
             BankMoneyDestockManager bankMoneyDestockManager,
-            CryptoBrokerWalletManager cryptoBrokerWalletManager,CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager) {
+            CryptoBrokerWalletManager cryptoBrokerWalletManager, CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager) {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginRoot = pluginRoot;
@@ -144,7 +144,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
         this.bankMoneyDestockManager = bankMoneyDestockManager;
         this.cashMoneyDestockManager = cashMoneyDestockManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
-        this.customerBrokerPurchaseNegotiationManager=customerBrokerPurchaseNegotiationManager;
+        this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
     }
 
     @Override
@@ -411,17 +411,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
             final String accountNumber = getAccountNumber(destockRecord.getCbpWalletPublicKey(), destockRecord.getFiatCurrency());
             destockRecord.setBankAccount(accountNumber);
 
-            System.out.println("TEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeBankDeStock():" +
-                    "\n - deStockRecord.getPublicKeyActor(): " + destockRecord.getPublicKeyActor() +
-                    "\n - deStockRecord.getFiatCurrency(): " + destockRecord.getFiatCurrency() +
-                    "\n - deStockRecord.getCbpWalletPublicKey(): " + destockRecord.getCbpWalletPublicKey() +
-                    "\n - deStockRecord.getBankWalletPublicKey(): " + destockRecord.getBankWalletPublicKey() +
-                    "\n - deStockRecord.getBankAccount(): " + destockRecord.getBankAccount() +
-                    "\n - deStockRecord.getAmount(): " + destockRecord.getAmount() +
-                    "\n - deStockRecord.getMemo(): " + destockRecord.getMemo() +
-                    "\n - deStockRecord.getPriceReference(): " + destockRecord.getPriceReference() +
-                    "\n - deStockRecord.getOriginTransaction(): " + destockRecord.getOriginTransaction() +
-                    "\n - pendingToDeStockTransaction.getContractHash(): " + pendingToDeStockTransaction.getContractHash());
+            System.out.println("TEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeBankDeStock():" + "\n - deStockRecord.getPublicKeyActor(): " + destockRecord.getPublicKeyActor() + "\n - deStockRecord.getFiatCurrency(): " + destockRecord.getFiatCurrency() + "\n - deStockRecord.getCbpWalletPublicKey(): " + destockRecord.getCbpWalletPublicKey() + "\n - deStockRecord.getBankWalletPublicKey(): " + destockRecord.getBankWalletPublicKey() + "\n - deStockRecord.getBankAccount(): " + destockRecord.getBankAccount() + "\n - deStockRecord.getAmount(): " + destockRecord.getAmount() + "\n - deStockRecord.getMemo(): " + destockRecord.getMemo() + "\n - deStockRecord.getPriceReference(): " + destockRecord.getPriceReference() + "\n - deStockRecord.getOriginTransaction(): " + destockRecord.getOriginTransaction() + "\n - pendingToDeStockTransaction.getContractHash(): " + pendingToDeStockTransaction.getContractHash());
 
             bankMoneyDestockManager.createTransactionDestock(
                     destockRecord.getPublicKeyActor(),
@@ -450,17 +440,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
             final BigDecimal amount = getAmount(pendingToDeStockTransaction.getContractHash());
             destockRecord.setAmount(amount);
 
-            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeCashDeStock():" +
-                    "\n - destockRecord.getPublicKeyActor(): " + destockRecord.getPublicKeyActor() +
-                    "\n - destockRecord.getFiatCurrency(): " + destockRecord.getFiatCurrency() +
-                    "\n - destockRecord.getCbpWalletPublicKey(): " + destockRecord.getCbpWalletPublicKey() +
-                    "\n - destockRecord.getBankWalletPublicKey(): " + destockRecord.getCshWalletPublicKey() +
-                    "\n - destockRecord.getCashReference(): " + destockRecord.getCashReference() +
-                    "\n - destockRecord.getAmount(): " + destockRecord.getAmount() +
-                    "\n - destockRecord.getMemo(): " + destockRecord.getMemo() +
-                    "\n - destockRecord.getPriceReference(): " + destockRecord.getPriceReference() +
-                    "\n - destockRecord.getOriginTransaction(): " + destockRecord.getOriginTransaction() +
-                    "\n - pendingToDeStockTransaction.getContractHash(): " + pendingToDeStockTransaction.getContractHash());
+            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeCashDeStock():" + "\n - destockRecord.getPublicKeyActor(): " + destockRecord.getPublicKeyActor() + "\n - destockRecord.getFiatCurrency(): " + destockRecord.getFiatCurrency() + "\n - destockRecord.getCbpWalletPublicKey(): " + destockRecord.getCbpWalletPublicKey() + "\n - destockRecord.getBankWalletPublicKey(): " + destockRecord.getCshWalletPublicKey() + "\n - destockRecord.getCashReference(): " + destockRecord.getCashReference() + "\n - destockRecord.getAmount(): " + destockRecord.getAmount() + "\n - destockRecord.getMemo(): " + destockRecord.getMemo() + "\n - destockRecord.getPriceReference(): " + destockRecord.getPriceReference() + "\n - destockRecord.getOriginTransaction(): " + destockRecord.getOriginTransaction() + "\n - pendingToDeStockTransaction.getContractHash(): " + pendingToDeStockTransaction.getContractHash());
 
             cashMoneyDestockManager.createTransactionDestock(
                     destockRecord.getPublicKeyActor(),
@@ -485,11 +465,11 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                 final CryptoBrokerWalletSetting cryptoBrokerWalletSetting = cryptoBrokerWallet.getCryptoWalletSetting();
                 List<CryptoBrokerWalletAssociatedSetting> associatedWallets = cryptoBrokerWalletSetting.getCryptoBrokerWalletAssociatedSettings();
 
-                for(CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets){
+                for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
                     Platforms platform = associatedWallet.getPlatform();
                     Currency currency = associatedWallet.getMerchandise();
 
-                    if(platform == Platforms.BANKING_PLATFORM && currency == merchandiseCurrency)
+                    if (platform == Platforms.BANKING_PLATFORM && currency == merchandiseCurrency)
                         return associatedWallet.getBankAccount();
                 }
 
@@ -550,9 +530,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
          * This method parse a String object to a long object
          *
          * @param stringValue
-         *
          * @return
-         *
          * @throws InvalidParameterException
          */
         public double parseToDouble(String stringValue) throws InvalidParameterException {
@@ -560,7 +538,9 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                 throw new InvalidParameterException("Cannot parse a null string value to long");
             } else {
                 try {
-                    return NumberFormat.getInstance().parse(stringValue).doubleValue();
+                  //  return NumberFormat.getInstance().parse(stringValue).doubleValue();
+                    System.out.println("LOSTOOW_BrokerSubmitOfflineMerchandiseMonitorAgent_PARSE:"+stringValue);
+                    return Double.valueOf(stringValue);
                 } catch (Exception exception) {
                     throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
                             "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
@@ -617,7 +597,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
 
                             Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
                             String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.BROKER_PAYMENT_METHOD);
-                            if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
+                            if (!MoneyType.CRYPTO.getCode().equals(clauseValue)) {
                                 brokerSubmitOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
                                 customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
                                 Date date = new Date();

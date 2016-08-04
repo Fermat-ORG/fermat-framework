@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -42,8 +42,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantCreateNewCryptoBrokerWalletException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -70,16 +68,17 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
     private CryptoBrokerWalletDatabaseDao cryptoBrokerWalletDatabaseDao;
     private CurrencyExchangeProviderFilterManager providerFilter;
     private Broadcaster broadcaster;
+
     /**
      * Constructor
      */
-    public CryptoBrokerWalletImpl(CryptoBrokerWalletPluginRoot pluginRoot, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, CurrencyExchangeProviderFilterManager providerFilter,Broadcaster broadcaster) {
+    public CryptoBrokerWalletImpl(CryptoBrokerWalletPluginRoot pluginRoot, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, CurrencyExchangeProviderFilterManager providerFilter, Broadcaster broadcaster) {
         this.pluginRoot = pluginRoot;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.providerFilter = providerFilter;
-        this.broadcaster=broadcaster;
+        this.broadcaster = broadcaster;
     }
 
     /**
@@ -90,7 +89,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
      */
     @Override
     public StockBalance getStockBalance() throws CantGetStockCryptoBrokerWalletException {
-        return new StockBalanceImpl(database, pluginId, pluginFileSystem, pluginRoot,broadcaster);
+        return new StockBalanceImpl(database, pluginId, pluginFileSystem, pluginRoot, broadcaster);
     }
 
     /**

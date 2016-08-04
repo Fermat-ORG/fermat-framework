@@ -11,16 +11,19 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoB
 public interface CryptoBrokerWalletManager extends FermatManager {
     /**
      * This method create the wallet Crypto Broker
+     *
      * @param walletPublicKey
      * @return
-     * @exception CantCreateCryptoBrokerWalletException
+     * @throws CantCreateCryptoBrokerWalletException
      */
     void createCryptoBrokerWallet(String walletPublicKey) throws com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCreateCryptoBrokerWalletException;
+
     /**
      * This method load the wallet Crypto Broker
+     *
      * @param walletPublicKey
      * @return CryptoBrokerWallet
-     * @exception CryptoBrokerWalletNotFoundException
+     * @throws CryptoBrokerWalletNotFoundException
      */
     CryptoBrokerWallet loadCryptoBrokerWallet(String walletPublicKey) throws CryptoBrokerWalletNotFoundException;
 }

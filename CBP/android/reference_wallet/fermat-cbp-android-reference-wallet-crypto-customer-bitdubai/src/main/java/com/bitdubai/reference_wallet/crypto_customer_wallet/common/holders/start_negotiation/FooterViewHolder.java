@@ -54,9 +54,4 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
         void onSendButtonClicked();
     }
 
-    public void HideButtonsWalletUser(){
-        addNoteButton.setVisibility(View.GONE);
-        sendButton.setVisibility(View.GONE);
-        addWarningWalletUser.setVisibility(View.VISIBLE);
-    }
 }

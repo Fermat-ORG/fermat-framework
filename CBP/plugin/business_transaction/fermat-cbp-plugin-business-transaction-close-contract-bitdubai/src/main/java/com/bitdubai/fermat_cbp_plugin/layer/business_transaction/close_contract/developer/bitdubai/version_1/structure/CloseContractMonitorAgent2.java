@@ -78,9 +78,9 @@ public class CloseContractMonitorAgent2
              */
             List<String> pendingEventsIdList = closeContractBusinessTransactionDao.getPendingEvents();
             for (String eventId : pendingEventsIdList) {
-                try{
+                try {
                     checkPendingEvent(eventId);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -107,6 +107,13 @@ public class CloseContractMonitorAgent2
                 for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("CLOSE_CONTRACT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.CLOSE_CONTRACT)
+                        continue;
+
+                    System.out.println("CLOSE_CONTRACT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     try {
                         contractType = closeContractBusinessTransactionDao.getContractType(contractHash);
@@ -160,6 +167,13 @@ public class CloseContractMonitorAgent2
                 for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("CLOSE_CONTRACT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.CLOSE_CONTRACT)
+                        continue;
+
+                    System.out.println("CLOSE_CONTRACT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     try {
                         contractTransactionStatus = closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);

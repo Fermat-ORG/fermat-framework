@@ -45,7 +45,9 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
 /**
  * Created by nelson on 22/12/15.
  */
-public class SetttingsStockManagementFragment extends FermatWalletListFragment<CryptoBrokerWalletAssociatedSetting,ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>,ResourceProviderManager> implements FermatListItemListeners<CryptoBrokerWalletAssociatedSetting>, DialogInterface.OnDismissListener, CBPBroadcasterConstants {
+public class SetttingsStockManagementFragment extends FermatWalletListFragment<CryptoBrokerWalletAssociatedSetting,
+        ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager> implements
+        FermatListItemListeners<CryptoBrokerWalletAssociatedSetting>, DialogInterface.OnDismissListener, CBPBroadcasterConstants {
 
     // Constants
     private static final String TAG = "SettingsStockManagement";
@@ -68,7 +70,9 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     private ErrorManager errorManager;
 
 
-    public static SetttingsStockManagementFragment newInstance() { return new SetttingsStockManagementFragment(); }
+    public static SetttingsStockManagementFragment newInstance() {
+        return new SetttingsStockManagementFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,8 +107,8 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             }
         }
 
-        for(CryptoBrokerWalletAssociatedSetting x : associatedSettings) {
-            if(!merchandises.contains(x.getMerchandise())) {
+        for (CryptoBrokerWalletAssociatedSetting x : associatedSettings) {
+            if (!merchandises.contains(x.getMerchandise())) {
                 merchandises.add(x.getMerchandise());
             }
         }
@@ -140,10 +144,12 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { }
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
         spreadSeekBar.setProgress(spreadValue);
 
@@ -157,8 +163,8 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             }
         });
 
-        merchandisesAdapter = new SettingsStockManagementMerchandisesAdapter(getActivity(), merchandises, moduleManager);
-        //merchandisesAdapter.setFermatListEventListener(this);
+        merchandisesAdapter = new SettingsStockManagementMerchandisesAdapter(getActivity(), associatedSettings, moduleManager);
+        merchandisesAdapter.setFermatListEventListener(this);
 
         merchandisesRecyclerView = (RecyclerView) layout.findViewById(R.id.cbw_settings_current_merchandises);
         merchandisesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -224,21 +230,21 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     public void onItemClickListener(CryptoBrokerWalletAssociatedSetting data, int position) {
 
         //Launch Restock/Destock dialog
-        final CreateRestockDestockFragmentDialog dialog = new CreateRestockDestockFragmentDialog(getActivity(), (ReferenceAppFermatSession) appSession, data);
+        final CreateRestockDestockFragmentDialog dialog = new CreateRestockDestockFragmentDialog(getActivity(), appSession, data);
         dialog.setOnDismissListener(this);
         dialog.show();
     }
 
     @Override
-    public void onLongItemClickListener(CryptoBrokerWalletAssociatedSetting data, int position) {}
+    public void onLongItemClickListener(CryptoBrokerWalletAssociatedSetting data, int position) {
+    }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
 
         //Show progressbar on restock/destock action
         Object data = appSession.getData(CreateRestockDestockFragmentDialog.TRANSACTION_APPLIED);
-        if(data != null)
-        {
+        if (data != null) {
             appSession.removeData(CreateRestockDestockFragmentDialog.TRANSACTION_APPLIED);
             processingProgressBar.setVisibility(View.VISIBLE);
         }
@@ -281,7 +287,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
                 }
 
                 if (merchandisesAdapter != null) {
-                    merchandisesAdapter.changeDataSet(merchandises);
+                    merchandisesAdapter.changeDataSet(associatedSettings);
 
                     //This line is a hack, needed (don't know why) so that the merchandises get refreshed.
                     merchandisesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));

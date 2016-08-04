@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -38,8 +38,12 @@ public class CryptoBrokerImageCropperFragment extends AbstractFermatFragment<Ref
     Bitmap originalImage;
     Bitmap croppedImage;
 
-    public CryptoBrokerImageCropperFragment() {}
-    public static CryptoBrokerImageCropperFragment newInstance() {return new CryptoBrokerImageCropperFragment();}
+    public CryptoBrokerImageCropperFragment() {
+    }
+
+    public static CryptoBrokerImageCropperFragment newInstance() {
+        return new CryptoBrokerImageCropperFragment();
+    }
 
 
     @Override
@@ -65,9 +69,9 @@ public class CryptoBrokerImageCropperFragment extends AbstractFermatFragment<Ref
         cropImageView.setImageBitmap(originalImage);
         cropImageView.setGuidelines(2);
 
-        Button cropButton = (Button) layout.findViewById(R.id.cbi_crop_button);
-        Button rotateButton = (Button) layout.findViewById(R.id.cbi_rotate_button);
-        Button cancelButton = (Button) layout.findViewById(R.id.cbi_cancel_button);
+        ImageButton cropButton = (ImageButton) layout.findViewById(R.id.cbi_crop_button);
+        ImageButton rotateButton = (ImageButton) layout.findViewById(R.id.cbi_rotate_button);
+        ImageButton cancelButton = (ImageButton) layout.findViewById(R.id.cbi_cancel_button);
 
         cropButton.setOnClickListener(this);
         rotateButton.setOnClickListener(this);
@@ -75,7 +79,6 @@ public class CryptoBrokerImageCropperFragment extends AbstractFermatFragment<Ref
 
         return layout;
     }
-
 
 
     @Override
@@ -87,7 +90,7 @@ public class CryptoBrokerImageCropperFragment extends AbstractFermatFragment<Ref
             //Crop image
             croppedImage = cropImageView.getCroppedImage();
 
-            if(croppedImage.getHeight() >= 80) {
+            if (croppedImage.getHeight() >= 80) {
 
 
                 //Scale it to default size (IMAGE_WIDTH x IMAGE_HEIGHT)
@@ -101,8 +104,7 @@ public class CryptoBrokerImageCropperFragment extends AbstractFermatFragment<Ref
 
                 goBackToCallerActivity();
 
-            }
-            else
+            } else
                 Toast.makeText(getActivity(), "Cropped image is too small", Toast.LENGTH_SHORT).show();
 
         }
@@ -110,18 +112,22 @@ public class CryptoBrokerImageCropperFragment extends AbstractFermatFragment<Ref
         if (i == R.id.cbi_rotate_button)
             cropImageView.rotateImage(90);
 
-        if( i == R.id.cbi_cancel_button)
+        if (i == R.id.cbi_cancel_button)
             goBackToCallerActivity();
 
 
     }
 
-    private void goBackToCallerActivity()
-    {
-        if(backActivity == Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY)
+    private void goBackToCallerActivity() {
+        /*if (backActivity == Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY)
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY, appSession.getAppPublicKey());
-        else if(backActivity == Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY)
+        else if (backActivity == Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY)
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY, appSession.getAppPublicKey());
+        else
+            Toast.makeText(getActivity(), "Error! Wrong back activity!", Toast.LENGTH_SHORT).show();*/
+        if (backActivity == Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY)
+            changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY, appSession.getAppPublicKey());
+
         else
             Toast.makeText(getActivity(), "Error! Wrong back activity!", Toast.LENGTH_SHORT).show();
 

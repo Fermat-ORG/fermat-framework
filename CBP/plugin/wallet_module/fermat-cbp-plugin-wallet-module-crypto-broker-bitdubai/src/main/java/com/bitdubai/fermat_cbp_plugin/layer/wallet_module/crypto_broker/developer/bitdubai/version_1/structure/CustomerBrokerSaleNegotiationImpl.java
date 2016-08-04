@@ -195,11 +195,20 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
 
     public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo) {
 
-        dataHasChanged = dataHasChanged || !negotiationInfo.getCancelReason().equals(cancelReason);
-        cancelReason = negotiationInfo.getCancelReason();
+        final String changedCancelReason = negotiationInfo.getCancelReason();
 
-        dataHasChanged = dataHasChanged || !negotiationInfo.getMemo().equals(memo);
-        memo = negotiationInfo.getMemo();
+        dataHasChanged = (cancelReason != null && changedCancelReason != null) && (dataHasChanged || !changedCancelReason.equals(cancelReason));
+        dataHasChanged = dataHasChanged || (cancelReason == null && changedCancelReason != null);
+        dataHasChanged = dataHasChanged || (cancelReason != null && changedCancelReason == null);
+        cancelReason = changedCancelReason;
+
+
+        final String changedMemo = negotiationInfo.getMemo();
+        dataHasChanged = (memo != null && changedMemo != null) && (dataHasChanged || !changedMemo.equals(this.memo));
+        dataHasChanged = dataHasChanged || (memo == null && changedMemo != null);
+        dataHasChanged = dataHasChanged || (memo != null && changedMemo == null);
+        this.memo = changedMemo;
+
 
         Collection<ClauseInformation> values = negotiationInfo.getClauses().values();
         dataHasChanged = dataHasChanged || (clauses.size() != values.size());
@@ -210,7 +219,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
             clauses.add(new ClauseImpl(value, brokerPublicKey));
         }
 
-        this.status = NegotiationStatus.SENT_TO_CUSTOMER;
+        this.status = dataHasChanged ? NegotiationStatus.SENT_TO_CUSTOMER : NegotiationStatus.WAITING_FOR_CLOSING;
     }
 
     public boolean dataHasChanged() {

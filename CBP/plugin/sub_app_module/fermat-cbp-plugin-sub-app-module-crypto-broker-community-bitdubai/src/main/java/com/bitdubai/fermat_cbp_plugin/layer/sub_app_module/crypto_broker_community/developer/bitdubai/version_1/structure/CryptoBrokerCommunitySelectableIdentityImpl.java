@@ -84,13 +84,6 @@ public final class CryptoBrokerCommunitySelectableIdentityImpl implements Crypto
 
     @Override
     public String toString() {
-        return "CryptoBrokerCommunitySelectableIdentityImpl{" +
-                "publicKey='" + publicKey + '\'' +
-                ", actorType=" + actorType +
-                ", alias='" + alias + '\'' +
-                ", image=" + (image != null) +
-                ", accuracy=" + accuracy +
-                ", frequency='" + (frequency != null) +
-                '}';
+        return "CryptoBrokerCommunitySelectableIdentityImpl{" + "publicKey='" + publicKey + '\'' + ", actorType=" + actorType + ", alias='" + alias + '\'' + ", image=" + (image != null) + ", accuracy=" + accuracy + ", frequency='" + (frequency != null) + '}';
     }
 }

@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -252,7 +253,8 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             /**
              * Register Elements after Start
              */
-            handleNetworkServiceRegisteredEvent();
+           // handleNetworkServiceRegisteredEvent();
+
 
         } catch (Exception exception) {
 
@@ -457,26 +459,26 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         /*
          * 1. Listen and handle Network Client Registered Event
          */
-        FermatEventListener networkClientRegistered = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_REGISTERED);
-        networkClientRegistered.setEventHandler(new NetworkClientRegisteredEventHandler(this));
-        eventManager.addListener(networkClientRegistered);
-        listenersAdded.add(networkClientRegistered);
+//        FermatEventListener networkClientRegistered = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_REGISTERED);
+//        networkClientRegistered.setEventHandler(new NetworkClientRegisteredEventHandler(this));
+//        eventManager.addListener(networkClientRegistered);
+//        listenersAdded.add(networkClientRegistered);
 
         /*
          * 2. Listen and handle Network Client Network Service Registered Event
          */
-        FermatEventListener networkServiceProfileRegisteredListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_NETWORK_SERVICE_PROFILE_REGISTERED);
-        networkServiceProfileRegisteredListener.setEventHandler(new NetworkClientNetworkServiceRegisteredEventHandler(this));
-        eventManager.addListener(networkServiceProfileRegisteredListener);
-        listenersAdded.add(networkServiceProfileRegisteredListener);
+//        FermatEventListener networkServiceProfileRegisteredListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_NETWORK_SERVICE_PROFILE_REGISTERED);
+//        networkServiceProfileRegisteredListener.setEventHandler(new NetworkClientNetworkServiceRegisteredEventHandler(this));
+//        eventManager.addListener(networkServiceProfileRegisteredListener);
+//        listenersAdded.add(networkServiceProfileRegisteredListener);
 
         /*
          * 3. Listen and handle Network Client Connection Closed Event
          */
-        FermatEventListener connectionClosedListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_CONNECTION_CLOSED);
-        connectionClosedListener.setEventHandler(new NetworkClientConnectionClosedEventHandler(this));
-        eventManager.addListener(connectionClosedListener);
-        listenersAdded.add(connectionClosedListener);
+//        FermatEventListener connectionClosedListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_CONNECTION_CLOSED);
+//        connectionClosedListener.setEventHandler(new NetworkClientConnectionClosedEventHandler(this));
+//        eventManager.addListener(connectionClosedListener);
+//        listenersAdded.add(connectionClosedListener);
 
         /*
          * 4. Listen and handle Network Client Connection Lost Event
@@ -549,7 +551,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         queriesDao.deleteAll();
     }
 
-    public final void handleNetworkClientRegisteredEvent(final CommunicationChannels communicationChannel) throws FermatException {
+    public final void handleNetworkClientRegisteredEvent() throws FermatException {
 
 //        if(networkServiceRegistrationProcessAgent != null && networkServiceRegistrationProcessAgent.getActive()) {
 //            networkServiceRegistrationProcessAgent.stop();
@@ -697,8 +699,13 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
                     System.out.println("***************** ID DUPLICATED. GENERATING A NEW ONE *****************");
                     networkServiceMessage.setId(UUID.randomUUID());
                 }
-            }catch(CantReadRecordDataBaseException | RecordNotFoundException e){
+            } catch(CantReadRecordDataBaseException e) {
                 e.printStackTrace();
+            } catch(RecordNotFoundException e){
+                /**
+                 * Exception empty because not import if Record not found ¿? need better that
+                 * explication for Jose Vilchez
+                 */
             }
 
             networkServiceConnectionManager.getIncomingMessagesDao().create(networkServiceMessage);
@@ -716,7 +723,8 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         try {
             if (networkServicePendingMessagesSupervisorAgent == null)
                 this.networkServicePendingMessagesSupervisorAgent = new NetworkServicePendingMessagesSupervisorAgent(this);
-
+            if(networkServicePendingMessagesSupervisorAgent.getStatus()!=null && networkServicePendingMessagesSupervisorAgent.getStatus().equals(AgentStatus.STARTED))
+                return;
             this.networkServicePendingMessagesSupervisorAgent.start();
             System.out.println("12345CBP handleNetworkServiceRegisteredEvent starteado");
         } catch (Exception ex) {
@@ -779,7 +787,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     public final void handleNetworkClientConnectionClosedEvent(final CommunicationChannels communicationChannel) {
 
         try {
-
+            this.registered = Boolean.FALSE;
             if(!networkClientManager.getConnection().isRegistered()) {
 
                 try {
@@ -789,7 +797,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
                     System.out.println("Failed to pause the messages supervisor agent - > NS: "+this.getProfile().getNetworkServiceType());
                 }
 
-                this.registered = Boolean.FALSE;
 
                 onNetworkClientConnectionClosed();
 
@@ -1074,8 +1081,11 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         return networkServiceType;
     }
 
-    public void startConnection() throws CantRegisterProfileException {
-        getConnection().registerProfile(getProfile());
+    public synchronized void startConnection() throws FermatException {
+        if (!isRegistered())
+            handleNetworkClientRegisteredEvent();
+        else System.out.println("####################___ALGO__MALO___PASA__#####################");
+//        getConnection().registerProfile(getProfile());
     }
 
 

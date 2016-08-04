@@ -100,28 +100,14 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         lstCryptoWalletTransactionsAvailable = new ArrayList<>();
         mHandler = new Handler();
-        BitcoinWalletSettings bitcoinWalletSettings;
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            if((moduleManager!=null)) {
-                bitcoinWalletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-
-                if (bitcoinWalletSettings != null) {
-
-                    if (bitcoinWalletSettings.getBlockchainNetworkType() == null)
-                        bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                    moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
-
-                }
-
-                if (bitcoinWalletSettings != null) {
-                    if (bitcoinWalletSettings.getBlockchainNetworkType() == null)
-                        bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
-            }
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
             } catch (Exception ex) {
             if (errorManager != null)
@@ -129,18 +115,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
-        //noinspection TryWithIdenticalCatches
-        try {
-            blockchainNetworkType = (moduleManager!=null) ?
-                    moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType() :
-                    BlockchainNetworkType.getDefaultBlockchainNetworkType();
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+
 
         try {
             intraUserLoginIdentity = moduleManager.getSelectedActorIdentity();
@@ -385,7 +361,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                             appSession,
                             null,
                             (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                            moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                            (Boolean)appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED));
             presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
@@ -400,9 +376,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 }
             });
             presentationBitcoinWalletDialog.show();
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

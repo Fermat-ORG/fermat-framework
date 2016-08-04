@@ -13,6 +13,7 @@ import java.io.Serializable;
 public interface CryptoCustomerInformation extends Serializable {
     /**
      * The method <code>getPublicKet</code> returns the public key of the represented crypto customer
+     *
      * @return the public key of the crypto customer
      */
     String getPublicKey();

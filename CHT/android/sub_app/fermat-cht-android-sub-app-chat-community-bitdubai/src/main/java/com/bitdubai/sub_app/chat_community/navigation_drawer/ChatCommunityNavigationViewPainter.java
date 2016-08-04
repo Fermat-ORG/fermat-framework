@@ -14,7 +14,6 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.chat_community.adapters.NavigationAdapter;
 import com.bitdubai.sub_app.chat_community.common.utils.FragmentsCommons;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 
 import java.lang.ref.WeakReference;
 
@@ -24,16 +23,15 @@ import java.lang.ref.WeakReference;
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 13/04/16.
  * @version 1.0
  */
-public class ChatCommunityNavigationViewPainter implements NavigationViewPainter {
+public class ChatCommunityNavigationViewPainter extends NavigationViewPainter {
 
-    private WeakReference<Context> activity;
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> subAppSession;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
 
     public ChatCommunityNavigationViewPainter(Context activity,
-                                         ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> subAppSession,
+                                              ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> subAppSession,
                                               FermatApplicationCaller applicationsHelper) {
-        this.activity = new WeakReference(activity);
+        super(activity);
         this.subAppSession = subAppSession;
         this.applicationsHelper = new WeakReference<>(applicationsHelper);
     }
@@ -42,8 +40,8 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
     public View addNavigationViewHeader() {
         View headerView = null;
         try {
-            headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),subAppSession,
+            headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) getContext()
+                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE), getContext(), subAppSession,
                     applicationsHelper.get());
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,7 +52,7 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
 
     @Override
     public FermatAdapter addNavigationViewAdapter() {
-        return new NavigationAdapter(activity.get(), null);
+        return new NavigationAdapter(getContext(), null);
     }
 
     @Override

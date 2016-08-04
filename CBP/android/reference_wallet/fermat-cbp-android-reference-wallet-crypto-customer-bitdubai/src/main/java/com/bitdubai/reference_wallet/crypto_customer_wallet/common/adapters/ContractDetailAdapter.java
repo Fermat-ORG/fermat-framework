@@ -12,6 +12,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.ContractDetailViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.List;
 
@@ -57,24 +58,22 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
     public void onBindViewHolder(ContractDetailViewHolder holder, int position) {
         int holderType = getItemViewType(position);
 
-        switch (holderType){
+        switch (holderType) {
             case TYPE_BROKER:
-                ContractDetail brokerViewHolder= dataSet.get(position);
+                ContractDetail brokerViewHolder = dataSet.get(position);
                 holder.setWalletModuleManager(this.walletManager);
                 holder.setSession(this.walletSession);
                 holder.setParentFragment(
-                        (ContractDetailActivityFragment) this.walletSession.getData(
-                                "ContractDetailFragment"));
+                        (ContractDetailActivityFragment) this.walletSession.getData(FragmentsCommons.CONTRACT_DETAIL_FRAGMENT));
                 holder.setErrorManager(this.walletSession.getErrorManager());
                 holder.bind(brokerViewHolder);
                 break;
             case TYPE_CUSTOMER:
-                ContractDetail customerHolder= dataSet.get(position);
+                ContractDetail customerHolder = dataSet.get(position);
                 holder.setWalletModuleManager(this.walletManager);
                 holder.setSession(this.walletSession);
                 holder.setParentFragment(
-                        (ContractDetailActivityFragment) this.walletSession.getData(
-                                "ContractDetailFragment"));
+                        (ContractDetailActivityFragment) this.walletSession.getData(FragmentsCommons.CONTRACT_DETAIL_FRAGMENT));
                 holder.setErrorManager(this.walletSession.getErrorManager());
                 holder.bind(customerHolder);
                 break;

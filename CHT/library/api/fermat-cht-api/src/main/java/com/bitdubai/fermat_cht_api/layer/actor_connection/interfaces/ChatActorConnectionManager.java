@@ -7,7 +7,7 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorI
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 05/04/16.
  */
-public interface ChatActorConnectionManager extends ActorConnectionManager<ChatLinkedActorIdentity,ChatActorConnection,ChatActorConnectionSearch>{
+public interface ChatActorConnectionManager extends ActorConnectionManager<ChatLinkedActorIdentity, ChatActorConnection, ChatActorConnectionSearch> {
 
 
 }

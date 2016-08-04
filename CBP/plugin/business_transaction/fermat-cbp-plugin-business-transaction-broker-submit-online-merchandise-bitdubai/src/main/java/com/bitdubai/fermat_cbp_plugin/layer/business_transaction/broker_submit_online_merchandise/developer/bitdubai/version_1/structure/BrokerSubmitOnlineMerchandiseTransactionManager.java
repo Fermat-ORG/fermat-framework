@@ -89,9 +89,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
      * This method returns the crypto address from a CustomerBrokerPurchaseNegotiation
      *
      * @param customerBrokerSaleNegotiation
-     *
      * @return
-     *
      * @throws CantGetCryptoAddressException
      */
     private String getBrokerCryptoAddressString(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantGetCryptoAddressException {
@@ -144,7 +142,6 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
      * This method returns a CustomerBrokerPurchaseNegotiation by negotiationId.
      *
      * @param negotiationId
-     *
      * @return
      */
     private CustomerBrokerSaleNegotiation getCustomerBrokerSaleNegotiation(String negotiationId) throws CantGetListSaleNegotiationsException {

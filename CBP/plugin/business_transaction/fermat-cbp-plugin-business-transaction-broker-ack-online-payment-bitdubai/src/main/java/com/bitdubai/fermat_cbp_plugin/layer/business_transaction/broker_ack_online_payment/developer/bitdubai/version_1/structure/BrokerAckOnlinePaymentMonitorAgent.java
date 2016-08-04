@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_onl
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -63,7 +64,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_onli
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database.BrokerAckOnlinePaymentBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.exceptions.IncomingOnlinePaymentException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -367,23 +367,21 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                 long incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
                 long contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
                 if (incomingCryptoAmount != contractCryptoAmount) {
-                    throw new IncomingOnlinePaymentException("The incoming crypto amount received is " + incomingCryptoAmount +
-                            "\nThe amount excepted in contract " + contractHash + "\nis " + contractCryptoAmount);
+                    throw new IncomingOnlinePaymentException("The incoming crypto amount received is " + incomingCryptoAmount + "\nThe amount excepted in contract " + contractHash + "\nis " + contractCryptoAmount);
                 }
 
                 //TODO probar esto
                 CryptoCurrency incomingCryptoCurrency = incomingMoneyEventWrapper.getCryptoCurrency();
                 CryptoCurrency contractCryptoCurrency = businessTransactionRecord.getCryptoCurrency();
                 if (incomingCryptoCurrency != contractCryptoCurrency) {
-                    throw new IncomingOnlinePaymentException("The incoming crypto currency received is " + incomingCryptoCurrency +
-                            "\nThe crypto currency excepted in contract " + contractHash + "\nis " + contractCryptoCurrency);
+                    throw new IncomingOnlinePaymentException("The incoming crypto currency received is " + incomingCryptoCurrency + "\nThe crypto currency excepted in contract: " + contractHash + "\nis " + contractCryptoCurrency);
+//                    throw new IncomingOnlinePaymentException(String.format("The incoming crypto currency received is %s\nThe crypto currency excepted in contract %s\nis %s", incomingCryptoCurrency, contractHash, contractCryptoCurrency));
                 }
 
                 String receiverActorPublicKey = incomingMoneyEventWrapper.getReceiverPublicKey();
                 String expectedActorPublicKey = businessTransactionRecord.getCustomerPublicKey();
                 if (!receiverActorPublicKey.equals(expectedActorPublicKey)) {
-                    throw new IncomingOnlinePaymentException("The actor public key that receive the money is " + receiverActorPublicKey +
-                            "\nThe broker public key in contract " + contractHash + "\nis " + expectedActorPublicKey);
+                    throw new IncomingOnlinePaymentException("The actor public key that receive the money is " + receiverActorPublicKey + "\nThe broker public key in contract " + contractHash + "\nis " + expectedActorPublicKey);
                 }
 
                 businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION);
@@ -544,7 +542,6 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
          *
          * @param cryptoAmountString the crypto amount in String
          * @param currencyCode       the crypto currency code
-         *
          * @return the crypto amount in satoshi
          */
         private long getCryptoAmount(String cryptoAmountString, String currencyCode) {

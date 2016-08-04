@@ -15,19 +15,21 @@ import java.util.List;
 /**
  * Created by guillermo on 16/02/16.
  */
-public class SettingsStockManagementMerchandisesAdapter extends FermatAdapter<Currency,SettingsStockManagementMerchandisesViewHolder> {
+public class SettingsStockManagementMerchandisesAdapter extends FermatAdapter<CryptoBrokerWalletAssociatedSetting, SettingsStockManagementMerchandisesViewHolder> {
 
     CryptoBrokerWalletModuleManager walletManager;
     SettingsStockManagementMerchandisesViewHolder viewHolder;
+    CryptoBrokerWalletAssociatedSetting dataSetting;
 
-    public SettingsStockManagementMerchandisesAdapter(Context context, List<Currency> dataSet,CryptoBrokerWalletModuleManager walletManager) {
+    public SettingsStockManagementMerchandisesAdapter(Context context, List<CryptoBrokerWalletAssociatedSetting> dataSet, CryptoBrokerWalletModuleManager walletManager) {
         super(context, dataSet);
-        this.walletManager=walletManager;
+        this.walletManager = walletManager;
+//        this.dataSetting = dataSetting.get(dataSetting.size()-1);
     }
 
     @Override
     protected SettingsStockManagementMerchandisesViewHolder createHolder(View itemView, int type) {
-        viewHolder= new SettingsStockManagementMerchandisesViewHolder(itemView,walletManager);
+        viewHolder = new SettingsStockManagementMerchandisesViewHolder(itemView, walletManager);
         return viewHolder;
     }
 
@@ -37,7 +39,7 @@ public class SettingsStockManagementMerchandisesAdapter extends FermatAdapter<Cu
     }
 
     @Override
-    protected void bindHolder(SettingsStockManagementMerchandisesViewHolder holder, Currency data, int position) {
+    protected void bindHolder(SettingsStockManagementMerchandisesViewHolder holder, CryptoBrokerWalletAssociatedSetting data, int position) {
         viewHolder.bind(data);
     }
 }

@@ -25,7 +25,9 @@ public class MessageImpl implements Message {
     private Timestamp messageDate;
     private UUID contactId;
     private long count;
-    public MessageImpl(){}
+
+    public MessageImpl() {
+    }
 
     public MessageImpl(
             UUID chatId,
@@ -33,13 +35,13 @@ public class MessageImpl implements Message {
             MessageStatus messageStatus,
             TypeMessage typeMessage,
             UUID contactId
-    ){
-        messageId=chatMetadata.getMessageId();
+    ) {
+        messageId = chatMetadata.getMessageId();
 //        messageId=UUID.randomUUID();
-        this.chatId=chatId;
-        message=chatMetadata.getMessage();
-        status=messageStatus;
-        type=typeMessage;
+        this.chatId = chatId;
+        message = chatMetadata.getMessage();
+        status = messageStatus;
+        type = typeMessage;
 //        messageDate=new Timestamp(System.currentTimeMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
         Date parsedDate = null;
@@ -49,9 +51,9 @@ public class MessageImpl implements Message {
             e.printStackTrace();
         }
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        messageDate=new Timestamp(
+        messageDate = new Timestamp(
                 timestamp.getTime());
-        this.contactId=contactId;
+        this.contactId = contactId;
     }
 
     @Override
@@ -121,7 +123,7 @@ public class MessageImpl implements Message {
 
     @Override
     public void setContactId(UUID contactId) {
-        this.contactId=contactId;
+        this.contactId = contactId;
     }
 
     @Override
@@ -136,9 +138,10 @@ public class MessageImpl implements Message {
 
     /**
      * This method returns a String in XML format containing all this object information
+     *
      * @return
      */
-    public String toString(){
+    public String toString() {
         return XMLParser.parseObject(this);
     }
 }

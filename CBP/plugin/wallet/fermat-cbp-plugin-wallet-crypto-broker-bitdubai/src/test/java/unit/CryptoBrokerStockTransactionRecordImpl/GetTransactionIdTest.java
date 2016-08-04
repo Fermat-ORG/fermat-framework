@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetTransactionIdTest {
 
     @Test
-    public void getTransactionId(){
+    public void getTransactionId() {
         CryptoBrokerStockTransactionRecordImpl cryptoBrokerStockTransactionRecord = mock(CryptoBrokerStockTransactionRecordImpl.class);
         when(cryptoBrokerStockTransactionRecord.getTransactionId()).thenReturn(UUID.randomUUID());
         assertThat(cryptoBrokerStockTransactionRecord.getTransactionId()).isNotNull();

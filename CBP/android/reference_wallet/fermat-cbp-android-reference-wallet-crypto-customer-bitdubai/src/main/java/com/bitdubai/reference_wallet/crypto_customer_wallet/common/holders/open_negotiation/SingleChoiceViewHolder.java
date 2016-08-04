@@ -15,7 +15,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 /**
- *Created by Yordin Alayn on 22.01.16.
+ * Created by Yordin Alayn on 22.01.16.
  * Based in SingleChoiceViewHolder of Star_negotiation by nelson
  */
 public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnClickListener {
@@ -30,8 +30,8 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
 
         descriptionTextView = (TextView) itemView.findViewById(R.id.ccw_description_text);
         buttonValue = (Button) itemView.findViewById(R.id.ccw_single_choice_value);
-        separatorLineDown= itemView.findViewById(R.id.ccw_line_down);
-        separatorLineUp= itemView.findViewById(R.id.ccw_line_up);
+        separatorLineDown = itemView.findViewById(R.id.ccw_line_down);
+        separatorLineUp = itemView.findViewById(R.id.ccw_line_up);
         buttonValue.setOnClickListener(this);
     }
 

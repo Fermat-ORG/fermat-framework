@@ -51,13 +51,13 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
     /**
      * <p>Platform implementation constructor
      *
-     * @param contextPath Android context path
+     * @param contextPath   Android context path
      * @param directoryName name of the directory where the files are saved
-     * @param fileName name of file
-     * @param privacyLevel level of privacy for the file, if it is public or private
-     * @param lifeSpan lifetime of the file, whether it is permanent or temporary
+     * @param fileName      name of file
+     * @param privacyLevel  level of privacy for the file, if it is public or private
+     * @param lifeSpan      lifetime of the file, whether it is permanent or temporary
      */
-    public AndroidPlatformTextFile(String contextPath, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public AndroidPlatformTextFile(String contextPath, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
         this.contextPath = contextPath;
         this.directoryName = directoryName;
         this.fileName = fileName;
@@ -70,30 +70,29 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
      */
 
     public FileLifeSpan getLifeSpan() {
-		return lifeSpan;
-	}
+        return lifeSpan;
+    }
 
 
-    public String getDirectoryName(){
+    public String getDirectoryName() {
         return directoryName;
     }
 
-    public String getFileName(){
+    public String getFileName() {
         return fileName;
     }
 
-    public FilePrivacy getPrivacyLevel(){
+    public FilePrivacy getPrivacyLevel() {
         return privacyLevel;
     }
 
-	/**
+    /**
      * <p>This method returns the contents of a file in string.
      *
      * @return String file content
      */
     @Override
-    public String getContent()
-    {
+    public String getContent() {
         return this.content;
     }
 
@@ -103,8 +102,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
      * @param content string file content
      */
     @Override
-    public void setContent (String content)
-    {
+    public void setContent(String content) {
         this.content = content;
     }
 
@@ -121,14 +119,14 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
         /**
          *  Evaluate privacyLevel to determine the location of directory - external or internal
          */
-        if(privacyLevel == FilePrivacy.PUBLIC)
+        if (privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
             path = contextPath;
 
 
-        if(!this.directoryName.isEmpty())
-            path +="/"+ this.directoryName;
+        if (!this.directoryName.isEmpty())
+            path += new StringBuilder().append("/").append(this.directoryName).toString();
 
         /**
          * If the directory does not exist, we create it here.
@@ -146,15 +144,15 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
              * if not exist
              */
             /**
-            * Finally I write the content.
-            */
+             * Finally I write the content.
+             */
             OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
             outputStream.write(this.content.getBytes(Charset.forName(CHARSET_NAME)));
             outputStream.close();
         } catch (Exception ex) {
             String message = CantPersistFileException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(ex);
-            String context = "File Path: " + file.getPath();
+            String context = new StringBuilder().append("File Path: ").append(file.getPath()).toString();
             String possibleReason = "Check if we have the appropiate permissions to write on this path";
             throw new CantPersistFileException(message, cause, context, possibleReason);
         }
@@ -162,17 +160,18 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
 
     /**
      * <p>This method reads file content from the media.
+     *
      * @throws CantLoadFileException
      */
     @Override
     public void loadFromMedia() throws CantLoadFileException {
 
-    	BufferedReader bufferedReader = null;
+        BufferedReader bufferedReader = null;
         /**
          *  Evaluate privacyLevel to determine the location of directory - external or internal
          */
         String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
+        if (privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
             path = contextPath;
@@ -181,10 +180,10 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
          * Get the file handle.
          */
 
-        File file = new File(path +"/"+ this.directoryName,this.fileName);
+        File file = new File(new StringBuilder().append(path).append("/").append(this.directoryName).toString(), this.fileName);
 
         try {
-            InputStream inputStream =  new BufferedInputStream(new FileInputStream(file));
+            InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream, CHARSET_NAME);
 
             /**
@@ -205,15 +204,15 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
         } catch (Exception ex) {
             String message = CantLoadFileException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(ex);
-            String context = "File Path: " + file.getPath();
+            String context = new StringBuilder().append("File Path: ").append(file.getPath()).toString();
             String possibleReason = "This problem should be related with the FileInputStream either in the construction or the read operation";
             throw new CantLoadFileException(message, cause, context, possibleReason);
         }
     }
 
     @Override
-    public boolean equals(Object o){
-        if(!(o instanceof AndroidPlatformTextFile))
+    public boolean equals(Object o) {
+        if (!(o instanceof AndroidPlatformTextFile))
             return false;
 
         AndroidPlatformTextFile compare = (AndroidPlatformTextFile) o;
@@ -221,24 +220,23 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int c = 0;
         c += directoryName.hashCode();
         c += fileName.hashCode();
         c += privacyLevel.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
+        if (privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
             path = contextPath;
-        return path +"/"+ this.directoryName + "/" + fileName;
+        return new StringBuilder().append(path).append("/").append(this.directoryName).append("/").append(fileName).toString();
     }
-
 
 
 }

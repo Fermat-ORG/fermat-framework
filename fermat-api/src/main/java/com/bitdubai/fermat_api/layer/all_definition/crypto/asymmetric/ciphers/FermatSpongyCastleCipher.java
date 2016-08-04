@@ -61,6 +61,7 @@ public class FermatSpongyCastleCipher implements FermatCipher {
 
     /**
      * Constructor
+     *
      * @throws NoSuchProviderException
      * @throws NoSuchAlgorithmException
      */
@@ -72,6 +73,7 @@ public class FermatSpongyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#generateKeyPair()
      */
     @Override
@@ -83,6 +85,7 @@ public class FermatSpongyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#readPublicKey(String)
      */
     @Override
@@ -94,6 +97,7 @@ public class FermatSpongyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#readPrivateKey(String)
      */
     @Override
@@ -106,6 +110,7 @@ public class FermatSpongyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#createPublicKeyFromPrivateKey(PrivateKey)
      */
     @Override
@@ -127,10 +132,11 @@ public class FermatSpongyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#encrypt(String, String)
      */
     @Override
-    public String encrypt(String pubKey, String plaintTex) throws Exception{
+    public String encrypt(String pubKey, String plaintTex) throws Exception {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byteArrayOutputStream.reset();
@@ -143,7 +149,7 @@ public class FermatSpongyCastleCipher implements FermatCipher {
 
         int i = 0;
 //        int blockSize = asymmetricBlockCipher.getInputBlockSize();
-        while (i < messageBytes.length){
+        while (i < messageBytes.length) {
 
 //            if (i + blockSize > messageBytes.length) {
 //                blockSize = messageBytes.length - i;
@@ -158,10 +164,11 @@ public class FermatSpongyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#decrypt(String, String)
      */
     @Override
-    public String decrypt(String privateKey, String encryptedTex) throws Exception{
+    public String decrypt(String privateKey, String encryptedTex) throws Exception {
 
         StringBuilder decryptedMsj = new StringBuilder();
 
@@ -189,16 +196,18 @@ public class FermatSpongyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#encode(byte[])
      */
-    public String encode(byte[] data){
+    public String encode(byte[] data) {
 
 //        return Base64.toBase64String(data);
-    return null;
+        return null;
     }
 
     /**
      * (non-javadoc)
+     *
      * @see FermatCipher#decode(String)
      */
     public byte[] decode(String data) throws UnsupportedEncodingException {

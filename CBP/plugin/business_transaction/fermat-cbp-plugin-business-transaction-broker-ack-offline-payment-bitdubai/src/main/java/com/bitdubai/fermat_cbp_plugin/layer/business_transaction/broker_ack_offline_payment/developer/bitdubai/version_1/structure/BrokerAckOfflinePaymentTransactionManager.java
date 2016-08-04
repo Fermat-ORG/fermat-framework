@@ -121,7 +121,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                             contractTransactionStatus = ContractTransactionStatus.PENDING_CREDIT_CASH_WALLET;
                             break;
                         default:
-                            throw new InvalidParameterException(paymentType + " value from MoneyType is not valid in this plugin");
+                            throw new InvalidParameterException(String.valueOf(paymentType) + " value from MoneyType is not valid in this plugin");
                     }
 
                     final FiatCurrency currencyType = getCurrencyToDeliverFromContract(customerBrokerContractSale);
@@ -199,9 +199,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
      * This method returns the currency type from a contract
      *
      * @param customerBrokerContractSale
-     *
      * @return
-     *
      * @throws CantGetListSaleNegotiationsException
      */
     public MoneyType getMoneyTypeFromContract(
@@ -243,9 +241,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
      * This method returns the currency type from a contract
      *
      * @param customerBrokerContractSale
-     *
      * @return
-     *
      * @throws CantGetListSaleNegotiationsException
      */
     public FiatCurrency getCurrencyToDeliverFromContract(CustomerBrokerContractSale customerBrokerContractSale)

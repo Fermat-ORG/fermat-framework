@@ -34,25 +34,25 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Geo
 @PluginInfo(createdBy = "Eleazar Orono", maintainerMail = "franklinmarcano1970@gmail.com", platform = Platforms.CHAT_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CHAT_COMMUNITY_SUP_APP_MODULE)
 public class ChatActorCommunitySubAppModulePluginRoot extends AbstractModule<ChatActorCommunitySettings, ChatActorCommunitySelectableIdentity> {
 
-    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM      , addon  = Addons .PLUGIN_FILE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
     private LocationManager locationManager;
 
-    @NeededPluginReference (platform = Platforms.PLUG_INS_PLATFORM  , layer = Layers.EXTERNAL_API  , plugin  = Plugins .GEOLOCATION)
+    @NeededPluginReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.EXTERNAL_API, plugin = Plugins.GEOLOCATION)
     private GeolocationManager geolocationManager;
 
-    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CHAT_ACTOR_CONNECTION)
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_CONNECTION, plugin = Plugins.CHAT_ACTOR_CONNECTION)
     private ChatActorConnectionManager chatActorConnectionManager;
 
-    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE  )
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE)
     private ChatManager chatActorNetworkServiceManager;
 
-    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY             , plugin = Plugins.CHAT_IDENTITY)
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CHAT_IDENTITY)
     private ChatIdentityManager chatIdentityManager;
 
-private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCommunitySettings();
+    private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCommunitySettings();
     ChatActorCommunityManager fermatManager;
 
     public ChatActorCommunitySubAppModulePluginRoot() {
@@ -67,7 +67,7 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
 
             System.out.println("******* Init Chat Sup App Module Actor Connection ******");
 
-            fermatManager  = new ChatActorCommunityManager(
+            fermatManager = new ChatActorCommunityManager(
                     chatIdentityManager,
                     chatActorConnectionManager,
                     chatActorNetworkServiceManager,
@@ -91,7 +91,7 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
 
     @Override
     public ModuleManager<ChatActorCommunitySettings, ChatActorCommunitySelectableIdentity> getModuleManager() throws CantGetModuleManagerException {
-        if(fermatManager==null){
+        if (fermatManager == null) {
             fermatManager = new ChatActorCommunityManager(
                     chatIdentityManager,
                     chatActorConnectionManager,
@@ -107,7 +107,7 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
         return fermatManager;
     }
 
-    public ChatActorCommunityManager getChatActorCommunityManager(){
+    public ChatActorCommunityManager getChatActorCommunityManager() {
         return fermatManager;
     }
 

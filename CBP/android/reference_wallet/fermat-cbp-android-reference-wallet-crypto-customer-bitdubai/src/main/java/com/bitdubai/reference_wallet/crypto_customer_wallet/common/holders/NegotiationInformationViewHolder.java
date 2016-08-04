@@ -16,6 +16,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Map;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus.SENT_TO_BROKER;
@@ -23,6 +26,7 @@ import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus
 
 /**
  * Created by nelson on 28/10/15.
+ *
  */
 public class NegotiationInformationViewHolder extends ChildViewHolder {
     public final ImageView brokerImage;
@@ -35,6 +39,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
     private final FermatTextView exchangeRateUnit;
     private final Resources res;
     private final View itemView;
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
 
 
     /**
@@ -82,10 +87,11 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         String paymentCurrency = negotiationSummary.get(ClauseType.BROKER_CURRENCY);
         String merchandiseAmount = negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
 
-        exchangeRateUnit.setText(String.format("1 %1$s @ %2$s %3$s", merchandise, exchangeRate, paymentCurrency));
-        sellingText.setText(String.format("Selling %1$s %2$s", merchandiseAmount, merchandise));
+        exchangeRateUnit.setText(res.getString(R.string.ccw_exchange_rate_summary, merchandise, fixFormat(exchangeRate), paymentCurrency));
+        sellingText.setText(res.getString(R.string.ccw_selling_details, fixFormat(merchandiseAmount), merchandise));
     }
 
+    @SuppressWarnings("deprecation")
     private int getStatusBackgroundColor(NegotiationStatus status) {
         if (status == NegotiationStatus.WAITING_FOR_CUSTOMER || status == NegotiationStatus.SENT_TO_CUSTOMER)
             return res.getColor(R.color.waiting_for_customer_list_item_background);
@@ -121,5 +127,16 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
+    }
+
+
+    private String fixFormat(String value) {
+        numberFormat.setMaximumFractionDigits(compareLessThan1(value) ? 8 : 2);
+        return numberFormat.format(new BigDecimal(Double.valueOf(value)));
+    }
+
+    private Boolean compareLessThan1(String value) {
+        Double valueToConvert = Double.valueOf(value);
+        return BigDecimal.valueOf(valueToConvert).compareTo(BigDecimal.ONE) == -1;
     }
 }

@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantPerformTransactionException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T PERFORM THE TRANSACTION";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

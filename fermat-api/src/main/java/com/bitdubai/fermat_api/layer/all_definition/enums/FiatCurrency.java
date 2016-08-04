@@ -16,7 +16,7 @@ public enum FiatCurrency implements Currency {
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     ARGENTINE_PESO("ARS", "Argentine Peso", Country.ARGENTINA),
-    AUSTRALIAN_DOLLAR("AUD","Australian Dollar", Country.AUSTRALIA),
+    AUSTRALIAN_DOLLAR("AUD", "Australian Dollar", Country.AUSTRALIA),
     BRAZILIAN_REAL("BRL", "Brazilian Real", Country.BRAZIL),
     BRITISH_POUND("GBP", "British Pound", Country.GREAT_BRITAIN),
     CANADIAN_DOLLAR("CAD", "Canadian Dollar", Country.CANADA),
@@ -30,7 +30,7 @@ public enum FiatCurrency implements Currency {
     SWISS_FRANC("CHF", "Swiss Franc", Country.SWITZERLAND),
     US_DOLLAR("USD", "US Dollar", Country.UNITED_STATES_OF_AMERICA),
     VENEZUELAN_BOLIVAR("VEF", "Venezuelan Bolivar", Country.VENEZUELA),
-    ;
+    BITCOIN("BTC","Bitcoin",Country.NONE);
 
     private final String code;
     private final String friendlyName;
@@ -43,7 +43,10 @@ public enum FiatCurrency implements Currency {
 
     }
 
-    public Country getCountry() { return this.country; }
+    public Country getCountry() {
+        return this.country;
+    }
+
     public String getFriendlyName() {
         return this.friendlyName;
     }
@@ -57,25 +60,41 @@ public enum FiatCurrency implements Currency {
 
         switch (code) {
 
-            case "ARS": return FiatCurrency.ARGENTINE_PESO;
-            case "AUD": return FiatCurrency.AUSTRALIAN_DOLLAR;
-            case "BRL": return FiatCurrency.BRAZILIAN_REAL;
-            case "GBP": return FiatCurrency.BRITISH_POUND;
-            case "CAD": return FiatCurrency.CANADIAN_DOLLAR;
-            case "CLP": return FiatCurrency.CHILEAN_PESO;
-            case "CNY": return FiatCurrency.CHINESE_YUAN;
-            case "COP": return FiatCurrency.COLOMBIAN_PESO;
-            case "EUR": return FiatCurrency.EURO;
-            case "JPY": return FiatCurrency.JAPANESE_YEN;
-            case "MXN": return FiatCurrency.MEXICAN_PESO;
-            case "NZD": return FiatCurrency.NEW_ZEALAND_DOLLAR;
-            case "CHF": return FiatCurrency.SWISS_FRANC;
-            case "USD": return FiatCurrency.US_DOLLAR;
-            case "VEF": return FiatCurrency.VENEZUELAN_BOLIVAR;
-
+            case "ARS":
+                return FiatCurrency.ARGENTINE_PESO;
+            case "AUD":
+                return FiatCurrency.AUSTRALIAN_DOLLAR;
+            case "BRL":
+                return FiatCurrency.BRAZILIAN_REAL;
+            case "GBP":
+                return FiatCurrency.BRITISH_POUND;
+            case "CAD":
+                return FiatCurrency.CANADIAN_DOLLAR;
+            case "CLP":
+                return FiatCurrency.CHILEAN_PESO;
+            case "CNY":
+                return FiatCurrency.CHINESE_YUAN;
+            case "COP":
+                return FiatCurrency.COLOMBIAN_PESO;
+            case "EUR":
+                return FiatCurrency.EURO;
+            case "JPY":
+                return FiatCurrency.JAPANESE_YEN;
+            case "MXN":
+                return FiatCurrency.MEXICAN_PESO;
+            case "NZD":
+                return FiatCurrency.NEW_ZEALAND_DOLLAR;
+            case "CHF":
+                return FiatCurrency.SWISS_FRANC;
+            case "USD":
+                return FiatCurrency.US_DOLLAR;
+            case "VEF":
+                return FiatCurrency.VENEZUELAN_BOLIVAR;
+            case "BTC":
+                return FiatCurrency.BITCOIN;
             default:
                 throw new InvalidParameterException(
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "The received code is not valid for the FiatCurrency enum");
         }
     }
@@ -84,7 +103,7 @@ public enum FiatCurrency implements Currency {
         try {
             getByCode(code);
             return true;
-        } catch(InvalidParameterException e) {
+        } catch (InvalidParameterException e) {
             return false;
         }
     }
@@ -93,7 +112,6 @@ public enum FiatCurrency implements Currency {
     public String getCode() {
         return this.code;
     }
-
 
 
 }

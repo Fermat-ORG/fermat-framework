@@ -101,7 +101,7 @@ public class ConnectDialog extends FermatDialog<ReferenceAppFermatSession<Crypto
             try {
                 if (information != null && identity != null) {
 
-                    System.out.println("*********** i'm the selected identity: "+identity);
+                    System.out.println("*********** i'm the selected identity: " + identity);
                     System.out.println("*********** i'm the selected broker information: " + information);
 
                     getSession().getModuleManager().requestConnectionToCryptoBroker(identity, information);

@@ -1,7 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.DatePickerFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.TimePickerFragment;
@@ -11,7 +10,7 @@ import java.util.Calendar;
 /**
  * Created by Yordin Alayn on 30/01/16.
  */
-public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, TimePickerFragment.SelectedTime/*, View.OnClickListener*/{
+public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, TimePickerFragment.SelectedTime/*, View.OnClickListener*/ {
 
     private Activity activity;
     private Calendar calendar;
@@ -24,7 +23,7 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
         void getDate(long selectedValue);
     }
 
-    public ClauseDateTimeDialog(Activity activity, long timeInMillis){
+    public ClauseDateTimeDialog(Activity activity, long timeInMillis) {
 
         this.activity = activity;
 
@@ -33,9 +32,6 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
 
     @Override
     public void getDate(int year, int monthOfYear, int dayOfMonth) {
-//        if (!valuesHasChanged) valuesHasChanged = this.year != year;
-//        if (!valuesHasChanged) valuesHasChanged = this.monthOfYear != monthOfYear;
-//        if (!valuesHasChanged) valuesHasChanged = this.dayOfMonth != dayOfMonth;
 
         this.year = year;
         this.monthOfYear = monthOfYear;
@@ -48,8 +44,6 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
 
     @Override
     public void getTime(int hourOfDay, int minute) {
-//        if (!valuesHasChanged) valuesHasChanged = this.hourOfDay != hourOfDay;
-//        if (!valuesHasChanged) valuesHasChanged = this.minute != minute;
 
         this.hourOfDay = hourOfDay;
         this.minute = minute;
@@ -74,12 +68,12 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
 
     }
 
-    public void getDateDialog(){
+    public void getDateDialog() {
         DatePickerFragment datePicker = DatePickerFragment.getNewInstance(year, monthOfYear, dayOfMonth, this);
         datePicker.show(activity.getFragmentManager(), "datePicker");
     }
 
-    public void getTimeDialog(){
+    public void getTimeDialog() {
         TimePickerFragment timePicker = TimePickerFragment.getNewInstance(hourOfDay, minute, this);
         timePicker.show(activity.getFragmentManager(), "timePicker");
     }

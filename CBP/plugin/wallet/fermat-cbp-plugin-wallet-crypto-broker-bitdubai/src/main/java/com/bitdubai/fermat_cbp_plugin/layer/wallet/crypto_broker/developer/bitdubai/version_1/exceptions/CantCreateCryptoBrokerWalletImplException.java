@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantCreateCryptoBrokerWalletImplException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T CREATE NEW CRYPTO BROKER WALLET";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

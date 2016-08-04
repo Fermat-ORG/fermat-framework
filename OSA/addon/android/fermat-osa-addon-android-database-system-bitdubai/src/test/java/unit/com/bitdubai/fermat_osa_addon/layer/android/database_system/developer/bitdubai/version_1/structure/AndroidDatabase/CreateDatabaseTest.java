@@ -1,11 +1,8 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 
 import org.junit.Before;
@@ -17,11 +14,11 @@ import org.robolectric.annotation.Config;
 
 import java.util.UUID;
 
+import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
+
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.robolectric.Shadows.shadowOf;
-import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
 /**
  * Created by jorgegonzalez on 2015.06.27..
@@ -38,7 +35,7 @@ public class CreateDatabaseTest {
 
 
     @Before
-    public void CreateDatabase_TheDatabaseHasNotBeenCreated_MethodInvokedSuccessfully() throws Exception{
+    public void CreateDatabase_TheDatabaseHasNotBeenCreated_MethodInvokedSuccessfully() throws Exception {
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
 
@@ -48,7 +45,7 @@ public class CreateDatabaseTest {
     }
 
     @Test
-    public void CreateDatabase_TheDatabaseHasAlreadyBeenCreated_ThrowsCantCreateDatabaseException() throws Exception{
+    public void CreateDatabase_TheDatabaseHasAlreadyBeenCreated_ThrowsCantCreateDatabaseException() throws Exception {
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
 

@@ -10,8 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,6 +21,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
@@ -30,7 +29,6 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
@@ -122,19 +120,19 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
 
         try {
             userName.setText(chatUserInformation.getAlias());
-            connectionState=chatUserInformation.getConnectionState();
-            if(connectionState != null) {
+            connectionState = chatUserInformation.getConnectionState();
+            if (connectionState != null) {
                 switch (connectionState) {
                     case BLOCKED_LOCALLY:
                     case BLOCKED_REMOTELY:
                     case CANCELLED_LOCALLY:
                     case CANCELLED_REMOTELY:
                         connectionRejected();
-                        strConnectionState="BLOCKED";
+                        strConnectionState = "BLOCKED";
                         break;
                     case CONNECTED:
                         disconnectRequest();
-                        strConnectionState="CONNECTED";
+                        strConnectionState = "CONNECTED";
                         break;
                     case NO_CONNECTED:
                     case DISCONNECTED_LOCALLY:
@@ -142,20 +140,20 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
                     case ERROR:
                     case DENIED_LOCALLY:
                     case DENIED_REMOTELY:
-                        strConnectionState="DISCONNECTED";
+                        strConnectionState = "DISCONNECTED";
                         connectRequest();
                         break;
                     case PENDING_LOCALLY_ACCEPTANCE:
                         conectionAccept();
-                        strConnectionState="PENDING ACCEPTANCE";
+                        strConnectionState = "PENDING ACCEPTANCE";
                         break;
                     case PENDING_REMOTELY_ACCEPTANCE:
                         connectionSend();
-                        strConnectionState="PENDING ACCEPTANCE";
+                        strConnectionState = "PENDING ACCEPTANCE";
                         break;
                 }
                 userStatus.setText(strConnectionState);//connectionState.toString());
-                        userStatus.setTextColor(Color.parseColor("#292929"));
+                userStatus.setTextColor(Color.parseColor("#292929"));
             } else connectRequest();
 
             if (chatUserInformation.getImage() != null) {
@@ -204,7 +202,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
                     }
                 });
                 connectDialog.show();
-            } catch ( CantGetSelectedActorIdentityException
+            } catch (CantGetSelectedActorIdentityException
                     | ActorIdentityNotSelectedException e) {
                 e.printStackTrace();
             }
@@ -218,7 +216,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
                         new DisconnectDialog(getActivity(), appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 disconnectDialog.setTitle("Confirm Delete Connection");
-                disconnectDialog.setDescription("Are you sure you want to delete this connection?" );
+                disconnectDialog.setDescription("Are you sure you want to delete this connection?");
 //                disconnectDialog.setUsername(chatUserInformation.getAlias()+"?");
                 disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -227,15 +225,15 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
                     }
                 });
                 disconnectDialog.show();
-            } catch ( CantGetSelectedActorIdentityException
+            } catch (CantGetSelectedActorIdentityException
                     | ActorIdentityNotSelectedException e) {
                 e.printStackTrace();
             }
         }
-        if (i == R.id.btn_connection_accept){
+        if (i == R.id.btn_connection_accept) {
             try {
                 AcceptDialog notificationAcceptDialog =
-                        new AcceptDialog(getActivity(),appSession, null,
+                        new AcceptDialog(getActivity(), appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -245,7 +243,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
                 });
                 notificationAcceptDialog.show();
 
-            } catch ( CantGetSelectedActorIdentityException
+            } catch (CantGetSelectedActorIdentityException
                     | ActorIdentityNotSelectedException e) {
                 e.printStackTrace();
             }
@@ -270,7 +268,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
                     }
                 });
                 connectDialog.show();
-            } catch ( CantGetSelectedActorIdentityException
+            } catch (CantGetSelectedActorIdentityException
                     | ActorIdentityNotSelectedException e) {
                 e.printStackTrace();
             }
@@ -286,18 +284,18 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
         try {
             connectionState
                     = moduleManager.getActorConnectionState(chatUserInformation.getPublicKey());
-            if(connectionState!=null)  {
+            if (connectionState != null) {
                 switch (connectionState) {
                     case BLOCKED_LOCALLY:
                     case BLOCKED_REMOTELY:
                     case CANCELLED_LOCALLY:
                     case CANCELLED_REMOTELY:
                         connectionRejected();
-                        strConnectionState="BLOCKED";
+                        strConnectionState = "BLOCKED";
                         break;
                     case CONNECTED:
                         disconnectRequest();
-                        strConnectionState="CONNECTED";
+                        strConnectionState = "CONNECTED";
                         break;
                     case NO_CONNECTED:
                     case DISCONNECTED_LOCALLY:
@@ -306,20 +304,20 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
                     case DENIED_LOCALLY:
                     case DENIED_REMOTELY:
                         connectRequest();
-                        strConnectionState="DISCONNECTED";
+                        strConnectionState = "DISCONNECTED";
                         break;
                     case PENDING_REMOTELY_ACCEPTANCE:
                         connectionSend();
-                        strConnectionState="PENDING ACCEPTANCE";
+                        strConnectionState = "PENDING ACCEPTANCE";
                         break;
                     case PENDING_LOCALLY_ACCEPTANCE:
                         conectionAccept();
-                        strConnectionState="PENDING ACCEPTANCE";
+                        strConnectionState = "PENDING ACCEPTANCE";
                         break;
                 }
                 userStatus.setText(strConnectionState);//connectionState.toString());
                 userStatus.setTextColor(Color.parseColor("#292929"));
-            }else  connectRequest();
+            } else connectRequest();
         } catch (CantValidateActorConnectionStateException e) {
             e.printStackTrace();
         }
@@ -333,7 +331,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
         accept.setVisibility(View.GONE);
     }
 
-    private void conectionAccept(){
+    private void conectionAccept() {
         connectionRequestSend.setVisibility(View.GONE);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);

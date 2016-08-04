@@ -20,7 +20,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 /**
- * Created by nelson on 21/10/15.
+ * Created by Nelson Ramirez (nelsonalfo@gmail.com) on 21/10/15.
+ *
  */
 public class ContractExpandableListViewHolder extends ChildViewHolder {
     public ImageView customerImage;
@@ -63,7 +64,7 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         customerName.setText(itemInfo.getCryptoBrokerAlias());
         try {
             typeOfPayment.setText(MoneyType.getByCode(itemInfo.getTypeOfPayment()).getFriendlyName());
-        }catch (FermatException e){
+        } catch (FermatException e) {
             typeOfPayment.setText(itemInfo.getTypeOfPayment());
         }
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoBrokerImage()));
@@ -78,6 +79,7 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         return getReceivingOrSendingText(contractStatus) + " " + decimalFormat.format(itemInfo.getAmount()) + " " + itemInfo.getMerchandise();
     }
 
+    @SuppressWarnings("deprecation")
     private int getStatusBackgroundColor(ContractStatus status) {
         if (status == ContractStatus.PENDING_PAYMENT)
             return res.getColor(R.color.waiting_for_customer_list_item_background);
@@ -101,8 +103,8 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         if (status == ContractStatus.CANCELLED)
             return R.string.contract_cancelled;
 
-        if (status == ContractStatus.PENDING_PAYMENT){
-            if(nearExpirationDatetime)
+        if (status == ContractStatus.PENDING_PAYMENT) {
+            if (nearExpirationDatetime)
                 return R.string.about_to_expire;
             else
                 return R.string.waiting_for_you;
@@ -111,6 +113,7 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         return R.string.waiting_for_broker;
     }
 
+    @SuppressWarnings("deprecation")
     private int getStatusColor(ContractStatus status, boolean nearExpirationDatetime) {
         if (status == ContractStatus.PENDING_PAYMENT && nearExpirationDatetime)
             return res.getColor(R.color.ccw_contract_status_about_to_expire);
@@ -118,7 +121,7 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
     }
 
 
-        private Drawable getImgDrawable(byte[] customerImg) {
+    private Drawable getImgDrawable(byte[] customerImg) {
         if (customerImg != null && customerImg.length > 0)
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 

@@ -23,7 +23,7 @@ public enum Engine {
             if (vault.getCode().equals(code))
                 return vault;
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code is not valid for the CryptoCurrencyVault enum.");
+        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This code is not valid for the CryptoCurrencyVault enum.");
     }
 
     public String getCode() {

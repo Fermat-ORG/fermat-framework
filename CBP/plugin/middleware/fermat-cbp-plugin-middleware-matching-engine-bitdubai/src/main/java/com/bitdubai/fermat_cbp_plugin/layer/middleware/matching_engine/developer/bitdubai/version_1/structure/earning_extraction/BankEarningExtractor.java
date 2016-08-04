@@ -31,13 +31,13 @@ public class BankEarningExtractor implements EarningExtractor {
     }
 
     @Override
-    public void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey, long fee, FeeOrigin feeOrigin) throws CantExtractEarningsException {
+    public void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey, String brokerIdentityPublicKey, long fee, FeeOrigin feeOrigin) throws CantExtractEarningsException {
         try {
             final Currency earningCurrency = earningsPair.getEarningCurrency();
             final String accountNumber = getAccountNumber(earningCurrency);
 
             bankMoneyDestockManager.createTransactionDestock(
-                    "Actor",
+                    brokerIdentityPublicKey,
                     FiatCurrency.getByCode(earningCurrency.getCode()),
                     brokerWalletPublicKey,
                     earningWalletPublicKey,
@@ -53,7 +53,7 @@ public class BankEarningExtractor implements EarningExtractor {
                     "Verify the currency code or the currency type is correct");
 
         } catch (CantCreateBankMoneyDestockException e) {
-            throw new CantExtractEarningsException( e,"Trying to make the Bank Destock of the merchandise",
+            throw new CantExtractEarningsException(e, "Trying to make the Bank Destock of the merchandise",
                     "Verify the params are correct");
         }
     }

@@ -14,6 +14,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.sub_app.intra_user_community.fragmentFactory.IntraUserFragmentFactory;
 import com.bitdubai.sub_app.intra_user_community.navigation_drawer.IntraUserCommunityNavigationViewPainter;
@@ -73,13 +75,15 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(String code){
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle){
         try
         {
+            int notificationID = fermatBundle.getInt(NotificationBundleConstants.NOTIFICATION_ID);
+            String involvedActor =  fermatBundle.getString("InvolvedActor");
+
             this.intraUserSubAppSession = this.getFullyLoadedSession();
             if(intraUserSubAppSession!=  null)
-               moduleManager = intraUserSubAppSession.getModuleManager();
-            return CryptoWalletUserCommunityBuildNotification.getNotification(moduleManager,code, Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
+            return CryptoWalletUserCommunityBuildNotification.getNotification(notificationID,involvedActor, Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
         }
         catch(Exception e)
         {

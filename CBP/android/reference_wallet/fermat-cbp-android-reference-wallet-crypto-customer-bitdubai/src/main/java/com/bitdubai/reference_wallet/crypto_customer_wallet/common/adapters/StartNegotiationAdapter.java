@@ -7,18 +7,15 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.AmountToBuyViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ExchangeRateViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.SingleChoiceViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.start_negotiation.StartNegotiationActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
@@ -42,16 +39,12 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private StartNegotiationActivityFragment footerListener;
     ClauseViewHolder.Listener clauseListener;
-    private List <IndexInfoSummary> marketRateList;
-    private boolean walletUser = false;
 
 
-
-    public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation, boolean walletUser ) {
+    public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation) {
         super(context);
 
         this.negotiationInformation = negotiationInformation;
-        this.walletUser = walletUser;
 
         dataSet = new ArrayList<>();
         dataSet.addAll(buildListOfItems());
@@ -59,14 +52,6 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
 
     public void changeDataSet(EmptyCustomerBrokerNegotiationInformation negotiationInfo) {
         this.negotiationInformation = negotiationInfo;
-
-        final List<ClauseInformation> items = buildListOfItems();
-        super.changeDataSet(items);
-    }
-
-    public void changeDataSet(EmptyCustomerBrokerNegotiationInformation negotiationInfo, boolean walletUser) {
-        this.negotiationInformation = negotiationInfo;
-        this.walletUser = walletUser;
 
         final List<ClauseInformation> items = buildListOfItems();
         super.changeDataSet(items);
@@ -84,19 +69,16 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
                 return new SingleChoiceViewHolder(itemView);
 
             case TYPE_ITEM_EXCHANGE_RATE:
-//                return new ExchangeRateViewHolder(itemView);
-                final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
-                exchangeRateViewHolder.setMarketRateList(marketRateList);
-                return exchangeRateViewHolder;
+                return new ExchangeRateViewHolder(itemView);
 
             case TYPE_ITEM_AMOUNT_TO_BUY:
                 return new AmountToBuyViewHolder(itemView);
 
             case TYPE_ITEM_AMOUNT_TO_PAY:
 
-                    final AmountToBuyViewHolder amountToPayViewHolder = new AmountToBuyViewHolder(itemView);
-                    amountToPayViewHolder.setPaymentBuy(Boolean.FALSE);
-                    return amountToPayViewHolder;
+                final AmountToBuyViewHolder amountToPayViewHolder = new AmountToBuyViewHolder(itemView);
+                amountToPayViewHolder.setPaymentBuy(Boolean.FALSE);
+                return amountToPayViewHolder;
 
 
             case TYPE_FOOTER:
@@ -153,7 +135,7 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
                 return TYPE_ITEM_AMOUNT_TO_BUY;
             case BROKER_CURRENCY_QUANTITY:
                 return TYPE_ITEM_AMOUNT_TO_PAY;
-           default:
+            default:
                 return TYPE_ITEM_SINGLE_CHOICE;
         }
     }
@@ -187,18 +169,7 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
             case BROKER_CURRENCY_QUANTITY:
                 clauseViewHolder.setViewResources(R.string.ccw_amount_to_pay, clauseNumberImageRes, R.string.ccw_amount_title);
                 break;
-//            case CUSTOMER_PAYMENT_METHOD:
-//                clauseViewHolder.setViewResources(R.string.payment_methods_title, clauseNumberImageRes, R.string.payment_method);
-//                break;
-//            case BROKER_PAYMENT_METHOD:
-//                clauseViewHolder.setViewResources(R.string.reception_methods_title, clauseNumberImageRes, R.string.payment_method);
-//                break;
         }
-    }
-
-    public void changeItem(int position, ClauseInformation clause) {
-        dataSet.set(position, clause);
-        notifyItemChanged(position);
     }
 
     public void setFooterListener(StartNegotiationActivityFragment footerListener) {
@@ -207,10 +178,6 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
 
     public void setClauseListener(ClauseViewHolder.Listener clauseListener) {
         this.clauseListener = clauseListener;
-    }
-
-    public void setMarketRateList(List <IndexInfoSummary> marketRateList){
-        this.marketRateList = marketRateList;
     }
 
     private List<ClauseInformation> buildListOfItems() {
@@ -224,8 +191,6 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
         data[1] = clauses.get(ClauseType.EXCHANGE_RATE);
         data[2] = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
         data[3] = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
-//        data[3] = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
-//        data[4] = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
 
         return Arrays.asList(data);
     }

@@ -7,7 +7,7 @@ import java.util.List;
  * Created by angel on 16/9/15.
  */
 
-public interface subAppManger{
+public interface subAppManger {
 
     List<subAppMiddleware> getAllSubAppInstalled();
 

@@ -18,11 +18,13 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+
 /**
- * Created by nelson on 21/10/15.
+ * Created by Nelson Ramirez (nelsonalfo@gmail.com) on 21/10/15.
  */
 public class ContractListViewHolder extends FermatViewHolder {
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
+    private final String LANGUAGE = Resources.getSystem().getConfiguration().locale.getLanguage();
     private Resources res;
     private View itemView;
 
@@ -39,7 +41,7 @@ public class ContractListViewHolder extends FermatViewHolder {
      * @param itemView the child ViewHolder's view
      */
     public ContractListViewHolder(View itemView) {
-        super(itemView);
+        super(itemView, 0);
 
         this.itemView = itemView;
         res = itemView.getResources();
@@ -59,7 +61,7 @@ public class ContractListViewHolder extends FermatViewHolder {
         brokerName.setText(itemInfo.getCryptoBrokerAlias());
         brokerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoBrokerImage()));
 
-        statusHistoryCustomer.setText(contractStatus.getFriendlyName());
+        statusHistoryCustomer.setText(getContractStatusFriendlyName(contractStatus));
         String soldQuantityAndCurrencyText = getSoldQuantityAndCurrencyText(itemInfo, contractStatus);
         soldQuantityAndCurrency.setText(soldQuantityAndCurrencyText);
 
@@ -68,6 +70,15 @@ public class ContractListViewHolder extends FermatViewHolder {
 
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
         lastUpdateDate.setText(date);
+    }
+
+    private String getContractStatusFriendlyName(ContractStatus contractStatus) {
+        if (contractStatus == ContractStatus.COMPLETED)
+            return LANGUAGE.equalsIgnoreCase("es") ? "Completado" : contractStatus.getFriendlyName();
+        if (contractStatus == ContractStatus.CANCELLED)
+            return LANGUAGE.equalsIgnoreCase("es") ? "Cancelado" : contractStatus.getFriendlyName();
+
+        return null;
     }
 
     @NonNull
@@ -91,16 +102,13 @@ public class ContractListViewHolder extends FermatViewHolder {
     private int getStatusBackgroundColor(ContractStatus status) {
         int color = -1;
 
-//        if (status == ContractStatus.PENDING_PAYMENT)
-//            return R.color.waiting_for_customer_list_item_background;
-
         if (status == ContractStatus.CANCELLED)
-            color = Color.parseColor("#c6c6c6");//R.color.contract_cancelled_list_item_background);
+            color = Color.parseColor("#c6c6c6");
 
         if (status == ContractStatus.COMPLETED)
-            color = Color.parseColor("#f3f3f3");//res.getColor(R.color.contract_completed_list_item_background);
+            color = Color.parseColor("#f3f3f3");
 
-        return color;//R.color.waiting_for_broker_list_item_background;
+        return color;
     }
 
     private String getSellingOrSoldText(ContractStatus status) {

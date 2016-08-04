@@ -15,7 +15,7 @@ import java.util.List;
  * @version 1.0
  */
 public class CommunityFilter extends Filter {
-//
+    //
     private List<ChatActorCommunityInformation> data;
     private CommunityListAdapter adapter;
     ArrayList<ChatActorCommunityInformation> nlist = new ArrayList<>();

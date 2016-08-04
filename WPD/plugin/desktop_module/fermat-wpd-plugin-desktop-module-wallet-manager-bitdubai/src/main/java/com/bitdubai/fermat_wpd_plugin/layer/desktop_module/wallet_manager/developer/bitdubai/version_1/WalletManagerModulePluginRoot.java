@@ -757,7 +757,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                         WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
-                        AppsStatus.DEV);
+                        AppsStatus.ALPHA);
                 break;
             case "fermat_wallet":
                 installedWallet = new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
@@ -769,7 +769,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                         WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
-                        AppsStatus.DEV);
+                        AppsStatus.ALPHA);
                 break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);

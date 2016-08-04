@@ -15,28 +15,31 @@ public interface FrameworkHelpers {
 
     /**
      * Method to obtain res from framework,other app or internet
+     *
      * @return
      */
-    int obtainRes(int resType,int id,SourceLocation sourceLocation,String appOwnerPublicKey);
+    int obtainRes(int resType, int id, SourceLocation sourceLocation, String appOwnerPublicKey);
 
     /**
      * Method to obtain View from framework, other app or internet
+     *
      * @return
      */
     View obtainClassView(FermatView fermatView);
 
     /**
      * Method to obtain View from framework or internet
+     *
      * @param id
      * @param sourceLocation
      * @return
      */
-    View obtainFrameworkOptionMenuClassViewAvailable(int id,SourceLocation sourceLocation);
+    View obtainFrameworkOptionMenuClassViewAvailable(int id, SourceLocation sourceLocation);
 
     View obtainFrameworkOptionMenuClassViewAvailable(int id, SourceLocation sourceLocation, Object[] listeners);
 
 
-    void registerReceiver(FermatIntentFilter fermatIntentFilter,FermatBroadcastReceiver fermatBroadcastReceiver,@Nullable String appPublicKey);
+    void registerReceiver(FermatIntentFilter fermatIntentFilter, FermatBroadcastReceiver fermatBroadcastReceiver, @Nullable String appPublicKey);
 
-    void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver,@Nullable String appPublicKey);
+    void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver, @Nullable String appPublicKey);
 }

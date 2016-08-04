@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -28,11 +29,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_bch_api.layer.crypto_module.Crypto;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
@@ -154,12 +152,13 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
 
     /**
      * This method updates a stored CryptoBrokerIdentity
+     *
      * @param cryptoBrokerIdentity
      * @throws CantUpdateBrokerIdentityException
      */
     public void updateCryptoBrokerIdentity(CryptoBrokerIdentity cryptoBrokerIdentity)
             throws CantUpdateBrokerIdentityException {
-        try{
+        try {
             DatabaseTable table = this.database.getTable(
                     CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
@@ -390,12 +389,12 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
 
     }
 
-    private Currency getCurrencyFromString(String currencyString){
-        try{
+    private Currency getCurrencyFromString(String currencyString) {
+        try {
             FiatCurrency fiatCurrency = FiatCurrency.getByCode(currencyString);
             return fiatCurrency;
         } catch (InvalidParameterException e) {
-            try{
+            try {
                 CryptoCurrency cryptoCurrency = CryptoCurrency.getByCode(currencyString);
                 return cryptoCurrency;
             } catch (InvalidParameterException e1) {

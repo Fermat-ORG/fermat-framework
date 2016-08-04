@@ -43,10 +43,7 @@ public class TransactionTransmissionResponseMessage {
 
     @Override
     public String toString() {
-        return "TransactionTransmissionResponseMessage{" +
-                "transactionId=" + transactionId +
-                ", transactionTransmissionStates=" + transactionTransmissionStates +
-                '}';
+        return "TransactionTransmissionResponseMessage{" + "transactionId=" + transactionId + ", transactionTransmissionStates=" + transactionTransmissionStates + '}';
     }
 
 }

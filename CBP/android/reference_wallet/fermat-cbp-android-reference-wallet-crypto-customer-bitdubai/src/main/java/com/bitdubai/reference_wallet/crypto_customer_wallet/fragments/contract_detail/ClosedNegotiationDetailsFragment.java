@@ -20,7 +20,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -36,7 +35,6 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -52,27 +50,27 @@ import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.EXCHAN
  * A simple {@link Fragment} subclass.
  */
 public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager> {
-    
+
     private static final String TAG = "ClosedNegDetailsFrag";
-    
+
     private ErrorManager errorManager;
 
-    private NumberFormat numberFormat= DecimalFormat.getInstance();
-    
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
+
     private CustomerBrokerNegotiationInformation negotiationInfo;
 
     public static ClosedNegotiationDetailsFragment newInstance() {
         return new ClosedNegotiationDetailsFragment();
     }
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         try {
             final CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            
+
             negotiationInfo = moduleManager.getNegotiationInformation(getNegotiationId());
 
         } catch (Exception ex) {
@@ -85,11 +83,11 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
                 Log.e(TAG, ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         configureToolbar();
-    
+
         final View rootView = inflater.inflate(R.layout.ccw_fragment_close_negotiation_details_activity, container, false);
 
         final ImageView brokerImage = (ImageView) rootView.findViewById(R.id.ccw_customer_image);
@@ -99,13 +97,12 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
         final FermatTextView lastUpdateDate = (FermatTextView) rootView.findViewById(R.id.ccw_last_update_date);
         final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.ccw_open_negotiation_details_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-    
-    
+
+
         final ActorIdentity broker = negotiationInfo.getBroker();
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
-    
-        final String merchandise = clauses.get(CUSTOMER_CURRENCY).getValue();
 
+        final String merchandise = clauses.get(CUSTOMER_CURRENCY).getValue();
 
 
         final String exchangeAmount = fixFormat(clauses.get(EXCHANGE_RATE).getValue());
@@ -113,35 +110,36 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
 
 
         final String amount = fixFormat(clauses.get(CUSTOMER_CURRENCY_QUANTITY).getValue());
-    
+
         //Negotiation Summary
         brokerImage.setImageDrawable(getImgDrawable(broker.getProfileImage()));
         brokerName.setText(broker.getAlias());
         lastUpdateDate.setText(DateFormat.format("dd MMM yyyy", negotiationInfo.getLastNegotiationUpdateDate()));
         exchangeRateSummary.setText(getResources().getString(R.string.ccw_exchange_rate_summary, merchandise, exchangeAmount, paymentCurrency));
         sellingDetails.setText(getResources().getString(R.string.ccw_selling_details, amount, merchandise));
-    
+
         final ClosedNegotiationDetailsAdapter adapter = new ClosedNegotiationDetailsAdapter(getActivity(), negotiationInfo);
         recyclerView.setAdapter(adapter);
-    
+
         return rootView;
     }
-    
+
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
     }
-    
+
     private Drawable getImgDrawable(byte[] customerImg) {
         Resources res = getResources();
-        
+
         if (customerImg != null && customerImg.length > 0)
             return ImagesUtils.getRoundedBitmap(res, customerImg);
-        
+
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
     }
 
@@ -150,35 +148,21 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
         return (data != null) ? (UUID) data : null;
     }
 
-    private String fixFormat(String value){
+    private String fixFormat(String value) {
 
-        try {
-            if(compareLessThan1(value)){
-                numberFormat.setMaximumFractionDigits(8);
-            }else{
-                numberFormat.setMaximumFractionDigits(2);
-            }
-            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "0";
+
+        if (compareLessThan1(value)) {
+            numberFormat.setMaximumFractionDigits(8);
+        } else {
+            numberFormat.setMaximumFractionDigits(2);
         }
+        return numberFormat.format(new BigDecimal(Double.valueOf(value).toString()));
+
 
     }
 
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
-        try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return lessThan1;
+    private Boolean compareLessThan1(String value) {
+        return BigDecimal.valueOf(Double.valueOf(value)).compareTo(BigDecimal.ONE) == -1;
     }
 
 }

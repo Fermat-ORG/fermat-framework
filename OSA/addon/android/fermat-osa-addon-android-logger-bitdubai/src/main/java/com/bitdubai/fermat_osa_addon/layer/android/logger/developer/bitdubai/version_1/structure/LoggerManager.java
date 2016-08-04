@@ -22,6 +22,7 @@ public class LoggerManager implements LogManager {
 
     /**
      * executes the log
+     *
      * @param logLevel
      * @param minimalLogging
      * @param moderateLogging
@@ -32,14 +33,14 @@ public class LoggerManager implements LogManager {
         /**
          * Minimal logging level includes only the sent message
          */
-        if (logLevel == LogLevel.MINIMAL_LOGGING){
+        if (logLevel == LogLevel.MINIMAL_LOGGING) {
             setMinimalLogging(minimalLogging);
         }
 
         /**
          * Moderate loggin level logs current class and method information + minimal level.
          */
-        if (logLevel == LogLevel.MODERATE_LOGGING){
+        if (logLevel == LogLevel.MODERATE_LOGGING) {
             setMinimalLogging(minimalLogging);
             setModerateLogging(moderateLogging);
         }
@@ -47,7 +48,7 @@ public class LoggerManager implements LogManager {
         /**
          * Agressive logging level includes moderate and minimal + Thread information.
          */
-        if (logLevel == LogLevel.AGGRESSIVE_LOGGING){
+        if (logLevel == LogLevel.AGGRESSIVE_LOGGING) {
             setMinimalLogging(minimalLogging);
             setModerateLogging(moderateLogging);
             setAggressiveLogging(aggressiveLogging);
@@ -57,47 +58,47 @@ public class LoggerManager implements LogManager {
          * prints outs the log.
          */
         System.out.println(outputMessage.toString());
-        outputMessage.delete(0, outputMessage.capacity()-1);
+        outputMessage.delete(0, outputMessage.capacity() - 1);
     }
 
 
-    private void setAggressiveLogging(String message){
+    private void setAggressiveLogging(String message) {
         if (message != null) {
-            outputMessage.append("Message: " + message);
+            outputMessage.append("Message: ").append(message);
             outputMessage.append(System.lineSeparator());
         }
-        for (String property : callerInformationGetter.getCurrentThreadInformation()){
+        for (String property : callerInformationGetter.getCurrentThreadInformation()) {
             outputMessage.append(property);
             outputMessage.append(System.lineSeparator());
         }
 
-        for (String property : callerInformationGetter.getCurrentMethodInformation()){
+        for (String property : callerInformationGetter.getCurrentMethodInformation()) {
             outputMessage.append(property);
             outputMessage.append(System.lineSeparator());
         }
     }
 
-    private void setModerateLogging(String message){
+    private void setModerateLogging(String message) {
         if (message != null) {
-            outputMessage.append("Message: " + message);
+            outputMessage.append("Message: ").append(message);
             outputMessage.append(System.lineSeparator());
         }
-        for (String property : callerInformationGetter.getCurrentMethodInformation()){
+        for (String property : callerInformationGetter.getCurrentMethodInformation()) {
             outputMessage.append(property);
             outputMessage.append(System.lineSeparator());
         }
 
     }
 
-    private void setMinimalLogging(String message){
+    private void setMinimalLogging(String message) {
         if (message != null) {
-            outputMessage.append("Message: " + message);
+            outputMessage.append("Message: ").append(message);
             outputMessage.append(System.lineSeparator());
         }
     }
 
     @Override
-    public String getOutputMessage(){
+    public String getOutputMessage() {
         return outputMessage.toString();
     }
 }

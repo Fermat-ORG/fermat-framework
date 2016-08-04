@@ -134,7 +134,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * @param eventType   the event type
      * @param eventSource the event source
      * @param eventId     the event id
-     *
      * @throws CantSaveEventException
      */
     public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
@@ -168,7 +167,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      *
      * @param eventType   the event type
      * @param eventSource the event source
-     *
      * @throws CantSaveEventException
      */
     public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
@@ -186,7 +184,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * This method save an incoming money event in database. You can set the event Id with this method
      *
      * @param event the event to save
-     *
      * @throws CantSaveEventException
      */
     public void saveIncomingMoneyEvent(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
@@ -211,9 +208,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * This method returns the contract transaction status
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return the Contract Transaction Status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
@@ -242,7 +237,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * This method returns the recorded pending events
      *
      * @return a list of event IDs
-     *
      * @throws CantGetContractListException
      */
     public List<String> getPendingIncomingMoneyEvents() throws CantGetContractListException {
@@ -267,7 +261,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
 
     /**
      * @return a list of BusinessTransactionRecord pending to submit notification
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -292,7 +285,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
 
     /**
      * @return list of Business Transaction records pending to submit confirmation
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -328,9 +320,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * This method returns the business transaction record by a contract hash
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return the business transaction record
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public BusinessTransactionRecord getBusinessTransactionRecordByContractHash(String contractHash)
@@ -350,7 +340,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      *
      * @param contractHash the contract Hash/ID
      * @param newStatus    the new contract transaction status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -390,7 +379,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * This method returns the recorded pending events
      *
      * @return list of pending events
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -417,9 +405,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * This method returns the Incoming Money Wrapper by the eventId.
      *
      * @param eventId the event ID
-     *
      * @return a IncomingMoneyEventWrapper object with the information of the Incoming Money event
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public IncomingMoneyEventWrapper getIncomingMoneyEventWrapper(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
@@ -461,7 +447,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * Update a Business Transaction record information in database
      *
      * @param businessTransactionRecord the Business Transaction record with the updated information
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -499,9 +484,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * This method returns the event type by event Id
      *
      * @param eventId the event ID
-     *
      * @return the event type
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public String getEventType(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
@@ -530,9 +513,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * This method returns if the contract is persisted in database.
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return <code>true</code> if the contract is persisted in database. <code>false</code> otherwise
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public boolean isContractHashInDatabase(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
@@ -554,13 +535,12 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
      *
      * @param saleContract the object with the sale contract information to persist
-     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(CustomerBrokerContractSale saleContract) throws CantInsertRecordException {
         try {
-            if(isContractHashInDatabase(saleContract.getContractId())){
-                System.out.println("The contract "+saleContract+" exists in database");
+            if (isContractHashInDatabase(saleContract.getContractId())) {
+                System.out.println("The contract " + saleContract + " exists in database");
                 return;
             }
             DatabaseTable databaseTable = getAckMerchandiseTable();
@@ -584,7 +564,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      *
      * @param eventId     the event ID
      * @param eventStatus the new event status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -619,7 +598,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      *
      * @param eventId     the Incoming Money event ID
      * @param eventStatus the new event status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -655,7 +633,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * @param contractPurchase        the contract purchase object
      * @param cryptoAmount            the merchandise crypto amount
      * @param merchandiseCurrencyCode the merchandise currency code
-     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(CustomerBrokerContractPurchase contractPurchase,
@@ -663,8 +640,8 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
                                           String merchandiseCurrencyCode) throws CantInsertRecordException {
 
         try {
-            if(isContractHashInDatabase(contractPurchase.getContractId())){
-                System.out.println("The contract "+contractPurchase+" exists in database");
+            if (isContractHashInDatabase(contractPurchase.getContractId())) {
+                System.out.println("The contract " + contractPurchase + " exists in database");
                 return;
             }
             //Get information from negotiation clauses.
@@ -695,9 +672,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * This method returns the completion date from database.
      *
      * @param contractHash contract Hash
-     *
      * @return the completion date in millis
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public long getCompletionDateByContractHash(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
@@ -723,7 +698,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      *
      * @param contractHash   contract Hash
      * @param completionDate the completion date in millis
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public void setCompletionDateByContractHash(String contractHash, long completionDate)
@@ -790,7 +764,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      *
      * @param record           the database record
      * @param purchaseContract the purchase contract
-     *
      * @return the filled database record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record,
@@ -814,7 +787,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      *
      * @param record       the database record to fill
      * @param saleContract the object with the sale contract information to persist
-     *
      * @return the filled database record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, CustomerBrokerContractSale saleContract) {
@@ -834,7 +806,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      *
      * @param record                    the database record to fill
      * @param businessTransactionRecord the BusinessTransactionRecord object with the information
-     *
      * @return the filled database record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, BusinessTransactionRecord businessTransactionRecord) {
@@ -869,7 +840,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      *
      * @param record                    the database record to fill
      * @param incomingMoneyEventWrapper the IncomingMoneyEventWrapper with the data
-     *
      * @return the filled database record
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, IncomingMoneyEventWrapper incomingMoneyEventWrapper) {
@@ -894,7 +864,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * This method check the database record result.
      *
      * @param records the list of records to check
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private void checkDatabaseRecords(List<DatabaseTableRecord> records) throws UnexpectedResultReturnedFromDatabaseException {
@@ -917,9 +886,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      *
      * @param keyValue  the key to search
      * @param keyColumn the column to Search
-     *
      * @return the BusinessTransactionRecord
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private BusinessTransactionRecord getBusinessTransactionRecord(String keyValue, String keyColumn)
@@ -972,9 +939,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      *
      * @param keyValue  the key to search
      * @param keyColumn the column to Search
-     *
      * @return the BusinessTransactionRecord
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private BusinessTransactionRecord getBrokerBusinessTransactionRecord(String keyValue, String keyColumn)
@@ -1013,9 +978,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * Return a Business Transaction record given the contract Hash/ID
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return the Business Transaction record
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private BusinessTransactionRecord getBrokerBusinessTransactionRecordByContractHash(String contractHash)
@@ -1036,9 +999,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * @param key         String with the search key.
      * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
-     *
      * @return a list of BusinessTransactionRecord
-     *
      * @throws CantGetContractListException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
@@ -1062,7 +1023,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * @param key         String with the search key.
      * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
-     *
      * @return a list of String
      */
     private List<String> getStringList(String key, String keyColumn, String valueColumn) throws CantGetContractListException {
@@ -1095,9 +1055,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * @param databaseTable the database table
      * @param statusColumn  the status column
      * @param idColumn      the event id column
-     *
      * @return a list of event IDs
-     *
      * @throws CantGetContractListException
      */
     private List<String> getPendingGenericsEvents(DatabaseTable databaseTable, String statusColumn, String idColumn)
@@ -1131,9 +1089,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * @param key         the key to search
      * @param keyColumn   the column to search
      * @param valueColumn the column with the value
-     *
      * @return the String value
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private String getValue(String key, String keyColumn, String valueColumn) throws UnexpectedResultReturnedFromDatabaseException {

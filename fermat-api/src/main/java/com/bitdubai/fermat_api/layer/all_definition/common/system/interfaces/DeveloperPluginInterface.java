@@ -22,8 +22,7 @@ public interface DeveloperPluginInterface {
      * Throw the method <code>registerVersion</code> you can add new versions to the plugin developer.
      * Here we'll corroborate too that the version is not added twice.
      *
-     * @param abstractPlugin  plugin in-self.
-     *
+     * @param abstractPlugin plugin in-self.
      * @throws CantRegisterVersionException if something goes wrong.
      */
     void registerVersion(final AbstractPlugin abstractPlugin) throws CantRegisterVersionException;

@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 public class SetMerchandiseTest {
 
     @Test
-    public void setMerchandise(){
+    public void setMerchandise() {
         CryptoBrokerWalletAssociatedSettingImpl cryptoBrokerWalletAssociatedSetting = mock(CryptoBrokerWalletAssociatedSettingImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoBrokerWalletAssociatedSetting).setMerchandise(Mockito.any(Currency.class));
     }

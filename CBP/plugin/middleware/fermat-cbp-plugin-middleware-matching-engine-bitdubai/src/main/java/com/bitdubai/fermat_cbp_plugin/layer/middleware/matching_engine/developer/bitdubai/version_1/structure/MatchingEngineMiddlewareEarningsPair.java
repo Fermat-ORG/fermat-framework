@@ -70,13 +70,7 @@ public final class MatchingEngineMiddlewareEarningsPair implements EarningsPair,
 
     @Override
     public String toString() {
-        return "MatchingEngineMiddlewareEarningsPair{" +
-                "id=" + id +
-                ", earningCurrency=" + earningCurrency +
-                ", linkedCurrency=" + linkedCurrency +
-                ", earningsWallet=" + earningsWallet +
-                ", state=" + state +
-                '}';
+        return "MatchingEngineMiddlewareEarningsPair{" + "id=" + id + ", earningCurrency=" + earningCurrency + ", linkedCurrency=" + linkedCurrency + ", earningsWallet=" + earningsWallet + ", state=" + state + '}';
     }
 
     public WalletReference getWalletReference() {

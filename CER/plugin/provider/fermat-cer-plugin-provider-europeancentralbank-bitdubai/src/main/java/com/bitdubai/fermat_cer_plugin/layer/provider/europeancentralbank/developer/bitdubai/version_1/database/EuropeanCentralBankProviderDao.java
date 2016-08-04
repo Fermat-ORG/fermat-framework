@@ -190,28 +190,28 @@ public class EuropeanCentralBankProviderDao {
         List<ExchangeRate> exchangeRates = new ArrayList<>();
 
 
-        String query = "SELECT * FROM " +
-                EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME +
-                " WHERE " +
-                EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME +
-                " = '" +
-                currencyPair.getFrom().getCode() +
-                "' AND " +
-                EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME +
-                " = '" +
-                currencyPair.getTo().getCode() +
-                "' " +
-                " AND " +
-                EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
-                " >= " +
-                startTimestamp +
-                " AND " +
-                EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
-                " <= " +
-                endTimestamp +
-                " ORDER BY " +
-                EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME +
-                " ASC ";
+        String query = new StringBuilder()
+                .append("SELECT * FROM ")
+                .append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME)
+                .append(" WHERE ")
+                .append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME)
+                .append(" = '")
+                .append(currencyPair.getFrom().getCode())
+                .append("' AND ")
+                .append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME)
+                .append(" = '")
+                .append(currencyPair.getTo().getCode())
+                .append("' ")
+                .append(" AND ")
+                .append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME)
+                .append(" >= ").append(startTimestamp)
+                .append(" AND ")
+                .append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME)
+                .append(" <= ")
+                .append(endTimestamp)
+                .append(" ORDER BY ")
+                .append(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME)
+                .append(" ASC ").toString();
 
 
         DatabaseTable table = this.database.getTable(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME);
@@ -357,8 +357,7 @@ public class EuropeanCentralBankProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "EuropeanCentralBank provider plugin", "Invalid From Currency value stored in table"
-                    + EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "EuropeanCentralBank provider plugin", "Invalid From Currency value stored in table" + EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
         }
 
         Currency toCurrency;
@@ -372,8 +371,7 @@ public class EuropeanCentralBankProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "EuropeanCentralBank provider plugin", "Invalid To Currency value stored in table"
-                    + EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "EuropeanCentralBank provider plugin", "Invalid To Currency value stored in table" + EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
         }
 
         return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);

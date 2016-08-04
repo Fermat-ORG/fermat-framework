@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(MockitoJUnitRunner.class)
 public class SetTransactionIdTest {
     @Test
-    public void setTransactionId(){
+    public void setTransactionId() {
         BankMoneyDestockTransactionImpl bankMoneyDestockTransaction = mock(BankMoneyDestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(bankMoneyDestockTransaction).setTransactionId(Mockito.any(UUID.class));
     }

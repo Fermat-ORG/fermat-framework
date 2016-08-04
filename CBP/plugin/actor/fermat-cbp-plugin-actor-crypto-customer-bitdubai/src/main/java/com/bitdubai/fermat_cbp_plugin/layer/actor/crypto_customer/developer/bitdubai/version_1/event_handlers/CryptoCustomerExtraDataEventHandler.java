@@ -19,13 +19,13 @@ public class CryptoCustomerExtraDataEventHandler implements FermatEventHandler {
     public CryptoCustomerExtraDataEventHandler(final ActorCustomerExtraDataEventActions actorExtraDataEventActions,
                                                final CryptoCustomerActorPluginRoot cryptoCustomerActorPluginRoot) {
 
-        this.actorExtraDataEventAction   = actorExtraDataEventActions;
+        this.actorExtraDataEventAction = actorExtraDataEventActions;
         this.cryptoCustomerActorPluginRoot = cryptoCustomerActorPluginRoot;
     }
 
     /**
      * FermatEventHandler interface implementation
-     *
+     * <p/>
      * Plugin is started?
      * The event is the expected event?
      */
@@ -37,8 +37,7 @@ public class CryptoCustomerExtraDataEventHandler implements FermatEventHandler {
                 this.actorExtraDataEventAction.handleNewsEvent();
             } else {
                 EventType eventExpected = EventType.CRYPTO_BROKER_QUOTES_REQUEST_UPDATES;
-                String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
-                        "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
+                String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode() + "\n" + "Event expected: " + eventExpected.toString() + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);
             }
         } else {

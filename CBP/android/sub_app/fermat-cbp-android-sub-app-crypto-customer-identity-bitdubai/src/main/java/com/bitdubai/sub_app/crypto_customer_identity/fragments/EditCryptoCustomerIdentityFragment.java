@@ -41,11 +41,11 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.Utils.CryptoCustomerIdentityInformationImpl;
@@ -93,9 +93,15 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
 
 
     private final TextWatcher textWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
 
     public static EditCryptoCustomerIdentityFragment newInstance() {
@@ -123,20 +129,20 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
         }
 
         //Check if GPS is on and coordinate are fine
-        try{
+        try {
             location = appSession.getModuleManager().getLocation();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            isGpsDialogEnable=true;
+            isGpsDialogEnable = true;
             settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
             isGpsDialogEnable = settings.isGpsDialogEnabled();
         } catch (Exception e) {
             settings = new IdentityCustomerPreferenceSettings();
             settings.setGpsDialogEnabled(true);
-            isGpsDialogEnable=true;
+            isGpsDialogEnable = true;
         }
 
         turnGPSOn();
@@ -189,8 +195,8 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
             mCustomerName.setText(cryptoCustomerName);
 
 
-        mCustomerName.requestFocus();
-        mCustomerName.performClick();
+        // mCustomerName.requestFocus();
+        //mCustomerName.performClick();
         mCustomerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
         mCustomerName.addTextChangedListener(textWatcher);
         textCount.setText(String.valueOf(maxLenghtTextCount));
@@ -346,7 +352,8 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
     private void editIdentityInfoInBackDevice() {
         final String customerNameText = mCustomerName.getText().toString();
 
-        final byte[] imgInBytes = (cryptoCustomerBitmap != null) ? identityImgByteArray : profileImage;
+        final byte[] imgInBytes = (cryptoCustomerBitmap != null) ? ImagesUtils.toByteArray(convertImage(R.drawable.no_profile_image)) : profileImage;
+
 
         if (customerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name", Toast.LENGTH_LONG).show();
@@ -366,6 +373,10 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
             progressBar.setVisibility(View.VISIBLE);
             executor = fermatWorker.execute();
         }
+    }
+
+    private Bitmap convertImage(int resImage) {
+        return BitmapFactory.decodeResource(getActivity().getResources(), resImage);
     }
 
     private void dispatchTakePictureIntent() {

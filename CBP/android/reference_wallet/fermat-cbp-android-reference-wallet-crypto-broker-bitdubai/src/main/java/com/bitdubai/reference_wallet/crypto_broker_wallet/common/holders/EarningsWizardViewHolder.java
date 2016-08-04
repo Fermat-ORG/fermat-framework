@@ -27,7 +27,8 @@ public class EarningsWizardViewHolder extends FermatViewHolder {
     }
 
     public void bind(EarningsWizardData data) {
-        title.setText(String.format("%s / %s", data.getLinkedCurrency().getCode(), data.getEarningCurrency().getCode()));
+//                title.setText(String.format("%s / %s", data.getLinkedCurrency().getCode(), data.getEarningCurrency().getCode()));
+        title.setText(data.getLinkedCurrency().getCode() + " / " + data.getEarningCurrency().getCode());
 
         checkbox.setChecked(data.isChecked());
 

@@ -3,10 +3,10 @@ package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_c
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- Created by Eleazar Oroño (eorono@protonmail.com) on 1/04/16.
+ * Created by Eleazar Oroño (eorono@protonmail.com) on 1/04/16.
  */
 
-    public class CantGetSelectedActorException extends FermatException {
+public class CantGetSelectedActorException extends FermatException {
 
     private static final String DEFAULT_MESSAGE = "CAN'T GET SELECTED IDENTITY EXCEPTION";
 

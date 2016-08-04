@@ -9,15 +9,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
@@ -47,11 +48,12 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * This Activity is used as a loader, to show something while the Fermat Platform is being initialized.
- * <p>
+ * <p/>
  * -- Luis.
  */
 
-public class StartActivity extends AppCompatActivity implements  FermatWorkerCallBack /**,ServiceCallback */{
+public class StartActivity extends AppCompatActivity implements FermatWorkerCallBack /**,ServiceCallback */
+{
 
 
     private static final String TAG = "StartActivity";
@@ -59,6 +61,8 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
     private static boolean WAS_START_ACTIVITY_LOADED = false;
 
     private ImageView imageView_fermat;
+
+    private long startTime;
 
     Animation animation1;
     Animation animation2;
@@ -72,12 +76,12 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final FermatSystem fermatSystem =FermatApplication.getInstance().getFermatSystem();
+        final FermatSystem fermatSystem = FermatApplication.getInstance().getFermatSystem();
 
         try {
             AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
 //            AndroidCoreUtils.getInstance().setContextAndResume(this);
-            fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils));
+            fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils),false);
         } catch (FermatException e) {
 
             System.err.println(e.toString());
@@ -88,93 +92,93 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
 
         startReceiver = new StartReceiver();
 
-        if(!myReceiverIsRegistered) {
+        if (!myReceiverIsRegistered) {
             registerReceiver(startReceiver, new IntentFilter("org.fermat.SYSTEM_RUNNING"));
             myReceiverIsRegistered = true;
         }
 
-            // Indicate if the app was loaded, for not load again the start activity.
-            if (WAS_START_ACTIVITY_LOADED) {
-                this.fermatInit ();
-            }
+        // Indicate if the app was loaded, for not load again the start activity.
+        if (WAS_START_ACTIVITY_LOADED) {
+            this.fermatInit();
+        }
 
-            try {
-                setContentView(R.layout.splash_screen);
+        try {
+            setContentView(R.layout.splash_screen);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) getWindow().setStatusBarColor(Color.TRANSPARENT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
 
-                imageView_fermat = (ImageView) findViewById(R.id.imageView_fermat);
+            imageView_fermat = (ImageView) findViewById(R.id.imageView_fermat);
 
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                        Toast.LENGTH_LONG).show();
-            }
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    Toast.LENGTH_LONG).show();
+        }
 
-            int applicationState = FermatApplication.getInstance().getApplicationState();
+        int applicationState = FermatApplication.getInstance().getApplicationState();
 
-            if(applicationState==FermatFramework.STATE_NOT_CREATED) {
+        if (applicationState == FermatFramework.STATE_NOT_CREATED) {
 //                mDialog = new ProgressDialog(this);
 //                mDialog.setMessage("Please wait...");
 //                mDialog.setCancelable(false);
 //////                    mDialog.show();
 
 
-                animation1 = new AlphaAnimation(0.0f, 1.0f);
-                animation1.setDuration(1000);
-                //animation1.setStartOffset(5000);
+            animation1 = new AlphaAnimation(0.0f, 1.0f);
+            animation1.setDuration(1000);
+            //animation1.setStartOffset(5000);
 
-                //animation1 AnimationListener
-                animation1.setAnimationListener(new Animation.AnimationListener(){
+            //animation1 AnimationListener
+            animation1.setAnimationListener(new Animation.AnimationListener() {
 
-                    @Override
-                    public void onAnimationEnd(Animation arg0) {
-                        // start animation2 when animation1 ends (continue)
-                        imageView_fermat.startAnimation(animation2);
-                    }
+                @Override
+                public void onAnimationEnd(Animation arg0) {
+                    // start animation2 when animation1 ends (continue)
+                    imageView_fermat.startAnimation(animation2);
+                }
 
-                    @Override
-                    public void onAnimationRepeat(Animation arg0) {
-                        // TODO Auto-generated method stub
+                @Override
+                public void onAnimationRepeat(Animation arg0) {
+                    // TODO Auto-generated method stub
 
-                    }
+                }
 
-                    @Override
-                    public void onAnimationStart(Animation arg0) {
-                        // TODO Auto-generated method stub
+                @Override
+                public void onAnimationStart(Animation arg0) {
+                    // TODO Auto-generated method stub
 
-                    }
+                }
 
-                });
+            });
 
-                animation2 = new AlphaAnimation(1.0f, 0.0f);
-                animation2.setDuration(1000);
-                //animation2.setStartOffset(5000);
+            animation2 = new AlphaAnimation(1.0f, 0.0f);
+            animation2.setDuration(1000);
+            //animation2.setStartOffset(5000);
 
-                //animation2 AnimationListener
-                animation2.setAnimationListener(new Animation.AnimationListener() {
+            //animation2 AnimationListener
+            animation2.setAnimationListener(new Animation.AnimationListener() {
 
-                    @Override
-                    public void onAnimationEnd(Animation arg0) {
-                        // start animation1 when animation2 ends (repeat)
-                        imageView_fermat.startAnimation(animation1);
-                    }
+                @Override
+                public void onAnimationEnd(Animation arg0) {
+                    // start animation1 when animation2 ends (repeat)
+                    imageView_fermat.startAnimation(animation1);
+                }
 
-                    @Override
-                    public void onAnimationRepeat(Animation arg0) {
-                        // TODO Auto-generated method stub
+                @Override
+                public void onAnimationRepeat(Animation arg0) {
+                    // TODO Auto-generated method stub
 
-                    }
+                }
 
-                    @Override
-                    public void onAnimationStart(Animation arg0) {
-                        // TODO Auto-generated method stub
+                @Override
+                public void onAnimationStart(Animation arg0) {
+                    // TODO Auto-generated method stub
 
-                    }
+                }
 
-                });
+            });
 
-                imageView_fermat.startAnimation(animation1);
-
+            imageView_fermat.startAnimation(animation1);
 
 
 //                GetTaskV2 getTask = new GetTaskV2(this,this);
@@ -182,23 +186,32 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
 //                getTask.execute();
 
 
-            }else if (applicationState == FermatFramework.STATE_STARTED ){
-                fermatInit();
-            }
+        } else if (applicationState == FermatFramework.STATE_STARTED) {
+            fermatInit();
+        }
 
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
                 try {
+                    if(startTime==0){
+                        startTime = System.nanoTime();
+                    }
                     if (FermatApplication.getInstance().isFermatRunning()) {
                         fermatInit();
+                    }else{
+                        if (TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTime)>60){
+                            Log.i(TAG,"Checking platform...");
+                            FermatApplication.getInstance().reconnect();
+                            startTime = System.nanoTime();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }, 0, 3, TimeUnit.SECONDS);
+        }, 0, 5, TimeUnit.SECONDS);
 
     }
 
@@ -227,7 +240,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
 //                }
 //            }
 //        }).start();
-        if(!myReceiverIsRegistered){
+        if (!myReceiverIsRegistered) {
             registerReceiver(startReceiver, new IntentFilter("org.fermat.SYSTEM_RUNNING"));
             myReceiverIsRegistered = true;
         }
@@ -235,7 +248,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
             if (FermatApplication.getInstance().isFermatRunning()) {
                 fermatInit();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -257,8 +270,6 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
     }
 
 
-
-
     /**
      * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
      */
@@ -276,7 +287,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(myReceiverIsRegistered) {
+        if (myReceiverIsRegistered) {
             unregisterReceiver(startReceiver);
             myReceiverIsRegistered = false;
         }
@@ -318,18 +329,18 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
                 Toast.LENGTH_LONG).show();
     }
 
-    private void setPlatformDeviceInfo(PlatformInfoManager platformInfoManager){
+    private void setPlatformDeviceInfo(PlatformInfoManager platformInfoManager) {
         try {
             PlatformInfo platformInfo = platformInfoManager.getPlatformInfo();
             platformInfo.setScreenSize(getScreenSize());
             platformInfoManager.setPlatformInfo(platformInfo);
-        } catch(
+        } catch (
                 CantSetPlatformInformationException | com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantLoadPlatformInformationException e) {
             e.printStackTrace();
         }
     }
 
-    private ScreenSize getScreenSize(){
+    private ScreenSize getScreenSize() {
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
@@ -340,7 +351,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
     }
 
 
-    private class StartReceiver extends BroadcastReceiver{
+    private class StartReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

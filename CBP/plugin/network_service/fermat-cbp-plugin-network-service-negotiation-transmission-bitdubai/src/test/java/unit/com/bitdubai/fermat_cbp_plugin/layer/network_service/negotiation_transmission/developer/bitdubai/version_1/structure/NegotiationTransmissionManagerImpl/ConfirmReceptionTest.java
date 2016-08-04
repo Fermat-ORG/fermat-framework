@@ -19,8 +19,9 @@ import static org.mockito.Mockito.mock;
 public class ConfirmReceptionTest {
 
     private final UUID transmissionId = UUID.randomUUID();
+
     @Test
-    public void confirmReception() throws Exception{
+    public void confirmReception() throws Exception {
 
         NegotiationTransmissionManagerImpl negotiationTransmissionManagerImpl = mock(NegotiationTransmissionManagerImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(negotiationTransmissionManagerImpl).confirmReception(transmissionId);

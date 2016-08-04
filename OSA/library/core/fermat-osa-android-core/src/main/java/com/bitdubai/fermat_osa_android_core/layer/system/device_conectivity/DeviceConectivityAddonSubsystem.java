@@ -9,7 +9,6 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.DeveloperBitDubai;
 
 /**
- *
  * @version 1.0
  * @since Java JDK 1.7
  */
@@ -24,7 +23,7 @@ public class DeviceConectivityAddonSubsystem extends AbstractAddonSubsystem {
         try {
             registerDeveloper(new DeveloperBitDubai(new AddonDeveloperReference(Developers.BITDUBAI)));
         } catch (Exception e) {
-            System.err.println("Exception: " + e.getMessage());
+            System.err.println(new StringBuilder().append("Exception: ").append(e.getMessage()).toString());
             throw new CantStartSubsystemException(e, null, null);
         }
     }

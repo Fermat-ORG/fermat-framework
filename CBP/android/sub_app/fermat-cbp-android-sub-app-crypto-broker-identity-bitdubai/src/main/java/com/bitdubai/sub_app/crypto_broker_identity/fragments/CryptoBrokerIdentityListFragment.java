@@ -80,6 +80,7 @@ public class CryptoBrokerIdentityListFragment
     @Override
     public void onStart() {
         super.onStart();
+//        onRefreshCustomer();
         onRefresh();
     }
 
@@ -275,6 +276,85 @@ public class CryptoBrokerIdentityListFragment
     }
 
     /**
+     * Checking if a customer profile is already created before a broker is created
+     */
+//    public void onRefreshCustomer() {
+//        try{
+//            final FermatWorker worker = new FermatWorker() {
+//                @Override
+//                protected Object doInBackground() throws Exception {
+//                    return getMoreDataAsyncCustomer();
+//                }
+//            };
+//            worker.setContext(getActivity());
+//            worker.setCallBack(new FermatWorkerCallBack() {
+//                @SuppressWarnings("unchecked")
+//                @Override
+//                public void onPostExecute(Object... result) {
+//                    if (isAttached) {
+//                        if (result != null &&
+//                                result.length > 0) {
+//                            if (getActivity() != null) {
+//                                existentCustomerIdentityDialog();
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onErrorOccurred(Exception ex) {
+//                    try{
+//                        worker.shutdownNow();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//            worker.execute();
+//        }catch (Exception ignore){
+//            if (executor != null) {
+//                executor.shutdown();
+//                executor = null;
+//            }
+//        }
+//    }
+//
+//    public void existentCustomerIdentityDialog() {
+//        try {
+//            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+//                    .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
+//                    .setBody(R.string.cbp_broker_identity_existent_customer)
+//                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+//                    .setIconRes(R.drawable.bi_icon)
+//                    .setCheckButtonAndTextVisible(0)
+//                    .setIsCheckEnabled(false)
+//                    .setBannerRes(R.drawable.banner_identity)
+//                    .setVIewColor(R.color.background_toolbar)
+//                    .build();
+//            pd.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialog) {
+//                    getActivity().onBackPressed();
+//                }
+//            });
+//            pd.show();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public List<CryptoCustomerIdentityInformation> getMoreDataAsyncCustomer() {
+//        List<CryptoCustomerIdentityInformation> data = new ArrayList<>();
+//        try {
+//            data = appSession.getModuleManager().getAllCryptoCustomersIdentities(0, 0);
+//        } catch (CantGetCryptoCustomerListException ex) {
+//            appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+//                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+//        }
+//        return data;
+//    }
+
+    /**
      * Receiver class implemented
      */
     private class BrokerIdentityBroadcastReceiver extends FermatBroadcastReceiver {
@@ -282,7 +362,7 @@ public class CryptoBrokerIdentityListFragment
         @Override
         public void onReceive(FermatBundle fermatBundle) {
             try {
-                if(isAttached) {
+                if (isAttached) {
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                     if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)) {

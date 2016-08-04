@@ -16,7 +16,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version.RequestSendHistoryFragment;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version.SendTransactionFragment2;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version.SettingsNotificationsFragment;
+
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version.WalletErrorReportFragment;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
 
@@ -90,9 +90,7 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Fermat
                 case CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT:
                     currentFragment = FermatWalletSettings.newInstance();
                     break;
-                case CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS:
-                    currentFragment = SettingsNotificationsFragment.newInstance();
-                    break;
+
                 case CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK:
                     //currentFragment = SettingsMainNetworkFragment.newInstance();
                     break;

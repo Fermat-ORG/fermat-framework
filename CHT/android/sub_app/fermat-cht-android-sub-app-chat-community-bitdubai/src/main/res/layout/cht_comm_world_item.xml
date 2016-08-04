@@ -36,7 +36,6 @@
         android:layout_marginLeft="10dp"
         android:layout_below="@+id/profile_image"
         android:maxLines="1"
-        android:text="Person Namelsky"
         android:textAlignment="center"
         android:textStyle="normal"
         android:textColor="#757575"
@@ -65,11 +64,9 @@
             android:layout_centerHorizontal="true"
             android:textAlignment="center"
             android:maxLines="1"
-            android:text="Location - Place"
             android:textColor="#47BF73"
             android:textSize="12dp" />
     </RelativeLayout>
-
 
     <TextView
         android:id="@+id/connection_text"
@@ -81,7 +78,7 @@
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
         android:maxLines="3"
-        android:text="is now a connection"
+        android:text="@string/cht_comm_now_conn"
         android:textColor="#757575"
         android:visibility="gone"
         android:textSize="10dp" />
@@ -139,7 +136,7 @@
         android:layout_height="35dp"
         android:paddingRight="30dp"
         android:paddingLeft="30dp"
-        android:text="Add Contact"
+        android:text="@string/cht_comm_add_contact_button"
         android:textColor="#47BF73"
         android:textAllCaps="false"
         android:textSize="12dp"

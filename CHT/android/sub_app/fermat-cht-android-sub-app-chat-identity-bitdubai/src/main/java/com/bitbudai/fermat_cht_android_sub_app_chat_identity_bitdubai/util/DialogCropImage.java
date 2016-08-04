@@ -14,11 +14,12 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 import com.edmodo.cropper.CropImageView;
+
 /**
  * FERMAT-ORG
  * Developed by Lozadaa on 13/05/16.
  */
-public class DialogCropImage extends FermatDialog implements View.OnClickListener{
+public class DialogCropImage extends FermatDialog implements View.OnClickListener {
 
     /**
      * UI components
@@ -33,6 +34,7 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
     CropImageView cropImageView;
     Bitmap image;
     Bitmap croppedImage;
+
     public DialogCropImage(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources, Bitmap image) {
         super(activity, referenceAppFermatSession, resources);
         this.image = image;
@@ -42,15 +44,15 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            cropImageView = (CropImageView) findViewById(R.id.CropImageView);
-            cropImageView.setImageBitmap(image);
-            cropImageView.setGuidelines(2);
-            Button btnCrop = (Button) findViewById(R.id.btnCrop);
-              Button btnRotate = (Button) findViewById(R.id.btnRotateCropper);
-            Button btnCancel = (Button) findViewById(R.id.btnCancel);
-            btnCrop.setOnClickListener(this);
-            btnCancel.setOnClickListener(this);
-            btnRotate.setOnClickListener(this);
+        cropImageView = (CropImageView) findViewById(R.id.CropImageView);
+        cropImageView.setImageBitmap(image);
+        cropImageView.setGuidelines(2);
+        Button btnCrop = (Button) findViewById(R.id.btnCrop);
+        Button btnRotate = (Button) findViewById(R.id.btnRotateCropper);
+        Button btnCancel = (Button) findViewById(R.id.btnCancel);
+        btnCrop.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
+        btnRotate.setOnClickListener(this);
     }
 
     @Override
@@ -63,7 +65,7 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
         return Window.FEATURE_NO_TITLE;
     }
 
-    public Bitmap getCroppedImage(){
+    public Bitmap getCroppedImage() {
         return croppedImage;
     }
 
@@ -71,17 +73,17 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.btnCrop) {
-            if(cropImageView.getCroppedImage().getHeight() >= 200 && cropImageView.getCroppedImage().getWidth() >= 200) {
+            if (cropImageView.getCroppedImage().getHeight() >= 200 && cropImageView.getCroppedImage().getWidth() >= 200) {
                 croppedImage = cropImageView.getCroppedImage();
                 dismiss();
-            }else{
+            } else {
                 Toast.makeText(getActivity(), "Image crop is too small", Toast.LENGTH_SHORT).show();
             }
         }
         if (i == R.id.btnCancel) {
             dismiss();
         }
-        if( i == R.id.btnRotateCropper){
+        if (i == R.id.btnRotateCropper) {
             cropImageView.rotateImage(90);
         }
     }

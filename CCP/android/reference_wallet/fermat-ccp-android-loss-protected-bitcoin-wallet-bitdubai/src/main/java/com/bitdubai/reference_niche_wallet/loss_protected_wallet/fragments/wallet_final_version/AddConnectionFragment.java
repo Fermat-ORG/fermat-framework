@@ -45,6 +45,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.AddConnectionCallback;
 
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -91,19 +92,10 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
             connectionPickCounter = 0;
             hnadler = new Handler();
 
-            lossProtectedWalletSettings = moduleManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
-
-            if(lossProtectedWalletSettings != null) {
-
-                if (lossProtectedWalletSettings.getBlockchainNetworkType() == null) {
-                    lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                moduleManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), lossProtectedWalletSettings);
-
-            }
-
-            blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
-
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
 
             getActivity().getWindow().setSoftInputMode(

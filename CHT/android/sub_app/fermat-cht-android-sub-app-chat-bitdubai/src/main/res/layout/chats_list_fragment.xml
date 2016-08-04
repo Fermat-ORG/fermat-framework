@@ -1,46 +1,7 @@
-<!--<android.support.v4.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swipe_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_activity"
-
-    >
-<!--
-  <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
--->
-      <!--       android:background="@color/background_activity"
-      <ProgressBar
-               android:id="@+id/chat_list_progress_bar"
-               style="@style/Widget.AppCompat.ProgressBar"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_gravity="center" />
-
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/no_chats"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/no_chats_message"
-            android:textSize="@dimen/no_messages_text_size"
-            android:visibility="gone" />
-
-           <FermatTextView
-               android:id="@+id/no_chats"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_gravity="center"
-               android:text="@string/no_chats_message"
-               android:textSize="@dimen/no_messages_text_size"
-               android:visibility="gone" />-->
-
+    android:background="@color/background_activity">
       <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
@@ -64,9 +25,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No chats"
+            android:text="@string/cht_no_chat"
             android:id="@+id/nodatalabel"
-            android:textColor="#D1D3D4"
+            android:textColor="@color/cht_no_chat"
             android:textStyle="normal"
             android:textSize="12pt"
             android:layout_below="@+id/nodata"
@@ -75,9 +36,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Please, tap on contacts and select"
+            android:text="@string/cht_contact_select1"
             android:id="@+id/nochatssubtitle"
-            android:textColor="#D1D3D4"
+            android:textColor="@color/cht_no_chat"
             android:textStyle="normal"
             android:textSize="8pt"
             android:layout_marginTop="20dp"
@@ -87,7 +48,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="a friend to start a P2P Chat."
+            android:text="@string/cht_contact_select2"
             android:id="@+id/nochatssubtitle1"
             android:textColor="#D1D3D4"
             android:textStyle="normal"
@@ -95,26 +56,4 @@
             android:layout_below="@+id/nochatssubtitle"
             android:layout_centerHorizontal="true"/>
     </RelativeLayout>
-    <!--  <TextView android:id="@+id/text"
-          android:gravity="center"
-          android:layout_width="268dp"
-          android:layout_height="245dp"
-          android:textColor="@android:color/black"
-          android:fontFamily="sans-serif-light"
-          android:textAppearance="?android:attr/textAppearanceLarge"
-          />
--->
-  <!--  </FrameLayout>
--->
-
- <!--   <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="@dimen/margin_16dp"
-        android:background="@drawable/message_icon_bg"
-        android:src="@drawable/cht_floating_pencil" />-->
 </FrameLayout>
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
-

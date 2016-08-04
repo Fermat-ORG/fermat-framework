@@ -6,16 +6,21 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
@@ -24,6 +29,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMon
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_bch_api.layer.definition.util.CryptoAmount;
+import com.bitdubai.fermat_ccp_api.all_definition.constants.CCPBroadcasterConstants;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantProcessRequestAcceptedException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.exceptions.CantRevertTransactionException;
@@ -37,11 +43,14 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_us
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.OutgoingExtraActorWalletNotSupportedException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionWrapper;
 
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.Transaction;
-
 import java.util.List;
 import java.util.UUID;
+
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_ACTIVITY_TO_OPEN_CODE;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_TO_OPEN_PUBLIC_KEY;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 
 /**
  * Created by eze on 2015.06.25..
@@ -55,8 +64,12 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
     private final CryptoWalletManager cryptoWalletManager;
     private final CryptoVaultManager cryptoVaultManager  ;
+    private final CryptoVaultManager cryptoFermatVaultManager  ;
+
+
 
     private final BlockchainManager bitcoinNetworkManager  ;
+    private final BlockchainManager fermatNetworkManager  ;
     private final ErrorManager         errorManager        ;
     private final OutgoingExtraUserDao dao                 ;
     private EventManager eventManager;
@@ -68,7 +81,9 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
      */
     public OutgoingExtraUserTransactionProcessorAgent(final CryptoWalletManager cryptoWalletManager,
                                                       final CryptoVaultManager cryptoVaultManager  ,
+                                                      final CryptoVaultManager cryptoFermatVaultManager,
                                                       final BlockchainManager bitcoinNetworkManager,
+                                                      final BlockchainManager fermatNetworkManager,
                                                       final ErrorManager         errorManager        ,
                                                       final OutgoingExtraUserDao dao                 ,
                                                       final EventManager eventManager,
@@ -77,7 +92,9 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
         this.cryptoWalletManager = cryptoWalletManager;
         this.cryptoVaultManager   = cryptoVaultManager  ;
+        this.cryptoFermatVaultManager = cryptoFermatVaultManager;
         this.bitcoinNetworkManager   = bitcoinNetworkManager  ;
+        this.fermatNetworkManager = fermatNetworkManager;
         this.errorManager         = errorManager        ;
         this.dao                  = dao                 ;
         this.eventManager         = eventManager;
@@ -209,7 +226,13 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
         for(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionWrapper transaction : transactionList) {
             // Now we apply it in the vault
             try {
-                String hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), new CryptoAmount(transaction.getAmount(),transaction.getFeeOrigin(),transaction.getFee()), transaction.getBlockchainNetworkType());
+                String hash = "";
+                //check currency btc or frmts
+                if(transaction.getCryptoCurrency().equals(CryptoCurrency.BITCOIN))
+                 hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), new CryptoAmount(transaction.getAmount(), transaction.getFeeOrigin(), transaction.getFee()), transaction.getBlockchainNetworkType());
+                else
+                    hash = this.cryptoFermatVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), new CryptoAmount(transaction.getAmount(), transaction.getFeeOrigin(), transaction.getFee()), transaction.getBlockchainNetworkType());
+
                 dao.setTransactionHash(transaction,hash);
                 dao.setToSTCV(transaction);
 
@@ -219,7 +242,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
                 try {
                     dao.cancelTransaction(transaction, "Insufficient founds.");
-                    roolback(transaction,false);
+                    roolback(transaction,true);
                 } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e2) {
 
                     reportUnexpectedError(e2);
@@ -238,7 +261,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
                 try {
 
                     dao.cancelTransaction(transaction, "There was a problem and the money was not sent.");
-                    roolback(transaction, false);
+                    roolback(transaction, true);
 
                 } catch (Exception exception) {
                     reportUnexpectedError(exception);
@@ -257,7 +280,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
                 if (dif >= 540000) {
                     try {
                         dao.cancelTransaction(transaction, " ROLLBACK 4.");
-                        roolback(transaction, false);
+                        roolback(transaction, true);
                         System.out.print("ROLLBACK 4");
                     } catch (CantUpdateRecordException e1) {
                         e1.printStackTrace();
@@ -290,8 +313,18 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
             try {
                 CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(transaction.getWalletPublicKey());
-                CryptoStatus cryptoStatus = this.bitcoinNetworkManager.getCryptoStatus(transaction.getTransactionHash());
-                com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionHandler.handleTransaction(transaction, bitcoinNetworkManager, cryptoStatus, cryptoWalletWallet, this.dao, this.errorManager);
+                CryptoStatus cryptoStatus = null;
+                //we get the status from bitcoinNetwork if this a bitcoin transaction
+                if (transaction.getCryptoCurrency() == CryptoCurrency.BITCOIN){
+                    cryptoStatus = this.bitcoinNetworkManager.getCryptoStatus(transaction.getTransactionHash());
+                    com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionHandler.handleTransaction(transaction, bitcoinNetworkManager, cryptoStatus, cryptoWalletWallet, this.dao, this.errorManager);
+                }
+
+                //we get the status from fermatNetwork if this a fermat transaction
+                if (transaction.getCryptoCurrency() == CryptoCurrency.FERMAT){
+                    cryptoStatus = this.fermatNetworkManager.getCryptoStatus(transaction.getTransactionHash());
+                    com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionHandler.handleTransaction(transaction, fermatNetworkManager, cryptoStatus, cryptoWalletWallet, this.dao, this.errorManager);
+                }
 
             } catch (Exception exception) {
                 reportUnexpectedError(exception);
@@ -363,7 +396,24 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
     private void notificateRollbackToGUI(TransactionWrapper transactionWrapper){
 
-        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, transactionWrapper.getWalletPublicKey(),"TRANSACTIONREVERSE_" + transactionWrapper.getTransactionId().toString());
+        FermatBundle fermatBundle = new FermatBundle();
+        fermatBundle.put(SOURCE_PLUGIN, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION.getCode());
+
+
+        try {
+            fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.getByCode(transactionWrapper.getWalletPublicKey()).getCode()));
+            fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.getByCode(transactionWrapper.getWalletPublicKey()).getCode());
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
+
+
+        fermatBundle.put(NOTIFICATION_ID, CCPBroadcasterConstants.TRANSACTION_REVERSE);
+        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+        fermatBundle.put("InvolvedActor","");
+        fermatBundle.put("Amount", transactionWrapper.getTotal());
+
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
     }
 
