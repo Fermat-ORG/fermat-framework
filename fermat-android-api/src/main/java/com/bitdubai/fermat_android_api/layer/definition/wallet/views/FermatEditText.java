@@ -51,7 +51,7 @@ public class FermatEditText extends EditText {
     public void parseAttributes(Context context, AttributeSet attrs) {
         TypedArray values = context.obtainStyledAttributes(attrs, R.styleable.FermatEditText);
         FontType typefaceType = FontType.values()
-                [values.getInt(R.styleable.FermatEditText_typeface, FontType.CAVIAR_DREAMS.ordinal())];
+                [values.getInt(R.styleable.FermatEditText_typeface, FontType.ROBOTO_REGULAR.ordinal())];
         setFont(typefaceType);
         values.recycle();
     }
@@ -70,5 +70,4 @@ public class FermatEditText extends EditText {
             ex.printStackTrace();
         }
     }
-
 }

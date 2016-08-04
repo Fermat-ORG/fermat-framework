@@ -5,7 +5,7 @@ import android.os.Environment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginObjectFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
@@ -16,20 +16,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
 /**
- * Created by Natalia on 29/01/2015.
+ * Created by Matias Furszyfer on 03/08/16.
  */
-
-/**
- * The Plugin File System is the implementation of the file system that is handled to external plugins. It differs
- * from the Platform File System in that this one requires the plug in to identify itself.
- * That Plugin manage binary files
- */
-
-public class AndroidPluginBinaryFile implements PluginBinaryFile {
+public class ObjectFile<O> implements PluginObjectFile<O> {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 6547;
     private static final int HASH_PRIME_NUMBER_ADD = 3847;
@@ -42,10 +39,10 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
     private final FilePrivacy privacyLevel;
     private final FileLifeSpan lifeSpan;
     private String contextPath;
-    private byte[] content;
+    private O content;
 
 
-    public AndroidPluginBinaryFile(final UUID ownerId, final String contextPath, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan) {
+    public ObjectFile(final UUID ownerId, final String contextPath, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan) {
         this.ownerId = ownerId;
         this.contextPath = contextPath;
         this.directoryName = directoryName;
@@ -78,33 +75,25 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
      * PluginBinaryFile Interface implementation.
      */
     @Override
-    public byte[] getContent() {
-        return this.content.clone();
+    public O getContent() {
+        return this.content;
     }
 
     @Override
-    public void setContent(byte[] content) {
-        this.content = content.clone();
+    public void setContent(O content) {
+        this.content = content;
     }
 
     @Override
     public void persistToMedia() throws CantPersistFileException {
         if (content == null) {
-            String message = CantCreateFileException.DEFAULT_MESSAGE;
-            FermatException cause = null;
-            String context = "Content: null";
-            String possibleReason = "We can't write a null byte array in the outputstream";
-            throw new CantPersistFileException(message, cause, context, possibleReason);
+            throw new CantPersistFileException(CantCreateFileException.DEFAULT_MESSAGE, null, "Content: null", "We can't write a null byte array in the outputstream");
         }
 
         /**
          *  Evaluate privacyLevel to determine the location of directory - external or internal
          */
-        String path = "";
-        if (privacyLevel == FilePrivacy.PUBLIC)
-            path = Environment.getExternalStorageDirectory().toString();
-        else
-            path = contextPath;
+        String path = buildPath();
         /**
          * I set the path where the file is going to be located.
          */
@@ -130,81 +119,70 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             /**
              * Finally I write the content.
              */
-            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
-            outputStream.write(this.content);
-            outputStream.close();
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
+            try {
+                outputStream.writeObject(content);
+            } catch (NotSerializableException e) {
+                throw new CantPersistFileException("Not Serializable Exception", e, "File Info: " + toString(), "This is a problem in the outputstream, check the cause message to see what happened");
+            } catch (IOException e) {
+                throw new CantPersistFileException(CantCreateFileException.DEFAULT_MESSAGE, e, "File Info: " + toString(),  "This is a problem in the outputstream, check the cause message to see what happened");
+            } finally {
+                fileOutputStream.close();
+                outputStream.close();
+            }
+
 
         } catch (Exception e) {
-            String message = CantCreateFileException.DEFAULT_MESSAGE;
-            FermatException cause = FermatException.wrapException(e);
-            String context = "File Info: " + toString();
-            String possibleCause = "This is a problem in the outputstream, check the cause message to see what happened";
-            throw new CantPersistFileException(message, cause, context, possibleCause);
+            throw new CantPersistFileException(CantCreateFileException.DEFAULT_MESSAGE, e, "File Info: " + toString(), "This is a problem in the outputstream, check the cause message to see what happened");
         }
     }
 
 
     @Override
     public void loadFromMedia() throws CantLoadFileException {
-
-        FileInputStream binaryStream = null;
-        ByteArrayOutputStream buffer = null;
         try {
             /**
              *  Evaluate privacyLevel to determine the location of directory - external or internal
              */
-            String path = "";
-            if (privacyLevel == FilePrivacy.PUBLIC)
-                path = Environment.getExternalStorageDirectory().toString();
-            else
-                path = contextPath;
+            String path = buildPath();
 
             /**
              * Get the file handle.
              */
             File file = new File(path + "/" + this.ownerId + "/" + this.directoryName + "/" + this.fileName);
 
-
             /**
              * Read the content.
              */
             if (file.exists()) {
-                binaryStream = new FileInputStream(file);
-                buffer = new ByteArrayOutputStream();
-
-                int nRead;
-                byte[] data = new byte[16384];
-
-                while ((nRead = binaryStream.read(data, 0, data.length)) != -1) {
-                    buffer.write(data, 0, nRead);
+                FileInputStream binaryStream = new FileInputStream(file);
+                ObjectInputStream buffer = new ObjectInputStream(binaryStream);
+                try {
+                    content = (O) buffer.readObject();
+                }catch (Exception e){
+                    throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, e, "", "Check the cause of this error");
+                }finally {
+                    binaryStream.close();
+                    buffer.close();
                 }
-
-                buffer.flush();
-
-                /**
-                 * return content.
-                 */
-                this.content = buffer.toByteArray();
-            } else {
-                this.content = new byte[0];
             }
         } catch (Exception e) {
             throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, e, "", "Check the cause of this error");
-
-        } finally {
-            try {
-                binaryStream.close();
-            }catch (Exception e){
-                //nothing
-            }
-
-            try{
-                buffer.close();
-            }catch (Exception e){
-                //nothing
-            }
-
         }
+    }
+
+    public boolean exist(){
+        return new File(buildPath() + "/" + this.ownerId + "/" + this.directoryName + "/" + this.fileName).exists();
+    }
+
+    private String buildPath(){
+        String path = "";
+        if (privacyLevel == FilePrivacy.PUBLIC)
+            path = Environment.getExternalStorageDirectory().toString();
+        else
+            path = contextPath;
+        return path;
     }
 
     @Override
@@ -252,6 +230,5 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             path = contextPath;
         return path + "/" + this.directoryName + "/" + fileName;
     }
-
 
 }
