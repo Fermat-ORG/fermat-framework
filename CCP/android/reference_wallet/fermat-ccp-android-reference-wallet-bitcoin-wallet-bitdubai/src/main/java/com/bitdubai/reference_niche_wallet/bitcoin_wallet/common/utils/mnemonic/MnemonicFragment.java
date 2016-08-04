@@ -46,7 +46,7 @@ public class MnemonicFragment extends AbstractFermatFragment<ReferenceAppFermatS
             errorManager = appSession.getErrorManager();
 
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
@@ -75,10 +75,10 @@ public class MnemonicFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
         } catch (CantGetMnemonicTextException e) {
             e.printStackTrace();
-            Toast.makeText(getActivity(), "Error Getting Mnemonic Text", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_msg_mnemonic_text), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
 
 //        send_button.setOnClickListener(new View.OnClickListener() {

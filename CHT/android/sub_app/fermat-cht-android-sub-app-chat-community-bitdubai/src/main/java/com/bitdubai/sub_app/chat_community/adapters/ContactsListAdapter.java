@@ -82,7 +82,7 @@ public class ContactsListAdapter
                     countryAddress = "";
                 else countryAddress = data.getCountry();
                 if (/*stateAddress.equalsIgnoreCase("") && */cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
-                    holder.location.setText("Not Found");
+                    holder.location.setText(context.getResources().getString(R.string.cht_comm_not_found));
                 } else
                     holder.location.setText(new StringBuilder().append(cityAddress).append(" ").append(countryAddress).toString());
 //            } else

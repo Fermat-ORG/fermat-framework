@@ -35,20 +35,25 @@
     <string name="cht_chat_body">Si usted no tiene ninguna identidad registrada, favor registre una en nuestro P2P Chat Identity.</string>
     <string name="cht_chat_footer">P2P Chat</string>
     <string name="cht_no_chat">No hay chats</string>
-    <string name="cht_contact_select">Favor, toque en Contactos y seleccione uno para comenzar un P2P Chat.</string>
-    <string name="cht_contact_select1">Favor, toque en Contactos y </string>
-    <string name="cht_contact_select2">seleccione uno para comenzar un P2P Chat.</string>
+    <string name="cht_contact_select">Por favor, vaya a Contactos y seleccione un contacto para comenzar un P2P Chat.</string>
+    <string name="cht_contact_select1">Por favor, vaya a Contactos y </string>
+    <string name="cht_contact_select2">seleccione un contacto para comenzar un P2P Chat.</string>
     <string name="cht_contact_list_select1">Para agregar contactos, vaya a P2P Chat</string>
     <string name="cht_contact_list_select2">Community y envíe una solicitud</string>
     <string name="cht_contact_list_select3">de conexión a otro usuario o amigo.</string>
-    <string name="cht_dialog_welcome">Bienvenido!</string>
+    <string name="cht_dialog_welcome">¡Bienvenido!</string>
     <string name="cht_dialog_subtitle">Bienvenido a P2P Chat</string>
-    <string name="cht_dialog_content">Si usted no tiene ninguna identidad registrada, favor registre una en nuestro P2P Chat Identity.</string>
+    <string name="cht_dialog_content">Si usted no tiene ninguna identidad registrada, por favor registre una en nuestro P2P Chat Identity.</string>
     <string name="cht_dialog_dont_show">No mostrar de nuevo</string>
     <string name="cht_dialog_button_close">OK</string>
     <string name="cht_dialog_add_connection">Agregar conexiones</string>
     <string name="cht_yes">Sí</string>
     <string name="cht_no">No</string>
+    <string name="cht_last_time">Ultima vez </string>
+    <string name="cht_online">en línea</string>
+    <string name="cht_typing">escribiendo...</string>
+    <string name="cht_today">hoy a </string>
+    <string name="cht_yesterday">ayer a </string>
 
     <string name="cht_select">Seleccione</string>
     

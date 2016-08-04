@@ -262,7 +262,7 @@
         android:layout_width="150dp"
         android:layout_height="35dp"
         android:layout_marginTop="20dp"
-        android:text="Show more"
+        android:text="@string/cht_comm_show_more"
         android:textColor="#47BF73"
         android:textAllCaps="false"
         android:textSize="12dp"
