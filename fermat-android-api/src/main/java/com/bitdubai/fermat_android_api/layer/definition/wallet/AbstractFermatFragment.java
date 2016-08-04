@@ -4,8 +4,10 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.Notification;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -78,6 +80,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
      * Receivers
      */
     private List<FermatBroadcastReceiver> receivers;
+    private List<BroadcastReceiver> androidReceivers;
 
     /**
      * OptionMenuListeners
@@ -143,6 +146,11 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
         isAttached = false;
     }
 
+    @Override
+    public void onDestroy() {
+        unregisterAllReceivers();
+        super.onDestroy();
+    }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -396,9 +404,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     }
 
 
+
+
     protected void destroy() {
         unregisterAllReceivers();
-        onDestroy();
         System.gc();
     }
 
@@ -629,9 +638,45 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     protected void unregisterAllReceivers() {
         if (receivers != null) {
             for (FermatBroadcastReceiver receiver : receivers) {
-                getFrameworkHelpers().unregisterReceiver(receiver, appSession.getAppPublicKey());
+                try {
+                    getFrameworkHelpers().unregisterReceiver(receiver, appSession.getAppPublicKey());
+                }catch (Exception e){
+                    Log.e(TAG,"receiver cant be unregistered");
+                }
             }
         }
+        if (androidReceivers!=null){
+            for (BroadcastReceiver androidReceiver : androidReceivers) {
+                try {
+                    unregisterReceiver(androidReceiver);
+                }catch (Exception e){
+                    Log.e(TAG,"android receiver cant be unregistered");
+                }
+
+            }
+        }
+    }
+
+    /**
+     * Android receivers
+     */
+    protected boolean sendBroadcast(Intent intent){
+        return LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+    }
+    protected void registerReceiver(BroadcastReceiver receiver,IntentFilter intent){
+        registerReceiver(receiver, intent, false);
+    }
+
+    protected void registerReceiver(BroadcastReceiver receiver,IntentFilter intent,boolean keepReceiverAvailable){
+        if (!keepReceiverAvailable) {
+            if (androidReceivers==null) androidReceivers = new ArrayList<>();
+            androidReceivers.add(receiver);
+        }
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, intent);
+    }
+
+    protected void unregisterReceiver(BroadcastReceiver receiver){
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
     }
 
     /**

@@ -110,7 +110,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
         }
     };
 
-    private LossProtectedWalletSettings lossProtectedWalletSettings;
+
     BlockchainNetworkType blockchainNetworkType;
 
 
@@ -135,18 +135,10 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
-
-            if(lossProtectedWalletSettings != null) {
-
-                if (lossProtectedWalletSettings.getBlockchainNetworkType() == null) {
-                    lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                lossProtectedWalletManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), lossProtectedWalletSettings);
-
-            }
-
-            blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
 
           } catch (Exception e) {

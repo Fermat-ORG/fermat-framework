@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -61,6 +62,8 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
 
     private ImageView imageView_fermat;
 
+    private long startTime;
+
     Animation animation1;
     Animation animation2;
 
@@ -78,7 +81,7 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
         try {
             AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
 //            AndroidCoreUtils.getInstance().setContextAndResume(this);
-            fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils));
+            fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils),false);
         } catch (FermatException e) {
 
             System.err.println(e.toString());
@@ -192,14 +195,23 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
             @Override
             public void run() {
                 try {
+                    if(startTime==0){
+                        startTime = System.nanoTime();
+                    }
                     if (FermatApplication.getInstance().isFermatRunning()) {
                         fermatInit();
+                    }else{
+                        if (TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTime)>60){
+                            Log.i(TAG,"Checking platform...");
+                            FermatApplication.getInstance().reconnect();
+                            startTime = System.nanoTime();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }, 0, 3, TimeUnit.SECONDS);
+        }, 0, 5, TimeUnit.SECONDS);
 
     }
 

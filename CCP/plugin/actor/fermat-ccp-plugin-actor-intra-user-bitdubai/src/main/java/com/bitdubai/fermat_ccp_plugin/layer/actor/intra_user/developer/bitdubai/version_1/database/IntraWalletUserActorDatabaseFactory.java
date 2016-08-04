@@ -68,6 +68,8 @@ private PluginDatabaseSystem pluginDatabaseSystem;
                 table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME         , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
                 table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
                 table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME                    , DatabaseDataType.STRING      , 200, Boolean.FALSE);
+                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_COUNTRY_COLUMN_NAME                    , DatabaseDataType.STRING      , 50, Boolean.FALSE);
+                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CITY_COLUMN_NAME                    , DatabaseDataType.STRING      , 50, Boolean.FALSE);
 
                 //Create the table
                 databaseFactory.createTable(ownerId, table);

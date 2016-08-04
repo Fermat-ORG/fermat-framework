@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- balance_header.xml -->
-    <string name="available_balance_text">Available balance</string>
+    <string name="available_balance_text">Current balance</string>
     <string name="touch_to_change_text">Touch to change</string>
     <!-- ccp_grouper_list_item.xml -->
     <string name="txt_total_balance_15_btc_text">15 FTMS</string>
@@ -221,8 +221,8 @@
     <string name="title_activity_activity_main">Main Activity</string>
     <string name="empty_view">Empty List view</string>
     <!-- TAB BALANCE STRINGS -->
-    <string name="available_balance">available balance</string>
-    <string name="book_balance">book balance</string>
+    <string name="available_balance">Current balance</string>
+    <string name="book_balance">Book balance</string>
     <string name="search_hint">Contact name</string>
     <string name="empty_list_msg">No contacts</string>
     <!-- TAB TRANSACTIONS -->

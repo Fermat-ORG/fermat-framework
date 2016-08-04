@@ -45,9 +45,9 @@ public class NetworkClientRegisteredEventHandler implements FermatEventHandler<N
      */
     @Override
     public void handleEvent(NetworkClientRegisteredEvent fermatEvent) throws FermatException {
-
-        if (this.networkService.isStarted())
-            networkService.handleNetworkClientRegisteredEvent(fermatEvent.getCommunicationChannel());
+        //todo: esto lo saqué, ahora usamos la capa para registrar.
+        //if (this.networkService.isStarted())
+            //networkService.handleNetworkClientRegisteredEvent(fermatEvent.getCommunicationChannel());
 
     }
 }

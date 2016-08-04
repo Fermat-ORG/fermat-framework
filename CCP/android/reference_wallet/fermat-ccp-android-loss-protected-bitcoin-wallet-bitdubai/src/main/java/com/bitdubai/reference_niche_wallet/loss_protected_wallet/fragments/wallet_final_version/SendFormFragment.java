@@ -108,6 +108,7 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 
 /**
  * Created by Matias Furszyfer on 2015.11.05..
+ * updated by Andres Abreu aabreu1 2016/07/28
  */
 public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatSession<LossProtectedWallet>,ResourceProviderManager> implements View.OnClickListener{
 
@@ -188,27 +189,25 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             lossProtectedWalletSession = appSession;
 
             lossProtectedWalletManager = appSession.getModuleManager();
-            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey());
-
-            if(lossProtectedWalletSettings != null) {
-
-                blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
-                lossProtectedEnabled = lossProtectedWalletSettings.getLossProtectedEnabled();
-
-                if (lossProtectedWalletSettings.getFeedLevel() == null) {
-                    lossProtectedWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
-                    feeLevel = lossProtectedWalletSettings.getFeedLevel();
-                }
-                else    feeLevel = lossProtectedWalletSettings.getFeedLevel();
-
-            }
 
 
-        } catch (CantGetSettingsException e) {
-            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
-        } catch (SettingsNotFoundException e) {
+            if(appSession.getData(SessionConstant.FEE_LEVEL) != null)
+                feeLevel = (String)appSession.getData(SessionConstant.FEE_LEVEL);
+            else
+                feeLevel = BitcoinFee.NORMAL.toString();
+
+
+            if(appSession.getData(SessionConstant.LOSS_PROTECTED_ENABLED) != null)
+                lossProtectedEnabled = (boolean)appSession.getData(SessionConstant.LOSS_PROTECTED_ENABLED);
+            else
+                lossProtectedEnabled = true;
+
+        } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
 
@@ -815,7 +814,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)
                     != 0){
                 if (lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
-                    CryptoAddress validAddress = WalletUtils.validateAddress(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWalletManager);
+                    CryptoAddress validAddress = WalletUtils.validateAddress(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWalletManager,blockchainNetworkType);
                     if (validAddress != null) {
                         EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
                         String amount = txtAmount.getText().toString();
@@ -979,6 +978,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             } catch (Exception e) {
                                 appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                                 Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+
                             }
                         } else {
                             Toast.makeText(getActivity(), "Invalid Amount", Toast.LENGTH_LONG).show();

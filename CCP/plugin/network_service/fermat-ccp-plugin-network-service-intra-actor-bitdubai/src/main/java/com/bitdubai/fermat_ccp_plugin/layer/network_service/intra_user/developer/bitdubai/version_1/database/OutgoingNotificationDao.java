@@ -80,7 +80,8 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                                            ActorProtocolState          protocolState    ,
                                            boolean                     flagReaded,
                                            int sentCount,
-                                           UUID responseToNotificationId                     ) throws CantCreateNotificationException {
+                                           UUID responseToNotificationId ,
+                                           String city, String country) throws CantCreateNotificationException {
 
         try {
 
@@ -106,7 +107,9 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                         protocolState             ,
                         flagReaded,
                         sentCount,
-                         responseToNotificationId
+                         responseToNotificationId,
+                         city,
+                         country
 
                 );
 
@@ -455,12 +458,15 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME     , connectionRequestRecord.getNotificationDescriptor().getCode()                                 );
             record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME, connectionRequestRecord.getActorDestinationType().getCode());
             record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME, connectionRequestRecord.getActorSenderType().getCode());
-            record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME    , connectionRequestRecord.getActorSenderPublicKey()                 );
-            record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME    , connectionRequestRecord.getActorDestinationPublicKey());
+            record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, connectionRequestRecord.getActorSenderPublicKey());
+            record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, connectionRequestRecord.getActorDestinationPublicKey());
             record.setLongValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, connectionRequestRecord.getSentDate());
             record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, connectionRequestRecord.getActorProtocolState().getCode());
-            record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME           , String.valueOf(connectionRequestRecord.isFlagReadead())                  );
+            record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(connectionRequestRecord.isFlagReadead()));
             record.setIntegerValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME, connectionRequestRecord.getSentCount());
+            record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_CITY_COLUMN_NAME, connectionRequestRecord.getCity());
+            record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_COUNTRY_COLUMN_NAME, connectionRequestRecord.getCountry());
+
             if(connectionRequestRecord.getResponseToNotificationId()!=null)
             record.setUUIDValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, connectionRequestRecord.getResponseToNotificationId());
 
@@ -494,8 +500,10 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         long timestamp           = record.getLongValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
         String protocolState         = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
         String flagReaded  = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME);
+            String city   = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME      );
+            String country   = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME      );
 
-        int sentCount =  record.getIntegerValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME);
+            int sentCount =  record.getIntegerValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME);
             UUID   responseToNotificationId            = record.getUUIDValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
 
 
@@ -530,7 +538,9 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                 actorProtocolState             ,
                 readed,
                 sentCount,
-                responseToNotificationId
+                responseToNotificationId,
+                city,
+                country
         );
 
         }

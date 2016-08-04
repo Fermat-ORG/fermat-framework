@@ -58,26 +58,18 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
 
         try {
-            fermatWalletSettings = cryptoWallet.loadAndGetSettings(this.referenceWalletSession.getAppPublicKey());
-            if (fermatWalletSettings.getFeedLevel() == null)
-                fermatWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
+            if(referenceWalletSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)referenceWalletSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
             else
-                feeLevel = fermatWalletSettings.getFeedLevel();
-
-            if (fermatWalletSettings.getBlockchainNetworkType() == null) {
-                fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-            }
+
+            if(referenceWalletSession.getData(SessionConstant.FEE_LEVEL) != null)
+                feeLevel = (String)referenceWalletSession.getData(SessionConstant.FEE_LEVEL);
             else
-                blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
+                feeLevel = BitcoinFee.NORMAL.toString();
 
-            this.cryptoWallet.persistSettings(referenceWalletSession.getAppPublicKey(), fermatWalletSettings);
 
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantPersistSettingsException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -224,8 +216,9 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                 public void onClick(View view) {
                     try {
                         //check amount + fee less than balance
+
                         long availableBalance = cryptoWallet.getBalance(com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(), blockchainNetworkType);
-                        if(data.getAmount() < availableBalance)
+                        if((data.getAmount() + BitcoinFee.valueOf(feeLevel).getFee()) < availableBalance)
                         {
                             cryptoWallet.approveRequest(data.getRequestId()
                                     , referenceWalletSession.getModuleManager().getSelectedActorIdentity().getPublicKey());

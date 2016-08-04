@@ -870,6 +870,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         }
     }
 
+    @Override
     public void testNetGiveMeCoins(BlockchainNetworkType blockchainNetworkType, CryptoAddress cryptoAddress) throws CantGetCoinsFromFaucetException{
 
             BitcoinFaucetManager.giveMeCoins(blockchainNetworkType,cryptoAddress , 100000000);

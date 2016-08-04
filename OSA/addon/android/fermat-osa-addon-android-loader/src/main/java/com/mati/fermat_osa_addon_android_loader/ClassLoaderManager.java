@@ -122,7 +122,7 @@ public class ClassLoaderManager<O extends FermatApplicationSession & FermatConte
                         optimizedDexPath.getAbsolutePath(), null,
                         (baseClassLoader!=null)?baseClassLoader:context.getApplicationContext().getClassLoader()); //AbstractPluginDeveloper.class.getClassLoader());//context.getApplicationContext().getClassLoader().getParent());
                 Class clazz = dcl.loadClass("com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.DeveloperBitDubai");
-                if(clazz!=null)Log.e(TAG,"loadAllPlugins: "+clazz.getName());else Log.e(TAG,"Clazz null DeveloperBitDubai");
+                if(clazz!=null)Log.i(TAG,"loadAllPlugins: "+clazz.getName());else Log.e(TAG,"Clazz null DeveloperBitDubai");
                 return dcl;
             }
         } catch (Exception e) {
@@ -138,7 +138,9 @@ public class ClassLoaderManager<O extends FermatApplicationSession & FermatConte
             for (String title : asset.list("plugins")) {
                 String path = "plugins/" + title;
                 File dexInternalStoragePath = context.getApplicationContext().getDir("dex", Context.MODE_PRIVATE);
-                dexInternalStoragePath.mkdirs();
+                if (dexInternalStoragePath.exists()) {
+                    dexInternalStoragePath.mkdirs();
+                }
                 File f = new File(dexInternalStoragePath, title);
                 InputStream fis = context.getApplicationContext().getAssets().open(path);
                 FileOutputStream fos = new FileOutputStream(f);
