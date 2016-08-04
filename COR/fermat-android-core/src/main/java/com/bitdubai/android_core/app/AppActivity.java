@@ -74,33 +74,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
     }
 
-    /**
-     * Initialize the contents of the Activity's standard options menu
-     *
-     * @param menu
-     * @return true if all is okey
-     */
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        try {
-            MenuInflater inflater = getMenuInflater();
-
-            /**
-             *  Our future code goes here...
-             */
-
-        } catch (Exception e) {
-            getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-
-        return super.onCreateOptionsMenu(menu);
-
-    }
-
 
     /**
      * This hook is called whenever an item in your options menu is selected.
