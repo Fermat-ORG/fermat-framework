@@ -36,8 +36,8 @@
     <string name="cht_chat_footer">P2P Chat</string>
     <string name="cht_no_chat">No hay chats</string>
     <string name="cht_contact_select">Por favor, vaya a Contactos y seleccione un contacto para comenzar un P2P Chat.</string>
-    <string name="cht_contact_select1">Por favor, vaya a Contactos y </string>
-    <string name="cht_contact_select2">seleccione un contacto para comenzar un P2P Chat.</string>
+    <string name="cht_contact_select1">Por favor, vaya a Contactos y seleccione</string>
+    <string name="cht_contact_select2">un contacto para comenzar un P2P Chat.</string>
     <string name="cht_contact_list_select1">Para agregar contactos, vaya a P2P Chat</string>
     <string name="cht_contact_list_select2">Community y envíe una solicitud</string>
     <string name="cht_contact_list_select3">de conexión a otro usuario o amigo.</string>
