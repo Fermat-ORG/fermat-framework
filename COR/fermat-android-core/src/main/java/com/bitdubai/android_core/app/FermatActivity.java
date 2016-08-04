@@ -61,6 +61,7 @@ import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.builders.nav_menu.NavMenuBasicAdapter;
 import com.bitdubai.android_core.app.common.version_1.builders.option_menu.OptionMenuFrameworkHelper;
+import com.bitdubai.android_core.app.common.version_1.builders.toolbar.ToolbarBuilder;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.navigation_view.FermatActionBarDrawerEventListener;
@@ -142,6 +143,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeMa
 import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment_factory.DesktopFragmentsEnumType;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -244,6 +246,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     private OptionsMenu optionsMenu;
     private NavigationViewPainter navigationViewPainter;
+
+    /**
+     * Builders
+     */
+    private ToolbarBuilder toolbarBuilder;
 
     /**
      * Called when the activity is first created
@@ -381,34 +388,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             menu.clear();
             if (optionsMenu != null) {
                 List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
-                for (int i = 0; i < optionsMenuItems.size(); i++) {
-                    OptionMenuItem menuItem = optionsMenuItems.get(i);
-                    MenuItem item = menu.add(menuItem.getGroupId(), menuItem.getId(), menuItem.getOrder(), menuItem.getLabel());
-                    FermatDrawable icon = menuItem.getFermatDrawable();
-                    if (icon != null) {
-                        int iconRes = ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE, this, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
-                        item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                    }
-                    int showAsAction = menuItem.getShowAsAction();
-                    if (showAsAction != -1) item.setShowAsAction(menuItem.getShowAsAction());
-                    int actionViewClass = menuItem.getActionViewClass();
-                    if (actionViewClass != -1) {
-                        item.setActionView(OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this, actionViewClass));
-                    }
-                    if (menuItem.getOptionMenuPressEvent() != null) {
-                        final OptionMenuPressEvent optionMenuPressEvent = menuItem.getOptionMenuPressEvent();
-                        if (optionMenuPressEvent instanceof OptionMenuChangeActivityOnPressEvent) {
-                            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem item) {
-                                    changeActivity(((OptionMenuChangeActivityOnPressEvent) optionMenuPressEvent).getActivityCode(), null);
-                                    //return true because i want to cancell the rest of the callback if this is an activity change
-                                    return true;
-                                }
-                            });
-                        }
-                    }
-                }
+                loadMenu(menu, optionsMenuItems);
             }
             return true;
         } catch (Exception e) {
@@ -644,15 +624,18 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 String title = titleBar.getLabel();
 
                 if (titleBar.isTitleTextStatic()) {
-                    View toolabarContainer = getLayoutInflater().inflate(R.layout.text_view, null);
-                    FermatTextView txt_title = (FermatTextView) toolabarContainer.findViewById(R.id.txt_title);
-                    txt_title.setText(title);
-                    txt_title.setTypeface(typeface);
-                    txt_title.setTextSize(titleBar.getLabelSize());
+//                    View toolabarContainer = getLayoutInflater().inflate(R.layout.text_view, null);
+//                    FermatTextView txt_title = (FermatTextView) toolabarContainer.findViewById(R.id.txt_title);
+//                    txt_title.setText(title);
+//                    txt_title.setTypeface(typeface);
+//                    txt_title.setTextSize(titleBar.getLabelSize());
 
+                    if (toolbarBuilder==null)toolbarBuilder = new ToolbarBuilder(this,mToolbar);
+                    //todo: esto tiene que estar mejor..
+                    View toolabarContainer = toolbarBuilder.buildTitle(title, typeface, titleBar.getLabelSize(),titleBar.getTitleColor());
 
-                    if (titleBar.getTitleColor() != null)
-                        txt_title.setTextColor(Color.parseColor(titleBar.getTitleColor()));
+//                    if (titleBar.getTitleColor() != null)
+//                        txt_title.setTextColor(Color.parseColor(titleBar.getTitleColor()));
                     mToolbar.addView(toolabarContainer);
                 } else {
 
@@ -1443,7 +1426,21 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }
 
             if (mToolbar!=null){
-                mToolbar.removeAllViewsInLayout();
+
+//
+//                try {
+//                    Field field = mToolbar.getClass().getDeclaredField("mMenuView");
+//                    field.setAccessible(true);
+//                    View view = (View) field.get(mToolbar);
+//                    mToolbar.removeAllViewsInLayout();
+//                    Field field1 = mToolbar.getClass().getDeclaredField("mMenuView");
+//                    field1.setAccessible(true);
+//                    field1.set(mToolbar, view);
+//                } catch (NoSuchFieldException e) {
+//                    e.printStackTrace();
+//                } catch (IllegalAccessException e) {
+//                    e.printStackTrace();
+//                }
             }
 
             try{
@@ -1796,6 +1793,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
             if (runtimeStructureManager != null) {
                 runtimeStructureManager.clear();
             }
+
+            if (toolbarBuilder!=null)toolbarBuilder.clear();
 
             resetThisActivity();
 
