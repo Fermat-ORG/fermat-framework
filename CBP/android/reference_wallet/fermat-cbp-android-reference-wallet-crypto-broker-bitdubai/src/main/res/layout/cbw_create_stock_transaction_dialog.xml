@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:hint="@string/amount"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:maxLength="10"
             android:textColor="@color/black"
             android:textColorHint="#9a9a9c"

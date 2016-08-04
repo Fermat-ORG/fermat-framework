@@ -74,33 +74,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
     }
 
-    /**
-     * Initialize the contents of the Activity's standard options menu
-     *
-     * @param menu
-     * @return true if all is okey
-     */
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        try {
-            MenuInflater inflater = getMenuInflater();
-
-            /**
-             *  Our future code goes here...
-             */
-
-        } catch (Exception e) {
-            getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-
-        return super.onCreateOptionsMenu(menu);
-
-    }
-
 
     /**
      * This hook is called whenever an item in your options menu is selected.
@@ -276,6 +249,54 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         }
     }
 
+    @Override
+    public void changeActivity(String activityName, String appPublicKey,String appBackPublicKey, Object... objects) {
+        Activity lastActivity = null;
+        Activity nextActivity = null;
+        try {
+            FermatStructure fermatStructure = FermatApplication.getInstance().getAppManager().getAppStructure(appPublicKey);
+            lastActivity = fermatStructure.getLastActivity();
+            try {
+                nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
+            } catch (Exception e) {
+                e.printStackTrace();
+                try {
+                    //TODO: remember to delete this.
+                    fermatStructure = FermatApplication.getInstance().getAppManager().getAppStructure(appBackPublicKey);
+                    nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                    handleExceptionAndRestart();
+                }
+            }
+            if (nextActivity != null) {
+                if (!nextActivity.equals(lastActivity)) {
+                    resetThisActivity();
+                    loadUI(FermatApplication.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
+                }
+            } else {
+                Log.e(TAG, "Method: New,  nextActivity null Don't be afraid. Contact furszy., activity code: " + activityName + ". AppPublicKey:"+appBackPublicKey+" Please verify that the activity code exist in the fermat structure: " + fermatStructure.getPublicKey() + " \n Extra info: \n LastActivity: " + lastActivity + " FermatStructure: " + fermatStructure + " AppBackPublicKey: " + appBackPublicKey + "\n" + Arrays.toString(FermatApplication.getInstance().getAppManager().getRecentsAppsStack().toArray()));
+                Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
+                handleExceptionAndRestart();
+            }
+        } catch (Exception e) {
+            if (activityName.equals("develop_mode"))
+                onBackPressed();
+            else {
+                getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
+                Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+                handleExceptionAndRestart();
+
+            }
+        } catch (Throwable throwable) {
+            Toast.makeText(getApplicationContext(), "Recovering from system error. Throwable", Toast.LENGTH_LONG).show();
+            throwable.printStackTrace();
+        }
+
+
+    }
+
 
     @Override
     public void changeActivity(String activityName, String appBackPublicKey, Object... objects) {
@@ -303,7 +324,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     loadUI(FermatApplication.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
                 }
             } else {
-                Log.e(TAG, "nextActivity null, activity code: " + activityName + ". Please verify that the activity code exist in the fermat structure: " + fermatStructure.getPublicKey() + " \n Extra info: \n LastActivity: " + lastActivity + " FermatStructure: " + fermatStructure + " AppBackPublicKey: " + appBackPublicKey + "\n" + Arrays.toString(FermatApplication.getInstance().getAppManager().getRecentsAppsStack().toArray()));
+                Log.e(TAG, "nextActivity null, Don't be afraid. Contact furszy. activity code: " + activityName + ". Please verify that the activity code exist in the fermat structure: " + fermatStructure.getPublicKey() + " \n Extra info: \n LastActivity: " + lastActivity + " FermatStructure: " + fermatStructure + " AppBackPublicKey: " + appBackPublicKey + "\n" + Arrays.toString(FermatApplication.getInstance().getAppManager().getRecentsAppsStack().toArray()));
                 Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
                 handleExceptionAndRestart();
             }
@@ -423,7 +444,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         try {
             String activityCode = data.getLinkToActivity().getCode();
             String appLickPublicKey = data.getAppLinkPublicKey();
-            changeActivity(activityCode, appLickPublicKey);
+            changeActivity(activityCode, appLickPublicKey,null,null);
         } catch (Exception e) {
             e.printStackTrace();
         }

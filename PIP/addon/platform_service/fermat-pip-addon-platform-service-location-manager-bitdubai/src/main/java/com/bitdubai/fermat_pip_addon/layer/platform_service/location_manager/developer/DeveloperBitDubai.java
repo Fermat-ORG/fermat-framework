@@ -23,13 +23,13 @@ public class DeveloperBitDubai extends AbstractAddonDeveloper {
 
     @Override
     public void start() throws CantStartAddonDeveloperException {
-        try {
+//        try {
 
-            this.registerVersion(new LocationManagerPlatformServiceAddonRoot());
+//            this.registerVersion(new LocationManagerPlatformServiceAddonRoot());
 
-        } catch (CantRegisterVersionException e) {
-
-            throw new CantStartAddonDeveloperException(e, "", "Error registering addon versions for the developer.");
-        }
+//        } catch (CantRegisterVersionException e) {
+//
+//            throw new CantStartAddonDeveloperException(e, "", "Error registering addon versions for the developer.");
+//        }
     }
 }
