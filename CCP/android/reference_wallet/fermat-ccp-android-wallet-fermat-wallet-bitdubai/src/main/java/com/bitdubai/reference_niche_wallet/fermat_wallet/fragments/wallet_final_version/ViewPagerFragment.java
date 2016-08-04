@@ -48,7 +48,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
 
     //Managers
     FermatWallet fermatWalletManager;
-    FermatWalletSettings fermatWalletSettings;
+
     ErrorManager errorManager;
     String fiatCurrency;
     private TextView tvLabelRate;
