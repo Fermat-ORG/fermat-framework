@@ -75,6 +75,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
     Handler hnadler;
     BlockchainNetworkType blockchainNetworkType;
 
+    FloatingActionMenu actionMenu;
+
     public static AddConnectionFragment newInstance() {
         return new AddConnectionFragment();
     }
@@ -164,7 +166,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
                 .setContentView(frameLayout).setBackgroundDrawable(R.drawable.fermat_add_connection_selector)
                 .build();
 
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+         actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .attachTo(actionButton)
                 .build();
     }
@@ -345,6 +347,20 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         return data;
     }
 
+
+    @Override
+    public void onDestroy() {
+        try {
+
+            FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+            actionMenu = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+//        ((ViewGroup)button1.getParent()).removeView(button1);
+        super.onDestroy();
+    }
+
     private void runThread(){
         Thread timer = new Thread() {
             public void run() {
@@ -386,7 +402,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         if(!isMenuVisible){
             isMenuVisible = true;
             menu.add(0, FermatWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
-                    .setIcon(R.drawable.fermat_button_add_connection)
+                    .setIcon(R.drawable.add_contact_icon.png)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
     }
