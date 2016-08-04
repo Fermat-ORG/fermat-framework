@@ -50,7 +50,7 @@ public class SettingsFeeManagementFragment
     //
 
     private long bitcoinFee = 0;
-    private DecimalFormat df = new DecimalFormat(getResources().getString(R.string.decimal_format));
+    private DecimalFormat df = new DecimalFormat("0.00000000");
     CryptoBrokerWalletPreferenceSettings feeSettings;
 
     //UI

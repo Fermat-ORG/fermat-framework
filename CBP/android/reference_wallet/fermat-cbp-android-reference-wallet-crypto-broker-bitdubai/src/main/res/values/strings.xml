@@ -372,7 +372,6 @@
     <string name="balance">Balance: --</string>
     <string name="daily_earnings">Daily Earnings</string>
 
-    <string name="decimal_format" translatable="false">0.00000000</string>
     <string name="spread_format" translatable="false">%1$s %%</string>
 
     <string name="jan">JAN</string>
