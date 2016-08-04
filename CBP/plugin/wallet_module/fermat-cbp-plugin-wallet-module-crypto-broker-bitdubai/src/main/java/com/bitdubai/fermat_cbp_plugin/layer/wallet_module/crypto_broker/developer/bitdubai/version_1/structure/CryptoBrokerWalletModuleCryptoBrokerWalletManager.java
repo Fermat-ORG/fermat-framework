@@ -184,7 +184,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -699,13 +698,9 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                 List<BankAccountNumber> accounts = getAccounts(associatedWallet.getWalletPublicKey());
                 for (BankAccountNumber accountNumber : accounts) {
                     if (associatedWallet.getBankAccount().equals(accountNumber.getAccount())) {
-                        paymentMethod.add(new StringBuilder()
-                                .append("Bank: ")
-                                .append(accountNumber.getBankName())
-                                .append("\nAccount Number: ")
-                                .append(accountNumber.getAccount())
-                                .append("\nAccount Type: ")
-                                .append(accountNumber.getAccountType().getFriendlyName()).toString());
+                        paymentMethod.add("Bank: " + accountNumber.getBankName() +
+                                "\nAccount Number: " + accountNumber.getAccount() +
+                                "\nAccount Type: " + accountNumber.getAccountType().getFriendlyName());
                     }
                 }
             }
@@ -1638,7 +1633,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                 final Currency merchandise = associatedWallet.getMerchandise();
 
                 if (!associatedMerchandises.contains(merchandise)) {
-                    extraText += firstMerchandise ? merchandise.getCode() : new StringBuilder().append(", ").append(merchandise.getCode()).toString();
+                    extraText += firstMerchandise ? merchandise.getCode() : ", " + merchandise.getCode();
                     associatedMerchandises.add(merchandise);
                     firstMerchandise = false;
                 }
