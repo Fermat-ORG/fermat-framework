@@ -19,7 +19,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -101,7 +101,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
          List<String> lstCurrencies = new ArrayList<>();
          lstCurrencies.add(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
          lstCurrencies.add(FiatCurrency.US_DOLLAR.getCode());
-         lstCurrencies.add(FiatCurrency.BITCOIN.getCode());
+         lstCurrencies.add(CryptoCurrency.BITCOIN.getCode());
 
          ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                  getActivity(),
