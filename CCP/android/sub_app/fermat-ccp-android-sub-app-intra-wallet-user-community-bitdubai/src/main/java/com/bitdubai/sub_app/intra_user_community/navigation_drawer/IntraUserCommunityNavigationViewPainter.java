@@ -22,15 +22,14 @@ import java.lang.ref.WeakReference;
 /**
  * Created by mati on 2015.12.24..
  */
-public class IntraUserCommunityNavigationViewPainter implements NavigationViewPainter {
-
-    private WeakReference<Context> activity;
+public class IntraUserCommunityNavigationViewPainter extends NavigationViewPainter {
+    
    // private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
     private ReferenceAppFermatSession<IntraUserModuleManager> intraUserSubAppSession;
 
     public IntraUserCommunityNavigationViewPainter(Context activity,ReferenceAppFermatSession intraUserSubAppSession,FermatApplicationCaller applicationsHelper) {
-        this.activity = new WeakReference(activity);
+        super(activity);
         this.intraUserSubAppSession = intraUserSubAppSession;
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
     }
@@ -39,8 +38,8 @@ public class IntraUserCommunityNavigationViewPainter implements NavigationViewPa
     public View addNavigationViewHeader() {
         try {
 
-            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), intraUserSubAppSession,applicationsHelper.get());
+            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) getContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), getContext(), intraUserSubAppSession,applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
             return null;
@@ -49,7 +48,7 @@ public class IntraUserCommunityNavigationViewPainter implements NavigationViewPa
 
     @Override
     public FermatAdapter addNavigationViewAdapter() {
-        return new AppNavigationAdapter(activity.get(), null);
+        return new AppNavigationAdapter(getContext(), null);
     }
 
     @Override

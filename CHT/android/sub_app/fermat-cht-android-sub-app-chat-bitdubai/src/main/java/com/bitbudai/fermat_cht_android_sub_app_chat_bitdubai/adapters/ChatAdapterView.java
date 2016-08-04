@@ -396,12 +396,12 @@ public class ChatAdapterView extends LinearLayout {
                 }
 
                 if (Validate.isDateToday(new Date(date))) {
-                    fecha = "today at " + formattedTime;
+                    fecha = getContext().getResources().getString(R.string.cht_today) + formattedTime;
                 } else {
                     Date today = new Date();
                     long dias = (today.getTime() - new Date(date).getTime()) / (1000 * 60 * 60 * 24);
                     if (dias == 1) {
-                        fecha = "yesterday at " + formattedTime;
+                        fecha = getContext().getResources().getString(R.string.cht_yesterday) + formattedTime;
                     }
                 }
             } catch (Exception e) {
@@ -415,18 +415,17 @@ public class ChatAdapterView extends LinearLayout {
         switch (state) {
             case ConstantSubtitle.IS_OFFLINE:
                 if (date != null && !date.equals("no record")) {
-                    toolbar.setSubtitle(Html.fromHtml("<small><small>Last time " + setFormatLastTime(date) + "</small></small>"));
+                    toolbar.setSubtitle(Html.fromHtml("<small><small>"+getContext().getResources().getString(R.string.cht_last_time) + setFormatLastTime(date) + "</small></small>"));
                     appSession.setData("DATELASTCONNECTION", setFormatLastTime(date));
                 } else {
                     Log.i("159753**LastTimeOnChat", "No show");
                 }
                 break;
             case ConstantSubtitle.IS_ONLINE:
-                toolbar.setSubtitle("Online");
+                toolbar.setSubtitle(getContext().getResources().getString(R.string.cht_online));
                 break;
             case ConstantSubtitle.IS_WRITING:
-                // toolbar.setSubtitleTextColor(Color.parseColor("#fff"));
-                toolbar.setSubtitle("Typing...");
+                toolbar.setSubtitle(getContext().getResources().getString(R.string.cht_typing));
                 break;
         }
     }
@@ -435,7 +434,11 @@ public class ChatAdapterView extends LinearLayout {
         messagesContainer = (RecyclerView) findViewById(R.id.messagesContainer);
         layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
         messagesContainer.setLayoutManager(layoutManager);
-        messagesContainer.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//        if (adapter == null) {
+//            adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+//            messagesContainer.setAdapter(adapter);
+//        }
+            messagesContainer.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 
@@ -526,7 +529,7 @@ public class ChatAdapterView extends LinearLayout {
 
                 for (int i = 0; i < toolbar.getChildCount(); i++) {
                     View child = toolbar.getChildAt(i);
-                    if (child != null)
+                    if (child != null) {
                         if (child.getClass() == ImageView.class) {
                             ImageView iv2 = (ImageView) child;
                             if (iv2.getDrawable() == contactIconCircular) {
@@ -536,6 +539,7 @@ public class ChatAdapterView extends LinearLayout {
                                 break;
                             }
                         }
+                    }
                 }
             }
         }
@@ -578,7 +582,12 @@ public class ChatAdapterView extends LinearLayout {
                 if (TextUtils.isEmpty(messageText) || messageText.trim().length() == 0) {
                     return;
                 }
-                messageText = messageText.trim();
+
+//                if (adapter == null) {
+//                    adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+//                    messagesContainer.setAdapter(adapter);
+//                }
+                    messageText = messageText.trim();
 
 //                String text = "";
 //                char c = 39; // char ' in ASCII code
@@ -693,6 +702,10 @@ public class ChatAdapterView extends LinearLayout {
                     chatMessage.setDate(S);
                     chatMessage.setMe(true);
                     messageET.setText("");
+                    if (adapter == null) {
+                        adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+                        messagesContainer.setAdapter(adapter);
+                    }
                     displayMessage(chatMessage);
                     System.out.println("*** 12345 case 1:send msg in android layer" + new Timestamp(System.currentTimeMillis()));
                 } catch (CantSaveMessageException e) {
@@ -731,9 +744,11 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void displayMessage(ChatMessage message) {
-        adapter.addItem(message);
-        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
-        scroll();
+        if(adapter != null && message != null) {
+            adapter.addItem(message);
+            adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+            scroll();
+        }
     }
 
     public void refreshEvents() {

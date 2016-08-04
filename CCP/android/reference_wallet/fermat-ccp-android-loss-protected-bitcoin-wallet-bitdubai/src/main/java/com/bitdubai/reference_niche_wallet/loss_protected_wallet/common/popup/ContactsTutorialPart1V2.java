@@ -99,7 +99,9 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceAppFermatSess
             try {
                 LossProtectedWallet lossProtectedWalletManager = getSession().getModuleManager();
                 LossProtectedWalletSettings bitcoinWalletSettings = lossProtectedWalletManager.loadAndGetSettings(getSession().getAppPublicKey());
+
                 bitcoinWalletSettings.setIsContactsHelpEnabled((checkbox_not_show.isChecked()) ? false : true);
+                getSession().setData(SessionConstant.PRESENTATION_HELP_ENABLED, (checkbox_not_show.isChecked()) ? false : true);
 
                 lossProtectedWalletManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
 

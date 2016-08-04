@@ -79,7 +79,7 @@ public final class FermatSystemContext {
                 throw new CantRegisterPlatformException("platformReference=null", "The platform does not contain a platform reference to recognize it.");
 
             if (platforms.containsKey(platformReference))
-                throw new CantRegisterPlatformException(new StringBuilder().append("platform: ").append(platformReference.toString()).toString(), "platform already exists in the system context.");
+                throw new CantRegisterPlatformException("platform: " + platformReference.toString(), "platform already exists in the system context.");
 
             abstractPlatform.start();
 
@@ -90,7 +90,7 @@ public final class FermatSystemContext {
 
         } catch (final CantStartPlatformException e) {
 
-            throw new CantRegisterPlatformException(e, new StringBuilder().append("platform: ").append(platformReference.toString()).toString(), "Error trying to start the platform.");
+            throw new CantRegisterPlatformException(e, "platform: " + platformReference.toString(), "Error trying to start the platform.");
         }
     }
 
@@ -140,7 +140,7 @@ public final class FermatSystemContext {
 
         } catch (LayerNotFoundException e) {
 
-            throw new AddonNotFoundException(e, new StringBuilder().append("addon: ").append(addonReference.toString()).toString(), "layer not found for the specified addon.");
+            throw new AddonNotFoundException(e, "addon: " + addonReference.toString(), "layer not found for the specified addon.");
         }
     }
 
@@ -228,7 +228,7 @@ public final class FermatSystemContext {
 
         } catch (LayerNotFoundException e) {
 
-            throw new PluginNotFoundException(e, new StringBuilder().append("plugin: ").append(pluginReference.toString()).toString(), "layer not found in the platform of the system context.");
+            throw new PluginNotFoundException(e, "plugin: " + pluginReference.toString(), "layer not found in the platform of the system context.");
         }
     }
 
@@ -247,7 +247,7 @@ public final class FermatSystemContext {
 
         } catch (final PlatformNotFoundException e) {
 
-            throw new LayerNotFoundException(e, new StringBuilder().append("layer: ").append(layerReference.toString()).toString(), "the platform of the layer was not founded in the system context.");
+            throw new LayerNotFoundException(e, "layer: " + layerReference.toString(), "the platform of the layer was not founded in the system context.");
         }
     }
 
@@ -263,7 +263,7 @@ public final class FermatSystemContext {
         if (platforms.containsKey(platformReference)) {
             return platforms.get(platformReference);
         } else {
-            throw new PlatformNotFoundException(new StringBuilder().append("platform: ").append(platformReference.toString()).toString(), "platform not found in the system context.");
+            throw new PlatformNotFoundException("platform: " + platformReference.toString(), "platform not found in the system context.");
         }
     }
 

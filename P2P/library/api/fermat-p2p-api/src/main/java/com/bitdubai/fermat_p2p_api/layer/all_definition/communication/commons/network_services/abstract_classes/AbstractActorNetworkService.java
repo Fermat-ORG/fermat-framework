@@ -342,11 +342,11 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         onActorNetworkServiceRegistered();
     }
 
-    @Override
-    public void startConnection() throws CantRegisterProfileException {
-        getConnection().registerProfile(getProfile());
-
-    }
+//    @Override
+//    public void startConnection() throws CantRegisterProfileException {
+//        getConnection().registerProfile(getProfile());
+//
+//    }
 
     public final void onActorRegistered(String publicKey) {
 

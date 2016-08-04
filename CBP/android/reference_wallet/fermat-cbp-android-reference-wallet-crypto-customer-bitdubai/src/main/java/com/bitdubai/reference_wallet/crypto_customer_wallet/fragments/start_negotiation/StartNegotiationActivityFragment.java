@@ -360,6 +360,21 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
             final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
+            //LOCATION TO FIX THE DECIMAL FORMAT
+            //       new BigDecimal(DecimalFormat.getInstance(this.getResources().getConfiguration().locale).parse(clauses.get(ClauseType.EXCHANGE_RATE).getValue()).toString())
+
+
+            //ASIGNAMENT NEW VALUE
+            //change lostwood
+            //   newValue = numberFormat.format(getBigDecimal(newValue));
+            /*if (newValue.equals("") || newValue.equals("0")) {
+                newValue = "0.0";
+            }*/
+            if(newValue.equals("")){
+                newValue="0";
+            }
+
+
             newValue = fixFormat(newValue,false);
 
             negotiationInfo.putClause(clause, newValue);

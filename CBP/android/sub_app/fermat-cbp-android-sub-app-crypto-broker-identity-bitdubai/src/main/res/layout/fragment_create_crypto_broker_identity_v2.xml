@@ -51,7 +51,7 @@
         android:hint="@string/cbi_name"
         android:inputType="textPersonName"
         android:maxLength="25"
-        android:textColor="#808080"
+        android:textColor="#616161"
         android:textColorHint="#B2B2B2"
         android:textSize="16sp" />
     <!--android:textAlignment="center"/>-->
@@ -101,7 +101,9 @@
             android:layout_width="wrap_content"
             android:layout_height="28dp"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:text="@string/cbi_visibility"
@@ -113,7 +115,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/switch_off" />
 
     </RelativeLayout>
@@ -175,6 +179,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:gravity="right"
         android:text="50"
         android:textColor="#FFFFFF"

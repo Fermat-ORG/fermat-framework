@@ -113,7 +113,7 @@ public class ChatListFragment
     TextView noDatalabel;
     TextView nochatssubtitle;
     TextView nochatssubtitle1;
-    private static final int MAX = 20;
+    private static final int MAX = 200;
     private int offset = 0;
 
     public static ChatListFragment newInstance() {
@@ -139,14 +139,14 @@ public class ChatListFragment
                     if (chat.getStatus() != ChatStatus.INVISSIBLE) {
                         chatidtemp = chat.getChatId();
                         if (chatidtemp != null) {
-                            noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
-                            contactId.add(chat.getRemoteActorPublicKey());
                             if (chatIdentity != null) {
                                 List<ChatActorCommunityInformation> chatActorCommunityInformations = chatManager.listAllConnectedChatActor(chatIdentity, MAX, offset);
                                 for (ChatActorCommunityInformation cont : chatActorCommunityInformations) {
                                     String pk1 = cont.getPublicKey();
                                     String pk2 = chat.getRemoteActorPublicKey();
                                     if (pk2.equals(pk1)) {
+                                        noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
+                                        contactId.add(pk1);
                                         contactName.add(cont.getAlias());
                                         Message mess = null;
                                         try {
@@ -363,6 +363,9 @@ public class ChatListFragment
                     .setSubTitle(R.string.cht_chat_subtitle)
                     .setBody(R.string.cht_chat_body)
                     .setTextFooter(R.string.cht_chat_footer)
+                    .setTitle(R.string.cht_dialog_welcome)
+                    .setTextCloseButton(R.string.cht_dialog_button_close)
+                    .setCheckboxText(R.string.cht_dialog_dont_show)
                     .setVIewColor(R.color.cht_color_dialog)
                     .setIsCheckEnabled(false)
                     .build();

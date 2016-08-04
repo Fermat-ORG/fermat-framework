@@ -71,29 +71,27 @@ public class ContactsListAdapter
             } else
                 holder.friendAvatar.setImageResource(R.drawable.cht_comm_icon_user);
 
-            if (data.getLocation() != null) {
-                if (data.getState().equals("null") || data.getState().equals("") || data.getState().equals("state"))
-                    stateAddress = "";
-                else stateAddress = new StringBuilder().append(data.getState()).append(" ").toString();
+//            if (data.getLocation() != null) {
+//                if (data.getState().equals("null") || data.getState().equals("") || data.getState().equals("state"))
+//                    stateAddress = "";
+//                else stateAddress = new StringBuilder().append(data.getState()).append(" ").toString();
                 if (data.getCity().equals("null") || data.getState().equals("") || data.getCity().equals("city"))
                     cityAddress = "";
                 else cityAddress = new StringBuilder().append(data.getCity()).append(" ").toString();
                 if (data.getCountry().equals("null") || data.getState().equals("") || data.getCountry().equals("country"))
                     countryAddress = "";
                 else countryAddress = data.getCountry();
-                if (stateAddress.equalsIgnoreCase("") && cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
-                    holder.location.setText("Not Found");
+                if (/*stateAddress.equalsIgnoreCase("") && */cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
+                    holder.location.setText(context.getResources().getString(R.string.cht_comm_not_found));
                 } else
-                    holder.location.setText(new StringBuilder().append(cityAddress).append(stateAddress).append(countryAddress).toString());
-            } else
-                holder.location.setText("Not Found");
+                    holder.location.setText(new StringBuilder().append(cityAddress).append(" ").append(countryAddress).toString());
+//            } else
+//                holder.location.setText(R.string.cht_comm_not_found);
 
-            if (data.getProfileStatus() == ProfileStatus.ONLINE)
-                holder.location.setTextColor(Color.parseColor("#47BF73"));//Verde no brillante
-            else if (data.getProfileStatus() == ProfileStatus.OFFLINE)
+            if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
+                holder.location.setTextColor(Color.parseColor("#47BF73"));
+            else
                 holder.location.setTextColor(Color.RED);
-            else if (data.getProfileStatus() == ProfileStatus.UNKNOWN)
-                holder.location.setTextColor(Color.BLACK);
 
             final ChatActorCommunityInformation dat = data;
             holder.friendAvatar.setOnClickListener(new View.OnClickListener() {
@@ -101,22 +99,22 @@ public class ContactsListAdapter
                 public void onClick(View v) {
                     ContactDialog contact = new ContactDialog(context, appSession, null);
                     contact.setProfileName(dat.getAlias());
-                    if (dat.getLocation() != null) {
-                        if (dat.getState().equals("null") || dat.getState().equals(""))
+//                    if (dat.getLocation() != null) {
+                        /*if (dat.getState().equals("null") || dat.getState().equals(""))
                             stateAddress = "";
-                        else stateAddress = new StringBuilder().append(dat.getState()).append(" ").toString();
+                        else stateAddress = new StringBuilder().append(dat.getState()).append(" ").toString();*/
                         if (dat.getCity().equals("null") || dat.getCity().equals(""))
                             cityAddress = "";
                         else cityAddress = new StringBuilder().append(dat.getCity()).append(" ").toString();
                         if (dat.getCountry().equals("null") || dat.getCountry().equals(""))
                             countryAddress = "";
                         else countryAddress = dat.getCountry();
-                        if (stateAddress.equalsIgnoreCase("") && cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
-                            contact.setCountryText("Not Found");
+                        if (/*stateAddress.equalsIgnoreCase("") &&*/ cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
+                            contact.setCountryText(context.getResources().getString(R.string.cht_comm_not_found));
                         } else
-                            contact.setCountryText(new StringBuilder().append(cityAddress).append(stateAddress).append(countryAddress).toString());
-                    } else
-                        contact.setCountryText("Not Found");
+                            contact.setCountryText(new StringBuilder().append(cityAddress).append(" ").append(countryAddress).toString());
+//                    } else
+//                        contact.setCountryText("Not Found");
 
                     ByteArrayInputStream bytes = new ByteArrayInputStream(dat.getImage());
                     BitmapDrawable bmd = new BitmapDrawable(bytes);

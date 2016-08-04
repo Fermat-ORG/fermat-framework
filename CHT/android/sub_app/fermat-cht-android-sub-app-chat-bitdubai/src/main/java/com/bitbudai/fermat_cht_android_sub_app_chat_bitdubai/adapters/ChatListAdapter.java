@@ -48,6 +48,7 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
 
     ArrayList<String> filteredData;
     private String filterString;
+    private String nUnreadMessages;
 
     public ChatListAdapter(Context context, ArrayList<String> contactName,
                            ArrayList message,
@@ -115,7 +116,10 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
 
             TextView tvnumber = (TextView) item.findViewById(R.id.tvnumber);
             if (noReadMsgs.get(position) > 0) {
-                tvnumber.setText(noReadMsgs.get(position).toString());
+                nUnreadMessages = noReadMsgs.get(position).toString();
+                if(nUnreadMessages.length()==1)
+                    nUnreadMessages = " " + nUnreadMessages + " ";
+                tvnumber.setText(nUnreadMessages);
                 tvnumber.setVisibility(View.VISIBLE);
             } else
                 tvnumber.setVisibility(View.GONE);
