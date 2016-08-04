@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_corners"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4.5dp"
+        android:background="@drawable/round_corner_line_dialog"
+        android:fitsSystemWindows="true" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="2dp"
+        android:paddingEnd="1dp"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:paddingStart="1dp"
+        android:paddingTop="20dp">
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/ccw_text_dialog_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Intra User Identity"
+                    android:paddingLeft="5dp"
+                    android:layout_weight="1"
+                    android:textSize="20sp"
+                    android:textColor="#00a99d"
+                    app:typeface="CAVIAR_DREAMS_BOLD"
+                    android:gravity="left"
+                    android:layout_gravity="center"
+
+                    />
+
+                <ImageView
+                    android:id="@+id/ccw_text_dialog_title_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="0.4"
+                    android:src="@drawable/bitcoin_wallet_2"
+                    android:paddingBottom="2dp"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.7dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/round_corner_line_dialog"
+                android:layout_marginBottom="12dp"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
+                <ImageView
+                    android:id="@+id/ccw_text_dialog_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/identity_banner"/>
+            </RelativeLayout>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/ccw_text_dialog_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:paddingBottom="5dp"
+                android:paddingEnd="30dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="30dp"
+                android:paddingStart="20dp"
+                android:paddingTop="7sp"
+                android:text="To receive or send BTC must create an Intra User Identity"
+                android:textColor="#1d1d26"
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/round_corner_line_dialog" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="7dp"
+                android:paddingTop="12dp">
+
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/ccw_text_dialog_description2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="start"
+                    android:paddingBottom="0dp"
+                    android:paddingEnd="30dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="30dp"
+                    android:paddingStart="16dp"
+                    android:text="To create the identity now?\n\nIndicate your User Name and push the button Create."
+                    android:textColor="#1d1d26"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/ccw_text_dialog_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:inputType="text"
+                android:ems="50"
+                android:layout_weight="2.18"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="0dp"
+                android:singleLine="true"
+                android:textColor="#1d1d26"
+                android:textColorHint="#9a9a9c"
+                android:textSize="16sp"
+                app:typeface="ROBOTO_REGULAR"
+                tools:hint="User Name"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/ccw_text_dialog_edit_text_count"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="18dp"
+                android:layout_marginBottom="14dp"
+                android:text="50"
+                android:textColor="#bbb"
+                android:textSize="12dp"
+                android:textColorHint="#9a9a9c"
+                android:gravity="right"
+                android:visibility="visible"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/round_corner_line_dialog" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/ccw_text_dialog_done_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="#0072bb"
+                android:gravity="center"
+                android:text="Create"
+                android:textColor="#ffffff"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>
