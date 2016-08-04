@@ -85,10 +85,9 @@ public class DeviceUserUserManager implements DeviceUserManager {
             throw new CantGetLoggedInDeviceUserException(CantGetLoggedInDeviceUserException.DEFAULT_MESSAGE, null, "There's no device user logged in.", "");
         return mLoggedInDeviceUser;*/
         try {
-            userPublicKey = createNewDeviceUser("test1", "test1");
-            DeviceUser deviceUser = getDeviceUser(userPublicKey);
+            if (userPublicKey==null) userPublicKey = createNewDeviceUser("test1", "test1");
 
-            return deviceUser;
+            return getDeviceUser(userPublicKey);
         } catch (Exception e) {
             try {
                 return getDeviceUser(userPublicKey);

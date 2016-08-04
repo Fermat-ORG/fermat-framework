@@ -56,7 +56,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
 
     private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
         try {
-            database = pluginDatabaseSystem.openDatabase(this.pluginId, UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME);
+            if (database==null) database = pluginDatabaseSystem.openDatabase(this.pluginId, UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME);
 
         } catch (DatabaseNotFoundException e) {
             UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory = new UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory(this.pluginDatabaseSystem);
