@@ -304,7 +304,6 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
 
                 if (currencyFrom.equals(merchandise.getCode()) && currencyTo.equals(payment.getCode())) {
                     associatedProviders.add(setting);
-                    break;
                 }
             }
 
