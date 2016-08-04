@@ -212,8 +212,10 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
             final List<CryptoBrokerIdentity> list = new ArrayList<>();
-            for (DatabaseTableRecord record : table.getRecords())
+            for (DatabaseTableRecord record : table.getRecords()) {
                 list.add(getIdentityFromRecord(record));
+                System.out.println("LOSTWOOD_BROKER_IDENTITY:" + list);
+            }
             return list;
         } catch (final CantGetCryptoBrokerIdentityProfileImageException e) {
             throw new CantListCryptoBrokerIdentitiesException(e.getMessage(), e, "Crypto Broker Identity", "Problem trying to get the profile image of the identity.");

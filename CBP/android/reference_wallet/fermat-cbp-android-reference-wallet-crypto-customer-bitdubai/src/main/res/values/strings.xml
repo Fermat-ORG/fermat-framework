@@ -168,6 +168,11 @@
     <string name="ccw_your_exchange_rate_title">Selected Rate:</string>
     <string name="ccw_currency_to_pay">Currency to Pay</string>
     <string name="ccw_amount_to_pay">Amount to Pay</string>
+    <string name="ccw_identity_wallet_user">Intra User Identity</string>
+    <string name="ccw_identity_dialog_hint">User Name</string>
+    <string name="ccw_identity_dialog_title_btc">Intra User Identity</string>
+    <string name="ccw_identity_dialog_description_btc">To receive or send BTC must create an Intra User Identity</string>
+    <string name="ccw_identity_dialog_description2_btc">To create the identity now?\nIndicate your User Name and push the button Create.</string>
 
     <string name="ccw_currency_to_buy">Currency to Buy</string>
     <string name="selected_currency">Selected Currency</string>
@@ -176,6 +181,7 @@
     <string name="cancel">Cancel</string>
     <string name="hint" translatable="false">hint</string>
     <string name="title">Title</string>
+
 
 
     <!-- Settings Fee Management -->
@@ -238,6 +244,7 @@
     <string name="ccw_currencies">Currencies</string>
     <string name="ccw_negotiation_sent">Negotiation sent</string>
     <string name="ccw_error_sending_the_negotiation">Error sending the negotiation</string>
+    <string name="ccw_error_confirm_clauses">Need to confirm ALL the clauses</string>
     <string name="ccw_need_to_register_the_wallet_user_for_user_btc">Need to create a User for the Bitcoin Wallet</string>
     <string name="ccw_error_in_the_information_is_empty">Error in the information. Is empty.</string>
     <string name="the_exchange_rate_must_be_greater_than_zero">The exchange rate must be greater than zero.</string>

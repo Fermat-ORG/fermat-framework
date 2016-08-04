@@ -28,6 +28,10 @@
     <string name="ccw_amount_title">Cantidad:</string>
     <string name="ccw_amount_to_buy">Cantidad a Comprar</string>
     <string name="ccw_amount_to_pay">Cantidad a Pagar</string>
+    <string name="ccw_identity_wallet_user">Intra User Identity</string>
+    <string name="ccw_identity_dialog_title_btc">Intra User Identity</string>
+    <string name="ccw_identity_dialog_description_btc">Para recibir o enviar BTC debe crear una identidad de Intra User Identity</string>
+    <string name="ccw_identity_dialog_description2_btc">Si Desea crear la identidad ahora?\nIndique su nombre de usuario y pulse el botón Crear.</string>
     <string name="ccw_automatic_restock">Restock Automatico</string>
     <string name="ccw_bank">Banco</string>
     <string name="ccw_bank_account_broker">Cuenta Bancaria del Vendedor</string>
@@ -208,6 +212,7 @@
     <string name="ccw_error_happened_in_ContractHistoryActivityFragment">Disculpe, a ocurrido un error en ContractHistoryActivityFragment (Module == null)</string>
     <string name="ccw_error_in_the_information_is_empty">Error en la informacion. Esta vacia</string>
     <string name="ccw_error_sending_the_negotiation">Error enviando la negociación</string>
+    <string name="ccw_error_confirm_clauses">Necesita confirmar todas las clausulas</string>
     <string name="ccw_exchange_rate_provider_is_down">%1$s caido</string>
     <string name="ccw_location_list_is_empty_notification">La lista de Locaciones esta vacia. Agrega una en Configuración</string>
     <string name="ccw_need_to_confirm_all_the_clauses">Necesita confirmar TODOS los pasos</string>
