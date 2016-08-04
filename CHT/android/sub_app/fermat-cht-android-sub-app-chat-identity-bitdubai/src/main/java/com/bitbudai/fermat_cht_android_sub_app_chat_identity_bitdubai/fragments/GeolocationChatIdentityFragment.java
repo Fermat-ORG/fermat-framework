@@ -193,7 +193,7 @@ public class GeolocationChatIdentityFragment extends AbstractFermatFragment<Refe
         GeolocationIdentityExecutor executor = null;
         try {
             if (accuracy.getText().length() == 0) {
-                Toast.makeText(getActivity(), "Accuracy is empty, please add a value", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_accuracy_toast), Toast.LENGTH_SHORT).show();
             } else {
                 acurracydata = Long.parseLong(accuracy.getText().toString());
                 executor = new GeolocationIdentityExecutor(appSession, identity.getPublicKey(), identity.getAlias(),
@@ -204,10 +204,10 @@ public class GeolocationChatIdentityFragment extends AbstractFermatFragment<Refe
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-                            Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_geo_toast), Toast.LENGTH_LONG).show();
                             //getActivity().onBackPressed();
                         } else if (donde.equalsIgnoreCase("onBack")) {
-                            Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_geo_toast), Toast.LENGTH_LONG).show();
                         }
                         break;
                 }

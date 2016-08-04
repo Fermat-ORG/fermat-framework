@@ -104,7 +104,6 @@ public class CreateCryptoCustomerIdentityFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         //If we landed here from CryptoCustomerImageCropperFragment or geo settings fragment
         //Use the cropped image, if there is one (!=null)
         if (appSession.getData(FragmentsCommons.CROPPED_IMAGE) != null) {
@@ -170,12 +169,12 @@ public class CreateCryptoCustomerIdentityFragment
         mCustomerName.addTextChangedListener(textWatcher);
         textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.getText().length()));
 
-        mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+   /*     mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
-        });
+        });*/
 
 
         final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
@@ -294,7 +293,7 @@ public class CreateCryptoCustomerIdentityFragment
             appSession.setData(FragmentsCommons.CUSTOMER_NAME, mCustomerName.getText().toString());
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER, appSession.getAppPublicKey());
         }
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -353,7 +352,7 @@ public class CreateCryptoCustomerIdentityFragment
     }
 
     private void dispatchTakePictureIntent() {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         // Check permission for CAMERA
         if (Build.VERSION.SDK_INT >= 23) {
             if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
@@ -391,7 +390,7 @@ public class CreateCryptoCustomerIdentityFragment
     }
 
     private void loadImageFromGallery() {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
