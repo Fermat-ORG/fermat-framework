@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
@@ -169,6 +170,9 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
     IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
+
     /**
      * Logging level for this plugin
      */
@@ -243,7 +247,8 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                     customerBrokerCloseManager,
                     cryptoCustomerActorConnectionManager,
                     pluginFileSystem,
-                    pluginId
+                    pluginId,
+                    locationManager
             );
 
         return moduleManager;

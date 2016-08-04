@@ -49,6 +49,11 @@
     <string name="cht_dialog_add_connection">Add connections</string>
     <string name="cht_yes">Yes</string>
     <string name="cht_no">No</string>
+    <string name="cht_last_time">Last time </string>
+    <string name="cht_online">Online</string>
+    <string name="cht_typing">Typing...</string>
+    <string name="cht_today">today at </string>
+    <string name="cht_yesterday">yesterday at </string>
 
     <string name="cht_select">Select</string>
     

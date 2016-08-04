@@ -217,13 +217,21 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         }
     }
 
+//    long time = 10000;
+
     @Override
     public void onWalletChanged(Wallet wallet) {
         /**
          * I will save the wallet after a change.
          */
         try {
-            wallet.saveToFile(walletFilename);
+//            if (time==0) {
+//                System.out.println("OnWalletchanged");
+                wallet.saveToFile(walletFilename);
+//                time = 10000;
+//            }else {
+//                time--;
+//            }
         } catch (IOException e) {
             e.printStackTrace();
         }

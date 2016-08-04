@@ -36,6 +36,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -936,10 +938,12 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
     private void loadSettings(){
         try {
+            try {
+                lossProtectedWalletSettings = lossProtectedWalletmanager.loadAndGetSettings(appSession.getAppPublicKey());
 
-
-                    lossProtectedWalletSettings = lossProtectedWalletmanager.loadAndGetSettings(appSession.getAppPublicKey());
-
+            } catch ( CantGetSettingsException|SettingsNotFoundException e) {
+                lossProtectedWalletSettings = null;
+            }
 
                     if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
                         balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);

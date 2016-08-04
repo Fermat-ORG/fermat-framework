@@ -27,7 +27,7 @@ public class PlatformServiceLayer extends AbstractLayer {
 
             registerAddon(new ErrorManagerSubsystem());
             registerAddon(new EventManagerSubsystem());
-            registerAddon(new LocationManagerSubsystem());
+//            registerAddon(new LocationManagerSubsystem());
             registerAddon(new PlatformInfoSubsystem());
 
         } catch (CantRegisterAddonException e) {

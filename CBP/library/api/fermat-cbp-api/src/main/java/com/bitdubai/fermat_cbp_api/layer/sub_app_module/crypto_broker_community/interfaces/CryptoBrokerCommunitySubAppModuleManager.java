@@ -3,6 +3,8 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
@@ -86,6 +88,9 @@ public interface CryptoBrokerCommunitySubAppModuleManager
      */
     CryptoBrokerCommunitySearch getCryptoBrokerSearch();
 
+    @Override
+    CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException;
+
     /**
      * The method <code>getCryptoBrokerSearch</code> returns an interface that allows searching for remote
      * Crypto Brokers that are linked to the local selectedIdentity
@@ -147,6 +152,9 @@ public interface CryptoBrokerCommunitySubAppModuleManager
      * @throws ConnectionRequestNotFoundException    if we cant find the connection request.
      */
     void cancelCryptoBroker(UUID requestId) throws CryptoBrokerCancellingFailedException, ConnectionRequestNotFoundException;
+
+    @Override
+    void createIdentity(String name, String phrase, byte[] profile_img) throws Exception;
 
     /**
      * The method <code>listAllConnectedCryptoBrokers</code> returns the list of all crypto brokers registered by the
