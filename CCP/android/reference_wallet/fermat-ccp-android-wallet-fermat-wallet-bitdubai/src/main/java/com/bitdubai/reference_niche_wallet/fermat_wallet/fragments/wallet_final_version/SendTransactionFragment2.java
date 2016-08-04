@@ -916,7 +916,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         Log.e(TAG,"Balance null, please check this, line:"+new Throwable().getStackTrace()[0].getLineNumber());
                     }
                 } else {
-                    runningDailyBalance = (HashMap)appSession.getData(SessionConstant.RUNNIBLE_BALANCE);
+                    runningDailyBalance = (Map<Long, Long>) appSession.getData(SessionConstant.RUNNIBLE_BALANCE);
 
                     //verify that I have this day added
                     long lastDate = getKeyDate(runningDailyBalance.size()-1);
