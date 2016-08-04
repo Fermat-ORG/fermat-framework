@@ -18,7 +18,7 @@
     <string name="cht_creation_dialog_body">* Buscar usuarios del Chat cerca de tí.\n* Ver sus perfiles.\n* Conectar con ellos.</string>
     <string name="cht_creation_dialog_footer">Si no tiene una identidad o perfil, favor registre una para utilizar esta comunidad.</string>
     <string name="cht_comm_dont_show_again">No mostrar de nuevo</string>
-    <string name="cht_comm_welcome">Bienvenido!</string>
+    <string name="cht_comm_welcome">¡Bienvenido!</string>
     <string name="cht_comm_connection_request">Solicitud de conexión</string>
     <string name="cht_comm_resend_toast">The connection request has been sent
  you need to wait until the user responds</string>
@@ -44,10 +44,11 @@
     <string name="cht_comm_blocked">está bloqueado(a)</string>
     <string name="cht_comm_pending">Por aceptar</string>
     <string name="cht_comm_sent">Solicitud enviada</string>
-    <string name="cht_comm_add_contact_button">Contactar</string>
+    <string name="cht_comm_add_contact_button">Conectar</string>
     <string name="cht_comm_empty_conn">No tiene contactos</string>
     <string name="cht_comm_empty_brow">No hay usuarios</string>
     <string name="cht_comm_empty_not">No tiene notificaciones</string>
     <string name="cht_creation_name_left">Chat</string>
     <string name="cht_creation_name_right">Usuarios</string>
+    <string name="cht_comm_show_more">Mostrar más</string>
 </resources>
