@@ -3,6 +3,8 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
@@ -85,6 +87,9 @@ public interface CryptoBrokerCommunitySubAppModuleManager
      * @return a searching interface
      */
     CryptoBrokerCommunitySearch getCryptoBrokerSearch();
+
+    @Override
+    CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException;
 
     /**
      * The method <code>getCryptoBrokerSearch</code> returns an interface that allows searching for remote

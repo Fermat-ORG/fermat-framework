@@ -197,10 +197,10 @@ public class CryptoBrokerCommunityManager
 
             final List<CryptoBrokerCommunitySelectableIdentity> selectableIdentities = new ArrayList<>();
 
-            final List<CryptoBrokerIdentity> cryptoBrokerIdentities = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
+            /*final List<CryptoBrokerIdentity> cryptoBrokerIdentities = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
 
             for (final CryptoBrokerIdentity cbi : cryptoBrokerIdentities)
-                selectableIdentities.add(new CryptoBrokerCommunitySelectableIdentityImpl(cbi));
+                selectableIdentities.add(new CryptoBrokerCommunitySelectableIdentityImpl(cbi));*/
 
             final List<CryptoCustomerIdentity> cryptoCustomerIdentities = cryptoCustomerIdentityManager.listAllCryptoCustomerFromCurrentDeviceUser();
 
@@ -209,7 +209,7 @@ public class CryptoBrokerCommunityManager
 
             return selectableIdentities;
 
-        } catch (final CantListCryptoBrokerIdentitiesException e) {
+        } catch (final CantListCryptoCustomerIdentityException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListIdentitiesToSelectException(e, "", "Error in DAO trying to list identities.");
@@ -621,13 +621,33 @@ public class CryptoBrokerCommunityManager
         } catch (CantListCryptoCustomerIdentityException e) { /*Do nothing*/ }
 
 
-        //Get all broker identities on local device
-        List<CryptoBrokerIdentity> brokerIdentitiesInDevice = new ArrayList<>();
-        try {
-            brokerIdentitiesInDevice = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
-        } catch (CantListCryptoBrokerIdentitiesException e) { /*Do nothing*/ }
 
         //No registered users in device
+        if (customerIdentitiesInDevice.size() == 0)
+            return null;
+
+        //If appSettings exists, get its selectedActorIdentityPublicKey property
+        String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
+
+        CryptoBrokerCommunitySelectableIdentityImpl selectedIdentity = null;
+        if (lastSelectedIdentityPublicKey != null) {
+
+            for (CryptoCustomerIdentity identity : customerIdentitiesInDevice) {
+                if (identity.getPublicKey().equals(lastSelectedIdentityPublicKey)) {
+                    selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(identity);
+                    break;
+                }
+            }
+
+            if (selectedIdentity == null)
+                throw new ActorIdentityNotSelectedException("", null, "", "");
+
+            return selectedIdentity;
+        }
+
+        return null;
+
+        /*//No registered users in device
         if (customerIdentitiesInDevice.isEmpty() && brokerIdentitiesInDevice.isEmpty())
             return null;
 
@@ -662,8 +682,9 @@ public class CryptoBrokerCommunityManager
             return selectedIdentity;
         }
 
-        return null;
+        return null;*/
     }
+
 
 
     @Override
