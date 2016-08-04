@@ -134,7 +134,7 @@ public class CryptoBrokerIdentityListFragment
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         configureToolbar();
     }
