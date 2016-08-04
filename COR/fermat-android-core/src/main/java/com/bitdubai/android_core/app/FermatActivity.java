@@ -636,6 +636,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //                    if (titleBar.getTitleColor() != null)
 //                        txt_title.setTextColor(Color.parseColor(titleBar.getTitleColor()));
                     View toolabarContainer = null;
+                    if (toolbarBuilder==null)toolbarBuilder = new ToolbarBuilder(this,mToolbar);
+                    else toolbarBuilder.setToolbar(mToolbar);
                     if (isLayoutRecicled){
 //                        toolbarBuilder.setTextTitle(title);
 //                        toolbarBuilder.setTypeface(typeface);
@@ -643,7 +645,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //                        toolbarBuilder.setTextColor(titleBar.getTitleColor());
                         toolabarContainer = toolbarBuilder.buildTitle(title, typeface, titleBar.getLabelSize(),titleBar.getTitleColor());
                     } else{
-                        if (toolbarBuilder==null)toolbarBuilder = new ToolbarBuilder(this,mToolbar);
                         toolabarContainer = toolbarBuilder.buildTitle(title, typeface, titleBar.getLabelSize(),titleBar.getTitleColor());
                     }
                     try {

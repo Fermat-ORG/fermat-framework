@@ -534,7 +534,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         LineData data = null;
 
         try{
-            data = getData(fermatWalletSettings.getRunningDailyBalance());
+            data = getData((HashMap)appSession.getData(SessionConstant.RUNNIBLE_BALANCE));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -905,10 +905,10 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             long currentTime = System.currentTimeMillis();
             runningDailyBalance = new HashMap<>();
 
-            if(fermatWalletSettings != null){
 
-                blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
-                if (fermatWalletSettings.getRunningDailyBalance() == null) {
+
+
+                if (appSession.getData(SessionConstant.RUNNIBLE_BALANCE) == null) {
                     try {
                         long balance = moduleManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType);
                         runningDailyBalance.put(currentTime, balance);
@@ -916,7 +916,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         Log.e(TAG,"Balance null, please check this, line:"+new Throwable().getStackTrace()[0].getLineNumber());
                     }
                 } else {
-                    runningDailyBalance = fermatWalletSettings.getRunningDailyBalance();
+                    runningDailyBalance = (HashMap)appSession.getData(SessionConstant.RUNNIBLE_BALANCE);
 
                     //verify that I have this day added
                     long lastDate = getKeyDate(runningDailyBalance.size()-1);
@@ -936,14 +936,15 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                     }
                 }
 
-                fermatWalletSettings.setRunningDailyBalance(runningDailyBalance);
-                if(moduleManager!=null) {
-                    moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
-                }else {
-                    Log.e(TAG,"Settings manager null, please check this line:"+new Throwable().getStackTrace()[0].getLineNumber());
-                }
+                appSession.setData(SessionConstant.RUNNIBLE_BALANCE, runningDailyBalance);
+                    fermatWalletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
 
-            }
+                fermatWalletSettings.setRunningDailyBalance(runningDailyBalance);
+
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1083,6 +1084,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
                         appSession.setData(SessionConstant.FIAT_CURRENCY, FiatCurrency.US_DOLLAR.getCode());
 
+                        appSession.setData(SessionConstant.RUNNIBLE_BALANCE, 0);
+
                         appSession.setData(SessionConstant.SETTINGS_LOADED, true);
 
                     } else {
@@ -1098,6 +1101,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         appSession.setData(SessionConstant.NOTIFICATION_ENABLED, fermatWalletSettings.getNotificationEnabled());
                         appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, fermatWalletSettings.isPresentationHelpEnabled());
                         appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
+
+                        appSession.setData(SessionConstant.RUNNIBLE_BALANCE, fermatWalletSettings.getRunningDailyBalance());
                     }
 
                     if(moduleManager!=null) moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);

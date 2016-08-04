@@ -48,4 +48,5 @@
     <string name="cht_comm_empty_not">No Notifications</string>
     <string name="cht_creation_name_left">Chat</string>
     <string name="cht_creation_name_right">Users</string>
+    <string name="cht_comm_show_more">Show more</string>
 </resources>
