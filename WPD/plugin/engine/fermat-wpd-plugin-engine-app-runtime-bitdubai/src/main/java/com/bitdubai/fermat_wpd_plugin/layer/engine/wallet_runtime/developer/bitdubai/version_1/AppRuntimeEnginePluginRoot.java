@@ -4727,7 +4727,8 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Bitcoin wallet");
         runtimeTitleBar.setLabelSize(18);
-        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setIsTitleTextStatic(true)
+        ;
         runtimeTitleBar.setFont("Roboto-Regular.ttf");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#05CFC2");

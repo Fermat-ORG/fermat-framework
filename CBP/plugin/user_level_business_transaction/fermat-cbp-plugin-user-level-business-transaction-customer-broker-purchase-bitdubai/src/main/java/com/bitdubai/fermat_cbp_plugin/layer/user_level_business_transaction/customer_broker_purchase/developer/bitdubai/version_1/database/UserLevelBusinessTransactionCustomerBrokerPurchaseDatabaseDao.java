@@ -56,7 +56,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
 
     private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
         try {
-            database = pluginDatabaseSystem.openDatabase(this.pluginId, UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME);
+            if (database==null) database = pluginDatabaseSystem.openDatabase(this.pluginId, UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME);
 
         } catch (DatabaseNotFoundException e) {
             UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory = new UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory(this.pluginDatabaseSystem);
@@ -217,5 +217,9 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
         record.setLongValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, customerBrokerPurchaseEventRecord.getTimestamp());
 
         return record;
+    }
+
+    public boolean isEmptyTable() {
+        return getDatabaseTable(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_EVENTS_RECORDED_TABLE_NAME).numRecords()==0;
     }
 }

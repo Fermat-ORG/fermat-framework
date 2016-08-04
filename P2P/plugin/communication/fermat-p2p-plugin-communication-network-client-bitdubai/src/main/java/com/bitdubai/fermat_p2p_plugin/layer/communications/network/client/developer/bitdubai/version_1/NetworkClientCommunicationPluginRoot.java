@@ -192,7 +192,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             /*
              * Initialize the networkClientConnectionsManager to the Connections
              */
-            networkClientConnectionsManager = new NetworkClientConnectionsManager(identity, eventManager, locationManager, this);
+            networkClientConnectionsManager = new NetworkClientConnectionsManager(identity, eventManager, locationManager, this,connectivityManager);
 
             /*
              * Add references to the node context
@@ -218,7 +218,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                         this,
                         0,
                         Boolean.FALSE,
-                        nodesProfileList.get(0)
+                        nodesProfileList.get(0),
+                        connectivityManager
                 );
 
 
@@ -239,7 +240,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                             this,
                             0,
                             Boolean.FALSE,
-                            nodesProfileList.get(0)
+                            nodesProfileList.get(0),
+                            connectivityManager
                     );
 
                 } else {
@@ -252,7 +254,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                             this,
                             -1,
                             Boolean.FALSE,
-                            null
+                            null,
+                            connectivityManager
                     );
 
                 }
@@ -509,7 +512,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     this,
                     i+1,
                     Boolean.FALSE,
-                    nodesProfileList.get(i+1)
+                    nodesProfileList.get(i+1),
+                    connectivityManager
             );
 
         }else{
@@ -522,7 +526,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     this,
                     -1,
                     Boolean.FALSE,
-                    null
+                    null,
+                    connectivityManager
             );
 
         }
