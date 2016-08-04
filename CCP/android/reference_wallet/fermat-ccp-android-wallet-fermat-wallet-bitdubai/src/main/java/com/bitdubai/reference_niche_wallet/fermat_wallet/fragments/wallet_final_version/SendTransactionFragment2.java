@@ -173,10 +173,15 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             intraUserLoginIdentity = appSession.getModuleManager().getSelectedActorIdentity();
 
             //load settings params
-            if(appSession.getData(SessionConstant.SETTINGS_LOADED)!=false)
+            if(appSession.getData(SessionConstant.SETTINGS_LOADED) != null) {
+                if (!(Boolean) appSession.getData(SessionConstant.SETTINGS_LOADED)) {
+                    loadSettings();
+                }
+            }
+            else
+            {
                 loadSettings();
-            else loadSettings();
-
+            }
 
 
 
