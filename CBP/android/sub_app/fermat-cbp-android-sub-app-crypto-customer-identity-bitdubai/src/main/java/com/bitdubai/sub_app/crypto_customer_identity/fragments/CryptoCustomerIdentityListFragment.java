@@ -119,7 +119,7 @@ public class CryptoCustomerIdentityListFragment
             makeText(getActivity(), "Error dialogo", Toast.LENGTH_SHORT).show();
         }
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         configureToolbar();
     }
