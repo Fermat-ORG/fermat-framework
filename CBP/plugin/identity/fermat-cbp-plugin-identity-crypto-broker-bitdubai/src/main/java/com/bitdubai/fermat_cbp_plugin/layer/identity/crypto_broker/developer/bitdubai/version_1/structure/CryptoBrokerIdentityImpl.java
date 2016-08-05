@@ -48,7 +48,7 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
         this.cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
                 CryptoCurrency.BITCOIN,
                 FiatCurrency.US_DOLLAR,
-                "Selling Bitcoin");
+                "Not Available Merchandises");
     }
 
     public CryptoBrokerIdentityImpl(
