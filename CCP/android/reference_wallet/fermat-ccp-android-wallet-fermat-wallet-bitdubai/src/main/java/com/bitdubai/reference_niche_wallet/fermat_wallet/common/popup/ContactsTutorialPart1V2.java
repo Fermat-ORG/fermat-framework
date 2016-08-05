@@ -104,7 +104,9 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceAppFermatSess
             try {
                 FermatWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
                 bitcoinWalletSettings.setIsContactsHelpEnabled((checkbox_not_show.isChecked()) ? false : true);
-                getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
+                getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
+
+                getSession().setData(SessionConstant.PRESENTATION_HELP_ENABLED, (checkbox_not_show.isChecked()) ? false : true);
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {
