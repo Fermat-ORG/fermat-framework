@@ -396,12 +396,12 @@ public class ChatAdapterView extends LinearLayout {
                 }
 
                 if (Validate.isDateToday(new Date(date))) {
-                    fecha = getContext().getResources().getString(R.string.cht_today) + formattedTime;
+                    fecha = getContext().getResources().getString(R.string.cht_today) + " " + formattedTime;
                 } else {
                     Date today = new Date();
                     long dias = (today.getTime() - new Date(date).getTime()) / (1000 * 60 * 60 * 24);
                     if (dias == 1) {
-                        fecha = getContext().getResources().getString(R.string.cht_yesterday) + formattedTime;
+                        fecha = getContext().getResources().getString(R.string.cht_yesterday) + " " + formattedTime;
                     }
                 }
             } catch (Exception e) {
@@ -415,7 +415,7 @@ public class ChatAdapterView extends LinearLayout {
         switch (state) {
             case ConstantSubtitle.IS_OFFLINE:
                 if (date != null && !date.equals("no record")) {
-                    toolbar.setSubtitle(Html.fromHtml("<small><small>"+getContext().getResources().getString(R.string.cht_last_time) + setFormatLastTime(date) + "</small></small>"));
+                    toolbar.setSubtitle(Html.fromHtml("<small><small>"+getContext().getResources().getString(R.string.cht_last_time) + " "  + setFormatLastTime(date) + "</small></small>"));
                     appSession.setData("DATELASTCONNECTION", setFormatLastTime(date));
                 } else {
                     Log.i("159753**LastTimeOnChat", "No show");

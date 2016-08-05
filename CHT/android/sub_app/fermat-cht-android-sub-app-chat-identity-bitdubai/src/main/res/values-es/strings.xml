@@ -61,6 +61,7 @@
          ContactsListFragment when a search query match occurs that is not the display name.
          -->
     <string name="search_match_other">Matches Other Field</string>
+    <string name="profile_picture">Foto del Perfil</string>
 
     <string name="no_address">No addresses found</string>
     <string name="no_intent_found">No application found to handle this action</string>
