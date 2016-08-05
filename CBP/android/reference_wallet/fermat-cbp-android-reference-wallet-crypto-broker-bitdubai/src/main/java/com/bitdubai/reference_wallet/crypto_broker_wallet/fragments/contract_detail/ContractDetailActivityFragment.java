@@ -181,9 +181,9 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
 
         brokerName.setText(data.getCryptoCustomerAlias());
         customerImage.setImageDrawable(getImgDrawable(data.getCryptoCustomerImage()));
-        sellingSummary.setText(String.format("BUYING %1$s", merchandise));
+        sellingSummary.setText(String.format(getResources().getString(R.string.cbw_buying_details2), merchandise));
         detailDate.setText(formatter.format(lastUpdate));
-        detailRate.setText(String.format("1 %1$s @ %2$s %3$s", merchandise, exchangeRateAmount, paymentCurrency));
+        detailRate.setText(String.format(getResources().getString(R.string.cbw_exchange_rate_summary), merchandise, exchangeRateAmount, paymentCurrency));
 
         adapter = new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletModuleManager, this);
         recyclerView.setAdapter(adapter);
@@ -331,7 +331,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
             //If module is null, I cannot handle with this.
             Toast.makeText(
                     getActivity(),
-                    "Sorry, an error happened in ContractDetailActivityFragment (CryptoCustomerWalletModuleManager == null)",
+                    getResources().getString(R.string.error_contract_detail),
                     Toast.LENGTH_SHORT)
                     .show();
         }

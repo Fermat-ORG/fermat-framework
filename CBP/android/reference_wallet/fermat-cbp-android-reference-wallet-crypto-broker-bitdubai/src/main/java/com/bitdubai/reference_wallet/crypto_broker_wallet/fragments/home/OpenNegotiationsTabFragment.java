@@ -172,7 +172,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error", LENGTH_LONG).show();
+            makeText(getActivity(), getResources().getString(R.string.error_opps), LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -241,7 +241,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             }
 
         } else {
-            Toast.makeText(getActivity(), "Sorry, an error happened OpenNegotiationsTabFragment (Module == null)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.error_open_negotiations_tab), Toast.LENGTH_SHORT).show();
         }
 
         return data;

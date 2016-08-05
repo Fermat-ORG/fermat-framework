@@ -306,7 +306,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.crypto_customer_error_image), Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -331,7 +331,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
 
         progressBar.setVisibility(View.GONE);
 
-        Toast.makeText(getActivity(), "Crypto Customer Identity Updated.", Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), getResources().getString(R.string.crypto_customer_identity_updated), Toast.LENGTH_LONG).show();
         changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY, appSession.getAppPublicKey());
     }
 
@@ -344,7 +344,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
 
         progressBar.setVisibility(View.GONE);
 
-        Toast.makeText(getActivity().getApplicationContext(), "Error trying to edit the identity.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.crypto_customer_error_create), Toast.LENGTH_SHORT).show();
         appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY,
                 UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
     }
@@ -356,10 +356,10 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
 
 
         if (customerNameText.trim().equals("")) {
-            Toast.makeText(getActivity(), "Please enter a name", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.crypto_customer_enter_name), Toast.LENGTH_LONG).show();
 
         } else if (imgInBytes == null) {
-            Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.crypto_customer_enter_image), Toast.LENGTH_LONG).show();
 
         } else {
             final int accuracy = getAccuracyData();
@@ -402,7 +402,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                     imageToUploadUri = Uri.fromFile(f);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 } else {
-                    Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.crypto_customer_error), Toast.LENGTH_LONG).show();
                 }
             }
         } else {
@@ -462,7 +462,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                 if (Build.VERSION.SDK_INT < 23) {
                     String provider = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if (!provider.contains("gps")) { //if gps is disabled
-                        Toast.makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, getResources().getString(R.string.crypto_customer_turnon_gps), Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
@@ -470,7 +470,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                 } else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if (!provider.contains("gps")) { //if gps is disabled
-                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getResources().getString(R.string.crypto_customer_turnon_gps), Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
@@ -478,9 +478,9 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
 
             } catch (Exception ex) {
                 if (Build.VERSION.SDK_INT < 23) {
-                    Toast.makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, getResources().getString(R.string.crypto_customer_turnon_gps), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getResources().getString(R.string.crypto_customer_turnon_gps), Toast.LENGTH_SHORT).show();
                 }
             }
         }
