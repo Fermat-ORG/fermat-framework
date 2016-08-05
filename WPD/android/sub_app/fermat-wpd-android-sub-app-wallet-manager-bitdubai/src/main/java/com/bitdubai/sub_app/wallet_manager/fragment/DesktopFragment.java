@@ -28,6 +28,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Fermat
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_android_api.utils.ScreenUtils;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -148,7 +149,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 4, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
-            adapter = new DesktopAdapter(getActivity(), lstItems,this,DesktopAdapter.DEKSTOP,getScreenSize());
+            adapter = new DesktopAdapter(getActivity(), lstItems,this,DesktopAdapter.DEKSTOP, ScreenUtils.getScreenSize(getActivity()));
             recyclerView.setAdapter(adapter);
             rootView.setBackgroundColor(Color.TRANSPARENT);
 
@@ -582,10 +583,10 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
                                 try {
                                     if(folderDialog==null) {
                                         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                                            folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), DesktopFragment.this, ((FermatActivityManager) getActivity()).getAppStatus(), getScreenSize());
+                                            folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), DesktopFragment.this, ((FermatActivityManager) getActivity()).getAppStatus(), ScreenUtils.getScreenSize(getActivity()));
                                             folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                         } else {
-                                            folderDialog = new FolderDialog(getActivity(), appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), DesktopFragment.this, ((FermatActivityManager) getActivity()).getAppStatus(), getScreenSize());
+                                            folderDialog = new FolderDialog(getActivity(), appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), DesktopFragment.this, ((FermatActivityManager) getActivity()).getAppStatus(), ScreenUtils.getScreenSize(getActivity()));
                                         }
                                     }
                                     folderDialog.show();

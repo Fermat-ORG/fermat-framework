@@ -52,7 +52,7 @@ public class ToolbarBuilder {
             }catch (Exception e){
                 //nothing
             }
-            toolabarContainer.removeAllViewsInLayout();
+            if (toolabarContainer!=null)toolabarContainer.removeAllViewsInLayout();
             toolabarContainer = null;
             txtTitle = null;
         }
@@ -60,9 +60,7 @@ public class ToolbarBuilder {
     }
 
     public void clear(){
-        txtTitle = null;
-        if (toolabarContainer!=null)toolabarContainer.removeAllViewsInLayout();
-        toolabarContainer = null;
+        clearToolbarViews();
         mToolbar.clear();
         fermatActivity.clear();
     }

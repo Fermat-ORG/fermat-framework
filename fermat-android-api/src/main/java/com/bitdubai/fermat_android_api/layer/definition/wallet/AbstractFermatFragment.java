@@ -93,10 +93,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     protected ViewInflater viewInflater;
     private WizardConfiguration context;
 
-    public enum ScreenSize {
-        LARGE, NORMAL, UNDEFINED, SMALL
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -312,6 +308,27 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     }
 
     /**
+     * Open NavigationDrawer if exist
+     */
+    protected void openDrawer(){
+        getPaintActivtyFeactures().openDrawer();
+    }
+
+    /**
+     * Open if is not visible and close it if is visible
+     */
+    protected void openOrCLoseDrawer(){
+        getPaintActivtyFeactures().openOrCLoseDrawer();
+    }
+
+    /**
+     * Close NavigationDrawer if exist
+     */
+    protected void closeDrawer(){
+        getPaintActivtyFeactures().closeDrawer();
+    }
+
+    /**
      * Method used to go to home desktop
      */
     protected void home() {
@@ -337,7 +354,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
 
     protected final void changeActivity(Activities activity) {
         destroy();
-        getFermatScreenSwapper().changeActivity(activity.getCode(),appSession.getAppPublicKey());
+        getFermatScreenSwapper().changeActivity(activity.getCode(), appSession.getAppPublicKey());
     }
 
     /**
@@ -458,15 +475,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     }
 
 
-    public final void onUpdateViewUIThred(final String code) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                onUpdateViewOnUIThread(code);
-            }
-        });
-    }
-
     /**
      * This class have to be ovverride if someone wants to get broadcast
      *
@@ -540,29 +548,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
      */
     public void onOptionMenuPrepared(Menu menu) {
 
-    }
-
-    public ScreenSize getScreenSize() {
-        int screenSize = getResources().getConfiguration().screenLayout &
-                Configuration.SCREENLAYOUT_SIZE_MASK;
-        ScreenSize screenSizeType = null;
-        switch (screenSize) {
-            case Configuration.SCREENLAYOUT_SIZE_LARGE:
-                screenSizeType = ScreenSize.LARGE;
-                break;
-            case Configuration.SCREENLAYOUT_SIZE_NORMAL:
-                screenSizeType = ScreenSize.NORMAL;
-                break;
-            case Configuration.SCREENLAYOUT_SIZE_SMALL:
-                screenSizeType = ScreenSize.SMALL;
-                break;
-            case Configuration.SCREENLAYOUT_SIZE_UNDEFINED:
-                screenSizeType = ScreenSize.UNDEFINED;
-                break;
-            default:
-                screenSizeType = ScreenSize.UNDEFINED;
-        }
-        return screenSizeType;
     }
 
 
@@ -675,6 +660,9 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
     }
 
+
+
+    //todo: Esto no se quien lo puso pero no va acá...
     /**
      * Override this method if yo want to implement infinite scrolling or pagination.
      * Return a {@link RecyclerView.OnScrollListener} for the {@link RecyclerView} of this fragment.

@@ -150,8 +150,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
 
-            String frgBackType = null;
-
             RuntimeManager runtimeManager = getDesktopRuntimeManager();
 
             FermatStructure structure = runtimeManager.getLastApp();
@@ -182,6 +180,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 }
             }
 
+            String frgBackType = null;
             if (fragment != null) frgBackType = fragment.getBack();
 
             if (activity.getBackActivity() != null && activity.getBackAppPublicKey() != null) {
