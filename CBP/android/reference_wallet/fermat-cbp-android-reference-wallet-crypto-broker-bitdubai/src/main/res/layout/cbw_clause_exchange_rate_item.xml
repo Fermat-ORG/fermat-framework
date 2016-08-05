@@ -40,7 +40,7 @@
                 android:textAllCaps="true"
                 android:textColor="#1271A7"
                 android:textSize="14sp"
-                tools:text="Exchange Rate Reference"/>
+                tools:text="@string/exchange_rate_reference"/>
 
             <View
                 android:layout_width="match_parent"
@@ -144,7 +144,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:text="Selected Rate:"
+                    android:text="@string/selected_rate"
                     android:textColor="@color/description_text_status_confirm"
                     android:textSize="14sp"/>
 

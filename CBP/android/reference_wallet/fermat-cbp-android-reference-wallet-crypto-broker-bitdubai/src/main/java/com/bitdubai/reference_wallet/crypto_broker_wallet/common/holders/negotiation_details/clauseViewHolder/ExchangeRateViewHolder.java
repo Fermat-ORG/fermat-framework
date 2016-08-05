@@ -94,8 +94,8 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
             exchangeRateReferenceValue.setText(String.format("Min: %1$s %3$s    Max: %2$s %3$s",
                     marketExchangeRateStr, suggestedMaxExchangeRateStr, suggestedRateCurrencyStr));
         } else {
-            markerRateReference.setText("Can't get Market Exchange Rate");
-            exchangeRateReferenceValue.setText("Can't get suggested Exchange Rate");
+            markerRateReference.setText(R.string.cant_get_market_rate);
+            exchangeRateReferenceValue.setText(R.string.cant_get_suggested_rate);
         }
 
 //

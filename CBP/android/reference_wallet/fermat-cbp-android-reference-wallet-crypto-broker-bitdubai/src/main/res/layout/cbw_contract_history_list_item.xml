@@ -86,5 +86,5 @@
         android:singleLine="true"
         android:textColor="@color/cbw_contract_history_broker_name_text"
         android:textSize="@dimen/cbw_subtitle_text"
-        tools:text="success"/>
+        tools:text="@string/sucess"/>
 </RelativeLayout>
