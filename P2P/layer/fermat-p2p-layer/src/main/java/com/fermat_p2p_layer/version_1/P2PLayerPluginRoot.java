@@ -95,7 +95,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
                                     }
                                 }
                             }
-                        }, 10, 5, TimeUnit.SECONDS);
+                        }, 30, 60, TimeUnit.SECONDS);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
