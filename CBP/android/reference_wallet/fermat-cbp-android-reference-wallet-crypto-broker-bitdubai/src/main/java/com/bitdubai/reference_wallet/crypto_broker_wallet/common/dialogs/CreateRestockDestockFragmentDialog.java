@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -48,7 +49,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
     /**
      * UI components
      */
-    FermatEditText amountText;
+    EditText amountText;
 
 
     public CreateRestockDestockFragmentDialog(Activity activity, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session, CryptoBrokerWalletAssociatedSetting setting) {
@@ -67,7 +68,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.cbw_create_stock_transaction_dialog);
 
-            amountText = (FermatEditText) findViewById(R.id.cbw_ctd_amount);
+            amountText = (EditText) findViewById(R.id.cbw_ctd_amount);
 
             //If working with BIC, allow a max of 999,999,999.99999999 BTC
             if (Platforms.CRYPTO_CURRENCY_PLATFORM.equals(setting.getPlatform()))
