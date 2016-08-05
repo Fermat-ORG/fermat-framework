@@ -1217,7 +1217,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 bitcoinWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                 bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
-                appSession.setData(SessionConstant.RUNNIBLE_BALANCE,0);
+
                 if(moduleManager!=null)
                     moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
 
@@ -1225,6 +1225,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, true);
                 appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
                 appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
+                appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
+                appSession.setData(SessionConstant.RUNNIBLE_BALANCE,new HashMap<>());
+
                 appSession.setData(SessionConstant.SETTINGS_LOADED, true);
 
             } else {
