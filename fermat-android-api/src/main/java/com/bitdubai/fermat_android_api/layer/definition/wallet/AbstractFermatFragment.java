@@ -330,14 +330,14 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     /**
      * Change activity
      */
-    protected final void changeActivityOld(Activities activity) {
-        destroy();
-        getFermatScreenSwapper().changeActivity(activity.getCode(), appSession.getAppPublicKey());
-    }
+//    protected final void changeActivityOld(Activities activity) {
+//        destroy();
+//        getFermatScreenSwapper().changeActivity(activity.getCode(), appSession.getAppPublicKey());
+//    }
 
     protected final void changeActivity(Activities activity) {
         destroy();
-        getFermatScreenSwapper().changeActivity(activity.getCode(),appSession.getAppPublicKey(),null,null);
+        getFermatScreenSwapper().changeActivity(activity.getCode(),appSession.getAppPublicKey());
     }
 
     /**
@@ -375,19 +375,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     /**
      * Change activity
      */
-    protected final void changeActivity(String activityCode, String appPublicKey, Object... objectses) {
-        destroy();
-        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, appPublicKey, objectses);
-
-    }
-
-    /**
-     * Change activity
-     */
     @Deprecated
     protected final void changeActivity(String activityCode, Object... objectses) {
         destroy();
-        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, null);
+        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, appSession.getAppPublicKey(),objectses);
     }
 
     protected void changeApp(Engine emgine, Object[] objects) {
