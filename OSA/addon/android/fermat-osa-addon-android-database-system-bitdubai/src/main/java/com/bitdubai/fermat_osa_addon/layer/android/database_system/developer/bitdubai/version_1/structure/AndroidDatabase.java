@@ -3,6 +3,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bi
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteStatement;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -170,11 +171,11 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
 
             if (updateTables != null)
                 for (int i = 0; i < updateTables.size(); ++i)
-                    updateTransactionRecord(database, updateTables.get(i), updateRecords.get(i), variablesResult);
+                    updateTransactionRecord(database, updateTables.get(i), updateRecords.get(i), variablesResult).executeUpdateDelete();
 
             if (insertTables != null)
                 for (int i = 0; i < insertTables.size(); ++i)
-                    insertTransactionRecord(database, insertTables.get(i), insertRecords.get(i), variablesResult);
+                    insertTransactionRecord(database, insertTables.get(i), insertRecords.get(i), variablesResult).executeInsert();
 
             database.setTransactionSuccessful();
 
@@ -337,6 +338,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
 
         try {
             SQLiteDatabase.openDatabase(databasePath, null, SQLiteDatabase.OPEN_READWRITE, null).close();
+            SQLiteDatabase.releaseMemory();
         } catch (SQLiteException exception) {
 
             /**
@@ -587,7 +589,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         return new AndroidDatabaseTableFactory(tableName);
     }
 
-    private void updateTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<AndroidVariable> variablesResult) throws CantUpdateRecordException {
+    private SQLiteStatement updateTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<AndroidVariable> variablesResult) throws CantUpdateRecordException {
 
         try {
             List<DatabaseRecord> records = record.getValues();
@@ -619,14 +621,15 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 }
             }
 
-            database.execSQL("UPDATE " + table.getTableName() + " SET " + strRecords + " " + table.makeFilter());
+            return database.compileStatement("UPDATE " + table.getTableName() + " SET " + strRecords + " " + table.makeFilter());
+//            database.execSQL();
 
         } catch (Exception exception) {
             throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         }
     }
 
-    private void insertTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<AndroidVariable> variableResultList) throws CantInsertRecordException {
+    private SQLiteStatement insertTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<AndroidVariable> variableResultList) throws CantInsertRecordException {
 
         try {
             StringBuilder strRecords = new StringBuilder("");
@@ -659,8 +662,8 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                             .append("'");
                 }
             }
-
-            database.execSQL("INSERT INTO " + table.getTableName() + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
+            return database.compileStatement("INSERT INTO " + table.getTableName() + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
+//            database.execSQL();
         } catch (Exception exception) {
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         }

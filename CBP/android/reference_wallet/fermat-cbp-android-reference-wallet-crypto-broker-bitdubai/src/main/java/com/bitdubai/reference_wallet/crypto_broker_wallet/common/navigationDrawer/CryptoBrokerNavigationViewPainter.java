@@ -220,4 +220,11 @@ public class CryptoBrokerNavigationViewPainter extends NavigationViewPainter {
 
         return earningsItems;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //TODO: acá des registrá tu receiver
+        //unregisterReceiver();
+    }
 }

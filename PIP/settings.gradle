@@ -22,8 +22,8 @@ project(':fermat-pip-addon-platform-service-platform-info-bitdubai').projectDir 
 include ':fermat-pip-addon-platform-service-error-manager-bitdubai'
 project(':fermat-pip-addon-platform-service-error-manager-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai')
 
-include ':fermat-pip-addon-platform-service-location-manager-bitdubai'
-project(':fermat-pip-addon-platform-service-location-manager-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-location-manager-bitdubai')
+//include ':fermat-pip-addon-platform-service-location-manager-bitdubai'
+//project(':fermat-pip-addon-platform-service-location-manager-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-location-manager-bitdubai')
 
 include ':fermat-pip-addon-user-device-user-bitdubai'
 project(':fermat-pip-addon-user-device-user-bitdubai').projectDir = new File('PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai')

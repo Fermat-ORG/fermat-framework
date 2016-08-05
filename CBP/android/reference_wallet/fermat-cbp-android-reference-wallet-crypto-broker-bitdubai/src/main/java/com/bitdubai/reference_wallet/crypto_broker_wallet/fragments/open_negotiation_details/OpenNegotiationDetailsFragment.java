@@ -54,6 +54,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.ClauseD
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.TextValueDialog;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.IntraUserIdentity;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
@@ -358,15 +359,23 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     public void onSendButtonClicked() {
         try {
 
+            IntraUserIdentity intraUserIdentity = new IntraUserIdentity(
+                    moduleManager,
+                    errorManager,
+                    TAG,
+                    getActivity());
+
             if (negotiationWrapper.isClausesConfirmed()) {
 
-                if (isCreateIdentityIntraUser(negotiationWrapper.getClauses())) {
+                if (intraUserIdentity.isCreateIdentityIntraUser(negotiationWrapper.getClauses())) {
 
                     moduleManager.sendNegotiation(negotiationWrapper.getNegotiationInfo());
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
 
                 } else {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.need_register), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getActivity(), "Need to register THE WALLET USER for user BTC ", Toast.LENGTH_LONG).show();
+                    intraUserIdentity.dialogCreateIdentityIntraUser(appSession, appResourcesProviderManager);
+
                 }
 
             } else

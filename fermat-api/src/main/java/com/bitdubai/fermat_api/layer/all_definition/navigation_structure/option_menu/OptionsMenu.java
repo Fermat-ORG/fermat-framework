@@ -18,7 +18,7 @@ import java.util.List;
 public class OptionsMenu implements FermatMainMenu<OptionMenuItem>, Serializable {
 
     /**
-     * OptionsMenu class member variables
+     * OptionsMenu class member variablesó
      */
     List<OptionMenuItem> menuItems = new ArrayList<>();
 

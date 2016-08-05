@@ -128,6 +128,12 @@
     <string name="cbw_cash">Cash</string>
     <string name="cbw_bank">Bank</string>
 
+    <string name="cbw_identity_wallet_user">Intra User Identity</string>
+    <string name="cbw_identity_dialog_hint">User Name</string>
+    <string name="cbw_identity_dialog_title_btc">Intra User Identity</string>
+    <string name="cbw_identity_dialog_description_btc">To receive or send BTC must create an Intra User Identity</string>
+    <string name="cbw_identity_dialog_description2_btc">To create the identity now?\nIndicate your User Name and push the button Create.</string>
+
     <string name="cbw_settings_locations_description">You must have at least one location to make your transactions</string>
     <string name="cbw_settings_locations_title">Manage Your Locations</string>
     <string name="cbw_save">Save</string>
