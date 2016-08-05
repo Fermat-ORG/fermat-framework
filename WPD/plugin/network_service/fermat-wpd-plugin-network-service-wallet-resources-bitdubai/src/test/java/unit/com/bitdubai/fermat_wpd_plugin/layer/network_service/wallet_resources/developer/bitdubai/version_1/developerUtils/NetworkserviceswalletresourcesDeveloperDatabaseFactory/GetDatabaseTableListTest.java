@@ -26,19 +26,19 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetDatabaseTableListTest {
 
-@Mock
-private Database mockDatabase;
+    @Mock
+    private Database mockDatabase;
 
-@Mock
-private DeveloperObjectFactory mockDeveloperObjectFactory;
+    @Mock
+    private DeveloperObjectFactory mockDeveloperObjectFactory;
 
-@Mock
-private PluginDatabaseSystem mockPluginDatabaseSystem;
+    @Mock
+    private PluginDatabaseSystem mockPluginDatabaseSystem;
 
-private NetworkserviceswalletresourcesDeveloperDatabaseFactory DatabaseFactory;
+    private NetworkserviceswalletresourcesDeveloperDatabaseFactory DatabaseFactory;
 
     @Test
-    public void getDatabaseTableListTest() throws Exception{
+    public void getDatabaseTableListTest() throws Exception {
         UUID testOwnerId = UUID.randomUUID();
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);

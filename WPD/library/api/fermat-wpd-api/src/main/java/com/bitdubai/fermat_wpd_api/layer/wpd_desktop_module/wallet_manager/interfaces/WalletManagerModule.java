@@ -28,7 +28,7 @@ public interface WalletManagerModule extends FermatManager {
      * This method let the client create a new wallet of a type already intalled by the user.
      *
      * @param walletIdInTheDevice The identifier of the wallet to copy
-     * @param newName the name to give to the wallet
+     * @param newName             the name to give to the wallet
      * @throws NewWalletCreationFailedException
      */
     void createNewWallet(UUID walletIdInTheDevice, String newName) throws NewWalletCreationFailedException;
@@ -55,11 +55,10 @@ public interface WalletManagerModule extends FermatManager {
      * This method let us change the name (alias) of a given wallet.
      *
      * @param walletIdInTheDevice the identifier of the wallet to rename
-     * @param newName the new name for the wallet
+     * @param newName             the new name for the wallet
      * @throws WalletRenameFailedException
      */
     void renameWallet(UUID walletIdInTheDevice, String newName) throws WalletRenameFailedException;
 
 
-
-    }
+}

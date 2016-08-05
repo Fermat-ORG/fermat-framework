@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.08.19..
  */
 
-public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp,FermatInterfaceObject,InstalledApp {
+public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp, FermatInterfaceObject, InstalledApp {
 
     private SubApps subApps;
     private List<InstalledSkin> skinsId;
@@ -58,17 +58,15 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
 
     /**
      * This method gives us the list of all the languages installed for this wallet
-     *
      */
-    public List<InstalledLanguage> getLanguagesId(){
+    public List<InstalledLanguage> getLanguagesId() {
         return languajesId;
     }
 
     /**
      * This method gives us the list of all the skins installed for this wallet
-     *
      */
-    public List<InstalledSkin> getSkinsId(){
+    public List<InstalledSkin> getSkinsId() {
         return skinsId;
     }
 

@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetSkinFileException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetSkinFileException;
 
 import java.util.UUID;
 

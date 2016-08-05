@@ -6,12 +6,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantInstallWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletInstallationProcess;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesInstalationManager;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.exceptions.CantGetInstalledWalletsException;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.exceptions.CantPersistWalletException;
@@ -77,6 +77,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
         }
 
     }
+
     /**
      * This method starts the wallet installation process
      */
@@ -113,14 +114,14 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                  * Send wallet info to Wallet Resource
                  */
                 //TODO: se necesita pasarle la public key de la wallet  instalar al resources
-                LOG.info("MAP_WCAT:"+walletCategory.getCode());
-                LOG.info("MAP_WTYP:"+walletType.getCode());
-                LOG.info("MAP_DNAM:"+developerName);
-                LOG.info("MAP_SSIZ:"+screenSize);
-                LOG.info("MAP_SNAM:"+skinName);
-                LOG.info("MAP_LVAL:"+language.getCode());
-                LOG.info("MAP_NSV:"+navigationStructureVersion);
-                LOG.info("MAP_WPK"+walletPublicKey);
+                LOG.info("MAP_WCAT:" + walletCategory.getCode());
+                LOG.info("MAP_WTYP:" + walletType.getCode());
+                LOG.info("MAP_DNAM:" + developerName);
+                LOG.info("MAP_SSIZ:" + screenSize);
+                LOG.info("MAP_SNAM:" + skinName);
+                LOG.info("MAP_LVAL:" + language.getCode());
+                LOG.info("MAP_NSV:" + navigationStructureVersion);
+                LOG.info("MAP_WPK" + walletPublicKey);
                 walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, skinName, language.getCode(), navigationStructureVersion, walletPublicKey);
                 //TODO: erase this test line.
                 //walletResources.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0","TestPublicKey");

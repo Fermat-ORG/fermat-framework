@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
  */
 public class PreferenceWalletSettings implements FermatSettings {
 
-    public final String toXml(){
+    public final String toXml() {
         return XMLParser.parseObject(this);
     }
 

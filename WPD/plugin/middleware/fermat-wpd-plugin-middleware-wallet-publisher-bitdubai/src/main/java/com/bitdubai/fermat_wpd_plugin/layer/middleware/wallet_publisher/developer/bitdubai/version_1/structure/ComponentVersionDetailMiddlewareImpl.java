@@ -84,7 +84,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
     /**
      * Constructor
      */
-    public ComponentVersionDetailMiddlewareImpl(){
+    public ComponentVersionDetailMiddlewareImpl() {
         super();
     }
 
@@ -120,6 +120,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see ComponentVersionDetailMiddleware#getCatalogId()
      */
     @Override
@@ -138,6 +139,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see ComponentVersionDetailMiddleware#getComponentId()
      */
     @Override
@@ -156,6 +158,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see ComponentVersionDetailMiddleware#getFinalPlatformVersion()
      */
     @Override
@@ -174,6 +177,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see ComponentVersionDetailMiddleware#getFinalWalletVersion()
      */
     @Override
@@ -192,6 +196,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see ComponentVersionDetailMiddleware#getId()
      */
     @Override
@@ -210,6 +215,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see ComponentVersionDetailMiddleware#getInitialPlatformVersion()
      */
     @Override
@@ -228,6 +234,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see ComponentVersionDetailMiddleware#getInitialWalletVersion()
      */
     @Override
@@ -246,6 +253,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see ComponentVersionDetailMiddleware#getObservations()
      */
     @Override
@@ -264,6 +272,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see ComponentVersionDetailMiddleware#getScreenSize()
      */
     @Override
@@ -282,6 +291,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see ComponentVersionDetailMiddleware#getVersion()
      */
     @Override
@@ -300,6 +310,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see ComponentVersionDetailMiddleware#getVersionTimestamp()
      */
     @Override
@@ -318,6 +329,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#equals(Object)
      */
     @Override
@@ -330,6 +342,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#hashCode()
      */
     @Override
@@ -339,6 +352,7 @@ public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDet
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#toString()
      */
     @Override

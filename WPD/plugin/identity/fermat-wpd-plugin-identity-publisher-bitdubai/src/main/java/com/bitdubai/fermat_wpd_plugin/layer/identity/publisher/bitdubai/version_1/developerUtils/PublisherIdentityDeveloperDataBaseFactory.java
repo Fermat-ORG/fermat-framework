@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -54,13 +55,13 @@ public class PublisherIdentityDeveloperDataBaseFactory {
         List records = selectedTable.getRecords();
         Iterator var6 = records.iterator();
 
-        while(var6.hasNext()) {
-            DatabaseTableRecord row = (DatabaseTableRecord)var6.next();
+        while (var6.hasNext()) {
+            DatabaseTableRecord row = (DatabaseTableRecord) var6.next();
             ArrayList developerRow = new ArrayList();
             Iterator var9 = row.getValues().iterator();
 
-            while(var9.hasNext()) {
-                DatabaseRecord field = (DatabaseRecord)var9.next();
+            while (var9.hasNext()) {
+                DatabaseRecord field = (DatabaseRecord) var9.next();
                 developerRow.add(field.getValue().toString());
             }
 

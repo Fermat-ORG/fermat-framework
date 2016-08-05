@@ -49,7 +49,7 @@ public class GetDatabaseListTest {
     }
 
     @Test
-    public void getDatabaseListTest()  {
+    public void getDatabaseListTest() {
 
         assertThat(developerDatabaseFactory.getDatabaseList(developerObjectFactory)).isInstanceOf(List.class);
     }
