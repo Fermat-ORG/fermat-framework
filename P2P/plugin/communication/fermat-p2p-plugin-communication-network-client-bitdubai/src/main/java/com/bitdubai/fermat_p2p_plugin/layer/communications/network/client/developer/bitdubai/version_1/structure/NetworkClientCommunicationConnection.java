@@ -202,14 +202,14 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                         return Boolean.FALSE;
 
                     }else{
-                        return tryToReconnect;
+                        return closeReason.getCloseCode() != CloseReason.CloseCodes.NORMAL_CLOSURE;
                     }
 
                 }else {
                     System.out.println("##########################################################################");
                     System.out.println("#  NetworkClientCommunicationConnection  - Disconnect -> Reconnecting... #");
                     System.out.println("##########################################################################");
-                    return tryToReconnect;
+                    return closeReason.getCloseCode() != CloseReason.CloseCodes.NORMAL_CLOSURE;
                 }
             }
 
