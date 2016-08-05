@@ -8,7 +8,7 @@
     <string name="cbp_customer_identity_welcome_subTitle">Bienvenido a la Customer Identity.</string>
     <string name="cbp_customer_identity_welcome_subTitle_gps">Anuncio Importante.</string>
     <string name="cbp_customer_identity_welcome_title_gps">Anuncio!</string>
-    <string name="cci_accuracy_km">Exactitud (Km)</string>
+    <string name="cci_accuracy_km">Exactitud (km)</string>
     <string name="cci_frequency">Frecuencia</string>
     <string name="create">CREAR</string>
     <string name="create_a_new_one">CREAR UNO NUEVO</string>
