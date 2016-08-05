@@ -824,7 +824,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             money = new BigDecimal("0");
                         else
                             money = new BigDecimal(amount);
-
                         if(!amount.equals("") && !money.equals(new BigDecimal("0"))) {
                             try {
                                 String notes = "";
@@ -855,8 +854,11 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                                 long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
                                 BigDecimal amountDecimal = new BigDecimal(newAmount);
+                               // amountDecimal.setScale(1,BigDecimal.ROUND_HALF_DOWN);
 
                                 BigDecimal decimalFeed = new BigDecimal(newFee);
+                                //decimalFeed.setScale(1, BigDecimal.ROUND_HALF_DOWN);
+
                                 //BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                                 BigDecimal operator = new BigDecimal(newAmount);
 
@@ -901,8 +903,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                             long total = 0;
                                             if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode()))
                                                 total =  operator.longValueExact() +  decimalFeed.longValueExact();
-                                            else
+                                            else{
+                                                //String o = operator.toString().replace(".", ",");
+                                                //String d = decimalFeed.toString().replace(".",",");
+                                               // total = Long.parseLong(o, 10) -  Long.parseLong(d, 10);
                                                 total =  operator.longValueExact() -  decimalFeed.longValueExact();
+                                            }
+
 
                                             if(total < Balance)
                                             {
