@@ -184,6 +184,22 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 if (!(Boolean) appSession.getData(SessionConstant.SETTINGS_LOADED)) {
                     loadSettings();
                 }
+                else
+                {
+
+                    if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                        balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+                    if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                        typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
+
+                    blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+
+                }
             }
             else
             {
@@ -1051,15 +1067,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     private void loadSettings(){
         try {
 
-             if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
-                        balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
-                    else
-                        appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
 
-                    if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
-                        typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
-                    else
-                        appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
 
                     //get wallet settings
                     try {
@@ -1092,10 +1100,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         appSession.setData(SessionConstant.SETTINGS_LOADED, true);
 
                     } else {
-                        if (fermatWalletSettings.getBlockchainNetworkType() == null)
-                            fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                        else
-                            blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
+
+                        blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
 
 
                         appSession.setData(SessionConstant.FIAT_CURRENCY,  fermatWalletSettings.getFiatCurrency());
@@ -1106,6 +1112,16 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
 
                         appSession.setData(SessionConstant.RUNNIBLE_BALANCE, fermatWalletSettings.getRunningDailyBalance());
+
+                        if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                            balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+                        else
+                            appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+                        if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                            typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+                        else
+                            appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
                     }
 
                     if(moduleManager!=null) moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
