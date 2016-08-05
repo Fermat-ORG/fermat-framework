@@ -208,7 +208,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
             }
         } else {
             Toast.makeText(getActivity(),
-                    "Sorry, an error happened in ContractHistoryActivityFragment (Module == null)",
+                    getResources().getString(R.string.error_contract_history),
                     Toast.LENGTH_SHORT).
                     show();
         }

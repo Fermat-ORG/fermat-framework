@@ -21,7 +21,8 @@
             android:layout_gravity="center_vertical"
             android:textColor="@color/black"
             android:textSize="14sp"
-            tools:text="CASH"
+            tools:text="@string/cbw_cash"
+            android:textAllCaps="true"
             android:layout_weight="3"
             />
 

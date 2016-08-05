@@ -40,7 +40,7 @@
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:textColor="#222"
-                tools:text="Negotiation Expiration Date"/>
+                tools:text="@string/expiration_date_title"/>
 
             <View
                 android:layout_width="match_parent"
@@ -61,7 +61,7 @@
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
                     android:textColor="@color/description_text_status_confirm"
-                    tools:text="Expiration Date:"/>
+                    tools:text="@string/expiration_date_text"/>
 
                 <Button
                     android:id="@+id/cbw_date_value"

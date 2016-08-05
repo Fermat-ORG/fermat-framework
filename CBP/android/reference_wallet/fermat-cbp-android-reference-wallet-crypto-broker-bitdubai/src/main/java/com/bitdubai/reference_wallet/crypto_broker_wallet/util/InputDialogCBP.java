@@ -263,15 +263,15 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
             try {
 
                 if (selectedBankAccountBankName.equals("")) {
-                    Toast.makeText(activity.getApplicationContext(), "Please enter a bank name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.enter_bank_name), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (selectedBankAccountAlias.equals("")) {
-                    Toast.makeText(activity.getApplicationContext(), "Please enter an alias for the account", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.enter_alias), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (selectedBankAccountNumber.equals("")) {
-                    Toast.makeText(activity.getApplicationContext(), "Please enter an account number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.enter_account), Toast.LENGTH_SHORT).show();
                     return;
                 }
 

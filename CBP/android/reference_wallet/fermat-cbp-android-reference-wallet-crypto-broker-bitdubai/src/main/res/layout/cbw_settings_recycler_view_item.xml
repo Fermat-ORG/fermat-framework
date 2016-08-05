@@ -19,7 +19,7 @@
         android:layout_alignParentLeft="true"
         android:textColor="@color/white"
         android:textSize="14sp"
-        tools:text="Bank Wallet"/>
+        tools:text="@string/bank_wallet"/>
 
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

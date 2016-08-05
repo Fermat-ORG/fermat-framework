@@ -136,7 +136,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             deactivatedButton();
 
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
-        spreadTextView.setText(String.format("%1$s %%", spreadValue));
+        spreadTextView.setText(String.format(getResources().getString(R.string.spread_format), spreadValue));
 
         final FermatCheckBox automaticRestockCheckBox = (FermatCheckBox) layout.findViewById(R.id.cbw_automatic_restock_check_box);
         automaticRestockCheckBox.setOnClickListener(new View.OnClickListener() {
@@ -152,7 +152,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 spreadValue = progress;
-                spreadTextView.setText(String.format("%1$s %%", spreadValue));
+                spreadTextView.setText(String.format(getResources().getString(R.string.spread_format), spreadValue));
 
                 if(spreadValue > 0) {
                     activateButton();
@@ -204,7 +204,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             moduleManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
 
         } catch (FermatException ex) {
-            Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "There was a problem saving your settings", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), getResources().getString(R.string.error_settings), Toast.LENGTH_SHORT).show();
 
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
@@ -322,13 +322,13 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     public void onUpdateViewOnUIThread(String code) {
         switch (code) {
             case CBW_OPERATION_DESTOCK_OR_RESTOCK_UPDATE_VIEW_ERROR:
-                Toast.makeText(this.getActivity(), "There has been an error processing your request.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.getActivity(), getResources().getString(R.string.error_request), Toast.LENGTH_SHORT).show();
                 processingProgressBar.setVisibility(View.INVISIBLE);
                 onRefresh();
                 break;
 
             case CBW_OPERATION_DESTOCK_OR_RESTOCK_UPDATE_VIEW:
-                Toast.makeText(this.getActivity(), "Transaction completed.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.getActivity(), getResources().getString(R.string.transaction_completed), Toast.LENGTH_SHORT).show();
                 processingProgressBar.setVisibility(View.INVISIBLE);
                 onRefresh();
                 break;
