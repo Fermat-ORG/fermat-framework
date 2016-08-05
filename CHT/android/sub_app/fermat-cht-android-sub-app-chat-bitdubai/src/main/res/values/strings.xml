@@ -79,6 +79,8 @@
     <string name="cht_send_error_hint">Type email of support personal</string>
     <string name="cht_send_error_hint_hold">Hold a tap here</string>
     <string name="copy_message_toast">Copied: </string>
+    <string name="cht_notif_new_msg_title">Chat - New Message</string>
+    <string name="cht_notif_new_msg_content">You have a new message in Chat.</string>
 
 
     <!-- Used for the AlphabetIndexer in ContactsListFragment to provide quick navigation by
