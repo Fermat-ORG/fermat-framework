@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
@@ -134,7 +135,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      */
     private NodeProfile nodeProfile;
 
-    private Lock lock;
+    private ConnectivityManager connectivityManager;
 
     /*
      * Constructor
@@ -146,7 +147,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                                 final NetworkClientCommunicationPluginRoot pluginRoot       ,
                                                 final Integer                              nodesListPosition,
                                                 final boolean                              isExternalNode   ,
-                                                final NodeProfile                          nodeProfile      ){
+                                                final NodeProfile                          nodeProfile      ,
+                                                ConnectivityManager connectivityManager){
 
         URI uri = null;
         try {
@@ -168,6 +170,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         this.activeCalls            = new CopyOnWriteArrayList<>();
         this.container              = ClientManager.createClient();
+        this.connectivityManager = connectivityManager;
 
         this.networkClientCommunicationChannel = new NetworkClientCommunicationChannel(this, isExternalNode);
     }
@@ -246,9 +249,23 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                         e.printStackTrace();
                     }
 
+
                     System.out.println("###############################################################################");
                     System.out.println("#  NetworkClientCommunicationConnection  - Connect Failure -> Reconnecting... #");
                     System.out.println("###############################################################################");
+
+                    try {
+                        if (!connectivityManager.isOnline()) {
+                            System.out.println("###############################################################################");
+                            System.out.println("#  Interrumpiendo hilo de reconctado, no sirve tener algo intentando conectarse si hay un evento que te avisa eso #");
+                            System.out.println("###############################################################################");
+                            tryToReconnect = false;
+
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
                     return tryToReconnect;
                 }
             }
