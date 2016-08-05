@@ -27,29 +27,32 @@ public class ToolbarBuilder {
     private FermatTextView txtTitle;
 
 
-    public ToolbarBuilder(FermatActivity fermatActivity,Toolbar mToolbar) {
+    public ToolbarBuilder(FermatActivity fermatActivity, Toolbar mToolbar) {
         this.mToolbar = new WeakReference<Toolbar>(mToolbar);
         this.fermatActivity = new WeakReference<FermatActivity>(fermatActivity);
     }
 
 
-    public View buildTitle(String title, Typeface typeface, float textSize, String titleColor){
-        if (toolabarContainer==null)toolabarContainer = (ViewGroup) fermatActivity.get().getLayoutInflater().inflate(R.layout.text_view, null);
-        else Log.e(TAG,"error title container");
-        if (txtTitle==null)txtTitle = (FermatTextView) toolabarContainer.findViewById(R.id.txt_title);
-        else Log.e(TAG,"error txtTitle");
+    public View buildTitle(String title, Typeface typeface, float textSize, String titleColor) {
+        if (toolabarContainer == null)
+            toolabarContainer = (ViewGroup) fermatActivity.get().getLayoutInflater().inflate(R.layout.text_view, null);
+        else Log.e(TAG, "error title container");
+        if (txtTitle == null)
+            txtTitle = (FermatTextView) toolabarContainer.findViewById(R.id.txt_title);
+        else Log.e(TAG, "error txtTitle");
         txtTitle.setText(title);
-        if (typeface!=null) txtTitle.setTypeface(typeface);
+        if (typeface != null) txtTitle.setTypeface(typeface);
         txtTitle.setTextSize(textSize);
-        if (titleColor != null && !titleColor.equals("")) txtTitle.setTextColor(Color.parseColor(titleColor));
+        if (titleColor != null && !titleColor.equals(""))
+            txtTitle.setTextColor(Color.parseColor(titleColor));
         return toolabarContainer;
     }
 
-    public void clearToolbarViews(){
-        if (toolabarContainer!=null) {
+    public void clearToolbarViews() {
+        if (toolabarContainer != null) {
             try {
                 mToolbar.get().removeView(toolabarContainer);
-            }catch (Exception e){
+            } catch (Exception e) {
                 //nothing
             }
             toolabarContainer.removeAllViewsInLayout();
@@ -59,9 +62,9 @@ public class ToolbarBuilder {
 
     }
 
-    public void clear(){
+    public void clear() {
         txtTitle = null;
-        toolabarContainer.removeAllViewsInLayout();
+        if (toolabarContainer != null) toolabarContainer.removeAllViewsInLayout();
         toolabarContainer = null;
         mToolbar.clear();
         fermatActivity.clear();
@@ -73,8 +76,8 @@ public class ToolbarBuilder {
     }
 
     public void setTypeface(Typeface typeface) {
-        if (typeface!=null)
-        txtTitle.setTypeface(typeface);
+        if (typeface != null)
+            txtTitle.setTypeface(typeface);
     }
 
     public void setTextSize(float textSize) {
@@ -82,7 +85,8 @@ public class ToolbarBuilder {
     }
 
     public void setTextColor(String textColor) {
-        if (textColor != null && !textColor.equals("")) txtTitle.setTextColor(Color.parseColor(textColor));
+        if (textColor != null && !textColor.equals(""))
+            txtTitle.setTextColor(Color.parseColor(textColor));
     }
 
     public void invalidate() {

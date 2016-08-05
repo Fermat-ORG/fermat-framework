@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.footer.CryptoBrokerWalletFooterPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.header.CryptoBrokerWalletHeaderPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.CryptoBrokerNavigationViewPainter;
@@ -92,21 +93,21 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Refere
 
         switch (notificationID) {
             case CBW_NEW_NEGOTIATION_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("New Negotiation", "You have a new negotiation! Please check your wallet.", "");
+                return new CryptoBrokerNotificationPainter(getContext().getResources().getString(R.string.new_negotiation), getContext().getResources().getString(R.string.have_negotiation_message), "");
             case CBW_WAITING_FOR_BROKER_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("Negotiation Update", "You have received a negotiation update, check your wallet.", "");
+                return new CryptoBrokerNotificationPainter(getContext().getResources().getString(R.string.negotiation_update), getContext().getResources().getString(R.string.negotiation_update_message), "");
             case CBW_CANCEL_NEGOTIATION_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("Negotiation Canceled", "Check the Contract History, a customer has canceled a negotiation.", "");
+                return new CryptoBrokerNotificationPainter(getContext().getResources().getString(R.string.negotiation_cancelled2), getContext().getResources().getString(R.string.negotiation_cancelled_message), "");
             case CBW_NEW_CONTRACT_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("New Contract.", "A new contract has been created, check your wallet.", "");
+                return new CryptoBrokerNotificationPainter(getContext().getResources().getString(R.string.new_contract), getContext().getResources().getString(R.string.new_contract_message), "");
             case CBW_CONTRACT_CUSTOMER_SUBMITTED_PAYMENT_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("Contract Update", "You just received a payment.", "");
+                return new CryptoBrokerNotificationPainter(getContext().getResources().getString(R.string.contract_update), getContext().getResources().getString(R.string.contract_update_message1), "");
             case CBW_CONTRACT_COMPLETED_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("Contract Update", "The contract has been completed.", "");
+                return new CryptoBrokerNotificationPainter(getContext().getResources().getString(R.string.contract_update), getContext().getResources().getString(R.string.contract_update_message2), "");
             case CBW_CONTRACT_CANCELLED_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("Contract Update", "The contract has been cancelled.", "");
+                return new CryptoBrokerNotificationPainter(getContext().getResources().getString(R.string.contract_update), getContext().getResources().getString(R.string.contract_update_message3), "");
             case CBW_CONTRACT_EXPIRATION_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("Expiring contract.", "A contract is about to expire, check your wallet.", "");
+                return new CryptoBrokerNotificationPainter(getContext().getResources().getString(R.string.expiring_contract), getContext().getResources().getString(R.string.expiring_contract_message), "");
             default:
                 return super.getNotificationPainter(fermatBundle);
         }

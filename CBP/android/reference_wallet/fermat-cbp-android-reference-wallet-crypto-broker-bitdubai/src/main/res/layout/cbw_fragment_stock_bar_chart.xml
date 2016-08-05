@@ -89,7 +89,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:gravity="center"
-                    android:text="open"
+                    android:text="@string/open"
                     android:textColor="#222"
                     android:textSize="12sp"/>
 
@@ -125,7 +125,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:gravity="center"
-                    android:text="close"
+                    android:text="@string/close"
                     android:textColor="#FFF"
                     android:textSize="12sp"/>
 
@@ -154,7 +154,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="BTC"
+            android:text="@string/btc"
             android:textColor="#6cd8ff"
             android:textSize="20sp"/>
     </LinearLayout>
@@ -183,7 +183,7 @@
             android:gravity="center_vertical"
             android:textColor="#ffffff"
             android:textSize="18sp"
-            tools:text="Bitcoins"/>
+            tools:text="@string/bitcoins"/>
 
         <TextView
             android:id="@+id/cbw_currency_bottom_value"
