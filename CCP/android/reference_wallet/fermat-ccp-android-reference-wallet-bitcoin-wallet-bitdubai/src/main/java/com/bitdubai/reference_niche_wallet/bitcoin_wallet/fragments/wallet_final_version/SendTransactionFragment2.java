@@ -746,8 +746,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //                moduleManager.launchNotification();
                 changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
                 return true;
-            } else
-            {
+            }
+            if (id == 200){
+                openOrCLoseDrawer();
+            } else {
                 if (id == 4) {
                     changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, appSession.getAppPublicKey());
                     return true;
