@@ -4707,6 +4707,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         final String publicKey = WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode();
 
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(publicKey);
+
         runtimeAppNavigationStructure = new AppNavigationStructure();
         runtimeAppNavigationStructure.setPublicKey(publicKey);
         //listWallets.put(publicKey, runtimeAppNavigationStructure);
@@ -4733,6 +4736,10 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#05CFC2");
 
+        MenuItem leftToolbarIcon = new MenuItem(200);
+        leftToolbarIcon.setAppLinkPublicKey("nav_menu");
+        runtimeTitleBar.setNavItem(leftToolbarIcon);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#05CFC2");
         //runtimeActivity.setColor("#d07b62");
@@ -4755,8 +4762,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
-        Owner owner = new Owner();
-        owner.setOwnerAppPublicKey(publicKey);
         runtimeTab.setFragment(new FermatRuntimeFragment(1,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
@@ -5783,6 +5788,23 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_RECEIVED_HISTORY.getKey());
         runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_RECEIVED_HISTORY.getKey(), runtimeFragment);
+
+        optionsMenu = new OptionsMenu();
+        optionMenuItem = new OptionMenuItem(2);
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(3);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(4, "loss_send_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("send");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         //Navigation
 

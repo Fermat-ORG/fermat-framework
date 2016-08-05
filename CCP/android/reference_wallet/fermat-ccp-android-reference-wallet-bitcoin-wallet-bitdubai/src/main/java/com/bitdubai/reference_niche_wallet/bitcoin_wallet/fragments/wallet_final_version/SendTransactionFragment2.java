@@ -175,6 +175,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 if (!(Boolean) appSession.getData(SessionConstant.SETTINGS_LOADED)) {
                     loadSettings();
                 }
+                else
+                {
+                    if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                        balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+                    if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                        typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
+
+                    blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+                }
             }
             else
             {
@@ -732,8 +746,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //                moduleManager.launchNotification();
                 changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
                 return true;
-            } else
-            {
+            }
+            if (id == 200){
+                openOrCLoseDrawer();
+            } else {
                 if (id == 4) {
                     changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, appSession.getAppPublicKey());
                     return true;
@@ -1201,7 +1217,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 bitcoinWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                 bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
-                appSession.setData(SessionConstant.RUNNIBLE_BALANCE,0);
+
                 if(moduleManager!=null)
                     moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
 
@@ -1209,13 +1225,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, true);
                 appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
                 appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
+                appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
+                appSession.setData(SessionConstant.RUNNIBLE_BALANCE,new HashMap<>());
+
                 appSession.setData(SessionConstant.SETTINGS_LOADED, true);
 
             } else {
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null)
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                else
-                    blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+
+
+                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
 
                 appSession.setData(SessionConstant.FEE_LEVEL, bitcoinWalletSettings.getFeedLevel());
                 appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, bitcoinWalletSettings.isBlockchainDownloadEnabled());

@@ -55,17 +55,15 @@ public class ToolbarBuilder {
             } catch (Exception e) {
                 //nothing
             }
-            toolabarContainer.removeAllViewsInLayout();
+            if (toolabarContainer!=null)toolabarContainer.removeAllViewsInLayout();
             toolabarContainer = null;
             txtTitle = null;
         }
 
     }
 
-    public void clear() {
-        txtTitle = null;
-        if (toolabarContainer != null) toolabarContainer.removeAllViewsInLayout();
-        toolabarContainer = null;
+    public void clear(){
+        clearToolbarViews();
         mToolbar.clear();
         fermatActivity.clear();
     }
