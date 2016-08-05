@@ -3144,9 +3144,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
         optionsMenu.addMenuItem(optionMenuItem);
 
-        // Option Menu Item - Canceled
+        // Option Menu Item - Cancelled
         optionMenuItem = new OptionMenuItem(CANCELED_FILTER_OPTION_MENU_ID);
-        optionMenuItem.setLabel("Canceled");
+        optionMenuItem.setLabel("Cancelled");
         optionMenuItem.setOrder(2);
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
         optionsMenu.addMenuItem(optionMenuItem);
