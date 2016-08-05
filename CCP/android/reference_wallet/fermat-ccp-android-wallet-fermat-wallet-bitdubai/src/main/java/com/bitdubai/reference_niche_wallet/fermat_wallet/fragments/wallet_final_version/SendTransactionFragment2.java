@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -117,6 +118,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     private LinearLayout emptyListViewsContainer;
     private AnimationManager animationManager;
     private TextView txt_type_balance_amount;
+    private Toolbar toolbar;
 
     private Map<Long, Long> runningDailyBalance;
     final Handler handler = new Handler();
@@ -165,6 +167,11 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
             }
         });
+
+        toolbar = getToolbar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setElevation(10);
+        }
 
         try {
 
@@ -372,12 +379,6 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             e.printStackTrace();
         }
 
-        /*final int sdk = android.os.Build.VERSION.SDK_INT;
-        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            container_header_balance.setBackgroundDrawable( getResources().getDrawable(R.drawable.background_white_gradient) );
-        } else {
-            container_header_balance.setBackground( getResources().getDrawable(R.drawable.background_white_gradient));
-        }*/
 
         final View header_layout = inflater.inflate(R.layout.fermat_wallet_home_header,container_header_balance,true);
         container_header_balance.setVisibility(View.VISIBLE);
@@ -488,7 +489,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         long balance = 0;
 
 
-       balance =  moduleManager.getBalance(balanceType, appSession.getAppPublicKey(), blockchainNetworkType);
+        balance =  moduleManager.getBalance(balanceType, appSession.getAppPublicKey(), blockchainNetworkType);
 
         txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, typeAmountSelected.getCode()));
 
