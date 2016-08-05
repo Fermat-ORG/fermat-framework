@@ -41,9 +41,8 @@ dependencies {
     compile project(':fermat-ccp-api')
     compile project(':fermat-android-api')
     compile project(':fermat_preference_settings')
-
     compile project(':fermat_navigator_drawer')
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
@@ -64,6 +63,7 @@ dependencies {
     //compile 'com.google.guava:guava:r05'
     //compile 'com.getbase:floatingactionbutton:1.10.1'
     //    compile 'org.apache.httpcomponents:httpclient:4.5'
+    compile project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
 }
 
 repositories {
