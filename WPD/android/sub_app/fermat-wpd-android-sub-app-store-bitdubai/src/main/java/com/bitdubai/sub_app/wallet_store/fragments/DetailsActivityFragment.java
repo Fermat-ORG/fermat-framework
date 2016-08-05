@@ -11,11 +11,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.sub_app.wallet_store.common.adapters.ImagesAdapter;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
@@ -35,7 +38,7 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @author Nelson Ramirez
  * @version 1.0
  */
-public class DetailsActivityFragment extends AbstractFermatFragment {
+public class DetailsActivityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<WalletStoreModuleManager>, ResourceProviderManager> {
 
     private WalletStoreListItem catalogItem;
 

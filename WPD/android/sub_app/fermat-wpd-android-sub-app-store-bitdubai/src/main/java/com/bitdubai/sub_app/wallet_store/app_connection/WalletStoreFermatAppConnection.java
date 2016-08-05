@@ -7,12 +7,14 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentFactory;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp;
 
@@ -21,7 +23,7 @@ import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferen
  *
  * @since 2015.12.17
  */
-public class WalletStoreFermatAppConnection extends AppConnections<WalletStoreSubAppSessionReferenceApp> {
+public class WalletStoreFermatAppConnection extends AppConnections<ReferenceAppFermatSession<WalletStoreModuleManager>> {//AppConnections<WalletStoreSubAppSessionReferenceApp> {
 
     public WalletStoreFermatAppConnection(Context activity) {
         super(activity);
@@ -44,7 +46,7 @@ public class WalletStoreFermatAppConnection extends AppConnections<WalletStoreSu
     }
 
     @Override
-    public AbstractReferenceAppFermatSession getSession() {
+    public ReferenceAppFermatSession<WalletStoreModuleManager> getSession() {
         return new WalletStoreSubAppSessionReferenceApp();
     }
 

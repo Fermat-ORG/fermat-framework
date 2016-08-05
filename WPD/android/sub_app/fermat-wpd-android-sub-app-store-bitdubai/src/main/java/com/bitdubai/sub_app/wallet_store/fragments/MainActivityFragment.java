@@ -22,6 +22,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.basic_classes.BasicWalletSettings;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp;
@@ -45,13 +46,13 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @author Nelson Ramirez
  * @version 1.0
  */
-public class MainActivityFragment extends FermatListFragment<WalletStoreListItem, ReferenceAppFermatSession>
+public class MainActivityFragment extends FermatListFragment<WalletStoreListItem, ReferenceAppFermatSession<WalletStoreModuleManager>>
         implements FermatListItemListeners<WalletStoreListItem>, OnMenuItemClickListener {
 
     /**
      * MANAGERS
      */
-    WalletStoreSubAppSessionReferenceApp walletStoreSubAppSession;
+//    WalletStoreSubAppSessionReferenceApp walletStoreSubAppSession;
     BasicWalletSettings settings = null;
     /**
      * DATA
@@ -78,7 +79,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         super.onCreate(savedInstanceState);
         try {
             // setting up  module
-            walletStoreSubAppSession = ((WalletStoreSubAppSessionReferenceApp) appSession);
+//            walletStoreSubAppSession = appSession;
 
             catalogueItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -270,7 +271,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
 
     private BasicWalletSettings getPreferenceSettings() {
         try {
-            settings = walletStoreSubAppSession.getModuleManager().loadAndGetSettings(walletStoreSubAppSession.getAppPublicKey());
+            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
@@ -280,7 +281,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
             settings.setIsPresentationHelpEnabled(true);
 
             try {
-                walletStoreSubAppSession.getModuleManager().persistSettings(walletStoreSubAppSession.getAppPublicKey(), settings);
+                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
             } catch (Exception e) {
                 settings = null;
             }

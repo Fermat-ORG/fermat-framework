@@ -16,12 +16,13 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.excepti
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.DetailedCatalogItem;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * This interface manage the presentation logic of the wallet store
  */
-public interface WalletStoreModuleManager extends ModuleManager<BasicWalletSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<BasicWalletSettings> {
+public interface WalletStoreModuleManager extends ModuleManager<BasicWalletSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<BasicWalletSettings>, Serializable {
 
     /**
      * This method let us get the wallet catalogue

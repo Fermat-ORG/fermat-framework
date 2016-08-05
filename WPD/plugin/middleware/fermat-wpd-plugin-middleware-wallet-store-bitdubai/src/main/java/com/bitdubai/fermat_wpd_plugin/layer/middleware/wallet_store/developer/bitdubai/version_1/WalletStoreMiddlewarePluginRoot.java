@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -53,13 +54,16 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.LOW,
+        maintainerMail = "matias.furszyfer@gmail.com",
+        createdBy = "matias",
+        layer = Layers.MIDDLEWARE,
+        platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
+        plugin = Plugins.WALLET_STORE)
 public class WalletStoreMiddlewarePluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers,
         WalletStoreManager {
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
-    private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
