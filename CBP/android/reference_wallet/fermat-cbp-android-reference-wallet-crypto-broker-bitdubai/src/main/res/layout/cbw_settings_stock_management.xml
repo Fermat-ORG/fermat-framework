@@ -204,10 +204,9 @@
 
 
             </LinearLayout>
-
-
         </LinearLayout>
 
+        <!--Revisar codigo en JAVA para el color y activacion y desactivacion del boton SAVE-->
         <LinearLayout
             android:id="@+id/cbw_next_step_button"
             android:layout_width="200dp"

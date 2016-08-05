@@ -64,7 +64,8 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     private FermatTextView emptyView;
     private SettingsStockManagementMerchandisesAdapter merchandisesAdapter;
     private RecyclerView merchandisesRecyclerView;
-
+    private View nextStepButton;
+    private SeekBar spreadSeekBar;
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -122,6 +123,17 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
         processingProgressBar = (ProgressBar) layout.findViewById(R.id.cbw_processing_progress_bar);
 
+        nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
+
+        nextStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveSettingsAndGoBack();
+            }
+        });
+
+        if(spreadValue == 0)
+            deactivatedButton();
 
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
         spreadTextView.setText(String.format(getResources().getString(R.string.spread_format), spreadValue));
@@ -135,12 +147,18 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         });
         automaticRestockCheckBox.setChecked(automaticRestock);
 
-        final SeekBar spreadSeekBar = (SeekBar) layout.findViewById(R.id.cbw_spread_value_seek_bar);
+        spreadSeekBar = (SeekBar) layout.findViewById(R.id.cbw_spread_value_seek_bar);
         spreadSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 spreadValue = progress;
                 spreadTextView.setText(String.format(getResources().getString(R.string.spread_format), spreadValue));
+
+                if(spreadValue > 0) {
+                    activateButton();
+                } else {
+                    deactivatedButton();
+                }
             }
 
             @Override
@@ -152,16 +170,6 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             }
         });
         spreadSeekBar.setProgress(spreadValue);
-
-
-        final View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
-        nextStepButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveSettingsAndGoBack();
-//                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
-            }
-        });
 
         merchandisesAdapter = new SettingsStockManagementMerchandisesAdapter(getActivity(), associatedSettings, moduleManager);
         merchandisesAdapter.setFermatListEventListener(this);
@@ -337,5 +345,16 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         }
 
     }
+    private void activateButton() {
+        nextStepButton.setEnabled(true);
+//        nextStepButton.setBackgroundResource(R.color.cbw_wizard_color);
+        nextStepButton.setBackgroundColor(Color.parseColor("#1270A6"));
+//        nextStepButton.setTextColor(Color.WHITE);
+    }
 
+    private void deactivatedButton() {
+        nextStepButton.setEnabled(false);
+        nextStepButton.setBackgroundColor(Color.parseColor("#b3b3b3"));
+//        nextStepButton.setTextColor(Color.parseColor("#b3b3b3"));
+    }
 }
