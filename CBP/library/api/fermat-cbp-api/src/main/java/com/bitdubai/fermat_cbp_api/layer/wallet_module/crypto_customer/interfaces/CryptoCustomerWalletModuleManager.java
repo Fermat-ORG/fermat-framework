@@ -416,6 +416,16 @@ public interface CryptoCustomerWalletModuleManager
     boolean isCreateIdentityIntraUser() throws CantSendNegotiationException;
 
     /**
+     * Return if is create intra user wallet
+     *
+     * @param alias
+     * @param profileImage
+     * @return
+     * @throws CantSendNegotiationException
+     */
+    void createIdentityIntraUser(String alias, byte[] profileImage) throws CantSendNegotiationException;
+
+    /**
      * Return if stock in wallet for send payment
      *
      * @return

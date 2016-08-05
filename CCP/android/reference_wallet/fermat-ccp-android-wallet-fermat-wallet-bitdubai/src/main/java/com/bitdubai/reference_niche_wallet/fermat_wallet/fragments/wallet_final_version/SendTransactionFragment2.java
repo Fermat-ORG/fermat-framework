@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -117,6 +118,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     private LinearLayout emptyListViewsContainer;
     private AnimationManager animationManager;
     private TextView txt_type_balance_amount;
+    private Toolbar toolbar;
 
     private Map<Long, Long> runningDailyBalance;
     final Handler handler = new Handler();
@@ -166,6 +168,11 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             }
         });
 
+        toolbar = getToolbar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setElevation(10);
+        }
+
         try {
 
             moduleManager = appSession.getModuleManager();
@@ -176,6 +183,22 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             if(appSession.getData(SessionConstant.SETTINGS_LOADED) != null) {
                 if (!(Boolean) appSession.getData(SessionConstant.SETTINGS_LOADED)) {
                     loadSettings();
+                }
+                else
+                {
+
+                    if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                        balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+                    if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                        typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
+
+                    blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+
                 }
             }
             else
@@ -372,12 +395,6 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             e.printStackTrace();
         }
 
-        /*final int sdk = android.os.Build.VERSION.SDK_INT;
-        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            container_header_balance.setBackgroundDrawable( getResources().getDrawable(R.drawable.background_white_gradient) );
-        } else {
-            container_header_balance.setBackground( getResources().getDrawable(R.drawable.background_white_gradient));
-        }*/
 
         final View header_layout = inflater.inflate(R.layout.fermat_wallet_home_header,container_header_balance,true);
         container_header_balance.setVisibility(View.VISIBLE);
@@ -488,7 +505,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         long balance = 0;
 
 
-       balance =  moduleManager.getBalance(balanceType, appSession.getAppPublicKey(), blockchainNetworkType);
+        balance =  moduleManager.getBalance(balanceType, appSession.getAppPublicKey(), blockchainNetworkType);
 
         txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, typeAmountSelected.getCode()));
 
@@ -515,26 +532,28 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         //chart.setOnChartValueSelectedListener((OnChartValueSelectedListener) this);
         chart.fitScreen();
 
+        LineData data = null;
+
         /**HARD CORE DATA FOR CHART**/
        /* long frmt =  100000000;
         long date = System.currentTimeMillis();
         long day = 86400000;
         Map<Long, Long> dailyHardCore = new HashMap<>();
-        for (int i = 0; i < 6 ; i++) {
+        for (int i = 0; i < 7 ; i++) {
 
             long frm1t =+frmt;
             long dataPlusday =+ date + day;
             dailyHardCore.put(dataPlusday,frm1t);
             dataPlusday++;
             day++;
-        }*/
-        //LineData data = getData(dailyHardCore);
+        }
+        data = getData(dailyHardCore);*/
         /**END HARD CORE DATA FOR CHART**/
 
-        LineData data = null;
+
 
         try{
-            data = getData(fermatWalletSettings.getRunningDailyBalance());
+           data = getData((HashMap)appSession.getData(SessionConstant.RUNNIBLE_BALANCE));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -568,7 +587,10 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         //yAxis1R.setAxisMinValue(-30);
 
         XAxis xAxis = chart.getXAxis();
-        xAxis.setEnabled(false);
+        xAxis.setEnabled(true);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setTextColor(Color.parseColor("#2FAEDC"));
 
         Legend legend = chart.getLegend();
         legend.setEnabled(false);
@@ -902,10 +924,10 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             long currentTime = System.currentTimeMillis();
             runningDailyBalance = new HashMap<>();
 
-            if(fermatWalletSettings != null){
 
-                blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
-                if (fermatWalletSettings.getRunningDailyBalance() == null) {
+
+
+                if (appSession.getData(SessionConstant.RUNNIBLE_BALANCE) == null) {
                     try {
                         long balance = moduleManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType);
                         runningDailyBalance.put(currentTime, balance);
@@ -913,7 +935,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         Log.e(TAG,"Balance null, please check this, line:"+new Throwable().getStackTrace()[0].getLineNumber());
                     }
                 } else {
-                    runningDailyBalance = fermatWalletSettings.getRunningDailyBalance();
+                    runningDailyBalance = (Map<Long, Long>) appSession.getData(SessionConstant.RUNNIBLE_BALANCE);
 
                     //verify that I have this day added
                     long lastDate = getKeyDate(runningDailyBalance.size()-1);
@@ -933,14 +955,15 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                     }
                 }
 
-                fermatWalletSettings.setRunningDailyBalance(runningDailyBalance);
-                if(moduleManager!=null) {
-                    moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
-                }else {
-                    Log.e(TAG,"Settings manager null, please check this line:"+new Throwable().getStackTrace()[0].getLineNumber());
-                }
+                appSession.setData(SessionConstant.RUNNIBLE_BALANCE, runningDailyBalance);
+                    fermatWalletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
 
-            }
+                fermatWalletSettings.setRunningDailyBalance(runningDailyBalance);
+
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1044,15 +1067,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     private void loadSettings(){
         try {
 
-             if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
-                        balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
-                    else
-                        appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
 
-                    if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
-                        typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
-                    else
-                        appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
 
                     //get wallet settings
                     try {
@@ -1080,13 +1095,13 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
                         appSession.setData(SessionConstant.FIAT_CURRENCY, FiatCurrency.US_DOLLAR.getCode());
 
+                        appSession.setData(SessionConstant.RUNNIBLE_BALANCE, 0);
+
                         appSession.setData(SessionConstant.SETTINGS_LOADED, true);
 
                     } else {
-                        if (fermatWalletSettings.getBlockchainNetworkType() == null)
-                            fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                        else
-                            blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
+
+                        blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
 
 
                         appSession.setData(SessionConstant.FIAT_CURRENCY,  fermatWalletSettings.getFiatCurrency());
@@ -1095,6 +1110,18 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         appSession.setData(SessionConstant.NOTIFICATION_ENABLED, fermatWalletSettings.getNotificationEnabled());
                         appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, fermatWalletSettings.isPresentationHelpEnabled());
                         appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
+
+                        appSession.setData(SessionConstant.RUNNIBLE_BALANCE, fermatWalletSettings.getRunningDailyBalance());
+
+                        if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                            balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+                        else
+                            appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+                        if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                            typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+                        else
+                            appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
                     }
 
                     if(moduleManager!=null) moduleManager.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);

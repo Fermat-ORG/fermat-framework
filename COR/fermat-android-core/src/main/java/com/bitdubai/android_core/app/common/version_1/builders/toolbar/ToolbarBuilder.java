@@ -88,4 +88,9 @@ public class ToolbarBuilder {
     public void invalidate() {
         txtTitle.invalidate();
     }
+
+    public void setToolbar(Toolbar toolbar) {
+        this.mToolbar.clear();
+        this.mToolbar = new WeakReference<Toolbar>(toolbar);
+    }
 }

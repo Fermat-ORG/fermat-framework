@@ -39,8 +39,6 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private StartNegotiationActivityFragment footerListener;
     ClauseViewHolder.Listener clauseListener;
-
-
     public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation) {
         super(context);
 
@@ -84,9 +82,6 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
             case TYPE_FOOTER:
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView);
                 footerViewHolder.setListener(footerListener);
-
-//                if(this.walletUser == false)
-//                    footerViewHolder.HideButtonsWalletUser();
 
                 return footerViewHolder;
 

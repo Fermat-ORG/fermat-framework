@@ -100,7 +100,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
 
 
 
-            list.add(new PreferenceSettingsSwithItem(1, "Enabled Notifications",(Boolean)appSession.getData(SessionConstant.NOTIFICATION_ENABLED)));
+            list.add(new PreferenceSettingsSwithItem(1, getResources().getString(R.string.settings_notifications),(Boolean)appSession.getData(SessionConstant.NOTIFICATION_ENABLED)));
 
 
                 switch (blockchainNetworkType) {
@@ -126,7 +126,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
             networkDialog.putString("title", getResources().getString(R.string.title_label));
             networkDialog.putString("mode", "single_option");
             networkDialog.putString("previous_selected_item", previousSelectedItem);
-            list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", networkDialog));
+            list.add(new PreferenceSettingsOpenDialogText(5, getResources().getString(R.string.settings_select_network), networkDialog));
 
             //feed level options
 
@@ -143,10 +143,10 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
             dataDialogFeed.putString("title", getResources().getString(R.string.title_Fee));
             dataDialogFeed.putString("mode", "single_option");
             dataDialogFeed.putString("previous_selected_item", previousSelectedFee);
-            list.add(new PreferenceSettingsOpenDialogText(13, "Feed Level", dataDialogFeed));
+            list.add(new PreferenceSettingsOpenDialogText(13, getResources().getString(R.string.settings_fee_level), dataDialogFeed));
 
 
-            list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.GRAY));
+            list.add(new PreferenceSettingsLinkText(9, getResources().getString(R.string.settings_send_error_report), "",15,Color.GRAY));
 
             //list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 

@@ -77,6 +77,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
 
     FloatingActionMenu actionMenu;
 
+    com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton;
+
     public static AddConnectionFragment newInstance() {
         return new AddConnectionFragment();
     }
@@ -162,7 +164,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         frameLayout.addView(view);
         frameLayout.setOnClickListener(onClickListener);
         view.setOnClickListener(onClickListener);
-        final com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
+        actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout).setBackgroundDrawable(R.drawable.fermat_add_connection_selector)
                 .build();
 
@@ -353,6 +355,10 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         try {
 
             FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+            actionButton.detach();
+            actionButton.removeAllViewsInLayout();
+
+            actionButton = null;
             actionMenu = null;
         }catch (Exception e){
             e.printStackTrace();

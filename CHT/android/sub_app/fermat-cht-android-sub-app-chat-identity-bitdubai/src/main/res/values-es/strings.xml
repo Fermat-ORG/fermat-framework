@@ -24,14 +24,29 @@
     <string name="search_hint">Find contacts</string>
     <string name="defaulttext">Type a message</string>
     <string name="dialog_title_select_gallery_picture">Avatar</string>
-    <string name="cht_identity_welc">Bienvenido!</string>
+    <string name="cht_identity_welc">¡Bienvenido!</string>
     <string name="cht_identity_close">OK</string>
+    <string name="cht_identity_name">Usuario</string>
+    <string name="cht_identity_status">Estatus</string>
     <string name="cht_identity_dont_show_again">No mostrar de nuevo</string>
     <string name="cht_chat_subtitle">Bienvenido a Fermat P2P Chat.</string>
     <string name="cht_chat_identity_subtitle">Bienvenido to Fermat P2P Chat Identity.</string>
     <string name="cht_chat_body">Si no tiene una identidad creada, favor registre una.</string>
     <string name="cht_chat_identity_body">Si no tiene una identidad creada, registre su identidad aquí!</string>
-    <string name="cht_chat_identity_gps">Favor, encienda su GPS para registrar su ubicación, así luego otros pueden encontrarlo y puede encontrar otros usuarios cerca de usted.</string>
+    <string name="cht_chat_identity_gps">Por favor, encienda su GPS para registrar su ubicación. Así podrá localizar a otros usuarios y ser localizado a su vez por los mismos.</string>
+    <string name="cht_identity_accuracy">PRECISIÓN (km)</string>
+    <string name="cht_identity_frequency">FRECUENCIA</string>
+    <string name="cht_identity_accuracy_toast">El campo Precisión está vacío, por favor ingrese un valor</string>
+    <string name="cht_identity_geo_toast">Geolocalización de Chat Identity actualizada.</string>
+    <string name="cht_identity_menu_option">Debe crear una identidad para abrir este menú.</string>
+    <string name="cht_identity_create_toast">Geolocalización de Chat Identity actualizada</string>
+    <string name="cht_identity_created_toast">Chat Identity creada</string>
+    <string name="cht_identity_image_small">La imagen seleccionada es muy pequeña. Por favor seleccione una de altura y ancho de al menos 192x192px</string>
+    <string name="cht_identity_error_image">Error al cargar imagen</string>
+    <string name="cht_identity_enter_name">Por favor ingreseun nombre o alias</string>
+    <string name="cht_identity_available">Disponible</string>
+    <string name="cht_identity_no_camera">No tiene cámaras disponibles</string>
+    <string name="cht_identity_turn_gps">Por favor, encienda su GPS</string>
 
     <string name="cht_chat_footer">Fermat P2P Chat</string>
 

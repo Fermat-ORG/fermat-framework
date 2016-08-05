@@ -170,6 +170,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootLayout = inflater.inflate(R.layout.fragment_create_crypto_customer_identity_v2, container, false);
         initViews(rootLayout);
+        getToolbar().setVisibility(View.VISIBLE);
         return rootLayout;
     }
 
@@ -322,12 +323,12 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         mCustomerName.addTextChangedListener(textWatcher);
         textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.getText().length()));
 
-        mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+       /* mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
-        });
+        });*/
 
         mCustomerName.requestFocus();
 
@@ -432,7 +433,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
             appSession.setData(FragmentsCommons.CUSTOMER_NAME, mCustomerName.getText().toString());
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER, appSession.getAppPublicKey());
         }
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -518,7 +519,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
     }
 
     private void dispatchTakePictureIntent() {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         // Check permission for CAMERA
         if (Build.VERSION.SDK_INT >= 23) {
             if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
@@ -555,7 +556,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
     }
 
     private void loadImageFromGallery() {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
