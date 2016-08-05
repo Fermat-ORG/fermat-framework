@@ -33,7 +33,7 @@
                 android:textColor="#085394"
                 android:textSize="18dp"
                 android:layout_weight="1"
-                android:text="Location"/>
+                android:text="@string/location"/>
 
             <ImageView
                 android:id="@+id/cbw_close_img_button"

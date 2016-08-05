@@ -116,7 +116,7 @@ public class CryptoCustomerIdentityListFragment
                 presentationDialog.show();
             }
         } catch (FermatException e) {
-            makeText(getActivity(), "Error dialogo", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), getResources().getString(R.string.crypto_customer_error_dialog), Toast.LENGTH_SHORT).show();
         }
 
        // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

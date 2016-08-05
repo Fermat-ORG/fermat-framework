@@ -37,12 +37,13 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="OK"
+                android:text="@string/ok"
                 android:layout_weight="1"
                 android:id="@+id/cbw_open_negotiation_save_note"
                 android:background="#E7E7E7"
                 android:textColor="#5F5F5F"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:textAllCaps="true"/>
         </LinearLayout>
 
 </RelativeLayout>

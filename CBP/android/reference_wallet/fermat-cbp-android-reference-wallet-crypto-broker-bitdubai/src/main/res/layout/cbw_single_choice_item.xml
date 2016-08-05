@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="center"
-                tools:text="Single Choice Item"
+                tools:text="@string/single_choice_item"
                 android:textAllCaps="true"
                 android:textColor="@color/card_title_color_status_confirm"/>
 

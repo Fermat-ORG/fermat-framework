@@ -13,7 +13,7 @@
         android:layout_height="50dp"
         android:background="#00a99d"
         android:gravity="center"
-        android:text="NEW BANK WALLET"
+        android:text="@string/new_bank_wallet"
         android:textColor="#FFF"
         android:textSize="16sp" />
 
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="1dp"
             android:paddingTop="20dp"
-            android:text="Currency"
+            android:text="@string/currency"
             android:textColor="#7A7A7A" />
 
         <Spinner
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="1dp"
             android:paddingTop="20dp"
-            android:text="Account type"
+            android:text="@string/account_type"
             android:textColor="#7A7A7A" />
 
         <Spinner
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="1dp"
             android:paddingTop="20dp"
-            android:text="Bank name"
+            android:text="@string/bank_name"
             android:textColor="#7A7A7A" />
 
         <RelativeLayout
@@ -81,7 +81,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_toLeftOf="@+id/cbp_bank_account_bank_name_count"
                 android:layout_toStartOf="@+id/cbp_bank_account_bank_name_count"
-                android:hint="Bank name"
+                android:hint="@string/bank_name"
                 android:maxLength="10"
                 android:paddingLeft="15dp"
                 android:paddingStart="15dp"
@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="1dp"
             android:paddingTop="20dp"
-            android:text="Alias"
+            android:text="@string/alias"
             android:textColor="#7A7A7A" />
 
         <RelativeLayout
@@ -124,7 +124,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_toLeftOf="@+id/cbp_bank_account_alias_count"
                 android:layout_toStartOf="@+id/cbp_bank_account_alias_count"
-                android:hint="Alias"
+                android:hint="@string/alias"
                 android:maxLength="10"
                 android:paddingLeft="15dp"
                 android:paddingStart="15dp"
@@ -151,7 +151,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="1dp"
             android:paddingTop="20dp"
-            android:text="Account"
+            android:text="@string/account"
             android:textColor="#7A7A7A" />
 
         <RelativeLayout
@@ -167,7 +167,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_toLeftOf="@+id/cbp_bank_account_number_count"
                 android:layout_toStartOf="@+id/cbp_bank_account_number_count"
-                android:hint="Account Number"
+                android:hint="@string/account_number"
                 android:maxLength="25"
                 android:paddingLeft="15dp"
                 android:paddingStart="15dp"
@@ -197,8 +197,9 @@
             android:layout_gravity="end"
             android:layout_marginTop="10dp"
             android:padding="15dp"
-            android:text="CREATE"
+            android:text="@string/cbw_create"
             android:textColor="#000"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textAllCaps="true"/>
     </LinearLayout>
 </RelativeLayout>
