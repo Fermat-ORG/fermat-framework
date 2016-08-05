@@ -73,7 +73,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraUserM
              newIdentityButton.setOnClickListener(new View.OnClickListener() {
                  @Override
                  public void onClick(View view) {
-                     changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode(), appSession.getAppPublicKey());
+                     changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
                  }
              });
 

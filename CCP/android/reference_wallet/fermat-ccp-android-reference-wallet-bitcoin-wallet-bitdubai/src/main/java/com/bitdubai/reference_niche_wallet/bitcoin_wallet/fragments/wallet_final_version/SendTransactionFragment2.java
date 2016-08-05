@@ -170,58 +170,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             intraUserLoginIdentity = appSession.getModuleManager().getSelectedActorIdentity();
 
 
-            if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
-                balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
-            else
-                appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
-
-            if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
-                typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
-            else
-                appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
-
-            //get wallet settings
-            try {
-                bitcoinWalletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-            } catch (Exception e) {
-                bitcoinWalletSettings = null;
+            //load settings params
+            if(appSession.getData(SessionConstant.SETTINGS_LOADED) != null) {
+                if (!(Boolean) appSession.getData(SessionConstant.SETTINGS_LOADED)) {
+                    loadSettings();
+                }
             }
-
-            if (bitcoinWalletSettings == null) {
-                bitcoinWalletSettings = new BitcoinWalletSettings();
-                bitcoinWalletSettings.setIsContactsHelpEnabled(true);
-                bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
-                bitcoinWalletSettings.setNotificationEnabled(true);
-                bitcoinWalletSettings.setIsBlockchainDownloadEnabled(true);
-                bitcoinWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
-                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-                bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
-                if(moduleManager!=null)
-                    moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
-
-                appSession.setData(SessionConstant.NOTIFICATION_ENABLED, true);
-                appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, true);
-                appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
-                appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
-
-            } else {
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null)
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                else
-                    blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-
-                appSession.setData(SessionConstant.FEE_LEVEL, bitcoinWalletSettings.getFeedLevel());
-                appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, bitcoinWalletSettings.isBlockchainDownloadEnabled());
-                appSession.setData(SessionConstant.NOTIFICATION_ENABLED, bitcoinWalletSettings.getNotificationEnabled());
-                appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, bitcoinWalletSettings.isPresentationHelpEnabled());
-                appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
-            }
-
-
-            try {
-                if(moduleManager!=null) moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
-            } catch (Exception e) {
-                e.printStackTrace();
+            else
+            {
+                loadSettings();
             }
 
 
@@ -1075,10 +1032,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             long currentTime = System.currentTimeMillis();
             runningDailyBalance = new HashMap<>();
 
-            if(bitcoinWalletSettings != null){
-
-                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-                if (bitcoinWalletSettings.getRunningDailyBalance() == null) {
+                if (appSession.getData(SessionConstant.RUNNIBLE_BALANCE) == null) {
                     try {
                         long balance = balanceAvailable;
                         runningDailyBalance.put(currentTime, balance);
@@ -1086,7 +1040,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         Log.e(TAG,"Balance null, please check this, line:"+new Throwable().getStackTrace()[0].getLineNumber());
                     }
                 } else {
-                    runningDailyBalance = bitcoinWalletSettings.getRunningDailyBalance();
+                    runningDailyBalance = (HashMap)appSession.getData(SessionConstant.RUNNIBLE_BALANCE);
 
                     //verify that I have this day added
                     long lastDate = getKeyDate(runningDailyBalance.size()-1);
@@ -1099,21 +1053,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             runningDailyBalance = new HashMap<>();
 
                         runningDailyBalance.put(currentTime, moduleManager.getBalance(
-                                BalanceType.AVAILABLE, appSession.getAppPublicKey(),blockchainNetworkType));
+                                BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType));
                     } else {
                         //update balance
-                        this.updateDailyBalance(runningDailyBalance.size()-1,balanceAvailable);
+                        this.updateDailyBalance(runningDailyBalance.size() - 1, balanceAvailable);
                     }
                 }
+                appSession.setData(SessionConstant.RUNNIBLE_BALANCE, runningDailyBalance);
 
+                bitcoinWalletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 bitcoinWalletSettings.setRunningDailyBalance(runningDailyBalance);
-                if(moduleManager!=null) {
-                    moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
-                }else {
-                    Log.e(TAG,"Settings manager null, please check this line:"+new Throwable().getStackTrace()[0].getLineNumber());
-                }
+                moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
 
-            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1217,6 +1170,75 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
         circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
         circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
+    }
+
+    private void loadSettings(){
+        try {
+
+            if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+            else
+                appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+            if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+            else
+                appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
+
+            //get wallet settings
+            try {
+                bitcoinWalletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+            } catch (Exception e) {
+                bitcoinWalletSettings = null;
+            }
+
+            if (bitcoinWalletSettings == null) {
+                bitcoinWalletSettings = new BitcoinWalletSettings();
+                bitcoinWalletSettings.setIsContactsHelpEnabled(true);
+                bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
+                bitcoinWalletSettings.setNotificationEnabled(true);
+                bitcoinWalletSettings.setIsBlockchainDownloadEnabled(true);
+                bitcoinWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+                appSession.setData(SessionConstant.RUNNIBLE_BALANCE,0);
+                if(moduleManager!=null)
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+
+                appSession.setData(SessionConstant.NOTIFICATION_ENABLED, true);
+                appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, true);
+                appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
+                appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
+                appSession.setData(SessionConstant.SETTINGS_LOADED, true);
+
+            } else {
+                if (bitcoinWalletSettings.getBlockchainNetworkType() == null)
+                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                else
+                    blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+
+                appSession.setData(SessionConstant.FEE_LEVEL, bitcoinWalletSettings.getFeedLevel());
+                appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, bitcoinWalletSettings.isBlockchainDownloadEnabled());
+                appSession.setData(SessionConstant.NOTIFICATION_ENABLED, bitcoinWalletSettings.getNotificationEnabled());
+                appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, bitcoinWalletSettings.isPresentationHelpEnabled());
+                appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
+                appSession.setData(SessionConstant.RUNNIBLE_BALANCE, bitcoinWalletSettings.getRunningDailyBalance());
+
+                appSession.setData(SessionConstant.SETTINGS_LOADED, true);
+            }
+
+
+            try {
+                if(moduleManager!=null) moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
 

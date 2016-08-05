@@ -365,7 +365,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-                            changeActivity(((OptionMenuChangeActivityOnPressEvent) optionMenuPressEvent).getActivityCode(), null);
+                            changeActivity(((OptionMenuChangeActivityOnPressEvent) optionMenuPressEvent).getActivityCode(),null);
                             //return true because i want to cancell the rest of the callback if this is an activity change
                             return true;
                         }

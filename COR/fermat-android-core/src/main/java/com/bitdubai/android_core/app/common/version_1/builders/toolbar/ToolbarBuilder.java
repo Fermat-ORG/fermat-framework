@@ -61,7 +61,7 @@ public class ToolbarBuilder {
 
     public void clear(){
         txtTitle = null;
-        toolabarContainer.removeAllViewsInLayout();
+        if (toolabarContainer!=null)toolabarContainer.removeAllViewsInLayout();
         toolabarContainer = null;
         mToolbar.clear();
         fermatActivity.clear();

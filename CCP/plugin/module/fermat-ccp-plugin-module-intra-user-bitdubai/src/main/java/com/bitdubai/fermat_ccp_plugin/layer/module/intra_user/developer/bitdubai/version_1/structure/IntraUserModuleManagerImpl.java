@@ -111,7 +111,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
         this.intraWalletUserManager = intraWalletUserManager;
         this.intraUserNertwokServiceManager = intraUserNertwokServiceManager;
         this.errorManager = errorManager;
-        this.intraUserLoggedPublicKey = intraUserLoggedPublicKey;
+       // this.intraUserLoggedPublicKey = intraUserLoggedPublicKey;
         this.locationManager = locationManager;
         this.geolocationManager = geolocationManager;
     }

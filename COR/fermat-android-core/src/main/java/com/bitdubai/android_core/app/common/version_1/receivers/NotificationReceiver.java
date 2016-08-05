@@ -37,7 +37,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             if (data != null) weakSession.get().getNotificationService().notificate(data);
             else weakSession.get().getNotificationService().notificate(appPublicKey, code);
         } catch (Exception e) {
-            Log.e(TAG, new StringBuilder().append("Process name: ").append(getCurrentProcess().processName).toString());
+            Log.e(TAG, "Process name: " + getCurrentProcess().processName);
             e.printStackTrace();
         }
     }
