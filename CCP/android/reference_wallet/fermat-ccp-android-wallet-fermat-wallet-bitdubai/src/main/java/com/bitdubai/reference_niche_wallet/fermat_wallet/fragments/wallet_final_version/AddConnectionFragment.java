@@ -75,7 +75,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
     BlockchainNetworkType blockchainNetworkType;
 
     FloatingActionMenu actionMenu;
-     com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton;
+
+    com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton;
 
     public static AddConnectionFragment newInstance() {
         return new AddConnectionFragment();
