@@ -642,6 +642,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //                mDrawerLayout.setEnabled(false);
                 navigationView.setVisibility(View.GONE);
                 mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                mToolbar.setVisibility(View.VISIBLE);
                 mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1174,7 +1175,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             if (header == null) {
                 if (appBarLayout != null) {
                     appBarLayout.setExpanded(false);
-                    appBarLayout.setEnabled(false);
+//                    appBarLayout.setEnabled(false);
                 }
 
             } else {

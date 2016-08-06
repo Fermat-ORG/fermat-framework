@@ -168,25 +168,16 @@ public class AndroidDatabaseTable implements DatabaseTable {
         SQLiteDatabase database = null;
         try {
             List<DatabaseRecord> records = record.getValues();
-            StringBuilder strRecords = new StringBuilder();
-
+            ContentValues contentValues =  new ContentValues();
             for (int i = 0; i < records.size(); ++i) {
-
-                if (records.get(i).isChange()) {
-
-                    if (strRecords.length() > 0)
-                        strRecords.append(",");
-
-                    strRecords.append(records.get(i).getName())
-                            .append(" = '")
-                            .append(records.get(i).getValue())
-                            .append("'");
+                DatabaseRecord androidRecord = records.get(i);
+                if (androidRecord.isChange()) {
+                    contentValues.put(androidRecord.getName(),androidRecord.getValue());
                 }
             }
-
             database = this.database.getWritableDatabase();
-            database.execSQL("UPDATE " + tableName + " SET " + strRecords + " " + makeFilter());
-
+            String filter = makeFilter2();
+            Log.i("AndroidDatabase","Database name:"+tableName+" update quantity: "+database.update(tableName, contentValues,filter , null));
         } catch (Exception exception) {
             throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         } finally {
@@ -632,7 +623,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         } else {
             //if set group filter
             if (tableFilterGroup != null) {
-                return makeGroupFilters(tableFilterGroup);
+                return makeGroupFilters2(tableFilterGroup);
             } else {
                 return filter;
             }
@@ -680,6 +671,46 @@ public class AndroidDatabaseTable implements DatabaseTable {
         if (strFilter.length() > 0) filter = " WHERE " + filter;
 
         return filter;
+    }
+
+    public String makeGroupFilters2(DatabaseTableFilterGroup databaseTableFilterGroup) {
+
+        StringBuilder strFilter = new StringBuilder();
+        String filter;
+
+        if (databaseTableFilterGroup != null && (databaseTableFilterGroup.getFilters().size() > 0 || databaseTableFilterGroup.getSubGroups().size() > 0)) {
+            strFilter.append("(");
+            strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
+
+            int ix = 0;
+
+            if (databaseTableFilterGroup.getSubGroups() != null){
+
+                for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
+                    if (subGroup.getFilters().size() > 0 || ix > 0) {
+                        switch (databaseTableFilterGroup.getOperator()) {
+                            case AND:
+                                strFilter.append(" AND ");
+                                break;
+                            case OR:
+                                strFilter.append(" OR ");
+                                break;
+                            default:
+                                strFilter.append(" ");
+                        }
+                    }
+                    strFilter.append("(");
+                    strFilter.append(makeGroupFilters(subGroup));
+                    strFilter.append(")");
+                    ix++;
+                }
+
+            }
+
+            strFilter.append(")");
+        }
+
+        return strFilter.toString();
     }
 
     public String makeOutputColumns() {
