@@ -92,7 +92,7 @@ public enum Actors implements FermatEnum, Serializable {
 
             default:
                 throw new IllegalArgumentException(
-                        new StringBuilder().append("The code").append(code).append(" is not valid for the Actors enum.").toString()
+                        "The code" + code + " is not valid for the Actors enum."
                 );
         }
     }
