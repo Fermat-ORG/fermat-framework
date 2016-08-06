@@ -23,6 +23,8 @@ public class Tab implements FermatTab, Serializable {
 
     private FermatDrawable drawable;
 
+    private int tabTextSize;
+
     /**
      * Custom View for the tab
      * eg: you can use frameworks view or your custom view
@@ -95,4 +97,11 @@ public class Tab implements FermatTab, Serializable {
         this.drawable = fermatDrawable;
     }
 
+    public int getTabTextSize() {
+        return tabTextSize;
+    }
+
+    public void setTabTextSize(int tabTextSize) {
+        this.tabTextSize = tabTextSize;
+    }
 }

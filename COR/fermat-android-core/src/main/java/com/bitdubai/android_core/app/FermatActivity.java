@@ -732,7 +732,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 setActionBarProperties(title);
                 paintToolbarIcon(titleBar);
                 //Toolbar
-                if (mToolbar != null && !isLayoutRecicled)
+                if (mToolbar != null)
                     setSupportActionBar(mToolbar);
 
                 if (title!=null){
@@ -861,7 +861,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         int tabsSize = tabStrip.getTabs().size();
         final List<Tab> tabs = tabStrip.getTabs();
         Fragment[] fragments = new Fragment[tabsSize];
-        String[] tabTitles = new String[tabsSize];
         FermatFragment[] fermatFragments = new FermatFragment[tabsSize];
         FermatDrawable[] tabsDrawables = new FermatDrawable[tabsSize];
         View[] tabsViews = new View[tabsSize];
@@ -886,7 +885,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 } catch (FragmentNotFoundException e) {
                     throw new InvalidParameterException(e, "Fragment not found: " + fragment.getType() + " with owner: " + fragment.getOwner(), "Framework building tabs");
                 }
-                tabTitles[i] = tab.getLabel();
+//                tabTitles[i] = tab.getLabel();
                 tabsDrawables[i] = tab.getDrawable();
 
                 FermatView fermatView = tab.getFermatView();
@@ -899,7 +898,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }
             tabLayout.setVisibility(View.VISIBLE);
             pagertabs.setVisibility(View.VISIBLE);
-            adapter = new TabsPagerAdapter2(this, getFragmentManager(), tabTitles, fragments, tabsDrawables);
+            adapter = new TabsPagerAdapter2(this, getFragmentManager(), tabs.toArray(new Tab[tabs.size()]), fragments, tabsDrawables);
             pagertabs.setAdapter(adapter);
             if (tabStrip.isHasIcon()) {
                 for (int i = 0; i < tabLayout.getTabCount(); i++) {
@@ -1251,6 +1250,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     //  System.out.println("TOOLBARTAMANO:"+heightDp);
                     lp.height = (int) heightDp;
                 }
+
 
                 if (tabs.getBackgroundDrawable() != null) {
                     FermatDrawable fermatDrawable = tabs.getBackgroundDrawable();
