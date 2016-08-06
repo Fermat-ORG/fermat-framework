@@ -732,7 +732,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     FermatDrawable backgroundDrawable = titleBar.getBackgroundDrawable();
                     mToolbar.setBackgroundResource(ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE, this, backgroundDrawable.getId(), backgroundDrawable.getSourceLocation(), backgroundDrawable.getOwner().getOwnerAppPublicKey()));
                 }
+                //Title builder
                 setActionBarProperties(title);
+                // Navigation Icon
                 paintToolbarIcon(titleBar);
                 //Toolbar
                 if (mToolbar != null)
