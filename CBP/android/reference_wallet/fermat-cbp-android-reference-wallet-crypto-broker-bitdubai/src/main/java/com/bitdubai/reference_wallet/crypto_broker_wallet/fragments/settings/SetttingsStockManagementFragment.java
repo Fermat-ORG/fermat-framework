@@ -64,7 +64,8 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     private FermatTextView emptyView;
     private SettingsStockManagementMerchandisesAdapter merchandisesAdapter;
     private RecyclerView merchandisesRecyclerView;
-
+    private View nextStepButton;
+    private SeekBar spreadSeekBar;
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -122,9 +123,20 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
         processingProgressBar = (ProgressBar) layout.findViewById(R.id.cbw_processing_progress_bar);
 
+        nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
+
+        nextStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveSettingsAndGoBack();
+            }
+        });
+
+        if(spreadValue == 0)
+            deactivatedButton();
 
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
-        spreadTextView.setText(String.format("%1$s %%", spreadValue));
+        spreadTextView.setText(String.format(getResources().getString(R.string.spread_format), spreadValue));
 
         final FermatCheckBox automaticRestockCheckBox = (FermatCheckBox) layout.findViewById(R.id.cbw_automatic_restock_check_box);
         automaticRestockCheckBox.setOnClickListener(new View.OnClickListener() {
@@ -135,12 +147,18 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         });
         automaticRestockCheckBox.setChecked(automaticRestock);
 
-        final SeekBar spreadSeekBar = (SeekBar) layout.findViewById(R.id.cbw_spread_value_seek_bar);
+        spreadSeekBar = (SeekBar) layout.findViewById(R.id.cbw_spread_value_seek_bar);
         spreadSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 spreadValue = progress;
-                spreadTextView.setText(String.format("%1$s %%", spreadValue));
+                spreadTextView.setText(String.format(getResources().getString(R.string.spread_format), spreadValue));
+
+                if(spreadValue > 0) {
+                    activateButton();
+                } else {
+                    deactivatedButton();
+                }
             }
 
             @Override
@@ -152,16 +170,6 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             }
         });
         spreadSeekBar.setProgress(spreadValue);
-
-
-        final View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
-        nextStepButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveSettingsAndGoBack();
-//                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
-            }
-        });
 
         merchandisesAdapter = new SettingsStockManagementMerchandisesAdapter(getActivity(), associatedSettings, moduleManager);
         merchandisesAdapter.setFermatListEventListener(this);
@@ -196,7 +204,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             moduleManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
 
         } catch (FermatException ex) {
-            Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "There was a problem saving your settings", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), getResources().getString(R.string.error_settings), Toast.LENGTH_SHORT).show();
 
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
@@ -314,13 +322,13 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     public void onUpdateViewOnUIThread(String code) {
         switch (code) {
             case CBW_OPERATION_DESTOCK_OR_RESTOCK_UPDATE_VIEW_ERROR:
-                Toast.makeText(this.getActivity(), "There has been an error processing your request.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.getActivity(), getResources().getString(R.string.error_request), Toast.LENGTH_SHORT).show();
                 processingProgressBar.setVisibility(View.INVISIBLE);
                 onRefresh();
                 break;
 
             case CBW_OPERATION_DESTOCK_OR_RESTOCK_UPDATE_VIEW:
-                Toast.makeText(this.getActivity(), "Transaction completed.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.getActivity(), getResources().getString(R.string.transaction_completed), Toast.LENGTH_SHORT).show();
                 processingProgressBar.setVisibility(View.INVISIBLE);
                 onRefresh();
                 break;
@@ -337,5 +345,16 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         }
 
     }
+    private void activateButton() {
+        nextStepButton.setEnabled(true);
+//        nextStepButton.setBackgroundResource(R.color.cbw_wizard_color);
+        nextStepButton.setBackgroundColor(Color.parseColor("#1270A6"));
+//        nextStepButton.setTextColor(Color.WHITE);
+    }
 
+    private void deactivatedButton() {
+        nextStepButton.setEnabled(false);
+        nextStepButton.setBackgroundColor(Color.parseColor("#b3b3b3"));
+//        nextStepButton.setTextColor(Color.parseColor("#b3b3b3"));
+    }
 }

@@ -639,9 +639,15 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     navigationView.setBackgroundResource(ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE, this, backgroundDrawableColor.getId(), backgroundDrawableColor.getSourceLocation(), backgroundDrawableColor.getOwner().getOwnerAppPublicKey()));
                 }
             } else {
-                mDrawerLayout.setEnabled(false);
+//                mDrawerLayout.setEnabled(false);
                 navigationView.setVisibility(View.GONE);
                 mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onBackPressed();
+                    }
+                });
                 //test
                 //mDrawerToggle.onDrawerClosed(mDrawerLayout);
             }
@@ -662,9 +668,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void paintTitleBar(TitleBar titleBar, Activity activity) {
         try {
             if (titleBar != null) {
-//                getSupportActionBar().setWindowTitle("");
-//                getSupportActionBar().setDisplayShowTitleEnabled(false);
-//                mToolbar.setTitleTextColor(Color.TRANSPARENT);
                 Typeface typeface = null;
                 try {
                     if (titleBar.getFont() != null)
@@ -798,12 +801,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Check if no view has focus:
-                        View view = getCurrentFocus();
-                        if (view != null) {
-                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                        }
+                        Log.e(TAG,"OnBackPressed");
                         onBackPressed();
                     }
                 });

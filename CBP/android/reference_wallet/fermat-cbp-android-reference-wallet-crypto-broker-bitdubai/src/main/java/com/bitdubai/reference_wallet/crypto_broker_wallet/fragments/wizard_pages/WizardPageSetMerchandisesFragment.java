@@ -283,7 +283,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
             }
 
             final SimpleListDialogFragment<CBPInstalledWallet> dialogFragment = new SimpleListDialogFragment<>();
-            dialogFragment.configure("Select a Wallet", filteredList);
+            dialogFragment.configure(getResources().getString(R.string.select_wallet), filteredList);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<CBPInstalledWallet>() {
                 @Override
                 public void onItemSelected(final CBPInstalledWallet selectedItem) {
@@ -334,7 +334,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
             dialogFragment.show(getFragmentManager(), "WalletsDialog");
 
         } catch (CantListWalletsException ex) {
-            Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), getResources().getString(R.string.error_opps2), Toast.LENGTH_SHORT).show();
 
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
@@ -353,7 +353,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
             if (!accounts.isEmpty()) {
 
                 SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
-                accountsDialog.configure("Select an Account", accounts);
+                accountsDialog.configure(getResources().getString(R.string.select_account), accounts);
                 accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
 
                     @Override
@@ -401,7 +401,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
             }
 
         } catch (FermatException ex) {
-            Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), getResources().getString(R.string.error_opps2), Toast.LENGTH_SHORT).show();
 
             if (errorManager != null) {
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
@@ -451,7 +451,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
             }
 
         } catch (FermatException ex) {
-            Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), getResources().getString(R.string.error_opps2), Toast.LENGTH_SHORT).show();
 
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,

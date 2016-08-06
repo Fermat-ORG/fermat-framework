@@ -168,7 +168,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Set a Spread"
+                android:text="@string/set_spread"
                 android:textAllCaps="true"
                 android:textColor="@color/cbw_wizard_color" />
 
@@ -204,10 +204,9 @@
 
 
             </LinearLayout>
-
-
         </LinearLayout>
 
+        <!--Revisar codigo en JAVA para el color y activacion y desactivacion del boton SAVE-->
         <LinearLayout
             android:id="@+id/cbw_next_step_button"
             android:layout_width="200dp"

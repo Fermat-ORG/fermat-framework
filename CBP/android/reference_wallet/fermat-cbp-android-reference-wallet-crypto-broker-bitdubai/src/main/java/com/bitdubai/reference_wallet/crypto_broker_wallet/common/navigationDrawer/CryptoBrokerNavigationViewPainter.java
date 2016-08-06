@@ -95,8 +95,8 @@ public class CryptoBrokerNavigationViewPainter extends NavigationViewPainter {
             List<NavViewFooterItem> earningsData = getEarningsData();
 
             final CryptoBrokerNavigationViewAdapter adapter = new CryptoBrokerNavigationViewAdapter(getContext(), stockData, earningsData);
-            adapter.setStockTitle("Current Stock");
-            adapter.setEarningsTitle("Daily Earnings");
+            adapter.setStockTitle(getContext().getResources().getString(R.string.current_stock));
+            adapter.setEarningsTitle(getContext().getResources().getString(R.string.daily_earnings));
 
             return adapter;
         } catch (Exception e) {

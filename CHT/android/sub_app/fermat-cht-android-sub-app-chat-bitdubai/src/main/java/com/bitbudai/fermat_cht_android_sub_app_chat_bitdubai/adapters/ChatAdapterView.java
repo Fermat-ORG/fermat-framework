@@ -256,15 +256,16 @@ public class ChatAdapterView extends LinearLayout {
                         chatHistory.add(msg);
                     }
                 }
+            }
 
-                if (adapter == null) {
-                    adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
-                    messagesContainer.setAdapter(adapter);
-                } else {
-                    adapter.notifyItemRangeChanged(0, adapter.getItemCount());
-                    if (oldChatMessagesCount < chatHistory.size() && !isScrollingUp)
-                        scroll();
-                }
+
+            if (adapter == null) {
+                adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+                messagesContainer.setAdapter(adapter);
+            } else {
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+                if (oldChatMessagesCount < chatHistory.size() && !isScrollingUp)
+                    scroll();
             }
         } catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -396,12 +397,12 @@ public class ChatAdapterView extends LinearLayout {
                 }
 
                 if (Validate.isDateToday(new Date(date))) {
-                    fecha = getContext().getResources().getString(R.string.cht_today) + formattedTime;
+                    fecha = getContext().getResources().getString(R.string.cht_today) + " " + formattedTime;
                 } else {
                     Date today = new Date();
                     long dias = (today.getTime() - new Date(date).getTime()) / (1000 * 60 * 60 * 24);
                     if (dias == 1) {
-                        fecha = getContext().getResources().getString(R.string.cht_yesterday) + formattedTime;
+                        fecha = getContext().getResources().getString(R.string.cht_yesterday) + " " + formattedTime;
                     }
                 }
             } catch (Exception e) {
@@ -415,7 +416,7 @@ public class ChatAdapterView extends LinearLayout {
         switch (state) {
             case ConstantSubtitle.IS_OFFLINE:
                 if (date != null && !date.equals("no record")) {
-                    toolbar.setSubtitle(Html.fromHtml("<small><small>"+getContext().getResources().getString(R.string.cht_last_time) + setFormatLastTime(date) + "</small></small>"));
+                    toolbar.setSubtitle(Html.fromHtml("<small><small>"+getContext().getResources().getString(R.string.cht_last_time) + " "  + setFormatLastTime(date) + "</small></small>"));
                     appSession.setData("DATELASTCONNECTION", setFormatLastTime(date));
                 } else {
                     Log.i("159753**LastTimeOnChat", "No show");
@@ -434,11 +435,8 @@ public class ChatAdapterView extends LinearLayout {
         messagesContainer = (RecyclerView) findViewById(R.id.messagesContainer);
         layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
         messagesContainer.setLayoutManager(layoutManager);
-//        if (adapter == null) {
-//            adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
-//            messagesContainer.setAdapter(adapter);
-//        }
-            messagesContainer.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+        messagesContainer.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 
@@ -583,24 +581,7 @@ public class ChatAdapterView extends LinearLayout {
                     return;
                 }
 
-//                if (adapter == null) {
-//                    adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
-//                    messagesContainer.setAdapter(adapter);
-//                }
-                    messageText = messageText.trim();
-
-//                String text = "";
-//                char c = 39; // char ' in ASCII code
-//                for (int i = 0; i < messageText.length(); i++){
-//                    if(messageText.charAt(i) == c){
-//                        text = (String) text.concat("''");
-//                    }
-//                    else {
-//                        text = text + Character.toString(messageText.charAt(i));
-//                    }
-//                }
-//
-//                messageText = text;
+                messageText = messageText.trim();
 
                 try {
                     ChatImpl chat = new ChatImpl();
@@ -740,7 +721,8 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void getFilter(String s) {
-        adapter.getFilter().filter(s);
+        if(adapter != null)
+            adapter.getFilter().filter(s);
     }
 
     public void displayMessage(ChatMessage message) {
