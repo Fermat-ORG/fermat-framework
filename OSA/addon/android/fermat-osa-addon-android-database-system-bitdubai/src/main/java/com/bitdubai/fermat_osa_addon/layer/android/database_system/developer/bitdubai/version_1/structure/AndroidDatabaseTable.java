@@ -737,7 +737,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
              database = this.database.getWritableDatabase();
             String filter = makeFilter2();
             int rowDeleted =  database.delete(tableName, (!filter.isEmpty()) ? filter : null, null);
-            //Log.i("AndroidDatabase", "Database name:" + tableName + " delete id: " +rowDeleted);
+            Log.i("AndroidDatabase", "Database name:" + tableName + " delete id: " +rowDeleted);
 
         } catch (Exception exception) {
             throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
