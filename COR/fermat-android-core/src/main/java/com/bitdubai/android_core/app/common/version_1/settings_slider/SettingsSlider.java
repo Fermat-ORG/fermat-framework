@@ -45,7 +45,7 @@ public class SettingsSlider {
         txt_more_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.changeActivity(Activities.DESKTOP_MORE_SETTINGS.getCode(), null, null);
+                activity.changeActivity(Activities.DESKTOP_MORE_SETTINGS.getCode(), "main_desktop", null,null);
             }
         });
     }

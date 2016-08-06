@@ -13,6 +13,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
 import com.bitdubai.fermat_android_api.ui.adapters.AdapterChangeListener;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.utils.ScreenUtils;
 import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
@@ -28,7 +29,7 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
     public static final int DEKSTOP = 1;
     public static final int FOLDER = 2;
     public static final int DESKTOP_FOLDER = 3;
-    private AbstractFermatFragment.ScreenSize screenSize;
+    private ScreenUtils.ScreenSize screenSize;
     private Typeface tf;
     private Item parentItem;
 
@@ -38,14 +39,14 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
     private AdapterChangeListener adapterChangeListener;
 
 
-    public DesktopAdapter(Context context, List<Item> dataSet, DesktopHolderClickCallback desktopHolderClickCallback, int fragmentWhoUseThisAdapter, AbstractFermatFragment.ScreenSize screenSize) {
+    public DesktopAdapter(Context context, List<Item> dataSet,DesktopHolderClickCallback desktopHolderClickCallback,int fragmentWhoUseThisAdapter,ScreenUtils.ScreenSize screenSize) {
         super(context, dataSet);
         this.desktopHolderClickCallback = desktopHolderClickCallback;
         this.fragmentWhoUseThisAdapter = fragmentWhoUseThisAdapter;
         this.screenSize = screenSize;
     }
 
-    public DesktopAdapter(Context context, List<Item> dataSet, Item parent, DesktopHolderClickCallback desktopHolderClickCallback, int fragmentWhoUseThisAdapter, boolean isChild, AbstractFermatFragment.ScreenSize screenSize) {
+    public DesktopAdapter(Context context, List<Item> dataSet,Item parent,DesktopHolderClickCallback desktopHolderClickCallback,int fragmentWhoUseThisAdapter,boolean isChild,ScreenUtils.ScreenSize screenSize) {
         super(context, dataSet);
         this.desktopHolderClickCallback = desktopHolderClickCallback;
         this.fragmentWhoUseThisAdapter = fragmentWhoUseThisAdapter;
@@ -128,12 +129,12 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
 
         } else {
 
-            if (!isChild) {
-                holder.name.setText(data.getName());
-                if (screenSize == AbstractFermatFragment.ScreenSize.SMALL) {
-                    holder.name.setTextSize(holder.name.getTextSize() - 9);
-                }
-                //holder.name.setTypeface(tf);
+                if(!isChild) {
+                    holder.name.setText(data.getName());
+                    if(screenSize== ScreenUtils.ScreenSize.SMALL){
+                        holder.name.setTextSize(holder.name.getTextSize()-9);
+                    }
+                    //holder.name.setTypeface(tf);
 //                    holder.thumbnail.setOnClickListener(new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View view) {

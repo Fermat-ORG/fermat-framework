@@ -24,5 +24,6 @@ public class SessionConstant {
     public static final String FEE_LEVEL = "Feelevel";
     public static final String FIAT_CURRENCY = "FiatCurrency";
     public static final String SETTINGS_LOADED = "SettingLoaded";
+    public static final String RUNNIBLE_BALANCE = "RunningDailyBalance";
 
 }
