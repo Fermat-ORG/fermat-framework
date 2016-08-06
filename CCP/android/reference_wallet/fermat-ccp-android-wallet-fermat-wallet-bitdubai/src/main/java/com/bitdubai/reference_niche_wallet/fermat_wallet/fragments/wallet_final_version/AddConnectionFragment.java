@@ -76,6 +76,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
     BlockchainNetworkType blockchainNetworkType;
 
     FloatingActionMenu actionMenu;
+
     com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton;
 
     public static AddConnectionFragment newInstance() {
@@ -354,7 +355,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         try {
 
             FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
-            FermatAnimationsUtils.showEmpty(getActivity(),true,actionButton.getActivityContentView());
+            actionButton.detach();
+            actionButton.removeAllViewsInLayout();
+
             actionButton = null;
             actionMenu = null;
         }catch (Exception e){

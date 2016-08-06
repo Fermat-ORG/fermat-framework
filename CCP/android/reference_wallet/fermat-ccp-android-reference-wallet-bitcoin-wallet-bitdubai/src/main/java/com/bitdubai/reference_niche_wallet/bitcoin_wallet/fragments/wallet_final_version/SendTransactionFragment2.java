@@ -175,6 +175,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 if (!(Boolean) appSession.getData(SessionConstant.SETTINGS_LOADED)) {
                     loadSettings();
                 }
+                else
+                {
+                    if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                        balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+                    if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                        typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
+
+                    blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+                }
             }
             else
             {
@@ -841,7 +855,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
                     List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(
                             BalanceType.AVAILABLE, TransactionType.DEBIT, appSession.getAppPublicKey(),
-                            cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+                            cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0,cryptoWalletTransaction.getActorFromType());
 
                     GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction> grouperItem = new GrouperItem<>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);
@@ -1203,7 +1217,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 bitcoinWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                 bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
-                appSession.setData(SessionConstant.RUNNIBLE_BALANCE,0);
+
                 if(moduleManager!=null)
                     moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
 
@@ -1211,13 +1225,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, true);
                 appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
                 appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
+                appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
+                appSession.setData(SessionConstant.RUNNIBLE_BALANCE,new HashMap<>());
+
                 appSession.setData(SessionConstant.SETTINGS_LOADED, true);
 
             } else {
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null)
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                else
-                    blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+
+
+                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
 
                 appSession.setData(SessionConstant.FEE_LEVEL, bitcoinWalletSettings.getFeedLevel());
                 appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, bitcoinWalletSettings.isBlockchainDownloadEnabled());

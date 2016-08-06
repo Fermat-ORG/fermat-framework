@@ -93,6 +93,9 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceAppFermatSess
         if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked()) {
             //noinspection TryWithIdenticalCatches
             try {
+
+                getSession().setData(SessionConstant.PRESENTATION_HELP_ENABLED,(checkbox_not_show.isChecked()) ? false : true);
+
                 BitcoinWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
                 bitcoinWalletSettings.setIsContactsHelpEnabled((checkbox_not_show.isChecked()) ? false : true);
                 getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);

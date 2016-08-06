@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.exceptions.CantRevertTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -82,7 +83,8 @@ public interface CryptoWalletWallet {
                                                                   final TransactionType transactionType,
                                                                   final int              max           ,
                                                                   final int              offset       ,
-                                                                  final BlockchainNetworkType blockchainNetworkType) throws CantListTransactionsException;
+                                                                  final BlockchainNetworkType blockchainNetworkType,
+                                                                 final Actors actorType) throws CantListTransactionsException;
     /**
      * Throw the method <code>listLastActorTransactionsByTransactionType</code> you can get the last transaction for each actor
      * who have made transactions with this wallet.

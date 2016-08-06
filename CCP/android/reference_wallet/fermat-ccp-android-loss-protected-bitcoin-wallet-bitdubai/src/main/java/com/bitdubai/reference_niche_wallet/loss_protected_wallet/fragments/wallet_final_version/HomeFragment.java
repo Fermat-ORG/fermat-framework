@@ -166,6 +166,21 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                 if (!(Boolean) appSession.getData(SessionConstant.SETTINGS_LOADED)) {
                     loadSettings();
                 }
+                else
+                {
+                    if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                        balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+                    if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                        typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
+
+                    blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+
+                }
             }
             else
             {
@@ -941,7 +956,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             try {
                 lossProtectedWalletSettings = lossProtectedWalletmanager.loadAndGetSettings(appSession.getAppPublicKey());
 
-            } catch ( CantGetSettingsException|SettingsNotFoundException e) {
+            } catch (Exception e) {
                 lossProtectedWalletSettings = null;
             }
 
@@ -976,6 +991,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                         appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
                         appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
                         appSession.setData(SessionConstant.LOSS_PROTECTED_ENABLED, true);
+                        appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
                     } else {
                         if (lossProtectedWalletSettings.getBlockchainNetworkType() == null)
                             lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
