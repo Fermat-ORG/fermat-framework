@@ -59,7 +59,7 @@ public abstract class FermatDialog<S extends FermatSession, R extends ResourcePr
             setContentView(setLayoutId());
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
-            Toast.makeText(getOwnerActivity(), new StringBuilder().append("Oooops! recovering from system error - ").append(e.getMessage()).toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getOwnerActivity(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

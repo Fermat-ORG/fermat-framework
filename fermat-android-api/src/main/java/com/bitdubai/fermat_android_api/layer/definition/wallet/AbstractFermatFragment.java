@@ -187,7 +187,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
                 }
             } else {
                 if (appSession != null)
-                    Log.e(TAG, new StringBuilder().append("FermatFragmentType null in fragment for app:").append(appSession.getAppPublicKey()).append(", contact furszy").toString());
+                    Log.e(TAG, "FermatFragmentType null in fragment for app:" + appSession.getAppPublicKey() + ", contact furszy");
             }
 
             onOptionMenuPrepared(menu);
@@ -195,7 +195,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
 
         } catch (Exception e) {
             if (appSession != null)
-                Log.e(TAG, new StringBuilder().append("Error loading optionsMenu, please check fragments for session: ").append(appSession.getAppPublicKey()).append(", if problem persist contact to Furszy").toString());
+                Log.e(TAG, "Error loading optionsMenu, please check fragments for session: " + appSession.getAppPublicKey() + ", if problem persist contact to Furszy");
             e.printStackTrace();
         }
         super.onPrepareOptionsMenu(menu);

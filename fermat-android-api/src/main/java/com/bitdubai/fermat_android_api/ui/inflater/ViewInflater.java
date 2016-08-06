@@ -718,7 +718,7 @@ public class ViewInflater {
             m.invoke(view, boolValue);
             return true;
         } catch (NoSuchMethodException ex) {
-            Log.e("ViewInflater", new StringBuilder().append("No such method: ").append(method).toString(), ex);
+            Log.e("ViewInflater", "No such method: " + method, ex);
         } catch (IllegalArgumentException e) {
             Log.e("ViewInflater", "Call", e);
         } catch (IllegalAccessException e) {
@@ -755,7 +755,7 @@ public class ViewInflater {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        Toast.makeText(context, new StringBuilder().append("Unhandled tag:").append(name).toString(),
+        Toast.makeText(context, "Unhandled tag:" + name,
                 Toast.LENGTH_SHORT).show();
         return null;
     }
