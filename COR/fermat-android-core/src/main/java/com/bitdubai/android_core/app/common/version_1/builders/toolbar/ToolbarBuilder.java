@@ -52,7 +52,7 @@ public class ToolbarBuilder {
             }catch (Exception e){
                 //nothing
             }
-            toolabarContainer.removeAllViewsInLayout();
+            if (toolabarContainer!=null)toolabarContainer.removeAllViewsInLayout();
             toolabarContainer = null;
             txtTitle = null;
         }
@@ -60,9 +60,7 @@ public class ToolbarBuilder {
     }
 
     public void clear(){
-        txtTitle = null;
-        toolabarContainer.removeAllViewsInLayout();
-        toolabarContainer = null;
+        clearToolbarViews();
         mToolbar.clear();
         fermatActivity.clear();
     }
@@ -87,5 +85,10 @@ public class ToolbarBuilder {
 
     public void invalidate() {
         txtTitle.invalidate();
+    }
+
+    public void setToolbar(Toolbar toolbar) {
+        this.mToolbar.clear();
+        this.mToolbar = new WeakReference<Toolbar>(toolbar);
     }
 }

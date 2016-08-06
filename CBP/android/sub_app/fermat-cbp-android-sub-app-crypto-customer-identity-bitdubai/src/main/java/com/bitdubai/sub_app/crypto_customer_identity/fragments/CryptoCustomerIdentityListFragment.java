@@ -119,7 +119,7 @@ public class CryptoCustomerIdentityListFragment
             makeText(getActivity(), "Error dialogo", Toast.LENGTH_SHORT).show();
         }
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         configureToolbar();
     }
@@ -218,7 +218,7 @@ public class CryptoCustomerIdentityListFragment
     @Override
     public void onItemClickListener(CryptoCustomerIdentityInformation data, int position) {
         appSession.setData(FragmentsCommons.IDENTITY_INFO, data);
-        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY.getCode());
     }
 
     @Override

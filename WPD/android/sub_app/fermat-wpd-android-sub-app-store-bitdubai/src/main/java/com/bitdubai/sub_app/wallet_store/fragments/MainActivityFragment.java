@@ -250,7 +250,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
             appSession.setData(PREVIEW_IMGS, item.getScreenshots());
             appSession.setData(BASIC_DATA, item);
 
-            changeActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY.getCode(), appSession.getAppPublicKey());
+            changeActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY.getCode());
 
         }
     }

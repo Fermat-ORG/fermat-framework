@@ -36,6 +36,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -163,6 +165,21 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             if(appSession.getData(SessionConstant.SETTINGS_LOADED) != null) {
                 if (!(Boolean) appSession.getData(SessionConstant.SETTINGS_LOADED)) {
                     loadSettings();
+                }
+                else
+                {
+                    if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                        balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+                    if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                        typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
+
+                    blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+
                 }
             }
             else
@@ -936,10 +953,12 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
     private void loadSettings(){
         try {
+            try {
+                lossProtectedWalletSettings = lossProtectedWalletmanager.loadAndGetSettings(appSession.getAppPublicKey());
 
-
-                    lossProtectedWalletSettings = lossProtectedWalletmanager.loadAndGetSettings(appSession.getAppPublicKey());
-
+            } catch (Exception e) {
+                lossProtectedWalletSettings = null;
+            }
 
                     if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
                         balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
@@ -972,6 +991,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                         appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
                         appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
                         appSession.setData(SessionConstant.LOSS_PROTECTED_ENABLED, true);
+                        appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
                     } else {
                         if (lossProtectedWalletSettings.getBlockchainNetworkType() == null)
                             lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());

@@ -138,7 +138,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
             rootView = super.onCreateView(inflater, container, savedInstanceState);
         } catch (Exception e){
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
 
         return rootView;
@@ -185,7 +185,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }

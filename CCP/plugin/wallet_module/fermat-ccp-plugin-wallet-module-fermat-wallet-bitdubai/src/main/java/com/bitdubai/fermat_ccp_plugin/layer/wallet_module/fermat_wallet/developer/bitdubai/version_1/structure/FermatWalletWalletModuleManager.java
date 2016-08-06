@@ -393,7 +393,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
             }
 
             Map<UUID, String> providerBTC = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
-                    new CurrencyPairImpl(CryptoCurrency.FERMAT,FiatCurrency.BITCOIN));
+                    new CurrencyPairImpl(CryptoCurrency.FERMAT, CryptoCurrency.BITCOIN));
             if (providerBTC.size()>0){
                 Iterator entries = providerBTC.entrySet().iterator();
                 while (entries.hasNext()) {

@@ -134,7 +134,7 @@ public class CryptoBrokerIdentityListFragment
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         configureToolbar();
     }
@@ -223,7 +223,7 @@ public class CryptoBrokerIdentityListFragment
     @Override
     public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {
         appSession.setData(FragmentsCommons.IDENTITY_INFO, data);
-        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode());
     }
 
     @Override
