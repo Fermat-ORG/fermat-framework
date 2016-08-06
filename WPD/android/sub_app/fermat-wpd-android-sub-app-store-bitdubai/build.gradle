@@ -38,7 +38,6 @@ dependencies {
     /** module dependencies **/
     compile project(':fermat-api')
     compile project(':fermat-core')
-    compile project(':fermat-wpd-api')
     compile project(':fermat-android-api')
     /* android dependencies */
     compile fileTree(dir: 'libs', include: ['*.jar'])

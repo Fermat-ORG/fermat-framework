@@ -46,7 +46,7 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @author Nelson Ramirez
  * @version 1.0
  */
-public class MainActivityFragment extends FermatListFragment<WalletStoreListItem, ReferenceAppFermatSession<WalletStoreModuleManager>>
+public class MainActivityFragment extends FermatListFragment<WalletStoreListItem, ReferenceAppFermatSession>
         implements FermatListItemListeners<WalletStoreListItem>, OnMenuItemClickListener {
 
     /**
@@ -79,7 +79,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         super.onCreate(savedInstanceState);
         try {
             // setting up  module
-//            walletStoreSubAppSession = appSession;
+//            walletStoreSubAppSession = ((WalletStoreSubAppSessionReferenceApp) appSession);
 
             catalogueItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -112,18 +112,18 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         super.initViews(layout);
 
         configureToolbar();
-        BasicWalletSettings preferenceSettings = getPreferenceSettings();
+//        BasicWalletSettings preferenceSettings = getPreferenceSettings();
+//
+//        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession).
+//                setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).
+//                setBannerRes(R.drawable.banner_app_store).
+//                setSubTitle(R.string.presentation_dialog_subtitle_app_store_list).
+//                setBody(R.string.presentation_dialog_body_app_store_list).
+//                build();
 
-        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession).
-                setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).
-                setBannerRes(R.drawable.banner_app_store).
-                setSubTitle(R.string.presentation_dialog_subtitle_app_store_list).
-                setBody(R.string.presentation_dialog_body_app_store_list).
-                build();
-
-        if (preferenceSettings != null && preferenceSettings.isHomeTutorialDialogEnabled()) {
-            presentationDialog.show();
-        }
+//        if (preferenceSettings != null && preferenceSettings.isHomeTutorialDialogEnabled()) {
+//            presentationDialog.show();
+//        }
     }
 
     @Override
@@ -168,13 +168,13 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     public ArrayList<WalletStoreListItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         ArrayList<WalletStoreListItem> data;
 
-        Object walletList = appSession.getData(WalletStoreSubAppSessionReferenceApp.WALLET_LIST);
-        if (walletList != null) {
-            data = (ArrayList<WalletStoreListItem>) walletList;
-        } else {
+//        Object walletList = appSession.getData(WalletStoreSubAppSessionReferenceApp.WALLET_LIST);
+//        if (walletList != null) {
+//            data = (ArrayList<WalletStoreListItem>) walletList;
+//        } else {
             data = WalletStoreListItem.getTestData(getResources());
-            appSession.setData(WalletStoreSubAppSessionReferenceApp.WALLET_LIST, data);
-        }
+//            appSession.setData(WalletStoreSubAppSessionReferenceApp.WALLET_LIST, data);
+//        }
 
         return data;
     }
@@ -269,23 +269,23 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
-    private BasicWalletSettings getPreferenceSettings() {
-        try {
-            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
-        } catch (Exception e) {
-            settings = null;
-        }
-
-        if (settings == null) {
-            settings = new BasicWalletSettings();
-            settings.setIsPresentationHelpEnabled(true);
-
-            try {
-                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
-            } catch (Exception e) {
-                settings = null;
-            }
-        }
-        return settings;
-    }
+//    private BasicWalletSettings getPreferenceSettings() {
+//        try {
+//            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+//        } catch (Exception e) {
+//            settings = null;
+//        }
+//
+//        if (settings == null) {
+//            settings = new BasicWalletSettings();
+//            settings.setIsPresentationHelpEnabled(true);
+//
+//            try {
+//                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
+//            } catch (Exception e) {
+//                settings = null;
+//            }
+//        }
+//        return settings;
+//    }
 }
