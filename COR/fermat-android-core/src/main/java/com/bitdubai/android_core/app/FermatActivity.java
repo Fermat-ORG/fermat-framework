@@ -639,9 +639,16 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     navigationView.setBackgroundResource(ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE, this, backgroundDrawableColor.getId(), backgroundDrawableColor.getSourceLocation(), backgroundDrawableColor.getOwner().getOwnerAppPublicKey()));
                 }
             } else {
-                mDrawerLayout.setEnabled(false);
+//                mDrawerLayout.setEnabled(false);
                 navigationView.setVisibility(View.GONE);
                 mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                mToolbar.setVisibility(View.VISIBLE);
+                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onBackPressed();
+                    }
+                });
                 //test
                 //mDrawerToggle.onDrawerClosed(mDrawerLayout);
             }
@@ -662,9 +669,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void paintTitleBar(TitleBar titleBar, Activity activity) {
         try {
             if (titleBar != null) {
-//                getSupportActionBar().setWindowTitle("");
-//                getSupportActionBar().setDisplayShowTitleEnabled(false);
-//                mToolbar.setTitleTextColor(Color.TRANSPARENT);
                 Typeface typeface = null;
                 try {
                     if (titleBar.getFont() != null)
@@ -729,10 +733,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     FermatDrawable backgroundDrawable = titleBar.getBackgroundDrawable();
                     mToolbar.setBackgroundResource(ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE, this, backgroundDrawable.getId(), backgroundDrawable.getSourceLocation(), backgroundDrawable.getOwner().getOwnerAppPublicKey()));
                 }
+                //Title builder
                 setActionBarProperties(title);
+                // Navigation Icon
                 paintToolbarIcon(titleBar);
                 //Toolbar
-                if (mToolbar != null && !isLayoutRecicled)
+                if (mToolbar != null)
                     setSupportActionBar(mToolbar);
 
                 if (title!=null){
@@ -798,12 +804,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Check if no view has focus:
-                        View view = getCurrentFocus();
-                        if (view != null) {
-                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                        }
+                        Log.e(TAG,"OnBackPressed");
                         onBackPressed();
                     }
                 });
@@ -861,7 +862,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         int tabsSize = tabStrip.getTabs().size();
         final List<Tab> tabs = tabStrip.getTabs();
         Fragment[] fragments = new Fragment[tabsSize];
-        String[] tabTitles = new String[tabsSize];
         FermatFragment[] fermatFragments = new FermatFragment[tabsSize];
         FermatDrawable[] tabsDrawables = new FermatDrawable[tabsSize];
         View[] tabsViews = new View[tabsSize];
@@ -886,7 +886,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 } catch (FragmentNotFoundException e) {
                     throw new InvalidParameterException(e, "Fragment not found: " + fragment.getType() + " with owner: " + fragment.getOwner(), "Framework building tabs");
                 }
-                tabTitles[i] = tab.getLabel();
+//                tabTitles[i] = tab.getLabel();
                 tabsDrawables[i] = tab.getDrawable();
 
                 FermatView fermatView = tab.getFermatView();
@@ -899,7 +899,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }
             tabLayout.setVisibility(View.VISIBLE);
             pagertabs.setVisibility(View.VISIBLE);
-            adapter = new TabsPagerAdapter2(this, getFragmentManager(), tabTitles, fragments, tabsDrawables);
+            adapter = new TabsPagerAdapter2(this, getFragmentManager(), tabs.toArray(new Tab[tabs.size()]), fragments, tabsDrawables);
             pagertabs.setAdapter(adapter);
             if (tabStrip.isHasIcon()) {
                 for (int i = 0; i < tabLayout.getTabCount(); i++) {
@@ -1175,7 +1175,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             if (header == null) {
                 if (appBarLayout != null) {
                     appBarLayout.setExpanded(false);
-                    appBarLayout.setEnabled(false);
+//                    appBarLayout.setEnabled(false);
                 }
 
             } else {
@@ -1251,6 +1251,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     //  System.out.println("TOOLBARTAMANO:"+heightDp);
                     lp.height = (int) heightDp;
                 }
+
 
                 if (tabs.getBackgroundDrawable() != null) {
                     FermatDrawable fermatDrawable = tabs.getBackgroundDrawable();

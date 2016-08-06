@@ -4767,6 +4767,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
+        runtimeTab.setTabTextSize(34);
         runtimeTab.setFragment(new FermatRuntimeFragment(2,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
