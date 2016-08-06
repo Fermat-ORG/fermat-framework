@@ -458,29 +458,7 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
                                                                              int max,
                                                                              int offset) throws CantListTransactionsException;
 
-    /**
-     * Throw the method <code>listTransactionsByActorAndType</code> you can get the transactions for each actor
-     * who have made transactions with the specified wallet.
-     *
-     * @param balanceType
-     * @param transactionType
-     * @param walletPublicKey
-     * @param actorPublicKey
-     * @param intraUserLoggedInPublicKey
-     * @param max
-     * @param offset
-     * @return
-     * @throws CantListTransactionsException
-     */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
-    List<FermatWalletModuleTransaction> listTransactionsByActorAndType(BalanceType balanceType,
-                                                                 TransactionType transactionType,
-                                                                 String walletPublicKey,
-                                                                 String actorPublicKey,
-                                                                 String intraUserLoggedInPublicKey,
-                                                                 BlockchainNetworkType blockchainNetworkType,
-                                                                 int max,
-                                                                 int offset) throws CantListTransactionsException;
+
 
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.

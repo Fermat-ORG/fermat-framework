@@ -1040,46 +1040,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         }
     }
 
-    @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
-    public List<FermatWalletModuleTransaction> listTransactionsByActorAndType(BalanceType balanceType,
-                                                                        TransactionType transactionType,
-                                                                        String walletPublicKey,
-                                                                        String actorPublicKey, String intraUserLoggedInPublicKey,
-                                                                        BlockchainNetworkType blockchainNetworkType,
-                                                                        int max,
-                                                                        int offset) throws CantListTransactionsException {
-        try {
-            CryptoWalletWallet fermatWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-            List<FermatWalletModuleTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<CryptoWalletTransaction> bitcoinWalletTransactionList = fermatWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset, blockchainNetworkType);
 
-
-                List<CryptoWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
-
-                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
-
-                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-                        bitcoinWalletTransactionList1.add(bwt);
-                    }
-                }
-
-
-
-
-
-
-            for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList1) {
-                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
-            }
-
-            return cryptoWalletTransactionList;
-        } catch (CantLoadWalletsException | com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException e) {
-            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, e);
-        } catch(Exception e){
-            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
-        }
-    }
 
     @Override
     public ActorTransactionSummary getActorTransactionHistory(BalanceType balanceType,

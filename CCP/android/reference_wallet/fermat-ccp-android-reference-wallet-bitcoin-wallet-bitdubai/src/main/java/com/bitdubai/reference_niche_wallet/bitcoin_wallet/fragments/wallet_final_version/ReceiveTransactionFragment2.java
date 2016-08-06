@@ -276,7 +276,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
                     List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(
                             BalanceType.AVAILABLE, TransactionType.CREDIT, appSession.getAppPublicKey(),
-                            cryptoWalletTransaction.getActorFromPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+                            cryptoWalletTransaction.getActorFromPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0,cryptoWalletTransaction.getActorFromType());
 
                     GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction> grouperItem = new GrouperItem<>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);
