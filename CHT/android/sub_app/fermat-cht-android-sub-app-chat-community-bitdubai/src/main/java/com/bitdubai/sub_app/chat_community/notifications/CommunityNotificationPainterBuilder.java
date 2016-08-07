@@ -1,5 +1,7 @@
 package com.bitdubai.sub_app.chat_community.notifications;
 
+import android.content.Context;
+
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
@@ -16,7 +18,7 @@ import com.bitdubai.sub_app.chat_community.R;
  */
 public class CommunityNotificationPainterBuilder {
 
-    public static NotificationPainter getNotification(final FermatBundle fermatBundle) {
+    public static NotificationPainter getNotification(final FermatBundle fermatBundle, Context context) {
         NotificationPainter notification = null;
         try {
             int notificationID = fermatBundle.getInt(NotificationBundleConstants.NOTIFICATION_ID);
@@ -24,12 +26,12 @@ public class CommunityNotificationPainterBuilder {
 
             switch (notificationID) {// switch (notificationType) {
                 case ChatBroadcasterConstants.CHAT_COMMUNITY_CONNECTION_ACCEPTED_NOTIFICATION://ACTOR_CONNECTED
-                    return new CommunityNotificationPainter("Chat Community",
-                            "A Chat user accepted your connection request.", "",
+                    return new CommunityNotificationPainter(context.getResources().getString(R.string.cht_comm_notif_accepted_title),
+                            context.getResources().getString(R.string.cht_comm_notif_accepted_content), "",
                             "", R.drawable.cht_ic_nav_connections);
                 case ChatBroadcasterConstants.CHAT_COMMUNITY_REQUEST_CONNECTION_NOTIFICATION://CONNECTION_REQUEST_RECEIVED
-                    return new CommunityNotificationPainter("Chat Community",
-                            "A Chat user accepted your connection request.", "",
+                    return new CommunityNotificationPainter(context.getResources().getString(R.string.cht_comm_notif_request_title),
+                            context.getResources().getString(R.string.cht_comm_notif_request_content), "",
                             "", R.drawable.cht_ic_nav_connections);
                 default:
                     return null;

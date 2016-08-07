@@ -98,7 +98,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
                     chatExposingData.getPublicKey(),
                     chatExposingData.getAlias(),
                     chatExposingData.getAlias(),
-                    null,
+                    chatExposingData.getLocation(),
                     extraDataToJson(chatExposingData),
                     chatExposingData.getImage()
             );

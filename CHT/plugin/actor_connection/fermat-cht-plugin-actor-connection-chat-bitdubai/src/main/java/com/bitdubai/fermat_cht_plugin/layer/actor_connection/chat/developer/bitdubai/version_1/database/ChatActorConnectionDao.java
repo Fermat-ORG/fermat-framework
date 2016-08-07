@@ -97,19 +97,19 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            if (oldActorConnection != null) {
-                DatabaseTableRecord entityRecordOld = actorConnectionsTable.getEmptyRecord();
-                entityRecordOld = buildDatabaseRecord(
-                        entityRecordOld,
-                        oldActorConnection
-                );
-                deleteNewUserProfileImage(oldActorConnection.getPublicKey());
-                actorConnectionsTable.deleteRecord(entityRecordOld);
-
-                if (actorConnection.getConnectionState().equals(oldActorConnection.getConnectionState())
-                        && (!actorConnection.getConnectionState().equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE)))
-                    isNew = false;
-            }
+//            if (oldActorConnection != null) {
+//                DatabaseTableRecord entityRecordOld = actorConnectionsTable.getEmptyRecord();
+//                entityRecordOld = buildDatabaseRecord(
+//                        entityRecordOld,
+//                        oldActorConnection
+//                );
+//                deleteNewUserProfileImage(oldActorConnection.getPublicKey());
+//                actorConnectionsTable.deleteRecord(entityRecordOld);
+//
+//                if (actorConnection.getConnectionState().equals(oldActorConnection.getConnectionState())
+//                        && (!actorConnection.getConnectionState().equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE)))
+//                    isNew = false;
+//            }
 
             DatabaseTableRecord entityRecord = actorConnectionsTable.getEmptyRecord();
             entityRecord = buildDatabaseRecord(
@@ -134,8 +134,8 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 //        } catch (CantUpdateRecordException e) {
 //
 //            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to update the actor connection");
-        } catch (CantDeleteRecordException e) {
-            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to delete the actor.");
+//        } catch (CantDeleteRecordException e) {
+//            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to delete the actor.");
         } catch (CantPersistProfileImageException e) {
             throw new CantRegisterActorConnectionException(e, "", "There was an error trying to delete the actor image.");
         }
