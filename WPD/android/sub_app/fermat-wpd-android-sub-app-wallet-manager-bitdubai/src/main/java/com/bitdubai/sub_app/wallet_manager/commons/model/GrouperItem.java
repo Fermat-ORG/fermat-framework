@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentListItem;
 import java.util.List;
 
 
-public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
+public class GrouperItem<CHILD_TYPE, ITEM> implements ParentListItem {
 
     private List<CHILD_TYPE> childItemList;
     private int childCount;
@@ -14,7 +14,7 @@ public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
 
     private ITEM item;
 
-    public GrouperItem( List<CHILD_TYPE> childItemList, boolean initiallyExpanded,ITEM item) {
+    public GrouperItem(List<CHILD_TYPE> childItemList, boolean initiallyExpanded, ITEM item) {
         this.initiallyExpanded = initiallyExpanded;
         this.childItemList = childItemList;
         this.item = item;

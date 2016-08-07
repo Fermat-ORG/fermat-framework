@@ -21,7 +21,7 @@ import java.util.Map;
 public class WelcomeWizardFifthFragment extends AbstractFermatFragment<ReferenceAppFermatSession<WalletManager>, ResourceProviderManager> implements WizardPageListener {
 
 
-    public static AbstractFermatFragment newInstance(){
+    public static AbstractFermatFragment newInstance() {
         return new WelcomeWizardFifthFragment();
     }
 
@@ -33,8 +33,7 @@ public class WelcomeWizardFifthFragment extends AbstractFermatFragment<Reference
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.welcome_wizard_fifth,container,false);
-
+        View view = inflater.inflate(R.layout.welcome_wizard_fifth, container, false);
 
 
         return view;

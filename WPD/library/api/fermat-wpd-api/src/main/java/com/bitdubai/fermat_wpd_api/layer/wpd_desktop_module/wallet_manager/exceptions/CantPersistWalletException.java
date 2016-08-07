@@ -5,8 +5,8 @@ package com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exce
  */
 public class CantPersistWalletException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2877758259267368225L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2877758259267368225L;
 }

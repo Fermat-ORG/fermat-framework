@@ -3,25 +3,22 @@ package com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.i
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.InstalationProgress;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesUnninstallException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesUnninstallException;
 
 import java.util.UUID;
 
 /**
+ * <p>The abstract class <code>com.bitdubai.fermat_api.layer.network_service.wallet_resources.WalletResourcesInstalationManager/code> is a interface
+ * that define the methods to install wallets resource files.
  *
- *  <p>The abstract class <code>com.bitdubai.fermat_api.layer.network_service.wallet_resources.WalletResourcesInstalationManager/code> is a interface
- *     that define the methods to install wallets resource files.
- *
- *
- *  @author  Matias Furszyfer
- *  @since   4/08/15.
- * */
+ * @author Matias Furszyfer
+ * @since 4/08/15.
+ */
 public interface WalletResourcesInstalationManager extends FermatManager {
 
 
     /**
-     *
      * @param walletCategory
      * @param walletType
      * @param developer
@@ -35,7 +32,6 @@ public interface WalletResourcesInstalationManager extends FermatManager {
 
 
     /**
-     *
      * @param walletCategory
      * @param walletType
      * @param developer
@@ -48,7 +44,6 @@ public interface WalletResourcesInstalationManager extends FermatManager {
 
 
     /**
-     *
      * @param walletCategory
      * @param walletType
      * @param developer
@@ -61,7 +56,6 @@ public interface WalletResourcesInstalationManager extends FermatManager {
 
 
     /**
-     *
      * @param walletCategory
      * @param walletType
      * @param developer
@@ -74,11 +68,10 @@ public interface WalletResourcesInstalationManager extends FermatManager {
 
     //TODO: la wallet puede tener mas de un lenguage y skin, este metodo va a recibir el array de skins y language?
 
-    void uninstallCompleteWallet(String walletCategory, String walletType, String developer, String walletName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet, String walletPublicKey)throws WalletResourcesUnninstallException;
+    void uninstallCompleteWallet(String walletCategory, String walletType, String developer, String walletName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet, String walletPublicKey) throws WalletResourcesUnninstallException;
 
 
     /**
-     *
      * @param skinId
      * @param walletPublicKey
      * @throws WalletResourcesUnninstallException
@@ -87,7 +80,6 @@ public interface WalletResourcesInstalationManager extends FermatManager {
 
 
     /**
-     *
      * @param skinId
      * @param walletPublicKey
      * @param languageName
@@ -96,10 +88,9 @@ public interface WalletResourcesInstalationManager extends FermatManager {
     void uninstallLanguageForWallet(UUID skinId, String walletPublicKey, String languageName) throws WalletResourcesUnninstallException;
 
 
-
-
     /**
-     *  Get enum type of wallet instalation progress
+     * Get enum type of wallet instalation progress
+     *
      * @return
      */
     InstalationProgress getInstallationProgress();

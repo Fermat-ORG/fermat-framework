@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -17,9 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_wpd_api.all_definition.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -29,8 +29,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.enums.FactoryProjectType;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.CantChangeProjectStateException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
@@ -59,13 +59,13 @@ public class WalletFactoryMiddlewarePluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         WalletFactoryProjectManager {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM    )
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
     WalletFactoryProjectMiddlewareManager walletFactoryProjectMiddlewareManager;
@@ -73,6 +73,7 @@ public class WalletFactoryMiddlewarePluginRoot extends AbstractPlugin implements
     public WalletFactoryMiddlewarePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
+
     /**
      * WalletFactoryProjectMiddlewareManager Interfaces member variables.
      */
@@ -166,6 +167,7 @@ public class WalletFactoryMiddlewarePluginRoot extends AbstractPlugin implements
 
     /**
      * Creates and (almost) empty project and persists it.
+     *
      * @return
      * @throws CantCreateWalletFactoryProjectException
      */
@@ -176,6 +178,7 @@ public class WalletFactoryMiddlewarePluginRoot extends AbstractPlugin implements
 
     /**
      * Persists in disk and database all changes in the project
+     *
      * @param walletFactoryProject
      * @throws CantSaveWalletFactoryProyect
      */
@@ -217,7 +220,7 @@ public class WalletFactoryMiddlewarePluginRoot extends AbstractPlugin implements
         }
     }
 
-    private void test(WalletFactoryProjectState state){
+    private void test(WalletFactoryProjectState state) {
         try {
             WalletFactoryProject walletFactoryProject = createEmptyWalletFactoryProject();
             walletFactoryProject.setName("ProyectoPrueba");
@@ -266,7 +269,6 @@ public class WalletFactoryMiddlewarePluginRoot extends AbstractPlugin implements
             navigationStructure.setPublicKey(UUID.randomUUID().toString());
 
             walletFactoryProject.setNavigationStructure(navigationStructure);
-
 
 
             this.saveWalletFactoryProjectChanges(walletFactoryProject);

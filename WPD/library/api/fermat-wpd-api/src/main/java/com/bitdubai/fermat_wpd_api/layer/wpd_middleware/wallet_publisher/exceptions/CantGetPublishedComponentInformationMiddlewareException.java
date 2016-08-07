@@ -14,7 +14,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.exc
  * <p/>
  *
  * @author Create by Roberto Requena - (rart3001@gmail.com) on 14/08/15.
- *
  * @version 1.0
  * @since Java JDK 1.7
  */

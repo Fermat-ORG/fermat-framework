@@ -175,7 +175,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
 
             //Set up bankAccountType Spinner
             ArrayAdapter<String> bankAccountTypeAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_simple_spinner_item, bankAccountTypesFriendly);
-            bankAccountTypeAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_item);
+            bankAccountTypeAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_dropdown);
             bankAccountTypeAdapter.notifyDataSetChanged();
             bankAccountTypeSpinner.setAdapter(bankAccountTypeAdapter);
             bankAccountTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -194,7 +194,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
 
             //Set up currency Spinner
             ArrayAdapter<String> currencySpinnerAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_simple_spinner_item, fiatCurrenciesFriendly);
-            currencySpinnerAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_item);
+            currencySpinnerAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_dropdown);
             currencySpinnerAdapter.notifyDataSetChanged();
             bankAccountCurrencySpinner.setAdapter(currencySpinnerAdapter);
             bankAccountCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -220,7 +220,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
 
             //Set up currency Spinner
             ArrayAdapter<String> currencySpinnerAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_simple_spinner_item, fiatCurrenciesFriendly);
-            currencySpinnerAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_item);
+            currencySpinnerAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_dropdown);
             currencySpinnerAdapter.notifyDataSetChanged();
             cashCurrencySpinner.setAdapter(currencySpinnerAdapter);
             cashCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

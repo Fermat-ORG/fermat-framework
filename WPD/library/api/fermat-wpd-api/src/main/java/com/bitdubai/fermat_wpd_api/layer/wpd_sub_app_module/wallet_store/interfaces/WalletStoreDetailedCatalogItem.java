@@ -5,6 +5,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interf
 /**
  * Created by eze on 2015.07.17..
  */
-public interface WalletStoreDetailedCatalogItem extends DetailedCatalogItem{
+public interface WalletStoreDetailedCatalogItem extends DetailedCatalogItem {
 
 }

@@ -16,8 +16,8 @@ public final class CallerInformationGetter {
      */
     public final List<String> getCurrentThreadInformation() {
         List<String> list = new ArrayList<String>();
-        list.add(new StringBuilder().append("Thread name:").append(Thread.currentThread().getName()).toString());
-        list.add(new StringBuilder().append("Thread state:").append(Thread.currentThread().getState().toString()).toString());
+        list.add("Thread name:" + Thread.currentThread().getName());
+        list.add("Thread state:" + Thread.currentThread().getState().toString());
 
         return list;
     }
@@ -34,18 +34,18 @@ public final class CallerInformationGetter {
         StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
         StackTraceElement e = stacktrace[5];//maybe this number needs to be corrected
 
-        list.add(new StringBuilder().append("Class name:").append(e.getClassName()).toString());
+        list.add("Class name:" + e.getClassName());
         try {
             Class c = Class.forName(e.getClassName());
-            list.add(new StringBuilder().append("Package: ").append(c.getPackage().getName()).toString());
+            list.add("Package: " + c.getPackage().getName());
         } catch (ClassNotFoundException e1) {
             /**
              * If I couldn't get the class, then I won't show that info.
              */
         }
-        list.add(new StringBuilder().append("File name: ").append(e.getFileName()).toString());
+        list.add("File name: " + e.getFileName());
 
-        list.add(new StringBuilder().append("Method:").append(e.toString()).toString());
+        list.add("Method:" + e.toString());
         return list;
     }
 

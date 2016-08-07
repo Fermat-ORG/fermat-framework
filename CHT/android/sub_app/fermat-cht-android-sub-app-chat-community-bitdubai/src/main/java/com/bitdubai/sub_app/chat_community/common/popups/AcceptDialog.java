@@ -76,7 +76,7 @@ public class AcceptDialog
         negativeBtn.setOnClickListener(this);
 
         title.setText(activity.getResources().getString(R.string.cht_comm_pending));
-        description.setText(chatUserInformation.getAlias() + activity.getResources().getString(R.string.cht_comm_text_accept));
+        description.setText(chatUserInformation.getAlias() + " " + activity.getResources().getString(R.string.cht_comm_text_accept));
         userName.setText("");
 
     }
@@ -104,7 +104,7 @@ public class AcceptDialog
                             .acceptChatActor(chatUserInformation.getConnectionId());
                     getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED, Boolean.TRUE);
                     Toast.makeText(getContext(),
-                            chatUserInformation.getAlias() + activity.getResources().getString(R.string.cht_comm_text_accpet_toast),
+                            chatUserInformation.getAlias() + " " + activity.getResources().getString(R.string.cht_comm_text_accpet_toast),
                             Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();

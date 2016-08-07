@@ -41,7 +41,7 @@ public enum TransactionMetadataState implements FermatEnum {
             case "CIDW":
                 return TransactionMetadataState.CREDITED_IN_DESTINATION_WALLET;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("The code read was: ").append(code).toString(), "Missing branch in switch statement");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "The code read was: " + code, "Missing branch in switch statement");
         }
     }
 }

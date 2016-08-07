@@ -3,11 +3,12 @@ package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.b
 /**
  * Created by rodrigo on 7/24/15.
  */
+
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 24/07/15.
  *
  * @version 1.0
@@ -17,7 +18,7 @@ public class WalletStoreMiddlewareDatabaseConstants {
     /**
      * Database name definition
      */
-    public static final  String DATABASE_NAME = "Installations";
+    public static final String DATABASE_NAME = "Installations";
 
     /**
      * WalletStatus database table definition.

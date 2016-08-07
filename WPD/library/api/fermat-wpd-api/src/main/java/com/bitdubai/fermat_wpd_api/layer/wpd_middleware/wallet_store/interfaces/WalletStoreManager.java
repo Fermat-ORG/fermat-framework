@@ -12,9 +12,9 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.interfaces.WalletStoreManager</code>
  * indicates the functionality of a WalletStoreManager
  * <p/>
- *
+ * <p/>
  * This class will
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
  * Modified by Ezequiel Postan - (ezequiel.postan@gmail.com)
  *

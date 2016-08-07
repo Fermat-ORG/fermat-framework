@@ -3,7 +3,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection;
 import android.content.Context;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory.ChatFragmentFactory;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.notifications.ChatNotificationPainterBuilder;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.notifications.ChatNotificationPainter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
@@ -81,7 +81,8 @@ public class ChatFermatAppConnection
 
         switch (notificationID) {
             case ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE_NOTIFICATION:
-                return new ChatNotificationPainterBuilder("New Message.", "New message in Chat.", "", R.drawable.chat_subapp);
+                return new ChatNotificationPainter(getContext().getResources().getString(R.string.cht_notif_new_msg_title),
+                        getContext().getResources().getString(R.string.cht_notif_new_msg_content), "", R.drawable.chat_subapp);
             default:
                 return null;
         }

@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionSummary;
@@ -170,7 +171,8 @@ public class CryptoWalletBasicWalletDao {
                                                                   final TransactionType  transactionType,
                                                                   final int max,
                                                                   final int offset,
-                                                                        BlockchainNetworkType blockchainNetworkType) throws CantListTransactionsException {
+                                                                        BlockchainNetworkType blockchainNetworkType,
+                                                                        final Actors actorType) throws CantListTransactionsException {
         try {
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
@@ -191,39 +193,19 @@ public class CryptoWalletBasicWalletDao {
             // filter by actor from or to
 
             if (transactionType == TransactionType.CREDIT)
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+                if(actorType.equals(Actors.INTRA_USER))
+                 bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+                else
+                    bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
             else
                 bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
 
 
-            bitcoinWalletTable.loadToMemory();
+             bitcoinWalletTable.loadToMemory();
 
-            if (createTransactionList(bitcoinWalletTable.getRecords()).size()== 0 && transactionType == TransactionType.CREDIT){
-                bitcoinWalletTable.clearAllFilters();
-                bitcoinWalletTable.addFilterOrder(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
-
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
-
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
-                bitcoinWalletTable.loadToMemory();
-                return createTransactionList(bitcoinWalletTable.getRecords());
-            }
-            if (createTransactionList(bitcoinWalletTable.getRecords()).size()== 0 && transactionType == TransactionType.DEBIT){
-                bitcoinWalletTable.clearAllFilters();
-                bitcoinWalletTable.addFilterOrder(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
-
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
-
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
-                bitcoinWalletTable.loadToMemory();
-                return createTransactionList(bitcoinWalletTable.getRecords());
-            }
 
             return createTransactionList(bitcoinWalletTable.getRecords());
+
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, cantLoadTableToMemory, "Error loading wallet table ", "");
@@ -277,7 +259,7 @@ public class CryptoWalletBasicWalletDao {
 
             bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
 
-            if ( transactionType == TransactionType.CREDIT){
+           // if ( transactionType == TransactionType.CREDIT){
                // bitcoinWalletTable.clearAllFilters();
 
                 bitcoinWalletTable.addFilterOrder(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
@@ -288,8 +270,8 @@ public class CryptoWalletBasicWalletDao {
 
 
                 bitcoinWalletTable.loadToMemory();
-                return createTransactionList(bitcoinWalletTable.getRecords());
-            }
+
+          /*  }
             if ( transactionType == TransactionType.DEBIT){
                // bitcoinWalletTable.clearAllFilters();
                 bitcoinWalletTable.addFilterOrder(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
@@ -300,8 +282,8 @@ public class CryptoWalletBasicWalletDao {
 
 
                 bitcoinWalletTable.loadToMemory();
-                return createTransactionList(bitcoinWalletTable.getRecords());
-            }
+
+            }*/
             return createTransactionList(bitcoinWalletTable.getRecords());
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
@@ -672,7 +654,7 @@ public class CryptoWalletBasicWalletDao {
 
         for(DatabaseTableRecord record : records)
         {
-            CryptoWalletTransaction transaction = constructBitcoinWalletTransactionFromRecord(record);
+           // CryptoWalletTransaction transaction = constructBitcoinWalletTransactionFromRecord(record);
             transactions.add(constructBitcoinWalletTransactionFromRecord(record));
 
           /*  if(transaction.getTransactionHash().equals("fab23065-5b3a-4ec1-8a51-6c9bae62bb36"))

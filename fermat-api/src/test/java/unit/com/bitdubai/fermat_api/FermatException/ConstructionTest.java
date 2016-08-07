@@ -22,7 +22,7 @@ public class ConstructionTest {
     public void setUp() {
         testCause = null;
         testMessage = "TEST MESSAGE";
-        testContext = new StringBuilder().append("A = 1").append(FermatException.CONTEXT_CONTENT_SEPARATOR).append("B = 2").toString();
+        testContext = "A = 1" + FermatException.CONTEXT_CONTENT_SEPARATOR + "B = 2";
         testPossibleReason = "FERMAT IS WAY TOO COMPLEX FOR THAT";
     }
 
@@ -60,7 +60,7 @@ public class ConstructionTest {
 
     @Test
     public void SimpleConstruction_WithACause_ReturnsCause() {
-        testCause = new FermatException(new StringBuilder().append(testMessage).append(" Cause").toString(), null, "WE NEED TO TEST THE CHAIN OF CAUSES", "WE NEED TO TEST THE CHAIN OF CAUSES");
+        testCause = new FermatException(testMessage + " Cause", null, "WE NEED TO TEST THE CHAIN OF CAUSES", "WE NEED TO TEST THE CHAIN OF CAUSES");
         testException = new FermatException(testMessage, testCause, testContext, testPossibleReason);
         assertThat(testException.getCause()).isNotNull();
         assertThat(testException.getCause().toString()).isNotEmpty();

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by mati on 2016.02.19..
  */
-public class FermatNetworkSettings<S extends DesktopSessionReferenceApp,RE extends ResourceProviderManager> extends FermatPreferenceFragment<S,RE> {
+public class FermatNetworkSettings<S extends DesktopSessionReferenceApp, RE extends ResourceProviderManager> extends FermatPreferenceFragment<S, RE> {
 
 
     private String ip = "";
@@ -35,8 +35,8 @@ public class FermatNetworkSettings<S extends DesktopSessionReferenceApp,RE exten
 
     @Override
     protected List<PreferenceSettingsItem> setSettingsItems() {
-        PreferenceSettingsEditText preferenceSettingsEditText = new PreferenceSettingsEditText(1,"IP","enter new IP");
-        PreferenceSettingsEditText preferenceSettingsEditText2 = new PreferenceSettingsEditText(2,"Port","enter new Port");
+        PreferenceSettingsEditText preferenceSettingsEditText = new PreferenceSettingsEditText(1, "IP", "enter new IP");
+        PreferenceSettingsEditText preferenceSettingsEditText2 = new PreferenceSettingsEditText(2, "Port", "enter new Port");
         List<PreferenceSettingsItem> list = new ArrayList<>();
         list.add(preferenceSettingsEditText);
         list.add(preferenceSettingsEditText2);
@@ -72,7 +72,7 @@ public class FermatNetworkSettings<S extends DesktopSessionReferenceApp,RE exten
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(getActivity(),"Settings has saved",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Settings has saved", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -85,11 +85,11 @@ public class FermatNetworkSettings<S extends DesktopSessionReferenceApp,RE exten
         return 0;
     }
 
-    public String[] getIpPort(){
+    public String[] getIpPort() {
 
-        String ip = ((SettingEditTextViewHolder)findItemById(0)).getSettingsEditText().getText().toString();
-        String port = ((SettingEditTextViewHolder)findItemById(1)).getSettingsEditText().getText().toString();
+        String ip = ((SettingEditTextViewHolder) findItemById(0)).getSettingsEditText().getText().toString();
+        String port = ((SettingEditTextViewHolder) findItemById(1)).getSettingsEditText().getText().toString();
 
-        return new String[]{ip,port};
+        return new String[]{ip, port};
     }
 }

@@ -1,21 +1,21 @@
 package com.bitdubai.fermat_wpd_api.all_definition.listeners;
 
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 
 /**
  * Created by ciencias on 25.01.15.
  */
-public class WalletWentOnlineEventListener  implements FermatEventListener {
+public class WalletWentOnlineEventListener implements FermatEventListener {
 
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
 
-    public WalletWentOnlineEventListener (EventType eventType, FermatEventMonitor fermatEventMonitor){
+    public WalletWentOnlineEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }
@@ -38,12 +38,9 @@ public class WalletWentOnlineEventListener  implements FermatEventListener {
     @Override
     public void raiseEvent(FermatEvent fermatEvent) {
 
-        try
-        {
+        try {
             this.fermatEventHandler.handleEvent(fermatEvent);
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             fermatEventMonitor.handleEventException(exception, fermatEvent);
         }
 
