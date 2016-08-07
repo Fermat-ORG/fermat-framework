@@ -1,5 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
+import android.widget.Toast;
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -84,21 +86,24 @@ final public class NegotiationWrapper {
             if (clauses.get(CUSTOMER_PAYMENT_METHOD) == null) {
                 final String currencyToReceive = clauses.get(BROKER_CURRENCY).getValue();
                 final List<MoneyType> paymentMethods = moduleManager.getPaymentMethods(currencyToReceive, appSession.getAppPublicKey());
-                final MoneyType paymentMethod = paymentMethods.get(0);
+                if(paymentMethods!=null && paymentMethods.size() > 0) {
+                    final MoneyType paymentMethod = paymentMethods.get(0);
 
-                addClause(CUSTOMER_PAYMENT_METHOD, paymentMethod.getCode());
+                    addClause(CUSTOMER_PAYMENT_METHOD, paymentMethod.getCode());
 
-                if (paymentMethod == BANK) {
-                    List<String> bankAccounts = moduleManager.getAccounts(currencyToReceive, appSession.getAppPublicKey());
-                    addClause(BROKER_BANK_ACCOUNT, bankAccounts.isEmpty() ? "" : bankAccounts.get(0));
+                    if (paymentMethod == BANK) {
+                        List<String> bankAccounts = moduleManager.getAccounts(currencyToReceive, appSession.getAppPublicKey());
+                        addClause(BROKER_BANK_ACCOUNT, bankAccounts.isEmpty() ? "" : bankAccounts.get(0));
 
-                } else if (paymentMethod == CASH_ON_HAND || paymentMethod == CASH_DELIVERY) {
-                    ArrayList<NegotiationLocations> locations = Lists.newArrayList(moduleManager.getAllLocations(SALE));
-                    addClause(BROKER_PLACE_TO_DELIVER, locations.isEmpty() ? "" : locations.get(0).getLocation());
-                } else {
-                    addClause(BROKER_CRYPTO_ADDRESS, "");
-                    changeClauseValue(clauses.get(BROKER_CRYPTO_ADDRESS), "");
+                    } else if (paymentMethod == CASH_ON_HAND || paymentMethod == CASH_DELIVERY) {
+                        ArrayList<NegotiationLocations> locations = Lists.newArrayList(moduleManager.getAllLocations(SALE));
+                        addClause(BROKER_PLACE_TO_DELIVER, locations.isEmpty() ? "" : locations.get(0).getLocation());
+                    } else {
+                        addClause(BROKER_CRYPTO_ADDRESS, "");
+                        changeClauseValue(clauses.get(BROKER_CRYPTO_ADDRESS), "");
+                    }
                 }
+
             }
 
             String youTimeZoneValue = TimeZone.getDefault().getID();

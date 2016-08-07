@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -11,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,7 +40,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -75,6 +72,7 @@ import static android.widget.Toast.makeText;
  * This Fragment let you edit a Broker Identity
  * <p/>
  * Created by Nelson Ramirez (nelsonalfo@gmail.com)
+ * Editd for the new desing, for Jinmy Bohorquez, 27/07/2016
  */
 public class EditCryptoBrokerIdentityFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerIdentityModuleManager>, ResourceProviderManager>
@@ -94,13 +92,14 @@ public class EditCryptoBrokerIdentityFragment
     private boolean actualizable;
     Location location;
     private Uri imageToUploadUri;
-    IdentityBrokerPreferenceSettings settings;
+    //    IdentityBrokerPreferenceSettings settings;
     boolean isGpsDialogEnable = true;
     private ImageView mBrokerImage;
     private CryptoBrokerIdentityInformation identityInfo;
     List<CryptoBrokerIdentityInformation> brokerIdentities = new ArrayList<>();
     private PresentationDialog presentationDialog;
-    private boolean isPresentationDialogEnabled;
+    IdentityBrokerPreferenceSettings subappSettings;
+
     // Managers
 
     private ImageView sw;
@@ -135,12 +134,12 @@ public class EditCryptoBrokerIdentityFragment
         try {
             brokerIdentities = appSession.getModuleManager().listIdentities(0, 0);
 
-            identityInfo = (brokerIdentities.size() > 0)?brokerIdentities.get(0):null;
+            identityInfo = (brokerIdentities.size() > 0) ? brokerIdentities.get(0) : null;
 
         } catch (CantListCryptoBrokersException e) {
             e.printStackTrace();
         }
-        appSession.setData(FragmentsCommons.VISIBILITY, (identityInfo!= null) ?
+        appSession.setData(FragmentsCommons.VISIBILITY, (identityInfo != null) ?
                 identityInfo.isPublished() : false);
 
         //If we landed here from CryptoBrokerImageCropperFragment, save the cropped Image.
@@ -154,7 +153,7 @@ public class EditCryptoBrokerIdentityFragment
             cryptoBrokerBitmap = (Bitmap) appSession.getData(FragmentsCommons.ORIGINAL_IMAGE);
             appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
 
-            if (appSession.getData(FragmentsCommons.IMAGE_BYTE_ARRAY) != null){
+            if (appSession.getData(FragmentsCommons.IMAGE_BYTE_ARRAY) != null) {
                 identityImgByteArray = (byte[]) appSession.getData(FragmentsCommons.IMAGE_BYTE_ARRAY);
                 appSession.removeData(FragmentsCommons.IMAGE_BYTE_ARRAY);
             }
@@ -177,6 +176,7 @@ public class EditCryptoBrokerIdentityFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootLayout = inflater.inflate(R.layout.fragment_create_crypto_broker_identity_v2, container, false);
         initViews(rootLayout);
+        getToolbar().setVisibility(View.VISIBLE);
         return rootLayout;
     }
 
@@ -195,47 +195,50 @@ public class EditCryptoBrokerIdentityFragment
         /*final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
         final ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);*/
 
-        presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
-                .setBannerRes(R.drawable.banner_identity)
-                .setBody(R.string.cbp_broker_identity_welcome_body)
-                .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
-                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                .setVIewColor(R.color.background_toolbar)
-                .setIsCheckEnabled(false)
-                .build();
+//        presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+//                .setBannerRes(R.drawable.banner_identity)
+//                .setBody(R.string.cbp_broker_identity_welcome_body)
+//                .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
+//                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+//                .setVIewColor(R.color.background_toolbar)
+//                .setIsCheckEnabled(false)
+//                .build();
+//
+//        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                checkGPSOn();
+//            }
+//        });
 
-        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                checkGPSOn();
-            }
-        });
 
-        IdentityBrokerPreferenceSettings subappSettings;
         try {
-            subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+//            if ((appSession.getData(FragmentsCommons.SETTING_BROKER) != null)) {
+//                subappSettings = (IdentityBrokerPreferenceSettings) appSession.getData(FragmentsCommons.SETTING_BROKER);
+//            } else {
+                subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+//            }
         } catch (Exception e) {
             subappSettings = null;
         }
 
-        if (subappSettings == null) {
-            subappSettings = new IdentityBrokerPreferenceSettings();
-            subappSettings.setIsPresentationHelpEnabled(true);
-            try {
-                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), subappSettings);
-            } catch (Exception ignore) {
-
-            }
-        }
 
         boolean showDialog;
         try {
-            showDialog = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
-            if (showDialog) {
-                presentationDialog.show();
+            if (subappSettings == null) {
+                subappSettings = new IdentityBrokerPreferenceSettings();
+                subappSettings.setIsPresentationHelpEnabled(true);
+//                appSession.setData(FragmentsCommons.SETTING_BROKER, subappSettings);
             }
-        } catch (FermatException e) {
-            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+            showDialog = subappSettings.isHomeTutorialDialogEnabled();
+            if (showDialog) {
+                homeTutorialDialog();
+            }
+            appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), subappSettings);
+
+        } catch (Exception e) {
+            makeText(getActivity(), R.string.cbi_system_error, Toast.LENGTH_SHORT).show();
         }
 
         //Check if GPS is on and coordinate are fine
@@ -246,11 +249,12 @@ public class EditCryptoBrokerIdentityFragment
         }
 
         try {
-            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
-            isGpsDialogEnable = settings.isGpsDialogEnabled();
+//            subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+//            subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            isGpsDialogEnable = subappSettings.isGpsDialogEnabled();
         } catch (Exception e) {
-            settings = new IdentityBrokerPreferenceSettings();
-            settings.setGpsDialogEnabled(true);
+            subappSettings = new IdentityBrokerPreferenceSettings();
+            subappSettings.setGpsDialogEnabled(true);
             isGpsDialogEnable = true;
         }
 
@@ -276,7 +280,7 @@ public class EditCryptoBrokerIdentityFragment
         mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+              //  getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 if (actualizable) {
                     actualizable = false;
                 }
@@ -302,30 +306,14 @@ public class EditCryptoBrokerIdentityFragment
             @Override
             public void onClick(View v) {
                 appSession.setData(FragmentsCommons.IDENTITY_INFO, identityInfo);
-                if( identityInfo != null){
+                if (identityInfo != null) {
                     actualizable = false;
                     editIdentityInfoInDevice();
-                }else{
+                } else {
                     createNewIdentityInDevice();
                 }
             }
         });
-
-        /*camara.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchTakePictureIntent();
-            }
-        });
-
-        galeria.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadImageFromGallery();
-            }
-        });*/
-
-       // identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
 
         //Coming from List activity
         if (identityInfo != null) {
@@ -343,7 +331,7 @@ public class EditCryptoBrokerIdentityFragment
                 BitmapDrawable bmd = new BitmapDrawable(getResources(), new ByteArrayInputStream(profileImage));
                 mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bmd.getBitmap()));
             }
-        }else{
+        } else {
             visibilityLayout.setVisibility(View.GONE);
         }
 
@@ -363,7 +351,7 @@ public class EditCryptoBrokerIdentityFragment
         mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+               // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 if (actualizable) {
                     actualizable = false;
                 }
@@ -372,24 +360,20 @@ public class EditCryptoBrokerIdentityFragment
 
         textCount.setText(String.valueOf(maxLenghtTextCount - mBrokerName.length()));
 
-        /*if (!wantPublishIdentity){
-            sw.setImageResource(R.drawable.switch_off);
-        } else {
-            sw.setImageResource(R.drawable.switch_on);
-        }*/
-        if ((Boolean)appSession.getData(FragmentsCommons.TEMP_VISIBILITY) != null){
+
+        if ((Boolean) appSession.getData(FragmentsCommons.TEMP_VISIBILITY) != null) {
             appSession.setData(FragmentsCommons.VISIBILITY, appSession.getData(FragmentsCommons.TEMP_VISIBILITY));
-            if ((Boolean) appSession.getData(FragmentsCommons.TEMP_VISIBILITY) == true){
+            if ((Boolean) appSession.getData(FragmentsCommons.TEMP_VISIBILITY) == true) {
                 wantPublishIdentity = true;
-            }else{
+            } else {
                 wantPublishIdentity = false;
             }
 
         }
 
-        if ((Boolean) appSession.getData(FragmentsCommons.VISIBILITY)){
+        if ((Boolean) appSession.getData(FragmentsCommons.VISIBILITY)) {
             sw.setImageResource(R.drawable.switch_on);
-        }else{
+        } else {
             sw.setImageResource(R.drawable.switch_off);
         }
 
@@ -401,20 +385,8 @@ public class EditCryptoBrokerIdentityFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == FragmentsCommons.HELP_OPTION_MENU_ID) {
-            new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
-                    .setBannerRes(R.drawable.banner_identity)
-                    .setBody(R.string.cbp_broker_identity_welcome_body)
-                    .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
-                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                    .setVIewColor(R.color.background_toolbar)
-                    .setIsCheckEnabled(false)
-                    .build().show();
-
-
-
+            homeTutorialDialog();
             return true;
-
-
         }
         if (item.getItemId() == FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID) {
             appSession.setData(FragmentsCommons.BROKER_NAME, mBrokerName.getText().toString());
@@ -451,9 +423,6 @@ public class EditCryptoBrokerIdentityFragment
                                         REQUEST_IMAGE_CAPTURE);
                             }
                         }
-//                        getActivity().getContentResolver().notifyChange(selectedImage, null);
-//                        Bundle extras = data.getExtras();
-//                        cryptoBrokerBitmap = (Bitmap) extras.get("data");
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
                         Bitmap reducedSizeBitmap = getBitmap(imageToUploadUri.getPath());
                         if (reducedSizeBitmap != null) {
@@ -470,7 +439,7 @@ public class EditCryptoBrokerIdentityFragment
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        makeText(getActivity().getApplicationContext(), R.string.cbi_error_image, Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -482,7 +451,7 @@ public class EditCryptoBrokerIdentityFragment
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER, appSession.getAppPublicKey());
 
         }
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -552,8 +521,10 @@ public class EditCryptoBrokerIdentityFragment
 
         //progressBar.setVisibility(View.GONE);
 
-        makeText(getActivity(), "Crypto Broker Identity Updated.", Toast.LENGTH_LONG).show();
-        //changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY, appSession.getAppPublicKey());
+        if (identityInfo != null)
+            makeText(getActivity(), R.string.cbi_identity_updated, Toast.LENGTH_LONG).show();
+        else
+            makeText(getActivity(), R.string.cbi_identity_created, Toast.LENGTH_LONG).show();
         getActivity().onBackPressed();
     }
 
@@ -566,7 +537,7 @@ public class EditCryptoBrokerIdentityFragment
 
         //progressBar.setVisibility(View.GONE);
 
-        makeText(getActivity().getApplicationContext(), "Error trying to edit the identity.", Toast.LENGTH_SHORT).show();
+        makeText(getActivity().getApplicationContext(), R.string.cbi_error_create, Toast.LENGTH_SHORT).show();
         appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
                 UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
     }
@@ -579,10 +550,10 @@ public class EditCryptoBrokerIdentityFragment
         final byte[] imgInBytes = (cryptoBrokerBitmap != null) ? identityImgByteArray : profileImage;
 
         if (brokerNameText.trim().isEmpty()) {
-            makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
+            makeText(getActivity(), R.string.cbi_enter_name_alias, Toast.LENGTH_LONG).show();
 
         } else if (imgInBytes == null) {
-            makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            makeText(getActivity(), R.string.cbi_enter_image, Toast.LENGTH_LONG).show();
 
         } else {
             final int accuracy = getAccuracyData();
@@ -598,11 +569,12 @@ public class EditCryptoBrokerIdentityFragment
             executor = fermatWorker.execute();
         }
     }
+
     private void createNewIdentityInDevice() {
         final String brokerAlias = mBrokerName.getText().toString();
 
         if (brokerAlias.trim().isEmpty()) {
-            makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
+            makeText(getActivity(), R.string.cbi_enter_name_alias, Toast.LENGTH_LONG).show();
 
         } else {
             final int accuracy = getAccuracyData();
@@ -613,7 +585,6 @@ public class EditCryptoBrokerIdentityFragment
 
             //progressBar.setVisibility(View.VISIBLE);
             executor = fermatWorker.execute();
-            //Toast.makeText(getActivity(), "Crypto Broker Identity Created", Toast.LENGTH_LONG).show();
 
         }
     }
@@ -623,7 +594,7 @@ public class EditCryptoBrokerIdentityFragment
     }
 
     private void dispatchTakePictureIntent() {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         // Check permission for CAMERA
         if (Build.VERSION.SDK_INT >= 23) {
             if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
@@ -645,7 +616,7 @@ public class EditCryptoBrokerIdentityFragment
                     imageToUploadUri = Uri.fromFile(f);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 } else {
-                    makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                    makeText(getActivity(), R.string.cbi_error, Toast.LENGTH_LONG).show();
                 }
             }
         } else {
@@ -658,15 +629,10 @@ public class EditCryptoBrokerIdentityFragment
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
-
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//        }
     }
 
     private void loadImageFromGallery() {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
@@ -710,25 +676,25 @@ public class EditCryptoBrokerIdentityFragment
                 if (Build.VERSION.SDK_INT < 23) {
                     String provider = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if (!provider.contains("gps")) { //if gps is disabled
-                        makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
-                        Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        makeText(activity, R.string.cbi_turnon_gps, Toast.LENGTH_SHORT).show();
+                        Intent gpsOptionsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
 
                 } else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if (!provider.contains("gps")) { //if gps is disabled
-                        makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
-                        Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        makeText(getContext(), R.string.cbi_turnon_gps, Toast.LENGTH_SHORT).show();
+                        Intent gpsOptionsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
                 }
 
             } catch (Exception ex) {
                 if (Build.VERSION.SDK_INT < 23) {
-                    makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                    makeText(activity, R.string.cbi_turnon_gps, Toast.LENGTH_SHORT).show();
                 } else {
-                    makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                    makeText(getContext(), R.string.cbi_turnon_gps, Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -766,25 +732,48 @@ public class EditCryptoBrokerIdentityFragment
     }
 
     public void turnOnGPSDialog() {
-        /*isPresentationDialogEnabled =  (Boolean) appSession.getData("presentation_screen_enabled");
-        if (isPresentationDialogEnabled) {*/
 
-            try {
-                PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
-                        .setBody(R.string.cbp_broker_identity_gps)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                        .setIconRes(R.drawable.bi_icon)
-                        .setBannerRes(R.drawable.banner_identity)
-                        .setVIewColor(R.color.background_toolbar)
-                        .build();
-                pd.show();
+        try {
+            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTitle(R.string.advertisement_text)
+                    .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle_gps)
+                    .setBody(R.string.cbp_broker_identity_gps)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIconRes(R.drawable.bi_icon)
+//                    .setTextNameLeft(R.string.dialog_button_close)
+                    .setBannerRes(R.drawable.banner_identity)
+                    .setVIewColor(R.color.background_toolbar)
+                    .setCheckButtonAndTextVisible(0)
+                    .build();
+            pd.show();
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    //}
+    }
+
+    public void homeTutorialDialog() {
+        presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+                .setBannerRes(R.drawable.banner_identity)
+                .setBody(R.string.cbp_broker_identity_welcome_body)
+                .setTitle(R.string.dialog_title)
+                .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setVIewColor(R.color.background_toolbar)
+                .setIconRes(R.drawable.bi_icon)
+//                .setTextNameLeft(R.string.dialog_button_close)
+                .setIsCheckEnabled(false)
+                .build();
+        presentationDialog.show();
+
+        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                checkGPSOn();
+            }
+        });
+    }
+
     @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();

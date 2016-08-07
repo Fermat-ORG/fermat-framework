@@ -152,20 +152,20 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
         layout.findViewById(R.id.cbw_create_new_location_button).setOnClickListener(this);
 
 
-        try {
+//        try {
             walletManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            lastActivity = (String) appSession.getData(FragmentsCommons.LAST_ACTIVITY);
-            setChangeBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS);
-            if (lastActivity.equals(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode())) {
-                setChangeBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS);
-                isFromNegDetail = true;
-            }
-            appSession.setData(FragmentsCommons.LAST_ACTIVITY, "");
-        } catch (Exception e) {
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
-        }
+//            lastActivity = (String) appSession.getData(FragmentsCommons.LAST_ACTIVITY);
+//            setChangeBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS);
+//            if (lastActivity.equals(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode())) {
+//                setChangeBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS);
+//                isFromNegDetail = true;
+//            }
+//            appSession.setData(FragmentsCommons.LAST_ACTIVITY, "");
+//        } catch (Exception e) {
+//            if (errorManager != null)
+//                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+//        }
 
         configureToolbar();
 
@@ -247,7 +247,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
                 }
             */
         } else {
-            Toast.makeText(getActivity(), "Need to set the fields", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.need_set_fields), Toast.LENGTH_LONG).show();
         }
     }
 

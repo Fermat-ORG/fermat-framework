@@ -97,4 +97,52 @@
 
     <color name="cht_color_dialog">#47BF73</color>
 
+    <color name="cht_light_hint">#bdbdbd</color>
+    <color name="cht_light_tint">#acaaaa</color>
+
+    <color name="cht_dialog_title">#00a99d</color>
+    <color name="cht_dialog_text">#1d1d26</color>
+    <color name="cht_dialog_search">#000000</color>
+    <color name="cht_dont_show">#7c7c7c</color>
+    <color name="cht_button_background">#5a595b</color>
+    <color name="cht_button_text">#ffffff</color>
+
+    <color name="cht_chat_text">#666666</color>
+    <color name="cht_bar_title">#000000</color>
+    <color name="cht_bar_message">#757575</color>
+    <color name="cht_bar_date">#000000</color>
+    <color name="cht_bar_circle_text">#ffffff</color>
+
+    <color name="cht_no_chat">#D1D3D4</color>
+
+    <color name="cht_dialog_yes_no">#00a99d</color>
+    <color name="cht_dialog_yes_no_title">#00a99d</color>
+
+    <color name="cht_profile_background">#000000</color>
+    <color name="cht_profile_text">#ffffff</color>
+    <color name="cht_profile_image_background">#f9f9f9</color>
+
+    <color name="cht_picker_select_text">#fff</color>
+    <color name="cht_picker_select_background">#47BF73</color>
+
+    <color name="cht_broadcaster_type_title">#000</color>
+    <color name="cht_broadcaster_text">#808080</color>
+    <color name="cht_broadcaster_separator">#C0C0C0</color>
+    <color name="cht_broadcaster_hint">#000</color>
+    <color name="cht_broadcaster_button_background">#47BF73</color>
+    <color name="cht_broadcaster_simple_name">#000</color>
+    <color name="cht_broadcaster_simple_name_hint">#808080</color>
+    <color name="cht_broadcaster_list_recipients_text">#6d6d6d</color>
+
+    <color name="cht_contact_list_text">#000000</color>
+
+    <color name="cht_no_contacts">#D1D3D4</color>
+
+    <color name="list_view_me">#dcedc8</color>
+    <color name="list_view_you">#cfd8dc</color>
+
+    <color name="cht_send_error_hint">#bdbdbd</color>
+    <color name="cht_send_error_background_tint">#acaaaa</color>
+    <color name="cht_send_error_text">#000000</color>
+    <color name="cht_send_error_button_background">#3d3d3d</color>
 </resources>

@@ -1,91 +1,105 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_activity">
+    >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="100">
-
-        <ImageView
+        <com.bitdubai.fermat_android_api.ui.Views.SquareImageView
             android:id="@+id/contact_image"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="80dp"
-            android:layout_gravity="center"
-            android:gravity="center_vertical"
-            android:scaleType="fitXY" />
-
-        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="@integer/contact_detail_info_percent"
-            android:orientation="vertical"
-            android:layout_gravity="center"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/uuid"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:paddingRight="@dimen/padding"
-                android:layout_gravity="center"
-                android:gravity="center_vertical"
-                android:textColor="@color/color_white"/>
+        <com.bitdubai.fermat_android_api.ui.Views.SquareImageView
+            android:id="@+id/cht_profile_gradient_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cht_gradient_status_2"
+            />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/contact_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/padding"
-                android:paddingRight="@dimen/padding"
-                android:paddingTop="@dimen/padding"
-                android:orientation="vertical"
-                android:textColor="@color/black"
-                style="@style/contactNameTitle"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:clickable="false"
-                android:longClickable="false"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"/>
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center">
-
-                <LinearLayout
-                    android:id="@+id/contact_details_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/padding"
-                    android:textColor="@color/black"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
-                </LinearLayout>
-
-            </ScrollView>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <!-- This view will be displayed when the views above are hidden. That happens when in two-pane
-         layout mode and no contact is currently selected and therefore the this fragment will
-         simply show a text message instead of contact details. -->
-    <TextView android:id="@id/android:empty"
-        android:gravity="center"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/no_contact_selected"
-        android:fontFamily="sans-serif-light"
-        android:visibility="gone"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:layout_height="40dp"
+        android:layout_alignBottom="@+id/contact_image"
+        >
 
-</FrameLayout>
+
+
+        <TextView
+            android:id="@+id/contact_name_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contact Name"
+            android:layout_centerVertical="true"
+            android:textColor="@color/color_white"
+            android:paddingLeft="10dp"
+            android:textSize="25dp"/>
+
+    </RelativeLayout>
+
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_below="@+id/contact_image"
+       >
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:orientation="vertical"
+           android:weightSum="100"
+           >
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:paddingTop="10dp"
+               android:paddingBottom="10dp"
+               android:text="@string/status"
+               android:gravity="center_vertical"
+               android:textSize="20sp"
+               android:textColor="#075e55"
+               android:paddingLeft="10dp"
+               android:paddingStart="10dp"
+               />
+
+           <View
+               android:layout_width="match_parent"
+               android:layout_height="0.1dp"
+               android:background="#e7e7e7"
+               />
+
+
+           <Space
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_weight="20"
+               />
+
+           <TextView
+               android:id="@+id/contact_status_input"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:text="@string/profile_status"
+               android:textColor="@color/color_black"
+               android:paddingLeft="10dp"
+               android:paddingStart="10dp"
+               android:textSize="18sp"
+               android:paddingBottom="5dp"
+               />
+
+           <TextView
+               android:id="@+id/contact_status_date"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:text="15 de Junio"
+               android:textColor="@color/color_black_light"
+               android:paddingLeft="10dp"
+               android:paddingStart="10dp"
+               android:textSize="14sp"
+               android:paddingBottom="10dp"
+               />
+
+       </LinearLayout>
+   </RelativeLayout>
+</RelativeLayout>

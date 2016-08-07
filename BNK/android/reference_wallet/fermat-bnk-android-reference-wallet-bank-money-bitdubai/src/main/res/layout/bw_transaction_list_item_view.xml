@@ -31,7 +31,6 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="8dp"
-        android:contentDescription="transaction image"
         android:visibility="visible"
         android:src="@drawable/bw_ic_account_deposit"/>
 

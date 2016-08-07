@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/transacion_form"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background_white_gradient">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -446,7 +447,9 @@
         android:paddingBottom="10dip"
         android:paddingLeft="7dip"
         android:paddingRight="7dip"
-        android:paddingTop="3dip">
+        android:paddingTop="3dip"
+        android:background="#FFF"
+        >
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
             android:id="@+id/send_button"

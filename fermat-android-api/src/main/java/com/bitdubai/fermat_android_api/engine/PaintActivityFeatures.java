@@ -28,6 +28,22 @@ public interface PaintActivityFeatures {
     void setTabCustomImageView(int position, View view);
 
     /**
+     * Open NavigationDrawer if exist
+     */
+    void openDrawer();
+
+    /**
+     * Close NavigationDrawer if exist
+     */
+    void closeDrawer();
+
+    /**
+     * If visible close and if invisble open
+     */
+    void openOrCLoseDrawer();
+
+
+    /**
      * NotificationId and sourcePlugin needed, se necesitan esos dos campos en el fermatBundle para cancelar la notificacion
      *
      * @param fermatBundle

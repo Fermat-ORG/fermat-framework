@@ -19,6 +19,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalle
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +48,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
 
     //Managers
     FermatWallet fermatWalletManager;
-    FermatWalletSettings fermatWalletSettings;
+
     ErrorManager errorManager;
     String fiatCurrency;
     private TextView tvLabelRate;
@@ -71,15 +73,15 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
 
             fermatWalletManager = fermatSession.getModuleManager();
             errorManager = fermatSession.getErrorManager();
-            fermatWalletSettings = fermatWalletManager.loadAndGetSettings(fermatSession.getAppPublicKey());
+
             page = getArguments().getInt("someInt", 0);
             providerName = getArguments().getString("providerName");
             providerId = UUID.fromString(getArguments().getString("providerId"));
 
-            if (fermatWalletSettings.getFiatCurrency() == null) {
-                fermatWalletSettings.setFiatCurrency(FiatCurrency.US_DOLLAR.getCode());
-                fiatCurrency = fermatWalletSettings.getFiatCurrency();
-            }else{ fiatCurrency = fermatWalletSettings.getFiatCurrency();}
+            if(fermatSession.getData(SessionConstant.FIAT_CURRENCY) != null)
+                fiatCurrency = (String) fermatSession.getData(SessionConstant.FIAT_CURRENCY);
+            else
+                fiatCurrency = FiatCurrency.US_DOLLAR.getCode();
 
             getAndShowMarketExchangeRateData();
         }catch (Exception e){
@@ -97,10 +99,9 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
          //WheelView wheel = (WheelView) view.findViewById(R.id.wheel_picker);
 
          List<String> lstCurrencies = new ArrayList<>();
-         lstCurrencies.add(FiatCurrency.US_DOLLAR.getCode());
-         lstCurrencies.add(FiatCurrency.EURO.getCode());
-         lstCurrencies.add(FiatCurrency.ARGENTINE_PESO.getCode());
          lstCurrencies.add(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
+         lstCurrencies.add(FiatCurrency.US_DOLLAR.getCode());
+         lstCurrencies.add(CryptoCurrency.BITCOIN.getCode());
 
          ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                  getActivity(),
@@ -116,13 +117,15 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
 
                  item.setTextColor(Color.parseColor("#2481BA"));
                  item.setTextSize(16);
-                 try {
-                     fermatWalletSettings.setFiatCurrency(FiatCurrency.getByCode((String) item.getText()).getCode());
 
-                     getAndShowMarketExchangeRateData();
+                 fiatCurrency = String.valueOf(item.getText());
+                 try {
+                     fermatSession.setData(SessionConstant.FIAT_CURRENCY,FiatCurrency.getByCode(fiatCurrency).getCode());
                  } catch (InvalidParameterException e) {
                      e.printStackTrace();
                  }
+                 getAndShowMarketExchangeRateData();
+
              }
          });
 
@@ -145,7 +148,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
             protected Object doInBackground() {
                 ExchangeRate rate = null;
                 try{
-                    rate = fermatWalletManager.getCurrencyExchange(providerId,FiatCurrency.getByCode(fermatWalletSettings.getFiatCurrency()));
+                    rate = fermatWalletManager.getCurrencyExchange(providerId,FiatCurrency.getByCode(fiatCurrency));
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -179,7 +182,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
             @Override
             public void onErrorOccurred(Exception ex) {
 // progressBar.setVisibility(View.GONE);
-                ErrorManager errorManager = appSession.getErrorManager();
+
                 if (errorManager != null)
                     errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);

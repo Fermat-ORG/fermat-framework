@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cer_api.layer.provider.utils;
 
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -72,7 +73,10 @@ public class HttpHelper {
             System.out.println("The waiting for respond is to long");
         } catch (MalformedURLException e) {
             System.out.println("The URL is Malformed");
-        } catch (IOException e) {
+        }catch (FileNotFoundException e) {
+            System.out.println("The service is unavailable");
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         return content;

@@ -83,9 +83,9 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
                         clipboard.setText(copiedMessage);
                     }
                     if (copiedMessage.length() <= 10) {
-                        Toast.makeText(context, "Copied: " + copiedMessage, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getText(R.string.copy_message_toast)+ " " + copiedMessage, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(context, "Copied: " + copiedMessage.substring(0, 11) + "...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getText(R.string.copy_message_toast)+ " " + copiedMessage.substring(0, 11) + "...", Toast.LENGTH_SHORT).show();
                     }
                     return true;
                 }

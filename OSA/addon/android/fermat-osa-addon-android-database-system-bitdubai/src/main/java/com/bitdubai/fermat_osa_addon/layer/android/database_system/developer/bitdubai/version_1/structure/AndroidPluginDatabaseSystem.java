@@ -54,7 +54,7 @@ public class AndroidPluginDatabaseSystem implements PluginDatabaseSystem {
 
         } catch (final NoSuchAlgorithmException e) {
 
-            throw new CantOpenDatabaseException(e, new StringBuilder().append("Database Name : ").append(databaseName).toString(), "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
+            throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
         } catch (final DatabaseNotFoundException exception) {
 
             throw exception;
@@ -78,7 +78,7 @@ public class AndroidPluginDatabaseSystem implements PluginDatabaseSystem {
 
         } catch (final NoSuchAlgorithmException e) {
 
-            throw new CantOpenDatabaseException(e, new StringBuilder().append("Database Name : ").append(databaseName).toString(), "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
+            throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
         } catch (final DatabaseNotFoundException exception) {
 
             throw exception;

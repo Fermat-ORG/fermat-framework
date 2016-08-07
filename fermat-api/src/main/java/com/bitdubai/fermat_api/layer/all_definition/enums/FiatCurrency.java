@@ -29,7 +29,7 @@ public enum FiatCurrency implements Currency {
     NEW_ZEALAND_DOLLAR("NZD", "New Zealand Dollar", Country.NEW_ZEALAND),
     SWISS_FRANC("CHF", "Swiss Franc", Country.SWITZERLAND),
     US_DOLLAR("USD", "US Dollar", Country.UNITED_STATES_OF_AMERICA),
-    VENEZUELAN_BOLIVAR("VEF", "Venezuelan Bolivar", Country.VENEZUELA),;
+    VENEZUELAN_BOLIVAR("VEF", "Venezuelan Bolivar", Country.VENEZUELA);
 
     private final String code;
     private final String friendlyName;
@@ -89,10 +89,9 @@ public enum FiatCurrency implements Currency {
                 return FiatCurrency.US_DOLLAR;
             case "VEF":
                 return FiatCurrency.VENEZUELAN_BOLIVAR;
-
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code Received: ").append(code).toString(),
+                        "Code Received: " + code,
                         "The received code is not valid for the FiatCurrency enum");
         }
     }

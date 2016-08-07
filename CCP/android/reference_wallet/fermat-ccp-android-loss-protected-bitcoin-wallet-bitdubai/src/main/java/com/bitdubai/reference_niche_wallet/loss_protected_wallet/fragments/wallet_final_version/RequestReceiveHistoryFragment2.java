@@ -36,6 +36,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -99,12 +100,10 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
         try {
             lossProtectedWalletManager = appSession.getModuleManager();
 
-            try {
-                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey());
-                this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
-            } catch (Exception e) {
-
-            }
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
             onRefresh();
         } catch (Exception ex) {
@@ -123,7 +122,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
-            setUp();
+            //setUp();
             return rootView;
         } catch (Exception e) {
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -189,18 +188,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
         }
     }
 
-    @Override
-    public void onDrawerOpen() {
-        actionButton.setVisibility(View.GONE);
 
-    }
-
-    @Override
-    public void onDrawerClose() {
-        FermatAnimationsUtils.showEmpty(getActivity(), true, actionMenu.getActivityContentView());
-        actionButton.setVisibility(View.VISIBLE);
-
-    }
 
     @Override
     protected boolean hasMenu() {

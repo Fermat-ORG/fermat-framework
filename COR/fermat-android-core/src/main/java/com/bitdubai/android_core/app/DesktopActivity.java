@@ -150,8 +150,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
 
-            String frgBackType = null;
-
             RuntimeManager runtimeManager = getDesktopRuntimeManager();
 
             FermatStructure structure = runtimeManager.getLastApp();
@@ -182,6 +180,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 }
             }
 
+            String frgBackType = null;
             if (fragment != null) frgBackType = fragment.getBack();
 
             if (activity.getBackActivity() != null && activity.getBackAppPublicKey() != null) {
@@ -370,7 +369,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
 
                 FermatApplication.getInstance().getAppManager().openApp(getDesktopManager(), fermatAppConnection);
-                //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
                 /**
                  *
                  * Get current activity to paint
@@ -402,6 +400,8 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                     hideBottonIcons();
 
                     findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
+
+                    findViewById(R.id.radiogroup).setVisibility(View.GONE);
 
                     if (activity.getFragments().size() == 1) {
                         setOneFragmentInScreen(fermatAppConnection.getFragmentFactory(), FermatApplication.getInstance().getAppManager().lastAppSession(), activity.getLastFragment());
@@ -464,7 +464,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             if (activityCode.equals("develop_mode")) {
                 onBackPressed();
             } else
-                changeActivity(activityCode, data.getAppLinkPublicKey());
+                changeActivity(activityCode, data.getAppLinkPublicKey(),null,null);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -330,18 +330,9 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
 
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
             for (final CryptoBrokerIdentity identity : listIdentitiesFromCurrentDeviceUser()) {
-                int refreshInterval = identity.getFrequency().getRefreshInterval();
                 if (identity.isPublished()) {
                     cryptoBrokerExposingDataList.add(
-                            new CryptoBrokerExposingData(
-                                    identity.getPublicKey(),
-                                    identity.getAlias(),
-                                    identity.getProfileImage(),
-                                    location,
-                                    refreshInterval,
-                                    identity.getAccuracy(),
-                                    ProfileStatus.UNKNOWN
-                            )
+                            new CryptoBrokerExposingData(identity, location, ProfileStatus.UNKNOWN)
                     );
                 }
             }
@@ -353,6 +344,7 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeActorIdentitiesException(e, "", "Problem exposing identities.");
         } catch (CantGetDeviceLocationException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeActorIdentitiesException(e, "", "Problem exposing identities in Location.");
         }
     }
@@ -360,13 +352,12 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
     private void exposeIdentity(final CryptoBrokerIdentity identity) throws CantExposeActorIdentityException {
         try {
             Location location = locationManager.getLocation();
-            //long refreshInterval = 0;
-            //refreshInterval = identity.getFrequency().getRefreshInterval();
             cryptoBrokerANSManager.exposeIdentity(new CryptoBrokerExposingData(identity, location, ProfileStatus.UNKNOWN));
         } catch (final CantExposeIdentityException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeActorIdentityException(e, "", "Problem exposing identity.");
         } catch (CantGetDeviceLocationException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeActorIdentityException(e, "", "Problem exposing identities in Location.");
         }
     }

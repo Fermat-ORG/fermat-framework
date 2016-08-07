@@ -21,13 +21,13 @@ public class FermatVaultPluginSubsystem extends AbstractPluginSubsystem {
             try {
                 registerDeveloperMati("com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.DeveloperBitDubai");
             }catch (Exception e){
-                System.err.println("##############################################\n");
-                System.err.println("##############################################\n");
+               System.err.println("##############################################\n");
+               System.err.println("##############################################\n");
                 System.err.println("Fermat vault not found");
                 System.err.println("Search type:"+AbstractPluginDeveloper.class.getName());
                 e.printStackTrace();
                 System.err.println("##############################################\n");
-                System.err.println("##############################################\n");
+               System.err.println("##############################################\n");
             }
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());

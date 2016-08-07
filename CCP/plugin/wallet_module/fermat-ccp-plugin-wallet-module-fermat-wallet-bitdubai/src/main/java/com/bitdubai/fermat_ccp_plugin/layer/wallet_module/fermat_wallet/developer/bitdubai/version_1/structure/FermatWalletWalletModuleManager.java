@@ -339,7 +339,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         ExchangeRate rate = null;
         try {
             //TODO: cambiar la currency a Fermat cuando esten los providers listos
-            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, fiatCurrency);
+            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.FERMAT, fiatCurrency);
             CurrencyExchangeRateProviderManager  rateProviderManager = exchangeProviderFilterManagerproviderFilter.getProviderReference(rateProviderManagerId);
             //your exchange rate.
             rate = rateProviderManager.getCurrentExchangeRate(wantedCurrencyPair);
@@ -365,35 +365,8 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
             //looking all providers
 
 
-            Map<UUID, String> providerARG = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
-                    new CurrencyPairImpl(CryptoCurrency.BITCOIN,FiatCurrency.ARGENTINE_PESO));
-            if (providerARG.size()>0){
-                Iterator entries = providerARG.entrySet().iterator();
-                while (entries.hasNext()) {
-                    Map.Entry thisEntry = (Map.Entry) entries.next();
-                    Object key = thisEntry.getKey();
-                    Object value = thisEntry.getValue();
-
-                    filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
-                }
-            }
-
-
-            Map<UUID, String> providerUSD = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
-                    new CurrencyPairImpl(CryptoCurrency.BITCOIN,FiatCurrency.US_DOLLAR));
-            if (providerUSD.size()>0){
-                Iterator entries = providerUSD.entrySet().iterator();
-                while (entries.hasNext()) {
-                    Map.Entry thisEntry = (Map.Entry) entries.next();
-                    Object key = thisEntry.getKey();
-                    Object value = thisEntry.getValue();
-
-                    filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
-                }
-            }
-
             Map<UUID, String> providerVEN = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
-                    new CurrencyPairImpl(CryptoCurrency.BITCOIN,FiatCurrency.VENEZUELAN_BOLIVAR));
+                    new CurrencyPairImpl(CryptoCurrency.FERMAT,FiatCurrency.VENEZUELAN_BOLIVAR));
             if (providerVEN.size()>0){
                 Iterator entries = providerVEN.entrySet().iterator();
                 while (entries.hasNext()) {
@@ -406,11 +379,10 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
             }
 
 
-
-            Map<UUID, String> providerEUR = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
-                    new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.EURO));
-            if (providerEUR.size()>0){
-                Iterator entries = providerEUR.entrySet().iterator();
+            Map<UUID, String> providerUSD = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
+                    new CurrencyPairImpl(CryptoCurrency.FERMAT,FiatCurrency.US_DOLLAR));
+            if (providerUSD.size()>0){
+                Iterator entries = providerUSD.entrySet().iterator();
                 while (entries.hasNext()) {
                     Map.Entry thisEntry = (Map.Entry) entries.next();
                     Object key = thisEntry.getKey();
@@ -420,6 +392,18 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                 }
             }
 
+            Map<UUID, String> providerBTC = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
+                    new CurrencyPairImpl(CryptoCurrency.FERMAT, CryptoCurrency.BITCOIN));
+            if (providerBTC.size()>0){
+                Iterator entries = providerBTC.entrySet().iterator();
+                while (entries.hasNext()) {
+                    Map.Entry thisEntry = (Map.Entry) entries.next();
+                    Object key = thisEntry.getKey();
+                    Object value = thisEntry.getValue();
+
+                    filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
+                }
+            }
         }
         catch (Exception e) {
             throw new CantGetCurrencyExchangeProviderException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "unknown error.");
@@ -432,7 +416,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     public  List<ExchangeRateProvider> getExchangeRateProviderManagers(FiatCurrency fiatCurrency) throws CantGetCurrencyExchangeProviderException {
         List<ExchangeRateProvider> filteredProviders = new ArrayList<>();
         try {
-            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, fiatCurrency);
+            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.FERMAT, fiatCurrency);
 
             Collection<CurrencyExchangeRateProviderManager> providers = exchangeProviderFilterManagerproviderFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
 
@@ -1056,46 +1040,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         }
     }
 
-    @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
-    public List<FermatWalletModuleTransaction> listTransactionsByActorAndType(BalanceType balanceType,
-                                                                        TransactionType transactionType,
-                                                                        String walletPublicKey,
-                                                                        String actorPublicKey, String intraUserLoggedInPublicKey,
-                                                                        BlockchainNetworkType blockchainNetworkType,
-                                                                        int max,
-                                                                        int offset) throws CantListTransactionsException {
-        try {
-            CryptoWalletWallet fermatWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-            List<FermatWalletModuleTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<CryptoWalletTransaction> bitcoinWalletTransactionList = fermatWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset, blockchainNetworkType);
 
-
-                List<CryptoWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
-
-                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
-
-                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-                        bitcoinWalletTransactionList1.add(bwt);
-                    }
-                }
-
-
-
-
-
-
-            for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList1) {
-                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
-            }
-
-            return cryptoWalletTransactionList;
-        } catch (CantLoadWalletsException | com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException e) {
-            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, e);
-        } catch(Exception e){
-            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
-        }
-    }
 
     @Override
     public ActorTransactionSummary getActorTransactionHistory(BalanceType balanceType,

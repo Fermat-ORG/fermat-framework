@@ -20,8 +20,29 @@
     <string name="cbp_ccc_launch_action_creation_dialog_footer">To begin, choose an avatar below.\nYou may change it later.</string>
     <string name="no_users">No Users</string>
     <string name="connection_request">Connection Request</string>
+
+    <string name="connection_request_new">New Request</string>
     <string name="ccc_please_select_an_identity">Please select an Identity</string>
     <string name="ccc_connection_state_connected">Is connected with you</string>
     <string name="ccc_connection_state_pending_acceptance">Pending request acceptance</string>
     <string name="ccc_no_data_available">No Locations Available</string>
+    <string name="cbc_country">Country</string>
+    <string name="cbc_state">State</string>
+    <string name="cbc_home">Home</string>
+    <string name="ccc_ok">OK</string>
+    <string name="ccc_name">Name</string>
+    <string name="ccc_unknow">Unknown</string>
+    <string name="ccc_two_minutes_tag">2 minutes</string>
+    <string name="ccc_select_identity">Please, select an identity</string>
+    <string name="ccc_no_identity">You don\'t have any</string>
+    <string name="ccc_no_connections">connections yet</string>
+    <string name="ccc_currency_exchanges">Currencies and exchange rates?</string>
+    <string name="ccc_connect">Connect</string>
+    <string name="ccc_disconnect">Disconnect</string>
+    <string name="ccc_broker_name">Broker Name</string>
+    <string name="ccc_cancel">Cancel</string>
+    <string name="ccc_no_results">User search don\'t\nhave results</string>
+    <string name="ccc_asking">You want to send a Connection Request to the user nbroker1?</string>
+    <string name="ccc_connection_confirm">Is now a connection</string>
+
 </resources>

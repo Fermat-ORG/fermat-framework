@@ -95,6 +95,9 @@ public class TransactionCompleteInformation {
                     timestamp                                                ,
                     memo,
                     cryptoTransaction.getBlockchainNetworkType(),
+                    FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS,
+                    cryptoTransaction.getFee(),
+                    cryptoTransaction.getCryptoAmount(),
                     cryptoTransaction.getCryptoCurrency()
 
             );

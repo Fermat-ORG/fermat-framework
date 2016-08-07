@@ -329,7 +329,7 @@ public class HomeFragment extends FermatWalletListFragment<CashMoneyWalletTransa
                     errorManager.reportUnexpectedWalletException(Wallets.CSH_CASH_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }
         } else {
-            Toast.makeText(getActivity(), "Sorry, an error happened in HomeFragment (Module == null)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.cash_error_msg_std), Toast.LENGTH_SHORT).show();
         }
         return data;
     }
@@ -447,12 +447,12 @@ public class HomeFragment extends FermatWalletListFragment<CashMoneyWalletTransa
             //onRefresh();
             //break;
             case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_INSUFICCIENT_FUNDS:
-                Toast.makeText(getActivity(), "Transaction failed due to insufficient funds", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.cash_error_msg_transaction_failed_insufficient_funds), Toast.LENGTH_SHORT).show();
 
                 onRefresh();
                 break;
             case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_TRANSACTION_FAILED:
-                Toast.makeText(getActivity(), "Sorry, the transaction has failed.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.cash_error_msg_transaction_failed), Toast.LENGTH_SHORT).show();
                 onRefresh();
                 break;
             default:

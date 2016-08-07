@@ -767,6 +767,16 @@ public interface CryptoBrokerWalletModuleManager
      */
     boolean isCreateIdentityIntraUser() throws CantSendNegotiationException;
 
+    /**
+     * Return if is create intra user wallet
+     *
+     * @param alias
+     * @param profileImage
+     * @return
+     * @throws CantSendNegotiationException
+     */
+    void createIdentityIntraUser(String alias, byte[] profileImage) throws CantSendNegotiationException;
+
     List<EarningTransaction> searchEarnings(EarningsPair earningsPair, EarningTransactionState state) throws CantListEarningTransactionsException;
 
     List<EarningTransaction> searchEarnings(EarningsPair earningsPair) throws CantListEarningTransactionsException;

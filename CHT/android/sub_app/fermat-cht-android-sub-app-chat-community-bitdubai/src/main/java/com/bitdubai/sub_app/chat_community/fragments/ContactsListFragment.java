@@ -122,22 +122,22 @@ public class ContactsListFragment
             lstChatUserInformations = new ArrayList<>();
             applicationsHelper = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
             //Obtain Settings or create new Settings if first time opening subApp
-            appSettings = null;
-            try {
-                appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-            } catch (Exception e) {
-                appSettings = null;
-            }
-
-            if (appSettings == null) {
-                appSettings = new ChatActorCommunitySettings();
-                appSettings.setIsPresentationHelpEnabled(true);
-                try {
-                    moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+//            appSettings = null;
+//            try {
+//                appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+//            } catch (Exception e) {
+//                appSettings = null;
+//            }
+//
+//            if (appSettings == null) {
+//                appSettings = new ChatActorCommunitySettings();
+//                appSettings.setIsPresentationHelpEnabled(true);
+//                try {
+//                    moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
 
             //Check if a default identity is configured
             try {
@@ -344,15 +344,15 @@ public class ContactsListFragment
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         appSession.setData(CHAT_USER_SELECTED, data);
         if (Build.VERSION.SDK_INT < 23) {
-            CommonLogger.info(TAG, "User connection state " +
+            CommonLogger.info(TAG, getResources().getString(R.string.cht_comm_text_state) +
                     data.getConnectionState());
             final DisconnectDialog disconnectDialog;
             try {
                 disconnectDialog =
                         new DisconnectDialog(getActivity(), appSession, null,
                                 data, moduleManager.getSelectedActorIdentity());
-                disconnectDialog.setTitle("Disconnect");
-                disconnectDialog.setDescription("Do you want to disconnect from");
+                disconnectDialog.setTitle(getResources().getString(R.string.cht_comm_disconnection_request));
+                disconnectDialog.setDescription(getResources().getString(R.string.cht_comm_text_disconnect));
                 disconnectDialog.setUsername(data.getAlias() + "?");
                 disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -370,15 +370,15 @@ public class ContactsListFragment
                 e.printStackTrace();
             }
         } else {
-            CommonLogger.info(TAG, "User connection state " +
+            CommonLogger.info(TAG,getResources().getString(R.string.cht_comm_text_state) +
                     data.getConnectionState());
             final DisconnectDialog disconnectDialog;
             try {
                 disconnectDialog =
                         new DisconnectDialog(getContext(), appSession, null,
                                 data, moduleManager.getSelectedActorIdentity());
-                disconnectDialog.setTitle("Disconnect");
-                disconnectDialog.setDescription("Do you want to disconnect from");
+                disconnectDialog.setTitle(getResources().getString(R.string.cht_comm_disconnection_request));
+                disconnectDialog.setDescription(getResources().getString(R.string.cht_comm_text_disconnect));
                 disconnectDialog.setUsername(data.getAlias() + "?");
                 disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -472,7 +472,7 @@ public class ContactsListFragment
 
     private void showDialogHelp() {
         try {
-            moduleManager = appSession.getModuleManager();
+//            moduleManager = appSession.getModuleManager();
             if (identity != null) {
                 if (!identity.getPublicKey().isEmpty()) {
                     PresentationChatCommunityDialog presentationChatCommunityDialog =

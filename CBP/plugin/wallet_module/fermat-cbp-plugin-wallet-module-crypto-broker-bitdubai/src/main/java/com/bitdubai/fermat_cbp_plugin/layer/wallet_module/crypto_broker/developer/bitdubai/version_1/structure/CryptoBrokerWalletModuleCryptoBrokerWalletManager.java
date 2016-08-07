@@ -17,6 +17,9 @@ import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
@@ -161,8 +164,10 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CBPInstalledWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
@@ -184,7 +189,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -236,6 +240,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
     private final MatchingEngineManager matchingEngineManager;
     private final CustomerBrokerCloseManager customerBrokerCloseManager;
     private final CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
+    private final LocationManager locationManager;
 
 
     public CryptoBrokerWalletModuleCryptoBrokerWalletManager(WalletManagerManager walletManagerManager,
@@ -267,7 +272,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                                                              MatchingEngineManager matchingEngineManager,
                                                              CustomerBrokerCloseManager customerBrokerCloseManager,
                                                              CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager,
-                                                             PluginFileSystem pluginFileSystem, UUID pluginId) {
+                                                             PluginFileSystem pluginFileSystem, UUID pluginId,
+                                                             LocationManager locationManager) {
         super(pluginFileSystem, pluginId);
 
         this.walletManagerManager = walletManagerManager;
@@ -299,6 +305,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         this.matchingEngineManager = matchingEngineManager;
         this.customerBrokerCloseManager = customerBrokerCloseManager;
         this.cryptoCustomerActorConnectionManager = cryptoCustomerActorConnectionManager;
+        this.locationManager = locationManager;
     }
 
     @Override
@@ -699,13 +706,9 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                 List<BankAccountNumber> accounts = getAccounts(associatedWallet.getWalletPublicKey());
                 for (BankAccountNumber accountNumber : accounts) {
                     if (associatedWallet.getBankAccount().equals(accountNumber.getAccount())) {
-                        paymentMethod.add(new StringBuilder()
-                                .append("Bank: ")
-                                .append(accountNumber.getBankName())
-                                .append("\nAccount Number: ")
-                                .append(accountNumber.getAccount())
-                                .append("\nAccount Type: ")
-                                .append(accountNumber.getAccountType().getFriendlyName()).toString());
+                        paymentMethod.add("Bank: " + accountNumber.getBankName() +
+                                "\nAccount Number: " + accountNumber.getAccount() +
+                                "\nAccount Type: " + accountNumber.getAccountType().getFriendlyName());
                     }
                 }
             }
@@ -1573,6 +1576,14 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         final EarningExtractorManager earningsExtractorManager = matchingEngineManager.getEarningsExtractorManager();
         CryptoBrokerWalletPreferenceSettings preferenceSettings;
 
+        String associatedIdentityPublicKey;
+        try {
+            CryptoBrokerIdentity associatedIdentity = getAssociatedIdentity(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+            associatedIdentityPublicKey = associatedIdentity.getPublicKey();
+        } catch (Exception e) {
+            associatedIdentityPublicKey = "cryptoBrokerActorPublicKey";
+        }
+
         try {
             preferenceSettings = loadAndGetSettings(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
         } catch (Exception e) {
@@ -1582,7 +1593,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         final FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
         final long fee = preferenceSettings.getBitcoinFee().getFee();
 
-        return earningsExtractorManager.extractEarnings(earningsPair, earningTransactions, fee, feeOrigin);
+
+        return earningsExtractorManager.extractEarnings(associatedIdentityPublicKey, earningsPair, earningTransactions, fee, feeOrigin);
     }
 
     @Override
@@ -1610,6 +1622,29 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
     }
 
     @Override
+    public void createIdentityIntraUser(String alias, byte[] profileImage)  throws CantSendNegotiationException{
+
+        try {
+
+            String phrase = "Available";
+            intraWalletUserIdentityManager.createNewIntraWalletUser(
+                    alias,
+                    phrase,
+                    profileImage,
+                    (long)100,
+                    Frequency.NORMAL,
+                    getLocationManager()
+            );
+
+        } catch (CantCreateNewIntraWalletUserException e) {
+            throw new CantSendNegotiationException(e, "Cannot not create intra user identity", "Cannot get the negotiation");
+        } catch (CantGetDeviceLocationException e){
+            throw new CantSendNegotiationException(e, "Cannot not create intra user identity", "Cannot get the location");
+        }
+
+    }
+
+    @Override
     public CryptoBrokerIdentity setMerchandisesAsExtraDataInAssociatedIdentity() throws CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException {
 
         try {
@@ -1629,7 +1664,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                 final Currency merchandise = associatedWallet.getMerchandise();
 
                 if (!associatedMerchandises.contains(merchandise)) {
-                    extraText += firstMerchandise ? merchandise.getCode() : new StringBuilder().append(", ").append(merchandise.getCode()).toString();
+                    extraText += firstMerchandise ? merchandise.getCode() : ", " + merchandise.getCode();
                     associatedMerchandises.add(merchandise);
                     firstMerchandise = false;
                 }
@@ -1748,11 +1783,19 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
             throw new InvalidParameterException("Cannot parse a null string value to long");
         } else {
             try {
-                return NumberFormat.getInstance().parse(stringValue).doubleValue();
+            //    return NumberFormat.getInstance().parse(stringValue).doubleValue();
+                System.out.println("LOSTOOW_CryptoBrokerWalletModuleCryptoBrokerWalletManager_PARSE"+stringValue);
+                return Double.valueOf(stringValue);
             } catch (Exception exception) {
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
                         "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
             }
         }
+    }
+
+    private Location getLocationManager() throws CantGetDeviceLocationException {
+
+        return locationManager.getLocation();
+
     }
 }

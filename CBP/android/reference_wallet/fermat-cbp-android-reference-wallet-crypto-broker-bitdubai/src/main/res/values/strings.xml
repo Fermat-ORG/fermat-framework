@@ -2,15 +2,15 @@
 
     <string name="app_name">Crypto Broker Wallet</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="action_settings">Settings</string>
     <string name="no_new_open_negotiations">No New\nOpen Negotiations</string>
     <string name="no_new_open_contracts">No New\nOpen Contracts</string>
     <string name="no_contracts">No Contracts</string>
     <string name="identity_img" translatable="false">person_img</string>
-    <string name="arrow" translatable="false">arrow</string>
+    <string name="arrow">arrow</string>
     <string name="at">\@</string>
-    <string name="cbw_unit_number">1</string>
+    <string name="cbw_unit_number" translatable="false">1</string>
     <string name="cbw_no_market_exchange_rates_to_show">No Market Exchange Rates to Show</string>
     <string name="buy">Buying</string>
     <string name="unit_number" translatable="false">1</string>
@@ -31,13 +31,15 @@
     <string name="buy_text_and_price">Buy: %1$s</string>
     <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
     <string name="market_exchange_rate_text">Market Exchange Rate</string>
-    <string name="cbw_exchange_rate_summary">1 %1$s @ %2$s %3$s</string>
+    <string name="cbw_exchange_rate_summary" translatable="false">1 %1$s @ %2$s %3$s</string>
     <string name="cbw_buying_details">Buying %1$s %2$s</string>
-    <string name="cbw_sold_quantity_and_currency">%1$s %2$s %3$s</string>
+    <string name="cbw_buying_details2">BUYING %1$s</string>
+    <string name="cbw_sold_quantity_and_currency" translatable="false">%1$s %2$s %3$s</string>
+    <string name="cbw_earning_amount" translatable="false">%1$s %2$s</string>
     <string name="cbw_contract_history_action_no_filter_text">No filter</string>
     <string name="cbw_contract_history_action_filter_succeed_text">Succeed</string>
     <string name="cbw_contract_history_action_filter_canceled_text">Canceled</string>
-    <string name="title_activity_broker_list">BrokerListActivity</string>
+    <string name="title_activity_broker_list" translatable="false">BrokerListActivity</string>
     <string name="delivery_date_title">Customer Delivery Date</string>
     <string name="delivery_date_text">Delivery Date: </string>
     <string name="notes">Notes</string>
@@ -126,6 +128,12 @@
     <string name="cbw_cash">Cash</string>
     <string name="cbw_bank">Bank</string>
 
+    <string name="cbw_identity_wallet_user">Intra User Identity</string>
+    <string name="cbw_identity_dialog_hint">User Name</string>
+    <string name="cbw_identity_dialog_title_btc">Intra User Identity</string>
+    <string name="cbw_identity_dialog_description_btc">To receive or send BTC must create an Intra User Identity</string>
+    <string name="cbw_identity_dialog_description2_btc">To create the identity now?\nIndicate your User Name and push the button Create.</string>
+
     <string name="cbw_settings_locations_description">You must have at least one location to make your transactions</string>
     <string name="cbw_settings_locations_title">Manage Your Locations</string>
     <string name="cbw_save">Save</string>
@@ -136,8 +144,8 @@
     <string name="wizard_locations_title">Add Your Locations</string>
     <string name="cbw_contract_details_contract_title">SELLING BTC</string>
     <string name="cbw_contract_details_negotiation_details">NEGOTIATION DETAILS</string>
-    <string name="cbw_contract_history_sold_quantity_and_currency">%1$s %2$s %3$s</string>
-    <string name="cbw_contract_history_exchange_rate_amount_and_currency">1 %1$s @ %2$s %3$s</string>
+    <string name="cbw_contract_history_sold_quantity_and_currency" translatable="false">%1$s %2$s %3$s</string>
+    <string name="cbw_contract_history_exchange_rate_amount_and_currency" translatable="false">1 %1$s @ %2$s %3$s</string>
     <string name="bought">Bought</string>
     <string name="cbw_current_earings_title">Current Earnings:</string>
     <string name="cbw_earning_wizard_item_msg">Assign a wallet here</string>
@@ -167,9 +175,9 @@
     <!--Fee setting -->
 
 
-    <string name="cbw_fee_miner_speed_1"> SLOW</string>
-    <string name="cbw_fee_miner_speed_2"> NORMAL</string>
-    <string name="cbw_fee_miner_speed_3"> FAST</string>
+    <string name="cbw_fee_miner_speed_1">SLOW</string>
+    <string name="cbw_fee_miner_speed_2">NORMAL</string>
+    <string name="cbw_fee_miner_speed_3">FAST</string>
     <string name="cbw_fee_miner_value">Fee miner:</string>
 
     <string name="cbw_fee_speed_text">Select the confirmation speed for a bitcoin transaction. More speed means more fee</string>
@@ -213,6 +221,7 @@
     <string name="cbw_wizard_stock_merchandise_description">Associate at least <b>two</b> of your wallets, from which you can withdraw funds to use as stock.</string>
     <string name="cbw_select_stock_merchandise">YOUR WALLETS</string>
     <string name="cbw_your_stock">YOUR STOCK</string>
+    <string name="cbw_stock_tittle">STOCK</string>
     <string name="cbw_associated_wallets">ASSOCIATED WALLETS</string>
 
     <!-- Earnings Wizard and Settings pages-->
@@ -241,4 +250,160 @@
     <string name="cbw_blockchain_network_description">Select the Blockchain Network where you want to send and receive the bitcoins</string>
     <string name="cbw_network">Network</string>
 
+    <string name="amount_buy">Amount to Buy</string>
+    <string name="selected_rate">Selected Rate:</string>
+    <string name="exchange_rate">Your Exchange Rate:</string>
+    <string name="single_choice_item">Single Choice Item</string>
+    <string name="title_may">TITLE</string>
+    <string name="crypto_transfer">Crypto Transfer</string>
+    <string name="detail_step">Contract Detail Step</string>
+    <string name="your_recieve">You receive:</string>
+    <string name="sucess">success</string>
+    <string name="send">send</string>
+    <string name="bitcoins" translatable="false">Bitcoins</string>
+    <string name="country">Country:</string>
+    <string name="zip_code">Zip Code:</string>
+    <string name="state_province">State/Province:</string>
+    <string name="city">City:</string>
+    <string name="address_line_1">Address Line 1:</string>
+    <string name="address_line_2">Address Line 2:</string>
+    <string name="ok">ok</string>
+    <string name="today">Today</string>
+    <string name="no_earnings">No Earnings</string>
+    <string name="last_month">Last Month</string>
+    <string name="month">Month</string>
+    <string name="sell">Sell</string>
+    <string name="buy_2">Buy</string>
+    <string name="no_data">No Data</string>
+    <string name="my_locations">My Locations</string>
+    <string name="bank_accounts">Bank Accounts</string>
+    <string name="stock_management">Stock Management</string>
+    <string name="fee_management">Fee Management</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="btc" translatable="false">BTC</string>
+    <string name="home">Home</string>
+    <string name="current_stock">Current Stock</string>
+    <string name="transfer_to_bank">Transfer to Bank</string>
+    <string name="bank_wallet">Bank Wallet</string>
+    <string name="set_spread">Set a Spread</string>
+    <string name="location">Location</string>
+    <string name="spread">Spread</string>
+    <string name="new_bank_wallet">NEW BANK WALLET</string>
+    <string name="currency">Currency</string>
+    <string name="account_type">Account type</string>
+    <string name="bank_name">Bank name</string>
+    <string name="alias">Alias</string>
+    <string name="account">Account</string>
+    <string name="account_number">Account Number</string>
+    <string name="new_cash_wallet">NEW CASH WALLET</string>
+    <string name="currency2">Currency:</string>
+    <string name="need_set_fields">Need to set the fields</string>
+    <string name="earnings_extracted">Earnings Extracted!</string>
+    <string name="no_current_earnings">No current earnings</string>
+    <string name="no_previous_earnings">No previous earnings</string>
+    <string name="this_week">This Week</string>
+    <string name="this_month">This Month</string>
+    <string name="this_year">This Year</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="last_week">Last Week</string>
+    <string name="last_year">Last Year</string>
+    <string name="is_down"> is down</string>
+    <string name="selected_by_customer">This is selected by the Customer</string>
+    <string name="value_higher_zero">The value must be higher than 0</string>
+    <string name="need_select_account">Need to select a bank account</string>
+    <string name="need_select_location">Need to select a location</string>
+    <string name="merchandise_delivery_future">Merchandise delivery date must be in the future</string>
+    <string name="merchandise_delivery_payment_date">The Merchandise Delivery date must be after the Payment date</string>
+    <string name="payment_future">Payment date must be in the future</string>
+    <string name="payment_date_delivery">The Payment date must be before the Merchandise Delivery Date</string>
+    <string name="need_register">Need to register THE WALLET USER for user BTC</string>
+    <string name="need_confirm">Need to confirm ALL the clauses</string>
+    <string name="warning_selected_rate_higher">Warning: Selected Rate is higher than suggested!</string>
+    <string name="warning_selected_rate_lower">Warning: Selected Rate is lower than suggested!</string>
+    <string name="payment_methods">Payment Methods</string>
+    <string name="dont_have_locations">You don\'t have Locations. Add one in the Wallet Settings.</string>
+    <string name="dont_have_accounts">You don\'t have Bank Accounts. Add one in the Wallet Settings.</string>
+    <string name="select_account">Select an Account</string>
+    <string name="account_exists">Account already exists</string>
+    <string name="transaction_completed">Transaction completed.</string>
+    <string name="select_wallet">Select a Wallet</string>
+    <string name="cant_associate_identity_wallet">Sorry, Can\'t associate the identity whit this wallet</string>
+    <string name="select_provider">Select a Provider</string>
+    <string name="new_negotiation">New Negotiation</string>
+    <string name="have_negotiation_message">You have a new negotiation! Please check your wallet.</string>
+    <string name="negotiation_update">Negotiation Update</string>
+    <string name="negotiation_update_message">You have received a negotiation update, check your wallet.</string>
+    <string name="negotiation_cancelled2">Negotiation Cancelled</string>
+    <string name="negotiation_cancelled_message">Check the Contract History, a customer has canceled a negotiation.</string>
+    <string name="new_contract">New Contract</string>
+    <string name="new_contract_message">A new contract has been created, check your wallet.</string>
+    <string name="contract_update">Contract Update</string>
+    <string name="contract_update_message1">You just received a payment.</string>
+    <string name="contract_update_message2">The contract has been completed.</string>
+    <string name="contract_update_message3">The contract has been cancelled.</string>
+    <string name="expiring_contract">Expiring contract</string>
+    <string name="expiring_contract_message">A contract is about to expire, check your wallet.</string>
+    <string name="enter_bank_name">Please enter a bank name</string>
+    <string name="enter_alias">Please enter an alias for the account</string>
+    <string name="enter_account">Please enter an account number</string>
+    <string name="cash_wallet">Cash Wallet</string>
+    <string name="crypto_wallet">Crypto Wallet</string>
+    <string name="amount_empty">The amount cannot be empty</string>
+    <string name="amount_zero">The amount can\'t be zero</string>
+    <string name="amount_higher_available">The amount is higher that the available balance for the selected merchandise</string>
+    <string name="unheld_funds_destock">Unheld funds, destocked from the Broker Wallet</string>
+    <string name="unheld_funds_restock">Held funds, used to restock the Broker Wallet</string>
+    <string name="cash_destock">Cash Destock in Broker Wallet</string>
+    <string name="no_money_restock">The selected wallet doesn\'t have enough money to restock the defined amount</string>
+    <string name="cash_restock">Cash Restock in Broker Wallet</string>
+    <string name="time_zone">Time Zone: %1$s</string>
+    <string name="cant_get_market_rate">can\'t get Market Exchange Rate</string>
+    <string name="cant_get_suggested_rate">can\'t get suggested Exchange Rate</string>
+    <string name="payment_confirmed">The payment has been confirmed</string>
+    <string name="merchandise_sent">The merchandise has been sent</string>
+    <string name="payment_delivery">Payment Delivery</string>
+    <string name="customer_sends">Customer sends:</string>
+    <string name="customer_sent">Customer sent:</string>
+    <string name="payment_reception">Payment Reception</string>
+    <string name="you_received">You received:</string>
+    <string name="confirmed">Confirmed</string>
+    <string name="confirm">Confirm</string>
+    <string name="you_send">You send:</string>
+    <string name="you_sent">You sent:</string>
+    <string name="no_enough_stock">NOT HAD ENOUGH STOCK IN THE WALLET</string>
+    <string name="merchandise_reception">Merchandise reception</string>
+    <string name="customer_receives">Customer receives:</string>
+    <string name="customer_received">Customer received:</string>
+    <string name="balance">Balance: --</string>
+    <string name="daily_earnings">Daily Earnings</string>
+
+    <string name="spread_format" translatable="false">%1$s %%</string>
+
+    <string name="jan">JAN</string>
+    <string name="feb">FEB</string>
+    <string name="mar">MAR</string>
+    <string name="apr">APR</string>
+    <string name="may">MAY</string>
+    <string name="jun">JUN</string>
+    <string name="jul">JUL</string>
+    <string name="aug">AUG</string>
+    <string name="sep">SEP</string>
+    <string name="oct">OCT</string>
+    <string name="nov">NOV</string>
+    <string name="dec">DEC</string>
+    
+    <string name="error_contract_detail">Sorry, an error happened in ContractDetailActivityFragment (CryptoCustomerWalletModuleManager == null)</string>
+    <string name="error_contract_history">Sorry, an error happened in ContractHistoryActivityFragment (Module == null)</string>
+    <string name="error_earning_list">Sorry. Cant Get the Earnings list</string>
+    <string name="error_cant_extract_earning">Sorry. Can\'t Extract the Earnings</string>
+    <string name="error_unexpected">Sorry. Unexpected Error</string>
+    <string name="error_opps">Oooops! recovering from system error</string>
+    <string name="error_open_contracts_tab">Sorry, an error happened in OpenContractsTabFragment (Module == null)</string>
+    <string name="error_open_negotiations_tab">Sorry, an error happened in OpenNegotiationsTabFragment (Module == null)</string>
+    <string name="error_opps2">Oopss, an error ocurred</string>
+    <string name="error_settings">There was a problem saving your settings</string>
+    <string name="error_request">There has been an error processing your request.</string>
+    <string name="error_memory">Error: out of memory</string>
+    <string name="error_try">There\'s been an error, please try again </string>
 </resources>

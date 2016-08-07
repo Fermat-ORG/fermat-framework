@@ -175,6 +175,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
 //        if(checkbox_not_show.isChecked()){
             //noinspection TryWithIdenticalCatches
             try {
+                getSession().setData(SessionConstant.PRESENTATION_HELP_ENABLED, Boolean.FALSE);
                     BitcoinWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
                     if(bitcoinWalletSettings!=null) {
                         bitcoinWalletSettings.setIsPresentationHelpEnabled(!checkbox_not_show.isChecked());

@@ -6,16 +6,17 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
@@ -41,17 +42,17 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
     public static final String TRANSACTION_APPLIED = "transaction_applied";
 
     private Activity activity;
-
-    private ReferenceAppFermatSession session;
+    private FermatTextView tittle_dialog_stock;
+    private ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session;
     private CryptoBrokerWalletAssociatedSetting setting;
 
     /**
      * UI components
      */
-    FermatEditText amountText;
+    EditText amountText;
 
 
-    public CreateRestockDestockFragmentDialog(Activity activity, ReferenceAppFermatSession session, CryptoBrokerWalletAssociatedSetting setting) {
+    public CreateRestockDestockFragmentDialog(Activity activity, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session, CryptoBrokerWalletAssociatedSetting setting) {
         super(activity);
 
         this.activity = activity;
@@ -67,7 +68,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.cbw_create_stock_transaction_dialog);
 
-            amountText = (FermatEditText) findViewById(R.id.cbw_ctd_amount);
+            amountText = (EditText) findViewById(R.id.cbw_ctd_amount);
 
             //If working with BIC, allow a max of 999,999,999.99999999 BTC
             if (Platforms.CRYPTO_CURRENCY_PLATFORM.equals(setting.getPlatform()))
@@ -75,6 +76,14 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             else
                 amountText.setFilters(new InputFilter[]{new NumberInputFilter(11, 2)});
 
+            tittle_dialog_stock = (FermatTextView) findViewById(R.id.cbw_dialog_title_stock);
+
+            if (setting.getPlatform().equals(Platforms.BANKING_PLATFORM))
+                tittle_dialog_stock.setText(activity.getResources().getString(R.string.bank_wallet));
+            else if (setting.getPlatform().equals(Platforms.CASH_PLATFORM))
+                tittle_dialog_stock.setText(activity.getResources().getString(R.string.cash_wallet));
+            else if (setting.getPlatform().equals(Platforms.CRYPTO_CURRENCY_PLATFORM))
+                tittle_dialog_stock.setText(activity.getResources().getString(R.string.crypto_wallet));
 
             final View restockBtn = findViewById(R.id.cbw_ctd_restock_transaction_btn);
             final View destockBtn = findViewById(R.id.cbw_ctd_destock_transaction_btn);
@@ -110,7 +119,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             String amountText = this.amountText.getText().toString();
 
             if (amountText.isEmpty()) {
-                Toast.makeText(activity.getApplicationContext(), "The amount cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.amount_empty), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -118,12 +127,12 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             final double amountAsDouble = amount.doubleValue();
 
             if (amountAsDouble == 0) {
-                Toast.makeText(activity.getApplicationContext(), "The amount can't be zero", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.amount_zero), Toast.LENGTH_SHORT).show();
                 return;
             }
 
             final Platforms walletPlatform = setting.getPlatform();
-            final CryptoBrokerWalletModuleManager moduleManager = (CryptoBrokerWalletModuleManager) session.getModuleManager();
+            final CryptoBrokerWalletModuleManager moduleManager = session.getModuleManager();
 
             boolean transactionApplied = false;
             switch (option) {
@@ -142,9 +151,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             }
 
         } catch (Exception e) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("There's been an error, please try again ").append(e.getMessage());
-            Toast.makeText(activity.getApplicationContext(), stringBuilder.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.error_try) + e.getMessage(), Toast.LENGTH_SHORT).show();
 
             final ErrorManager errorManager = session.getErrorManager();
             errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, DISABLES_THIS_FRAGMENT, e);
@@ -152,21 +159,23 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
     }
 
     private boolean applyDestock(BigDecimal amount, Platforms walletPlatform, CryptoBrokerWalletModuleManager moduleManager) throws Exception {
+        final String brokerWalletPublicKey = session.getAppPublicKey();
 
-        final float availableBalance = moduleManager.getAvailableBalance(setting.getMerchandise(), WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+        final float availableBalance = moduleManager.getAvailableBalance(setting.getMerchandise(), brokerWalletPublicKey);
         if (amount.floatValue() > availableBalance) {
-            Toast.makeText(activity.getApplicationContext(), "The amount is higher that the available balance for the selected merchandise", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.amount_higher_available), Toast.LENGTH_LONG).show();
             return false;
         }
 
-        final String memo = "Unheld funds, destocked from the Broker Wallet";
+        final String memo = activity.getResources().getString(R.string.unheld_funds_destock);
+        final String brokerIdentityPublicKey = moduleManager.getAssociatedIdentity(brokerWalletPublicKey).getPublicKey();
 
         switch (walletPlatform) {
             case BANKING_PLATFORM:
                 moduleManager.createTransactionDestockBank(
-                        setting.getBrokerPublicKey(),
+                        brokerIdentityPublicKey,
                         (FiatCurrency) setting.getMerchandise(),
-                        setting.getBrokerPublicKey(),
+                        brokerWalletPublicKey,
                         setting.getWalletPublicKey(),
                         setting.getBankAccount(),
                         amount,
@@ -177,12 +186,13 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
                 break;
 
             case CASH_PLATFORM:
+
                 moduleManager.createTransactionDestockCash(
-                        setting.getBrokerPublicKey(),
+                        brokerIdentityPublicKey,
                         (FiatCurrency) setting.getMerchandise(),
-                        setting.getBrokerPublicKey(),
+                        brokerWalletPublicKey,
                         setting.getWalletPublicKey(),
-                        "Cash Destock in Broker Wallet",
+                        activity.getResources().getString(R.string.cash_destock),
                         amount,
                         memo,
                         BigDecimal.ZERO,
@@ -194,9 +204,9 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
                 final double satoshi = BitcoinConverter.convert(amount.doubleValue(), BITCOIN, SATOSHI);
 
                 moduleManager.createTransactionDestockCrypto(
-                        setting.getBrokerPublicKey(),
+                        brokerIdentityPublicKey,
                         (CryptoCurrency) setting.getMerchandise(),
-                        setting.getBrokerPublicKey(),
+                        brokerWalletPublicKey,
                         setting.getWalletPublicKey(),
                         new BigDecimal(satoshi),
                         memo,
@@ -212,22 +222,24 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
     }
 
     private boolean applyRestock(BigDecimal amount, Platforms walletPlatform, CryptoBrokerWalletModuleManager moduleManager) throws Exception {
+        final String brokerWalletPublicKey = session.getAppPublicKey();
 
         final double availableBalance = getStockWalletBalance(walletPlatform, moduleManager);
         final double amountAsDouble = amount.doubleValue();
         if (amountAsDouble > availableBalance) {
-            Toast.makeText(activity.getApplicationContext(), "The selected wallet doesn't have enough money to restock the defined amount", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.no_money_restock), Toast.LENGTH_LONG).show();
             return false;
         }
 
-        final String memo = "Held funds, used to restock the Broker Wallet";
+        final String memo = activity.getResources().getString(R.string.unheld_funds_restock);
+        final String brokerIdentityPublicKey = moduleManager.getAssociatedIdentity(brokerWalletPublicKey).getPublicKey();
 
         switch (walletPlatform) {
             case BANKING_PLATFORM:
                 moduleManager.createTransactionRestockBank(
-                        setting.getBrokerPublicKey(),
+                        brokerIdentityPublicKey,
                         (FiatCurrency) setting.getMerchandise(),
-                        session.getAppPublicKey(),
+                        brokerWalletPublicKey,
                         setting.getWalletPublicKey(),
                         setting.getBankAccount(),
                         amount,
@@ -239,11 +251,11 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
 
             case CASH_PLATFORM:
                 moduleManager.createTransactionRestockCash(
-                        setting.getBrokerPublicKey(),
+                        brokerIdentityPublicKey,
                         (FiatCurrency) setting.getMerchandise(),
-                        session.getAppPublicKey(),
+                        brokerWalletPublicKey,
                         setting.getWalletPublicKey(),
-                        "Cash Restock in Broker Wallet",
+                        activity.getResources().getString(R.string.cash_restock),
                         amount,
                         memo,
                         BigDecimal.ZERO,
@@ -256,9 +268,9 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
                 long satoshi = getCryptoAmountInSatoshi(amount, merchandise);
 
                 moduleManager.createTransactionRestockCrypto(
-                        setting.getBrokerPublicKey(),
+                        brokerIdentityPublicKey,
                         merchandise,
-                        session.getAppPublicKey(),
+                        brokerWalletPublicKey,
                         setting.getWalletPublicKey(),
                         new BigDecimal(satoshi),
                         memo,

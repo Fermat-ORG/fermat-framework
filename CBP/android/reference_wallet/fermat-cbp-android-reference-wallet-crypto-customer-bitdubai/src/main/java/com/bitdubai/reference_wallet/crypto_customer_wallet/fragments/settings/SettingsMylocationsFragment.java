@@ -52,8 +52,6 @@ public class SettingsMylocationsFragment
     private LocationsAdapter adapter;
     private View emptyView;
 
-    // Fermat Managers
-    private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
 
@@ -62,11 +60,12 @@ public class SettingsMylocationsFragment
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = appSession.getModuleManager();
+            CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
 
@@ -178,28 +177,6 @@ public class SettingsMylocationsFragment
             Toast.makeText(getActivity(), R.string.ccw_add_location_warning_msg, Toast.LENGTH_SHORT).show();
             return;
         }
-        /*
-        try {
-            //Clear previous locations from settings
-            moduleManager.clearLocations();
-
-            //Save locations to settings
-            for (String location : locationList) {
-                moduleManager.createNewLocation(location, appSession.getAppPublicKey());
-            }
-
-        } catch (FermatException ex) {
-            Toast.makeText(getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-
-            Log.e(TAG, ex.getMessage(), ex);
-            if (errorManager != null) {
-                errorManager.reportUnexpectedWalletException(
-                        Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                        ex);
-            }
-        }
-        */
 
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS, appSession.getAppPublicKey());
     }

@@ -53,6 +53,7 @@ public class ServerHandshakeRespondProcessor extends PackageProcessor{
             getChannel().getConnection().registerInNode();
 
         }else{
+            System.err.println("Algo está mal..");
             //there is some wrong
         }
 

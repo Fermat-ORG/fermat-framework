@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.events;
 
+import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
@@ -61,6 +62,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_ACTIVITY_TO_OPEN_CODE;
@@ -85,7 +87,8 @@ import static com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.
  */
 public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent extends FermatAgent {
 
-    private Thread agentThread;
+//    private Thread agentThread;
+    private Agent agent;
     private final AbstractPlugin pluginRoot;
     private final CustomerBrokerPurchaseNegotiationManager purchaseNegotiationManager;
     private final UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao dao;
@@ -122,14 +125,45 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
         this.broadcaster = broadcaster;
 
         this.dao = new UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao(pluginDatabaseSystem, pluginId);
+//
+//        this.agentThread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (isRunning())
+//                    process();
+//            }
+//        }, this.getClass().getSimpleName());
 
-        this.agentThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isRunning())
-                    process();
+        this.agent = new Agent(getClass().getSimpleName(),5,TimeUnit.SECONDS,5);
+    }
+
+
+    private class Agent extends AbstractAgent{
+
+        public Agent(long sleepTime, TimeUnit timeUnit) {
+            super(sleepTime, timeUnit);
+        }
+
+        public Agent(long sleepTime, TimeUnit timeUnit, long initDelayTime) {
+            super(sleepTime, timeUnit, initDelayTime);
+        }
+
+        public Agent(String threadName, long sleepTime, TimeUnit timeUnit, long initDelayTime) {
+            super(threadName, sleepTime, timeUnit, initDelayTime);
+        }
+
+        @Override
+        protected void agentJob() {
+            if (isRunning()){
+                process();
             }
-        }, this.getClass().getSimpleName());
+        }
+
+        @Override
+        protected void onErrorOccur(Exception e) {
+            e.printStackTrace();
+            cleanResources();
+        }
     }
 
     @Override
@@ -137,13 +171,15 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
         Logger LOG = Logger.getGlobal();
         LOG.info("Customer Broker Purchase monitor agent starting");
 
-        this.agentThread.start();
+        this.agent.start();
+//        this.agentThread.start();
         super.start();
     }
 
     @Override
     public void stop() throws CantStopAgentException {
-        this.agentThread.interrupt();
+        this.agent.stop();
+//        this.agentThread.interrupt();
         super.stop();
     }
 
@@ -154,19 +190,19 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
 
         while (isRunning()) {
 
-            try {
-                Thread.sleep(SLEEP_TIME);
-            } catch (InterruptedException interruptedException) {
-                cleanResources();
-                return;
-            }
+//            try {
+//                Thread.sleep(SLEEP_TIME);
+//            } catch (InterruptedException interruptedException) {
+//                cleanResources();
+//                return;
+//            }
 
             doTheMainTask();
 
-            if (agentThread.isInterrupted()) {
-                cleanResources();
-                return;
-            }
+//            if (agentThread.isInterrupted()) {
+//                cleanResources();
+//                return;
+//            }
         }
     }
 
@@ -700,11 +736,9 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
         final DatabaseTableFilter tableFilter = getFilterTable(
                 negotiationId.toString(),
                 UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_ID_COLUMN_NAME);
-
-        final List<CustomerBrokerPurchase> transactions = dao.getCustomerBrokerPurchases(tableFilter);
-
-        return transactions.isEmpty();
+        return dao.isEmptyTable();
     }
+
 
     /**
      * Return a database filter object filled with the given parameters

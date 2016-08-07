@@ -156,40 +156,25 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         bitcoinConverter = new BitcoinConverter();
         setHasOptionsMenu(true);
         try {
-            fermatWalletSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
-            if(fermatWalletSettings != null) {
-
-                if (fermatWalletSettings.getBlockchainNetworkType() == null) {
-                    fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-
-                if (fermatWalletSettings.getFeedLevel() == null)
-                    fermatWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
+            if(appSession.getData(SessionConstant.FEE_LEVEL) != null)
+                feeLevel = (String)appSession.getData(SessionConstant.FEE_LEVEL);
                 else
-                    feeLevel = fermatWalletSettings.getFeedLevel();
+                    feeLevel = BitcoinFee.NORMAL.toString();
 
-                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
-
-            }
-
-            blockchainNetworkType = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
 
             fermatWallet = appSession.getModuleManager();
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
-        /*    if (fermatWalletSettings.getFeedLevel()==null)
-                fermatWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
-            else
-                feeLevel = fermatWalletSettings.getFeedLevel(); */
+          //  InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+           // imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
 
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantPersistSettingsException e) {
+
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -295,7 +280,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
        // editFeedamount = (EditText) rootView.findViewById(R.id.feed_amount);
 
-
         advances_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -345,12 +329,18 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.FAST.getFee())));
                     feeLevel = String.valueOf(BitcoinFee.FAST);
                 }
-
-                fermatWalletSettings.setFeedLevel(feeLevel);
-
                 try {
+                    fermatWallet.loadAndGetSettings(appSession.getAppPublicKey());
+
+                    fermatWalletSettings.setFeedLevel(feeLevel);
+
+
                     fermatWallet.persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
                 } catch (CantPersistSettingsException e) {
+                    e.printStackTrace();
+                } catch (CantGetSettingsException e) {
+                    e.printStackTrace();
+                } catch (SettingsNotFoundException e) {
                     e.printStackTrace();
                 }
 

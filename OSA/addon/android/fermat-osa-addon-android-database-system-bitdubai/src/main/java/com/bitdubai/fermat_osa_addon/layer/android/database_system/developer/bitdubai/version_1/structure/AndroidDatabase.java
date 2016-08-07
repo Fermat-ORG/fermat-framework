@@ -39,7 +39,7 @@ import java.util.UUID;
  * This class define methods to execute query and transactions on database
  * And method to get a database table definition
  * <p/>
- * <p/>
+ *
  * Created by ciencias on 23.12.14.
  * Modified by Leon Acosta (laion.cj91@gmail.com) on 27/08/2015.
  */
@@ -49,9 +49,9 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     /**
      * database Interface member variables.
      */
-    private String path;
+    private String path        ;
     private String databaseName;
-    private UUID ownerId;
+    private       UUID   ownerId     ;
 
 
     public AndroidDatabase() {
@@ -64,12 +64,12 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      * @param ownerId      PlugIn owner id
      * @param databaseName name database using
      */
-    public AndroidDatabase(final String path,
-                           final UUID ownerId,
+    public AndroidDatabase(final String path        ,
+                           final UUID   ownerId     ,
                            final String databaseName) {
 
-        this.path = path;
-        this.ownerId = ownerId;
+        this.path         = path        ;
+        this.ownerId      = ownerId     ;
         this.databaseName = databaseName;
     }
 
@@ -79,10 +79,10 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      * @param path         Android path
      * @param databaseName name database using
      */
-    public AndroidDatabase(final String path,
+    public AndroidDatabase(final String path        ,
                            final String databaseName) {
 
-        this.path = path;
+        this.path         = path        ;
         this.databaseName = databaseName;
     }
 
@@ -190,22 +190,23 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
             throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, exception, context, possibleReason);
 
         } finally {
-            if (database != null) {
+            if(database != null) {
                 database.endTransaction();
                 database.close();
             }
         }
     }
 
-    public List<AndroidVariable> selectTransactionRecord(final SQLiteDatabase database,
-                                                         final DatabaseTable table,
-                                                         final DatabaseTableRecord record) throws CantSelectRecordException {
+    public List<AndroidVariable> selectTransactionRecord(final SQLiteDatabase      database,
+                                                         final DatabaseTable       table   ,
+                                                         final DatabaseTableRecord record  ) throws CantSelectRecordException {
 
         List<AndroidVariable> variablesResult = new ArrayList<>();
-        Cursor c = null;
+
         try {
 
             StringBuilder strRecords = new StringBuilder("");
+
             List<DatabaseRecord> records = record.getValues();
 
             List<DatabaseAggregateFunction> tableSelectOperator = table.getTableAggregateFunction();
@@ -247,8 +248,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 }
             }
 
-
-            c = database.rawQuery("SELECT " + strRecords + " FROM " + table.getTableName() + table.makeFilter() , null);
+            Cursor c = database.rawQuery("SELECT " + strRecords + " FROM " + table.getTableName() + " " + table.makeFilter(), null);
             int columnsCant = 0;
 
             if (c.moveToFirst()) {
@@ -269,17 +269,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
             c.close();
             return variablesResult;
         } catch (Exception exception) {
-            if (c != null)
-                c.close();
             throw new CantSelectRecordException(CantSelectRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
-        } finally {
-            if (c != null) {
-                try {
-                    c.close();
-                }catch (Exception e){
-                    //nothing
-                }
-            }
         }
     }
 
@@ -348,6 +338,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
 
         try {
             SQLiteDatabase.openDatabase(databasePath, null, SQLiteDatabase.OPEN_READWRITE, null).close();
+            SQLiteDatabase.releaseMemory();
         } catch (SQLiteException exception) {
 
             /**
@@ -464,7 +455,6 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      * build full path of the android database
      * if owner id if null
      * because it comes from platformDatabase
-     *
      * @return string full path of database
      */
     private String getDatabasePath() {
@@ -485,8 +475,6 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         /**
          * I check that the owner id is the same I currently have..
          */
-        StringBuilder query = new StringBuilder("");
-
         if (this.ownerId != ownerId) {
             String context = "database Owner Id: " + ownerId;
             context += InvalidOwnerIdException.CONTEXT_CONTENT_SEPARATOR;
@@ -506,70 +494,44 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
          */
         try {
             List<String> primaryKey = new ArrayList<>();
-
-            query.append("CREATE TABLE IF NOT EXISTS ");
-            query.append(table.getTableName());
-            query.append("(");
-
+            String query = "CREATE TABLE IF NOT EXISTS " + table.getTableName() + "(";
             ArrayList<DatabaseTableColumn> tableColumns = table.getColumns();
 
             for (int i = 0; i < tableColumns.size(); i++) {
 
-                query.append(tableColumns.get(i).getName());
-                query.append(" ");
-                query.append(tableColumns.get(i).getDataType().name());
-
-                if (tableColumns.get(i).getDataType() == DatabaseDataType.STRING) {
-                    query.append("(");
-                    query.append(String.valueOf(tableColumns.get(i).getDataTypeSize()));
-                    query.append(")");
-                }
-
+                query += tableColumns.get(i).getName() + " " + tableColumns.get(i).getDataType().name();
+                if (tableColumns.get(i).getDataType() == DatabaseDataType.STRING)
+                    query += "(" + String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
 
                 if (tableColumns.get(i).isPrimaryKey())
                     primaryKey.add(tableColumns.get(i).getName());
 
                 if (i < tableColumns.size() - 1)
-                    query.append(",");
+                    query += ",";
             }
 
             /**
              * add primary key
              */
-            if (!primaryKey.isEmpty()) {
-                query.append(", PRIMARY KEY (");
-                query.append(StringUtils.join(primaryKey, ","));
-                query.append(") ");
-            }
+            if (!primaryKey.isEmpty())
+                query += ", PRIMARY KEY (" + StringUtils.join(primaryKey, ",") + ") ";
 
+            query += ")";
 
-            query.append(")");
-
-            executeQuery(query.toString());
+            executeQuery(query);
 
             /**
              * get index column
              */
-            query = new StringBuilder("");
             List<List<String>> indexes = table.listIndexes();
             for (List<String> indexColumns : indexes) {
-
-                query.append(" CREATE INDEX IF NOT EXISTS ");
-                query.append(table.getTableName());
-                query.append("_");
-                query.append(StringUtils.join(indexColumns, "_"));
-                query.append("_idx ON ");
-                query.append(table.getTableName());
-                query.append(" (");
-                query.append(StringUtils.join(indexColumns, ","));
-                query.append(")");
-
-                executeQuery(query.toString());
+                query = " CREATE INDEX IF NOT EXISTS " + table.getTableName()+"_" +StringUtils.join(indexColumns, "_")+ "_idx ON " + table.getTableName() + " (" + StringUtils.join(indexColumns, ",") + ")";
+                executeQuery(query);
             }
         } catch (Exception ex) {
-            String context = new StringBuilder().append("Owner Id : ").append(ownerId.toString()).toString();
+            String context = "Owner Id : " + ownerId.toString();
             context += CantCreateTableException.CONTEXT_CONTENT_SEPARATOR;
-            context += new StringBuilder().append("DatabaseTableFactory Info: ").append(table.toString()).toString();
+            context += "DatabaseTableFactory Info: " + table.toString();
             String possibleReason = "Check the cause for the reason we are getting this error.";
             throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, ex, context, possibleReason);
         }
@@ -587,7 +549,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         try {
             createTable(ownerId, table);
         } catch (InvalidOwnerIdException ex) {
-            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, ex, new StringBuilder().append("database Owner Id: ").append(ownerId).toString(), "This error is strange and shouldn't ever happen");
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, ex, "database Owner Id: " + ownerId, "This error is strange and shouldn't ever happen");
         } catch (Exception e) {
             throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "We couldn't open the Database, you should checkout the cause");
         }
@@ -643,7 +605,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                     if (dbRecord.isUseOfVariable()) {
                         for (int j = 0; j < variablesResult.size(); ++j) {
 
-                            if (variablesResult.get(j).getName().equals(dbRecord.getValue())) {
+                            if (variablesResult.get(j).getName().equals(dbRecord.getValue())){
                                 strRecords.append(dbRecord.getName())
                                         .append(" = '")
                                         .append(variablesResult.get(j).getValue())
@@ -659,9 +621,8 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 }
             }
 
-
-
-            return database.compileStatement("UPDATE " + table.getTableName() + " SET " + strRecords + " " + " " );
+            return database.compileStatement("UPDATE " + table.getTableName() + " SET " + strRecords + " " + table.makeFilter());
+//            database.execSQL();
 
         } catch (Exception exception) {
             throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
@@ -673,7 +634,8 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         try {
             StringBuilder strRecords = new StringBuilder("");
             StringBuilder strValues = new StringBuilder("");
-             List<DatabaseRecord> records = record.getValues();
+
+            List<DatabaseRecord> records = record.getValues();
 
 
             for (int i = 0; i < records.size(); ++i) {
@@ -686,7 +648,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                     strValues.append(",");
 
                 if (records.get(i).isUseOfVariable()) {
-                    for (AndroidVariable variableResult : variableResultList) {
+                    for (AndroidVariable variableResult :  variableResultList) {
 
                         if (variableResult.getName().equals(records.get(i).getValue())) {
                             strValues.append("'")
@@ -700,13 +662,11 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                             .append("'");
                 }
             }
-
-
-//            database.execSQL(query.toString());
-
-            return database.compileStatement("INSERT INTO " + table.getTableName() + "( " + strRecords + ") VALUES (" + strValues + ")" );
+            return database.compileStatement("INSERT INTO " + table.getTableName() + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
+//            database.execSQL();
         } catch (Exception exception) {
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         }
     }
+
 }

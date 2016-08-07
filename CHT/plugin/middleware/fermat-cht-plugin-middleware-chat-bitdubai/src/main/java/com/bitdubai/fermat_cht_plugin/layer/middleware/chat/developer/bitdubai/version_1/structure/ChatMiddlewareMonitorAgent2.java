@@ -43,7 +43,9 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorCo
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ActionOnline;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
@@ -57,6 +59,8 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.Distribution
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
@@ -64,6 +68,7 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingActionListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
+import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure.ChatActorCommunitySubAppModuleSearch;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 
 import java.sql.Timestamp;
@@ -331,6 +336,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
      */
     public void checkIncomingChat(ChatMetadata chatMetadata)
             throws CantGetPendingTransactionException,
+            CantListChatException,
             UnexpectedResultReturnedFromDatabaseException {
         try {
             chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
@@ -341,38 +347,45 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                     pluginFileSystem);
 
             System.out.println("12345 CHECKING INCOMING CHAT");
-            saveChat(chatMetadata);
 
-            saveMessage(chatMetadata);
-
+            chatMetadata.getLocalActorPublicKey();
+            ChatExposingData chatExposingData = getChatActorSearch().getResult(chatMetadata.getLocalActorPublicKey());
+            System.out.println("12345 CHECKING CONTACT EXIST");
+            if(chatExposingData != null) {
+                System.out.println("12345 CONTACT ALREADY EXIST");
+                saveChat(chatMetadata);
+                //Start: Commented trying to avoid messages in wrong chat
+//                    saveMessage(chatMetadata);
+                //End: Commented trying to avoid messages in wrong chat
 //            FermatBundle fermatBundle = new FermatBundle();
 //            fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
 //            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
 //            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle);
-            FermatBundle fermatBundle = new FermatBundle();
-            fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
-            fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode()));
-            fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-            fermatBundle.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE_NOTIFICATION);
-            fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+                FermatBundle fermatBundle = new FermatBundle();
+                fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+                fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode()));
+                fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                fermatBundle.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE_NOTIFICATION);
+                fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+                fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-            FermatBundle fermatBundle2 = new FermatBundle();
-            fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
-            fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-            fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
+                FermatBundle fermatBundle2 = new FermatBundle();
+                fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+                fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
 
-            FermatBundle fermatBundle3 = new FermatBundle();
-            fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
-            fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-            fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
+                FermatBundle fermatBundle3 = new FermatBundle();
+                fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+                fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
 
 //            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
 //            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-
+            }else
+                System.out.println("12345 CONTACT DOES NOT EXIST");
         } catch (DatabaseOperationException e) {
             throw new CantGetPendingTransactionException(
                     e,
@@ -408,6 +421,12 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             e.printStackTrace();
         }
 
+    }
+
+
+    public ChatActorCommunitySearch getChatActorSearch() {
+        return new ChatActorCommunitySubAppModuleSearch(chatActorNetworkServiceManager) {
+        };
     }
 
     /**
@@ -811,11 +830,8 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             DatabaseOperationException,
             CantSaveMessageException,
             CantGetMessageException, SendStatusUpdateMessageNotificationException {
-        UUID messageId = chatMetadata.getMessageId();
         System.out.println("12345 SAVING MESSAGE");
-//        Message messageRecorded = chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
         Message messageRecorded = null;
-//        if (messageRecorded == null) {
         /**
          * In this case, the message is not created in database, so, is an incoming message,
          * I need to create a new message
@@ -823,7 +839,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
         messageRecorded = getMessageFromChatMetadata(
                 chatMetadata);
         if (messageRecorded == null) return;
-//        }
 
         messageRecorded.setStatus(MessageStatus.RECEIVE);
         chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
@@ -836,32 +851,56 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
      * @param chatMetadata
      * @throws DatabaseOperationException
      */
-    private void saveChat(ChatMetadata chatMetadata) throws DatabaseOperationException, CantGetChatException, CantSaveChatException {
-        String localPublicKey;
-        PlatformComponentType localType;
-        String remotePublicKey;
-        PlatformComponentType remoteType;
+    private void saveChat(ChatMetadata chatMetadata)
+            throws DatabaseOperationException, CantGetChatException,
+            CantSaveChatException,
+            CantSaveMessageException,
+            CantGetMessageException, SendStatusUpdateMessageNotificationException {
+
         System.out.println("12345 SAVING CHAT");
-        Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatMetadata.getChatId());
-        if (chat == null)
+        Chat chat=null;
+        //Start: Commented trying to avoid messages in wrong chat
+        //Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatMetadata.getChatId());
+        //if(chat==null)
+        //End: Commented trying to avoid messages in wrong chat
             chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
 
         // change to put in the remote device in the correct place of table chat
         if (chat == null) {
             chat = getChatFromChatMetadata(chatMetadata);
-        } else {
-            localPublicKey = chatMetadata.getRemoteActorPublicKey();
-            if (!localPublicKey.equals(chat.getRemoteActorPublicKey())) {
-                chat.setLocalActorPublicKey(localPublicKey);
-            }
         }
+        //Start: Commented trying to avoid messages in wrong chat
+        //
+        // else {
+//            localPublicKey = chatMetadata.getRemoteActorPublicKey();
+//            if (!localPublicKey.equals(chat.getRemoteActorPublicKey())) {
+//                chat.setLocalActorPublicKey(localPublicKey);
+//            }
+//        }
+        //End: Commented trying to avoid messages in wrong chat
         chat.setLastMessageDate(new Timestamp(System.currentTimeMillis()));//updating date of last message arrived in chat
 
         chat.setStatus(ChatStatus.VISSIBLE);
 
         chatMiddlewareDatabaseDao.saveChat(chat);
-    }
 
+        //Start: Implementation trying to avoid messages in wrong chat
+        Message messageRecorded = null;
+//        if (messageRecorded == null) {
+        /**
+         * In this case, the message is not created in database, so, is an incoming message,
+         * I need to create a new message
+         */
+        messageRecorded = getMessageFromChatMetadata(
+                chatMetadata);
+        if (messageRecorded == null) return;
+//        }
+        messageRecorded.setChatId(chat.getChatId());
+        messageRecorded.setStatus(MessageStatus.RECEIVE);
+        chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
+        chatMiddlewareManager.sendDeliveredMessageNotification(messageRecorded);
+        //End: Implementation trying to avoid messages in wrong chat
+    }
 
     /**
      * This method creates a new Message from incoming metadata

@@ -185,7 +185,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
             }
 
             final SimpleListDialogFragment<CurrencyPairAndProvider> dialogFragment = new SimpleListDialogFragment<>();
-            dialogFragment.configure("Select a Provider", providers);
+            dialogFragment.configure(getResources().getString(R.string.select_provider), providers);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<CurrencyPairAndProvider>() {
                 @Override
                 public void onItemSelected(CurrencyPairAndProvider selectedItem) {

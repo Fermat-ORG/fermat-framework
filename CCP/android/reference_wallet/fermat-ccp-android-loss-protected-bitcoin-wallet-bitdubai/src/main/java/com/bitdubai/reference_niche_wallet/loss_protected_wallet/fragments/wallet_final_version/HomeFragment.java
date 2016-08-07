@@ -32,15 +32,20 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
@@ -156,57 +161,36 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             lossProtectedWalletmanager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
-                balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+            //load settings params
+            if(appSession.getData(SessionConstant.SETTINGS_LOADED) != null) {
+                if (!(Boolean) appSession.getData(SessionConstant.SETTINGS_LOADED)) {
+                    loadSettings();
+                }
+                else
+                {
+                    if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                        balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+                    if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                        typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
+
+                    blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+
+                }
+            }
             else
-                appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
-
-            if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
-                typeAmountSelected = ((ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED));
-            else
-                appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
-
-            if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE) != null)
-                actuaExchangeRate = Double.parseDouble(String.valueOf(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
-            else
-                appSession.setData(SessionConstant.ACTUAL_EXCHANGE_RATE, 0);
-
-            try {
-                lossProtectedWalletSettings = lossProtectedWalletmanager.loadAndGetSettings(appSession.getAppPublicKey());
-            } catch (Exception e) {
-                lossProtectedWalletSettings = null;
+            {
+                loadSettings();
             }
-
-
-            if(lossProtectedWalletSettings == null){
-                lossProtectedWalletSettings = new LossProtectedWalletSettings();
-                lossProtectedWalletSettings.setIsContactsHelpEnabled(true);
-                lossProtectedWalletSettings.setIsPresentationHelpEnabled(true);
-                lossProtectedWalletSettings.setNotificationEnabled(true);
-                lossProtectedWalletSettings.setLossProtectedEnabled(true);
-
-            }
-
-            //default btc network
-            if(lossProtectedWalletSettings.getBlockchainNetworkType()==null){
-                lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-            }
-
-
-            try {
-                if(lossProtectedWalletmanager!=null) lossProtectedWalletmanager.persistSettings(appSession.getAppPublicKey(), lossProtectedWalletSettings);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
-
-            final LossProtectedWalletSettings lossProtectedWalletSettingstemp = lossProtectedWalletSettings;
-
 
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable() {
                 public void run() {
-                    if (lossProtectedWalletSettingstemp.isPresentationHelpEnabled()) {
+                    if ((Boolean)appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED)) {
                         setUpPresentation(false);
                     }
 
@@ -743,7 +727,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                 changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
                 return true;
             }else {
-                setUpPresentation(lossProtectedWalletSettings.isPresentationHelpEnabled());
+                setUpPresentation((Boolean)appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED));
                 return true;
             }
 
@@ -964,5 +948,73 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
         if(fermatWorker != null)
             fermatWorker.shutdownNow();
         super.onStop();
+    }
+
+
+    private void loadSettings(){
+        try {
+            try {
+                lossProtectedWalletSettings = lossProtectedWalletmanager.loadAndGetSettings(appSession.getAppPublicKey());
+
+            } catch (Exception e) {
+                lossProtectedWalletSettings = null;
+            }
+
+                    if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                        balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+                    if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                        typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+                    else
+                        appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
+
+                    //get wallet settings
+
+
+                    if (lossProtectedWalletSettings == null) {
+                        lossProtectedWalletSettings = new LossProtectedWalletSettings();
+                        lossProtectedWalletSettings.setIsContactsHelpEnabled(true);
+                        lossProtectedWalletSettings.setIsPresentationHelpEnabled(true);
+                        lossProtectedWalletSettings.setNotificationEnabled(true);
+                       // lossProtectedWalletSettings.setIsBlockchainDownloadEnabled(true);
+                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                        lossProtectedWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+                        lossProtectedWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
+                        lossProtectedWalletSettings.setLossProtectedEnabled(true);
+                        if(lossProtectedWalletmanager!=null)
+                            lossProtectedWalletmanager.persistSettings(appSession.getAppPublicKey(), lossProtectedWalletSettings);
+
+                        appSession.setData(SessionConstant.NOTIFICATION_ENABLED, true);
+                        appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, true);
+                        appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
+                        appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
+                        appSession.setData(SessionConstant.LOSS_PROTECTED_ENABLED, true);
+                        appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
+                    } else {
+                        if (lossProtectedWalletSettings.getBlockchainNetworkType() == null)
+                            lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                        else
+                            blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
+
+
+                        appSession.setData(SessionConstant.FEE_LEVEL, lossProtectedWalletSettings.getFeedLevel());
+                       // appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, lossProtectedWalletSettings.isBlockchainDownloadEnabled());
+                        appSession.setData(SessionConstant.NOTIFICATION_ENABLED, lossProtectedWalletSettings.getNotificationEnabled());
+                        appSession.setData(SessionConstant.PRESENTATION_HELP_ENABLED, lossProtectedWalletSettings.isPresentationHelpEnabled());
+                        appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
+                        appSession.setData(SessionConstant.LOSS_PROTECTED_ENABLED, lossProtectedWalletSettings.getLossProtectedEnabled());
+
+                    }
+
+                   lossProtectedWalletmanager.persistSettings(appSession.getAppPublicKey(), lossProtectedWalletSettings);
+                    appSession.setData(SessionConstant.SETTINGS_LOADED, true);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

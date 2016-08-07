@@ -95,7 +95,7 @@ public class FragmentsCommons {
                 }
             });
         } catch (OutOfMemoryError outOfMemoryError) {
-            Toast.makeText(activity, "Error: out of memory ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, activity.getResources().getString(R.string.error_memory), Toast.LENGTH_SHORT).show();
         }
         return view;
     }

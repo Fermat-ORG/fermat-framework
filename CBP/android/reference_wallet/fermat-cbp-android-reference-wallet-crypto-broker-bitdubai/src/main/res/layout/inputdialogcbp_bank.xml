@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_corners"
     android:gravity="center"
     android:orientation="vertical"
-    android:textColor="#00a99d"
-    android:background="@drawable/rounded_corners">
+    android:textColor="#00a99d">
 
-
-<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/txt_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:id="@+id/txt_title"
-        android:text="NEW BANK WALLET"
-        android:textSize="16sp"
-        android:textColor="#FFF"
-        android:gravity="center"
         android:background="#00a99d"
-        />
-
-
-
+        android:gravity="center"
+        android:text="@string/new_bank_wallet"
+        android:textColor="#FFF"
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,201 +24,182 @@
         android:paddingBottom="2dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:paddingTop="50dp"
-        >
-
-
-
+        android:paddingTop="50dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Currency"
-            android:textColor="#7A7A7A"
+            android:paddingBottom="1dp"
             android:paddingTop="20dp"
-            android:paddingBottom="1dp"/>
+            android:text="@string/currency"
+            android:textColor="#7A7A7A" />
 
         <Spinner
             android:id="@+id/cbp_bank_account_currency"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
             android:layout_gravity="center"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            />
+            android:textAlignment="center" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Account type"
-            android:textColor="#7A7A7A"
-            android:paddingTop="20dp"
             android:paddingBottom="1dp"
-            />
-
+            android:paddingTop="20dp"
+            android:text="@string/account_type"
+            android:textColor="#7A7A7A" />
 
         <Spinner
             android:id="@+id/cbp_bank_account_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
             android:layout_gravity="center"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            />
+            android:textAlignment="center" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bank name"
-            android:textColor="#7A7A7A"
-            android:paddingTop="20dp"
             android:paddingBottom="1dp"
-            />
-
+            android:paddingTop="20dp"
+            android:text="@string/bank_name"
+            android:textColor="#7A7A7A" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/cbp_bank_account_bank_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/cbp_bank_account_bank_name_count"
-                android:hint="Bank name"
-                android:textColorHint="#9a9a9c"
-                android:maxLength="10"
-                android:paddingLeft="15dp"
-                android:textColor="#000"
-                android:textSize="16sp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                />
+                android:layout_toLeftOf="@+id/cbp_bank_account_bank_name_count"
+                android:layout_toStartOf="@+id/cbp_bank_account_bank_name_count"
+                android:hint="@string/bank_name"
+                android:maxLength="10"
+                android:paddingLeft="15dp"
+                android:paddingStart="15dp"
+                android:textColor="#000"
+                android:textColorHint="#9a9a9c"
+                android:textSize="16sp" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbp_bank_account_bank_name_count"
                 android:layout_width="25dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:text="10"
                 android:textColor="#bbb"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
         </RelativeLayout>
-
-
-
-
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Alias"
-            android:textColor="#7A7A7A"
-            android:paddingTop="20dp"
             android:paddingBottom="1dp"
-            />
+            android:paddingTop="20dp"
+            android:text="@string/alias"
+            android:textColor="#7A7A7A" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/cbp_bank_account_alias"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/cbp_bank_account_alias_count"
-                android:maxLength="10"
-                android:hint="Alias"
-                android:textColorHint="#9a9a9c"
-                android:paddingLeft="15dp"
-                android:textColor="#000"
-                android:textSize="16sp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                />
+                android:layout_toLeftOf="@+id/cbp_bank_account_alias_count"
+                android:layout_toStartOf="@+id/cbp_bank_account_alias_count"
+                android:hint="@string/alias"
+                android:maxLength="10"
+                android:paddingLeft="15dp"
+                android:paddingStart="15dp"
+                android:textColor="#000"
+                android:textColorHint="#9a9a9c"
+                android:textSize="16sp" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbp_bank_account_alias_count"
                 android:layout_width="25dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:text="10"
                 android:textColor="#bbb"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
         </RelativeLayout>
-
-
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Account"
-            android:textColor="#7A7A7A"
+            android:paddingBottom="1dp"
             android:paddingTop="20dp"
-            android:paddingBottom="1dp"/>
+            android:text="@string/account"
+            android:textColor="#7A7A7A" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/cbp_bank_account_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/cbp_bank_account_number_count"
-                android:hint="Account Number"
-                android:maxLength="25"
-                android:textColorHint="#9a9a9c"
-                android:paddingLeft="15dp"
-                android:textColor="#000"
-                android:textSize="12sp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                />
-
+                android:layout_toLeftOf="@+id/cbp_bank_account_number_count"
+                android:layout_toStartOf="@+id/cbp_bank_account_number_count"
+                android:hint="@string/account_number"
+                android:maxLength="25"
+                android:paddingLeft="15dp"
+                android:paddingStart="15dp"
+                android:textColor="#000"
+                android:textColorHint="#9a9a9c"
+                android:textSize="14sp"
+                android:inputType="number" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbp_bank_account_number_count"
                 android:layout_width="25dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:text="10"
                 android:textColor="#bbb"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
         </RelativeLayout>
-
-
-
-
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/idcbp_button_action_bank"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_gravity="right"
-            android:text="CREATE"
-            android:textColor="#000"
-            android:padding="15dp"
+            android:layout_gravity="end"
             android:layout_marginTop="10dp"
-            />
-
+            android:padding="15dp"
+            android:text="@string/cbw_create"
+            android:textColor="#000"
+            android:textSize="16sp"
+            android:textAllCaps="true"/>
     </LinearLayout>
 </RelativeLayout>

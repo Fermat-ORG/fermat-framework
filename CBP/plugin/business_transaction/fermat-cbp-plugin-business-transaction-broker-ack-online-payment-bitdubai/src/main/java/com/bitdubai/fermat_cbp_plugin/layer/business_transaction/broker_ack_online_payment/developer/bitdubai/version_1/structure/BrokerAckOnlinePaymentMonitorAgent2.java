@@ -152,7 +152,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
 
                     final CustomerBrokerContractSale saleContract = contractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
                     applySalePaymentCredit(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), saleContract, saleContract.getNegotiatiotId());
-                    System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Make Bank Restock");
+                    System.out.println("ACK_ONLINE_PAYMENT - [Broker] Make Crypto Restock");
 
                     dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.ONLINE_PAYMENT_ACK);
                     System.out.println("ACK_ONLINE_PAYMENT [Broker] - ContractTransactionStatus updated to ONLINE_PAYMENT_ACK");
@@ -425,10 +425,12 @@ public class BrokerAckOnlinePaymentMonitorAgent2
         String clauseValue;
 
         clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.EXCHANGE_RATE);
-        final BigDecimal priceReference = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
+        assert clauseValue != null;
+        final BigDecimal priceReference = new BigDecimal(Double.valueOf(clauseValue));
 
         clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_CURRENCY_QUANTITY);
-        BigDecimal amount = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
+        assert clauseValue != null;
+        BigDecimal amount = new BigDecimal(Double.valueOf(clauseValue));
 
         clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
         final MoneyType paymentMethod = MoneyType.getByCode(clauseValue);

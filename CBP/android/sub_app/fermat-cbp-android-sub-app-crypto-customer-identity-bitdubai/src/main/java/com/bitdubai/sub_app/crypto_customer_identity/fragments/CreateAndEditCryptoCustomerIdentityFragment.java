@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.crypto_customer_identity.fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -74,7 +73,7 @@ import static android.widget.Toast.makeText;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * Created by Penny, 26/07/2016
  */
 public class CreateAndEditCryptoCustomerIdentityFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerIdentityModuleManager>, ResourceProviderManager>
@@ -100,11 +99,12 @@ public class CreateAndEditCryptoCustomerIdentityFragment
     private int maxLenghtTextCount = 30;
     FermatTextView textCount;
     private String cryptoCustomerPublicKey;
+    IdentityCustomerPreferenceSettings subappSettings;
 
     private CryptoCustomerIdentityInformation identityInfo;
     List<CryptoCustomerIdentityInformation> customerIdentities = new ArrayList<>();
 
-    IdentityCustomerPreferenceSettings settings;
+//    IdentityCustomerPreferenceSettings settings;
     boolean isGpsDialogEnable;
 
     private ExecutorService executor;
@@ -131,6 +131,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         super.onCreate(savedInstanceState);
 
         try {
+            //Getting the first Identity since it was implemented for multiples identities before
             customerIdentities = appSession.getModuleManager().getAllCryptoCustomersIdentities(0, 0);
 
             identityInfo = (customerIdentities.size() > 0) ? customerIdentities.get(0) : null;
@@ -169,6 +170,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootLayout = inflater.inflate(R.layout.fragment_create_crypto_customer_identity_v2, container, false);
         initViews(rootLayout);
+        getToolbar().setVisibility(View.VISIBLE);
         return rootLayout;
     }
 
@@ -183,25 +185,28 @@ public class CreateAndEditCryptoCustomerIdentityFragment
 
         turnGPSOn();
 
-        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_identity_customer)
-                .setBody(R.string.cbp_customer_identity_welcome_body)
-                .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
-                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                .setVIewColor(R.color.ccc_color_dialog_identity)
-                .setIsCheckEnabled(false)
-                .build();
+//        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+//                .setBannerRes(R.drawable.banner_identity_customer)
+//                .setBody(R.string.cbp_customer_identity_welcome_body)
+//                .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
+//                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+//                .setVIewColor(R.color.ccc_color_dialog_identity)
+//                .setIsCheckEnabled(false)
+//                .build();
+//
+//        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                checkGPSOn();
+//            }
+//        });
 
-        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                checkGPSOn();
-            }
-        });
-
-        IdentityCustomerPreferenceSettings subappSettings;
         try {
-            subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+//            if((appSession.getData(FragmentsCommons.SETTING_CUSTOMER) != null)) {
+//                subappSettings = (IdentityCustomerPreferenceSettings) appSession.getData(FragmentsCommons.SETTING_CUSTOMER);
+//            } else {
+                subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+//            }
         } catch (Exception e) {
             subappSettings = null;
         }
@@ -209,22 +214,24 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         if (subappSettings == null) {
             subappSettings = new IdentityCustomerPreferenceSettings();
             subappSettings.setIsPresentationHelpEnabled(true);
+//            appSession.setData(FragmentsCommons.SETTING_CUSTOMER, subappSettings);
+        }
             try {
                 appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), subappSettings);
             } catch (Exception e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
-        }
 
         boolean showDialog;
         try {
-            showDialog = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+//            showDialog = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+            showDialog = subappSettings.isHomeTutorialDialogEnabled();
             if (showDialog) {
-                presentationDialog.show();
+                homeTutorialDialog();
             }
-        } catch (FermatException e) {
-            makeText(getActivity(), "Error dialogo", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            makeText(getActivity(), R.string.crypto_customer_error_dialog, Toast.LENGTH_SHORT).show();
         }
 
         //Check if GPS is on and coordinates are fine
@@ -236,14 +243,13 @@ public class CreateAndEditCryptoCustomerIdentityFragment
 
         try {
             isGpsDialogEnable = true;
-            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
-            isGpsDialogEnable = settings.isGpsDialogEnabled();
+//            subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            isGpsDialogEnable = subappSettings.isGpsDialogEnabled();
         } catch (Exception e) {
-            settings = new IdentityCustomerPreferenceSettings();
-            settings.setGpsDialogEnabled(true);
+            subappSettings = new IdentityCustomerPreferenceSettings();
+            subappSettings.setGpsDialogEnabled(true);
             isGpsDialogEnable = true;
         }
-
 
 
         if (identityInfo != null) { //I'm editing the customer
@@ -255,9 +261,9 @@ public class CreateAndEditCryptoCustomerIdentityFragment
 
             if (cryptoCustomerName == null) {
                 mCustomerName.setText(identityInfo.getAlias());
-                mCustomerName.selectAll();}
-            if (cryptoCustomerBitmap == null)
-            {
+                mCustomerName.selectAll();
+            }
+            if (cryptoCustomerBitmap == null) {
                 profileImage = identityInfo.getProfileImage();
 
                 if (profileImage.length == 0) {
@@ -311,24 +317,22 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         });
 
 
-
         mCustomerName.requestFocus();
         mCustomerName.performClick();
         mCustomerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
         mCustomerName.addTextChangedListener(textWatcher);
         textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.getText().length()));
 
-        mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+       /* mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
-        });
+        });*/
 
         mCustomerName.requestFocus();
 
         textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.length()));
-
 
 
         final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -371,7 +375,6 @@ public class CreateAndEditCryptoCustomerIdentityFragment
                 appSession.setData(FragmentsCommons.CROPPED_IMAGE, identityImageByteArray);
                 appSession.setData(FragmentsCommons.IDENTITY_INFO, identityInfo);
                 appSession.setData(FragmentsCommons.IMAGE_BYTE_ARRAY, identityImageByteArray);
-
 
                 changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_CREATE_IDENTITY, appSession.getAppPublicKey());
                 return true;
@@ -420,7 +423,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.crypto_customer_error_image, Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -430,18 +433,18 @@ public class CreateAndEditCryptoCustomerIdentityFragment
             appSession.setData(FragmentsCommons.CUSTOMER_NAME, mCustomerName.getText().toString());
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER, appSession.getAppPublicKey());
         }
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
-     * Crea una nueva identidad para un crypto customer
+     * Creates the new identity of the customer in device
      */
     private void createNewIdentityInBackDevice() {
         final String customerAlias = mCustomerName.getText().toString();
 
         if (customerAlias.trim().isEmpty()) {
-            Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.crypto_customer_enter_name_alias, Toast.LENGTH_LONG).show();
 
         } else {
             final int accuracy = getAccuracyData();
@@ -461,10 +464,10 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         final byte[] imgInBytes = (cryptoCustomerBitmap != null) ? ImagesUtils.toByteArray(convertImage(R.drawable.no_profile_image)) : profileImage;
 
         if (customerNameText.trim().equals("")) {
-            Toast.makeText(getActivity(), "Please enter a name", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.crypto_customer_enter_name, Toast.LENGTH_LONG).show();
 
         } else if (imgInBytes == null) {
-            Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.crypto_customer_enter_image, Toast.LENGTH_LONG).show();
 
         } else {
             final int accuracy = getAccuracyData();
@@ -493,12 +496,11 @@ public class CreateAndEditCryptoCustomerIdentityFragment
 
         //progressBar.setVisibility(View.GONE);
         if (!isEditing)
-            Toast.makeText(getActivity(), "Crypto Customer Identity Created.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.crypto_customer_identity_created, Toast.LENGTH_LONG).show();
         else
-            Toast.makeText(getActivity(), "Crypto Customer Identity Updated.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.crypto_customer_identity_updated, Toast.LENGTH_LONG).show();
 
         getActivity().onBackPressed();
-        //changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY, appSession.getAppPublicKey());
     }
 
     @Override
@@ -510,14 +512,14 @@ public class CreateAndEditCryptoCustomerIdentityFragment
 
         //progressBar.setVisibility(View.GONE);
 
-        Toast.makeText(getActivity(), "An error occurred trying to create a Crypto Customer Identity", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.crypto_customer_error_create, Toast.LENGTH_SHORT).show();
 
         appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY,
                 UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
     }
 
     private void dispatchTakePictureIntent() {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         // Check permission for CAMERA
         if (Build.VERSION.SDK_INT >= 23) {
             if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
@@ -539,7 +541,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
                     imageToUploadUri = Uri.fromFile(f);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 } else {
-                    Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.crypto_customer_error, Toast.LENGTH_LONG).show();
                 }
             }
         } else {
@@ -551,14 +553,10 @@ public class CreateAndEditCryptoCustomerIdentityFragment
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//        }
     }
 
     private void loadImageFromGallery() {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
@@ -659,7 +657,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
                 if (Build.VERSION.SDK_INT < 23) {
                     String provider = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if (!provider.contains("gps")) { //if gps is disabled
-                        Toast.makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, R.string.crypto_customer_turnon_gps, Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
@@ -667,7 +665,7 @@ public class CreateAndEditCryptoCustomerIdentityFragment
                 } else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if (!provider.contains("gps")) { //if gps is disabled
-                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.crypto_customer_turnon_gps, Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
@@ -675,9 +673,9 @@ public class CreateAndEditCryptoCustomerIdentityFragment
 
             } catch (Exception ex) {
                 if (Build.VERSION.SDK_INT < 23) {
-                    Toast.makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.crypto_customer_turnon_gps, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.crypto_customer_turnon_gps, Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -714,18 +712,43 @@ public class CreateAndEditCryptoCustomerIdentityFragment
         }
     }
 
+    public void homeTutorialDialog() {
+        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                .setBannerRes(R.drawable.banner_identity_customer)
+                .setBody(R.string.cbp_customer_identity_welcome_body)
+                .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setVIewColor(R.color.ccc_color_dialog_identity)
+                .setIconRes(R.drawable.building)
+                .setIsCheckEnabled(false)
+                .build();
+
+        presentationDialog.show();
+
+        presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                checkGPSOn();
+            }
+        });
+    }
+
     public void turnOnGPSDialog() {
         try {
             PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
+                    .setTitle(R.string.cbp_customer_identity_welcome_title_gps)
+                    .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle_gps)
                     .setBody(R.string.cbp_customer_identity_gps)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_identity_customer)
                     .setVIewColor(R.color.ccc_color_dialog_identity)
+                    .setIconRes(R.drawable.building)
+                    .setCheckButtonAndTextVisible(0)
                     .build();
+
             pd.show();
-            settings.setGpsDialogEnabled(false);
-            appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
+            subappSettings.setGpsDialogEnabled(false);
+            appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), subappSettings);
         } catch (Exception e) {
             e.printStackTrace();
         }

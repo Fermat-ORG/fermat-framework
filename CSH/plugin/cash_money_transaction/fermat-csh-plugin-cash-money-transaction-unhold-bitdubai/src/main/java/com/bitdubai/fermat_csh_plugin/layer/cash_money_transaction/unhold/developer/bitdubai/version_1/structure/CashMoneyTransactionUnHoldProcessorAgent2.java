@@ -2,6 +2,7 @@ package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.devel
 
 import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
@@ -14,6 +15,7 @@ import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.develo
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 02/07/16.
  */
@@ -23,17 +25,7 @@ public class CashMoneyTransactionUnHoldProcessorAgent2 extends AbstractAgent {
     private final CashMoneyTransactionUnholdManager unHoldTransactionManager;
     private final CashMoneyWalletManager cashMoneyWalletManager;
     private CashMoneyWallet cashMoneyWallet = null;
-    private String lastPublicKey = "";
 
-    /**
-     * Default constructor with parameters
-     * @param sleepTime
-     * @param timeUnit
-     * @param initDelayTime
-     * @param pluginRoot
-     * @param unHoldTransactionManager
-     * @param cashMoneyWalletManager
-     */
     public CashMoneyTransactionUnHoldProcessorAgent2(
             long sleepTime,
             TimeUnit timeUnit,
@@ -49,6 +41,7 @@ public class CashMoneyTransactionUnHoldProcessorAgent2 extends AbstractAgent {
 
     /**
      * This method contains the logic to start this agent
+     *
      * @return
      */
     @Override
@@ -57,7 +50,8 @@ public class CashMoneyTransactionUnHoldProcessorAgent2 extends AbstractAgent {
     }
 
     @Override
-    protected void onErrorOccur(Exception e) {        pluginRoot.reportError(
+    protected void onErrorOccur(Exception e) {
+        pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("CashMoneyTransactionUnHoldProcessorAgent2 Error"));
     }
@@ -67,8 +61,6 @@ public class CashMoneyTransactionUnHoldProcessorAgent2 extends AbstractAgent {
      * Contains all the logic for the execution of this agent
      */
     private void doTheMainTask() {
-        //System.out.println("CASHUNHOLD - Agent LOOP");
-
         List<CashUnholdTransaction> transactionList;
 
         try {
@@ -86,27 +78,21 @@ public class CashMoneyTransactionUnHoldProcessorAgent2 extends AbstractAgent {
          * If not, changes transaction status to Rejected.
          * Sends an event, notifying the calling plugin the status change
          */
-        for(CashUnholdTransaction transaction : transactionList) {
+        for (CashUnholdTransaction transaction : transactionList) {
 
             //Change the status to pending
             try {
-                unHoldTransactionManager.setTransactionStatusToPending(
-                        transaction.getTransactionId());
+                unHoldTransactionManager.setTransactionStatusToPending(transaction.getTransactionId());
             } catch (CantUpdateUnholdTransactionException ex) {
-                pluginRoot.reportError(
-                        UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
-                        ex);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, ex);
             }
 
             //Open the cash wallet
-            if (cashMoneyWallet == null || transaction.getPublicKeyWallet() != lastPublicKey) {
+            if (cashMoneyWallet == null) {
                 try {
-                    //cashMoneyWallet = cashMoneyWalletManager.loadCashMoneyWallet(transaction.getPublicKeyWallet());
-                    cashMoneyWallet = cashMoneyWalletManager.loadCashMoneyWallet("cash_wallet");
+                    cashMoneyWallet = cashMoneyWalletManager.loadCashMoneyWallet(WalletsPublicKeys.CSH_MONEY_WALLET.getCode());
                 } catch (CantLoadCashMoneyWalletException e) {
-                    pluginRoot.reportError(
-                            UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
-                            e);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
                     continue;
                 }
             }
@@ -119,22 +105,18 @@ public class CashMoneyTransactionUnHoldProcessorAgent2 extends AbstractAgent {
                         transaction.getPublicKeyPlugin(),
                         transaction.getAmount(),
                         transaction.getMemo());
-                unHoldTransactionManager.setTransactionStatusToConfirmed(
-                        transaction.getTransactionId());
+
+                unHoldTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
+
             } catch (CantRegisterUnholdException e) {
                 //if we got not enough fonds, we'll reject this transaction
                 try {
-                    unHoldTransactionManager.setTransactionStatusToRejected(
-                            transaction.getTransactionId());
+                    unHoldTransactionManager.setTransactionStatusToRejected(transaction.getTransactionId());
                 } catch (CantUpdateUnholdTransactionException ex) {
-                    pluginRoot.reportError(
-                            UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
-                            ex);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, ex);
                 }
             } catch (CantUpdateUnholdTransactionException e) {
-                pluginRoot.reportError(
-                        UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
-                        e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
             }
 
             //TODO: Lanzar un evento al plugin que envio la transaccion para avisarle que se actualizo el status de su transaccion.

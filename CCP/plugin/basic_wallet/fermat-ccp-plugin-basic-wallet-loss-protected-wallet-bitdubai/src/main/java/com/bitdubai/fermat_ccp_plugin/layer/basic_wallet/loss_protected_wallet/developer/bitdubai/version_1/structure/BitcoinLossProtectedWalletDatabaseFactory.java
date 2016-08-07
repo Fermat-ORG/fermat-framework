@@ -21,6 +21,7 @@ import java.util.UUID;
 
 /**
  * Created by eze on 2015.06.23..
+ * updated by Andres Abreu aabreu1 2016.08.01..
  */
 public class BitcoinLossProtectedWalletDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
@@ -99,6 +100,9 @@ public class BitcoinLossProtectedWalletDatabaseFactory implements DealsWithPlugi
         table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 10,false);
         table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
         table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_EXCHANGE_RATE_COLUMN_NAME, DatabaseDataType.REAL, 0,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TRANSACTION_FEE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TRANSACTION_FEE_ORIGIN_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TRANSACTION_TOTAL_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
 
         return table;
     }

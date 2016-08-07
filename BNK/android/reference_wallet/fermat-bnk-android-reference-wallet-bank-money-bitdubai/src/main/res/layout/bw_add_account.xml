@@ -24,7 +24,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="25dp"
                 android:gravity="center_horizontal"
-                android:text="ADD ACCOUNT"
+                android:text="@string/bnk_add_acc_title"
                 android:textColor="#fff"
                 android:textSize="@dimen/large_text_size"
                 android:textStyle="bold" />
@@ -36,7 +36,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
-                android:text="Please enter the following account information:"
+                android:text="@string/bnk_add_acc_subtitle"
                 android:textColor="#fff"
                 android:textSize="@dimen/text_size" />
 
@@ -44,7 +44,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Account Number:"
+                android:text="@string/bnk_add_acc_acc_number"
                 android:layout_marginTop="20dp"
                 android:paddingLeft="10dp"
                 android:textSize="16sp"
@@ -64,7 +64,7 @@
                     android:layout_toLeftOf="@+id/account_number_count"
                     android:paddingLeft="15dp"
                     android:layout_marginLeft="15dp"
-                    android:hint="Enter account number"
+                    android:hint="@string/bnk_add_acc_acc_number_hint"
                     android:textColor="#fff"
                     android:textSize="14sp"
                     />
@@ -85,7 +85,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Account Alias:"
+                android:text="@string/bnk_add_acc_acc_alias"
                 android:layout_marginTop="15dp"
                 android:paddingLeft="10dp"
                 android:textSize="16sp"
@@ -106,7 +106,7 @@
                     android:layout_toLeftOf="@+id/account_alias_count"
                     android:paddingLeft="15dp"
                     android:layout_marginLeft="15dp"
-                    android:hint="Enter alias"
+                    android:hint="@string/bnk_add_acc_acc_alias_hint"
                     android:textColor="#fff"
                     android:textSize="14sp"
                     />
@@ -128,7 +128,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Currency:"
+                android:text="@string/bnk_add_acc_currency"
                 android:layout_marginTop="15dp"
                 android:paddingLeft="10dp"
                 android:textSize="16sp"
@@ -146,7 +146,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Image:"
+                android:text="@string/bnk_add_acc_image"
                 android:layout_marginTop="15dp"
                 android:paddingLeft="10dp"
                 android:textSize="16sp"
