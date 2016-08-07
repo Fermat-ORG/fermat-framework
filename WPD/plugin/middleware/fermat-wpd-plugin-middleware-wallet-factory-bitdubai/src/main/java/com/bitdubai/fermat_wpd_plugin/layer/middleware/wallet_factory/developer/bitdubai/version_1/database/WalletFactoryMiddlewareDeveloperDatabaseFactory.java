@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -9,12 +8,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.CantInitializeWalletFactoryMiddlewareDatabaseException;
 
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 17/08/15.
  *
  * @version 1.0
@@ -179,7 +177,6 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory {//implements Deals
         tables.add(navigation_structureTable);
 
 
-
         return tables;
     }
 
@@ -196,12 +193,12 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory {//implements Deals
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -221,7 +218,7 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory {//implements Deals
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }

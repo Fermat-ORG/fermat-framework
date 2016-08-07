@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.FermatException;
  *
  * @author Ezequiel Postan (ezequiel.postan@gmail.com) on 2015.07.15
  * @author Update by Roberto Requena - (rart3001@gmail.com) on 14/08/15.
- *
  * @version 1.0
  * @since Java JDK 1.7
  */

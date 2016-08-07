@@ -23,6 +23,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFr
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_android_api.utils.ScreenUtils;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -70,7 +71,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
     /**
      * MANAGERS
      */
-    private  static ErrorManager errorManager;
+    private static ErrorManager errorManager;
 
     private SearchView mSearchView;
 
@@ -89,7 +90,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
 
     ArrayList<Item> lstItems;
 
-    private boolean started=false;
+    private boolean started = false;
     private List<Item> lstItemsWithIcon;
 
     /**
@@ -143,11 +144,11 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 4, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
-            adapter = new DesktopAdapter(getActivity(), lstItems,this,DesktopAdapter.DEKSTOP,getScreenSize());
+            adapter = new DesktopAdapter(getActivity(), lstItems,this,DesktopAdapter.DEKSTOP, ScreenUtils.getScreenSize(getActivity()));
             recyclerView.setAdapter(adapter);
             rootView.setBackgroundColor(Color.TRANSPARENT);
 
-            ((ImageView)rootView.findViewById(R.id.container_title)).setImageResource(R.drawable.title_p2p);
+            ((ImageView) rootView.findViewById(R.id.container_title)).setImageResource(R.drawable.title_p2p);
 
 
             ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
@@ -156,12 +157,12 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
 
             //adapter.setFermatListEventListener(this);
 
-        } catch(Exception ex) {
+        } catch (Exception ex) {
 //            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             //         Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             ex.printStackTrace();
 
-        }catch (OutOfMemoryError outOfMemoryError){
+        } catch (OutOfMemoryError outOfMemoryError) {
             outOfMemoryError.printStackTrace();
         }
 
@@ -217,7 +218,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
 
     @Override
     public void onRefresh() {
-        if(!started) {
+        if (!started) {
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -289,8 +290,6 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
     }
 
 
-
-
     @Override
     public boolean onQueryTextSubmit(String name) {
         return true;
@@ -304,13 +303,12 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
 
     @Override
     public boolean onClose() {
-        if(!mSearchView.isActivated()){
+        if (!mSearchView.isActivated()) {
             //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
         }
 
         return true;
     }
-
 
 
     private synchronized List<Item> getMoreData() {
@@ -332,7 +330,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
 //                    lstItemsWithIcon.add(item);
 //                }
 //            }
-            InstalledApp installedApp = new InstalledApp("Dating","tinder_public_key",new Version(),R.drawable.datting,0,0, AppsStatus.DEV,null);
+            InstalledApp installedApp = new InstalledApp("Dating", "tinder_public_key", new Version(), R.drawable.datting, 0, 0, AppsStatus.DEV, null);
 
             lstInstalledApps.add(installedApp);
             Item item = new Item(installedApp);
@@ -340,21 +338,21 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
             item.setPosition(0);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("Jobs","Airbnb_public_key",new Version(),R.drawable.jobs,0,0,  AppsStatus.DEV,null);
+            installedApp = new InstalledApp("Jobs", "Airbnb_public_key", new Version(), R.drawable.jobs, 0, 0, AppsStatus.DEV, null);
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
             item.setIconResource(R.drawable.jobs);
             item.setPosition(1);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("Market Place","eBay_public_key",new Version(),R.drawable.market_place_icon,0,0,  AppsStatus.DEV,null);
+            installedApp = new InstalledApp("Market Place", "eBay_public_key", new Version(), R.drawable.market_place_icon, 0, 0, AppsStatus.DEV, null);
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
             item.setIconResource(R.drawable.market_place_icon);
             item.setPosition(2);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("Household","mercado_libre_public_key",new Version(),R.drawable.house_hold,0,0,  AppsStatus.DEV,null);
+            installedApp = new InstalledApp("Household", "mercado_libre_public_key", new Version(), R.drawable.house_hold, 0, 0, AppsStatus.DEV, null);
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
             item.setIconResource(R.drawable.house_hold);
@@ -383,8 +381,8 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
 //            lstItemsWithIcon.add(item);
 
 
-            for(int i=0;i<12;i++){
-                Item emptyItem = new Item(new EmptyItem(0,i));
+            for (int i = 0; i < 12; i++) {
+                Item emptyItem = new Item(new EmptyItem(0, i));
                 emptyItem.setIconResource(-1);
                 arrItemsWithoutIcon[i] = emptyItem;
             }
@@ -394,23 +392,22 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
 //            }
 
             int pos = 0;
-            for(int i = 0;i<lstItemsWithIcon.size();i++){
+            for (int i = 0; i < lstItemsWithIcon.size(); i++) {
                 Item itemIcon = lstItemsWithIcon.get(i);
-                if((itemIcon.getAppStatus() == getFermatActivityManager().getAppStatus())){
-                    arrItemsWithoutIcon[pos]= itemIcon;
+                if ((itemIcon.getAppStatus() == getFermatActivityManager().getAppStatus())) {
+                    arrItemsWithoutIcon[pos] = itemIcon;
                     pos++;
                 }
             }
 
             dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return dataSet;
     }
-
 
 
     @Override
@@ -453,12 +450,12 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
     }
 
 
-    private void select(AppsStatus appsStatus){
+    private void select(AppsStatus appsStatus) {
         try {
             List<Item> list = new ArrayList<>();
             for (Item installedWallet : lstItemsWithIcon) {
-                if(installedWallet.getAppStatus()!=null) {
-                    if(appsStatus.isAppStatusAvailable(installedWallet.getAppStatus())) {
+                if (installedWallet.getAppStatus() != null) {
+                    if (appsStatus.isAppStatusAvailable(installedWallet.getAppStatus())) {
                         list.add(installedWallet);
                     }
                 }
@@ -480,7 +477,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
                 ((DesktopAdapter) recyclerView.getAdapter()).changeDataSet(Arrays.asList(arrItemsWithoutIcon));
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -511,8 +508,8 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
 
             select(appsStatus);
             super.onUpdateViewOnUIThread(code);
-        }catch (Exception e){
-            Log.e(TAG,"Desktop. no olvidar borrar esto. furszy");
+        } catch (Exception e) {
+            Log.e(TAG, "Desktop. no olvidar borrar esto. furszy");
         }
     }
 

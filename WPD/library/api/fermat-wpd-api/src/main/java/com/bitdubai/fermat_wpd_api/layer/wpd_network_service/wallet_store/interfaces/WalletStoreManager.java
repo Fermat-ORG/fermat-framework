@@ -5,7 +5,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_wpd_api.all_definition.exceptions.CantGetWalletLanguageException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetDesignerException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetDeveloperException;
@@ -19,9 +22,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.except
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantPublishTranslatorInCatalogException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 
 import java.net.URL;
 import java.util.List;

@@ -133,7 +133,7 @@ public abstract class AbstractLayer {
             return addons.get(addonReference);
         } else {
 
-            throw new AddonNotFoundException(new StringBuilder().append("addon: ").append(addonReference).toString(), "addon not found in the specified layer.");
+            throw new AddonNotFoundException("addon: " + addonReference, "addon not found in the specified layer.");
         }
     }
 
@@ -143,7 +143,7 @@ public abstract class AbstractLayer {
             return plugins.get(pluginReference);
         } else {
 
-            throw new PluginNotFoundException(new StringBuilder().append("plugin: ").append(pluginReference).toString(), "plugin not found in the specified layer.");
+            throw new PluginNotFoundException("plugin: " + pluginReference, "plugin not found in the specified layer.");
         }
     }
 

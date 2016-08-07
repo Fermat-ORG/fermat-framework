@@ -46,7 +46,7 @@ public class DeveloperDatabaseFactory {
         /**
          * Wallet table
          */
-        DeveloperDatabaseTable  walletTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_TABLE_NAME, walletTableColumns);
+        DeveloperDatabaseTable walletTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_TABLE_NAME, walletTableColumns);
         tables.add(walletTable);
 
         /**
@@ -59,20 +59,20 @@ public class DeveloperDatabaseFactory {
         /**
          * Skin table
          */
-        DeveloperDatabaseTable  skinTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_TABLE_NAME, skinTableColumns);
-        tables.add(skinTable );
+        DeveloperDatabaseTable skinTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_TABLE_NAME, skinTableColumns);
+        tables.add(skinTable);
 
         /**
          * Language table columns
          */
         List<String> languageTableColumns = new ArrayList<String>();
-        languageTableColumns .add(WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_ID_COLUMN_NAME);
-        languageTableColumns .add(WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_INSTALATIONSTATUS_COLUMN_NAME);
+        languageTableColumns.add(WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_ID_COLUMN_NAME);
+        languageTableColumns.add(WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_INSTALATIONSTATUS_COLUMN_NAME);
 
         /**
          * Wallet table
          */
-        DeveloperDatabaseTable  languageTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_TABLE_NAME, languageTableColumns );
+        DeveloperDatabaseTable languageTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_TABLE_NAME, languageTableColumns);
         tables.add(languageTable);
 
 
@@ -80,7 +80,7 @@ public class DeveloperDatabaseFactory {
     }
 
 
-    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory,  Database database, DeveloperDatabaseTable developerDatabaseTable) {
+    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, Database database, DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
          */
@@ -92,12 +92,12 @@ public class DeveloperDatabaseFactory {
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -117,7 +117,7 @@ public class DeveloperDatabaseFactory {
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }

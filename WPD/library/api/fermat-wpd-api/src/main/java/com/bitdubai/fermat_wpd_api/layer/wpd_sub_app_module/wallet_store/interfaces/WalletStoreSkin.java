@@ -6,6 +6,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interf
 /**
  * Created by eze on 2015.07.18..
  */
-public interface WalletStoreSkin extends Skin{
+public interface WalletStoreSkin extends Skin {
     InstallationStatus getInstallationStatus();
 }

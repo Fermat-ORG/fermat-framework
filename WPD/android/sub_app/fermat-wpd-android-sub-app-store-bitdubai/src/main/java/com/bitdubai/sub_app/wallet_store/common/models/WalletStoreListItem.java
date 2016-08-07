@@ -24,7 +24,7 @@ import static com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enum
  */
 public class WalletStoreListItem implements Serializable {
     private static final long serialVersionUID = -8730067026050196759L;
-    public static boolean started=false;
+    public static boolean started = false;
 
 
     private InstallationStatus installationStatus;
@@ -115,7 +115,7 @@ public class WalletStoreListItem implements Serializable {
 
         ArrayList<WalletStoreListItem> testItems = new ArrayList<>();
 
-        if(!started) {
+        if (!started) {
 
             String[] walletNames = {
                     "Bitcoin Wallet",
@@ -248,7 +248,7 @@ public class WalletStoreListItem implements Serializable {
             data.add(null);
 
             return data;
-        }catch (OutOfMemoryError error){
+        } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }
         return null;

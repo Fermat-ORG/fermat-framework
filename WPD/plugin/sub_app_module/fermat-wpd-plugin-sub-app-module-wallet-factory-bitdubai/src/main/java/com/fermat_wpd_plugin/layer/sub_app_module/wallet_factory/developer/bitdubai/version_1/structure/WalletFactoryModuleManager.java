@@ -20,6 +20,7 @@ public class WalletFactoryModuleManager {
 
     /**
      * constructor
+     *
      * @param walletFactoryProjectManager
      */
     public WalletFactoryModuleManager(WalletFactoryProjectManager walletFactoryProjectManager) {
@@ -38,11 +39,11 @@ public class WalletFactoryModuleManager {
         return walletFactoryProjectManager.createEmptyWalletFactoryProject();
     }
 
-    public void saveProject (WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
+    public void saveProject(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
         walletFactoryProjectManager.saveWalletFactoryProjectChanges(walletFactoryProject);
     }
 
-    public List<WalletFactoryProject> getClosedProjects () throws CantGetWalletFactoryProjectException {
+    public List<WalletFactoryProject> getClosedProjects() throws CantGetWalletFactoryProjectException {
         return walletFactoryProjectManager.getWalletFactoryProjectByState(WalletFactoryProjectState.CLOSED);
     }
 

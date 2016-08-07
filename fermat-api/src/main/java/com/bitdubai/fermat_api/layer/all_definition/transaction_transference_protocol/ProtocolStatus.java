@@ -40,7 +40,7 @@ public enum ProtocolStatus {
                 return ProtocolStatus.APPLIED;
             //Modified by Manuel Perez on 04/08/2015
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the ProtocolStatus enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ProtocolStatus enum");
 
         }
 

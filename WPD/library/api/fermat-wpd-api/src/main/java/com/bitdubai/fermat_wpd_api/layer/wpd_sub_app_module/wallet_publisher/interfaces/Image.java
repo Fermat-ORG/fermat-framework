@@ -6,8 +6,6 @@
  */
 package com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces;
 
-import java.util.UUID;
-
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.ImageMiddleware</code> this wrap a image
  * to be persist into the file system ike a xml file
@@ -24,6 +22,6 @@ public interface Image {
      *
      * @return byte []
      */
-    byte [] getData();
+    byte[] getData();
 
 }

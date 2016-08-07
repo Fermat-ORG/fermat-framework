@@ -25,6 +25,7 @@ public class LossProtectedWalletSearcher extends ResourceSearcher {
                 resId = R.drawable.sendbtc_icon;
                 break;
             case 3:
+              resId = R.drawable.btc_wallet_send_icon_action_bar;
 
                 break;
 

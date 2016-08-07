@@ -15,7 +15,7 @@ public class WalletCreatedEvent extends AbstractWPDEvent {
     private CryptoCurrency cryptoCurrency;
     private FiatCurrency fiatCurrency;
 
-    public void setWalletId (UUID walletId){
+    public void setWalletId(UUID walletId) {
         this.walletId = walletId;
     }
 
@@ -23,15 +23,23 @@ public class WalletCreatedEvent extends AbstractWPDEvent {
         return this.walletId;
     }
 
-    public void setCryptoCurrency(CryptoCurrency cryptoCurrency){this.cryptoCurrency = cryptoCurrency;}
+    public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
+        this.cryptoCurrency = cryptoCurrency;
+    }
 
-    public CryptoCurrency getCryptoCurrency(){return cryptoCurrency;}
+    public CryptoCurrency getCryptoCurrency() {
+        return cryptoCurrency;
+    }
 
-    public void setFiatCurrency(FiatCurrency fiatCurrency){this.fiatCurrency = fiatCurrency;}
+    public void setFiatCurrency(FiatCurrency fiatCurrency) {
+        this.fiatCurrency = fiatCurrency;
+    }
 
-    public FiatCurrency getFiatCurrency(){return fiatCurrency;}
+    public FiatCurrency getFiatCurrency() {
+        return fiatCurrency;
+    }
 
-    public WalletCreatedEvent (EventType eventType){
+    public WalletCreatedEvent(EventType eventType) {
         super(eventType);
     }
 }

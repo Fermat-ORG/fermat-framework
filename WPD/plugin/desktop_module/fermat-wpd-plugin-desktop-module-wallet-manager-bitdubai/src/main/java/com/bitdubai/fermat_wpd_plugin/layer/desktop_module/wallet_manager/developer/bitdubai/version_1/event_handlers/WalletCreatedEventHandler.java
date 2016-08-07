@@ -2,14 +2,13 @@ package com.bitdubai.fermat_wpd_plugin.layer.desktop_module.wallet_manager.devel
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.dmp_module.ModuleNotRunningException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-
 import com.bitdubai.fermat_wpd_api.all_definition.events.WalletCreatedEvent;
 
 import java.util.UUID;
@@ -21,12 +20,12 @@ public class WalletCreatedEventHandler implements FermatEventHandler {
 
     WalletManager walletManager;
 
-    public void setWalletManager ( WalletManager walletManager){
+    public void setWalletManager(WalletManager walletManager) {
         this.walletManager = walletManager;
     }
 
     @Override
-    public  void handleEvent(FermatEvent fermatEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
         // TODO USABA LA WALLETID DE LA REQUESTED CREADA PARA CARGAR LAS BILLETERAS DEL USUARIO?
         UUID walletId = ((WalletCreatedEvent) fermatEvent).getWalletId();

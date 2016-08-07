@@ -60,7 +60,7 @@ public class CreateRepositoryTest {
 
     private UUID skinId;
 
-    private  Repository repository;
+    private Repository repository;
 
     private String path;
 
@@ -95,7 +95,7 @@ public class CreateRepositoryTest {
     @Test
     public void createRepositoryTest_CreateOk_ThrowsCantCreateRepositoryException() throws Exception {
 
-        catchException(networkServicesWalletResourcesDAO).createRepository(repository,skinId);
+        catchException(networkServicesWalletResourcesDAO).createRepository(repository, skinId);
         assertThat(CatchException.<Exception>caughtException()).isNull();
 
     }
@@ -105,7 +105,7 @@ public class CreateRepositoryTest {
 
         Repository repository1 = new Repository(null, null, null);
 
-        catchException(networkServicesWalletResourcesDAO).createRepository(repository1,skinId);
+        catchException(networkServicesWalletResourcesDAO).createRepository(repository1, skinId);
         assertThat(CatchException.<Exception>caughtException()).isNotNull();
 
     }

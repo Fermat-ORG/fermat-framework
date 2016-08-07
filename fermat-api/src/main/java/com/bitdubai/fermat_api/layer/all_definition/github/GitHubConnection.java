@@ -148,7 +148,7 @@ public class GitHubConnection {
             contents.setName(commitMessage);
             contents.setMessage(commitMessage);
             contents.setPath(path);
-            client.put(new StringBuilder().append("/repos/").append(repo.generateId()).append("/contents/").append(path).toString(), contents, Contents.class);
+            client.put("/repos/" + repo.generateId() + "/contents/" + path, contents, Contents.class);
         } catch (JsonParseException e) {
             System.out.println("creado");
         } catch (IOException e) {
@@ -173,7 +173,7 @@ public class GitHubConnection {
             contents.setName(commitMessage);
             contents.setMessage(commitMessage);
             contents.setPath(path);
-            client.put(new StringBuilder().append("/repos/").append(repo.generateId()).append("/contents/").append(path).toString(), contents, Contents.class);
+            client.put("/repos/" + repo.generateId() + "/contents/" + path, contents, Contents.class);
         } catch (JsonParseException e) {
             System.out.println("creado");
         } catch (IOException e) {

@@ -77,7 +77,7 @@ public class DeleteTest {
         when(mockRecords.get(anyInt())).thenReturn(mockRecord);
 
         networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(mockPluginDatabaseSystem);
-  networkServicesWalletResourcesDAO.initializeDatabase(testOwnerId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
+        networkServicesWalletResourcesDAO.initializeDatabase(testOwnerId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
     }
 
     @Test
@@ -91,11 +91,10 @@ public class DeleteTest {
     @Test
     public void deleteTest_ErrorParamsNull_ThrowsCantDeleteRepositoryException() throws Exception {
 
-         catchException(networkServicesWalletResourcesDAO).delete(null, null);
+        catchException(networkServicesWalletResourcesDAO).delete(null, null);
         assertThat(CatchException.<Exception>caughtException()).isNotNull();
 
     }
-
 
 
 }

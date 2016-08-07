@@ -10,10 +10,10 @@ public interface XML {
 
     //TODO: cambiar las excepciones por otras del wallet runtime
 
-    AppNavigationStructure getNavigationStructure(String navigationStructure) ;
+    AppNavigationStructure getNavigationStructure(String navigationStructure);
 
     String parseNavigationStructureXml(AppNavigationStructure walletNavigationStructure);
 
-    void setNavigationStructure(FermatStructure walletNavigationStructure) ;
+    void setNavigationStructure(FermatStructure walletNavigationStructure);
 
 }

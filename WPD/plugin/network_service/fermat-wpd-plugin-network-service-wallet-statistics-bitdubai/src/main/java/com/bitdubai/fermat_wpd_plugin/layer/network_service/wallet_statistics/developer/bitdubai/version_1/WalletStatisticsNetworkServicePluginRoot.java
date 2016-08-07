@@ -19,7 +19,7 @@ import java.util.UUID;
  * <p/>
  * TODO: DETAIL...............................................
  * <p/>
- *
+ * <p/>
  * Created by someone.
  *
  * @version 1.0
@@ -28,7 +28,7 @@ import java.util.UUID;
 public class WalletStatisticsNetworkServicePluginRoot extends AbstractPlugin implements
         WalletStatisticsManager {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
     public WalletStatisticsNetworkServicePluginRoot() {
@@ -36,7 +36,7 @@ public class WalletStatisticsNetworkServicePluginRoot extends AbstractPlugin imp
     }
 
     @Override
-    public WalletStatistics getWalletStatistics(UUID walletCatalogId) throws CantGetWalletStatisticsException{
+    public WalletStatistics getWalletStatistics(UUID walletCatalogId) throws CantGetWalletStatisticsException {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }

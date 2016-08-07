@@ -4,7 +4,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version
  * The Class <code>com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.PublisherIdentityDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Ezequiel Postan - (ezequiel.postan@gmail.com) on 14/07/15.
  *
  * @version 1.0

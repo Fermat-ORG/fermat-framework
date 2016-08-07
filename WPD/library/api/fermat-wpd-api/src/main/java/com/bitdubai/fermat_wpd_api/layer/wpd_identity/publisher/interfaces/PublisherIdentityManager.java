@@ -10,8 +10,9 @@ import java.util.List;
  * The Interface <code>DeveloperIdentityManager</code>
  * indicates the functionality of a DeveloperIdentityManager
  * <p/>
- *
+ * <p/>
  * Created by Nerio on 13/08/15
+ *
  * @version 1.0
  * @since Java JDK 1.7
  */

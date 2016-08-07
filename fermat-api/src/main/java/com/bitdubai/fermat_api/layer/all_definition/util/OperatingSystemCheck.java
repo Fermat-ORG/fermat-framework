@@ -42,8 +42,8 @@ public class OperatingSystemCheck {
                 String jvm = System.getProperty("java.vm.name", "generic").toLowerCase(Locale.ENGLISH);
                 String jvmVendorUrl = System.getProperty("java.vendor.url", "generic").toLowerCase(Locale.ENGLISH);
 
-                System.out.println(new StringBuilder().append("OperatingSystemCheck - jvm= ").append(jvm).toString());
-                System.out.println(new StringBuilder().append("OperatingSystemCheck - jvmVendor= ").append(jvmVendorUrl).toString());
+                System.out.println("OperatingSystemCheck - jvm= " + jvm);
+                System.out.println("OperatingSystemCheck - jvmVendor= " + jvmVendorUrl);
 
                 if (jvmVendorUrl.equalsIgnoreCase("http://www.android.com/") || jvm.equalsIgnoreCase("Dalvik")) {
                     current = OperatingSystemType.Android;
@@ -59,7 +59,7 @@ public class OperatingSystemCheck {
                 current = OperatingSystemType.Other;
             }
 
-            System.out.println(new StringBuilder().append("OperatingSystemCheck - current = ").append(current).toString());
+            System.out.println("OperatingSystemCheck - current = " + current);
 
         }
 

@@ -104,7 +104,7 @@ public class AndroidPlatformBinaryFile implements PlatformBinaryFile {
 
 
         if (!this.directoryName.isEmpty())
-            path += new StringBuilder().append("/").append(this.directoryName).toString();
+            path += "/" + this.directoryName;
 
         /**
          * If the directory does not exist the I create it.
@@ -130,7 +130,7 @@ public class AndroidPlatformBinaryFile implements PlatformBinaryFile {
         } catch (IOException e) {
             String message = CantCreateFileException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
-            String context = new StringBuilder().append("File Info: ").append(toString()).toString();
+            String context = "File Info: " + toString();
             String possibleCause = "This is a problem in the outputstream, check the cause message to see what happened";
             throw new CantPersistFileException(message, cause, context, possibleCause);
         }
@@ -154,7 +154,7 @@ public class AndroidPlatformBinaryFile implements PlatformBinaryFile {
             /**
              * Get the file handle.
              */
-            File file = new File(new StringBuilder().append(path).append("/").append(this.directoryName).append("/").append(this.fileName).toString());
+            File file = new File(path + "/" + this.directoryName + "/" + this.fileName);
 
             if (file.exists()) {
                 /**
@@ -220,7 +220,7 @@ public class AndroidPlatformBinaryFile implements PlatformBinaryFile {
             path = Environment.getExternalStorageDirectory().toString();
         else
             path = contextPath;
-        return new StringBuilder().append(path).append("/").append(this.directoryName).append("/").append(fileName).toString();
+        return path + "/" + this.directoryName + "/" + fileName;
     }
 
 

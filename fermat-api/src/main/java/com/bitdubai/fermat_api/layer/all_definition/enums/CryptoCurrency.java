@@ -51,7 +51,7 @@ public enum CryptoCurrency implements Currency, Serializable {
                 return CryptoCurrency.FERMAT;
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code Received: ").append(code).toString(),
+                        "Code Received: " + code,
                         "This Code Is Not Valid for the CryptoCurrency enum"
                 );
         }

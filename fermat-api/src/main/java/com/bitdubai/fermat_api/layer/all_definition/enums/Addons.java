@@ -85,7 +85,7 @@ public enum Addons implements FermatEnum {
 
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code Received: ").append(code).toString(),
+                        "Code Received: " + code,
                         "This Code Is Not Valid for the Addons enum"
                 );
 
