@@ -405,5 +405,10 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
             throw new CantAcceptActorConnectionRequestException(exception, "connectionId: " + connectionId, "Unhandled error.");
         }
     }
+
+    @Override
+    public void updateActorConnection(ChatActorConnection chatActorConnection) {
+        this.dao.updateChatActorConnection(chatActorConnection);
+    }
 }
 
