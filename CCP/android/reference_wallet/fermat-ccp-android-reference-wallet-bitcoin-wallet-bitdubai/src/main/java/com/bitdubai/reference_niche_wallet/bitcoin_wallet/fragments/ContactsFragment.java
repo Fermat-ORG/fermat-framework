@@ -1001,7 +1001,6 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
             actionButton.detach();
             actionButton.removeAllViewsInLayout();
 
-
             button1.removeAllViewsInLayout();
             button2.removeAllViewsInLayout();
 
