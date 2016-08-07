@@ -115,8 +115,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
-            BankMoneyWalletNavigationViewPainter navigationViewPainter = new BankMoneyWalletNavigationViewPainter(getActivity());
-//            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+        //            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
         } catch (Exception e) {
             Toast.makeText(getActivity(), getResources().getString(R.string.bnk_error_msg_std), Toast.LENGTH_SHORT).show();
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);

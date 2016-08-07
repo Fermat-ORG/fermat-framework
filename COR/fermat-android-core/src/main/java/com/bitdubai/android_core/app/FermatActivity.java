@@ -255,7 +255,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     /**
      * Builders
      */
-    private ToolbarBuilder toolbarBuilder;
+//    private ToolbarBuilder toolbarBuilder;
 
     /**
      * Called when the activity is first created
@@ -465,7 +465,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             paintStatusBar(activity.getStatusBar());
             // Log.i("FERMAT ACTIVITY loadUI", " paintStatusBar " + System.currentTimeMillis());
 
-            paintTitleBar(titleBar, activity);
+            paintTitleBar(titleBar);
             //Log.i("FERMAT ACTIVITY loadUI", " paintTitleBar " + System.currentTimeMillis());
 
             paintSideMenu(activity, sideMenu, appConnections);
@@ -712,9 +712,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Method in charge of painting the titleBar
      * @param titleBar
      */
-    protected void paintTitleBar(TitleBar titleBar, Activity activity) {
+    protected void paintTitleBar(TitleBar titleBar) {
         try {
             if (titleBar != null) {
+                appBarLayout.setVisibility(View.VISIBLE);
                 Typeface typeface = null;
                 try {
                     if (titleBar.getFont() != null)
@@ -792,8 +793,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     getSupportActionBar().setDisplayShowHomeEnabled(true);
                 }
             } else {
-                if (appBarLayout != null)
+                if (appBarLayout != null) {
+                    Log.e(TAG,"AppBarLayout visibility gone");
                     appBarLayout.setVisibility(View.GONE);
+                }
                 if (collapsingToolbarLayout != null)
                     collapsingToolbarLayout.setVisibility(View.GONE);
             }
@@ -1415,10 +1418,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }
 
             if (mToolbar!=null) {
-                if (toolbarBuilder != null) {
-                    toolbarBuilder.clear();
-                    toolbarBuilder = null;
-                }
+//                if (toolbarBuilder != null) {
+//                    toolbarBuilder.clear();
+//                    toolbarBuilder = null;
+//                }
             }
 
             try{
@@ -1768,11 +1771,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             if (runtimeStructureManager != null) {
                 runtimeStructureManager.clear();
-            }
-
-            if (toolbarBuilder!=null){
-                toolbarBuilder.clear();
-                toolbarBuilder = null;
             }
 
             resetThisActivity();
