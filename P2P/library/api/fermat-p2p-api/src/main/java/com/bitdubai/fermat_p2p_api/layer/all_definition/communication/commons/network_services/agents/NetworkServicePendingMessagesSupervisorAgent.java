@@ -311,8 +311,8 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
         @Override
         public void run() {
             processPendingOutgoingMessage(countFailMin, countFailMax);
-            if (countFailMax == null && countFailMin==null)
-                processSentMessages();
+//            if (countFailMax == null && countFailMin==null)
+//                processSentMessages();
         }
     }
 
