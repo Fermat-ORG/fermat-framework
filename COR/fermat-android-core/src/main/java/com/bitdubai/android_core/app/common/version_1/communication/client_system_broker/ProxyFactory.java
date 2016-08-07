@@ -33,7 +33,7 @@ public class ProxyFactory {
             try {
                 ModuleManager moduleManagerBase = FermatSystem.getInstance().getModuleManager2(pluginVersionReference);
                 if (moduleManagerBase == null)
-                    throw new RuntimeException(new StringBuilder().append("Module manager null in platform, please check if your plugin is connected, pluginVersionReference: ").append(pluginVersionReference.toString3()).toString());
+                    throw new RuntimeException("Module manager null in platform, please check if your plugin is connected, pluginVersionReference: " + pluginVersionReference.toString3());
                 Class clazz = moduleManagerBase.getClass();
                 moduleManager = (ModuleManager) Proxy.newProxyInstance(
                         clazz.getClassLoader(),
@@ -44,18 +44,18 @@ public class ProxyFactory {
                 try {
                     Class clazz = FermatSystem.getInstance().getModuleManager3(pluginVersionReference);
                     if (clazz == null)
-                        throw new RuntimeException(new StringBuilder().append("Module manager null in platform, please check if your plugin is connected, pluginVersionReference: ").append(pluginVersionReference.toString3()).toString());
+                        throw new RuntimeException("Module manager null in platform, please check if your plugin is connected, pluginVersionReference: " + pluginVersionReference.toString3());
                     moduleManager = (ModuleManager) Proxy.newProxyInstance(
                             clazz.getClassLoader(),
                             clazz.getInterfaces(),
                             invocationHandler);
                     openModules.put(clazz, moduleManager);
                 } catch (Exception e2) {
-                    Log.e(TAG, new StringBuilder().append("Cant get module manager in platform, please check if your plugin is connected, pluginVersionReference: ").append(pluginVersionReference.toString3()).toString());
+                    Log.e(TAG, "Cant get module manager in platform, please check if your plugin is connected, pluginVersionReference: " + pluginVersionReference.toString3());
                     throw new CantCreateProxyException("Cant get module manager from system", e, "factory", "");
                 }
             } catch (ModuleManagerNotFoundException e) {
-                Log.e(TAG, new StringBuilder().append("Cant get module manager in platform, please check if your plugin is connected, pluginVersionReference: ").append(pluginVersionReference.toString3()).toString());
+                Log.e(TAG, "Cant get module manager in platform, please check if your plugin is connected, pluginVersionReference: " + pluginVersionReference.toString3());
                 throw new CantCreateProxyException("Cant fount module manager from system", e, "factory", "");
 
             }

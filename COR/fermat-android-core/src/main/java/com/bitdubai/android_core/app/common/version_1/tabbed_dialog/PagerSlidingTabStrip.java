@@ -172,7 +172,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     public void setViewPager(ViewPager pager) {
         System.out.println("debuging setViewPager");
-        System.out.println(new StringBuilder().append("pager: ").append(pager).toString());
+        System.out.println("pager: " + pager);
         try {
             this.pager = pager;
 
@@ -182,7 +182,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             }
 
             pager.setOnPageChangeListener(pageListener);
-            System.out.println(new StringBuilder().append("pageLister: ").append(pageListener).toString());
+            System.out.println("pageLister: " + pageListener);
             notifyDataSetChanged();
         } catch (Exception e) {
             throw e;
@@ -197,11 +197,11 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     public void notifyDataSetChanged() {
         System.out.println("Debug notifyDataSetChanged()");
         try {
-            System.out.println(new StringBuilder().append("tabsContainer: ").append(tabsContainer).toString());
+            System.out.println("tabsContainer: " + tabsContainer);
             tabsContainer.removeAllViews();
-            System.out.println(new StringBuilder().append("pager: ").append(pager).toString());
+            System.out.println("pager: " + pager);
             tabCount = pager.getAdapter().getCount();
-            System.out.println(new StringBuilder().append("tabCount: ").append(tabCount).toString());
+            System.out.println("tabCount: " + tabCount);
             for (int i = 0; i < tabCount; i++) {
 
                 if (pager.getAdapter() instanceof IconTabProvider) {
