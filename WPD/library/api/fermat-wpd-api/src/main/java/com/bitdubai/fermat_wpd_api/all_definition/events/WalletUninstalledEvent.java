@@ -11,15 +11,15 @@ public class WalletUninstalledEvent extends AbstractWPDEvent {
 
     private UUID walletId;
 
-    public void setWalletId (UUID walletId){
+    public void setWalletId(UUID walletId) {
         this.walletId = walletId;
     }
 
-    public UUID getWalletId(){
+    public UUID getWalletId() {
         return this.walletId;
     }
 
-    public WalletUninstalledEvent (EventType eventType){
+    public WalletUninstalledEvent(EventType eventType) {
         super(eventType);
     }
 

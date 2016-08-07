@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
-import com.bitdubai.fermat_wpd_api.all_definition.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -13,8 +13,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_wpd_api.all_definition.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetDesignerException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetDeveloperException;
@@ -116,7 +116,7 @@ public class WalletStoreManager {
     }
 
     private void saveImageIntoFile(String directory, String filename, byte[] content) throws CantPublishItemInCatalogException {
-        try{
+        try {
             PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, directory, filename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             imageFile.setContent(content);
             imageFile.persistToMedia();
@@ -155,13 +155,14 @@ public class WalletStoreManager {
     private void saveSkinImageFiles(com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Skin skin) throws CantGetWalletIconException, CantPublishItemInCatalogException {
         saveImageIntoFile(skin.getSkinId().toString(), skin.getSkinName(), skin.getPresentationImage());
         int i = 0;
-        for (byte[] images : skin.getPreviewImageList()){
-            if (images != null){
+        for (byte[] images : skin.getPreviewImageList()) {
+            if (images != null) {
                 i++;
                 saveImageIntoFile(skin.getSkinId().toString(), skin.getSkinName() + "_" + i, images);
             }
         }
     }
+
     /**
      * pubish the skin into DB and files into disk
      *
@@ -169,7 +170,7 @@ public class WalletStoreManager {
      * @throws CantPublishSkinInCatalogException
      */
 
-    public void publishSkin (com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Skin skin) throws CantPublishSkinInCatalogException{
+    public void publishSkin(com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Skin skin) throws CantPublishSkinInCatalogException {
         try {
             publishItemInDB(null, null, null, null, skin, null);
             saveSkinImageFiles(skin);
@@ -244,9 +245,9 @@ public class WalletStoreManager {
     }
 
     private byte[] getSkinContent(String directory, String fileName) throws FileNotFoundException, CantCreateFileException, CantLoadFileException {
-            PluginBinaryFile skinFile = pluginFileSystem.getBinaryFile(pluginId, directory, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            skinFile.loadFromMedia();
-            return skinFile.getContent();
+        PluginBinaryFile skinFile = pluginFileSystem.getBinaryFile(pluginId, directory, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        skinFile.loadFromMedia();
+        return skinFile.getContent();
     }
 
     /**
@@ -259,7 +260,7 @@ public class WalletStoreManager {
     public DetailedCatalogItemImpl getDetailedCatalogItem(UUID walletId) throws CantGetCatalogItemException {
         try {
             DetailedCatalogItemImpl detailedCatalogItemImpl;
-            detailedCatalogItemImpl = getDetailedCatalogItemFromDatabase (walletId);
+            detailedCatalogItemImpl = getDetailedCatalogItemFromDatabase(walletId);
 
             Skin defaultSkin = (Skin) detailedCatalogItemImpl.getDefaultSkin();
             try {
@@ -281,7 +282,7 @@ public class WalletStoreManager {
         //the Preview Images are saved under the skinId directoty and skin name filename with _i which is the amount of files to search for.
         List<byte[]> images = new ArrayList<>();
 
-        for (int i=0; i<6;i++){
+        for (int i = 0; i < 6; i++) {
             String filename = skinName + "_" + i;
             try {
                 PluginBinaryFile content = pluginFileSystem.getBinaryFile(pluginId, directory, filename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
@@ -334,10 +335,10 @@ public class WalletStoreManager {
         WalletCatalog walletCatalog = new WalletCatalog();
         try {
             List<CatalogItemImpl> catalogItemImplList = getDatabaseDAO().getCatalogItems();
-            for (CatalogItemImpl catalogItem : catalogItemImplList ){
-                try{
+            for (CatalogItemImpl catalogItem : catalogItemImplList) {
+                try {
                     catalogItem.setIcon(getWalletIcon(catalogItem.getId().toString(), catalogItem.getName()));
-                } catch (FileNotFoundException e){
+                } catch (FileNotFoundException e) {
                     catalogItem.setIcon(null);
                 }
             }

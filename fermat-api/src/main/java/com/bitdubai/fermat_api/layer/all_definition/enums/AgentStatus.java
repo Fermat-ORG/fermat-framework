@@ -42,7 +42,7 @@ public enum AgentStatus implements FermatEnum {
                 return AgentStatus.STOPPED;
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code Received: ").append(code).toString(),
+                        "Code Received: " + code,
                         "The received code is not valid for the AgentStatus enum."
                 );
         }

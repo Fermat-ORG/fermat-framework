@@ -35,7 +35,7 @@ public enum UnexpectedPluginExceptionSeverity implements FermatEnum {
 
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code: ").append(code).toString(),
+                        "Code: " + code,
                         "The received code is not valid for the UnexpectedPluginExceptionSeverity enum"
                 );
         }

@@ -26,6 +26,7 @@ import com.bitdubai.sub_app.developer.app_connection.DeveloperFermatAppConnectio
 import com.bitdubai.sub_app.intra_user_community.app_connection.CryptoWalletUserCommunityFermatAppConnection;
 import com.bitdubai.sub_app.intra_user_identity.app_connection.CryptoWalletUserFermatAppConnection;
 import com.bitdubai.sub_app.wallet_manager.app_connection.DesktopFermatAppConnection;
+import com.bitdubai.sub_app.wallet_store.app_connection.WalletStoreFermatAppConnection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,8 +68,8 @@ public class FermatAppConnectionManager {
                 fermatAppConnection = new LossProtectedWalletFermatAppConnection(activity);
                 break;
             case "fermat_wallet":
-               fermatAppConnection = new FermatWalletAppConnection(activity);
-               break;
+                fermatAppConnection = new FermatWalletAppConnection(activity);
+                break;
             //CCP Sub Apps
             case "public_key_ccp_intra_user_identity":
                 fermatAppConnection = new CryptoWalletUserFermatAppConnection(activity);
@@ -112,7 +113,6 @@ public class FermatAppConnectionManager {
 //            case "public_key_dap_redeem_point_community":
 //                fermatAppConnection = new CommunityRedeemPointFermatAppConnection(activity);
 //                break;
-
             //PIP Sub Apps
             case "public_key_pip_developer_sub_app":
                 fermatAppConnection = new DeveloperFermatAppConnection(activity);
@@ -124,7 +124,6 @@ public class FermatAppConnectionManager {
             case "crypto_customer_wallet":
                 fermatAppConnection = new CryptoCustomerWalletFermatAppConnection(activity);
                 break;
-
             //CBP Sub Apps
             case "public_key_crypto_broker_community":
                 fermatAppConnection = new CryptoBrokerCommunityFermatAppConnection(activity);
@@ -147,10 +146,9 @@ public class FermatAppConnectionManager {
                 fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
                 break;
 //            // WPD Sub Apps
-//            case "public_key_store":
-//                fermatAppConnection = new WalletStoreFermatAppConnection(activity);
-//                break;
-
+            case "public_key_store":
+                fermatAppConnection = new WalletStoreFermatAppConnection(activity);
+                break;
 //            // CHT Sub Apps
             case "public_key_cht_chat":
                 fermatAppConnection = new ChatFermatAppConnection(activity);
@@ -182,11 +180,9 @@ public class FermatAppConnectionManager {
 //            case "public_key_art_fan_identity":
 //                fermatAppConnection = new ArtFanUserFermatAppConnection(activity);
 //                break;
-//
 //            case "public_key_art_artist_identity":
 //                fermatAppConnection = new ArtArtistIdentityAppConnection(activity);
 //                break;
-//
 //            case "public_key_art_music_player":
 //                fermatAppConnection = new MusicPlayerFermatAppConnection(activity);
 //                break;

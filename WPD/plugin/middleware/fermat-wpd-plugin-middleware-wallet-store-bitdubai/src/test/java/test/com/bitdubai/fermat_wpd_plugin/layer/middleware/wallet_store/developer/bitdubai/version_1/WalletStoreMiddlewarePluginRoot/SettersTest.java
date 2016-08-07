@@ -1,10 +1,10 @@
 package test.com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.WalletStoreMiddlewarePluginRoot;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.WalletStoreMiddlewarePluginRoot;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import junit.framework.TestCase;
 
@@ -40,7 +40,7 @@ public class SettersTest extends TestCase {
     static final LogLevel LOG_LEVEL = LogLevel.MODERATE_LOGGING;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         walletStoreMiddlewarePluginRoot = new WalletStoreMiddlewarePluginRoot();
         testPluginId = UUID.randomUUID();
     }
@@ -66,7 +66,7 @@ public class SettersTest extends TestCase {
     }
 
     @Test
-    public void LoggingLevelPerClassTest(){
+    public void LoggingLevelPerClassTest() {
         Map<String, LogLevel> data = new HashMap<String, LogLevel>();
         data.put(CLASS, LOG_LEVEL);
         walletStoreMiddlewarePluginRoot.setLoggingLevelPerClass(data);

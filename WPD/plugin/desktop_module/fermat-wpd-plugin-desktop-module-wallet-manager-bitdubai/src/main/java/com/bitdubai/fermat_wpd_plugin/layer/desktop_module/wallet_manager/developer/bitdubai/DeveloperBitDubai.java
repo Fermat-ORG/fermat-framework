@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_wpd_plugin.layer.desktop_module.wallet_manager.developer.bitdubai;
 
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
@@ -18,7 +16,7 @@ import com.bitdubai.fermat_wpd_plugin.layer.desktop_module.wallet_manager.develo
  */
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
-    public DeveloperBitDubai () {
+    public DeveloperBitDubai() {
         super(new PluginDeveloperReference(Developers.BITDUBAI));
     }
 

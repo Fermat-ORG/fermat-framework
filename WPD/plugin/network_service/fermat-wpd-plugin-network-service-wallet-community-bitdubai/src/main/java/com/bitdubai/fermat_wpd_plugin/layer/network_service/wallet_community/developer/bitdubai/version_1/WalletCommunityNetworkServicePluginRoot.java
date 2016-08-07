@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -12,7 +13,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_community.interfaces.WalletCommunityManager;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_community.developer.bitdubai.version_1.event_handlers.FinishedWalletInstallationEventHandler;
@@ -27,20 +27,20 @@ import java.util.List;
 /**
  * This Plugin maintains a list of Users for each wallet installed. I will include a pre-configured number of users per
  * wallet type, prioritizing the ones which location is closer to the users average location.
- * 
- * 
+ * <p/>
+ * <p/>
  * It also maintains a general list of system users also by average location as the main community.
- *
- * * * * 
+ * <p/>
+ * * * *
  */
 
 public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin implements
         WalletCommunityManager {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
 
@@ -55,7 +55,7 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
      */
 
     @Override
-    public void start()  throws CantStartPluginException {
+    public void start() throws CantStartPluginException {
         /**
          * I will initialize the handling of platform events.
          */
@@ -73,18 +73,18 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
          /*
          * Listen and handle VPN Connection Close Notification Event
          */
-     //   fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
-     //   fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
-      //  eventManager.addListener(fermatEventListener);
-      //  listenersAdded.add(fermatEventListener);
+        //   fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
+        //   fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
+        //  eventManager.addListener(fermatEventListener);
+        //  listenersAdded.add(fermatEventListener);
 
               /*
          * Listen and handle Client Connection Close Notification Event
          */
-      //  fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
-      //  fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
-      //  eventManager.addListener(fermatEventListener);
-      //  listenersAdded.add(fermatEventListener);
+        //  fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
+        //  fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
+        //  eventManager.addListener(fermatEventListener);
+        //  listenersAdded.add(fermatEventListener);
 
           /*
          * Listen and handle Client Connection Loose Notification Event

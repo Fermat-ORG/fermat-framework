@@ -7,7 +7,7 @@
     android:layout_margin="1dp"
     android:background="#FFF"
     android:orientation="vertical"
-    android:layout_gravity="center"
+    android:layout_gravity="center_horizontal"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     >
@@ -59,8 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center">
+        android:layout_gravity="center_horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -74,7 +73,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:text="No Location"
-            android:maxLines="3"
+            android:maxLines="2"
             android:textColor="#7DD5CA"
             android:textSize="12sp"
             android:layout_marginTop="0dp"

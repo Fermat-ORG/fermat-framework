@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Created by Matias Furszyfer on 2016.05.24..
  */
-public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractReferenceAppFermatSession<InstalledDesktop,WalletManager,ResourceProviderManager>,ResourceProviderManager> {
+public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractReferenceAppFermatSession<InstalledDesktop, WalletManager, ResourceProviderManager>, ResourceProviderManager> {
 
     private static final String TAG = "ImportFragment";
     private View root;
@@ -57,11 +57,10 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
     ProgressDialog dialog = null;
 
     public static ExportImportSeedFragment newInstance(int type) {
-        ExportImportSeedFragment abstractFermatFragment =  new ExportImportSeedFragment();
+        ExportImportSeedFragment abstractFermatFragment = new ExportImportSeedFragment();
         abstractFermatFragment.setType(type);
         return abstractFermatFragment;
     }
-
 
 
     @Override
@@ -73,10 +72,10 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = null;
-        if(type==0){
-            view = initExportView(inflater,container);
-        }else if(type==1){
-            view = initImportView(inflater,container);
+        if (type == 0) {
+            view = initExportView(inflater, container);
+        } else if (type == 1) {
+            view = initImportView(inflater, container);
         }
 
         root = view;
@@ -84,7 +83,7 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
     }
 
     private View initImportView(final LayoutInflater inflater, ViewGroup container) {
-        View view = inflater.inflate(R.layout.import_seed_layour,container,false);
+        View view = inflater.inflate(R.layout.import_seed_layour, container, false);
         editText_mnemonic = (EditText) view.findViewById(R.id.editText_mnemonic);
         editText_mnemonic_date = (EditText) view.findViewById(R.id.editText_mnemonic_date);
 
@@ -107,53 +106,53 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
             @Override
             public void onClick(View v) {
 
-                    try {
-                        String[] mNemonceWord = editText_mnemonic.getText().toString().split(" ");
-                        final long date = Long.parseLong(editText_mnemonic_date.getText().toString());
-                            if(mNemonceWord.length>0 || date > 0) {
-                            //final long date = Long.parseLong(input[input.length - 1]);
-                            final List<String> mnemonicWords = Arrays.asList(mNemonceWord);
-                            Thread thread = new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Log.i(TAG,"Starting import");
-                                    try {
-                                        appSession.getModuleManager().importMnemonicCode(mnemonicWords, date, BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (dialog != null) dialog.dismiss();
-                                                Toast.makeText(getActivity(), "Import completed, the money will be confirmed in a few minutes :)", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                try {
+                    String[] mNemonceWord = editText_mnemonic.getText().toString().split(" ");
+                    final long date = Long.parseLong(editText_mnemonic_date.getText().toString());
+                    if (mNemonceWord.length > 0 || date > 0) {
+                        //final long date = Long.parseLong(input[input.length - 1]);
+                        final List<String> mnemonicWords = Arrays.asList(mNemonceWord);
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.i(TAG, "Starting import");
+                                try {
+                                    appSession.getModuleManager().importMnemonicCode(mnemonicWords, date, BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (dialog != null) dialog.dismiss();
+                                            Toast.makeText(getActivity(), "Import completed, the money will be confirmed in a few minutes :)", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
 
-                                    } catch (Exception e) {
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (dialog != null) dialog.dismiss();
-                                                Toast.makeText(getActivity(), "Import completed, the money will be confirmed in a few minutes :)", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                } catch (Exception e) {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (dialog != null) dialog.dismiss();
+                                            Toast.makeText(getActivity(), "Import completed, the money will be confirmed in a few minutes :)", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
 
-                                        e.printStackTrace();
-                                    }
+                                    e.printStackTrace();
                                 }
-                            });
-                            thread.start();
-                            dialog = ProgressDialog.show(getActivity(), "",
-                                    "Importing. Please wait...", true);
+                            }
+                        });
+                        thread.start();
+                        dialog = ProgressDialog.show(getActivity(), "",
+                                "Importing. Please wait...", true);
 
-                        }else {
-                            editText_mnemonic.animate();
-                            editText_mnemonic_date.animate();
-                            Toast.makeText(getActivity(),"Import failed, Please fill this box",Toast.LENGTH_SHORT).show();
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
+                    } else {
                         editText_mnemonic.animate();
-                        Toast.makeText(getActivity(),"Import failed, Please fill this box",Toast.LENGTH_SHORT).show();
+                        editText_mnemonic_date.animate();
+                        Toast.makeText(getActivity(), "Import failed, Please fill this box", Toast.LENGTH_SHORT).show();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    editText_mnemonic.animate();
+                    Toast.makeText(getActivity(), "Import failed, Please fill this box", Toast.LENGTH_SHORT).show();
+                }
 
 
             }
@@ -161,8 +160,8 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
         return view;
     }
 
-    private View initExportView(LayoutInflater inflater,ViewGroup container){
-        View view = inflater.inflate(R.layout.export_import_seed_layout,container,false);
+    private View initExportView(LayoutInflater inflater, ViewGroup container) {
+        View view = inflater.inflate(R.layout.export_import_seed_layout, container, false);
         txt_mnemonic = (FermatTextView) view.findViewById(R.id.txt_mnemonic);
         txt_mnemonic_date = (FermatTextView) view.findViewById(R.id.txt_mnemonic_date);
         spinnerKeyType = (Spinner) view.findViewById(R.id.spinner_key_type);
@@ -190,7 +189,7 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
             public void onClick(View v) {
                 txt_mnemonic.setText("");
                 txt_mnemonic_date.setText("");
-                if (mnemonicLinear.getVisibility() == View.GONE){
+                if (mnemonicLinear.getVisibility() == View.GONE) {
                     mnemonicLinear.setVisibility(View.VISIBLE);
                     new Thread(new Runnable() {
                         @Override

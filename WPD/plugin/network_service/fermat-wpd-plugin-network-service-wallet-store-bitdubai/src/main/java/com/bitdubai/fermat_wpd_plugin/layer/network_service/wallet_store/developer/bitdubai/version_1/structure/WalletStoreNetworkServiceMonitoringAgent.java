@@ -3,6 +3,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.develo
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -13,7 +14,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.CatalogItems;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseConstants;
@@ -62,12 +62,13 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
 
     /**
      * constructor
+     *
      * @param eventManager
      * @param errorManager
      * @param logManager
      * @param pluginDatabaseSystem
      */
-    public WalletStoreNetworkServiceMonitoringAgent(EventManager eventManager, ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId){
+    public WalletStoreNetworkServiceMonitoringAgent(EventManager eventManager, ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.eventManager = eventManager;
         this.errorManager = errorManager;
         this.logManager = logManager;
@@ -82,14 +83,14 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
     @Override
     public void start() throws CantStartAgentException {
         // I register this networkservice.
-       // ECCKeyPair keyPair = new ECCKeyPair();
-       // try {
+        // ECCKeyPair keyPair = new ECCKeyPair();
+        // try {
         //    communicationLayerManager.registerNetworkService(NetworkServices.WALLET_STORE, keyPair.getPublicKey());
         //    communicationLayerManager.acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels.CLOUD, NetworkServices.WALLET_STORE, null);
-         //   System.out.println("Remote networkservices: " + communicationLayerManager.getNetworkServiceChannelPublicKey(NetworkServices.WALLET_STORE));
-       // } catch (CommunicationException e) {
+        //   System.out.println("Remote networkservices: " + communicationLayerManager.getNetworkServiceChannelPublicKey(NetworkServices.WALLET_STORE));
+        // } catch (CommunicationException e) {
         //    e.printStackTrace();
-       // }
+        // }
 
 
         Thread thread = new Thread(new Monitoring());
@@ -139,7 +140,7 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
     private class Monitoring implements Runnable {
         @Override
         public void run() {
-            while (runner){
+            while (runner) {
                 try {
                     doTheMainTask();
                     Thread.sleep(10000);
@@ -166,7 +167,7 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
         }
 
         private void insertValidLanguagesFromPeer() throws InvalidParameterException, CantExecuteDatabaseOperationException {
-            for (UUID idToInsert : getMissingIds(CatalogItems.LANGUAGE)){
+            for (UUID idToInsert : getMissingIds(CatalogItems.LANGUAGE)) {
                 //todo get the object from peer
                 //validate if the version is for our platform
                 //persist in the catalog
@@ -174,11 +175,11 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
 
         }
 
-        private boolean isValidVersion(Version version){
+        private boolean isValidVersion(Version version) {
             return true;
         }
 
-        private void raiseEvent(){
+        private void raiseEvent() {
             //todo add events depending on the event raised I need find the way to pass the missing Ids.
         }
 

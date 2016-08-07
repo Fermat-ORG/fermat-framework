@@ -91,6 +91,6 @@ public class FermatModuleObjectWrapper implements Parcelable, Serializable {
     @Override
     public String toString() {
         String o = (object != null) ? object.toString() : "null";
-        return new StringBuilder().append("FermatModuleObjectWrapper{").append("object=").append(o).append('}').toString();
+        return "FermatModuleObjectWrapper{" + "object=" + o + '}';
     }
 }

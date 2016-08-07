@@ -445,7 +445,9 @@ public class BrowserTabFragment
 
             ConnectionState connectionState = data.getConnectionState();
 
+
             if ((data.getState().equals(ProfileStatus.ONLINE) || data.getState().equals(ProfileStatus.UNKNOWN)) && connectionState.equals(ConnectionState.NO_CONNECTED)) {
+
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
                         appSession.setData(INTRA_USER_SELECTED, data);

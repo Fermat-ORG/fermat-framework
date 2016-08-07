@@ -126,7 +126,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
 
 
         if (!this.directoryName.isEmpty())
-            path += new StringBuilder().append("/").append(this.directoryName).toString();
+            path += "/" + this.directoryName;
 
         /**
          * If the directory does not exist, we create it here.
@@ -152,7 +152,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
         } catch (Exception ex) {
             String message = CantPersistFileException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(ex);
-            String context = new StringBuilder().append("File Path: ").append(file.getPath()).toString();
+            String context = "File Path: " + file.getPath();
             String possibleReason = "Check if we have the appropiate permissions to write on this path";
             throw new CantPersistFileException(message, cause, context, possibleReason);
         }
@@ -180,7 +180,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
          * Get the file handle.
          */
 
-        File file = new File(new StringBuilder().append(path).append("/").append(this.directoryName).toString(), this.fileName);
+        File file = new File(path + "/" + this.directoryName, this.fileName);
 
         try {
             InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
@@ -204,7 +204,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
         } catch (Exception ex) {
             String message = CantLoadFileException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(ex);
-            String context = new StringBuilder().append("File Path: ").append(file.getPath()).toString();
+            String context = "File Path: " + file.getPath();
             String possibleReason = "This problem should be related with the FileInputStream either in the construction or the read operation";
             throw new CantLoadFileException(message, cause, context, possibleReason);
         }
@@ -235,7 +235,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
             path = Environment.getExternalStorageDirectory().toString();
         else
             path = contextPath;
-        return new StringBuilder().append(path).append("/").append(this.directoryName).append("/").append(fileName).toString();
+        return path + "/" + this.directoryName + "/" + fileName;
     }
 
 

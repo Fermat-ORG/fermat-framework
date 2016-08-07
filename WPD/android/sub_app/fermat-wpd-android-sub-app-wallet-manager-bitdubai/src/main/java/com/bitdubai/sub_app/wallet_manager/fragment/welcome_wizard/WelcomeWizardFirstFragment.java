@@ -21,9 +21,9 @@ import java.util.Map;
 /**
  * Created by mati on 2016.04.13..
  */
-public class WelcomeWizardFirstFragment extends AbstractFermatFragment<ReferenceAppFermatSession<WalletManager>, ResourceProviderManager> implements WizardPageListener{
+public class WelcomeWizardFirstFragment extends AbstractFermatFragment<ReferenceAppFermatSession<WalletManager>, ResourceProviderManager> implements WizardPageListener {
 
-    public static AbstractFermatFragment newInstance(){
+    public static AbstractFermatFragment newInstance() {
         return new WelcomeWizardFirstFragment();
     }
 
@@ -35,7 +35,7 @@ public class WelcomeWizardFirstFragment extends AbstractFermatFragment<Reference
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.welcome_first,container,false);
+        View view = inflater.inflate(R.layout.welcome_first, container, false);
         FermatTextView txt_version = (FermatTextView) view.findViewById(R.id.txt_version);
         PackageInfo pInfo = null;
         try {

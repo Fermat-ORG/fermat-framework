@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * The Class <code>com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus</code> define
  * all the status have a Wallet Published Information
  * <p/>
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 06/08/15.
  *
  * @version 1.0
@@ -21,13 +21,13 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum ComponentPublishedInformationStatus {
 
     /**
-     *  Definitions of status
+     * Definitions of status
      */
-    NO_PUBLISHED   ("NP"),
-    REQUESTED      ("RQ"),
-    UNDER_REVISION ("UR"),
-    PUBLISHED      ("PB"),
-    REJECTED       ("RJ");
+    NO_PUBLISHED("NP"),
+    REQUESTED("RQ"),
+    UNDER_REVISION("UR"),
+    PUBLISHED("PB"),
+    REJECTED("RJ");
 
     /**
      * Represent the key
@@ -48,7 +48,9 @@ public enum ComponentPublishedInformationStatus {
      *
      * @return String
      */
-    public String getCode()   { return this.code; }
+    public String getCode() {
+        return this.code;
+    }
 
     /**
      * Get the ComponentPublishedInformationStatus representation from code
@@ -59,16 +61,16 @@ public enum ComponentPublishedInformationStatus {
      */
     public static ComponentPublishedInformationStatus getByCode(String code) throws InvalidParameterException {
 
-        switch(code) {
-            case"NP":
+        switch (code) {
+            case "NP":
                 return NO_PUBLISHED;
-            case"RQ":
+            case "RQ":
                 return REQUESTED;
-            case"UR":
+            case "UR":
                 return UNDER_REVISION;
-            case"PB":
+            case "PB":
                 return PUBLISHED;
-            case"RJ":
+            case "RJ":
                 return REJECTED;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ComponentPublishedInformationStatus enum");
@@ -78,6 +80,7 @@ public enum ComponentPublishedInformationStatus {
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#toString()
      */
     @Override

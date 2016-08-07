@@ -13,9 +13,8 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantFindProcessException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantInstallWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletInstallationProcess;
@@ -57,6 +56,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfa
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreDetailedCatalogItem;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreLanguage;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreSkin;
+import com.bitdubai.fermat_wpd_plugin.layer.sub_app_module.wallet_store.developer.bitdubai.version_1.WalletStoreModulePluginRoot;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -71,11 +71,6 @@ import java.util.logging.Logger;
 public class WalletStoreModuleManager extends ModuleManagerImpl<BasicWalletSettings> implements com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager {
 
     /**
-     * DealsWithErrors interface member variables
-     */
-    ErrorManager errorManager;
-
-    /**
      * DealsWithDeviceUser interface variables and implementation
      */
     DeviceUserManager deviceUserManager;
@@ -85,7 +80,7 @@ public class WalletStoreModuleManager extends ModuleManagerImpl<BasicWalletSetti
      */
     LogManager logManager;
 
-
+    WalletStoreModulePluginRoot pluginRoot;
     /**
      * DealsWithWalletStoreMiddleware interface member variable
      */
@@ -104,12 +99,12 @@ public class WalletStoreModuleManager extends ModuleManagerImpl<BasicWalletSetti
     /**
      * Constructor
      *
-     * @param errorManager
+     * @param pluginRoot
      * @param logManager
      * @param walletStoreManagerMiddleware
      * @param walletStoreManagerNetworkService
      */
-    public WalletStoreModuleManager(ErrorManager errorManager, LogManager logManager, WalletStoreManager walletStoreManagerMiddleware,
+    public WalletStoreModuleManager(WalletStoreModulePluginRoot pluginRoot, LogManager logManager, WalletStoreManager walletStoreManagerMiddleware,
                                     com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.WalletStoreManager walletStoreManagerNetworkService,
                                     WalletManagerManager walletManagerManager,
                                     PluginFileSystem pluginFileSystem,
@@ -117,7 +112,7 @@ public class WalletStoreModuleManager extends ModuleManagerImpl<BasicWalletSetti
 
         super(pluginFileSystem, pluginId);
 
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.logManager = logManager;
         this.walletStoreManagerMiddleware = walletStoreManagerMiddleware;
         this.walletStoreManagerNetworkService = walletStoreManagerNetworkService;
@@ -482,18 +477,18 @@ public class WalletStoreModuleManager extends ModuleManagerImpl<BasicWalletSetti
 
     }
 
-    private String checkDeveloperAlias(DetailedCatalogItem detailedCatalogItem){
-        String developerAlias="DefaultDeveloperAlias";
-        if(detailedCatalogItem.getDeveloper()!=null){
-            developerAlias=detailedCatalogItem.getDeveloper().getAlias();
+    private String checkDeveloperAlias(DetailedCatalogItem detailedCatalogItem) {
+        String developerAlias = "DefaultDeveloperAlias";
+        if (detailedCatalogItem.getDeveloper() != null) {
+            developerAlias = detailedCatalogItem.getDeveloper().getAlias();
         }
         return developerAlias;
     }
 
-    private Languages checkLanguages(Languages languages){
-        Languages checkingLanguages=languages;
-        if(languages==null){
-            checkingLanguages=Languages.AMERICAN_ENGLISH;
+    private Languages checkLanguages(Languages languages) {
+        Languages checkingLanguages = languages;
+        if (languages == null) {
+            checkingLanguages = Languages.AMERICAN_ENGLISH;
         }
         return checkingLanguages;
     }
@@ -513,40 +508,40 @@ public class WalletStoreModuleManager extends ModuleManagerImpl<BasicWalletSetti
         try {
             Logger LOG = Logger.getGlobal();
 
-            LOG.info("MAP_CATALOGUE:"+walletCatalogueId);
-            LOG.info("MAP_WMNS:"+walletStoreManagerNetworkService);
+            LOG.info("MAP_CATALOGUE:" + walletCatalogueId);
+            LOG.info("MAP_WMNS:" + walletStoreManagerNetworkService);
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLING);
             CatalogItem catalogItem = walletStoreManagerNetworkService.getCatalogItem(walletCatalogueId);
             DetailedCatalogItem detailedCatalogItem = walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogueId);
-            LOG.info("MAP_WMM:"+walletManagerManager);
+            LOG.info("MAP_WMM:" + walletManagerManager);
             WalletInstallationProcess walletInstallationProcess = walletManagerManager.installWallet(walletCategory, walletCatalogueId.toString());
-            LOG.info("MAP_DUM:"+deviceUserManager);
+            LOG.info("MAP_DUM:" + deviceUserManager);
             //DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
             Skin skin = getWalletSkinFromWalletCatalogueId(walletCatalogueId);
             Language language = getWalletLanguageFromWalletCatalogueId(walletCatalogueId);
             //TODO: when we fix the publisher, delete this, please.
-            Languages languageName=checkLanguages(language.getLanguageName());
-            String developerAlias=checkDeveloperAlias(detailedCatalogItem);
+            Languages languageName = checkLanguages(language.getLanguageName());
+            String developerAlias = checkDeveloperAlias(detailedCatalogItem);
 
             /*
             For now, we'll pass null to the  walletPrivateKey, walletIconName, skinPreview method arguments
             TODO: Get the real values for this null objects.
             */
 
-            LOG.info("MAP_STORE_MODULE:"+walletInstallationProcess);
-            LOG.info("MAP_NAME:"+catalogItem.getName());
-            LOG.info("MAP_ID:"+catalogItem.getId());
-            LOG.info("MAP_VERSION:"+detailedCatalogItem.getVersion());
-            LOG.info("MAP_SCREENS:"+skin.getScreenSize().getCode());
-            LOG.info("MAP_SKIN_VERSION:"+skin.getVersion());
-            LOG.info("MAP_SKIN_NAME:"+skin.getSkinName());
-            LOG.info("MAP_LANGUAGE_VERSION:"+language.getVersion());
-            LOG.info("MAP_LANGUAGE_NAME:"+language.getLanguageName());
-            LOG.info("MAP_FIX_LANGUAGE_NAME:"+languageName);
-            LOG.info("MAP_LANGUAGE_LABEL:"+language.getLanguageLabel());
-            LOG.info("MAP_DEVELOPER_ALIAS:"+developerAlias);
+            LOG.info("MAP_STORE_MODULE:" + walletInstallationProcess);
+            LOG.info("MAP_NAME:" + catalogItem.getName());
+            LOG.info("MAP_ID:" + catalogItem.getId());
+            LOG.info("MAP_VERSION:" + detailedCatalogItem.getVersion());
+            LOG.info("MAP_SCREENS:" + skin.getScreenSize().getCode());
+            LOG.info("MAP_SKIN_VERSION:" + skin.getVersion());
+            LOG.info("MAP_SKIN_NAME:" + skin.getSkinName());
+            LOG.info("MAP_LANGUAGE_VERSION:" + language.getVersion());
+            LOG.info("MAP_LANGUAGE_NAME:" + language.getLanguageName());
+            LOG.info("MAP_FIX_LANGUAGE_NAME:" + languageName);
+            LOG.info("MAP_LANGUAGE_LABEL:" + language.getLanguageLabel());
+            LOG.info("MAP_DEVELOPER_ALIAS:" + developerAlias);
 
-            LOG.info("MAP_VERSION:"+version);
+            LOG.info("MAP_VERSION:" + version);
             walletInstallationProcess.startInstallation(WalletType.NICHE, catalogItem.getName(),
                     catalogItem.getId().toString(), null, /*deviceUser.getPublicKey()*/"testPublicKey", null,
                     walletCatalogueId, detailedCatalogItem.getVersion(), skin.getScreenSize().getCode(),

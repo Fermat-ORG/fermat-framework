@@ -169,7 +169,7 @@ public class SearchViewStyleHelper {
 
     private int getId(final String name) {
         return mSearchView.getContext().getResources()
-                .getIdentifier(new StringBuilder().append("android:id/").append(name).toString(), null, null);
+                .getIdentifier("android:id/" + name, null, null);
     }
 
     @SuppressWarnings("unchecked")

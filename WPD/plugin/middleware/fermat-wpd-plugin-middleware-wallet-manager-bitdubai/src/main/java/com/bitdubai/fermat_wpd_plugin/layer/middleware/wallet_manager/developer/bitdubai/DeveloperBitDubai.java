@@ -13,7 +13,7 @@ import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_manager.developer.
 /**
  * I will choose from the different versions of my implementations which one to start. Now there is only one, so
  * it is easy to choose.
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
  *
  * @version 1.0

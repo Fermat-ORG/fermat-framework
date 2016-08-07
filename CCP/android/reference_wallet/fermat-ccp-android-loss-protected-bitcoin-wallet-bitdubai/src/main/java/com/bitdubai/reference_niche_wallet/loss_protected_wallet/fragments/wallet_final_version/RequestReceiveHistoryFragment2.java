@@ -122,7 +122,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
-            setUp();
+            //setUp();
             return rootView;
         } catch (Exception e) {
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -188,18 +188,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
         }
     }
 
-    @Override
-    public void onDrawerOpen() {
-        actionButton.setVisibility(View.GONE);
 
-    }
-
-    @Override
-    public void onDrawerClose() {
-        FermatAnimationsUtils.showEmpty(getActivity(), true, actionMenu.getActivityContentView());
-        actionButton.setVisibility(View.VISIBLE);
-
-    }
 
     @Override
     protected boolean hasMenu() {

@@ -67,7 +67,7 @@ public class ServicesHelpers {
     }
 
     public NotificationService getNotificationService() {
-        Log.i(TAG, new StringBuilder().append("getNotificationService, service state: ").append(notificationServiceHelper.getNotificationService()).toString());
+        Log.i(TAG, "getNotificationService, service state: " + notificationServiceHelper.getNotificationService());
         return notificationServiceHelper.getNotificationService();
     }
 

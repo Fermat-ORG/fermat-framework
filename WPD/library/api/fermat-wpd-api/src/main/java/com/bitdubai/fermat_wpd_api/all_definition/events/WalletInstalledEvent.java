@@ -12,19 +12,19 @@ public class WalletInstalledEvent extends AbstractWPDEvent {
     private UUID walletId;
     private String publicKey;
 
-    public void setWalletId (UUID walletId){
-        this.walletId = walletId;        
+    public void setWalletId(UUID walletId) {
+        this.walletId = walletId;
     }
-    
-    public UUID getWalletId(){
+
+    public UUID getWalletId() {
         return this.walletId;
     }
 
-    public String getPublicKey(){
+    public String getPublicKey() {
         return publicKey;
     }
-    
-    public WalletInstalledEvent (EventType eventType){
+
+    public WalletInstalledEvent(EventType eventType) {
         super(eventType);
     }
 }

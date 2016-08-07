@@ -994,10 +994,12 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     public void onDestroy() {
         try {
 
-            FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+            actionButton.setVisibility(View.GONE);
+            button1.setVisibility(View.GONE);
+            button2.setVisibility(View.GONE);
+
             actionButton.detach();
             actionButton.removeAllViewsInLayout();
-
 
             button1.removeAllViewsInLayout();
             button2.removeAllViewsInLayout();

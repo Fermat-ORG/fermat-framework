@@ -744,6 +744,32 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         return super.onContextItemSelected(item);
     }
 
+
+
+    @Override
+    public void onDestroy() {
+        try {
+
+            FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+            actionButton.detach();
+            actionButton.removeAllViewsInLayout();
+
+
+            button1.removeAllViewsInLayout();
+            button2.removeAllViewsInLayout();
+
+            actionButton = null;
+            button1 = null;
+            button2 = null;
+
+            actionMenu = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+//        ((ViewGroup)button1.getParent()).removeView(button1);
+        super.onDestroy();
+    }
+
     private void loadImageFromGallery() {
         Intent intentLoad = new Intent(
                 Intent.ACTION_PICK,

@@ -30,7 +30,7 @@ public class ProfilesHolder extends ChildViewHolder {
     }
 
     public ProfilesHolder bind(InstalledApp childListItem) {
-        if(childListItem.getIconResource()!=0){
+        if (childListItem.getIconResource() != 0) {
             Picasso.with(itemView.getContext()).load(childListItem.getIcon()).into(img_icon);
         }
         txtProfile.setText(childListItem.getName());
