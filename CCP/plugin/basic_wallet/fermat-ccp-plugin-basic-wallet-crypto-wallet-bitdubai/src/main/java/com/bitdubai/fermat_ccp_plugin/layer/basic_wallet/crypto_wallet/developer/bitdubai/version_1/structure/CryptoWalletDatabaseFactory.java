@@ -45,7 +45,7 @@ public class CryptoWalletDatabaseFactory implements DealsWithPluginDatabaseSyste
             createBitcoinWalletBalancesTable(ownerId, database.getDatabaseFactory());
             insertInitialBalancesRecord(database);
             database.closeDatabase();
-            System.out.println("******BASIC WALLET - CREATE NEW DATA BASE ********");
+
             return database;
         } catch(CantCreateTableException | CantInsertRecordException exception){
             if(database != null)

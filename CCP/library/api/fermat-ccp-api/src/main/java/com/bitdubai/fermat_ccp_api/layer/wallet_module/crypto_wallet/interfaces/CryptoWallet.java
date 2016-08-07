@@ -440,7 +440,8 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
                                                                  String intraUserLoggedInPublicKey,
                                                                  BlockchainNetworkType blockchainNetworkType,
                                                                  int max,
-                                                                 int offset) throws CantListTransactionsException;
+                                                                 int offset,
+                                                                 Actors actorType) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.

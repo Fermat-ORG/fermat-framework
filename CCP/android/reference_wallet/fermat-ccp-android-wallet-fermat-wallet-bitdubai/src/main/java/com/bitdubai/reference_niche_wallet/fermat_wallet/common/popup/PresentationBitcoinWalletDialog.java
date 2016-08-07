@@ -208,6 +208,8 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
                     FermatWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
                     bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
                     getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
+
+                getSession().setData(SessionConstant.PRESENTATION_HELP_ENABLED, Boolean.FALSE);
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {
