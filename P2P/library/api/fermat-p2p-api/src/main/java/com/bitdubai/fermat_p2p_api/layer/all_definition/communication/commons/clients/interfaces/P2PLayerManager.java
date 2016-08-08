@@ -11,6 +11,6 @@ public interface P2PLayerManager {
 
     void register(NetworkChannel networkChannel);
 
-    void registerReconnect(NetworkChannel networkChannel);
+    void setNetworkServicesRegisteredFalse();
 
 }

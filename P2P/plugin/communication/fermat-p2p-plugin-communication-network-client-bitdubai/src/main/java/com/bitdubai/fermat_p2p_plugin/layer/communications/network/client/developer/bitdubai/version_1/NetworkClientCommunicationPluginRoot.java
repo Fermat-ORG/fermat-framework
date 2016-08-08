@@ -190,7 +190,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             /*
              * Initialize the networkClientConnectionsManager to the Connections
              */
-            networkClientConnectionsManager = new NetworkClientConnectionsManager(identity, eventManager, locationManager, this,connectivityManager);
+            networkClientConnectionsManager = new NetworkClientConnectionsManager(identity, eventManager, locationManager, this,connectivityManager,p2PLayerManager);
 
             /*
              * Add references to the node context
@@ -217,7 +217,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                         0,
                         Boolean.FALSE,
                         nodesProfileList.get(0),
-                        connectivityManager
+                        connectivityManager,
+                        p2PLayerManager
                 );
 
 
@@ -239,7 +240,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                             0,
                             Boolean.FALSE,
                             nodesProfileList.get(0),
-                            connectivityManager
+                            connectivityManager,
+                            p2PLayerManager
                     );
 
                 } else {
@@ -253,7 +255,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                             -1,
                             Boolean.FALSE,
                             null,
-                            connectivityManager
+                            connectivityManager,
+                            p2PLayerManager
                     );
 
                 }
@@ -325,10 +328,6 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
         }
 
 
-    }
-
-    public void register(){
-        p2PLayerManager.registerReconnect(this);
     }
 
     /**
@@ -511,7 +510,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     i+1,
                     Boolean.FALSE,
                     nodesProfileList.get(i+1),
-                    connectivityManager
+                    connectivityManager,
+                    p2PLayerManager
             );
 
         }else{
@@ -525,7 +525,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     -1,
                     Boolean.FALSE,
                     null,
-                    connectivityManager
+                    connectivityManager,
+                    p2PLayerManager
             );
 
         }
