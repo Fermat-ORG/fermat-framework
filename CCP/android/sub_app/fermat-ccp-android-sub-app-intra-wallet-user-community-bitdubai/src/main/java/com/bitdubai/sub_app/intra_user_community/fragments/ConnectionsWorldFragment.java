@@ -900,7 +900,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
             if (moduleManager.getActiveIntraUserIdentity() != null) {
                 if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
                     appSession.setData(INTRA_USER_SELECTED, data);
-                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
             }
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();

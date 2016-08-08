@@ -991,6 +991,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                         appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
                         appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
                         appSession.setData(SessionConstant.LOSS_PROTECTED_ENABLED, true);
+                        appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
                     } else {
                         if (lossProtectedWalletSettings.getBlockchainNetworkType() == null)
                             lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());

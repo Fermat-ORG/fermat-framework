@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -276,7 +277,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
                     List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(
                             BalanceType.AVAILABLE, TransactionType.CREDIT, appSession.getAppPublicKey(),
-                            cryptoWalletTransaction.getActorFromPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+                            (cryptoWalletTransaction.getActorToType().equals(Actors.EXTRA_USER) ? cryptoWalletTransaction.getActorToPublicKey() : cryptoWalletTransaction.getActorFromPublicKey()),
+                            intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0, (cryptoWalletTransaction.getActorToType().equals(Actors.EXTRA_USER)? cryptoWalletTransaction.getActorToType() : cryptoWalletTransaction.getActorFromType() ));
 
                     GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction> grouperItem = new GrouperItem<>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);

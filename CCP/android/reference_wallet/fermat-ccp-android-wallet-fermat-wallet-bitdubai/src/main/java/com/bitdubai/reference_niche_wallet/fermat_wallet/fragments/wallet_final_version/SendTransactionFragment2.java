@@ -1094,8 +1094,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         appSession.setData(SessionConstant.BLOCKCHAIN_DOWNLOAD_ENABLED, true);
                         appSession.setData(SessionConstant.FEE_LEVEL, BitcoinFee.NORMAL.toString());
                         appSession.setData(SessionConstant.FIAT_CURRENCY, FiatCurrency.US_DOLLAR.getCode());
-
-                        appSession.setData(SessionConstant.RUNNIBLE_BALANCE, 0);
+                        appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
+                        appSession.setData(SessionConstant.RUNNIBLE_BALANCE, new HashMap<>());
 
                         appSession.setData(SessionConstant.SETTINGS_LOADED, true);
 

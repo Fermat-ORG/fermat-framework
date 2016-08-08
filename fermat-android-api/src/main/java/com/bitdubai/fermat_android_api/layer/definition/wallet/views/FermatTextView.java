@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bitdubai.android_api.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FontType;
 
-
 /**
  * Custom TextView
  *
@@ -71,6 +70,4 @@ public class FermatTextView extends TextView {
             ex.printStackTrace();
         }
     }
-
-
 }
