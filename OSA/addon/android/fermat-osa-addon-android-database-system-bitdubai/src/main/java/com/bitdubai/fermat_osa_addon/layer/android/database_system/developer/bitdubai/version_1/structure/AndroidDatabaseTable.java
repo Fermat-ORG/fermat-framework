@@ -272,11 +272,12 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
     @Override
     public void truncate() throws CantTruncateTableException {
+        SQLiteDatabase database = null;
+        try {
+            database = this.database.getWritableDatabase();
 
-        try (SQLiteDatabase database = this.database.getWritableDatabase()) {
-
-            database.execSQL("DELETE FROM " + tableName);
-
+//            database.execSQL("DELETE FROM " + tableName);
+            Log.i("AndroidDatabase", "Truncate table, records quantity: " + database.delete(tableName, null, null));
         } catch (Exception exception) {
 
             throw new CantTruncateTableException(
@@ -284,6 +285,10 @@ public class AndroidDatabaseTable implements DatabaseTable {
                     null,
                     "Check the cause for this error"
             );
+        } finally {
+            if (database != null) {
+                database.close();
+            }
         }
     }
 
@@ -341,6 +346,71 @@ public class AndroidDatabaseTable implements DatabaseTable {
             if (database != null)
                 database.close();
         }
+    }
+
+    @Override
+    public List<DatabaseTableRecord> loadRecords(List<DatabaseTableFilter> tableFilters, List<DatabaseTableFilterGroup> databaseTableFilterGroups, String[] columns) throws CantLoadTableToMemoryException{
+
+        List<DatabaseTableRecord> records = new ArrayList<>();
+        StringBuilder queryString = new StringBuilder("");
+        String topSentence = "";
+        String offsetSentence = "";
+        if (!this.top.isEmpty())
+            topSentence = " LIMIT " + this.top;
+
+        if (!this.offset.isEmpty())
+            offsetSentence = " OFFSET " + this.offset;
+
+        Cursor cursor = null;
+
+        /**
+         * Get columns name to read values of files
+         *
+         */
+        SQLiteDatabase database = null;
+        try {
+            database = this.database.getReadableDatabase();
+            if(columns==null) {
+                List<String> columnsNames = getColumns(database);
+                columns = columnsNames.toArray(new String[columnsNames.size()]);
+            }
+            queryString.append("SELECT *");
+            queryString.append(makeOutputColumns());
+            queryString.append(" FROM ");
+            queryString.append(tableName);
+            queryString.append(makeFilter());
+            queryString.append(makeOrder());
+            queryString.append(topSentence);
+            queryString.append(offsetSentence);
+
+            cursor = database.rawQuery(queryString.toString(), null);
+            while (cursor.moveToNext()) {
+                AndroidDatabaseRecord tableRecord = new AndroidDatabaseRecord();
+
+                for (String column : columns) {
+                    DatabaseRecord recordValue = new AndroidRecord(
+                            column,
+                            cursor.getString(cursor.getColumnIndex(column)),
+                            false
+                    );
+                    tableRecord.addValue(recordValue);
+                }
+
+                records.add(tableRecord);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            if (cursor != null)
+                cursor.close();
+            throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "Check the cause for this error");
+        } finally {
+            if (database != null)
+                database.close();
+
+            if (cursor != null)
+                cursor.close();
+        }
+        return records;
     }
 
     @Override
