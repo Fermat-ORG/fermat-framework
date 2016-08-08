@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">fermat-cbp-android-crypto-broker-community</string>
+    <string name="app_name" translatable="false">fermat-cbp-android-crypto-broker-community</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world" translatable="false">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="description_search">Search</string>
-    <string name="wallet_icon">wallet icon</string>
+    <string name="wallet_icon" translatable="false">wallet icon</string>
     <string name="wallet_installs">Installed</string>
     <string name="wallet_status_install">INSTALL</string>
     <string name="wallet_status_installed">INSTALLED</string>
@@ -27,7 +27,7 @@
     <string name="cbc_connection_state_pending_acceptance">Request sent</string>
     <string name="no_data_available">No data available</string>
 
-    <string name="cbc_connection_request_question">You want to send a Connection Request to the user nbroker1?</string>
+    <string name="cbc_connection_request_question">You want to send a Connection Request to the user broker?</string>
     <string name="cbc_cancel">Cancel</string>
     <string name="cbc_ok">OK</string>
     <string name="cbc_welcome">Welcome!</string>
@@ -50,7 +50,7 @@
     <string name="cbc_broker_name">Broker Name</string>
     <string name="cbc_second_identity">Second Identity</string>
     <string name="cbc_no_results">User search don\'t\nhave results</string>
-    <string name="cbc_asking">You want to send a Connection Request to the user nbroker1?</string>
+    <string name="cbc_asking">You want to send a Connection Request to the user broker?</string>
     <string name="cbc_connection_confirm">Is now a connection</string>
     <string name="cbc_connection_state">Is Connected with you</string>
     <string name="cbc_merch">Merchandises: USD, BTC, VEF</string>
