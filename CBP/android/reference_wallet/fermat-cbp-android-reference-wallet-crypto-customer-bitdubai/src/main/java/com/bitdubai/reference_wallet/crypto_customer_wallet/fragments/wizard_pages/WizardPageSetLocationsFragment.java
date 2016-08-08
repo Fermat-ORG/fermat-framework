@@ -131,7 +131,7 @@ public class WizardPageSetLocationsFragment
             @Override
             public void onClick(View view) {
                 locationList.add("wizard");
-                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD, appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD);
             }
         });
 

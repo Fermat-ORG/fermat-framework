@@ -51,12 +51,12 @@ public class CreateDatabaseTest {
     private UUID testOwnerId;
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         testOwnerId = UUID.randomUUID();
 
         when(mockPluginDatabaseSystem.createDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
-        when(mockDatabaseFactory.newTableFactory(testOwnerId,NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME)).thenReturn(mockTableFactory);
+        when(mockDatabaseFactory.newTableFactory(testOwnerId, NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME)).thenReturn(mockTableFactory);
     }
 
     @Test
@@ -68,9 +68,8 @@ public class CreateDatabaseTest {
     }
 
 
-
     @Test
-    public void CreateDatabase_DatabaseAndTablesProperlyCreated_ReturnsDatabase() throws Exception{
+    public void CreateDatabase_DatabaseAndTablesProperlyCreated_ReturnsDatabase() throws Exception {
         databaseFactory = new NetworkserviceswalletresourcesDatabaseFactory(mockPluginDatabaseSystem);
         Database checkDatabase = databaseFactory.createDatabase(testOwnerId, NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME);
 
@@ -78,7 +77,7 @@ public class CreateDatabaseTest {
     }
 
     @Test
-    public void CreateDatabase_PluginSystemCantCreateDatabase_ThrowsCantCreateDatabaseException() throws Exception{
+    public void CreateDatabase_PluginSystemCantCreateDatabase_ThrowsCantCreateDatabaseException() throws Exception {
         when(mockPluginDatabaseSystem.createDatabase(testOwnerId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME)).thenThrow(new CantCreateDatabaseException("MOCK", null, null, null));
 
         databaseFactory = new NetworkserviceswalletresourcesDatabaseFactory(mockPluginDatabaseSystem);
@@ -90,9 +89,9 @@ public class CreateDatabaseTest {
     }
 
     @Test
-    public void CreateDatabase_CantCreateTables_ThrowsCantCreateDatabaseException() throws Exception{
+    public void CreateDatabase_CantCreateTables_ThrowsCantCreateDatabaseException() throws Exception {
 
-        when(mockDatabaseFactory.newTableFactory(testOwnerId,NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME)).thenReturn(null);
+        when(mockDatabaseFactory.newTableFactory(testOwnerId, NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME)).thenReturn(null);
 
         databaseFactory = new NetworkserviceswalletresourcesDatabaseFactory(mockPluginDatabaseSystem);
         catchException(databaseFactory).createDatabase(testOwnerId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
@@ -103,13 +102,12 @@ public class CreateDatabaseTest {
     }
 
 
-
     @Test
-    public void CreateDatabase_ConflictedIdWhenCreatingTables_ThrowsCantCreateDatabaseException() throws Exception{
+    public void CreateDatabase_ConflictedIdWhenCreatingTables_ThrowsCantCreateDatabaseException() throws Exception {
         when(mockDatabaseFactory.newTableFactory(testOwnerId, NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME)).thenReturn(null);
 
         databaseFactory = new NetworkserviceswalletresourcesDatabaseFactory(mockPluginDatabaseSystem);
-        catchException(databaseFactory).createDatabase(testOwnerId,NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
+        catchException(databaseFactory).createDatabase(testOwnerId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
 
         assertThat(caughtException())
                 .isNotNull()
@@ -117,9 +115,8 @@ public class CreateDatabaseTest {
     }
 
 
-
     @Test
-    public void CreateDatabase_GeneralExceptionThrown_ThrowsCantCreateDatabaseException() throws Exception{
+    public void CreateDatabase_GeneralExceptionThrown_ThrowsCantCreateDatabaseException() throws Exception {
         when(mockDatabase.getDatabaseFactory()).thenReturn(null);
 
         databaseFactory = new NetworkserviceswalletresourcesDatabaseFactory(mockPluginDatabaseSystem);

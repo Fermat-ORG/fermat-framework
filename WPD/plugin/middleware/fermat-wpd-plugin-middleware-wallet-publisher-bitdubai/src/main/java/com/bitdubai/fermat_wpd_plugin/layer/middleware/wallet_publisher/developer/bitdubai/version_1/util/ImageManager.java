@@ -46,7 +46,7 @@ public class ImageManager {
      * @param pluginOwnerId
      * @param pluginFileSystem
      */
-    public ImageManager(UUID pluginOwnerId, PluginFileSystem pluginFileSystem){
+    public ImageManager(UUID pluginOwnerId, PluginFileSystem pluginFileSystem) {
         super();
         this.pluginOwnerId = pluginOwnerId;
         this.pluginFileSystem = pluginFileSystem;

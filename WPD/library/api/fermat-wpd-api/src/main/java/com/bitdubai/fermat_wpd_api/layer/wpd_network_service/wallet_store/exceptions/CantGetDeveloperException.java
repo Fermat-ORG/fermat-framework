@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantGetDeveloperException extends FermatException {
     public static final String DEFAULT_MESSAGE = "There was an error trying to get the Developer information";
+
     public CantGetDeveloperException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

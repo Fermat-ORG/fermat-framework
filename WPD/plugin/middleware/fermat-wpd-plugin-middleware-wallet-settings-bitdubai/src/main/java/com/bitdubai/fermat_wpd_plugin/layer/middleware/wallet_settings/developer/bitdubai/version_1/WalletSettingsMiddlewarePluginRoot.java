@@ -2,13 +2,13 @@ package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_settings.develope
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSaveWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
@@ -19,7 +19,7 @@ import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_settings.developer
  * <p/>
  * TODO: DETAIL...............................................
  * <p/>
- *
+ * <p/>
  * Created by Natalia Cortez on 20-07-2015
  *
  * @version 1.0
@@ -28,10 +28,10 @@ import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_settings.developer
 public class WalletSettingsMiddlewarePluginRoot extends AbstractPlugin implements
         WalletSettingsManager {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM    )
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
     public WalletSettingsMiddlewarePluginRoot() {
@@ -43,7 +43,7 @@ public class WalletSettingsMiddlewarePluginRoot extends AbstractPlugin implement
      */
     @Override
     public WalletSettings getSettings(String walletPublicKey) {
-        return new WalletSettingsSettings(walletPublicKey,this.pluginFileSystem,this.pluginId,this.errorManager);
+        return new WalletSettingsSettings(walletPublicKey, this.pluginFileSystem, this.pluginId, this.errorManager);
     }
 
     /**
@@ -53,7 +53,7 @@ public class WalletSettingsMiddlewarePluginRoot extends AbstractPlugin implement
      * @return the settings of the specified wallet
      */
     @Override
-    public void setSettings(String xmlWalletSetting,String walletPublicKey) throws CantSaveWalletSettings {
-        new WalletSettingsSettings(walletPublicKey,pluginFileSystem,pluginId,errorManager);
+    public void setSettings(String xmlWalletSetting, String walletPublicKey) throws CantSaveWalletSettings {
+        new WalletSettingsSettings(walletPublicKey, pluginFileSystem, pluginId, errorManager);
     }
 }

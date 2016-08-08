@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * The exception <code>com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException</code>
  * is thrown when there is an error trying to get an installed wallet.
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/09/2015.
  */
 public class CantGetInstalledWalletException extends FermatException {

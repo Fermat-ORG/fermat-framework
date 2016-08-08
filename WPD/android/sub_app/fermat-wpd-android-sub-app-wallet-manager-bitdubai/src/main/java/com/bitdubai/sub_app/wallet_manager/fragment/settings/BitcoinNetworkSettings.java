@@ -14,7 +14,7 @@ import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 /**
  * Created by mati on 2016.04.25..
  */
-public class BitcoinNetworkSettings extends AbstractFermatFragment<DesktopSessionReferenceApp,ResourceProviderManager> {
+public class BitcoinNetworkSettings extends AbstractFermatFragment<DesktopSessionReferenceApp, ResourceProviderManager> {
 
 
     private View root;
@@ -27,7 +27,7 @@ public class BitcoinNetworkSettings extends AbstractFermatFragment<DesktopSessio
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.bitcoin_network_layout,container,false);
+        root = inflater.inflate(R.layout.bitcoin_network_layout, container, false);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

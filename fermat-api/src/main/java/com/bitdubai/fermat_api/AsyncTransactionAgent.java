@@ -132,7 +132,7 @@ public abstract class AsyncTransactionAgent<T> extends FermatAgent implements Se
 
             //Si ya han pasado n segundos
             if (transactionDelayExpired(transaction.getKey())) {
-                System.out.println(new StringBuilder().append("AsyncTransactionAgent - Transaction Agent time expired for transaction: ").append(transaction.toString()).toString());
+                System.out.println("AsyncTransactionAgent - Transaction Agent time expired for transaction: " + transaction.toString());
 
                 this.processTransaction(transaction.getValue());
 

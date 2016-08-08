@@ -64,7 +64,7 @@ public enum ReferenceWallet implements FermatWalletEnum {
             case "BWFMW":
                 return BASIC_WALLET_FERMAT_WALLET;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the ReferenceWallet enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ReferenceWallet enum");
         }
     }
 

@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInterface> extends FragmentStatePagerAdapter implements FermatUIAdapter<F> {
 
     protected F[] fragments;
-    protected String[] titles;
+    protected Tab[] titles;
     private int lastPosition;
 
     public FermatScreenAdapter(FragmentManager fm, F[] fragments) {
@@ -70,7 +71,7 @@ public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInte
         }
     }
 
-    public void setTitles(String[] titles) {
+    public void setTitles(Tab[] titles) {
         this.titles = titles;
     }
 

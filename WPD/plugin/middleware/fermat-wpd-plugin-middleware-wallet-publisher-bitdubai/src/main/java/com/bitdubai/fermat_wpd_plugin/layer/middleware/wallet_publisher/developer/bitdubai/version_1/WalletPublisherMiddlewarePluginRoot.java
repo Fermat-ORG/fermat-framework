@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -19,8 +21,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
-import com.bitdubai.fermat_wpd_api.all_definition.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
@@ -36,10 +36,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.enums.FactoryProjectType;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
@@ -66,7 +66,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.WalletPublisherMiddlewarePluginRoot</code> is
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
  * Update by Roberto Requena - (rart3001@gmail.com) on 04/08/2015
  *
@@ -78,10 +78,10 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
         WalletPublisherMiddlewarePlugin,
         DatabaseManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER    )
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -93,7 +93,7 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
     @NeededPluginReference(platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION, layer = Layers.NETWORK_SERVICE, plugin = Plugins.WALLET_STORE)
     private WalletStoreManager walletStoreManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM    )
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
 
@@ -114,10 +114,11 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
      */
     private Database dataBase;
 
-    /**s
+    /**
+     * s
      * Constructor
      */
-    public WalletPublisherMiddlewarePluginRoot(){
+    public WalletPublisherMiddlewarePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
@@ -132,12 +133,12 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
         /*
          * Validate If all resources are not null
          */
-        if (logManager                      == null ||
-                errorManager                == null ||
-                errorManager                == null ||
+        if (logManager == null ||
+                errorManager == null ||
+                errorManager == null ||
                 walletFactoryProjectManager == null ||
-                pluginFileSystem            == null ||
-                pluginDatabaseSystem        == null) {
+                pluginFileSystem == null ||
+                pluginDatabaseSystem == null) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -212,10 +213,10 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
                 throw new CantInitializeWalletPublisherMiddlewareDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
-        }finally {
+        } finally {
 
             //Close the database
-            if (dataBase != null){
+            if (dataBase != null) {
                 dataBase.closeDatabase();
             }
         }
@@ -224,6 +225,7 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
 
     /**
      * (non-Javadoc)
+     *
      * @see Service#start()
      */
     @Override
@@ -277,6 +279,7 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
 
     /**
      * (non-Javadoc)
+     *
      * @see LogManagerForDevelopers#getClassesFullPath()
      */
     @Override
@@ -289,6 +292,7 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
 
     /**
      * (non-Javadoc)
+     *
      * @see LogManagerForDevelopers#setLoggingLevelPerClass(Map<String, LogLevel>)
      */
     @Override
@@ -314,6 +318,7 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
 
     /**
      * (non-Javadoc)
+     *
      * @see DatabaseManagerForDevelopers#getDatabaseList(DeveloperObjectFactory)
      */
     @Override
@@ -323,6 +328,7 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
 
     /**
      * (non-Javadoc)
+     *
      * @see DatabaseManagerForDevelopers#getDatabaseTableList(DeveloperObjectFactory, DeveloperDatabase)
      */
     @Override
@@ -332,6 +338,7 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
 
     /**
      * (non-Javadoc)
+     *
      * @see DatabaseManagerForDevelopers#getDatabaseTableContent(DeveloperObjectFactory, DeveloperDatabase, DeveloperDatabaseTable)
      */
     @Override
@@ -341,6 +348,7 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
 
     /**
      * (non-Javadoc)
+     *
      * @see WalletPublisherMiddlewarePlugin#getWalletPublisherMiddlewareManagerInstance()
      */
     @Override
@@ -349,15 +357,15 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
     }
 
 
-    private void test(){
+    private void test() {
 
         try {
 
             WalletPublisherMiddlewareManager walletPublisherMiddlewareManager = getWalletPublisherMiddlewareManagerInstance();
 
             WalletFactoryProject walletFactoryProject = constructWalletFactoryProjectTest();
-            byte[] icon = new byte[] { 0x11, 0x22, 0x33 };
-            byte[] mainScreenShot = new byte[] { 0x11, 0x22, 0x33 };
+            byte[] icon = new byte[]{0x11, 0x22, 0x33};
+            byte[] mainScreenShot = new byte[]{0x11, 0x22, 0x33};
             List<byte[]> screenShotDetails = new ArrayList<>();
 
             screenShotDetails.add(icon);
@@ -365,13 +373,13 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
 
             URL videoUrl = new URL("http://www.youtube.com/watch?v=pBzjx7V3Ldw");
             String observations = "Its Rock!";
-            Version initialPlatformVersion = new Version(1,0,0);
-            Version finalPlatformVersion = new Version(1,0,0);
+            Version initialPlatformVersion = new Version(1, 0, 0);
+            Version finalPlatformVersion = new Version(1, 0, 0);
             String publisherIdentityPublicKey = "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
             String signature = "25928f344d466ae103d9a6643113a5003f061e8d81ec64048aafa3cd7bfd25cf 26337334089289ea0de1770a067d110c776b4a6dfba25c1ef218eb5cb639c6c5";
             URL publisherWebsiteUrl = new URL("http://www.publishertest.com");
 
-            walletPublisherMiddlewareManager.publishWallet(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations,  initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
+            walletPublisherMiddlewareManager.publishWallet(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -380,7 +388,7 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
     }
 
 
-    private WalletFactoryProject constructWalletFactoryProjectTest(){
+    private WalletFactoryProject constructWalletFactoryProjectTest() {
         WalletFactoryProject walletFactoryProject = new WalletFactoryProject() {
 
             @Override
@@ -395,7 +403,7 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
 
             @Override
             public String getName() {
-                return "Wallet Publication Test "+ System.currentTimeMillis();
+                return "Wallet Publication Test " + System.currentTimeMillis();
             }
 
             @Override
@@ -405,7 +413,7 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
 
             @Override
             public String getDescription() {
-                return "Wallet Test Publication description "+ System.currentTimeMillis();
+                return "Wallet Test Publication description " + System.currentTimeMillis();
             }
 
             @Override
@@ -564,7 +572,7 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
     }
 
 
-    private Skin constructSkinTest(){
+    private Skin constructSkinTest() {
 
         Skin skin = new Skin();
 
@@ -594,7 +602,7 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
     }
 
 
-    private Language constructLanguageTest(){
+    private Language constructLanguageTest() {
 
         Language language = new Language();
         language.setId(UUID.randomUUID());
@@ -622,14 +630,14 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
         return language;
     }
 
-    private void test2(){
+    private void test2() {
         WalletPublisherMiddlewareManager walletPublisherMiddlewareManager = getWalletPublisherMiddlewareManagerInstance();
 
         try {
 
             List<InformationPublishedComponent> list = walletPublisherMiddlewareManager.getPublishedComponents("04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80");
 
-            for (InformationPublishedComponent info:list) {
+            for (InformationPublishedComponent info : list) {
                 System.out.println(info.toString());
             }
 

@@ -38,7 +38,7 @@ public enum CryptoTransactionType implements FermatEnum {
 
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code Received: ").append(code).toString(),
+                        "Code Received: " + code,
                         "This code received is no valid for the CryptoTransactionType enum"
                 );
         }

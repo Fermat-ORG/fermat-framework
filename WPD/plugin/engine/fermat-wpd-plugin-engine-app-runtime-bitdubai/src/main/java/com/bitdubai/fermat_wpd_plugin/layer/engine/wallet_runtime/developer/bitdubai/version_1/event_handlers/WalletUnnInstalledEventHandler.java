@@ -4,10 +4,10 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_wpd_api.all_definition.events.WalletInstalledEvent;
+import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 
 /**
  * Created by Matias Furszyfer
@@ -31,7 +31,7 @@ public class WalletUnnInstalledEventHandler implements FermatEventHandler {
 
                 this.walletRuntimeManager.removeNavigationStructure(publicKey);
 
-            } catch (CantRemoveWalletNavigationStructureException cantRemoveWalletNavigationStructureException){
+            } catch (CantRemoveWalletNavigationStructureException cantRemoveWalletNavigationStructureException) {
                 /**
                  * The main module could not handle this exception. Me neither. Will throw it again.
                  */

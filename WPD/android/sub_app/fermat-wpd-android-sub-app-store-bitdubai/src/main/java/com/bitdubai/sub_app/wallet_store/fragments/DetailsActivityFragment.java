@@ -114,7 +114,7 @@ public class DetailsActivityFragment extends AbstractFermatFragment {
         readMoreLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getCode(), appSession.getAppPublicKey());
+                changeActivity(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getCode());
             }
         });
 

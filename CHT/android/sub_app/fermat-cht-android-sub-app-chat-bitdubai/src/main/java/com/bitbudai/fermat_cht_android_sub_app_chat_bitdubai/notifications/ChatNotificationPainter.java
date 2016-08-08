@@ -8,7 +8,7 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 /**
  * Created by Eleazar (eorono@protonmail.com) on 13/04/16.
  */
-public class ChatNotificationPainterBuilder extends NotificationPainter {
+public class ChatNotificationPainter extends NotificationPainter {
 
     private RemoteViews remoteViews;
     private String title;
@@ -17,14 +17,14 @@ public class ChatNotificationPainterBuilder extends NotificationPainter {
     private int icon;
 
 
-    public ChatNotificationPainterBuilder(String title, String textBody, String image, int icon) {
+    public ChatNotificationPainter(String title, String textBody, String image, int icon) {
         this.title = title;
         this.image = image;
         this.textBody = textBody;
         this.icon = icon;
     }
 
-    public ChatNotificationPainterBuilder(String title, String textBody, String image) {
+    public ChatNotificationPainter(String title, String textBody, String image) {
         this(title, textBody, image, 0);
     }
 

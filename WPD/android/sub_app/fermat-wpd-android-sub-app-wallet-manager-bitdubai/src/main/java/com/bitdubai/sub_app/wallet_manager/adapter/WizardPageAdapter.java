@@ -17,7 +17,7 @@ import java.util.List;
  * @author Matias Furszyfer
  * @version 1.0
  */
-public class WizardPageAdapter extends FragmentStatePagerAdapter{
+public class WizardPageAdapter extends FragmentStatePagerAdapter {
 
     private List<AbstractFermatFragment> fragments;
     private FragmentManager mFragmentManager;
@@ -56,7 +56,6 @@ public class WizardPageAdapter extends FragmentStatePagerAdapter{
     private static String makeFragmentName(int viewId, int index) {
         return "android:switcher:" + viewId + ":" + index;
     }
-
 
 
 }

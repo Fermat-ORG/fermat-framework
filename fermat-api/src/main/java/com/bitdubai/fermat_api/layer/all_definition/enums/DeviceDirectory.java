@@ -40,7 +40,7 @@ public enum DeviceDirectory implements FermatEnum {
 
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Name received: ").append(name).toString(),
+                        "Name received: " + name,
                         "The name received is not valid for the DeviceDirectory enum"
                 );
         }
@@ -57,7 +57,7 @@ public enum DeviceDirectory implements FermatEnum {
                 return SYSTEM;
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code received: ").append(code).toString(),
+                        "Code received: " + code,
                         "The code received is not valid for the DeviceDirectory enum"
                 );
         }
