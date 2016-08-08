@@ -24,6 +24,8 @@ public interface DatabaseTable {
 
     void loadToMemory() throws CantLoadTableToMemoryException;
 
+    List<DatabaseTableRecord> loadRecords(List<DatabaseTableFilter> tableFilters,List<DatabaseTableFilterGroup> databaseTableFilterGroups,String[] columns) throws CantLoadTableToMemoryException;
+
     void truncate() throws CantTruncateTableException;
 
     long getCount() throws CantLoadTableToMemoryException;

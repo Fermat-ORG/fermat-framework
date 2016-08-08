@@ -452,8 +452,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             selectLayout(header!=null);
 
             SideMenu sideMenu = activity.getSideMenu();
-
-//            initMainViews(header);
             // Log.i("FERMAT ACTIVITY loadUI", "initMainViews " + System.currentTimeMillis());
 
             setOptionsMenu(optionsMenu);
