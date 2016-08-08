@@ -83,7 +83,7 @@ public class DisconnectDialog
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
         if (chatUserInformation != null) {
-            setDescription(activity.getResources().getString(R.string.cht_comm_text_disconnect2)+ chatUserInformation.getAlias() + "?");
+            setDescription(activity.getResources().getString(R.string.cht_comm_text_disconnect2) + " " + chatUserInformation.getAlias() + "?");
         }
         mDescription.setText(description != null ? description : "");
         mUsername.setText(username != null ? username : "");
