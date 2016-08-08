@@ -21,7 +21,7 @@
     <string name="cbc_no_data_available">Sin Locaciones Disponibles</string>
     <string name="cbc_no_identity">Usted no tiene ninguna</string>
     <string name="cbc_no_results">La búsqueda no tiene resultados</string>
-    <string name="cbc_ok">ACEPTAR</string>
+    <string name="cbc_ok">Aceptar</string>
     <string name="cbc_pick_broker">Seleccione un Crypto Customer</string>
     <string name="cbc_please_select_an_identity">Por favor seleccione una Identidad</string>
     <string name="cbc_second_identity">Segunda Identidad</string>
@@ -50,4 +50,31 @@
     <string name="wallet_status_open">ACTUALIZADO</string>
     <string name="wallet_status_uninstall">DESINSTALAR</string>
     <string name="wallet_status_upgrade">ACTUALIZADO</string>
+    <string name="accept_connection_request">¿Desea aceptar la colicitud de conexión desde %1$s?</string>
+    <string name="accept_request">Aceptar Solicitud</string>
+    <string name="accepted_connection_request">Solicitud de conexión aceptada</string>
+    <string name="actor_connected">Un vendedor aceptó su solicitud de conexión</string>
+    <string name="app_name" translatable="false"></string>
+    <string name="cancelled_successfully">Cancelada satisfactoriamente</string>
+    <string name="connection_request_receiver">Un vendedor desea conectarse con usted</string>
+    <string name="connection_request_sent">Solicitud de conexión enviada</string>
+    <string name="disconnected_successfully">Desconectado satisfactoriamente</string>
+    <string name="error_cancel">Existe un error. No se pudo cancelar.</string>
+    <string name="error_connection">La conexión ha sido solicitada</string>
+    <string name="error_data">Disculpe, existe un problema cargando la data</string>
+    <string name="error_disconnect">No se pudo desconectar, por favor intente nuevamente</string>
+    <string name="error_disconnect2">Existe un error. No se pudo desconectar.</string>
+    <string name="error_identities">Error intentando obtener la lista de identidades seleccionables</string>
+    <string name="error_opps">Oooops! recuperándose de un error del sistema</string>
+    <string name="error_request">No se pudo solicitar la conexión, por favor intente nuevamente</string>
+    <string name="error_try">Existe un error, por favor intente nuevamente</string>
+    <string name="error_try2">No se pudo cancelar, por favor intente nuevamente</string>
+    <string name="not_available_merchandises">Sin Mercancías Disponibles</string>
+    <string name="search_dots">Buscar...</string>
+    <string name="send_connection_request">¿Desea enviar una solicitud de conexión a %1$s?</string>
+    <string name="title">Crypto Broker Community</string>
+    <string name="unknow">Desconocido, por ahora.</string>
+    <string name="want_disconnect">Desea desconectar desde</string>
+    <string name="want_disconnect2">¿Desea desconectar desde %1$s?</string>
+    <string name="confirm_disconnection">Confirmar Desconexión</string>
 </resources>

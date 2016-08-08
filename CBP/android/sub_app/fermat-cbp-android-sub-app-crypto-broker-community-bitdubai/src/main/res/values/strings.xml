@@ -56,5 +56,30 @@
     <string name="cbc_merch">Merchandises: USD, BTC, VEF</string>
     <string name="cbc_home">Home</string>
 
-
+    <string name="title">Crypto Broker Community</string>
+    <string name="connection_request_receiver">A Broker wants to connect with you.</string>
+    <string name="actor_connected">A Broker accepted your connection request.</string>
+    <string name="accept_request">Accept Request</string>
+    <string name="accept_connection_request">Do you want to accept the connection request from %1$s?</string>
+    <string name="error_opps">Oooops! recovering from system error</string>
+    <string name="accepted_connection_request"> Accepted connection request</string>
+    <string name="cancelled_successfully">Cancelled successfully</string>
+    <string name="error_try">There has been an error, please try again</string>
+    <string name="error_try2">Could not cancel, please try again</string>
+    <string name="error_request">Could not request connection, please try again</string>
+    <string name="error_cancel">There has been an error. Could not cancel.</string>
+    <string name="error_connection">The connection has already been requested</string>
+    <string name="error_disconnect">Could not disconnect, please try again</string>
+    <string name="error_disconnect2">There has been an error. Could not disconnect.</string>
+    <string name="connection_request_sent">Connection request sent</string>
+    <string name="disconnected_successfully">Disconnected successfully</string>
+    <string name="error_identities">Error trying to get list of selectable identities</string>
+    <string name="not_available_merchandises">Not Available Merchandises.</string>
+    <string name="search_dots">Search...</string>
+    <string name="send_connection_request">Do you want to send a connection request to %1$s?</string>
+    <string name="error_data">Sorry there was a problem loading the data</string>
+    <string name="unknow">Unknown, for now.</string>
+    <string name="want_disconnect">Want to disconnect from</string>
+    <string name="confirm_disconnection">Confirm Disconnection</string>
+    <string name="want_disconnect2">Do you want to disconnect from %1$s?</string>
 </resources>
