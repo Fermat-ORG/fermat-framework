@@ -41,7 +41,7 @@
             android:paddingTop="14dip"
             android:textColor="#ffffff"
             android:textSize="16sp"
-            tools:text="Home">
+            tools:text="@string/home">
         </TextView>
     </LinearLayout>
 

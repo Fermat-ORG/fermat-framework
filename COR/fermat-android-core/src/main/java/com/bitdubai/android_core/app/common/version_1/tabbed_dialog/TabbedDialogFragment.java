@@ -109,7 +109,7 @@ public class TabbedDialogFragment extends DialogFragment {
             TextView v = new TextView(getActivity());
 
             v.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
-            v.setText(new StringBuilder().append("PAGE ").append(position + 1).toString());
+            v.setText("PAGE " + (position + 1));
             final int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources()
                     .getDisplayMetrics());
             v.setPadding(padding, padding, padding, padding);

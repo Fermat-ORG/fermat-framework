@@ -6,13 +6,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
-//import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
+
+//import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
 
 /**
  * Created by eze on 2015.07.10..
@@ -42,12 +43,14 @@ public interface InstalledWallet extends Serializable {
 
     /**
      * This method tell us the type of the wallet
+     *
      * @return WalletType enum
      */
     WalletType getWalletType();
 
     /**
      * This method tell us the Screen Size of the wallet
+     *
      * @return String ScreenSize
      */
     String getWalletScreenSize();
@@ -55,6 +58,7 @@ public interface InstalledWallet extends Serializable {
 
     /**
      * This method tell us the Navigation Structure Version of the wallet
+     *
      * @return String NavigationStructureVersion
      */
     String getWalletNavigationStructureVersion();
@@ -64,7 +68,7 @@ public interface InstalledWallet extends Serializable {
      * registers the wallet)
      *
      * @return an string that is result of the method getCode of an enum that can be inferred by the
-     *         WalletCategory of the wallet.
+     * WalletCategory of the wallet.
      */
     String getWalletPlatformIdentifier();
 
@@ -112,7 +116,6 @@ public interface InstalledWallet extends Serializable {
     String getWalletDeveloperName();
 
     /**
-     *
      * @return
      */
     String getWalletDeviceUserPublicKey();
@@ -135,5 +138,5 @@ public interface InstalledWallet extends Serializable {
     /**
      *  return an element of the BlockchainNetworkType enum indicating to which network is connected.
      */
-   // BlockchainNetworkType getBlockchainNetworkType();
+    // BlockchainNetworkType getBlockchainNetworkType();
 }

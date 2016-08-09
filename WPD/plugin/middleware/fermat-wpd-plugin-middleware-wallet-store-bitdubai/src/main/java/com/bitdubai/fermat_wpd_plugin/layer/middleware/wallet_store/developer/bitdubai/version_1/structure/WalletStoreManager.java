@@ -1,18 +1,18 @@
 package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.CatalogItems;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.exceptions.CantGetItemInformationException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.exceptions.CantSetInstallationStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.CatalogItems;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.exceptions.CantGetItemInformationException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.exceptions.CantSetInstallationStatusException;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.common.DatabaseOperations;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/27/15.
  */
-public class WalletStoreManager implements DealsWithErrors,DealsWithLogger,DealsWithPluginDatabaseSystem {
+public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem {
 
     /**
      * WalletStoreManager member variables
@@ -40,6 +40,7 @@ public class WalletStoreManager implements DealsWithErrors,DealsWithLogger,Deals
 
     /**
      * constructor
+     *
      * @param pluginId
      * @param errorManager
      * @param logManager
@@ -59,6 +60,7 @@ public class WalletStoreManager implements DealsWithErrors,DealsWithLogger,Deals
 
     /**
      * DealsWithErrors interface implementation
+     *
      * @param errorManager
      */
     @Override
@@ -68,6 +70,7 @@ public class WalletStoreManager implements DealsWithErrors,DealsWithLogger,Deals
 
     /**
      * DealsWithLogger interface implementation
+     *
      * @param logManager
      */
     @Override
@@ -77,6 +80,7 @@ public class WalletStoreManager implements DealsWithErrors,DealsWithLogger,Deals
 
     /**
      * DealsWithPluginDatabaseSystem interface implementation
+     *
      * @param pluginDatabaseSystem
      */
     @Override
@@ -91,6 +95,7 @@ public class WalletStoreManager implements DealsWithErrors,DealsWithLogger,Deals
 
     /**
      * Gets the installation status of the passed catalog item and id
+     *
      * @param catalogItemType
      * @param itemId
      * @return
@@ -109,6 +114,7 @@ public class WalletStoreManager implements DealsWithErrors,DealsWithLogger,Deals
 
     /**
      * Sets the catalog Item Information for the passed item
+     *
      * @param catalogItemType
      * @param itemId
      * @param installationStatus

@@ -11,7 +11,7 @@ public class WalletWentOnlineEvent extends AbstractWPDEvent {
 
     private UUID walletId;
 
-    public void setWalletId (UUID walletId){
+    public void setWalletId(UUID walletId) {
         this.walletId = walletId;
     }
 
@@ -19,7 +19,7 @@ public class WalletWentOnlineEvent extends AbstractWPDEvent {
         return this.walletId;
     }
 
-    public WalletWentOnlineEvent (EventType eventType){
+    public WalletWentOnlineEvent(EventType eventType) {
         super(eventType);
     }
 

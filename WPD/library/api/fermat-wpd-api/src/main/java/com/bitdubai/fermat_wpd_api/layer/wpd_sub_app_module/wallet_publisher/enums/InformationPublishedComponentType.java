@@ -20,11 +20,11 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum InformationPublishedComponentType {
 
     /**
-     *  Definitions types
+     * Definitions types
      */
-    WALLET   ("W"),
-    SKIN     ("S"),
-    LANGUAGE ("L");
+    WALLET("W"),
+    SKIN("S"),
+    LANGUAGE("L");
 
     /**
      * Represent the key
@@ -45,7 +45,9 @@ public enum InformationPublishedComponentType {
      *
      * @return String
      */
-    public String getCode()   { return this.code; }
+    public String getCode() {
+        return this.code;
+    }
 
     /**
      * Get the FactoryProjectType representation from code
@@ -56,12 +58,12 @@ public enum InformationPublishedComponentType {
      */
     public static InformationPublishedComponentType getByCode(String code) throws InvalidParameterException {
 
-        switch(code) {
-            case"W":
+        switch (code) {
+            case "W":
                 return WALLET;
-            case"S":
+            case "S":
                 return SKIN;
-            case"L":
+            case "L":
                 return LANGUAGE;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the FactoryProjectType enum");
@@ -71,6 +73,7 @@ public enum InformationPublishedComponentType {
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#toString()
      */
     @Override

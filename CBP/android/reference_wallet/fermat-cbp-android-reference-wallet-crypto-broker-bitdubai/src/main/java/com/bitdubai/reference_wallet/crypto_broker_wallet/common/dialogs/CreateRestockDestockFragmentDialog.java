@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -48,7 +49,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
     /**
      * UI components
      */
-    FermatEditText amountText;
+    EditText amountText;
 
 
     public CreateRestockDestockFragmentDialog(Activity activity, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session, CryptoBrokerWalletAssociatedSetting setting) {
@@ -67,7 +68,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.cbw_create_stock_transaction_dialog);
 
-            amountText = (FermatEditText) findViewById(R.id.cbw_ctd_amount);
+            amountText = (EditText) findViewById(R.id.cbw_ctd_amount);
 
             //If working with BIC, allow a max of 999,999,999.99999999 BTC
             if (Platforms.CRYPTO_CURRENCY_PLATFORM.equals(setting.getPlatform()))
@@ -78,11 +79,11 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             tittle_dialog_stock = (FermatTextView) findViewById(R.id.cbw_dialog_title_stock);
 
             if (setting.getPlatform().equals(Platforms.BANKING_PLATFORM))
-                tittle_dialog_stock.setText("Bank Wallet");
+                tittle_dialog_stock.setText(activity.getResources().getString(R.string.bank_wallet));
             else if (setting.getPlatform().equals(Platforms.CASH_PLATFORM))
-                tittle_dialog_stock.setText("Cash Wallet");
+                tittle_dialog_stock.setText(activity.getResources().getString(R.string.cash_wallet));
             else if (setting.getPlatform().equals(Platforms.CRYPTO_CURRENCY_PLATFORM))
-                tittle_dialog_stock.setText("Crypto Wallet");
+                tittle_dialog_stock.setText(activity.getResources().getString(R.string.crypto_wallet));
 
             final View restockBtn = findViewById(R.id.cbw_ctd_restock_transaction_btn);
             final View destockBtn = findViewById(R.id.cbw_ctd_destock_transaction_btn);
@@ -118,7 +119,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             String amountText = this.amountText.getText().toString();
 
             if (amountText.isEmpty()) {
-                Toast.makeText(activity.getApplicationContext(), "The amount cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.amount_empty), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -126,7 +127,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             final double amountAsDouble = amount.doubleValue();
 
             if (amountAsDouble == 0) {
-                Toast.makeText(activity.getApplicationContext(), "The amount can't be zero", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.amount_zero), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -150,7 +151,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             }
 
         } catch (Exception e) {
-            Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.error_try) + e.getMessage(), Toast.LENGTH_SHORT).show();
 
             final ErrorManager errorManager = session.getErrorManager();
             errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, DISABLES_THIS_FRAGMENT, e);
@@ -162,11 +163,11 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
 
         final float availableBalance = moduleManager.getAvailableBalance(setting.getMerchandise(), brokerWalletPublicKey);
         if (amount.floatValue() > availableBalance) {
-            Toast.makeText(activity.getApplicationContext(), "The amount is higher that the available balance for the selected merchandise", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.amount_higher_available), Toast.LENGTH_LONG).show();
             return false;
         }
 
-        final String memo = "Unheld funds, destocked from the Broker Wallet";
+        final String memo = activity.getResources().getString(R.string.unheld_funds_destock);
         final String brokerIdentityPublicKey = moduleManager.getAssociatedIdentity(brokerWalletPublicKey).getPublicKey();
 
         switch (walletPlatform) {
@@ -191,7 +192,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
                         (FiatCurrency) setting.getMerchandise(),
                         brokerWalletPublicKey,
                         setting.getWalletPublicKey(),
-                        "Cash Destock in Broker Wallet",
+                        activity.getResources().getString(R.string.cash_destock),
                         amount,
                         memo,
                         BigDecimal.ZERO,
@@ -226,11 +227,11 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
         final double availableBalance = getStockWalletBalance(walletPlatform, moduleManager);
         final double amountAsDouble = amount.doubleValue();
         if (amountAsDouble > availableBalance) {
-            Toast.makeText(activity.getApplicationContext(), "The selected wallet doesn't have enough money to restock the defined amount", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.no_money_restock), Toast.LENGTH_LONG).show();
             return false;
         }
 
-        final String memo = "Held funds, used to restock the Broker Wallet";
+        final String memo = activity.getResources().getString(R.string.unheld_funds_restock);
         final String brokerIdentityPublicKey = moduleManager.getAssociatedIdentity(brokerWalletPublicKey).getPublicKey();
 
         switch (walletPlatform) {
@@ -254,7 +255,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
                         (FiatCurrency) setting.getMerchandise(),
                         brokerWalletPublicKey,
                         setting.getWalletPublicKey(),
-                        "Cash Restock in Broker Wallet",
+                        activity.getResources().getString(R.string.cash_restock),
                         amount,
                         memo,
                         BigDecimal.ZERO,

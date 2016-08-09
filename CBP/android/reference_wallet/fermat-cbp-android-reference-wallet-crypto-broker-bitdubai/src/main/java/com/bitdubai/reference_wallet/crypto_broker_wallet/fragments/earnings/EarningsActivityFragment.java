@@ -180,7 +180,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<ReferenceAp
 
         } catch (CantListEarningTransactionsException e) {
             errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            Toast.makeText(getActivity(), "Sorry. Cant Get the Earnings list", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.error_earning_list), Toast.LENGTH_SHORT).show();
         }
 
         if (allExtracted)
@@ -196,17 +196,17 @@ public class EarningsActivityFragment extends AbstractFermatFragment<ReferenceAp
                 boolean earningsExtracted = moduleManager.extractEarnings(selectedEarningsPair, earningTransactions);
 
                 if (earningsExtracted)
-                    Toast.makeText(getActivity(), "Earnings Extracted!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.earnings_extracted), Toast.LENGTH_SHORT).show();
 
                 showOrHideExtractEarningsButton(selectedEarningsPair);
 
             } catch (CantExtractEarningsException e) {
                 errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                Toast.makeText(getActivity(), "Sorry. Cant Extract the Earnings", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.error_cant_extract_earning), Toast.LENGTH_SHORT).show();
 
             } catch (Exception e) {
                 errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                Toast.makeText(getActivity(), "Sorry. Unexpected Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.error_unexpected), Toast.LENGTH_SHORT).show();
             }
         }
     }

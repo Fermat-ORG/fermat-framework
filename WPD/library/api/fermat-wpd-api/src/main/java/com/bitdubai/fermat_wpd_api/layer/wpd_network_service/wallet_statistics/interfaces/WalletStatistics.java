@@ -17,6 +17,7 @@ public interface WalletStatistics {
 
     /**
      * This method gives us the number of installations of the represented wallet
+     *
      * @return the number of installations of the represented wallet
      */
     int getNumberOfDownloads();

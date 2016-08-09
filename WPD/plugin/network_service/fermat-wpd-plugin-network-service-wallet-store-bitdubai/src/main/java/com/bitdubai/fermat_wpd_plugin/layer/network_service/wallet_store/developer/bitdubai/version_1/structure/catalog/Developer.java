@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/23/15.
  */
-public class Developer implements DeveloperIdentity,Serializable {
+public class Developer implements DeveloperIdentity, Serializable {
     UUID id;
     String alias;
     String publicKey;
@@ -23,6 +23,7 @@ public class Developer implements DeveloperIdentity,Serializable {
 
     /**
      * Overloaded constructor
+     *
      * @param id
      * @param alias
      * @param publicKey
@@ -42,12 +43,16 @@ public class Developer implements DeveloperIdentity,Serializable {
     public String getPublicKey() {
         return this.publicKey;
     }
-    @Override
-    public String getAlias(){ return this.alias; }
 
     @Override
-    public String createMessageSignature(String mensage) throws CantSingMessageException
-    { return  null;}
+    public String getAlias() {
+        return this.alias;
+    }
+
+    @Override
+    public String createMessageSignature(String mensage) throws CantSingMessageException {
+        return null;
+    }
 
     public void setId(UUID id) {
         this.id = id;

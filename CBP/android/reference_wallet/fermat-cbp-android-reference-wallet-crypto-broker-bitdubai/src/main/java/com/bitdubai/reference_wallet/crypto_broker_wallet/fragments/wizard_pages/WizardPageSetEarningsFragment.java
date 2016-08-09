@@ -153,7 +153,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
 
 
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
-        spreadTextView.setText(String.format("%1$s %%", spreadValue));
+        spreadTextView.setText(String.format(getResources().getString(R.string.spread_format), spreadValue));
 
         final SeekBar spreadSeekBar = (SeekBar) layout.findViewById(R.id.cbw_spread_value_seek_bar);
         spreadSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -161,7 +161,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 spreadValue = progress;
-                spreadTextView.setText(String.format("%1$s %%", spreadValue));
+                spreadTextView.setText(String.format(getResources().getString(R.string.spread_format), spreadValue));
             }
 
             @Override
@@ -276,7 +276,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
 
             final SimpleListDialogFragment<InstalledWallet> dialogFragment = new SimpleListDialogFragment<>();
             dialogFragment.setCancelable(false);
-            dialogFragment.configure("Select a Wallet", filteredList);
+            dialogFragment.configure(getResources().getString(R.string.select_wallet), filteredList);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<InstalledWallet>() {
                 @Override
                 public void onItemSelected(InstalledWallet selectedWallet) {
@@ -293,7 +293,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
             dialogFragment.show(getFragmentManager(), "WalletsDialog");
 
         } catch (FermatException ex) {
-            Toast.makeText(getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.error_opps2), Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
@@ -331,7 +331,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
             //Go to next wizard page
             changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS, appSession.getAppPublicKey());
         } catch (FermatException ex) {
-            Toast.makeText(WizardPageSetEarningsFragment.this.getActivity(), "There was a problem saving the settings. Try again later.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(WizardPageSetEarningsFragment.this.getActivity(), getResources().getString(R.string.error_settings), Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {

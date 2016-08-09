@@ -26,6 +26,6 @@ public class AndroidVariable {
 
     @Override
     public String toString() {
-        return new StringBuilder().append(variableName).append("=").append(variableValue).toString();
+        return variableName + "=" + variableValue;
     }
 }

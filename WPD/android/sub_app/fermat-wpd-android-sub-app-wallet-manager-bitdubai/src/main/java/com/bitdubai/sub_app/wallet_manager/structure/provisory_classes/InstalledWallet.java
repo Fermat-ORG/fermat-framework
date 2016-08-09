@@ -18,7 +18,6 @@ import java.util.List;
 public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet {
 
 
-
     private WalletCategory walletCategory;
     private WalletType walletType;
     private List<InstalledSkin> skinsId;
@@ -34,7 +33,7 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     private int bannerRes;
 //    private AppStructureType appStructureType = AppStructureType.REFERENCE;
 
-    public InstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version,AppsStatus appsStatus) {
+    public InstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version, AppsStatus appsStatus) {
         this.walletCategory = walletCategory;
         this.walletType = walletType;
         this.skinsId = skinsId;
@@ -208,8 +207,6 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     public byte[] getAppIcon() {
         return new byte[0];
     }
-
-
 
 
 }

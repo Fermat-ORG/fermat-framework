@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.developerUtils;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -9,15 +8,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseFactory;
+import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_services.network_services_wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Matias Furszyfer - (matiasfurszyfer@gmail.com) on 03/08/15.
  *
  * @version 1.0
@@ -101,8 +99,7 @@ public class NetworkserviceswalletresourcesDeveloperDatabaseFactory {//implement
                    */
                 throw new CantInitializeNetworkServicesWalletResourcesDatabaseException(cantCreateDatabaseException.getMessage());
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 
              /*
               * The database exists but cannot be open. I can not handle this situation.
@@ -126,22 +123,21 @@ public class NetworkserviceswalletresourcesDeveloperDatabaseFactory {//implement
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
-           /**
-            * Table Repositories columns.
-            */
-           List<String> repositoriesColumns = new ArrayList<String>();
+        /**
+         * Table Repositories columns.
+         */
+        List<String> repositoriesColumns = new ArrayList<String>();
 
-              repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_ID_COLUMN_NAME);
-              repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME);
-              repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATH_TO_REPO_COLUMN_NAME);
-              repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME);
-              repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME);
-           /**
-            * Table Repositories addition.
-            */
-                   DeveloperDatabaseTable repositoriesTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME, repositoriesColumns);
-                   tables.add(repositoriesTable);
-
+        repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_ID_COLUMN_NAME);
+        repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME);
+        repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATH_TO_REPO_COLUMN_NAME);
+        repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME);
+        repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME);
+        /**
+         * Table Repositories addition.
+         */
+        DeveloperDatabaseTable repositoriesTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME, repositoriesColumns);
+        tables.add(repositoriesTable);
 
 
         return tables;
@@ -160,12 +156,12 @@ public class NetworkserviceswalletresourcesDeveloperDatabaseFactory {//implement
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -185,7 +181,7 @@ public class NetworkserviceswalletresourcesDeveloperDatabaseFactory {//implement
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }

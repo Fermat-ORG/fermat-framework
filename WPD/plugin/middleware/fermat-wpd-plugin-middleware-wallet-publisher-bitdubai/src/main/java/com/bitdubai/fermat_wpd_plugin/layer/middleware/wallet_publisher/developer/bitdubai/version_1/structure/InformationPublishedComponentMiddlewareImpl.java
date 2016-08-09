@@ -23,7 +23,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.InformationPublishedComponentMiddlewareImpl</code> is the
  * representation of the Information Published Component
  * <p/>
- * 
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 03/08/15.
  *
  * @version 1.0
@@ -109,10 +109,10 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
     /**
      * Constructor
      */
-    public InformationPublishedComponentMiddlewareImpl(){
+    public InformationPublishedComponentMiddlewareImpl() {
         super();
         this.componentVersionDetailList = new ArrayList<>();
-        this.screensShotsComponentList    = new ArrayList<>();
+        this.screensShotsComponentList = new ArrayList<>();
     }
 
     /**
@@ -153,6 +153,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getComponentVersionDetailList()
      */
     @Override
@@ -172,6 +173,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getDescriptions()
      */
     @Override
@@ -191,6 +193,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getWalletFactoryProjectId()
      */
     @Override
@@ -210,6 +213,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getWalletFactoryProjectName()
      */
     @Override
@@ -229,6 +233,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getIconImg()
      */
     @Override
@@ -248,6 +253,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getId()
      */
     @Override
@@ -267,6 +273,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getMainScreenShotImg()
      */
     @Override
@@ -286,6 +293,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getPublicationTimestamp()
      */
     @Override
@@ -305,6 +313,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getPublisherIdentityPublicKey()
      */
     @Override
@@ -323,6 +332,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getSignature()
      */
     @Override
@@ -341,6 +351,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getScreensShotsComponentList()
      */
     @Override
@@ -360,6 +371,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getStatus()
      */
     @Override
@@ -378,6 +390,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getStatusTimestamp()
      */
     @Override
@@ -396,6 +409,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getType()
      */
     @Override
@@ -414,6 +428,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see InformationPublishedComponentMiddlewareImpl#getVideoUrl()
      */
     @Override
@@ -432,6 +447,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#equals(Object)
      */
     @Override
@@ -444,6 +460,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#hashCode()
      */
     @Override
@@ -453,6 +470,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#toString()
      */
     @Override

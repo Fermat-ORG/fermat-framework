@@ -10,7 +10,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_publisher.develop
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.WalletPublisherMiddlewareDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/08/15.
  *
  * @version 1.0
@@ -21,7 +21,7 @@ public class WalletPublisherMiddlewareDatabaseConstants {
     /**
      * Represent the name of the data base
      */
-    public static final String DATA_BASE_NAME  = "component_publisher_data_base";
+    public static final String DATA_BASE_NAME = "component_publisher_data_base";
 
     /**
      * INFORMATION PUBLISHED COMPONENTS database table definition.

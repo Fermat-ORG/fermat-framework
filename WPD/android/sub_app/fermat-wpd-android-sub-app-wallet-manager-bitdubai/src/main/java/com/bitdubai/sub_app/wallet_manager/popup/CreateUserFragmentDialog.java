@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.wallet_manager.popup;
 
 import android.app.Activity;
 import android.app.Dialog;
-
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -12,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.bitdubai.fermat_wpd.wallet_manager.R;
 
 /**
@@ -20,7 +20,6 @@ import com.bitdubai.fermat_wpd.wallet_manager.R;
 
 public class CreateUserFragmentDialog extends Dialog implements
         View.OnClickListener {
-
 
 
     private final String userId;
@@ -39,7 +38,7 @@ public class CreateUserFragmentDialog extends Dialog implements
      */
 
     /**
-     *  UI components
+     * UI components
      */
     Button save_contact_btn;
     Button cancel_btn;
@@ -55,13 +54,12 @@ public class CreateUserFragmentDialog extends Dialog implements
 
 
     /**
-     *
      * @param a
      * @param
      */
 
 
-    public CreateUserFragmentDialog(Activity a,  String userId, Bitmap contactImageBitmap) {
+    public CreateUserFragmentDialog(Activity a, String userId, Bitmap contactImageBitmap) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
@@ -83,7 +81,7 @@ public class CreateUserFragmentDialog extends Dialog implements
 
     }
 
-    private void setUpScreenComponents(){
+    private void setUpScreenComponents() {
 
         try {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -96,30 +94,22 @@ public class CreateUserFragmentDialog extends Dialog implements
             take_picture_btn = (ImageView) findViewById(R.id.take_picture_btn);
 
 
-
             cancel_btn.setOnClickListener(this);
             save_contact_btn.setOnClickListener(this);
 
-            if(contactImageBitmap!=null){
-                contactImageBitmap = Bitmap.createScaledBitmap(contactImageBitmap,65,65,true);
+            if (contactImageBitmap != null) {
+                contactImageBitmap = Bitmap.createScaledBitmap(contactImageBitmap, 65, 65, true);
                 take_picture_btn.setBackground(new BitmapDrawable(contactImageBitmap));
                 take_picture_btn.setImageDrawable(null);
             }
 
 
-
-
-
-
-
             //getWindow().setBackgroundDrawable(new ColorDrawable(0));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-
-
 
 
     @Override
@@ -128,7 +118,7 @@ public class CreateUserFragmentDialog extends Dialog implements
         if (i == R.id.cancel_btn) {
             //activity.finish();
             dismiss();
-        }else if( i == R.id.save_contact_btn){
+        } else if (i == R.id.save_contact_btn) {
             //saveContact();
         }
     }
@@ -173,12 +163,6 @@ public class CreateUserFragmentDialog extends Dialog implements
 //            Toast.makeText(activity.getApplicationContext(), "Oooops! recovering from system error - " +  e.getMessage(), Toast.LENGTH_SHORT).show();
 //        }
 //    }
-
-
-
-
-
-
 
 
 }

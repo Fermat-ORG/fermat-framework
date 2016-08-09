@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class InvalidDatabaseOperationException extends FermatException {
     static public final String DEFAULT_MESSAGE = "Invalid database operation detected. Valid values are INSERT, UPDATE, DELETE and SELECT";
+
     public InvalidDatabaseOperationException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

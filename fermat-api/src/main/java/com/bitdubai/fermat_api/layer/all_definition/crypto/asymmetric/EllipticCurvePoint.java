@@ -34,7 +34,7 @@ public class EllipticCurvePoint implements Point {
 
     @Override
     public String toUncompressedString() {
-        return new StringBuilder().append("04").append(String.format("%064X", x)).append(String.format("%064X", y)).toString();
+        return "04" + String.format("%064X", x) + String.format("%064X", y);
     }
 
     @Override

@@ -93,10 +93,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     protected ViewInflater viewInflater;
     private WizardConfiguration context;
 
-    public enum ScreenSize {
-        LARGE, NORMAL, UNDEFINED, SMALL
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -187,7 +183,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
                 }
             } else {
                 if (appSession != null)
-                    Log.e(TAG, new StringBuilder().append("FermatFragmentType null in fragment for app:").append(appSession.getAppPublicKey()).append(", contact furszy").toString());
+                    Log.e(TAG, "FermatFragmentType null in fragment for app:" + appSession.getAppPublicKey() + ", contact furszy");
             }
 
             onOptionMenuPrepared(menu);
@@ -195,7 +191,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
 
         } catch (Exception e) {
             if (appSession != null)
-                Log.e(TAG, new StringBuilder().append("Error loading optionsMenu, please check fragments for session: ").append(appSession.getAppPublicKey()).append(", if problem persist contact to Furszy").toString());
+                Log.e(TAG, "Error loading optionsMenu, please check fragments for session: " + appSession.getAppPublicKey() + ", if problem persist contact to Furszy");
             e.printStackTrace();
         }
         super.onPrepareOptionsMenu(menu);
@@ -312,6 +308,27 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     }
 
     /**
+     * Open NavigationDrawer if exist
+     */
+    protected void openDrawer(){
+        getPaintActivtyFeactures().openDrawer();
+    }
+
+    /**
+     * Open if is not visible and close it if is visible
+     */
+    protected void openOrCLoseDrawer(){
+        getPaintActivtyFeactures().openOrCLoseDrawer();
+    }
+
+    /**
+     * Close NavigationDrawer if exist
+     */
+    protected void closeDrawer(){
+        getPaintActivtyFeactures().closeDrawer();
+    }
+
+    /**
      * Method used to go to home desktop
      */
     protected void home() {
@@ -330,14 +347,14 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     /**
      * Change activity
      */
-    protected final void changeActivityOld(Activities activity) {
-        destroy();
-        getFermatScreenSwapper().changeActivity(activity.getCode(), appSession.getAppPublicKey());
-    }
+//    protected final void changeActivityOld(Activities activity) {
+//        destroy();
+//        getFermatScreenSwapper().changeActivity(activity.getCode(), appSession.getAppPublicKey());
+//    }
 
     protected final void changeActivity(Activities activity) {
         destroy();
-        getFermatScreenSwapper().changeActivity(activity.getCode(),appSession.getAppPublicKey(),null,null);
+        getFermatScreenSwapper().changeActivity(activity.getCode(), appSession.getAppPublicKey());
     }
 
     /**
@@ -375,19 +392,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     /**
      * Change activity
      */
-    protected final void changeActivity(String activityCode, String appPublicKey, Object... objectses) {
-        destroy();
-        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, appPublicKey, objectses);
-
-    }
-
-    /**
-     * Change activity
-     */
     @Deprecated
     protected final void changeActivity(String activityCode, Object... objectses) {
         destroy();
-        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, null);
+        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, appSession.getAppPublicKey(),objectses);
     }
 
     protected void changeApp(Engine emgine, Object[] objects) {
@@ -467,15 +475,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     }
 
 
-    public final void onUpdateViewUIThred(final String code) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                onUpdateViewOnUIThread(code);
-            }
-        });
-    }
-
     /**
      * This class have to be ovverride if someone wants to get broadcast
      *
@@ -549,29 +548,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
      */
     public void onOptionMenuPrepared(Menu menu) {
 
-    }
-
-    public ScreenSize getScreenSize() {
-        int screenSize = getResources().getConfiguration().screenLayout &
-                Configuration.SCREENLAYOUT_SIZE_MASK;
-        ScreenSize screenSizeType = null;
-        switch (screenSize) {
-            case Configuration.SCREENLAYOUT_SIZE_LARGE:
-                screenSizeType = ScreenSize.LARGE;
-                break;
-            case Configuration.SCREENLAYOUT_SIZE_NORMAL:
-                screenSizeType = ScreenSize.NORMAL;
-                break;
-            case Configuration.SCREENLAYOUT_SIZE_SMALL:
-                screenSizeType = ScreenSize.SMALL;
-                break;
-            case Configuration.SCREENLAYOUT_SIZE_UNDEFINED:
-                screenSizeType = ScreenSize.UNDEFINED;
-                break;
-            default:
-                screenSizeType = ScreenSize.UNDEFINED;
-        }
-        return screenSizeType;
     }
 
 
@@ -684,6 +660,9 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
     }
 
+
+
+    //todo: Esto no se quien lo puso pero no va acá...
     /**
      * Override this method if yo want to implement infinite scrolling or pagination.
      * Return a {@link RecyclerView.OnScrollListener} for the {@link RecyclerView} of this fragment.

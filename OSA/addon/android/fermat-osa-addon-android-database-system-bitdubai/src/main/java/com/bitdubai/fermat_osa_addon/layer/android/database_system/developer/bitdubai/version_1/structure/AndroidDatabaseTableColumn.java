@@ -53,7 +53,7 @@ public class AndroidDatabaseTableColumn implements DatabaseTableColumn {
     @Override
     public String toString() {
         String column = dataType.toString();
-        column += dataTypeSize > 0 ? new StringBuilder().append("(").append(dataTypeSize).append(")").toString() : "";
+        column += dataTypeSize > 0 ? "(" + dataTypeSize + ")" : "";
         column += " ";
         column += name;
         return column;

@@ -193,7 +193,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
                 fermatActivity.get().openRecentsScreen();
                 break;
             case HELP:
-                fermatActivity.get().changeActivity(Activities.DESKTOP_WIZZARD_WELCOME.getCode(), null);
+                fermatActivity.get().changeActivity(Activities.DESKTOP_WIZZARD_WELCOME.getCode(), "main_desktop",null,null);
                 break;
             case REPORT:
 //                if(androidCoreSettings==null){
@@ -212,7 +212,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
 //                }
 //
 //                androidCoreSettings.setIsErrorReportEnabled(!androidCoreSettings.isErrorReportEnabled());
-                fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_IMPORT_KEY.getCode(), null, null);
+                fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_IMPORT_KEY.getCode(), "main_desktop",null, null);
                 break;
         }
     }

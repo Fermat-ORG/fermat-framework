@@ -41,11 +41,7 @@ public enum DatabaseFilterOperator {
             case "AND":
                 return DatabaseFilterOperator.AND;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the DataFilterOperator enum");
-
-
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the DataFilterOperator enum");
         }
-
     }
-
 }

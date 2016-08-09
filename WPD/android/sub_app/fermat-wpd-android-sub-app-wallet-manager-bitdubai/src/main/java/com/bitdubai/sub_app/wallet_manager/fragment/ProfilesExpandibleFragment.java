@@ -79,14 +79,14 @@ public class ProfilesExpandibleFragment extends FermatWalletExpandableListFragme
             }
         });
 
-        ((FermatTextView)layout.findViewById(R.id.txt_title_communities)).setFont(FontType.CAVIAR_DREAMS);
+        ((FermatTextView) layout.findViewById(R.id.txt_title_communities)).setFont(FontType.CAVIAR_DREAMS);
 
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(!isScrolled){
+                if (!isScrolled) {
                     isScrolled = true;
                     adapter.expandAllParents();
                 }
@@ -226,7 +226,7 @@ public class ProfilesExpandibleFragment extends FermatWalletExpandableListFragme
                 "Wallet Users",
                 SubAppsPublicKeys.CCP_COMMUNITY.getCode(),
                 "intra_user_community_sub_app",
-                new Version(1,0,0),
+                new Version(1, 0, 0),
                 Platforms.CRYPTO_CURRENCY_PLATFORM, AppsStatus.ALPHA);
 
         installedSubApp.setIconResource(R.drawable.crypto_wallet_user_community);
@@ -363,7 +363,7 @@ public class ProfilesExpandibleFragment extends FermatWalletExpandableListFragme
         AppsStatus appsStatus = getFermatActivityManager().getAppStatus();
 
         for (InstalledApp installedApp : installedApps) {
-            if(installedApp.getAppStatus()==appsStatus){
+            if (installedApp.getAppStatus() == appsStatus) {
                 list.add(installedApp);
             }
         }

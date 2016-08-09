@@ -15,14 +15,16 @@ public interface WalletCatalog {
      * This method give us a list of wallets in the catalogue
      *
      * @param offset the offset (position) in the catalogue where we stand
-     * @param top the maximum number of wallets to get as a result
+     * @param top    the maximum number of wallets to get as a result
      * @return A list of at most "top" catalogue items (wallets)
      * @throws CantGetWalletsCatalogException
      */
     List<CatalogItem> getWalletCatalog(int offset, int top) throws CantGetWalletsCatalogException;
+
     int getCatalogSize() throws CantGetWalletsCatalogException;
 
 
     void setCatalogSize(int catalogSize);
+
     void setCatalogItems(List<? extends CatalogItem> catalogItemList);
 }

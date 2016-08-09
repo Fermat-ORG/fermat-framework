@@ -36,8 +36,8 @@
     <string name="cht_chat_footer">P2P Chat</string>
     <string name="cht_no_chat">No hay chats</string>
     <string name="cht_contact_select">Por favor, vaya a Contactos y seleccione un contacto para comenzar un P2P Chat.</string>
-    <string name="cht_contact_select1">Por favor, vaya a Contactos y </string>
-    <string name="cht_contact_select2">seleccione un contacto para comenzar un P2P Chat.</string>
+    <string name="cht_contact_select1">Por favor, vaya a Contactos y seleccione</string>
+    <string name="cht_contact_select2">un contacto para comenzar un P2P Chat.</string>
     <string name="cht_contact_list_select1">Para agregar contactos, vaya a P2P Chat</string>
     <string name="cht_contact_list_select2">Community y envíe una solicitud</string>
     <string name="cht_contact_list_select3">de conexión a otro usuario o amigo.</string>
@@ -93,6 +93,8 @@
     <string name="no_address">No se encontraron direcciones</string>
     <string name="no_intent_found">No hay aplicación para manejar esta acción</string>
     <string name="action_search">Buscar</string>
+    <string name="status">Estatus</string>
+    <string name="profile_status">Disponible</string>
 
     <string name="drawer_open">Abrir panel de navegación</string>
     <string name="drawer_close">Cerrar panel de navegación</string>
@@ -133,6 +135,9 @@
     <string name="text_test_number">100000</string>
     <string name="new_message_fragment_title">New message</string>
     <string name="select_chat_fragment_title">Select chat</string>
+    <string name="copy_message_toast">Copiado: </string>
+    <string name="cht_notif_new_msg_title">Chat - Nuevo Mensaje</string>
+    <string name="cht_notif_new_msg_content">Tiene un nuevo mensaje en Chat.</string>
 
     <string name="text_web_search">web search</string>
     <string name="text_find_images">FIND IMAGES</string>

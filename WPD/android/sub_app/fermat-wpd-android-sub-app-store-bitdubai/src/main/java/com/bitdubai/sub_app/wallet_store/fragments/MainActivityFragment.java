@@ -22,6 +22,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.basic_classes.BasicWalletSettings;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp;
@@ -51,7 +52,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     /**
      * MANAGERS
      */
-    WalletStoreSubAppSessionReferenceApp walletStoreSubAppSession;
+//    WalletStoreSubAppSessionReferenceApp walletStoreSubAppSession;
     BasicWalletSettings settings = null;
     /**
      * DATA
@@ -78,7 +79,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         super.onCreate(savedInstanceState);
         try {
             // setting up  module
-            walletStoreSubAppSession = ((WalletStoreSubAppSessionReferenceApp) appSession);
+//            walletStoreSubAppSession = ((WalletStoreSubAppSessionReferenceApp) appSession);
 
             catalogueItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -111,18 +112,18 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         super.initViews(layout);
 
         configureToolbar();
-        BasicWalletSettings preferenceSettings = getPreferenceSettings();
+//        BasicWalletSettings preferenceSettings = getPreferenceSettings();
+//
+//        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession).
+//                setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).
+//                setBannerRes(R.drawable.banner_app_store).
+//                setSubTitle(R.string.presentation_dialog_subtitle_app_store_list).
+//                setBody(R.string.presentation_dialog_body_app_store_list).
+//                build();
 
-        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession).
-                setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).
-                setBannerRes(R.drawable.banner_app_store).
-                setSubTitle(R.string.presentation_dialog_subtitle_app_store_list).
-                setBody(R.string.presentation_dialog_body_app_store_list).
-                build();
-
-        if (preferenceSettings != null && preferenceSettings.isHomeTutorialDialogEnabled()) {
-            presentationDialog.show();
-        }
+//        if (preferenceSettings != null && preferenceSettings.isHomeTutorialDialogEnabled()) {
+//            presentationDialog.show();
+//        }
     }
 
     @Override
@@ -167,13 +168,13 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     public ArrayList<WalletStoreListItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         ArrayList<WalletStoreListItem> data;
 
-        Object walletList = appSession.getData(WalletStoreSubAppSessionReferenceApp.WALLET_LIST);
-        if (walletList != null) {
-            data = (ArrayList<WalletStoreListItem>) walletList;
-        } else {
+//        Object walletList = appSession.getData(WalletStoreSubAppSessionReferenceApp.WALLET_LIST);
+//        if (walletList != null) {
+//            data = (ArrayList<WalletStoreListItem>) walletList;
+//        } else {
             data = WalletStoreListItem.getTestData(getResources());
-            appSession.setData(WalletStoreSubAppSessionReferenceApp.WALLET_LIST, data);
-        }
+//            appSession.setData(WalletStoreSubAppSessionReferenceApp.WALLET_LIST, data);
+//        }
 
         return data;
     }
@@ -250,7 +251,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
             appSession.setData(PREVIEW_IMGS, item.getScreenshots());
             appSession.setData(BASIC_DATA, item);
 
-            changeActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY.getCode(), appSession.getAppPublicKey());
+            changeActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY.getCode());
 
         }
     }
@@ -268,23 +269,23 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
-    private BasicWalletSettings getPreferenceSettings() {
-        try {
-            settings = walletStoreSubAppSession.getModuleManager().loadAndGetSettings(walletStoreSubAppSession.getAppPublicKey());
-        } catch (Exception e) {
-            settings = null;
-        }
-
-        if (settings == null) {
-            settings = new BasicWalletSettings();
-            settings.setIsPresentationHelpEnabled(true);
-
-            try {
-                walletStoreSubAppSession.getModuleManager().persistSettings(walletStoreSubAppSession.getAppPublicKey(), settings);
-            } catch (Exception e) {
-                settings = null;
-            }
-        }
-        return settings;
-    }
+//    private BasicWalletSettings getPreferenceSettings() {
+//        try {
+//            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+//        } catch (Exception e) {
+//            settings = null;
+//        }
+//
+//        if (settings == null) {
+//            settings = new BasicWalletSettings();
+//            settings.setIsPresentationHelpEnabled(true);
+//
+//            try {
+//                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
+//            } catch (Exception e) {
+//                settings = null;
+//            }
+//        }
+//        return settings;
+//    }
 }

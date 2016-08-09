@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetSkinFileException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetSkinFileException;
 
 import java.util.UUID;
 
@@ -38,8 +38,8 @@ public class WalletResources implements com.bitdubai.fermat_wpd_api.layer.wpd_ne
     }
 
     @Override
-    public byte[] getImageResource(String imageName,ScreenOrientation orientation) throws CantGetResourcesException {
-        switch (orientation){
+    public byte[] getImageResource(String imageName, ScreenOrientation orientation) throws CantGetResourcesException {
+        switch (orientation) {
             case PORTRAIT:
                 //Resource resource= skin.getLstPortraitResources().get(imageName);
 
