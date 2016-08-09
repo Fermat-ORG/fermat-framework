@@ -6,7 +6,7 @@
     <string name="text_footer">To begin pick an avatar from below. You can customize it later with your own name and image</string>
     <string name="name_left">John Doe</string>
     <string name="name_right">Jane Doe</string>
-    <string name="checkbox_show">Don\&#39;t show this again</string>
+    <string name="checkbox_show">Don't show this again</string>
     <string name="dialog_button_close">Close</string>
 
     <string name="confirm_dialog_title">Title</string>

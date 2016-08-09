@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#FFF"
-                android:text="CANCEL"
+                android:text="@string/cancel_label"
                 android:textColor="#272727"/>
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                 android:id="@+id/positive_button"
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:background="#FFF"
-                android:text="OK"
+                android:text="@string/ok_label"
                 android:textColor="#272727"/>
 
         </LinearLayout>

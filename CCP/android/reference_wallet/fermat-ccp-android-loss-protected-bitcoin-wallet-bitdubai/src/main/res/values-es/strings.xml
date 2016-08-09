@@ -56,7 +56,7 @@
     <string name="fee_amount_text">Taza</string>
     <string name="fee_low">Lento</string>
     <string name="fee_option_text">Restar taza al  monto</string>
-    <string name="fermat_network_offline_text">Red Fermat offline</string>
+    <string name="fermat_network_offline_text">Red Fermat Offline</string>
     <string name="footer_message_text"></string>
     <string name="fragment_send_account_details_summary">Detalles de cuenta</string>
     <string name="fragment_send_account_name_hint">Nombre (*)</string>
@@ -94,7 +94,7 @@
     <string name="receive_text">Recibir</string>
     <string name="refuse_text">Negar</string>
     <string name="remittance">Remitentes</string>
-    <string name="request_text">Solicitud</string>
+    <string name="request_text">Solicitar</string>
     <string name="save_text">Guardar</string>
     <string name="search_contacts_hint">Buscar contactos...</string>
     <string name="search_hint">Nombre de Contacto</string>
@@ -122,7 +122,7 @@
     <string name="txtLastTransactions_text">Ultimas transacciones</string>
     <string name="txtSeeAlltransactions_text">Ver todo</string>
     <string name="txtViewDetailTransaction_text"></string>
-    <string name="txt_conference_ticket_text">Ticket de conferencia</string>
+    <string name="txt_conference_ticket_text"></string>
     <string name="txt_title_text">Ayuda para anadir contacto</string>
     <string name="type_text">tipo</string>
     <string name="waiting_text">Esperando...</string>
@@ -160,34 +160,56 @@
     <string name="settings_send_error_report">Enviar reporte de Error</string>
     <string name="wallet_type">Esta cartera permite dos tipos diferentes de usuarios:</string>
     <string name="btc_loss">Ingresa la cantidad de BTC que quieres enviar a Loss Protected Wallet</string>
-    <string name="phone_notifications">Notificaciones de telefono</string>
-    <string name="middle_name_text" translatable="false">Segundo nombre</string>
-    <string name="title_activity_account_detail" translatable="false">Detalles de cuenta</string>
-    <string name="title_activity_accounts" translatable="false">Cuentas</string>
+    <string name="this_is_a_simple_bitcoint_only_wallet_text">Esta es una cartera de solo bitcoin. sus principales caracteristicas son:</string>
+    <string name="fermat_address">Direccion Fermat</string>
+    <string name="date">Fecha</string>
+    <string name="to">Para:</string>
+    <string name="amount_insert">Ingrese cantidad</string>
+    <string name="insert_notes">Insertar notas</string>
+    <string name="currency">Moneda</string>
+    <string name="advance_configuration">Configuracion avanzada</string>
+    <string name="from">De</string>
+    <string name="transaction_concept">Concepto de transferencia</string>
+    <string name="phone_notification">Notificationes al telefono</string>
+    <string name="exchange_rate_error_connection">No se pueden obtener las tasas de cambio, por favor revisa tu coneccion a internet</string>
+    <string name="this_is_a_loss_protected_wallet_text">Esta es una cartera que te permitira protegerte contra perdidas de dinero, sus principales caracteristicas son:</string>
+    <string name="income_expense">Esta es una cartera que te permite ver tus ingresos y gastos en todas las transacciones hechas</string>
+    <string name="see_your_loss_balance_text">* Ver su balance.\n* Envio/recepcion de bitcoins.\n* Pedir bitcoins.\n* Ver el historico de transacciones.</string>
+    <string name="spending_details">Detalles de gastos</string>
+    <string name="accept_btn">Aceptar</string>
+    <string name="cancel_btn">Cancelar</string>
+    <string name="exchange_title_label">Proveedores de tasa de cambio</string>
+    <string name="middle_name_text">Segundo nombre</string>
+    <string name="notes">Notas del usuario</string>
+    <string name="real_balance">Balance Real</string>
+    <string name="real_balance_text">Balance real</string>
+    <string name="title_activity_account_detail">Detalles de cuenta</string>
+    <string name="title_activity_accounts">Cuentas</string>
     <string name="title_activity_activity_main">Principal</string>
     <string name="title_activity_balance_available">Balance disponible</string>
+    <string name="title_activity_blank_activity_with_fragment"></string>
     <string name="title_activity_contacts">Contactos</string>
-    <string name="title_activity_daily_discounts" translatable="false">Descuentos diarios</string>
+    <string name="title_activity_daily_discounts">Descuento diario</string>
     <string name="title_activity_edit_personal_profile">Editar perfil personal</string>
     <string name="title_activity_main">Cartera Joven</string>
-    <string name="title_activity_monthly_discounts">Descuentos mensuales</string>
+    <string name="title_activity_monthly_discounts">Descuento mensual</string>
     <string name="title_activity_navegation_drawler">Cartera inteligente</string>
     <string name="title_activity_pay_to_new_contact">Pagar a un nuevo contacto</string>
     <string name="title_activity_receive_from_contact">Recibir de un contacto</string>
     <string name="title_activity_receive_from_new_contact">Recibir de un nuevo contacto</string>
     <string name="title_activity_received_detail">Detalles recibidos</string>
-    <string name="title_activity_refill_point">Recargar puntos</string>
-    <string name="title_activity_requests_sent">Solicitudes enviadas</string>
+    <string name="title_activity_refill_point">Recargas puntos</string>
+    <string name="title_activity_requests_sent">Solicitar envio</string>
     <string name="title_activity_sent_detail">Detalles de envio</string>
     <string name="title_activity_store">Tienda</string>
     <string name="title_activity_wallet">Cartera</string>
     <string name="title_activity_weekly_discount">Descuento semanal</string>
     <string name="title_section10">Infantes</string>
     <string name="title_section11">Salida</string>
-    <string name="title_section12">Cartera personal</string>
+    <string name="title_section12">Carteras personales</string>
     <string name="title_section13">Tiendas</string>
-    <string name="title_section14">Carteras comerciales</string>
-    <string name="title_section15">Fabrica de proyectos</string>
+    <string name="title_section14">Carteras Comerciales</string>
+    <string name="title_section15">Fabricas de proyectos</string>
     <string name="title_section16">Carteras publicadas</string>
     <string name="title_section17">Tiendas</string>
     <string name="title_section2">Contactos</string>
@@ -198,4 +220,6 @@
     <string name="title_section7">Vouchers</string>
     <string name="title_section8">Tarjetas de regalo</string>
     <string name="title_section9">Clones</string>
+    <string name="you_dont_have_chunck_datail_values">No tienes ningun \n gasto de este chunk todavia</string>
+    <string name="you_dont_have_chunck_values">No tienes \n ningun chunk todavia</string>
 </resources>

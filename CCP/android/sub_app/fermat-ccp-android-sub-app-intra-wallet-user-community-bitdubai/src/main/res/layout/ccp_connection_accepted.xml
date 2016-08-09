@@ -14,7 +14,7 @@
         android:id="@+id/text_connection_success"
         android:visibility="visible"
         android:gravity="center"
-        android:text="You are now connectedtextco"
+        android:text="@string/connected"
         android:textColor="#ffffff"
         android:textSize="18dp" />
 </LinearLayout>

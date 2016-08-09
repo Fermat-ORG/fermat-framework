@@ -69,7 +69,7 @@
                 android:textSize="14sp"
                 android:paddingBottom="5dp"
                 android:paddingTop="7sp"
-                android:text="In this wallet you can have two different types of contacts:"
+                android:text="@string/wallet_type"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center_horizontal"
                 android:paddingLeft="20dp"
@@ -194,7 +194,7 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Don´t show this again"
+                    android:text="@string/no_id_dont_show_this_again_text"
                     android:layout_alignParentEnd="true"
                     android:textColor="#7c7c7c"
                     android:textSize="12dp"
@@ -210,6 +210,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center"
             android:layout_marginLeft="15dp"
             >
 
