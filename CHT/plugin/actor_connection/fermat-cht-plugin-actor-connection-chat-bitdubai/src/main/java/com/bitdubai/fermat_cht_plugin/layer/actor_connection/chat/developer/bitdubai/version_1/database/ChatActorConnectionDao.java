@@ -69,6 +69,30 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
     }
 
+    public void updateChatActorConnectionRequest(final ChatActorConnection chatActorConnection){
+        final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
+
+        try {
+
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, chatActorConnection.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+
+            if(records!=null && !records.isEmpty()){
+                final DatabaseTableRecord record = records.get(0);
+                buildDatabaseRecord(record, chatActorConnection);
+                actorConnectionsTable.updateRecord(record);
+            }
+        }
+        catch (CantLoadTableToMemoryException e) {
+            e.printStackTrace();
+        } catch (CantUpdateRecordException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public ChatActorConnection chatActorConnectionExists(ChatLinkedActorIdentity linkedIdentity,
                                                          final String publicKey) throws CantGetActorConnectionException {
 
