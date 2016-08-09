@@ -803,6 +803,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             Map<Integer, CryptoWalletWalletContact> positions = new HashMap<>();
 
+            Map<Integer, CryptoWalletWalletContact> numberPositions = new HashMap<>();
+
             if (items != null)
                 if (items.size() > 0) {
                     MyComparator icc = new MyComparator();
@@ -841,7 +843,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             if (currentSection.matches(numberRegex)) {
                                 // is Digit
                                 numbers.add(cryptoWalletWalletContact.getActorName());
-                                positions.put(i, cryptoWalletWalletContact);
+                                numberPositions.put(i, cryptoWalletWalletContact);
 
                             }else if (currentSection.matches(letterRegex)) {
 
@@ -868,9 +870,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         if (!numbers.isEmpty()) {
                             mListItems.add(numberCode);
                             mListSectionPos.add(mListItems.indexOf(numberCode));
-                          //  mListItems.addAll(numbers);
-                            mListItems.addAll(positions.values());
+                            mListItems.addAll(numberPositions.values());
                         }
+
+
 
                         // add the letters items in the list and his corresponding sections based on its first letter
                         String prevSection = "";
