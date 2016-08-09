@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.23..
  */
 
-public class AppNavigationStructure implements FermatStructure,Serializable{
+public class AppNavigationStructure implements FermatStructure, Serializable {
 
     /**
      * AppNavigationStructure identifiers
@@ -39,7 +39,7 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
     /**
      * Notifications
      */
-    private Map<String,FermatNotification> notifications;
+    private Map<String, FermatNotification> notifications;
     /**
      * Last active screen
      */
@@ -57,7 +57,6 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
     }
 
     /**
-     *
      * @param activities
      */
     public AppNavigationStructure(Map<Activities, Activity> activities) {
@@ -88,12 +87,12 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
      */
     @Override
     public Activity getActivity(Activities activities) {
-        this.lastActivity=activities;
+        this.lastActivity = activities;
         return this.activities.get(activities);
     }
 
     /**
-     *  Get main screen
+     * Get main screen
      *
      * @return Activity
      */
@@ -103,7 +102,8 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
     }
 
     /**
-     *  Get the last Screen used
+     * Get the last Screen used
+     *
      * @return Activity
      */
     @Override
@@ -119,7 +119,7 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
     }
 
     @Override
-    public void changeActualStartActivity(String activityCode)throws IllegalArgumentException{
+    public void changeActualStartActivity(String activityCode) throws IllegalArgumentException {
 //        try {
 //            if(activities.get(Activities.getValueFromString(activityCode))==null) throw new IllegalArgumentException();
 //        } catch (InvalidParameterException e) {
@@ -130,14 +130,14 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
 
 
     public void setPublicKey(String appPublicKey) {
-        this.appPublicKey=appPublicKey;
+        this.appPublicKey = appPublicKey;
     }
 
     @Override
     public void clear() {
-        for(Activity activity : activities.values()){
+        for (Activity activity : activities.values()) {
             SideMenu sideMenu = activity.getSideMenu();
-            if (sideMenu!=null){
+            if (sideMenu != null) {
                 sideMenu.clearSelected();
             }
 
@@ -145,7 +145,7 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
     }
 
     /**
-     *  Screens in a AppNavigationStructure
+     * Screens in a AppNavigationStructure
      *
      * @return Map<Activities, Activity>
      */
@@ -159,12 +159,12 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
     }
 
     /**
-     *  Add Screen to AppNavigationStructure
+     * Add Screen to AppNavigationStructure
      *
      * @param activity
      */
     public void addActivity(Activity activity) {
-        if(actualStart==null){
+        if (actualStart == null) {
             actualStart = activity.getType().getCode();
         }
         activities.put(activity.getType(), activity);
@@ -192,18 +192,18 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
         return appsKeyConsumed;
     }
 
-    public void addAppKeyToConsume(String appPublicKey){
-        if(appsKeyConsumed==null){
+    public void addAppKeyToConsume(String appPublicKey) {
+        if (appsKeyConsumed == null) {
             appsKeyConsumed = new ArrayList<>();
         }
         this.appsKeyConsumed.add(appPublicKey);
     }
 
-    public void addNotification(String key,FermatNotification fermatNotification){
-        if(notifications==null){
+    public void addNotification(String key, FermatNotification fermatNotification) {
+        if (notifications == null) {
             notifications = new HashMap<>();
         }
-        notifications.put(key,fermatNotification);
+        notifications.put(key, fermatNotification);
     }
 
     @Override

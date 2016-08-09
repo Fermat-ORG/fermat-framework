@@ -44,7 +44,7 @@ public class AsymmetricKeyCreator {
         //3: ripemd-160
         publicAddress = CryptoHasher.performRipemd160(new BigInteger(publicAddress, 16));
         //4: version byte 00
-        publicAddress = new StringBuilder().append("00").append(publicAddress).toString();
+        publicAddress = "00" + publicAddress;
         //5: Stat checksum sha-256
         String checksum = CryptoHasher.performSha256(new BigInteger(publicAddress, 16));
         //6: sha-256
@@ -69,7 +69,7 @@ public class AsymmetricKeyCreator {
         //3: ripemd-160
         publicAddress = CryptoHasher.performRipemd160(new BigInteger(publicAddress, 16));
         //4: version byte 00
-        publicAddress = new StringBuilder().append("6F").append(publicAddress).toString();
+        publicAddress = "6F" + publicAddress;
         //5: Stat checksum sha-256
         String checksum = CryptoHasher.performSha256(new BigInteger(publicAddress, 16));
         //6: sha-256

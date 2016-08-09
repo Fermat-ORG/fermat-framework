@@ -1,20 +1,20 @@
 package unit.com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.Repository;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import junit.framework.TestCase;
 
@@ -108,8 +108,8 @@ public class InstallSkinForWalletTest extends TestCase {
     public void testInstallCompleteWallet_ThrowsWalletResourcesInstalationException() throws Exception {
 //TODO error parseando el skin, al parecer la estructura subida al repo no es correcta - se debe actualizar
         walletResourcePluginRoot.start();
-        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "mati_wallet_verde",  "navigationStructureVersion","walletPublicKey");
-          assertThat(caughtException()).isNotNull();
+        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "mati_wallet_verde", "navigationStructureVersion", "walletPublicKey");
+        assertThat(caughtException()).isNotNull();
 
     }
 
@@ -118,7 +118,7 @@ public class InstallSkinForWalletTest extends TestCase {
     public void testInstallCompleteWallet_FileNotFoundThrowsWalletResourcesInstalationException() throws Exception {
 
         walletResourcePluginRoot.start();
-        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "skin",  "navigationStructureVersion","walletPublicKey");
+        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "skin", "navigationStructureVersion", "walletPublicKey");
         assertThat(caughtException()).isInstanceOf(WalletResourcesInstalationException.class);
 
     }

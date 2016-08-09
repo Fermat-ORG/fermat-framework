@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantGetItemInformationException extends FermatException {
     public final static String DEFAULT_MESSAGE = "Error trying to get Item information.";
+
     public CantGetItemInformationException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

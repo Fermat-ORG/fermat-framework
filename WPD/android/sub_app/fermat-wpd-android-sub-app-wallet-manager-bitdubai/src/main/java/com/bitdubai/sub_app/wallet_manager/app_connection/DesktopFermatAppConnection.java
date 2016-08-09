@@ -1,7 +1,12 @@
 package com.bitdubai.sub_app.wallet_manager.app_connection;
 
 import android.content.Context;
-import com.bitdubai.fermat_android_api.engine.*;
+
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
+import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
+import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
+import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -31,7 +36,7 @@ public class DesktopFermatAppConnection extends AppConnections<ReferenceAppFerma
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return  new PluginVersionReference[]{ new PluginVersionReference(
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                 Layers.DESKTOP_MODULE,
                 Plugins.WALLET_MANAGER,
@@ -61,7 +66,7 @@ public class DesktopFermatAppConnection extends AppConnections<ReferenceAppFerma
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(String code){
+    public NotificationPainter getNotificationPainter(String code) {
         return null;
     }
 }

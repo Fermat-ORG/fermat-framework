@@ -47,6 +47,7 @@
     <string name="cht_identity_available">Available</string>
     <string name="cht_identity_no_camera">There is no cameras available</string>
     <string name="cht_identity_turn_gps">Please, turn on your GPS</string>
+    <string name="profile_picture">Profile Picture</string>
 
     <string name="cht_chat_footer">Fermat P2P Chat</string>
 

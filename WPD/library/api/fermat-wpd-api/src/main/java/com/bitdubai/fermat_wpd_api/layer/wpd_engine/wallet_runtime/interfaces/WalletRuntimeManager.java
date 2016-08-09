@@ -23,10 +23,8 @@ public interface WalletRuntimeManager extends RuntimeManager {
     FermatStructure getNavigationStructureFromWallet(String publicKey) throws WalletRuntimeExceptions;
 
 
-
-
     /**
-     *  Get the last wallet in screen
+     * Get the last wallet in screen
      *
      * @return Wallet in use
      */
@@ -34,9 +32,9 @@ public interface WalletRuntimeManager extends RuntimeManager {
 
 
     /**
-     *  Search wallet in the wallet installed list
+     * Search wallet in the wallet installed list
      *
-     * @return  The installed Wallet
+     * @return The installed Wallet
      */
     FermatStructure getWallet(String publicKey) throws WalletRuntimeExceptions;
 

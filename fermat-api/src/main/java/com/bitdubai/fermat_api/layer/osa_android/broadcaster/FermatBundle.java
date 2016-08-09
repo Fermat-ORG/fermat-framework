@@ -36,7 +36,7 @@ public class FermatBundle implements Serializable {
         if (o instanceof Serializable) {
             return (Serializable) o;
         } else {
-            throw new ClassCastException(new StringBuilder().append("Need Serializable, found").append(o.getClass()).toString());
+            throw new ClassCastException("Need Serializable, found" + o.getClass());
         }
     }
 
@@ -46,7 +46,7 @@ public class FermatBundle implements Serializable {
         if (o instanceof String) {
             return (String) o;
         } else {
-            throw new ClassCastException(new StringBuilder().append("Need String, found").append(o.getClass()).toString());
+            throw new ClassCastException("Need String, found" + o.getClass());
         }
     }
 
@@ -61,7 +61,7 @@ public class FermatBundle implements Serializable {
         if (o instanceof Integer) {
             return (int) o;
         } else {
-            throw new ClassCastException(new StringBuilder().append("Need int, found").append(o.getClass()).toString());
+            throw new ClassCastException("Need int, found" + o.getClass());
         }
     }
 

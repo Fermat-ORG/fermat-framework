@@ -81,7 +81,7 @@ public abstract class AbstractPlatform {
         try {
 
             if (layers.containsKey(layerReference))
-                throw new CantRegisterLayerException(new StringBuilder().append("layer: ").append(layerReference.toString()).toString(), "Layer already exists in this platform.");
+                throw new CantRegisterLayerException("layer: " + layerReference.toString(), "Layer already exists in this platform.");
 
             abstractLayer.start();
 
@@ -92,7 +92,7 @@ public abstract class AbstractPlatform {
 
         } catch (final CantStartLayerException e) {
 
-            throw new CantRegisterLayerException(e, new StringBuilder().append("layer: ").append(layerReference.toString()).toString(), "Error trying to start the layer.");
+            throw new CantRegisterLayerException(e, "layer: " + layerReference.toString(), "Error trying to start the layer.");
         }
     }
 
@@ -100,7 +100,7 @@ public abstract class AbstractPlatform {
         if (layers.containsKey(layerReference))
             return layers.get(layerReference);
         else
-            throw new LayerNotFoundException(new StringBuilder().append("layer: ").append(layerReference.getLayer()).toString(), "layer not found.");
+            throw new LayerNotFoundException("layer: " + layerReference.getLayer(), "layer not found.");
     }
 
     /**
@@ -149,7 +149,7 @@ public abstract class AbstractPlatform {
 
         } catch (LayerNotFoundException e) {
 
-            throw new AddonNotFoundException(e, new StringBuilder().append("addon: ").append(addonReference.toString()).toString(), "layer not found for the specified addon.");
+            throw new AddonNotFoundException(e, "addon: " + addonReference.toString(), "layer not found for the specified addon.");
         }
     }
 
@@ -220,7 +220,7 @@ public abstract class AbstractPlatform {
 
         } catch (LayerNotFoundException e) {
 
-            throw new PluginNotFoundException(e, new StringBuilder().append("plugin: ").append(pluginReference.toString()).toString(), "layer not found for the specified plugin.");
+            throw new PluginNotFoundException(e, "plugin: " + pluginReference.toString(), "layer not found for the specified plugin.");
         }
     }
 

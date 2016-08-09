@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Crypto Customer Identity</string>
+    <string name="action_settings">Configuración</string>
+    <string name="camera_option_context_menu">Cámara</string>
+    <string name="cbp_customer_identity_gps">Por favor, encienda su GPS para registrar tu locación, otros podrán encontrarte y tu podrás encontrar a los que están cerca</string>
+    <string name="cbp_customer_identity_welcome_body">Desde aquí serás capaz de crear una identidad de tipo Cliente.\n\nEsta identidad te identificará en el sistema como un Cliente, y te dará acceso a todas las tareas y aplicaciones que necesitas.\n\nCualquier vendedor o cliente será capaz de conectarse contigo encontrando la información que proveas aquí.</string>
+    <string name="cbp_customer_identity_welcome_subTitle">Bienvenido a la Customer Identity.</string>
+    <string name="cbp_customer_identity_welcome_subTitle_gps">Anuncio Importante.</string>
+    <string name="cbp_customer_identity_welcome_title_gps">Anuncio!</string>
+    <string name="cci_accuracy_km">Exactitud (km)</string>
+    <string name="cci_frequency">Frecuencia</string>
+    <string name="create">CREAR</string>
+    <string name="create_a_new_one">CREAR UNO NUEVO</string>
+    <string name="crop_accept">Aceptar</string>
+    <string name="crop_cancel">Cancelar</string>
+    <string name="crop_rotate">Rotar</string>
+    <string name="crypto_customer">Crypto Customer</string>
+    <string name="crypto_customer_empty_accuracy">La exactitud es vacia, por favor agregue un valor</string>
+    <string name="crypto_customer_enter_image">Debe cargar una imagen</string>
+    <string name="crypto_customer_enter_name">Introduzca su nombre</string>
+    <string name="crypto_customer_enter_name_alias">Introduzca un nombre o alias</string>
+    <string name="crypto_customer_error">Un error ha ocurrido</string>
+    <string name="crypto_customer_error_create">Un error ha ocurrido intentando guardar la identidad del Cliente</string>
+    <string name="crypto_customer_error_dialog">Error en diálogo</string>
+    <string name="crypto_customer_error_image">Error cargando la imagen</string>
+    <string name="crypto_customer_hint">Nombre</string>
+    <string name="crypto_customer_identity_created">Identidad de Cliente Creada.</string>
+    <string name="crypto_customer_identity_updated">Identidad de Cliente Actualizada.</string>
+    <string name="crypto_customer_name_hint">Introduzca un nombre o alias</string>
+    <string name="crypto_customer_status">Estatus</string>
+    <string name="crypto_customer_turnon_gps">Por favor, encienda su GPS</string>
+    <string name="crypto_customer_username">Nombre de Usuario</string>
+    <string name="customer_name">Nombre del cliente</string>
+    <string name="description_search">Buscar</string>
+    <string name="gallery_option_context_menu">Galería</string>
+    <string name="hello_blank_fragment"></string>
+    <string name="identity_img"></string>
+    <string name="no_matches">Sin Coincidencias</string>
+    <string name="not_identities">SIN IDENTIDADES</string>
+    <string name="profile_picture_dialog_gallery">Seleccione de la galería</string>
+    <string name="profile_picture_dialog_picture">Tome una foto</string>
+    <string name="profile_picture_dialog_title">FOTO DE PERFIL</string>
+    <string name="title_photo_context_menu">Elija el modo</string>
+    <string name="update">ACTUALIZAR</string>
+</resources>

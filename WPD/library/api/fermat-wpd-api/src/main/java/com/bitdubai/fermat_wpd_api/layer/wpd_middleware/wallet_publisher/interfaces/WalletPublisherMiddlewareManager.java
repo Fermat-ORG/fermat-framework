@@ -9,7 +9,6 @@ package com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_publisher.interf
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.exceptions.CantPublishComponentException;
@@ -64,7 +63,7 @@ public interface WalletPublisherMiddlewareManager extends FermatManager {
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    List<InformationPublishedComponent>  getPublishedLanguages(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
+    List<InformationPublishedComponent> getPublishedLanguages(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the published component with his details
@@ -96,7 +95,6 @@ public interface WalletPublisherMiddlewareManager extends FermatManager {
     void publishSkin(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
 
     /**
-     *
      * This method publishes the language factory project <code>LanguageDescriptorFactoryProject</code> with the language information in
      * the wallet store and register relevant information of this process.
      *
@@ -132,7 +130,6 @@ public interface WalletPublisherMiddlewareManager extends FermatManager {
      * @throws CantPublishComponentException
      */
     void publishWallet(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
-
 
 
 }

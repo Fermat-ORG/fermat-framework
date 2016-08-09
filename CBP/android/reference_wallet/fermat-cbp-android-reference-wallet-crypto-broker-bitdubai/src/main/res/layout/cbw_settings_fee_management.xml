@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="#000000"
-                android:text="Slow"
+                android:text="@string/cbw_fee_miner_speed_1"
                 android:textAllCaps="true"
                 android:textColor="@color/description_text_status_confirm" />
             <!--Problema con el STYLE en API inferior a API 21-->
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="#000000"
-                android:text="Normal"
+                android:text="@string/cbw_fee_miner_speed_2"
                 android:textAllCaps="true"
                 android:textColor="@color/description_text_status_confirm" />
             <!--Problema con el STYLE en API inferior a API 21-->
@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="#000000"
-                android:text="Fast"
+                android:text="@string/cbw_fee_miner_speed_3"
                 android:textAllCaps="true"
                 android:textColor="@color/description_text_status_confirm" />
         </RadioGroup>

@@ -15,7 +15,7 @@ public class WalletNavigationStructureDownloadedEventListener implements FermatE
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
 
-    public WalletNavigationStructureDownloadedEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor){
+    public WalletNavigationStructureDownloadedEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }
@@ -38,12 +38,9 @@ public class WalletNavigationStructureDownloadedEventListener implements FermatE
     @Override
     public void raiseEvent(FermatEvent fermatEvent) {
 
-        try
-        {
+        try {
             this.fermatEventHandler.handleEvent(fermatEvent);
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             fermatEventMonitor.handleEventException(exception, fermatEvent);
         }
 

@@ -7,7 +7,8 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantExecuteDatabaseOperationException extends FermatException {
     static final String DEFAULT_MESSAGE = "there was an error executing a database operation.";
-    public CantExecuteDatabaseOperationException( Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+
+    public CantExecuteDatabaseOperationException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }

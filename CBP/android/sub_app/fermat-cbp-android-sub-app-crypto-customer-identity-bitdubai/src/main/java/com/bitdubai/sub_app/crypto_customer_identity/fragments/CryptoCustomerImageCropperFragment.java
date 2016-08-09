@@ -104,7 +104,7 @@ public class CryptoCustomerImageCropperFragment extends AbstractFermatFragment<R
                 goBackToCallerActivity();
 
             } else
-                Toast.makeText(getActivity(), "Cropped image is too small", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.cropped_small), Toast.LENGTH_SHORT).show();
 
         }
 

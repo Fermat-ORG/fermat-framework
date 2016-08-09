@@ -65,7 +65,7 @@ public class StockDestockViewHolder extends FermatViewHolder {
                 amountTextView.setText(stringBuilder.toString());
             }
         } catch (Exception e) {
-            amountTextView.setText("Balance: --");
+            amountTextView.setText(R.string.balance);
         }
     }
 

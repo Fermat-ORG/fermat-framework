@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantPublishItemInCatalogException extends FermatException {
     public static final String DEFAULT_MESSAGE = "Error trying to publish item in catalog.";
+
     public CantPublishItemInCatalogException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

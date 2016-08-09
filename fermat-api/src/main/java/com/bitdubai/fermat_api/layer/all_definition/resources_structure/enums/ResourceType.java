@@ -35,7 +35,7 @@ public enum ResourceType implements Serializable {
                 return ResourceType.LAYOUT;
             //Modified by Manuel Perez on 04/08/2015
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the ResourceType enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ResourceType enum");
 
         }
 

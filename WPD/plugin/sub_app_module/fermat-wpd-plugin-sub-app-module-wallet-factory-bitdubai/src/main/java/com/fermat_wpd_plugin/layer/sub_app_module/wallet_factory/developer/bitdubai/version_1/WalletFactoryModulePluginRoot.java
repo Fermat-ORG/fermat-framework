@@ -3,6 +3,7 @@ package com.fermat_wpd_plugin.layer.sub_app_module.wallet_factory.developer.bitd
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -13,7 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.CantCreateWalletDescriptorFactoryProjectException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.CantRemoveWalletFactoryProject;
@@ -63,19 +63,19 @@ public class WalletFactoryModulePluginRoot extends AbstractPlugin implements
         return new int[0];
     }
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededPluginReference(platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION   , layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_FACTORY         )
+    @NeededPluginReference(platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_FACTORY)
     private WalletFactoryProjectManager walletFactoryProjectManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM   , layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER         )
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
     private WalletManagerManager walletManagerManager;
 
     // TODO MAKE USE OF THE ERROR MANAGER.
 
 
-    WalletFactoryModuleManager  walletFactoryModuleManager;
+    WalletFactoryModuleManager walletFactoryModuleManager;
 
     public WalletFactoryModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -100,27 +100,27 @@ public class WalletFactoryModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public List<WalletFactoryProject> getAvailableProjects() throws CantGetAvailableProjectsException {
-        try{
+        try {
             return walletFactoryModuleManager.getAllFactoryProjects();
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new CantGetAvailableProjectsException(CantGetAvailableProjectsException.DEFAULT_MESSAGE, e, null, null);
         }
     }
 
     @Override
     public WalletFactoryProject createEmptyProject() throws CantCreateWalletDescriptorFactoryProjectException {
-        try{
+        try {
             return walletFactoryModuleManager.createEmptyProject();
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new CantCreateWalletDescriptorFactoryProjectException(CantCreateWalletDescriptorFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
         }
     }
 
     @Override
     public void saveProject(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
-        try{
-             walletFactoryModuleManager.saveProject(walletFactoryProject);
-        } catch (Exception e){
+        try {
+            walletFactoryModuleManager.saveProject(walletFactoryProject);
+        } catch (Exception e) {
             throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, e, null, null);
         }
     }
@@ -132,27 +132,27 @@ public class WalletFactoryModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public WalletFactoryProject getProject(String publicKey) throws CantGetWalletFactoryProjectException {
-        try{
+        try {
             return walletFactoryModuleManager.getProject(publicKey);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
         }
     }
 
     @Override
     public List<WalletFactoryProject> getClosedProjects() throws CantGetWalletFactoryProjectException {
-        try{
+        try {
             return walletFactoryModuleManager.getClosedProjects();
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
         }
     }
 
     @Override
     public void closeProject(WalletFactoryProject walletFactoryProject) throws CantGetWalletFactoryProjectException {
-        try{
-             walletFactoryModuleManager.closeProject(walletFactoryProject);
-        } catch (Exception e){
+        try {
+            walletFactoryModuleManager.closeProject(walletFactoryProject);
+        } catch (Exception e) {
             throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
         }
     }
@@ -168,6 +168,7 @@ public class WalletFactoryModulePluginRoot extends AbstractPlugin implements
 
     /**
      * Clones a previously installed wallet under the new assigned name.
+     *
      * @param walletToClone
      * @param newName
      * @throws CantCloneInstalledWalletException
