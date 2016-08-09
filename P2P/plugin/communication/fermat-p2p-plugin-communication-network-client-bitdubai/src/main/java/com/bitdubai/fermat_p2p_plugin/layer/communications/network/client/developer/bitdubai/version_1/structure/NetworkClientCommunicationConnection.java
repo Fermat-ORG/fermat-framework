@@ -29,6 +29,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NearNodeListMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.UpdateActorProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.UpdateProfileGeolocationMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MessageTransmitRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
@@ -46,6 +47,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantSendPackageException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.network_calls.NetworkClientCommunicationCall;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.Sync.WaiterObjectsBuffer;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.util.HardcodeConstants;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.google.gson.JsonObject;
@@ -66,10 +68,12 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EncodeException;
@@ -116,7 +120,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     /*
      * Represent the nodesListPosition
      */
-    private Integer nodesListPosition;
+    private int nodesListPosition;
 
     /*
      * Represent the networkClientCommunicationChannel
@@ -136,6 +140,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     private NodeProfile nodeProfile;
 
     private ConnectivityManager connectivityManager;
+
+    private WaiterObjectsBuffer waiterObjectsBuffer;
 
     /*
      * Constructor
@@ -173,6 +179,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         this.connectivityManager = connectivityManager;
 
         this.networkClientCommunicationChannel = new NetworkClientCommunicationChannel(this, isExternalNode);
+        this.waiterObjectsBuffer = new WaiterObjectsBuffer();
     }
 
     /*
@@ -703,12 +710,13 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     public void sendPackageMessage(final PackageContent     packageContent              ,
                                    final NetworkServiceType networkServiceType          ,
                                    final String             destinationIdentityPublicKey) throws CantSendMessageException {
-        System.out.println("******* IS CONNECTED: "+ isConnected() + " - TRYING NO SEND = "+ packageContent.toJson());
+        System.out.println("******* IS CONNECTED: " + isConnected() + " - TRYING NO SEND = " + packageContent.toJson());
         if (isConnected()){
 
             try {
 
-                networkClientCommunicationChannel.getClientConnection().getBasicRemote().sendObject(
+                //todo: esto hay que mejorarlo
+                networkClientCommunicationChannel.getClientConnection().getAsyncRemote().sendObject(
                         Package.createInstance(
                                 packageContent.toJson(),
                                 networkServiceType,
@@ -716,7 +724,48 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                 clientIdentity.getPrivateKey(),
                                 destinationIdentityPublicKey
                         )
+                ).get();
+
+            } catch (Exception exception) {
+
+                throw new CantSendMessageException(
+                        exception,
+                        "packageContent:"+packageContent,
+                        "Unhandled error trying to send the message through the session."
                 );
+            }
+        }
+
+    }
+
+
+    public void receiveSyncPackgageMessage(String messageId,boolean status) {
+        waiterObjectsBuffer.addFullDataAndNotificateArrive(messageId, status);
+    }
+
+    //todo: ver que el id del mensaje sea unico
+    public boolean sendSyncPackageMessage(final PackageContent     packageContent              ,
+                                   final NetworkServiceType networkServiceType          ,
+                                   final String             destinationIdentityPublicKey,
+                                       UUID messageId) throws CantSendMessageException {
+        System.out.println("******* IS CONNECTED: "+ isConnected() + " - TRYING NO SEND = "+ packageContent.toJson());
+        if (isConnected()){
+
+            try {
+                networkClientCommunicationChannel.getClientConnection().getBasicRemote().sendObject(
+                        Package.createInstance(
+                                packageContent.toJson(),
+                                networkServiceType,
+                                PackageType.MESSAGE_TRANSMIT_SYNC_ACK_RESPONSE,
+                                clientIdentity.getPrivateKey(),
+                                destinationIdentityPublicKey
+                        )
+                );
+
+                //lock and wait
+                System.out.println("******* wainting for the sync object");
+                return (boolean) waiterObjectsBuffer.getBufferObject(messageId.toString());
+
 
             } catch (IOException | EncodeException exception){
 
@@ -734,8 +783,10 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                         "Unhandled error trying to send the message through the session."
                 );
             }
+        }else{
+            System.out.println("******* sendSyncPackageMessage, NODE IS NOT CONNECTED");
         }
-
+        return false;
     }
 
     private void sendPackage(final PackageContent packageContent,
@@ -745,7 +796,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             try {
 
-                networkClientCommunicationChannel.getClientConnection().getBasicRemote().sendObject(
+                networkClientCommunicationChannel.getClientConnection().getAsyncRemote().sendObject(
                         Package.createInstance(
                                 packageContent.toJson(),
                                 NetworkServiceType.UNDEFINED,
@@ -753,14 +804,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                 clientIdentity.getPrivateKey(),
                                 serverIdentity
                         )
-                );
-
-            } catch (IOException | EncodeException exception){
-
-                throw new CantSendPackageException(
-                        exception,
-                        "packageContent:"+packageContent,
-                        "Error trying to send the message through the session."
                 );
 
             } catch (Exception exception) {
@@ -1066,4 +1109,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         if (networkClientCommunicationChannel.getClientConnection().isOpen())
             networkClientCommunicationChannel.getClientConnection().close();
     }
+
+
+
 }
