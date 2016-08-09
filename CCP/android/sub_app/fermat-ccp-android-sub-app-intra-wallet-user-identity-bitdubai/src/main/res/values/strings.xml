@@ -101,7 +101,7 @@
     <string name="fragment_send_account_name_hint">Name (*)</string>
     <string name="fragment_send_account_number_hint">Address (*)</string>
     <string name="fragment_send_amount_hint">Amount (*)</string>
-    <string name="fragment_send_change_contact"><u>Change contact<u></string>
+    <string name="fragment_send_change_contact"><u>Change contact</u></string>
     <string name="fragment_send_header_summary">Be sure to enter the correct \n information</string>
     <string name="fragment_send_notes_hint">Notes (Optional)</string>
     <string name="from">From</string>
