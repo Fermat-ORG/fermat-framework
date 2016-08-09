@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.chat_community.holders;
 
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;

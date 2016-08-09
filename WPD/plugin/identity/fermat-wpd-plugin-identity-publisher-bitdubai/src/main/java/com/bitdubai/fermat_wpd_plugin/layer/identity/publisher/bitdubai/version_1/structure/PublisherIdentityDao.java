@@ -9,9 +9,6 @@ package com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version
 
 // Packages and classes to import of jdk 1.7
 
-import java.util.*;
-
-// Packages and classes to import of fermat api
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -23,7 +20,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -37,21 +35,24 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantCreateNewPublisherException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantGetUserPublisherIdentitiesException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.PublisherIdentity;
-import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantCreateNewPublisherException;
-
-
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.PublisherIdentityPluginRoot;
 import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseConstants;
 import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseFactory;
-import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.PublisherIdentityPluginRoot;
-import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.exceptions.CantInitializePublisherIdentityDatabaseException;
 import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.exceptions.*;
-// Packages and classes to import of apache commons.
+import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.exceptions.CantInitializePublisherIdentityDatabaseException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+
+// Packages and classes to import of fermat api
+// Packages and classes to import of apache commons.
 
 /**
  * The Class <code>com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.PublisherIdentityDao</code>

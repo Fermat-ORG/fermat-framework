@@ -22,6 +22,9 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
@@ -125,10 +128,12 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.CryptoCustomerWalletModulePluginRoot;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
@@ -182,6 +187,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
     private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
     private final CryptoWalletManager cryptoWalletManager;
+    private final LocationManager locationManager;
 
     private String merchandise = null;
     private String typeOfPayment = null;
@@ -215,7 +221,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                                                                  CryptoWalletManager cryptoWalletManager,
                                                                  final CryptoCustomerWalletModulePluginRoot pluginRoot,
                                                                  PluginFileSystem pluginFileSystem,
-                                                                 UUID pluginId) {
+                                                                 UUID pluginId,
+                                                                 LocationManager locationManager) {
         super(pluginFileSystem, pluginId);
 
         this.walletManagerManager = walletManagerManager;
@@ -239,6 +246,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
         this.cryptoWalletManager = cryptoWalletManager;
         this.pluginRoot = pluginRoot;
+        this.locationManager = locationManager;
     }
 
     @Override
@@ -468,7 +476,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             CustomerBrokerPurchaseNegotiation negotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(negotiationId);
             return negotiation.getClauses();
         } catch (CantGetListPurchaseNegotiationsException | CantGetListClauseException ex) {
-            throw new CantGetListClauseException(new StringBuilder().append("Cant get the negotiation clauses for the given negotiationId ").append(negotiationId.toString()).toString(), ex);
+            throw new CantGetListClauseException("Cant get the negotiation clauses for the given negotiationId " + negotiationId.toString(), ex);
         }
     }
 
@@ -511,9 +519,9 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             purchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(negotiationID);
         } catch (CantGetListPurchaseNegotiationsException e) {
             throw new CantGetNegotiationInformationException(CantGetNegotiationInformationException.DEFAULT_MESSAGE, e,
-                    new StringBuilder().append("negotiationId = ").append(negotiationID).toString(), "Cant get the Purchase Negotiation Information");
+                    "negotiationId = " + negotiationID, "Cant get the Purchase Negotiation Information");
         } catch (Exception e) {
-            throw new CantGetNegotiationInformationException(e, new StringBuilder().append("Unexpected Exception: ").append(e.getMessage()).toString(), "N/A");
+            throw new CantGetNegotiationInformationException(e, "Unexpected Exception: " + e.getMessage(), "N/A");
         }
 
         final String brokerPublicKey = purchaseNegotiation.getBrokerPublicKey();
@@ -524,14 +532,14 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             return new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(purchaseNegotiation, customerIdentity, brokerIdentity);
 
         } catch (CantListActorConnectionsException e) {
-            throw new CantGetNegotiationInformationException(e, new StringBuilder().append("negotiationId = ").append(negotiationID).append("\nbrokerPublicKey = ").append(brokerPublicKey).append("\ncustomerPublicKey = ").append(customerPublicKey).toString(), "Cant get the Broker Information");
+            throw new CantGetNegotiationInformationException(e, "negotiationId = " + negotiationID + "\nbrokerPublicKey = " + brokerPublicKey + "\ncustomerPublicKey = " + customerPublicKey, "Cant get the Broker Information");
 
         } catch (IdentityNotFoundException | CantGetCryptoCustomerIdentityException e) {
-            throw new CantGetNegotiationInformationException(e, new StringBuilder().append("negotiationId = ").append(negotiationID).append("\ncustomerPublicKey = ").append(customerPublicKey).toString(),
+            throw new CantGetNegotiationInformationException(e, "negotiationId = " + negotiationID + "\ncustomerPublicKey = " + customerPublicKey,
                     "Cant get the Customer Information");
 
         } catch (Exception e) {
-            throw new CantGetNegotiationInformationException(e, new StringBuilder().append("Unexpected Exception: ").append(e.getMessage()).toString(), "N/A");
+            throw new CantGetNegotiationInformationException(e, "Unexpected Exception: " + e.getMessage(), "N/A");
         }
     }
 
@@ -625,7 +633,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                 );
 
             } else {
-                throw new IdentityAssociatedNotFoundException(new StringBuilder().append("walletPublicKey: ").append(walletPublicKey).toString(), "We cannot find a customer identity associated to the referenced wallet.");
+                throw new IdentityAssociatedNotFoundException("walletPublicKey: " + walletPublicKey, "We cannot find a customer identity associated to the referenced wallet.");
             }
 
         } catch (IdentityAssociatedNotFoundException identityAssociatedNotFoundException) {
@@ -634,19 +642,19 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         } catch (RelationshipNotFoundException relationshipNotFoundException) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, relationshipNotFoundException);
-            throw new IdentityAssociatedNotFoundException(relationshipNotFoundException, new StringBuilder().append("walletPublicKey: ").append(walletPublicKey).toString(), "There's no relationship for this wallet.");
+            throw new IdentityAssociatedNotFoundException(relationshipNotFoundException, "walletPublicKey: " + walletPublicKey, "There's no relationship for this wallet.");
         } catch (CantGetCryptoCustomerIdentityException cantGetCryptoCustomerIdentityException) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetCryptoCustomerIdentityException);
-            throw new CantGetAssociatedIdentityException(cantGetCryptoCustomerIdentityException, new StringBuilder().append("walletPublicKey: ").append(walletPublicKey).toString(), "There was a problem trying to get a crypto customer identity.");
+            throw new CantGetAssociatedIdentityException(cantGetCryptoCustomerIdentityException, "walletPublicKey: " + walletPublicKey, "There was a problem trying to get a crypto customer identity.");
         } catch (CantGetCustomerIdentityWalletRelationshipException cantGetCustomerIdentityWalletRelationshipException) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetCustomerIdentityWalletRelationshipException);
-            throw new CantGetAssociatedIdentityException(cantGetCustomerIdentityWalletRelationshipException, new StringBuilder().append("walletPublicKey: ").append(walletPublicKey).toString(), "There was a problem listing the relationship between the wallet and the crypto customers.");
+            throw new CantGetAssociatedIdentityException(cantGetCustomerIdentityWalletRelationshipException, "walletPublicKey: " + walletPublicKey, "There was a problem listing the relationship between the wallet and the crypto customers.");
         } catch (Exception exception) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantGetAssociatedIdentityException(exception, new StringBuilder().append("walletPublicKey: ").append(walletPublicKey).toString(), "Unhandled Error.");
+            throw new CantGetAssociatedIdentityException(exception, "walletPublicKey: " + walletPublicKey, "Unhandled Error.");
         }
     }
 
@@ -684,20 +692,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
 
             customerBrokerUpdateManager.cancelNegotiation(customerBrokerPurchaseNegotiation);
 
-            System.out.print(new StringBuilder()
-                            .append("\nREFERENCE WALLET - CRYPTO CUSTOMER: CUSTOMER BROKER CANCEL ")
-                            .append("\n - NEGOTIATION ID ")
-                            .append(negotiation.getNegotiationId())
-                            .append(" | ")
-                            .append(negotiationInformation.getNegotiationId())
-                            .append("\n - STATUS ")
-                            .append(negotiation.getStatus())
-                            .append(" | ")
-                            .append(negotiationInformation.getStatus())
-                            .append("\n - REASON: ")
-                            .append(reason)
-                            .append(" | ")
-                            .append(negotiationInformation.getCancelReason()).toString()
+            System.out.print("\nREFERENCE WALLET - CRYPTO CUSTOMER: CUSTOMER BROKER CANCEL " + "\n - NEGOTIATION ID " + negotiation.getNegotiationId() + " | " + negotiationInformation.getNegotiationId() + "\n - STATUS " + negotiation.getStatus() + " | " + negotiationInformation.getStatus() + "\n - REASON: " + reason + " | " + negotiationInformation.getCancelReason()
             );
             return negotiationInformation;
 //        } catch (CantCancelNegotiationException e) {
@@ -790,12 +785,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     public boolean startNegotiation(String customerPublicKey, String brokerPublicKey, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
         try {
 
-            System.out.print(new StringBuilder()
-                    .append("\n**** 1) MOCK MODULE CRYPTO CUSTOMER - PURCHASE NEGOTIATION****\n")
-                    .append("\n-CUSTOMER: ")
-                    .append(customerPublicKey)
-                    .append("\n-BROKER: ")
-                    .append(brokerPublicKey).toString());
+            System.out.print("\n**** 1) MOCK MODULE CRYPTO CUSTOMER - PURCHASE NEGOTIATION****\n" + "\n-CUSTOMER: " + customerPublicKey + "\n-BROKER: " + brokerPublicKey);
 
             Date time = new Date();
 
@@ -841,16 +831,16 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
 
         } catch (CantGetListPurchaseNegotiationsException cause) {
             throw new CouldNotUpdateNegotiationException("Cant get the Purchase Negotiation from the Data Base",
-                    cause, new StringBuilder().append("negotiationInfo.getNegotiationId(): ").append(negotiation.getNegotiationId()).toString(),
+                    cause, "negotiationInfo.getNegotiationId(): " + negotiation.getNegotiationId(),
                     "There is no Record of the Sale Negotiation in the Data Base");
 
         } catch (CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException cause) {
             throw new CouldNotUpdateNegotiationException("Cant send the UPDATED Purchase Negotiation Transaction to the customer",
-                    cause, new StringBuilder().append("saleNegotiationImpl: ").append(purchaseNegotiationImpl).toString(), "N/A");
+                    cause, "saleNegotiationImpl: " + purchaseNegotiationImpl, "N/A");
 
         } catch (CantCreateCustomerBrokerPurchaseNegotiationException cause) {
             throw new CouldNotUpdateNegotiationException("Cant send the CLOSED Purchase Negotiation Transaction to the customer",
-                    cause, new StringBuilder().append("saleNegotiationImpl: ").append(purchaseNegotiationImpl).toString(), "N/A");
+                    cause, "saleNegotiationImpl: " + purchaseNegotiationImpl, "N/A");
 
         } catch (Exception cause) {
             throw new CouldNotUpdateNegotiationException(cause.getMessage(), cause, "Unknown Exception", "N/A");
@@ -1315,6 +1305,29 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     }
 
     @Override
+    public void createIdentityIntraUser(String alias, byte[] profileImage)  throws CantSendNegotiationException{
+
+        try {
+
+            String phrase = "Available";
+            intraWalletUserIdentityManager.createNewIntraWalletUser(
+                    alias,
+                    phrase,
+                    profileImage,
+                    (long)100,
+                    Frequency.NORMAL,
+                    getLocationManager()
+            );
+
+        } catch (CantCreateNewIntraWalletUserException e) {
+            throw new CantSendNegotiationException(e, "Cannot not create intra user identity", "Cannot get the negotiation");
+        } catch (CantGetDeviceLocationException e){
+            throw new CantSendNegotiationException(e, "Cannot not create intra user identity", "Cannot get the location");
+        }
+
+    }
+
+    @Override
     public boolean stockInTheWallet(String contractHash) throws CantSubmitMerchandiseException {
 
         try {
@@ -1345,7 +1358,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                 final CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(referenceWallet);
                 balance = (double) cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(preferenceSettings.getBlockchainNetworkType());
 
-                System.out.print(new StringBuilder().append("\nTEST - CRYPTO CUSTOMER MENAGER STOCK IN WALLET balance (").append(balance).append(") >= amount(").append(amount).append(")\n").toString());
+                System.out.print("\nTEST - CRYPTO CUSTOMER MENAGER STOCK IN WALLET balance (" + balance + ") >= amount(" + amount + ")\n");
 
                 return balance >= amount;
             }
@@ -1514,11 +1527,20 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             throw new InvalidParameterException("Cannot parse a null string value to long");
         } else {
             try {
-                return NumberFormat.getInstance().parse(stringValue).doubleValue();
+                System.out.println("LOSTOOW_CryptoCustomerWalletModuleCryptoCustomerWalletManager_PARSE"+stringValue);
+
+              //  return NumberFormat.getInstance().parse(stringValue).doubleValue();
+                return Double.valueOf(stringValue);
             } catch (Exception exception) {
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
-                        "Parsing String object to long", new StringBuilder().append("Cannot parse ").append(stringValue).append(" string value to long").toString());
+                        "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
             }
         }
+    }
+
+    private Location getLocationManager() throws CantGetDeviceLocationException {
+
+        return locationManager.getLocation();
+
     }
 }

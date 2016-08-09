@@ -37,7 +37,9 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -146,8 +148,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private FrameLayout contacts_container;
     private boolean connectionDialogIsShow = false;
     private boolean isScrolled = false;
-
-    private ExecutorService _executor;
+    FermatWorker fermatWorker;
 
     public static ContactsFragment newInstance() {
 
@@ -167,9 +168,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
         errorManager = appSession.getErrorManager();
 
-        _executor = Executors.newFixedThreadPool(2);
         try {
-        fermatWallet = appSession.getModuleManager();
+            fermatWallet = appSession.getModuleManager();
 
 
         } catch (Exception e) {
@@ -198,7 +198,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
-                            boolean isHelpEnabled = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
+                            boolean isHelpEnabled = (Boolean)appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED);
 
                             if (isHelpEnabled)
                                 setUpTutorial(true);
@@ -308,8 +308,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         mSearchView.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 String str = s.toString();
-            //    final int visibility = str.isEmpty() ? View.GONE : View.VISIBLE;
-            //    mClearSearchImageButton.setVisibility(visibility);
+                //    final int visibility = str.isEmpty() ? View.GONE : View.VISIBLE;
+                //    mClearSearchImageButton.setVisibility(visibility);
                 if (mPinnedHeaderAdapter != null) {
                     mPinnedHeaderAdapter.getFilter().filter(str);
                     mPinnedHeaderAdapter.notifyDataSetChanged();
@@ -325,6 +325,16 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         });
 
         // Apply any required UI change now that the Fragment is visible.
+    }
+
+    @Override
+    public void onStop() {
+
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+
+
+        super.onStop();
     }
 
     @Override
@@ -357,52 +367,72 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void onRefresh() {
 
-        _executor.submit(new Runnable() {
+        fermatWorker = new FermatWorker(getActivity()) {
             @Override
-            public void run() {
+            protected Object doInBackground()  {
 
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            walletContactRecords = fermatWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), fermatWallet.getSelectedActorIdentity().getPublicKey());
-                            if (walletContactRecords.isEmpty()) {
-                                mEmptyView.setVisibility(View.VISIBLE);
-                                mListView.setVisibility(View.GONE);
-                            } else {
-                                mListView.setVisibility(View.VISIBLE);
-                                mEmptyView.setVisibility(View.GONE);
-                                rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
-                            }
-                            refreshAdapter();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                try {
+                    walletContactRecords = fermatWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), fermatWallet.getSelectedActorIdentity().getPublicKey());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return walletContactRecords;
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                if (result != null && result.length > 0) {
+
+                    if (walletContactRecords.isEmpty()) {
+                        mEmptyView.setVisibility(View.VISIBLE);
+                        mListView.setVisibility(View.GONE);
+                    } else {
+                        mListView.setVisibility(View.VISIBLE);
+                        mEmptyView.setVisibility(View.GONE);
+                        rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
-                });
+                    refreshAdapter();
+
+                }
+                else {
+                    makeText(getActivity(), "Cant't Get Contact List.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+
+                makeText(getActivity(), "Cant't Get Contact List. " + ex.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
 
+        fermatWorker.execute();
+
     }
 
     private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
-       // if (isHelpEnabled) {
-            ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), referenceWalletSession, null, checkButton);
-            contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    Object b = referenceWalletSession.getData(SessionConstant.CREATE_EXTRA_USER);
-                    if (b != null) {
-                        if ((Boolean) b) {
-                            lauchCreateContactDialog(false);
-                            referenceWalletSession.removeData(SessionConstant.CREATE_EXTRA_USER);
-                        }
+        // if (isHelpEnabled) {
+        ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), referenceWalletSession, null, checkButton);
+        contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Object b = referenceWalletSession.getData(SessionConstant.CREATE_EXTRA_USER);
+                if (b != null) {
+                    if ((Boolean) b) {
+                        lauchCreateContactDialog(false);
+                        referenceWalletSession.removeData(SessionConstant.CREATE_EXTRA_USER);
                     }
-
                 }
-            });
-            contactsTutorialPart1.show();
-      //  }
+
+            }
+        });
+        contactsTutorialPart1.show();
+        //  }
     }
 
     private void refreshAdapter() {
@@ -431,7 +461,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void setupViews(View rootView) {
         mSearchView = (EditText) rootView.findViewById(R.id.search_view);
-       // mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+        // mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
         contacts_container = (FrameLayout) rootView.findViewById(R.id.contacts_container);
         mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
         mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
@@ -496,13 +526,13 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // set header view
-      //  View pinnedHeaderView = inflater.inflate(R.layout.section_row_view, mListView, false);
-      //  mListView.setPinnedHeaderView(pinnedHeaderView);
+        //  View pinnedHeaderView = inflater.inflate(R.layout.section_row_view, mListView, false);
+        //  mListView.setPinnedHeaderView(pinnedHeaderView);
 
         // set index bar view
-       // IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.fermat_index_bar_view, mListView, false);
-       // indexBarView.setData(mListView, mListItems, mListSectionPos);
-       // mListView.setIndexBarView(indexBarView);
+        // IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.fermat_index_bar_view, mListView, false);
+        // indexBarView.setData(mListView, mListItems, mListSectionPos);
+        // mListView.setIndexBarView(indexBarView);
 /*
         // set preview text view
         View previewTextView = inflater.inflate(R.layout.preview_view, mListView, false);
@@ -614,6 +644,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void lauchCreateContactDialog(boolean withImage) {
         dialog = new CreateContactFragmentDialog(
                 getActivity(),
+                referenceWalletSession,
+                null,
                 fermatWallet,
                 referenceWalletSession.getAppPublicKey(),
                 walletContact,
@@ -710,6 +742,32 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         }
 
         return super.onContextItemSelected(item);
+    }
+
+
+
+    @Override
+    public void onDestroy() {
+        try {
+
+            FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+            actionButton.detach();
+            actionButton.removeAllViewsInLayout();
+
+
+            button1.removeAllViewsInLayout();
+            button2.removeAllViewsInLayout();
+
+            actionButton = null;
+            button1 = null;
+            button2 = null;
+
+            actionMenu = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+//        ((ViewGroup)button1.getParent()).removeView(button1);
+        super.onDestroy();
     }
 
     private void loadImageFromGallery() {
@@ -831,7 +889,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
 
                             if (!prevSection.equals(currentSection)) {
-                               // mListItems.add(currentSection);
+                                // mListItems.add(currentSection);
 
                                 // array list of section positions
                                 mListSectionPos.add(mListItems.indexOf(currentSection));

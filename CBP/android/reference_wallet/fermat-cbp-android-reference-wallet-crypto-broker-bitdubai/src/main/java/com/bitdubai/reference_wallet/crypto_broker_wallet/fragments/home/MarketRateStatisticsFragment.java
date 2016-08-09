@@ -73,14 +73,14 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment<Referen
         String buyWithFormat = fixFormat(buyAmount);
         String sellWithFormat = fixFormat(sellAmount);
         if (buyAmount.equals("0") && sellAmount.equals("0")) {
-            providerName.setText(new StringBuilder().append(this.providerName).append(" is down").toString());
+            providerName.setText(this.providerName + getResources().getString(R.string.is_down));
             providerName.setTextColor(ContextCompat.getColor(getActivity(), R.color.cbw_provider_is_down));
         } else {
             providerName.setText(this.providerName);
         }
         currencies.setText(currencyPair);
-        buyPrice.setText(new StringBuilder().append(buyCurrency).append(" ").append(buyWithFormat).toString());
-        sellPrice.setText(new StringBuilder().append(sellCurrency).append(" ").append(sellWithFormat).toString());
+        buyPrice.setText(buyCurrency + " " + buyWithFormat);
+        sellPrice.setText(sellCurrency + " " + sellWithFormat);
 
         configChart(rootView);
 

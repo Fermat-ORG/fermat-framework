@@ -35,6 +35,7 @@ import java.util.List;
 
 /**
  * Created by nelson on 22/12/15.
+ *
  */
 public class WizardPageSetLocationsFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
@@ -61,6 +62,7 @@ public class WizardPageSetLocationsFragment
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -129,7 +131,7 @@ public class WizardPageSetLocationsFragment
             @Override
             public void onClick(View view) {
                 locationList.add("wizard");
-                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD, appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD);
             }
         });
 
@@ -149,6 +151,7 @@ public class WizardPageSetLocationsFragment
         return layout;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -190,7 +193,7 @@ public class WizardPageSetLocationsFragment
             }
 
         } catch (FermatException ex) {
-            Toast.makeText(getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.ccw_recovering_from_system_error, Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {

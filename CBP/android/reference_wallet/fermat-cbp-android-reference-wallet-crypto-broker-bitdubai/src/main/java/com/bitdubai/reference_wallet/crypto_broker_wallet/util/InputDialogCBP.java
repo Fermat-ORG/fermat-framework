@@ -131,7 +131,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
         //Get fermat FiatCurrencies
         for (FiatCurrency f : FiatCurrency.values()) {
             fiatCurrencies.add(f.getCode());
-            fiatCurrenciesFriendly.add(new StringBuilder().append(f.getFriendlyName()).append(" (").append(f.getCode()).append(")").toString());
+            fiatCurrenciesFriendly.add(f.getFriendlyName() + " (" + f.getCode() + ")");
         }
 
 
@@ -175,7 +175,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
 
             //Set up bankAccountType Spinner
             ArrayAdapter<String> bankAccountTypeAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_simple_spinner_item, bankAccountTypesFriendly);
-            bankAccountTypeAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_item);
+            bankAccountTypeAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_dropdown);
             bankAccountTypeAdapter.notifyDataSetChanged();
             bankAccountTypeSpinner.setAdapter(bankAccountTypeAdapter);
             bankAccountTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -194,7 +194,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
 
             //Set up currency Spinner
             ArrayAdapter<String> currencySpinnerAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_simple_spinner_item, fiatCurrenciesFriendly);
-            currencySpinnerAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_item);
+            currencySpinnerAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_dropdown);
             currencySpinnerAdapter.notifyDataSetChanged();
             bankAccountCurrencySpinner.setAdapter(currencySpinnerAdapter);
             bankAccountCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -220,7 +220,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
 
             //Set up currency Spinner
             ArrayAdapter<String> currencySpinnerAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_simple_spinner_item, fiatCurrenciesFriendly);
-            currencySpinnerAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_item);
+            currencySpinnerAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_dropdown);
             currencySpinnerAdapter.notifyDataSetChanged();
             cashCurrencySpinner.setAdapter(currencySpinnerAdapter);
             cashCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -263,15 +263,15 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
             try {
 
                 if (selectedBankAccountBankName.equals("")) {
-                    Toast.makeText(activity.getApplicationContext(), "Please enter a bank name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.enter_bank_name), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (selectedBankAccountAlias.equals("")) {
-                    Toast.makeText(activity.getApplicationContext(), "Please enter an alias for the account", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.enter_alias), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (selectedBankAccountNumber.equals("")) {
-                    Toast.makeText(activity.getApplicationContext(), "Please enter an account number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.enter_account), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -279,7 +279,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
                 walletManager.addNewAccount(createdBankAccount, WalletsPublicKeys.BNK_BANKING_WALLET.getCode());
                 dismiss();
             } catch (Exception e) {
-                Log.e(TAG, new StringBuilder().append("Error on: ").append(e).append(" ------------VALORES DE VARIABLES----------->").append(selectedBankAccountBankName).append("->").append(selectedBankAccountType).append("->").append(selectedBankAccountAlias).append("->").append(selectedBankAccountNumber).append("->").append(selectedBankAccountCurrency).toString());
+                Log.e(TAG, "Error on: " + e + " ------------VALORES DE VARIABLES----------->" + selectedBankAccountBankName + "->" + selectedBankAccountType + "->" + selectedBankAccountAlias + "->" + selectedBankAccountNumber + "->" + selectedBankAccountCurrency);
             }
         }
         if (id == R.id.idcbp_button_action_cash) {
@@ -287,7 +287,7 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
                 walletManager.createCashMoneyWallet(WalletsPublicKeys.CSH_MONEY_WALLET.getCode(), selectedCashCurrency);
                 dismiss();
             } catch (Exception e) {
-                Log.e(TAG, new StringBuilder().append("Error on: ").append(e).append(" ------------VALORES DE VARIABLES----------->").append(selectedCashCurrency).toString());
+                Log.e(TAG, "Error on: " + e + " ------------VALORES DE VARIABLES----------->" + selectedCashCurrency);
             }
         }
 

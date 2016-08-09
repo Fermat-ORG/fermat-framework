@@ -13,7 +13,7 @@ public interface WalletStoreCatalogue {
      * This method give us a list of wallets in the catalogue
      *
      * @param offset the offset (position) in the catalogue where we stand
-     * @param top the maximum number of wallets to get as a result
+     * @param top    the maximum number of wallets to get as a result
      * @return A list of at most "top" catalogue items (wallets)
      * @throws CantGetWalletsFromCatalogueException
      */
@@ -21,6 +21,7 @@ public interface WalletStoreCatalogue {
 
     /**
      * This method let us set filters to the catalogue
+     *
      * @param walletFilter the filter we want to add
      */
     void addFilter(WalletCatalogueFilter walletFilter);

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
@@ -17,11 +18,15 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by nelson on 28/12/15.
  */
 public class SimpleListDialogFragment<T> extends DialogFragment {
-    private String title;
+    private final String LANGUAGE = Resources.getSystem().getConfiguration().locale.getLanguage();
+
+    private String title = null;
+    private int titleRes = -1;
     private List<T> choices;
     private ItemSelectedListener listener;
 
@@ -35,12 +40,19 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.select_dialog_item, data);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(title).setAdapter(adapter, new DialogInterface.OnClickListener() {
+        if (titleRes == -1)
+            builder.setTitle(title);
+        else
+            builder.setTitle(titleRes);
+
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
+            @SuppressWarnings("unchecked")
             public void onClick(DialogInterface dialogInterface, int which) {
                 listener.onItemSelected(choices.get(which));
             }
         });
+
         return builder.create();
     }
 
@@ -55,7 +67,6 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
             } else if (choice instanceof BankAccountNumber) {
                 BankAccountNumber bankAccount = (BankAccountNumber) choice;
                 data.add(bankAccount.getAlias());
-//                data.add(bankAccount.toString());
 
             } else if (choice instanceof CurrencyExchangeRateProviderManager) {
                 CurrencyExchangeRateProviderManager provider = (CurrencyExchangeRateProviderManager) choice;
@@ -66,23 +77,23 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
 
             } else if (choice instanceof Currency) {
                 final Currency currency = (Currency) choice;
-                data.add(new StringBuilder().append(currency.getFriendlyName()).append(" (").append(currency.getCode()).append(")").toString());
+                data.add(currency.getFriendlyName() + " (" + currency.getCode() + ")");
 
             } else if (choice instanceof MoneyType) {
                 MoneyType moneyType = (MoneyType) choice;
 
                 switch (moneyType) {
                     case BANK:
-                        data.add("Bank Money");
+                        data.add(LANGUAGE.equalsIgnoreCase("es") ? "Tranferencia Bancaria" : "Bank Money");
                         break;
                     case CASH_DELIVERY:
-                        data.add("Cash Delivery");
+                        data.add(LANGUAGE.equalsIgnoreCase("es") ? "Envio de Efectivo" : "Cash Delivery");
                         break;
                     case CASH_ON_HAND:
-                        data.add("Cash on Hand");
+                        data.add(LANGUAGE.equalsIgnoreCase("es") ? "Efectivo en Mano":"Cash on Hand");
                         break;
                     case CRYPTO:
-                        data.add("Crypto Money");
+                        data.add(LANGUAGE.equalsIgnoreCase("es") ? "Dinero Crypto": "Crypto Money");
                         break;
                 }
             } else {
@@ -99,6 +110,11 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
 
     public void configure(String title, List<T> choices) {
         this.title = title;
+        this.choices = choices;
+    }
+
+    public void configure(int titleRes, List<T> choices) {
+        this.titleRes = titleRes;
         this.choices = choices;
     }
 

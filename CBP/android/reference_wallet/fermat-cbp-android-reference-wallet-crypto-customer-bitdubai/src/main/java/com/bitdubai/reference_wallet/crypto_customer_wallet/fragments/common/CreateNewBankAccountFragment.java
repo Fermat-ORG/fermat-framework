@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common;
 
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -40,6 +41,8 @@ public class CreateNewBankAccountFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
         implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
+    private final String LANGUAGE = Resources.getSystem().getConfiguration().locale.getLanguage();
+
     // Data
     private FiatCurrency[] currencies;
     private FiatCurrency selectedCurrency;
@@ -58,7 +61,6 @@ public class CreateNewBankAccountFragment
     FermatTextView bankNameCount, accountNumberCount, accountAliasCount;
 
 
-    private CryptoCustomerWalletModuleManager moduleManager;
     private final TextWatcher bankNameTextWatcher = new TextWatcher() {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME - s.length()));
@@ -148,11 +150,10 @@ public class CreateNewBankAccountFragment
 
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
 
-        moduleManager = appSession.getModuleManager();
-
         return layout;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -181,6 +182,7 @@ public class CreateNewBankAccountFragment
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onClick(View view) {
         BankAccountData data = new BankAccountData(
                 selectedCurrency,
@@ -198,7 +200,7 @@ public class CreateNewBankAccountFragment
             changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT, appSession.getAppPublicKey());
 
         } else {
-            Toast.makeText(getActivity(), "Need to set the fields", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.ccw_need_to_set_the_fields, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -206,15 +208,23 @@ public class CreateNewBankAccountFragment
         List<String> data = new ArrayList<>();
 
         for (FiatCurrency country : countries)
-            data.add(new StringBuilder().append(country.getFriendlyName()).append(" (").append(country.getCode()).append(")").toString());
+            data.add(country.getFriendlyName() + " (" + country.getCode() + ")");
 
         return data;
     }
 
     private List<String> getListOfAccountTypeNames() {
         List<String> data = new ArrayList<>();
-        data.add(new StringBuilder().append("Saving (").append(BankAccountType.SAVINGS.getCode()).append(")").toString());
-        data.add(new StringBuilder().append("Current (").append(BankAccountType.CHECKING.getCode()).append(")").toString());
+        final String savingType = LANGUAGE.equalsIgnoreCase("es") ?
+                "Ahorro (" + BankAccountType.SAVINGS.getCode() + ")" :
+                "Saving (" + BankAccountType.SAVINGS.getCode() + ")";
+
+        final String currentType = LANGUAGE.equalsIgnoreCase("es") ?
+                "Corriente (" + BankAccountType.CHECKING.getCode() + ")" :
+                "Current (" + BankAccountType.CHECKING.getCode() + ")";
+
+        data.add(savingType);
+        data.add(currentType);
 
         return data;
     }

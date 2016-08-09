@@ -3,9 +3,6 @@ package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
-import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantLoadSubAppSettings;
-import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSaveSubAppSettings;
-import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
@@ -54,20 +51,21 @@ public class ChatIdentityPreferenceSettings implements FermatSettings, Serializa
     }
 
     public void setProfileSelected(String publicKey, PlatformComponentType localPlatformComponentType) {
-        this.localPlatformComponentType=localPlatformComponentType;
-        this.localPublicKey=publicKey;
+        this.localPlatformComponentType = localPlatformComponentType;
+        this.localPublicKey = publicKey;
     }
 
     public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {
         this.isHomeTutorialDialogEnabled = isHomeTutorialDialogEnabled;
     }
+
     /**
      * This method let us know the default language of a wallet
      *
      * @return the identifier of the default language of the wallet
      * @throws CantGetDefaultLanguageException
      */
-   // @Override
+    // @Override
     public UUID getDefaultLanguage() throws com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantGetDefaultLanguageException {
         return null;
     }
@@ -108,7 +106,7 @@ public class ChatIdentityPreferenceSettings implements FermatSettings, Serializa
 
     @Override
     public void setIsPresentationHelpEnabled(boolean b) {
-        isHomeTutorialDialogEnabled=b;
+        isHomeTutorialDialogEnabled = b;
     }
 
 

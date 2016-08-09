@@ -2,18 +2,19 @@ package com.bitdubai.fermat_cer_api.layer.provider.utils;
 
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -49,7 +50,6 @@ public class HttpHelper {
     }
 
 
-
     /**
      * This method accepts an URL and fetches its content, returning it in a string
      **/
@@ -59,15 +59,24 @@ public class HttpHelper {
         String content = "";
 
         try {
-          //  stream = new URL(url).openStream();
-            URL url=new URL(receiveurl);
+            //  stream = new URL(url).openStream();
+            URL url = new URL(receiveurl);
             URLConnection con = url.openConnection();
             con.setConnectTimeout(5000);
-            con.setReadTimeout(5000);
+            con.setReadTimeout(10000);
           //  reader = new BufferedReader(new InputStreamReader(stream, Charset.forName("UTF-8")));
             reader = new BufferedReader(new InputStreamReader(con.getInputStream(), Charset.forName("UTF-8")));
             content = readAll(reader);
-        } catch (IOException e) {
+        } catch (UnknownHostException e) {
+            System.out.println("The base url can't be found");
+        }catch (SocketTimeoutException e){
+            System.out.println("The waiting for respond is to long");
+        } catch (MalformedURLException e) {
+            System.out.println("The URL is Malformed");
+        }catch (FileNotFoundException e) {
+            System.out.println("The service is unavailable");
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         return content;

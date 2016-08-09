@@ -34,6 +34,54 @@
     <string name="cht_chat_subtitle">Welcome to P2P Chat.</string>
     <string name="cht_chat_body">If you do not have any identity registered, please register one in our Chat Community.</string>
     <string name="cht_chat_footer">P2P Chat</string>
+    <string name="cht_no_chat">No chats</string>
+    <string name="cht_contact_select">Please, tap on contacts and select\na friend to start a P2P Chat.</string>
+    <string name="cht_contact_select1">Please, tap on contacts and select</string>
+    <string name="cht_contact_select2">a friend to start a P2P Chat.</string>
+    <string name="cht_contact_list_select1">To add contacts, go to P2P Chat</string>
+    <string name="cht_contact_list_select2">Community and send a connection</string>
+    <string name="cht_contact_list_select3">request to a friend.</string>
+    <string name="cht_dialog_welcome">Welcome!</string>
+    <string name="cht_dialog_subtitle">Welcome to P2P Chat</string>
+    <string name="cht_dialog_content">If you do not have any identity registered, please register one in our Chat Community.</string>
+    <string name="cht_dialog_dont_show">Don´t show this again</string>
+    <string name="cht_dialog_button_close">OK</string>
+    <string name="cht_dialog_add_connection">Add connections</string>
+    <string name="cht_yes">Yes</string>
+    <string name="cht_no">No</string>
+    <string name="cht_last_time">Last time </string>
+    <string name="cht_online">Online</string>
+    <string name="cht_typing">Typing...</string>
+    <string name="cht_today">today at </string>
+    <string name="cht_yesterday">yesterday at </string>
+    <string name="status">Status</string>
+    <string name="profile_status">Available</string>
+
+    <string name="cht_select">Select</string>
+    
+    <string name="cht_broadcaster_simple_text">BROADCAST SIMPLE</string>
+    <string name="cht_broadcaster_scheduled_text">BROADCAST SCHEDULED</string>
+    <string name="cht_broadcaster_button_text">Create</string>
+    <string name="cht_broadcaster_recipients">ADD BROADCAST LIST RECIPIENTS</string>
+    <string name="cht_broadcaster_simple_contact_hint">Type contact name</string>
+    <string name="cht_broadcaster_simple_name_hint">Type name for the broadcast</string>
+    <string name="cht_broadcaster_add_recipients">Add broadcast list recipients</string>
+    <string name="cht_broadcaster_scheduled_text2">Add broadcast list recipients</string>
+    <string name="cht_broadcaster_day_programming">DAY PROGRAMMING</string>
+    <string name="cht_broadcaster_name_hint">Type broadcast name</string>
+    
+    <string name="cht_contact_edit_text_hint">User Alias</string>
+
+    <string name="cht_no_contacts">No contacts</string>
+
+    <string name="cht_send_error_text1">Please, write an email to send us the error report to help fix the problem.</string>
+    <string name="cht_send_error_text2">...Or hold a tap in the empty   box below to load the log and then copy and paste in another place to send it</string>
+    <string name="cht_send_error_hint">Type email of support personal</string>
+    <string name="cht_send_error_hint_hold">Hold a tap here</string>
+    <string name="copy_message_toast">Copied: </string>
+    <string name="cht_notif_new_msg_title">Chat - New Message</string>
+    <string name="cht_notif_new_msg_content">You have a new message in Chat.</string>
+
 
     <!-- Used for the AlphabetIndexer in ContactsListFragment to provide quick navigation by
          alphabet using ListView fast scroll. -->
@@ -81,14 +129,12 @@
     <string name="text_internal_storage">Internal Storage</string>
     <string name="text_root">/</string>
     <string name="text_system_root">System Root</string>
-    <string name="text_mobigram">MobiGram</string>
     <string name="text_to_send_images_without_compression">To send images without compression</string>
     <string name="text_nearest_checkpoints">Nearest checkpoints</string>
     <string name="text_map">Map</string>
     <string name="text_satellite">Satellite</string>
     <string name="text_hybrid">Hybrid</string>
     <string name="text_send_selected_location">Send your current location</string>
-    <string name="text_test_mobigram">MobiGram - jkdksafkfsmskjsa</string>
     <string name="text_test_number">100000</string>
     <string name="new_message_fragment_title">New message</string>
     <string name="select_chat_fragment_title">Select chat</string>

@@ -443,7 +443,11 @@ public class BrowserTabFragment
     public void onItemClickListener(IntraUserInformation data, int position) {
         try {
 
-            if (data.getState().equals(ProfileStatus.ONLINE)) {
+            ConnectionState connectionState = data.getConnectionState();
+
+
+            if ((data.getState().equals(ProfileStatus.ONLINE) || data.getState().equals(ProfileStatus.UNKNOWN)) && connectionState.equals(ConnectionState.NO_CONNECTED)) {
+
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
                         appSession.setData(INTRA_USER_SELECTED, data);
@@ -463,7 +467,21 @@ public class BrowserTabFragment
                     connectDialog.show();
                 }
             }else
-                Toast.makeText(getActivity(),"USER OFFLINE",Toast.LENGTH_SHORT).show();
+            {   switch (connectionState)
+                {
+                    case CONNECTED:
+                        Toast.makeText(getActivity(),"IS A CONTACT",Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case PENDING_REMOTELY_ACCEPTANCE:
+                        Toast.makeText(getActivity(),"REQUEST HAS BEEN SEND",Toast.LENGTH_SHORT).show();
+                        break;
+
+                    default:
+                        Toast.makeText(getActivity(),"USER OFFLINE",Toast.LENGTH_SHORT).show();
+                }
+
+            }
 
             } catch (CantGetActiveLoginIdentityException e) {
                 e.printStackTrace();

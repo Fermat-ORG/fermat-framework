@@ -98,7 +98,8 @@ public class IntraUserModuleSearch implements IntraUserSearch {
                    if(intraWalletUser.getPublicKey().equals(intraUser.getPublicKey()) ){
                        ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
 
-                       intraUserInformationList.add(new IntraUserModuleInformation(intraWalletUser.getAlias(),intraWalletUser.getPhrase(), intraWalletUser.getPublicKey(), intraWalletUser.getImage(), connectionState,intraUser.getState(),0));
+                       intraUserInformationList.add(new IntraUserModuleInformation(intraWalletUser.getAlias(),intraWalletUser.getPhrase(), intraWalletUser.getPublicKey(), intraWalletUser.getImage(), connectionState,intraUser.getState(),0,
+                               intraUser.getCity(), intraUser.getCountry(), intraUser.getLocation()));
 
                    }
 

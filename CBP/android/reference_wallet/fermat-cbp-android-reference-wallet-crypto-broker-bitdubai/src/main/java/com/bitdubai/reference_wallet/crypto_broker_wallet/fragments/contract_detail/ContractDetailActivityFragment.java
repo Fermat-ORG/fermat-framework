@@ -181,9 +181,9 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
 
         brokerName.setText(data.getCryptoCustomerAlias());
         customerImage.setImageDrawable(getImgDrawable(data.getCryptoCustomerImage()));
-        sellingSummary.setText(String.format("BUYING %1$s", merchandise));
+        sellingSummary.setText(String.format(getResources().getString(R.string.cbw_buying_details2), merchandise));
         detailDate.setText(formatter.format(lastUpdate));
-        detailRate.setText(String.format("1 %1$s @ %2$s %3$s", merchandise, exchangeRateAmount, paymentCurrency));
+        detailRate.setText(String.format(getResources().getString(R.string.cbw_exchange_rate_summary), merchandise, exchangeRateAmount, paymentCurrency));
 
         adapter = new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletModuleManager, this);
         recyclerView.setAdapter(adapter);
@@ -331,7 +331,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
             //If module is null, I cannot handle with this.
             Toast.makeText(
                     getActivity(),
-                    "Sorry, an error happened in ContractDetailActivityFragment (CryptoCustomerWalletModuleManager == null)",
+                    getResources().getString(R.string.error_contract_detail),
                     Toast.LENGTH_SHORT)
                     .show();
         }
@@ -367,32 +367,24 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
 
     private String fixFormat(String value) {
 
-        try {
-            if (compareLessThan1(value)) {
-                numberFormat.setMaximumFractionDigits(8);
-            } else {
-                numberFormat.setMaximumFractionDigits(2);
-            }
-            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "0";
+        if (compareLessThan1(value)) {
+            numberFormat.setMaximumFractionDigits(8);
+        } else {
+            numberFormat.setMaximumFractionDigits(2);
         }
+        return numberFormat.format(new BigDecimal(Double.valueOf(value)));
 
     }
 
     private Boolean compareLessThan1(String value) {
         Boolean lessThan1 = true;
-        try {
-            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE) == -1) {
-                lessThan1 = true;
-            } else {
-                lessThan1 = false;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (BigDecimal.valueOf(Double.valueOf(value)).
+                compareTo(BigDecimal.ONE) == -1) {
+            lessThan1 = true;
+        } else {
+            lessThan1 = false;
         }
+
         return lessThan1;
     }
 

@@ -19,7 +19,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:typeface="ROBOTO_REGULAR"
-        tools:text="Title"/>
+        tools:text="@string/title_may"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
         android:id="@+id/cbw_text_dialog_edit_text"
@@ -38,7 +38,7 @@
         android:textColorHint="#9a9a9c"
         android:textSize="16sp"
         app:typeface="ROBOTO_REGULAR"
-        tools:hint="Amount"/>
+        tools:hint="@string/amount"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/cbw_text_dialog_edit_text_count"

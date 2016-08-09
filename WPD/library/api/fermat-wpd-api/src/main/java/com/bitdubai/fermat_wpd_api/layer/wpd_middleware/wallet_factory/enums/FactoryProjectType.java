@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * The Class <code>FactoryProjectType</code> define
  * all the types have a Descriptor Factory Project.
  * <p/>
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 06/08/15.
  *
  * @version 1.0
@@ -21,11 +21,11 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum FactoryProjectType {
 
     /**
-     *  Definitions types
+     * Definitions types
      */
-    WALLET   ("W"),
-    SKIN     ("S"),
-    LANGUAGE ("L");
+    WALLET("W"),
+    SKIN("S"),
+    LANGUAGE("L");
 
     /**
      * Represent the key
@@ -46,7 +46,9 @@ public enum FactoryProjectType {
      *
      * @return String
      */
-    public String getCode()   { return this.code; }
+    public String getCode() {
+        return this.code;
+    }
 
     /**
      * Get the FactoryProjectType representation from code
@@ -57,12 +59,12 @@ public enum FactoryProjectType {
      */
     public static FactoryProjectType getByCode(String code) throws InvalidParameterException {
 
-        switch(code) {
-            case"W":
+        switch (code) {
+            case "W":
                 return WALLET;
-            case"S":
+            case "S":
                 return SKIN;
-            case"L":
+            case "L":
                 return LANGUAGE;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the FactoryProjectType enum");
@@ -72,6 +74,7 @@ public enum FactoryProjectType {
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#toString()
      */
     @Override

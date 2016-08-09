@@ -22,7 +22,7 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
     String pluginId;
     List<String> walletsIds;
 
-    public WalletManagerMiddlewareDeveloperDatabaseFactory (String pluginId){
+    public WalletManagerMiddlewareDeveloperDatabaseFactory(String pluginId) {
         this.pluginId = pluginId;
 
     }
@@ -64,7 +64,7 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
         /**
          * Wallets table
          */
-        DeveloperDatabaseTable  WalletTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME, WalletManagerMiddlewareTableColumns);
+        DeveloperDatabaseTable WalletTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME, WalletManagerMiddlewareTableColumns);
         tables.add(WalletTable);
 
 
@@ -81,7 +81,7 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
         /**
          * language table
          */
-        DeveloperDatabaseTable  languageTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME, WalletManagerMiddlewareTableLanguageColumns);
+        DeveloperDatabaseTable languageTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME, WalletManagerMiddlewareTableLanguageColumns);
         tables.add(languageTable);
 
         /**
@@ -99,7 +99,7 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
          * Skin table
          */
 
-        DeveloperDatabaseTable  cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME, WalletManagerMiddlewareTableSkinColumns);
+        DeveloperDatabaseTable cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME, WalletManagerMiddlewareTableSkinColumns);
         tables.add(cryptoTransactionsTable);
 
 
@@ -107,7 +107,7 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
     }
 
 
-    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory,  Database database, DeveloperDatabaseTable developerDatabaseTable) {
+    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, Database database, DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
          */
@@ -119,12 +119,12 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -144,7 +144,7 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }

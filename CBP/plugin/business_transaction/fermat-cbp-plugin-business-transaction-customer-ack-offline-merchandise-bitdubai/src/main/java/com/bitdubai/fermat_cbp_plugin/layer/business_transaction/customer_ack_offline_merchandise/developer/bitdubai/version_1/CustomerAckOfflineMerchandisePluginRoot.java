@@ -330,7 +330,8 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
     @Override
     public void stop() {
         try {
-            processorAgent.stop();
+            if (processorAgent!=null)
+                processorAgent.stop();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception exception) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
@@ -362,7 +363,7 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
             String[] correctedClass = className.split((Pattern.quote("$")));
             return CustomerAckOfflineMerchandisePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
-            System.err.println(new StringBuilder().append("CantGetLogLevelByClass: ").append(e.getMessage()).toString());
+            System.err.println("CantGetLogLevelByClass: " + e.getMessage());
             return DEFAULT_LOG_LEVEL;
         }
     }

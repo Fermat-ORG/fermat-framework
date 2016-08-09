@@ -36,7 +36,7 @@ public class CryptoBrokerNewConnectionEventHandler implements FermatEventHandler
                 this.actorExtraDataEventAction.handleNewConnectionEvent();
             } else {
                 EventType eventExpected = EventType.CRYPTO_BROKER_ACTOR_CONNECTION_NEW_CONNECTION;
-                String context = new StringBuilder().append("Event received: ").append(fermatEvent.getEventType().toString()).append(" - ").append(fermatEvent.getEventType().getCode()).append("\n").append("Event expected: ").append(eventExpected.toString()).append(" - ").append(eventExpected.getCode()).toString();
+                String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode() + "\n" + "Event expected: " + eventExpected.toString() + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);
             }
         } else {

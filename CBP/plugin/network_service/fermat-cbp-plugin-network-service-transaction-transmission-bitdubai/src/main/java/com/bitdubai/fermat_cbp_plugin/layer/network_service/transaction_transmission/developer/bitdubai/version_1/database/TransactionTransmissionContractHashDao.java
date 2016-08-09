@@ -210,7 +210,7 @@ public class TransactionTransmissionContractHashDao {
             try {
                 businessTransactionMetadata = getMetadata(transaction_id);
             } catch (Exception e) {
-                System.out.println(new StringBuilder().append("Cannot find ").append(transaction_id).toString());
+                System.out.println("Cannot find " + transaction_id);
                 return;
             }
 
@@ -272,7 +272,7 @@ public class TransactionTransmissionContractHashDao {
             if (!records.isEmpty())
                 return buildBusinessTransactionRecord(records.get(0));
             else
-                throw new PendingRequestNotFoundException(null, new StringBuilder().append("RequestID: ").append(transmissionId).toString(), "Cannot find an address exchange request with the given request id.");
+                throw new PendingRequestNotFoundException(null, "RequestID: " + transmissionId, "Cannot find an address exchange request with the given request id.");
 
 
         } catch (CantLoadTableToMemoryException exception) {
@@ -342,7 +342,7 @@ public class TransactionTransmissionContractHashDao {
 
     public void confirmReception(UUID transactionID) throws CantUpdateRecordDataBaseException, PendingRequestNotFoundException, CantGetTransactionTransmissionException {
         try {
-            System.out.print(new StringBuilder().append("\n2)transactionId: ").append(transactionID).append("\n").toString());
+            System.out.print("\n2)transactionId: " + transactionID + "\n");
             BusinessTransactionMetadata businessTransactionMetadata = getMetadata(transactionID);
 
             businessTransactionMetadata.confirmRead();

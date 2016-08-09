@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by Matias Furszyfer on 2015.08.07..
  */
 
-public class CantRemoveWalletFactoryProject extends FermatException{
+public class CantRemoveWalletFactoryProject extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *

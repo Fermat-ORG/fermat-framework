@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -19,8 +21,6 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderExce
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderLayerManager;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,7 +74,6 @@ public class ProviderLayerPluginRoot extends AbstractPlugin implements CurrencyE
     }
 
 
-
     /*
      * Service interface implementation
      */
@@ -104,17 +103,14 @@ public class ProviderLayerPluginRoot extends AbstractPlugin implements CurrencyE
     }
 
 
-
-
-  /*
-   * CurrencyExchangeProviderFilterManager interface implementation
-   */
+    /*
+     * CurrencyExchangeProviderFilterManager interface implementation
+     */
     @Override
     public Map<UUID, String> getProviderNames() throws CantGetProviderInfoException {
 
         Map<UUID, String> providers = new HashMap<>();
-        for (Map.Entry<UUID, CurrencyExchangeRateProviderManager> provider : providerMap.entrySet())
-        {
+        for (Map.Entry<UUID, CurrencyExchangeRateProviderManager> provider : providerMap.entrySet()) {
             CurrencyExchangeRateProviderManager manager = provider.getValue();
             providers.put(provider.getKey(), manager.getProviderName());
         }
@@ -126,11 +122,10 @@ public class ProviderLayerPluginRoot extends AbstractPlugin implements CurrencyE
     public Map<UUID, String> getProviderNamesListFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderInfoException {
 
         Map<UUID, String> providers = new HashMap<>();
-        for (Map.Entry<UUID, CurrencyExchangeRateProviderManager> provider : providerMap.entrySet())
-        {
+        for (Map.Entry<UUID, CurrencyExchangeRateProviderManager> provider : providerMap.entrySet()) {
             CurrencyExchangeRateProviderManager manager = provider.getValue();
 
-            if(manager.isCurrencyPairSupported(currencyPair))
+            if (manager.isCurrencyPairSupported(currencyPair))
                 providers.put(provider.getKey(), manager.getProviderName());
         }
 
@@ -143,7 +138,7 @@ public class ProviderLayerPluginRoot extends AbstractPlugin implements CurrencyE
 
         CurrencyExchangeRateProviderManager manager = providerMap.get(providerId);
 
-        if(manager == null)
+        if (manager == null)
             throw new CantGetProviderException();
 
         return manager;
@@ -153,11 +148,10 @@ public class ProviderLayerPluginRoot extends AbstractPlugin implements CurrencyE
     public Collection<CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderException {
 
         List<CurrencyExchangeRateProviderManager> providerReferences = new ArrayList<>();
-        for (Map.Entry<UUID, CurrencyExchangeRateProviderManager> provider : providerMap.entrySet())
-        {
+        for (Map.Entry<UUID, CurrencyExchangeRateProviderManager> provider : providerMap.entrySet()) {
             CurrencyExchangeRateProviderManager manager = provider.getValue();
 
-            if(manager.isCurrencyPairSupported(currencyPair))
+            if (manager.isCurrencyPairSupported(currencyPair))
                 providerReferences.add(manager);
         }
         return providerReferences;

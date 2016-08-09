@@ -370,6 +370,7 @@ public class WizardActivity extends FermatActivity
 
     }
 
+
     @Override
     public void connectWithOtherApp(String fermatAppPublicKey, Object[] objectses) {
 

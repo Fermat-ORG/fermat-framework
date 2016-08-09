@@ -31,7 +31,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
@@ -41,6 +40,8 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.interfaces.BankMoneyRestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.interfaces.CashMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants;
@@ -62,39 +63,43 @@ import java.util.regex.Pattern;
 
 /**
  * Created by Manuel Perez on 17/12/2015.
+ *
  */
 @PluginInfo(createdBy = "darkestpriest", maintainerMail = "darkpriestrelative@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.BUSINESS_TRANSACTION, plugin = Plugins.BROKER_ACK_OFFLINE_PAYMENT)
 public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
-    private EventManager eventManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    LogManager logManager;
+    EventManager eventManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    PluginDatabaseSystem pluginDatabaseSystem;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.TRANSACTION_TRANSMISSION)
-    private TransactionTransmissionManager transactionTransmissionManager;
+    TransactionTransmissionManager transactionTransmissionManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_PURCHASE)
-    private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
+    CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_SALE)
-    private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+    CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
-    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     @NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.BANK_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION)
-    private DepositManager depositManager;
+    DepositManager depositManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_BROKER_WALLET)
-    private CryptoBrokerWalletManager cryptoBrokerWalletManager;
+    CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
     @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.CASH_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT)
-    private CashDepositTransactionManager CashDepositTransactionManager;
+    CashDepositTransactionManager CashDepositTransactionManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.STOCK_TRANSACTIONS, plugin = Plugins.BANK_MONEY_RESTOCK)
+    BankMoneyRestockManager bankMoneyRestockManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.STOCK_TRANSACTIONS, plugin = Plugins.CASH_MONEY_RESTOCK)
+    CashMoneyRestockManager cashMoneyRestockManager;
 
     /**
      * Represents the plugin manager.
@@ -117,19 +122,24 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
     BrokerAckOfflinePaymentMonitorAgent2 processorAgent;
 
     //Agent configuration
+
+    @SuppressWarnings("FieldCanBeLocal")
     private final long SLEEP_TIME = 10000;
+
+    @SuppressWarnings("FieldCanBeLocal")
     private final long DELAY_TIME = 1000;
+
     private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     public BrokerAckOfflinePaymentPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     @Override
     public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
+        List<String> returnedClasses = new ArrayList<>();
         returnedClasses.add("BrokerAckOfflinePaymentPluginRoot");
 
         return returnedClasses;
@@ -264,22 +274,24 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
             brokerAckOfflinePaymentMonitorAgent.start();*/
 
             //New Agent starting
-            processorAgent =
-                    new BrokerAckOfflinePaymentMonitorAgent2(
-                            SLEEP_TIME,
-                            TIME_UNIT,
-                            DELAY_TIME,
-                            this,
-                            brokerAckOfflinePaymentBusinessTransactionDao,
-                            eventManager,
-                            transactionTransmissionManager,
-                            customerBrokerContractPurchaseManager,
-                            customerBrokerContractSaleManager,
-                            customerBrokerSaleNegotiationManager,
-                            depositManager,
-                            cryptoBrokerWalletManager,
-                            CashDepositTransactionManager,
-                            pluginId);
+            processorAgent = new BrokerAckOfflinePaymentMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
+                    this,
+                    brokerAckOfflinePaymentBusinessTransactionDao,
+                    eventManager,
+                    transactionTransmissionManager,
+                    customerBrokerContractPurchaseManager,
+                    customerBrokerContractSaleManager,
+                    customerBrokerSaleNegotiationManager,
+                    depositManager,
+                    cryptoBrokerWalletManager,
+                    CashDepositTransactionManager,
+                    bankMoneyRestockManager,
+                    cashMoneyRestockManager,
+                    pluginId);
+
             processorAgent.start();
 
             /**
@@ -351,6 +363,7 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
     @Override
     public void stop() {
         try {
+            if (processorAgent!=null)
             processorAgent.stop();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception e) {
@@ -378,16 +391,18 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
         return brokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
+    @SuppressWarnings("StringBufferReplaceableByString")
     public static LogLevel getLogLevelByClass(String className) {
         try {
             String[] correctedClass = className.split((Pattern.quote("$")));
             return BrokerAckOfflinePaymentPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
-            System.err.println(new StringBuilder().append("CantGetLogLevelByClass: ").append(e.getMessage()).toString());
+            System.err.println("CantGetLogLevelByClass: " + e.getMessage());
             return DEFAULT_LOG_LEVEL;
         }
     }
 
+    @SuppressWarnings("unused")
     private void newOpenedContractRaiseEventTest() {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_OPENED);
         NewContractOpened newContractOpened = (NewContractOpened) fermatEvent;
@@ -396,6 +411,7 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
         eventManager.raiseEvent(fermatEvent);
     }
 
+    @SuppressWarnings("unused")
     private void testAck() {
         try {
             brokerAckOfflinePaymentTransactionManager.ackPayment(

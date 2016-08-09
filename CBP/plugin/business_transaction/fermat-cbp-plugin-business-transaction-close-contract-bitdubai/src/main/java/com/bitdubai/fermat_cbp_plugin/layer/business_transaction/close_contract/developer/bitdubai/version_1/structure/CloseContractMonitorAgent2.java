@@ -109,11 +109,11 @@ public class CloseContractMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("CLOSE_CONTRACT - remoteBusinessTransaction = " + remoteBusinessTransaction);
                     if (remoteBusinessTransaction != Plugins.CLOSE_CONTRACT)
                         continue;
 
-                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("CLOSE_CONTRACT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     try {
                         contractType = closeContractBusinessTransactionDao.getContractType(contractHash);
@@ -129,7 +129,7 @@ public class CloseContractMonitorAgent2
                         return;
                     }
 
-                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus = ").append(contractTransactionStatus).toString());
+                    System.out.println("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus = " + contractTransactionStatus);
                     if (contractTransactionStatus == ContractTransactionStatus.CHECKING_CLOSING_CONTRACT) {
 
                         switch (contractType) {
@@ -169,11 +169,11 @@ public class CloseContractMonitorAgent2
                     contractHash = businessTransactionMetadata.getContractHash();
                     Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
 
-                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("CLOSE_CONTRACT - remoteBusinessTransaction = " + remoteBusinessTransaction);
                     if (remoteBusinessTransaction != Plugins.CLOSE_CONTRACT)
                         continue;
 
-                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - PASS remoteBusinessTransaction = ").append(remoteBusinessTransaction).toString());
+                    System.out.println("CLOSE_CONTRACT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     try {
                         contractTransactionStatus = closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
@@ -182,7 +182,7 @@ public class CloseContractMonitorAgent2
                         return;
                     }
 
-                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - contractTransactionStatus = ").append(contractTransactionStatus).toString());
+                    System.out.println("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - contractTransactionStatus = " + contractTransactionStatus);
                     if (contractTransactionStatus == ContractTransactionStatus.SUBMIT_CLOSING_CONTRACT_CONFIRMATION) {
                         closeContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_COMPLETED);
                         raiseNewContractClosedEvent();

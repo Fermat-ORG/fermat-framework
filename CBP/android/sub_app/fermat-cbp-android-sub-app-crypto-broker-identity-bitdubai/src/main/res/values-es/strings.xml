@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Perfil Crypto Broker</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_settings">Configuración</string>
+    <string name="create">CREAR</string>
+    <string name="update">ACTUALIZAR</string>
+    <string name="broker_name">Nombre Broker</string>
+    <string name="identity_img">identity_image</string>
+    <string name="description_search">Buscar</string>
+    <string name="publish_identity">Publicar Perfil</string>
+    <string name="published">Publicado</string>
+    <string name="not_published">No Publicado</string>
+    <string name="empty_identity_list_msg">NO HAY PERFILES\nCrear un perfil nuevo</string>
+    <string name="no_matches">No Coincide</string>
+    <string name="camera_option_context_menu">Cámara</string>
+    <string name="gallery_option_context_menu">Galeria</string>
+    <string name="title_photo_context_menu">Escoger Opción</string>
+    <string name="dialog_identity_footer">Prueba de pie</string>
+    <string name="cbp_broker_identity_welcome_title_gps">Notificación!</string>
+    <string name="cbp_broker_identity_welcome_subTitle_gps">Aviso Importante.</string>
+    <string name="cbp_broker_identity_welcome_subTitle">Bienvenido al Perfil de Broker.</string>
+    <string name="cbp_broker_identity_welcome_body">Desde aquí usted será capaz de crear un perfil de tipo Broker.\n\nEste perfil, le identificará en el sistema como un Agente de Bolsa, y le dará acceso a todas las funciones y aplicaciones que necesita.\n\nOtro agente o cliente podrá solicitar una conexión a usted por la información que se proporcione aquí.</string>
+    <string name="cbp_broker_identity_gps">Por favor, encienda el GPS de su equipo móvil para poder registrar su ubicación y poder encontrar otros usuarios cerca de usted&#8230;</string>
+    <string name="cbi_accuracy_km">Precision (km)</string>
+    <string name="cbi_accuracy_hint">0 &#8211; 1000</string>
+    <string name="cbi_frequency">Frecuencia</string>
+    <string name="cbi_system_error">Oops! Recuperandose de un error</string>
+    <string name="cbi_low_tag">BAJO</string>
+    <string name="cbi_visible">Visible</string>
+    <string name="cbi_saxofon">Saxofon</string>
+    <string name="cbi_hint">Escriba el Nombre o Alias</string>
+    <string name="cbi_username">Usuario</string>
+    <string name="cbi_name">Nombre</string>
+    <string name="cbi_status">Status</string>
+    <string name="cbi_visibility">Visibilidad</string>
+    <string name="cbi_rotate_image">ROTAR IMAGEN</string>
+    <string name="cbi_dialog_cam_gallery_title">Foto de Perfil</string>
+    <string name="cbi_dialog_cg_take_picture">Tomar una Foto</string>
+    <string name="cbi_dialog_cg_take_gallery">Escoger de la Galeria</string>
+    <string name="cbi_error">Ocurrio un error</string>
+    <string name="cbi_turnon_gps">Por favor enciende el GPS</string>
+    <string name="cbi_error_dialog">Error en el dialogo</string>
+    <string name="cbi_error_image">Error Cargando Imagen</string>
+    <string name="cbi_enter_name_alias">Por favor, escriba el Nombre o Alias</string>
+    <string name="cbi_enter_name">Por favor, escriba el nombre</string>
+    <string name="cbi_enter_image">Debe ingresar una Imagen</string>
+    <string name="cbi_identity_created">Perfil Broker Creado</string>
+    <string name="cbi_identity_updated">Perfil Broker Actualizado</string>
+    <string name="cbi_empty_accuracy">Campo Precisión esta vacio</string>
+    <string name="cbi_error_create">Ocurrio un error intentando salvar el Profile del Broker</string>
+
+    <!--<string name="cbi_title_dialog_presentation">Bienvenido!</string>-->
+    <!--<string name="cbi_button_dialog_presentation">Cerrar</string>-->
+    <!--<string name="cbi_show_dialog_presentation">No mostrar</string>-->
+</resources>

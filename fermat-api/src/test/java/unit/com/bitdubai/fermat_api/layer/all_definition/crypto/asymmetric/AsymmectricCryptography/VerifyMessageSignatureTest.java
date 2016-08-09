@@ -15,17 +15,17 @@ public class VerifyMessageSignatureTest extends AsymmetricCryptographyUnitTest {
 
     @Test
     public void VerifyMessageSignature_DifferentSignature_ReturnsFalse() {
-        assertThat(AsymmetricCryptography.verifyMessageSignature(new StringBuilder().append(testSignature).append("0").toString(), testEncryptedMessage, testPublicKey)).isFalse();
+        assertThat(AsymmetricCryptography.verifyMessageSignature(testSignature + "0", testEncryptedMessage, testPublicKey)).isFalse();
     }
 
     @Test
     public void VerifyMessageSignature_DifferentMessage_ReturnsFalse() {
-        assertThat(AsymmetricCryptography.verifyMessageSignature(testSignature, new StringBuilder().append(testEncryptedMessage).append("0").toString(), testPublicKey)).isFalse();
+        assertThat(AsymmetricCryptography.verifyMessageSignature(testSignature, testEncryptedMessage + "0", testPublicKey)).isFalse();
     }
 
     @Test
     public void VerifyMessageSignature_DifferentPublicKey_ReturnsFalse() {
-        assertThat(AsymmetricCryptography.verifyMessageSignature(testSignature, testEncryptedMessage, new StringBuilder().append(testPublicKey).append("0").toString())).isFalse();
+        assertThat(AsymmetricCryptography.verifyMessageSignature(testSignature, testEncryptedMessage, testPublicKey + "0")).isFalse();
     }
 
     @Test(expected = IllegalArgumentException.class)

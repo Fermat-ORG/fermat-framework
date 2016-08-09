@@ -56,7 +56,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
 
     private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
         try {
-            database = pluginDatabaseSystem.openDatabase(this.pluginId, UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME);
+            if (database==null) database = pluginDatabaseSystem.openDatabase(this.pluginId, UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME);
 
         } catch (DatabaseNotFoundException e) {
             UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory = new UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory(this.pluginDatabaseSystem);
@@ -115,7 +115,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
         } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, new StringBuilder().append("error trying to get customers Broker Purchase from the database with filter: ").append(filter.toString()).toString(), null);
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get customers Broker Purchase from the database with filter: " + filter.toString(), null);
         }
 
         return customerBrokerPurchases;
@@ -217,5 +217,9 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
         record.setLongValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, customerBrokerPurchaseEventRecord.getTimestamp());
 
         return record;
+    }
+
+    public boolean isEmptyTable() {
+        return getDatabaseTable(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_EVENTS_RECORDED_TABLE_NAME).numRecords()==0;
     }
 }

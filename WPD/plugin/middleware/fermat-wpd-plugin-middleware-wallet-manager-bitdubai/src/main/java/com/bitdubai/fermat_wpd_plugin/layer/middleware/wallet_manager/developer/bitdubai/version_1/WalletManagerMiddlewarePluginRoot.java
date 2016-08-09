@@ -5,6 +5,9 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -34,12 +37,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_wpd_api.all_definition.events.WalletInstalledEvent;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantFindProcessException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantInstallLanguageException;
@@ -260,7 +260,6 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
         // Harcoded para testear el circuito más arriba
         List<InstalledWallet> lstInstalledWallet = new ArrayList<>();
 
-        //TODO: joaquin, a esta clase le tenes que agregar el blockCHain networkType que viene por default, acá solo se va a hardcodear
         InstalledWallet installedWallet = new WalletManagerMiddlewareInstalledWallet(
                 WalletCategory.REFERENCE_WALLET, // CATEGORY
                 new ArrayList<InstalledSkin>(),
@@ -282,7 +281,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
 
         lstInstalledWallet.add(installedWallet);
 
-        installedWallet = new WalletManagerMiddlewareInstalledWallet(
+       installedWallet = new WalletManagerMiddlewareInstalledWallet(
                WalletCategory.REFERENCE_WALLET, // CATEGORY
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
@@ -297,10 +296,11 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 null,
                 "bitDubai",
                "",
-                Platforms.CRYPTO_CURRENCY_PLATFORM,
+               Platforms.CRYPTO_CURRENCY_PLATFORM,
                BlockchainNetworkType.getDefaultBlockchainNetworkType()
         );
         lstInstalledWallet.add(installedWallet);
+
 
         installedWallet = new WalletManagerMiddlewareInstalledWallet(
                 WalletCategory.REFERENCE_WALLET, // CATEGORY
@@ -312,9 +312,9 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 ReferenceWallet.BASIC_WALLET_FERMAT_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
                 new Version(1, 0, 0), //VERSION
                 WalletType.REFERENCE, // WALLET TYPE
-                "medium",
+               "medium",
                 "1.0.0",
-                null,
+               null,
                 "bitDubai",
                 "",
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
@@ -509,7 +509,6 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
      * @param alias             the alias (name) of the skin
      * @param Preview           the name of the preview image of the skin
      * @param version           the version of the skin
-     *
      * @throws CantInstallSkinException
      */
     public void installSkin(UUID walletCatalogueId, UUID skinId, String alias, String Preview, Version version) throws CantInstallSkinException {
@@ -551,9 +550,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
      * @param walletPlatformIdentifier an string that encodes the wallet identifier in the platform
      *                                 We are usign the term platform to identify the software installed
      *                                 in the device and not the network.
-     *
      * @return an interface to manage the installation of a new wallet
-     *
      * @throws CantFindProcessException
      */
     public WalletInstallationProcess installWallet(WalletCategory walletCategory, String walletPlatformIdentifier) throws CantFindProcessException {
@@ -693,7 +690,6 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
      * using the <code>createWallet</code> method.
      *
      * @param walletIdInTheDevice the identifier of the wallet to delete
-     *
      * @throws CantRemoveWalletException
      */
     public void removeWallet(UUID walletIdInTheDevice) throws CantRemoveWalletException {
@@ -716,7 +712,6 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
      *
      * @param walletIdInTheDevice the identifier of the wallet to rename
      * @param newName             the new name for the wallet
-     *
      * @throws CantRenameWalletException
      */
     public void renameWallet(UUID walletIdInTheDevice, String newName) throws CantRenameWalletException {

@@ -19,4 +19,13 @@ public class SessionConstant {
     public static final String LAST_REQUEST_CONTACT = "LastRequestSelected";
     public static final String TRANSACTION_DETAIL_ID = "TransactionDetailId";
     public static final String CONTACT_ACCOUNT_NAME = "setAccountName";
+    public static final String BLOCKCHANIN_TYPE = "blockchainNetworkType";
+    public static final String NOTIFICATION_ENABLED = "NotificationEnabled";
+    public static final String BLOCKCHAIN_DOWNLOAD_ENABLED = "BlockchainDownloadEnabled";
+    public static final String FEE_LEVEL = "Feelevel";
+    public static final String FIAT_CURRENCY = "FiatCurrency";
+    public static final String SETTINGS_LOADED = "SettingLoaded";
+    public static final String PRESENTATION_HELP_ENABLED = "PresentationHelpEnabled";
+    public static final String LOSS_PROTECTED_ENABLED = "LossProtectedEnabled";
+
 }

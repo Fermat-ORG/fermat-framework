@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
@@ -67,6 +68,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EncodeException;
@@ -132,6 +135,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      */
     private NodeProfile nodeProfile;
 
+    private ConnectivityManager connectivityManager;
+
     /*
      * Constructor
      */
@@ -142,7 +147,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                                 final NetworkClientCommunicationPluginRoot pluginRoot       ,
                                                 final Integer                              nodesListPosition,
                                                 final boolean                              isExternalNode   ,
-                                                final NodeProfile                          nodeProfile      ){
+                                                final NodeProfile                          nodeProfile      ,
+                                                ConnectivityManager connectivityManager){
 
         URI uri = null;
         try {
@@ -164,6 +170,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         this.activeCalls            = new CopyOnWriteArrayList<>();
         this.container              = ClientManager.createClient();
+        this.connectivityManager = connectivityManager;
 
         this.networkClientCommunicationChannel = new NetworkClientCommunicationChannel(this, isExternalNode);
     }
@@ -195,14 +202,14 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                         return Boolean.FALSE;
 
                     }else{
-                        return tryToReconnect;
+                        return closeReason.getCloseCode() != CloseReason.CloseCodes.NORMAL_CLOSURE;
                     }
 
                 }else {
                     System.out.println("##########################################################################");
                     System.out.println("#  NetworkClientCommunicationConnection  - Disconnect -> Reconnecting... #");
                     System.out.println("##########################################################################");
-                    return tryToReconnect;
+                    return closeReason.getCloseCode() != CloseReason.CloseCodes.NORMAL_CLOSURE;
                 }
             }
 
@@ -242,9 +249,23 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                         e.printStackTrace();
                     }
 
+
                     System.out.println("###############################################################################");
                     System.out.println("#  NetworkClientCommunicationConnection  - Connect Failure -> Reconnecting... #");
                     System.out.println("###############################################################################");
+
+                    try {
+                        if (!connectivityManager.isOnline()) {
+                            System.out.println("###############################################################################");
+                            System.out.println("#  Interrumpiendo hilo de reconctado, no sirve tener algo intentando conectarse si hay un evento que te avisa eso #");
+                            System.out.println("###############################################################################");
+                            tryToReconnect = false;
+
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
                     return tryToReconnect;
                 }
             }
@@ -261,7 +282,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             container.asyncConnectToServer(networkClientCommunicationChannel, uri);
 
         } catch (Exception e) {
-            System.out.println(e.getCause());
+            e.printStackTrace();
+//            System.out.println(e.getCause());
         }
     }
 
@@ -290,6 +312,10 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setTryToReconnect(boolean tryToReconnect) {
+        this.tryToReconnect = tryToReconnect;
     }
 
     public boolean isConnected() {
@@ -860,6 +886,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         System.out.println("CommunicationsNetworkClientConnection - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_LOST");
     }
 
+    //TODO: Esto no tiene sentido, si el web socket ya está abierto porqué hacen un pedido rest preguntando si el actor está en el mismo nodo..
     private boolean isActorOnlineInTheSameNode(final ActorProfile actorProfile) {
 
         try {
@@ -1035,7 +1062,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         return nodeProfile;
     }
 
-    public void close() throws IOException {
-        networkClientCommunicationChannel.getClientConnection().close();
+    public synchronized void close() throws IOException {
+        if (networkClientCommunicationChannel.getClientConnection().isOpen())
+            networkClientCommunicationChannel.getClientConnection().close();
     }
 }

@@ -55,14 +55,6 @@ public class CurrencyMatchingImp implements CurrencyMatching {
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("CurrencyMatchingImp{")
-                .append("originTransactionId='").append(originTransactionId)
-                .append('\'')
-                .append(", currencyGiving=").append(currencyGiving)
-                .append(", currencyReceiving=").append(currencyReceiving)
-                .append(", amountGiving=").append(amountGiving)
-                .append(", amountReceiving=").append(amountReceiving)
-                .append('}').toString();
+        return "CurrencyMatchingImp{" + "originTransactionId='" + originTransactionId + '\'' + ", currencyGiving=" + currencyGiving + ", currencyReceiving=" + currencyReceiving + ", amountGiving=" + amountGiving + ", amountReceiving=" + amountReceiving + '}';
     }
 }

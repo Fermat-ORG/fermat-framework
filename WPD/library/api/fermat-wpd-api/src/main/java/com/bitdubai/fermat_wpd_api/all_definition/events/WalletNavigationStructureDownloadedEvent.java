@@ -15,7 +15,7 @@ public class WalletNavigationStructureDownloadedEvent extends AbstractWPDEvent {
     private String filename;
     private String walletPublicKey;
 
-    public WalletNavigationStructureDownloadedEvent(EventType eventType){
+    public WalletNavigationStructureDownloadedEvent(EventType eventType) {
         super(eventType);
     }
 
@@ -56,7 +56,7 @@ public class WalletNavigationStructureDownloadedEvent extends AbstractWPDEvent {
         return walletPublicKey;
     }
 
-    public void setWalletPublicKey(String walletPublicKey){
-        this.walletPublicKey=walletPublicKey;
+    public void setWalletPublicKey(String walletPublicKey) {
+        this.walletPublicKey = walletPublicKey;
     }
 }

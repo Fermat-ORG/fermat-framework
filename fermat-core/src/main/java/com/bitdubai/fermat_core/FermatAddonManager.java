@@ -153,7 +153,7 @@ public final class FermatAddonManager {
 
         if (!abstractAddon.isStarted()) {
             throw new UnexpectedServiceStatusException(
-                    new StringBuilder().append("Service Status: ").append(abstractAddon.getStatus()).append(" || ").append(abstractAddon.getAddonVersionReference().toString()).toString(),
+                    "Service Status: " + abstractAddon.getStatus() + " || " + abstractAddon.getAddonVersionReference().toString(),
                     "The addon cannot be stopped because is not started."
             );
         }
@@ -182,7 +182,7 @@ public final class FermatAddonManager {
 
         if (!abstractAddon.isStarted()) {
             throw new UnexpectedServiceStatusException(
-                    new StringBuilder().append("Service Status: ").append(abstractAddon.getStatus()).append(" || ").append(abstractAddon.getAddonVersionReference().toString()).toString(),
+                    "Service Status: " + abstractAddon.getStatus() + " || " + abstractAddon.getAddonVersionReference().toString(),
                     "The addon cannot be paused because is not started."
             );
         }
@@ -211,7 +211,7 @@ public final class FermatAddonManager {
 
         if (!abstractAddon.isPaused()) {
             throw new UnexpectedServiceStatusException(
-                    new StringBuilder().append("Service Status: ").append(abstractAddon.getStatus()).append(" || ").append(abstractAddon.getAddonVersionReference().toString()).toString(),
+                    "Service Status: " + abstractAddon.getStatus() + " || " + abstractAddon.getAddonVersionReference().toString(),
                     "The addon cannot be resumed because is not paused."
             );
         }

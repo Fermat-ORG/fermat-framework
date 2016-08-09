@@ -212,13 +212,15 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
             final List<CryptoBrokerIdentity> list = new ArrayList<>();
-            for (DatabaseTableRecord record : table.getRecords())
+            for (DatabaseTableRecord record : table.getRecords()) {
                 list.add(getIdentityFromRecord(record));
+                System.out.println("LOSTWOOD_BROKER_IDENTITY:" + list);
+            }
             return list;
         } catch (final CantGetCryptoBrokerIdentityProfileImageException e) {
             throw new CantListCryptoBrokerIdentitiesException(e.getMessage(), e, "Crypto Broker Identity", "Problem trying to get the profile image of the identity.");
         } catch (final CantLoadTableToMemoryException e) {
-            throw new CantListCryptoBrokerIdentitiesException(e.getMessage(), e, "Crypto Broker Identity", new StringBuilder().append("Cant load ").append(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantListCryptoBrokerIdentitiesException(e.getMessage(), e, "Crypto Broker Identity", "Cant load " + CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME + " table in memory.");
         } catch (final CantGetCryptoBrokerIdentityPrivateKeyException e) {
             throw new CantListCryptoBrokerIdentitiesException(e.getMessage(), e, "Crypto Broker Identity", "Can't get private key.");
         } catch (final InvalidParameterException e) {
@@ -238,7 +240,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
                 record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME, exposureLevel);
                 table.updateRecord(record);
             } else
-                throw new IdentityNotFoundException(new StringBuilder().append("publicKey: ").append(publicKey).toString(), "Cannot find an Identity with that publicKey.");
+                throw new IdentityNotFoundException("publicKey: " + publicKey, "Cannot find an Identity with that publicKey.");
         } catch (final CantUpdateRecordException e) {
             throw new CantChangeExposureLevelException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
         } catch (final CantLoadTableToMemoryException e) {
@@ -255,7 +257,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             if (!records.isEmpty())
                 return getIdentityFromRecord(records.get(0));
             else
-                throw new IdentityNotFoundException(new StringBuilder().append("publicKey: ").append(publicKey).toString(), "Cannot find a Broker Identity with that publicKey.");
+                throw new IdentityNotFoundException("publicKey: " + publicKey, "Cannot find a Broker Identity with that publicKey.");
 
         } catch (CantGetCryptoBrokerIdentityProfileImageException |
                 CantGetCryptoBrokerIdentityPrivateKeyException |
@@ -272,7 +274,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -297,7 +299,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PRIVATE_KEYS_FILE_NAME).append("_").append(publicKey).toString(),
+                    CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -314,7 +316,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -331,7 +333,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PRIVATE_KEYS_FILE_NAME).append("_").append(publicKey).toString(),
+                    CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -353,7 +355,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             table.loadToMemory();
             return table.getRecords().size() > 0;
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantCreateNewDeveloperException(em.getMessage(), em, "Crypto Broker Identity", new StringBuilder().append("Cant load ").append(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME).append(" table in memory.").toString());
+            throw new CantCreateNewDeveloperException(em.getMessage(), em, "Crypto Broker Identity", "Cant load " + CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME + " table in memory.");
         }
     }
 
@@ -408,13 +410,13 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         try {
             this.pluginFileSystem.deleteBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PRIVATE_KEYS_FILE_NAME).append("_").append(publicKey).toString(),
+                    CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT);
 
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );

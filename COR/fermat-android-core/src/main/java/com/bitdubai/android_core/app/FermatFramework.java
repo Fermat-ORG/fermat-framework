@@ -333,6 +333,10 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>, 
         }).start();
     }
 
+    public void reconnect(){
+        servicesHelpers.getClientSideBrokerServiceAIDL().connect();
+    }
+
     public synchronized void setFermatRunning(boolean fermatRunning) {
         Log.i(TAG, new StringBuilder().append("Fermat running: ").append(fermatRunning).toString());
         this.fermatRunning = fermatRunning;

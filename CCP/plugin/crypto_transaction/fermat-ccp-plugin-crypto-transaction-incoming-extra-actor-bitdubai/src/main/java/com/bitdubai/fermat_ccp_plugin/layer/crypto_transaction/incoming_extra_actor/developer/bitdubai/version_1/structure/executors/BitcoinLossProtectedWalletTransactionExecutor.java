@@ -8,6 +8,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.excep
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CryptoAddressBookRecordNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
@@ -98,6 +99,7 @@ public class BitcoinLossProtectedWalletTransactionExecutor implements com.bitdub
     private BitcoinLossProtectedWalletTransactionRecord generateBitcoinTransaction(final Transaction<CryptoTransaction> transaction, final TransactionType transactionType) throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.exceptions.CantGenerateTransactionException {
 
         try {
+             //bitcoinWalletTransactionRecord.setFeeOrigin(FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
             CryptoTransaction cryptoTransaction = transaction.getInformation();
 
             CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTransaction.getAddressTo());
@@ -119,7 +121,10 @@ public class BitcoinLossProtectedWalletTransactionExecutor implements com.bitdub
             bitcoinWalletTransactionRecord.setActorToPublicKey(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
             bitcoinWalletTransactionRecord.setActorToType(cryptoAddressBookRecord.getDeliveredToActorType());
             bitcoinWalletTransactionRecord.setBlockchainNetworkType(cryptoTransaction.getBlockchainNetworkType());
+            bitcoinWalletTransactionRecord.setFeeOrigin(FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
             bitcoinWalletTransactionRecord.setCryptoCurrency(CryptoCurrency.BITCOIN);
+
+            bitcoinWalletTransactionRecord.setTotal(cryptoTransaction.getCryptoAmount());
 
             return bitcoinWalletTransactionRecord;
 

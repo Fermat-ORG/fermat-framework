@@ -415,6 +415,7 @@ public class BrowserTabFragment
                     } else {
                         cryptoBrokerCommunityInformationList.addAll((ArrayList) result[0]);
                         adapter.notifyItemRangeInserted(offset, cryptoBrokerCommunityInformationList.size() - 1);
+                        adapter.notifyDataSetChanged();
                     }
 
                 }

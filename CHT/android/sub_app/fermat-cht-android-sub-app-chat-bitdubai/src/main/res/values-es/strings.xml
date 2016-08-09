@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <string name="app_name">CHT</string>
+    <string name="activity_contacts_list">Lista de Contactos</string>
+    <string name="activity_contact_detail">Detalle de Contacto</string>
+    <string name="contacts_list_search_results_title">Lista de Contactos Buscar por \"%s\"</string>
+    <string name="app_description">---</string>
+    <string name="imageview_description">Imagen en miniatura de contacto</string>
+    <string name="address_button_description">Ver dirección</string>
+    <string name="menu_search">Búsqueda</string>
+    <string name="menu_add_contact">Agregar contacto</string>
+    <string name="menu_open_chat">Abrir chat</string>
+    <string name="menu_create_group">Crear grupo</string>
+    <string name="menu_create_broadcasting">Crear difusión</string>
+    <string name="menu_delete_all_chats">Borrar todos los chats</string>
+    <string name="menu_switch_profile">Cambiar de perfil</string>
+    <string name="menu_settings">Reporte de Errores</string>
+    <string name="menu_block_contact">Bloquear Contacto</string>
+    <string name="cht_chat_body_broadcast_step_one">Cuerpo del paso uno del dialogo de difusión de chat</string>
+    <string name="cht_chat_subtitle_broadcast_step_one">Subtítulo del paso uno del dialogo de difusión de chat</string>
+    <string name="cht_chat_footer_broadcast_step_one">Piecera del paso uno del dialogo de difusión de chat</string>
+    <string name="menu_view_contact">Ver contacto</string>
+    <string name="menu_clean_chat">Limpiar Chat</string>
+    <string name="menu_send_chat_email">Enviar chat por Email</string>
+    <string name="menu_edit_contact">Editar contact</string>
+    <string name="menu_delete_chat">Borrar chat</string>
+    <string name="menu_delete_contact">Borrar contact</string>
+    <string name="no_contacts">No se encontraron contactos</string>
+    <string name="no_contact_selected">No hay contacto seleccionado</string>
+    <string name="cht_search_hint">Buscar...</string>
+    <string name="defaulttext">Escribir mensaje</string>
+    <string name="cht_chat_subtitle">Bienvenido a P2P Chat.</string>
+    <string name="cht_chat_body">Si usted no tiene ninguna identidad registrada, favor registre una en nuestro P2P Chat Identity.</string>
+    <string name="cht_chat_footer">P2P Chat</string>
+    <string name="cht_no_chat">No hay chats</string>
+    <string name="cht_contact_select">Por favor, vaya a Contactos y seleccione un contacto para comenzar un P2P Chat.</string>
+    <string name="cht_contact_select1">Por favor, vaya a Contactos y seleccione</string>
+    <string name="cht_contact_select2">un contacto para comenzar un P2P Chat.</string>
+    <string name="cht_contact_list_select1">Para agregar contactos, vaya a P2P Chat</string>
+    <string name="cht_contact_list_select2">Community y envíe una solicitud</string>
+    <string name="cht_contact_list_select3">de conexión a otro usuario o amigo.</string>
+    <string name="cht_dialog_welcome">¡Bienvenido!</string>
+    <string name="cht_dialog_subtitle">Bienvenido a P2P Chat</string>
+    <string name="cht_dialog_content">Si usted no tiene ninguna identidad registrada, por favor registre una en nuestro P2P Chat Identity.</string>
+    <string name="cht_dialog_dont_show">No mostrar de nuevo</string>
+    <string name="cht_dialog_button_close">OK</string>
+    <string name="cht_dialog_add_connection">Agregar conexiones</string>
+    <string name="cht_yes">Sí</string>
+    <string name="cht_no">No</string>
+    <string name="cht_last_time">Ultima vez </string>
+    <string name="cht_online">en línea</string>
+    <string name="cht_typing">escribiendo...</string>
+    <string name="cht_today">hoy a </string>
+    <string name="cht_yesterday">ayer a </string>
+
+    <string name="cht_select">Seleccione</string>
+    
+    <string name="cht_broadcaster_simple_text">DIFUSION SIMPLE</string>
+    <string name="cht_broadcaster_scheduled_text">DIFUSION PROGRAMADA</string>
+    <string name="cht_broadcaster_button_text">Crear</string>
+    <string name="cht_broadcaster_recipients">AGREGAR CONTACTOS A LISTA DE DIFUSION</string>
+    <string name="cht_broadcaster_simple_contact_hint">Escriba nombre de contacto</string>
+    <string name="cht_broadcaster_simple_name_hint">Escriba nombre de la difusión</string>
+    <string name="cht_broadcaster_add_recipients">Agregar contactos a lista de difusión</string>
+    <string name="cht_broadcaster_scheduled_text2">Agregar contactos a lista de difusión</string>
+    <string name="cht_broadcaster_day_programming">PROGRAMACION</string>
+    <string name="cht_broadcaster_name_hint">Escribir nombre de difusión</string>
+    
+    <string name="cht_contact_edit_text_hint">Alias</string>
+
+    <string name="cht_no_contacts">No hay contactos</string>
+
+    <string name="cht_send_error_text1">Favor, escriba un email para enviarnos un reporte de errores para ayudar a solucionar el problema.</string>
+    <string name="cht_send_error_text2">...O presione prolongadamente en el campo de texto vacio para cargar el log y luego copie y pegue en otro lugar desde el cual desea enviarlo.</string>
+    <string name="cht_send_error_hint">Escriba email de personal de soporte</string>
+    <string name="cht_send_error_hint_hold">Deje presionado aquí</string>
+
+
+    <!-- Used for the AlphabetIndexer in ContactsListFragment to provide quick navigation by
+         alphabet using ListView fast scroll. -->
+    <string name="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+
+    <!-- When using ContactsContract.Contacts#CONTENT_FILTER_URI to search contacts, a match occurs
+         when using a number of different fields, such as name, e-mail address, address, phone
+         number, etc. When a match occurs that is not the name, there is currently no way to tell
+         which other field was matched. This string is displayed in the secondary display text in
+         ContactsListFragment when a search query match occurs that is not the display name.
+         -->
+    <string name="search_match_other">Coincidir otros campos</string>
+
+    <string name="no_address">No se encontraron direcciones</string>
+    <string name="no_intent_found">No hay aplicación para manejar esta acción</string>
+    <string name="action_search">Buscar</string>
+    <string name="status">Estatus</string>
+    <string name="profile_status">Disponible</string>
+
+    <string name="drawer_open">Abrir panel de navegación</string>
+    <string name="drawer_close">Cerrar panel de navegación</string>
+    <string name="your_phone">Su teléfono</string>
+    <string name="photos">Fotos</string>
+    <string name="select_file">Seleccione una archivo</string>
+    <string name="your_code">Su código</string>
+    <string name="choose_country">Elija un país</string>
+
+    <string name="text_choose_country">Elija un país</string>
+    <string name="text_user_info">Enviaremos un mensaje de texto con un código de confirmación a tu número telefónico</string>
+    <string name="clear_history_menu">Limpiar historial</string>
+    <string name="delete_chat_menu">Borrar chat</string>
+    <string name="mute_notification_menu">Silenciar notificaciones</string>
+    <string name="logout_navigation_item">Salir</string>
+    <string name="action_ok">action_ok</string>
+    <string name="set_first_last_name">Ingrese su nombre y apellido</string>
+    <string name="first_name_hint">Nombre (requerido)</string>
+    <string name="last_name_hint">Apellido (opcional)</string>
+    <string name="cancel_registration">Cancelar registro</string>
+    <string name="your_name_fragment_title">Su nombre</string>
+    <string name="we_send_phone_number_test">Enviamos un mensaje de texto con un código de confirmación a tu número telefónico</string>
+    <string name="we_call_you_test">We will call to your after 2:00</string>
+    <string name="text_take_photo">Take photo</string>
+    <string name="text_gallery">Galería</string>
+    <string name="text_video">Vídeo</string>
+    <string name="text_file">Archivo</string>
+    <string name="text_location">Ubicación</string>
+    <string name="text_internal_storage">Almacenamiento interno</string>
+    <string name="text_root">/</string>
+    <string name="text_system_root">Raíz del sistema</string>
+    <string name="text_to_send_images_without_compression">To send images without compression</string>
+    <string name="text_nearest_checkpoints">Nearest checkpoints</string>
+    <string name="text_map">Map</string>
+    <string name="text_satellite">Satellite</string>
+    <string name="text_hybrid">Hybrid</string>
+    <string name="text_send_selected_location">Send your current location</string>
+    <string name="text_test_number">100000</string>
+    <string name="new_message_fragment_title">New message</string>
+    <string name="select_chat_fragment_title">Select chat</string>
+    <string name="copy_message_toast">Copiado: </string>
+    <string name="cht_notif_new_msg_title">Chat - Nuevo Mensaje</string>
+    <string name="cht_notif_new_msg_content">Tiene un nuevo mensaje en Chat.</string>
+
+    <string name="text_web_search">web search</string>
+    <string name="text_find_images">FIND IMAGES</string>
+    <string name="text_find_gifs">FIND GIFS</string>
+    <string name="text_giphy">giphy</string>
+    <string name="text_cancel">CANCEL</string>
+    <string name="text_send">SEND</string>
+
+    <string name="online">en línea</string>
+    <string name="last_seen">visto por última vez</string>
+    <string name="ls_recently">visto recientemente</string>
+    <string name="ls_week_ago">visto hace una semana</string>
+    <string name="ls_month_ago">visto hace un mes</string>
+    <string name="no_messages_here">No hay mensajes aquí aún…</string>
+
+    <string name="pull_to_refresh_pull_label">Halar para refrescar…</string>
+    <string name="pull_to_refresh_release_label">Soltar para refrescar…</string>
+    <string name="pull_to_refresh_refreshing_label">Cargando…</string>
+    <string name="pull_to_refresh_tap_label">Tocar para refrescar…</string>
+    <string name="text_no_result">No hay resultado</string>
+    <string name="share_user_menu_text">Compartir</string>
+    <string name="delete_user_menu_text">Borrar</string>
+    <string name="block_user_menu_text">Bloquear</string>
+    <string name="file_loaded">Archivo cargado.</string>
+    <string name="save_to_message">"On your device no programs to open a file of this type. The file is saved to the address "</string>
+    <string name="message_context_menu_header">Mensaje</string>
+    <string name="message_context_menu_forward">Continuar</string>
+    <string name="message_context_menu_delete">Borrar</string>
+    <string name="file_not_found">File not found</string>
+    <string name="no_chats_message">No hay chats aquí aún…</string>
+
+    <string name="gpsDisabledDialogMessage">Favor habititar servicio de localización en su dispositivo e intente de nuevo</string>
+    <string name="cancel_button">Cancelar</string>
+    <string name="openSettings_button">Abrir configuración</string>
+    <string name="photos_number_text_size">14</string>
+    <string name="selected_gif_count_text_size">14</string>
+    <string name="check_internet_message">Revise su conexión de internet</string>
+    <string name="wrong_number">Wrong number?</string>
+    <string name="code_digits">0123456789+</string>
+    <string name="code_plus">+</string>
+    <string name="username_title">Usuario</string>
+    <string name="mobile">Mobile</string>
+    <string name="no_internet_toast">Sin conexión a internet.\nFavor, revise su conexión e intente nuevamente</string>
+    <string name="private_chat">privado</string>
+    <string name="goup_chat">grupo</string>
+    <string name="members">" miembros"</string>
+    <string name="title_error">Title error</string>
+    <string name="image_processing">Image processing</string>
+    <string name="please_wait">Favor espere</string>
+    <string name="chat_list">chatList</string>
+    <string name="loading">Cargando</string>
+    <string name="error_dialog_title">Error</string>
+    <string name="invalid_key">The key is invalid</string>
+    <string name="ok_button">OK</string>
+    <string name="not_registered_key">The key is not registered in the system</string>
+    <string name="unexpected_code">The code is unexpected</string>
+    <string name="code_empty">The confirmation code is empty</string>
+    <string name="message_dialog_title">Message</string>
+    <string name="no_file_manager">You don\'t have any file manager for choosing file</string>
+    <string name="first_name_invalid">The first name is invalid</string>
+    <string name="flood">The code has been sent to your phone wait little bit please</string>
+    <string name="last_name_invalid">The last name is invalid</string>
+    <string name="phone_code_empty">The phone code is empty</string>
+    <string name="code_expired">The confirmation code has expired</string>
+    <string name="code_invalid">The phone code is invalid</string>
+    <string name="phone_number_invalid">The phone number is invalid</string>
+    <string name="phone_number_in_use">The phone number is already in use</string>
+    <string name="phone_number_not_used">The phone number is not yet being used</string>
+    <string name="authorization_expired">The authorization has expired</string>
+    <string name="authorization_invalidate">The authorization has been invalidated \n</string>
+    <string name="user_deleted">The user has been deleted/deactivated</string>
+    <string name="we_send_sms_message">"We send on SMS with an activation code to your phone "</string>
+    <string name="psease_confirm_phone">Please confirm your country code and enter your phone number.</string>
+    <string name="of">" of "</string>
+    <string name="message_photo">Photo</string>
+    <string name="message_audio">Audio</string>
+    <string name="message_contact">Contact</string>
+    <string name="message_document">Document</string>
+    <string name="message_geopoint">GeoPoint</string>
+    <string name="message_sticker">Sticker</string>
+    <string name="message_video">Video</string>
+    <string name="message_unknown">Unknown</string>
+    <string name="forwarded_message_from">"Forwarded message \nFrom "</string>
+    <string name="forwarded_message_from_id">"Forwarded message \nFrom ID: "</string>
+    <string name="duration">", duration: "</string>
+    <string name="unsupported">Unsupported</string>
+</resources>

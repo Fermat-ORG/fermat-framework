@@ -12,7 +12,7 @@ import java.util.List;
  * Created by nelsonalfo on 19/04/16.
  */
 public interface EarningExtractor {
-    void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey, long fee, FeeOrigin feeOrigin) throws CantExtractEarningsException;
+    void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey, String brokerIdentityPublicKey, long fee, FeeOrigin feeOrigin) throws CantExtractEarningsException;
 
     Platforms getPlatform();
 

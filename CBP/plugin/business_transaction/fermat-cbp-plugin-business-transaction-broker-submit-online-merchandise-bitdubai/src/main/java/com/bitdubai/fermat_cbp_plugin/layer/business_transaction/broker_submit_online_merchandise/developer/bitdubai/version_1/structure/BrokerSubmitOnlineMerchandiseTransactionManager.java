@@ -35,8 +35,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_o
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.exceptions.CantGetCryptoAmountException;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -118,14 +116,14 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             final String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.CUSTOMER_CURRENCY_QUANTITY);
 
             if (clauseValue != null) {
-                final Number number = DecimalFormat.getInstance().parse(clauseValue);
+                final double number = Double.valueOf(clauseValue);
                 if (merchandiseCurrency == CryptoCurrency.BITCOIN) {
-                    return (long) BitcoinConverter.convert(number.doubleValue(), BitcoinConverter.Currency.BITCOIN, BitcoinConverter.Currency.SATOSHI);
+                    return (long) BitcoinConverter.convert(number, BitcoinConverter.Currency.BITCOIN, BitcoinConverter.Currency.SATOSHI);
 
                 } else if (merchandiseCurrency == CryptoCurrency.FERMAT) {
-                    return (long) BitcoinConverter.convert(number.doubleValue(), BitcoinConverter.Currency.FERMAT, BitcoinConverter.Currency.SATOSHI);
+                    return (long) BitcoinConverter.convert(number, BitcoinConverter.Currency.FERMAT, BitcoinConverter.Currency.SATOSHI);
                 } else {
-                    return number.longValue();
+                    return (long) number;
                 }
             }
 
@@ -133,8 +131,6 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
 
         } catch (CantGetListClauseException e) {
             throw new CantGetCryptoAmountException(e, "Getting the broker crypto amount", "Cannot get the clauses list");
-        } catch (ParseException e) {
-            throw new CantGetCryptoAmountException(e, "Getting the broker crypto amount", "Cannot parse the clauseValue using DecimalFormat.parse()");
         }
     }
 
@@ -186,7 +182,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             CustomerBrokerContractSale saleContract = this.contractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
 
             if (saleContract == null) {
-                throw new CantSubmitMerchandiseException(new StringBuilder().append("The CustomerBrokerContractSale with the contractHash\n").append(contractHash).append("\nis null").toString());
+                throw new CantSubmitMerchandiseException("The CustomerBrokerContractSale with the contractHash\n" + contractHash + "\nis null");
             }
 
             final CustomerBrokerSaleNegotiation saleNegotiation = getCustomerBrokerSaleNegotiation(saleContract.getNegotiatiotId());

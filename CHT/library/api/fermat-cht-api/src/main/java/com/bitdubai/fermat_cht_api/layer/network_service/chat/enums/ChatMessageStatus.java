@@ -21,10 +21,10 @@ public enum ChatMessageStatus {
     /**
      * Definition types
      */
-    CREATED_CHAT         ("CREATED"),
-    SENT_CHAT           ("SENT"),
-    DELIVERED_CHAT      ("DELIVERED"),
-    READ_CHAT           ("READ");
+    CREATED_CHAT("CREATED"),
+    SENT_CHAT("SENT"),
+    DELIVERED_CHAT("DELIVERED"),
+    READ_CHAT("READ");
 
     /**
      * Represent the code of the message status
@@ -45,7 +45,9 @@ public enum ChatMessageStatus {
      *
      * @return String that represent of the message status
      */
-    public String getCode()   { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
     /**
      * Return the enum by the code

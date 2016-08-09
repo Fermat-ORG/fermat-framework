@@ -53,6 +53,6 @@ public class CatalogItemInformation implements com.bitdubai.fermat_wpd_api.layer
         stringBuilder.append(" - Status: " + getInstallationStatus(getCatalogItemId(CatalogItems.SKIN)));
         stringBuilder.append(System.lineSeparator());
 
-        return  stringBuilder.toString();
+        return stringBuilder.toString();
     }
 }

@@ -106,20 +106,20 @@ public class SettingsFeeManagementFragment
         radioButtonNormal = (RadioButton) layout.findViewById(R.id.cbw_radio_button_normal);
         radioButtonFast = (RadioButton) layout.findViewById(R.id.cbw_radio_button_fast);
 
-        feeMinerAmount.setText(new StringBuilder().append(satoshiToBtcFormat(BitcoinFee.SLOW.getFee())).append("BTC").toString());
+        feeMinerAmount.setText(satoshiToBtcFormat(BitcoinFee.SLOW.getFee()) + " " + getResources().getString(R.string.btc));
         bitcoinFee = BitcoinFee.SLOW.getFee();
 
         radioButtonGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.cbw_radio_button_slow) {
-                    feeMinerAmount.setText(new StringBuilder().append(" ").append(satoshiToBtcFormat(BitcoinFee.SLOW.getFee())).append(" BTC").toString());
+                    feeMinerAmount.setText(" " + satoshiToBtcFormat(BitcoinFee.SLOW.getFee()) + " " + getResources().getString(R.string.btc));
                     bitcoinFee = BitcoinFee.SLOW.getFee();
                 } else if (checkedId == R.id.cbw_radio_button_normal) {
-                    feeMinerAmount.setText(new StringBuilder().append(" ").append(satoshiToBtcFormat(BitcoinFee.NORMAL.getFee())).append(" BTC").toString());
+                    feeMinerAmount.setText(" " + satoshiToBtcFormat(BitcoinFee.NORMAL.getFee()) + " " + getResources().getString(R.string.btc));
                     bitcoinFee = BitcoinFee.NORMAL.getFee();
                 } else if (checkedId == R.id.cbw_radio_button_fast) {
-                    feeMinerAmount.setText(new StringBuilder().append(" ").append(satoshiToBtcFormat(BitcoinFee.FAST.getFee())).append(" BTC").toString());
+                    feeMinerAmount.setText(" " + satoshiToBtcFormat(BitcoinFee.FAST.getFee()) + " " + getResources().getString(R.string.btc));
                     bitcoinFee = BitcoinFee.FAST.getFee();
                 }
             }
@@ -158,7 +158,7 @@ public class SettingsFeeManagementFragment
         if (feeSettings != null) {
             feeOriginSpinner.setSelection(dataAdapter.getPosition(feeSettings.getFeeOrigin().getCode()));
             blockchainNetworkSpinner.setSelection(dataAdapter.getPosition(feeSettings.getBlockchainNetworkType().getCode()));
-            feeMinerAmount.setText(new StringBuilder().append(satoshiToBtcFormat(feeSettings.getBitcoinFee().getFee())).append(" BTC").toString());
+            feeMinerAmount.setText(satoshiToBtcFormat(feeSettings.getBitcoinFee().getFee()) + " " + getResources().getString(R.string.btc));
             selectRadioButtonsValue(feeSettings.getBitcoinFee().getFee());
         }
 
@@ -211,7 +211,7 @@ public class SettingsFeeManagementFragment
             moduleManager.persistSettings(appSession.getAppPublicKey(), feeSettings);
 
         } catch (FermatException ex) {
-            Toast.makeText(SettingsFeeManagementFragment.this.getActivity(), "There was a problem saving your settings", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsFeeManagementFragment.this.getActivity(), getResources().getString(R.string.error_settings), Toast.LENGTH_SHORT).show();
 
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,

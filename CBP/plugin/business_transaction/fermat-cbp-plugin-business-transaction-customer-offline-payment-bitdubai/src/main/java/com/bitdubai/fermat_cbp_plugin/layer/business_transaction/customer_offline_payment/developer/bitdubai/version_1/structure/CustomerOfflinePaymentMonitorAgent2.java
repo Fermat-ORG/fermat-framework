@@ -15,6 +15,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
@@ -24,13 +25,16 @@ import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.AbstractBusinessTransactionAgent;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_offline_payment.events.CustomerOfflinePaymentConfirmed;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
@@ -184,11 +188,8 @@ public class CustomerOfflinePaymentMonitorAgent2
 
                     System.out.println("CUSTOMER_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
-                    if (customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
-                        contractTransactionStatus = customerOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(contractHash);
-                        //TODO: analyze what we need to do here.
+                    if (!customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
 
-                    } else {
                         CustomerBrokerContractSale saleContract = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
 
                         //If the contract is null, I cannot handle with this situation
@@ -203,6 +204,8 @@ public class CustomerOfflinePaymentMonitorAgent2
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
                             customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
                             raisePaymentConfirmationEvent();
+                            closeNegotiation(customerBrokerPurchaseNegotiation);
+
 
                             System.out.println("OFFLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - Update Contract Status: PAYMENT_SUBMIT");
                             System.out.println("OFFLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - New Business Transaction Status: PENDING_OFFLINE_PAYMENT_CONFIRMATION");
@@ -309,5 +312,24 @@ public class CustomerOfflinePaymentMonitorAgent2
         CustomerOfflinePaymentConfirmed customerOnlinePaymentConfirmed = (CustomerOfflinePaymentConfirmed) fermatEvent;
         customerOnlinePaymentConfirmed.setSource(EventSource.CUSTOMER_OFFLINE_PAYMENT);
         eventManager.raiseEvent(customerOnlinePaymentConfirmed);
+    }
+
+    private void closeNegotiation(CustomerBrokerSaleNegotiation saleNegotiation) throws UnexpectedResultReturnedFromDatabaseException {
+
+        try {
+
+            if(saleNegotiation.getStatus().equals(NegotiationStatus.WAITING_FOR_CLOSING)) {
+                System.out.println("OFFLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - CLOSE NEGOTIATION" +
+                        "\n - NegotiationId = "+saleNegotiation.getNegotiationId());
+                //CLOSE SALE NEGOTIATION
+                customerBrokerSaleNegotiationManager.closeNegotiation(saleNegotiation.getNegotiationId());
+            }
+
+        } catch (CantUpdateCustomerBrokerSaleException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    e,
+                    "Close Negotiation",
+                    "Error Closing negotiation");
+        }
     }
 }

@@ -545,7 +545,7 @@ public class CryptoCustomerActorDao {
 
         } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantCheckIfExistsException(e, new StringBuilder().append("brokerPublicKey: ").append(brokerPublicKey).append(" - customerPublicKey: ").append(customerPublicKey).toString(), "Error checking if broker extra DATA exists.");
+            throw new CantCheckIfExistsException(e, "brokerPublicKey: " + brokerPublicKey + " - customerPublicKey: " + customerPublicKey, "Error checking if broker extra DATA exists.");
         }
     }
 
@@ -567,7 +567,7 @@ public class CryptoCustomerActorDao {
 
         } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantCheckIfExistsException(e, new StringBuilder().append("brokerPublicKey: ").append(brokerPublicKey).append(" - customerPublicKey: ").append(customerPublicKey).toString(), "Error checking if broker extra data QUOTES exists.");
+            throw new CantCheckIfExistsException(e, "brokerPublicKey: " + brokerPublicKey + " - customerPublicKey: " + customerPublicKey, "Error checking if broker extra data QUOTES exists.");
         }
     }
 
@@ -581,7 +581,7 @@ public class CryptoCustomerActorDao {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(this.CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    this.CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -601,7 +601,7 @@ public class CryptoCustomerActorDao {
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(this.CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    this.CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -621,12 +621,12 @@ public class CryptoCustomerActorDao {
         try {
             this.pluginFileSystem.deleteBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(this.CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT);
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    new StringBuilder().append(this.CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME).append("_").append(publicKey).toString(),
+                    CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );

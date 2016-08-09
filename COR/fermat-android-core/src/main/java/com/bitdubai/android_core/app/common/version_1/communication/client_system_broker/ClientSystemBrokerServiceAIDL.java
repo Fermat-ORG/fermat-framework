@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.net.LocalSocket;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.DeadObjectException;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -257,8 +258,11 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             } catch (TransactionTooLargeException t1) {
                 Log.e(TAG, new StringBuilder().append("Method request too much data on the main thread, method=").append(method.getName()).append(" at pluginVersionReference=").append(pluginVersionReference.toString3()).toString());
                 fermatModuleObjectWrapper = new FermatModuleObjectWrapper(new LargeWorkOnMainThreadException(proxy, method, t1));
+            } catch (DeadObjectException e) {
+                Log.e(TAG, "DeadObjectException");
+                e.printStackTrace();
             } catch (RemoteException e) {
-                Log.e(TAG,"Explota acá");
+                Log.e(TAG, "Explota acá");
                 e.printStackTrace();
             } catch (RuntimeException e) {
                 Log.e(TAG, new StringBuilder().append("ERROR: Some of the parameters not implement Serializable interface in interface ").append(proxy.getClass().getInterfaces()[0]).append(" in method:").append(method.getName()).toString());
@@ -266,6 +270,9 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } catch (DeadObjectException e){
+            Log.e(TAG,"DeadObjectException");
+            e.printStackTrace();
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -278,13 +285,12 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     @Override
     public boolean isFermatBackgroundServiceRunning() throws FermatPlatformServiceNotConnectedException {
         try {
-            if (iServerBrokerService != null)
+            if (iServerBrokerService != null && mPlatformServiceIsBound)
                 return iServerBrokerService.isFermatSystemRunning();
         } catch (RemoteException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new FermatPlatformServiceNotConnectedException("PlatformService not connected yet", e);
         } catch (Exception e) {
-
             e.printStackTrace();
         }
         return false;
@@ -316,6 +322,8 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 Intent serviceIntent = new Intent(this, PlatformService.class);
                 serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
                 doBindService(serviceIntent);
+            }else{
+                Log.i(TAG,"Platform bounded");
             }
         } catch (Exception e) {
             e.printStackTrace();

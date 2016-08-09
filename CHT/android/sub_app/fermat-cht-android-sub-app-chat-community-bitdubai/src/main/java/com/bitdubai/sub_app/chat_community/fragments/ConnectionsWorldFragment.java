@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.chat_community.fragments;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,9 +14,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,9 +25,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +43,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -87,7 +87,7 @@ public class ConnectionsWorldFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<ChatActorCommunityInformation>,
-        GeolocationDialog.AdapterCallback , SearchAliasDialog.AdapterCallbackAlias {
+        GeolocationDialog.AdapterCallback , SearchAliasDialog.AdapterCallbackAlias, CommunityListAdapter.AdapterCallbackList {
 
     //Constants
     public static final String CHAT_USER_SELECTED = "chat_user";
@@ -149,10 +149,10 @@ public class ConnectionsWorldFragment
         greenBarCity.setText(city.getName());
         greenBar.setVisibility(View.VISIBLE);
 
-        location=new DeviceLocation();
+        location = new DeviceLocation();
         location.setLatitude((double) city.getLatitude());
         location.setLongitude((double) city.getLongitude());
-        offset=0;
+        offset = 0;
         onRefresh();
 
         closeGreenBar.setOnClickListener(new View.OnClickListener() {
@@ -160,7 +160,7 @@ public class ConnectionsWorldFragment
             public void onClick(View v) {
                 greenBar.setVisibility(View.GONE);
                 location = null;
-                offset=0;
+                offset = 0;
                 onRefresh();
             }
         });
@@ -169,8 +169,13 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onMethodCallbackAlias(String aliasSearch) {
-        alias=aliasSearch;
+        alias = aliasSearch;
         onRefresh();
+    }
+
+    @Override
+    public void onMethodCallbackConnectionStatus(int position, ConnectionState state) {
+       lstChatUserInformations.get(position).setConnectionState(state);
     }
 
     /**
@@ -185,7 +190,7 @@ public class ConnectionsWorldFragment
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-            applicationsHelper = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
+            applicationsHelper = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
             //Obtain Settings or create new Settings if first time opening subApp
             appSettings = null;
             try {
@@ -206,11 +211,11 @@ public class ConnectionsWorldFragment
             }
 
             //Check if a default identity is configured
-            try{
+            try {
                 identity = moduleManager.getSelectedActorIdentity();
-                if(identity == null)
-                    launchListIdentitiesDialog  = true;
-            }catch (CantGetSelectedActorIdentityException e){
+                if (identity == null)
+                    launchListIdentitiesDialog = true;
+            } catch (CantGetSelectedActorIdentityException e) {
                 //There are no identities in device
                 launchActorCreationDialog = true;
             } catch (ActorIdentityNotSelectedException e) {
@@ -233,7 +238,7 @@ public class ConnectionsWorldFragment
             //Set up RecyclerView
             layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
             adapter = new CommunityListAdapter(getActivity(), lstChatUserInformations,
-                    appSession, moduleManager);
+                    appSession, moduleManager, this);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             refreshButtonView = (View) rootView.findViewById(R.id.show_more_layout);
@@ -242,13 +247,13 @@ public class ConnectionsWorldFragment
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    if(dy > 0){
+                    if (dy > 0) {
                         visibleItemCount = layoutManager.getChildCount();
                         totalItemCount = layoutManager.getItemCount();
                         pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-                        offset=totalItemCount;
+                        offset = totalItemCount;
                         final int lastItem = pastVisiblesItems + visibleItemCount;
-                        if(lastItem == totalItemCount) {
+                        if (lastItem == totalItemCount) {
                             refreshButtonView.setVisibility(View.VISIBLE);
                             refreshButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -258,7 +263,7 @@ public class ConnectionsWorldFragment
                                     onRefresh();
                                 }
                             });
-                        } else{
+                        } else {
                             refreshButtonView.setVisibility(View.GONE);
                         }
                     }
@@ -291,11 +296,12 @@ public class ConnectionsWorldFragment
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
                     .setBannerRes(R.drawable.chat_banner_community)
                     .setIconRes(R.drawable.chat_subapp)
+                    .setTitle(R.string.cht_comm_welcome)
                     .setSubTitle(R.string.cht_creation_dialog_sub_title)
                     .setBody(R.string.cht_creation_dialog_body)
-                    .setTextFooter(R.string.cht_creation_dialog_footer)
                     .setTextNameLeft(R.string.cht_creation_name_left)
                     .setTextNameRight(R.string.cht_creation_name_right)
+                    .setCheckboxText(R.string.cht_comm_dont_show_again)
                     .setImageRight(R.drawable.ic_profile_male)
                     .setVIewColor(R.color.cht_color_dialog_community)
                     .build();
@@ -322,7 +328,7 @@ public class ConnectionsWorldFragment
                     onRefresh();
                     try {
                         applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -336,7 +342,7 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onRefresh() {
-        try{
+        try {
             if (!isRefreshing) {
                 isRefreshing = true;
                 final FermatWorker worker = new FermatWorker() {
@@ -385,7 +391,7 @@ public class ConnectionsWorldFragment
 
                     @Override
                     public void onErrorOccurred(Exception ex) {
-                        try{
+                        try {
                             isRefreshing = false;
                             /*if (swipeRefresh != null && isAttached)
                                 swipeRefresh.setRefreshing(false);*/
@@ -399,7 +405,7 @@ public class ConnectionsWorldFragment
                 });
                 worker.execute();
             }
-        }catch (Exception ignore){
+        } catch (Exception ignore) {
             if (executor != null) {
                 executor.shutdown();
                 executor = null;
@@ -408,10 +414,9 @@ public class ConnectionsWorldFragment
     }
 
     private boolean notInList(ChatActorCommunityInformation info) {
-        for (ChatActorCommunityInformation contact : lstChatUserInformations)
-        {
+        for (ChatActorCommunityInformation contact : lstChatUserInformations) {
             if (contact.getPublicKey().equals(info.getPublicKey()))
-            return false;
+                return false;
         }
         return true;
     }
@@ -443,13 +448,13 @@ public class ConnectionsWorldFragment
         progressBar.setVisibility(View.GONE);
     }
 
-    private List<ChatActorCommunityInformation> getMoreDataAsync(DeviceLocation location, double distance, String alias,int max, int offset) {
+    private List<ChatActorCommunityInformation> getMoreDataAsync(DeviceLocation location, double distance, String alias, int max, int offset) {
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
             List<ChatActorCommunityInformation> result;
-            if(identity != null) {
+            if (identity != null) {
                 result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
-                       location, distance, alias, max, offset);
+                        location, distance, alias, max, offset);
                 dataSet.addAll(result);
                 offset = dataSet.size();
             }
@@ -460,7 +465,7 @@ public class ConnectionsWorldFragment
     }
 
     @Override
-    public void onFragmentFocus () {
+    public void onFragmentFocus() {
     }
 
     @Override
@@ -475,10 +480,10 @@ public class ConnectionsWorldFragment
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
     }
 
-    public void onOptionMenuPrepared(Menu menu){
+    public void onOptionMenuPrepared(Menu menu) {
         MenuItem searchItem = menu.findItem(1);
         final SearchAliasDialog.AdapterCallbackAlias ad = this;
-        if (searchItem!=null) {
+        if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getResources().getString(R.string.description_search));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -486,7 +491,7 @@ public class ConnectionsWorldFragment
                 public boolean onQueryTextSubmit(String s) {
                     try {
                         SearchAliasDialog notificationSearchAliasDialog =
-                                new SearchAliasDialog(getActivity(), appSession, null, null, null, s ,ad);
+                                new SearchAliasDialog(getActivity(), appSession, null, null, null, s, ad);
                         notificationSearchAliasDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
@@ -494,7 +499,7 @@ public class ConnectionsWorldFragment
                             }
                         });
                         notificationSearchAliasDialog.show();
-                    } catch ( Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     return true;
@@ -546,11 +551,11 @@ public class ConnectionsWorldFragment
                 case 2:
                     try {
                         GeolocationDialog geolocationDialog =
-                                new GeolocationDialog(getActivity(),appSession, null, this);
+                                new GeolocationDialog(getActivity(), appSession, null, this);
                         geolocationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
-                                }
+                            }
                         });
                         Window window = geolocationDialog.getWindow();
                         WindowManager.LayoutParams wlp = window.getAttributes();
@@ -559,7 +564,7 @@ public class ConnectionsWorldFragment
                         window.setAttributes(wlp);
                         geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         geolocationDialog.show();
-                    } catch ( Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     break;
@@ -567,7 +572,7 @@ public class ConnectionsWorldFragment
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                     UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
+            Toast.makeText(getActivity(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
@@ -631,7 +636,7 @@ public class ConnectionsWorldFragment
                     }
                 });
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             PresentationChatCommunityDialog presentationChatCommunityDialog =
                     new PresentationChatCommunityDialog(getActivity(),
                             appSession,
@@ -645,21 +650,20 @@ public class ConnectionsWorldFragment
     }
 
     public void turnGPSOn() {
-        try{
-            if(!checkGPSFineLocation() || !checkGPSCoarseLocation()){ //if gps is disabled
+        try {
+            if (!checkGPSFineLocation() || !checkGPSCoarseLocation()) { //if gps is disabled
                 if (Build.VERSION.SDK_INT < 23) {
                     if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(this.getActivity(),
                                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                     }
-                    if (ActivityCompat.checkSelfPermission(this.getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION)
+                    if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(this.getActivity(),
                                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
                     }
-                }
-                else{
+                } else {
                     if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) {
                         getActivity().requestPermissions(
@@ -672,32 +676,32 @@ public class ConnectionsWorldFragment
                     }
                 }
             }
-        }catch (Exception e){
-            try{
+        } catch (Exception e) {
+            try {
                 Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
                 intent.putExtra("enabled", true);
                 if (Build.VERSION.SDK_INT < 23) {
                     String provider = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        Toast.makeText(getActivity(),getResources().getString(R.string.cht_comm_text_gps), Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
-                }else {
+                } else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        Toast.makeText(getContext(), getResources().getString(R.string.cht_comm_text_gps), Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
                 }
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 if (Build.VERSION.SDK_INT < 23) {
-                    makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(),getResources().getString(R.string.cht_comm_text_gps), Toast.LENGTH_SHORT).show();
                 }else{
-                    makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(),getResources().getString(R.string.cht_comm_text_gps), Toast.LENGTH_SHORT).show();
                 }
             }
         }

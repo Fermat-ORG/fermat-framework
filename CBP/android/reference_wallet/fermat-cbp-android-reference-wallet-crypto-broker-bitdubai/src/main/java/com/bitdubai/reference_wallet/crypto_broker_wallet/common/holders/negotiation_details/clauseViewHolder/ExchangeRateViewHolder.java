@@ -81,7 +81,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
 
 
-        String marketExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue()));
+        String marketExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue));
         String suggestedMaxExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue() * (1 + (spread / 100))));
 
         String suggestedRateCurrencyStr = "";
@@ -94,8 +94,8 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
             exchangeRateReferenceValue.setText(String.format("Min: %1$s %3$s    Max: %2$s %3$s",
                     marketExchangeRateStr, suggestedMaxExchangeRateStr, suggestedRateCurrencyStr));
         } else {
-            markerRateReference.setText("Can't get Market Exchange Rate");
-            exchangeRateReferenceValue.setText("Can't get suggested Exchange Rate");
+            markerRateReference.setText(R.string.cant_get_market_rate);
+            exchangeRateReferenceValue.setText(R.string.cant_get_suggested_rate);
         }
 
 //
@@ -228,32 +228,27 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
 
     private String fixFormat(String value) {
 
-        try {
-            if (compareLessThan1(value)) {
-                numberFormat.setMaximumFractionDigits(8);
-            } else {
-                numberFormat.setMaximumFractionDigits(2);
-            }
-            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "0";
+
+        if (compareLessThan1(value)) {
+            numberFormat.setMaximumFractionDigits(8);
+        } else {
+            numberFormat.setMaximumFractionDigits(2);
         }
+        return numberFormat.format(new BigDecimal(Double.valueOf(value)));
+
 
     }
 
     private Boolean compareLessThan1(String value) {
         Boolean lessThan1 = true;
-        try {
-            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE) == -1) {
-                lessThan1 = true;
-            } else {
-                lessThan1 = false;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+        if (BigDecimal.valueOf(Double.valueOf(value)).
+                compareTo(BigDecimal.ONE) == -1) {
+            lessThan1 = true;
+        } else {
+            lessThan1 = false;
         }
+
         return lessThan1;
     }
 

@@ -1,118 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="#FFFFFF"
-              android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:textColor="#00a99d">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="20dp">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_text_dialog_title"
+            android:id="@+id/cbw_dialog_title_stock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/cbw_stock_tittle"
+            android:textColor="@color/cbw_wizard_color"
+            android:textSize="16sp" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_dialog_title_stock_transaction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
             android:gravity="center_vertical"
+            android:text="@string/amount_to_restock_or_destock"
             android:textColor="@color/black"
             android:textSize="14sp"
-            android:textStyle="bold"
-            app:typeface="ROBOTO_REGULAR"
-            android:text="@string/amount_to_restock_or_destock"
-            android:layout_marginBottom="20dp"/>
+            android:textStyle="bold" />
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+        <EditText
             android:id="@+id/cbw_ctd_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:ellipsize="end"
-            android:ems="10"
             android:hint="@string/amount"
-            android:inputType="number|numberDecimal"
+            android:inputType="numberDecimal"
             android:maxLength="10"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:textColor="#1d1d26"
+            android:textColor="@color/black"
             android:textColorHint="#9a9a9c"
-            android:textSize="15sp"
-            app:typeface="ROBOTO_REGULAR"/>
+            android:textSize="15sp" />
 
+        <RelativeLayout
+            android:id="@+id/linear_create_contact"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_ctd_cancel_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="start"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:padding="8dp"
+                android:text="@string/cancel"
+                android:textAllCaps="true"
+                android:textColor="@color/cbw_wizard_color"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_ctd_restock_transaction_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="end"
+                android:layout_toLeftOf="@+id/cbw_ctd_destock_transaction_btn"
+                android:layout_toStartOf="@+id/cbw_ctd_destock_transaction_btn"
+                android:padding="8dp"
+                android:text="@string/cbw_restock_title"
+                android:textAllCaps="true"
+                android:textColor="@color/cbw_wizard_color"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_ctd_destock_transaction_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="end"
+                android:layout_marginEnd="2dp"
+                android:layout_marginRight="2dp"
+                android:padding="8dp"
+                android:text="@string/cbw_destock_title"
+                android:textAllCaps="true"
+                android:textColor="@color/cbw_wizard_color"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
     </LinearLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/linear_create_contact"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp">
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_ctd_cancel_btn"
-            style="actio"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="start"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:background="@color/white"
-            android:padding="8dp"
-            android:text="@string/cancel"
-            android:textAllCaps="true"
-            android:textColor="@color/cbw_wizard_color"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:typeface="ROBOTO_REGULAR"/>
-
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_ctd_restock_transaction_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="end"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="24dp"
-            android:layout_toStartOf="@+id/cbw_ctd_destock_transaction_btn"
-            android:layout_toLeftOf="@+id/cbw_ctd_destock_transaction_btn"
-            android:background="@color/white"
-            android:padding="8dp"
-            android:text="@string/cbw_restock_title"
-            android:textAllCaps="true"
-            android:textColor="@color/cbw_wizard_color"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:typeface="ROBOTO_REGULAR"/>
-
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_ctd_destock_transaction_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="end"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@color/white"
-            android:padding="8dp"
-            android:text="@string/cbw_destock_title"
-            android:textAllCaps="true"
-            android:textColor="@color/cbw_wizard_color"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:typeface="ROBOTO_REGULAR"/>
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>

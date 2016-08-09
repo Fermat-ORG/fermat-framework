@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">Crypto Customer Identity</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="action_settings">Settings</string>
     <string name="customer_name">Customer name</string>
     <string name="create">CREATE</string>
-    <string name="identity_img">customer_img</string>
+    <string name="identity_img" translatable="false">customer_img</string>
     <string name="update">UPDATE</string>
     <string name="camera_option_context_menu">Camera</string>
     <string name="gallery_option_context_menu">Gallery</string>
@@ -15,12 +15,39 @@
     <string name="not_identities">NOT IDENTITIES</string>
     <string name="create_a_new_one">CREATE A NEW ONE</string>
     <string name="no_matches">No Matches</string>
+    <string name="profile_picture_dialog_title">PROFILE PICTURE</string>
+    <string name="profile_picture_dialog_picture">Take a picture</string>
+    <string name="profile_picture_dialog_gallery">Choose from gallery</string>
+    <string name="crop_cancel">Cancel</string>
+    <string name="crop_rotate">Rotate</string>
+    <string name="crop_accept">Accept</string>
+    <string name="crypto_customer">Crypto Custmer</string>
+    <string name="crypto_customer_name_hint">Enter name or alias</string>
+    <string name="crypto_customer_name_text_count_text" translatable="false">50</string>
+    <string name="crypto_customer_username">User Name</string>
+    <string name="crypto_customer_hint">Name</string>
+    <string name="crypto_customer_error">An error occurred</string>
+    <string name="crypto_customer_turnon_gps">Please, turn on your GPS</string>
+    <string name="crypto_customer_status">Status</string>
+    <string name="crypto_customer_error_dialog">Error in dialog</string>
+    <string name="crypto_customer_error_image">Error loading image</string>
+    <string name="crypto_customer_enter_name_alias">Please enter a name or alias</string>
+    <string name="crypto_customer_enter_name">Please enter a name</string>
+    <string name="crypto_customer_enter_image">You must enter an image</string>
+    <string name="crypto_customer_identity_created">Crypto Customer Identity Created.</string>
+    <string name="crypto_customer_identity_updated">Crypto Customer Identity Updated.</string>
+    <string name="crypto_customer_empty_accuracy">Accuracy is empty, please add a value</string>
+    <string name="crypto_customer_error_create">An error occurred trying to saving the Crypto Customer Identity</string>
 
+    <string name="cbp_customer_identity_welcome_title_gps">Advertisement!</string>
+    <string name="cbp_customer_identity_welcome_subTitle_gps">Important Announcement.</string>
     <string name="cbp_customer_identity_welcome_subTitle">Welcome to the Customer Identity.</string>
     <string name="cbp_customer_identity_welcome_body">From here you will be able to create an Customer type identity.\n\nThis Identity, will identify you in the system as an Customer, and give you access to all tasks and applications you need.\n\nOther broker or customer will be able to request connection to you by finding you with the information you provide here.</string>
     <string name="cbp_customer_identity_gps">Please, turn on your GPS to register your location, then others can find you and you can find peers near to you.</string>
     <string name="cci_accuracy_km">Accuracy (Km)</string>
-    <string name="cci_accuracy_hint">0 - 1000</string>
+    <string name="cci_accuracy_hint" translatable="false">0 - 1000</string>
     <string name="cci_frequency">Frequency</string>
+
+    <string name="cropped_small">Cropped image is too small</string>
 
 </resources>

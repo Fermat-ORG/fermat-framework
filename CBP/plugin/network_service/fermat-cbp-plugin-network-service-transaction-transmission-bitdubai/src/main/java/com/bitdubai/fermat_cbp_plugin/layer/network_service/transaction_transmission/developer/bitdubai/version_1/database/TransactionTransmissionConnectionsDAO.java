@@ -115,7 +115,7 @@ public class TransactionTransmissionConnectionsDAO {
             if (!records.isEmpty())
                 return buildTransactionTransmissionRecord(records.get(0));
             else
-                throw new PendingRequestNotFoundException(null, new StringBuilder().append("RequestID: ").append(transmissionId).toString(), "Can not find an address exchange request with the given request id.");
+                throw new PendingRequestNotFoundException(null, "RequestID: " + transmissionId, "Can not find an address exchange request with the given request id.");
 
 
         } catch (CantLoadTableToMemoryException exception) {

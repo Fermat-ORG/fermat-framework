@@ -80,4 +80,10 @@
     <color name="cbw_wizard_merchandises_wallet_button_color">#12aca0</color>
 
 
+    <color name="cbw_simple_spinner_item_text_color">@color/dark_grey</color>
+    <color name="cbw_simple_spinner_item_background_color">@color/white</color>
+    <color name="cbw_simple_spinner_item_divider_color">#a4a4a4</color>
+
+
+
 </resources>

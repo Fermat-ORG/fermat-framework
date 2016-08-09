@@ -83,7 +83,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
     private CryptoWalletManager cryptoWalletManager;
 
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.FERMAT_VAULT)
+    //   @NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.FERMAT_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API     , layer = Layers.SYSTEM          , addon = Addons.LOG_MANAGER)
@@ -139,7 +139,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
 
     private String appPublicKey;
 
-//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.FERMAT_NETWORK       )
+    //    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.FERMAT_NETWORK       )
     private BlockchainManager<ECKey, Transaction> fermatNetworkManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
@@ -215,7 +215,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
     public ModuleManager<FermatWalletSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException{
         try {
 
-           // logManager.log(FermatWalletFermatModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "FermatWallet instantiation started...", null, null);
+            // logManager.log(FermatWalletFermatModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "FermatWallet instantiation started...", null, null);
 
             if(walletModuleCryptoWallet == null) {
                 walletModuleCryptoWallet = new FermatWalletWalletModuleManager(

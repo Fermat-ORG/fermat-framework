@@ -2,9 +2,9 @@ package com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bit
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_wpd_api.all_definition.events.WalletNavigationStructureDownloadedEvent;
+import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 
 import java.util.UUID;
 
@@ -15,14 +15,14 @@ public class WalletNavigationStructureDownloadedHandler implements FermatEventHa
 
     private final WalletRuntimeManager walletRuntimeManager;
 
-    public WalletNavigationStructureDownloadedHandler(final WalletRuntimeManager runtimeManager){
+    public WalletNavigationStructureDownloadedHandler(final WalletRuntimeManager runtimeManager) {
         this.walletRuntimeManager = runtimeManager;
     }
 
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        WalletNavigationStructureDownloadedEvent walletNavigationStructureDownloadedEvent =(WalletNavigationStructureDownloadedEvent) fermatEvent;
+        WalletNavigationStructureDownloadedEvent walletNavigationStructureDownloadedEvent = (WalletNavigationStructureDownloadedEvent) fermatEvent;
         String xmlText = walletNavigationStructureDownloadedEvent.getXmlText();
         String link = walletNavigationStructureDownloadedEvent.getLinkToRepo();
         UUID skinId = walletNavigationStructureDownloadedEvent.getSkinId();
@@ -33,7 +33,7 @@ public class WalletNavigationStructureDownloadedHandler implements FermatEventHa
         //if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
 
         System.out.println("JORGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HOla111");
-        this.walletRuntimeManager.recordNavigationStructure(xmlText,link,filename,skinId,walletPubicKey);
+        this.walletRuntimeManager.recordNavigationStructure(xmlText, link, filename, skinId, walletPubicKey);
 
 
         //}

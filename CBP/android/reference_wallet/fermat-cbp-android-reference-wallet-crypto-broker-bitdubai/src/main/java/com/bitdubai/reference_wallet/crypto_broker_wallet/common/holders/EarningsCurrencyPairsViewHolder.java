@@ -24,7 +24,7 @@ public class EarningsCurrencyPairsViewHolder extends FermatViewHolder {
     public void bind(EarningsPair data, boolean selected) {
         Currency linkedCurrency = data.getLinkedCurrency();
         Currency earningCurrency = data.getEarningCurrency();
-        currencyPairButton.setText(new StringBuilder().append(linkedCurrency.getCode()).append(" / ").append(earningCurrency.getCode()).toString());
+        currencyPairButton.setText(linkedCurrency.getCode() + " / " + earningCurrency.getCode());
 
         // TODO commented due to change of the behavior of the earning pair.
 

@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -20,6 +22,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
@@ -49,6 +52,8 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interf
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.interfaces.BankMoneyRestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.interfaces.CashMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
@@ -62,17 +67,22 @@ import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.inte
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionManager;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus.*;
+
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 03/07/16.
+ *
  */
-public class BrokerAckOfflinePaymentMonitorAgent2
-        extends AbstractBusinessTransactionAgent<BrokerAckOfflinePaymentPluginRoot> {
+public class BrokerAckOfflinePaymentMonitorAgent2 extends AbstractBusinessTransactionAgent<BrokerAckOfflinePaymentPluginRoot> {
 
     private final BrokerAckOfflinePaymentBusinessTransactionDao brokerAckOfflinePaymentBusinessTransactionDao;
     private final TransactionTransmissionManager transactionTransmissionManager;
@@ -82,31 +92,27 @@ public class BrokerAckOfflinePaymentMonitorAgent2
     private final DepositManager bankDepositTransactionManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final CashDepositTransactionManager cashDepositTransactionManager;
+    private final BankMoneyRestockManager bankMoneyRestockManager;
+    private final CashMoneyRestockManager cashMoneyRestockManager;
     private final UUID pluginId;
 
-    /**
-     * Default constructor with parameters
-     *
-     * @param sleepTime
-     * @param timeUnit
-     * @param initDelayTime
-     * @param pluginRoot
-     */
-    public BrokerAckOfflinePaymentMonitorAgent2(
-            long sleepTime,
-            TimeUnit timeUnit,
-            long initDelayTime,
-            BrokerAckOfflinePaymentPluginRoot pluginRoot,
-            BrokerAckOfflinePaymentBusinessTransactionDao brokerAckOfflinePaymentBusinessTransactionDao,
-            EventManager eventManager,
-            TransactionTransmissionManager transactionTransmissionManager,
-            CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-            CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
-            DepositManager bankDepositTransactionManager,
-            CryptoBrokerWalletManager cryptoBrokerWalletManager,
-            CashDepositTransactionManager cashDepositTransactionManager,
-            UUID pluginId) {
+
+    public BrokerAckOfflinePaymentMonitorAgent2(long sleepTime,
+                                                TimeUnit timeUnit,
+                                                long initDelayTime,
+                                                BrokerAckOfflinePaymentPluginRoot pluginRoot,
+                                                BrokerAckOfflinePaymentBusinessTransactionDao brokerAckOfflinePaymentBusinessTransactionDao,
+                                                EventManager eventManager,
+                                                TransactionTransmissionManager transactionTransmissionManager,
+                                                CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
+                                                CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
+                                                CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+                                                DepositManager bankDepositTransactionManager,
+                                                CryptoBrokerWalletManager cryptoBrokerWalletManager,
+                                                CashDepositTransactionManager cashDepositTransactionManager,
+                                                BankMoneyRestockManager bankMoneyRestockManager, CashMoneyRestockManager cashMoneyRestockManager,
+                                                UUID pluginId) {
+
         super(sleepTime, timeUnit, initDelayTime, pluginRoot, eventManager);
         this.brokerAckOfflinePaymentBusinessTransactionDao = brokerAckOfflinePaymentBusinessTransactionDao;
         this.transactionTransmissionManager = transactionTransmissionManager;
@@ -116,6 +122,8 @@ public class BrokerAckOfflinePaymentMonitorAgent2
         this.bankDepositTransactionManager = bankDepositTransactionManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.cashDepositTransactionManager = cashDepositTransactionManager;
+        this.bankMoneyRestockManager = bankMoneyRestockManager;
+        this.cashMoneyRestockManager = cashMoneyRestockManager;
         this.pluginId = pluginId;
     }
 
@@ -132,8 +140,7 @@ public class BrokerAckOfflinePaymentMonitorAgent2
              * The status to verify is PENDING_CREDIT_BANK_WALLET, it represents that the payment
              * is "physically" acknowledge by the broker.
              */
-            List<BusinessTransactionRecord> pendingToBankCreditList =
-                    brokerAckOfflinePaymentBusinessTransactionDao.getPendingToBankCreditList();
+            List<BusinessTransactionRecord> pendingToBankCreditList = brokerAckOfflinePaymentBusinessTransactionDao.getPendingToBankCreditList();
             for (BusinessTransactionRecord pendingToBankCreditRecord : pendingToBankCreditList) {
                 try {
                     System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Enter Pending Bank Credit");
@@ -148,23 +155,23 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                             cryptoWalletPublicKey,
                             customerAlias);
 
-                    final BankTransaction bankTransaction =
-                            bankDepositTransactionManager.makeDeposit(bankDepositParameters);
+                    final BankTransaction bankTransaction = bankDepositTransactionManager.makeDeposit(bankDepositParameters);
                     System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Make Bank Deposit");
+
+                    final CustomerBrokerContractSale saleContract = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+                    applySalePaymentCredit(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), saleContract, saleContract.getNegotiatiotId());
+                    System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Make Bank Restock");
 
                     externalTransactionId = bankTransaction.getTransactionId();
                     pendingToBankCreditRecord.setExternalTransactionId(externalTransactionId);
-                    pendingToBankCreditRecord.setContractTransactionStatus(
-                            ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION);
+                    pendingToBankCreditRecord.setContractTransactionStatus(PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION);
                     pendingToBankCreditRecord.setPaymentType(MoneyType.BANK);
 
-                    brokerAckOfflinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
-                            pendingToBankCreditRecord);
+                    brokerAckOfflinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(pendingToBankCreditRecord);
                     System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Update Business Transaction Status: PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION");
                 } catch (Exception e) {
                     reportError(e);
                 }
-
             }
 
             /**
@@ -172,8 +179,7 @@ public class BrokerAckOfflinePaymentMonitorAgent2
              * The status to verify is PENDING_CREDIT_CASH_WALLET, it represents that the payment
              * is "physically" acknowledge by the broker.
              */
-            List<BusinessTransactionRecord> pendingToCashCreditList =
-                    brokerAckOfflinePaymentBusinessTransactionDao.getPendingToCashCreditList();
+            List<BusinessTransactionRecord> pendingToCashCreditList = brokerAckOfflinePaymentBusinessTransactionDao.getPendingToCashCreditList();
             for (BusinessTransactionRecord pendingToCashCreditRecord : pendingToCashCreditList) {
                 try {
                     System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Enter Pending Cash Credit");
@@ -191,23 +197,22 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                             paymentType,
                             customerAlias);
 
-                    cashDepositTransaction =
-                            cashDepositTransactionManager.createCashDepositTransaction(
-                                    cashDepositParameters);
+                    cashDepositTransaction = cashDepositTransactionManager.createCashDepositTransaction(cashDepositParameters);
                     System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Make Cash Deposit");
+
+                    final CustomerBrokerContractSale saleContract = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+                    applySalePaymentCredit(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), saleContract, saleContract.getNegotiatiotId());
+                    System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Make Cash Restock");
 
                     externalTransactionId = cashDepositTransaction.getTransactionId();
                     pendingToCashCreditRecord.setExternalTransactionId(externalTransactionId);
-                    pendingToCashCreditRecord.setContractTransactionStatus(
-                            ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION);
+                    pendingToCashCreditRecord.setContractTransactionStatus(PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION);
 
-                    brokerAckOfflinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
-                            pendingToCashCreditRecord);
+                    brokerAckOfflinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(pendingToCashCreditRecord);
                     System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Update Business Transaction Status: PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION");
                 } catch (Exception e) {
                     reportError(e);
                 }
-
             }
 
             /**
@@ -227,15 +232,13 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.OFFLINE_PAYMENT_ACK,
+                            OFFLINE_PAYMENT_ACK,
                             Plugins.BROKER_ACK_OFFLINE_PAYMENT,
                             PlatformComponentType.ACTOR_CRYPTO_BROKER,
                             PlatformComponentType.ACTOR_CRYPTO_CUSTOMER
                     );
 
-                    brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
-                            contractHash,
-                            ContractTransactionStatus.OFFLINE_PAYMENT_ACK);
+                    brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, OFFLINE_PAYMENT_ACK);
                     System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Update Business Transaction Status: OFFLINE_PAYMENT_ACK");
                 } catch (Exception e) {
                     reportError(e);
@@ -245,8 +248,7 @@ public class BrokerAckOfflinePaymentMonitorAgent2
             /**
              * Check pending notifications - Customer side
              */
-            List<BusinessTransactionRecord> pendingToSubmitConfirmationList =
-                    brokerAckOfflinePaymentBusinessTransactionDao.getPendingToSubmitConfirmationList();
+            List<BusinessTransactionRecord> pendingToSubmitConfirmationList = brokerAckOfflinePaymentBusinessTransactionDao.getPendingToSubmitConfirmationList();
             for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
 
                 try {
@@ -264,7 +266,7 @@ public class BrokerAckOfflinePaymentMonitorAgent2
 
                     brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
-                            ContractTransactionStatus.CONFIRM_OFFLINE_ACK_PAYMENT);
+                            CONFIRM_OFFLINE_ACK_PAYMENT);
                     System.out.println("ACK_OFFLINE_PAYMENT - [Customer] Update Business Transaction Status: CONFIRM_OFFLINE_ACK_PAYMENT");
                 } catch (Exception e) {
                     reportError(e);
@@ -317,7 +319,6 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                     System.out.println("ACK_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (brokerAckOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
-                        contractTransactionStatus = brokerAckOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(contractHash);
                         System.out.println("ACK_OFFLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - The Contract Hash is in Database");
                         //TODO: analyze what we need to do here.
 
@@ -359,9 +360,9 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                         businessTransactionRecord = brokerAckOfflinePaymentBusinessTransactionDao.getBrokerBusinessTransactionRecordByContractHash(contractHash);
                         contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
 
-                        if (contractTransactionStatus == ContractTransactionStatus.OFFLINE_PAYMENT_ACK) {
+                        if (contractTransactionStatus == OFFLINE_PAYMENT_ACK) {
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.PENDING_MERCHANDISE);
-                            brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_ACK_PAYMENT);
+                            brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, CONFIRM_OFFLINE_ACK_PAYMENT);
                             brokerAckOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
                             raiseAckConfirmationEvent(contractHash);
 
@@ -395,7 +396,7 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                             customerBrokerContractSale,
                             paymentType,
                             customerBrokerContractSale.getPublicKeyBroker(),
-                            ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT,
+                            PENDING_ACK_OFFLINE_PAYMENT,
                             currencyType);
                 }
 
@@ -405,14 +406,10 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                 brokerAckOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
             }
 
-        } catch (CantGetListClauseException e) {
+        } catch (CantGetListClauseException | CantUpdateRecordException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     e,
                     "Checking pending events",
-                    "Cannot update the database");
-        } catch (CantUpdateRecordException e) {
-            throw new UnexpectedResultReturnedFromDatabaseException(
-                    e, "Checking pending events",
                     "Cannot update the database");
         } catch (CantConfirmTransactionException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -465,30 +462,29 @@ public class BrokerAckOfflinePaymentMonitorAgent2
     /**
      * This method returns a BankTransactionParametersRecord from a given ContractHash/Id
      *
-     * @param contractHash
-     * @return
+     * @param contractHash the contract hash/ID
+     *
+     * @return the transaction record
      */
     private BankTransactionParametersRecord getBankDepositParametersFromContractId(
             String contractHash,
             String cryptoBrokerWalletPublicKey,
             String customerAlias) throws CantGetBankTransactionParametersRecordException {
         try {
-            CustomerBrokerContractSale customerBrokerContractSale =
-                    customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
-                            contractHash);
-            ObjectChecker.checkArgument(
-                    customerBrokerContractSale, "The customerBrokerContractSale is null");
+            CustomerBrokerContractSale customerBrokerContractSale = customerBrokerContractSaleManager.
+                    getCustomerBrokerContractSaleForContractId(contractHash);
+
+            ObjectChecker.checkArgument(customerBrokerContractSale, "The customerBrokerContractSale is null");
 
             String negotiationId = customerBrokerContractSale.getNegotiatiotId();
             String actorPublicKey = customerBrokerContractSale.getPublicKeyBroker();
-            ObjectChecker.checkArgument(
-                    negotiationId, new StringBuilder().append("The negotiationId for contractHash ").append(contractHash).append(" is null").toString());
+            ObjectChecker.checkArgument(negotiationId, "The negotiationId for contractHash " + contractHash + " is null");
 
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation =
                     customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
                             UUID.fromString(negotiationId));
             ObjectChecker.checkArgument(
-                    customerBrokerSaleNegotiation, new StringBuilder().append("The customerBrokerSaleNegotiation by Id ").append(negotiationId).append(" is null").toString());
+                    customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation by Id " + negotiationId + " is null");
 
             Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
             ClauseType clauseType;
@@ -504,7 +500,10 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                     brokerCurrency = FiatCurrency.getByCode(clause.getValue());
 
                 if (clauseType == ClauseType.BROKER_BANK_ACCOUNT)
+                   // System.out.println("LOSTWOOD_BANK_ACOUNT:"+clause);
+                   // System.out.println("LOSTWOOD_BANK_ACOUNT.getValue:"+clause.getValue());
                     account = NegotiationClauseHelper.getAccountNumberFromClause(clause);
+                  //  System.out.println("LOSTWOOD_BANK_ACOUNT_RESULT:"+account);
 
                 if (clauseType == ClauseType.BROKER_CURRENCY_QUANTITY) {
                     brokerAmountDouble = parseToDouble(clause.getValue());
@@ -537,13 +536,13 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                     brokerAmount,
                     account,
                     brokerCurrency,
-                    new StringBuilder().append("Payment from Customer ").append(customerAlias).toString());
+                    "Payment from Customer " + customerAlias);
 
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             throw new CantGetBankTransactionParametersRecordException(
                     e,
                     "Getting the BankTransactionParametersRecord",
-                    new StringBuilder().append("Cannot get the CustomerBrokerContractSale by contractHash/Id:\n").append(contractHash).toString());
+                    "Cannot get the CustomerBrokerContractSale by contractHash/Id:\n" + contractHash);
         } catch (ObjectNotSetException e) {
             throw new CantGetBankTransactionParametersRecordException(
                     e,
@@ -585,8 +584,9 @@ public class BrokerAckOfflinePaymentMonitorAgent2
     /**
      * This method returns a CashTransactionParametersRecord from a given ContractHash/Id
      *
-     * @param contractHash
-     * @return
+     * @param contractHash the contract hash/ID
+     *
+     * @return the transaction record
      */
     private CashTransactionParametersRecord getCashDepositParametersFromContractId(String contractHash, String cryptoBrokerWalletPublicKey, MoneyType paymentType, String customerAlias) throws CantGetCashTransactionParameterException {
         try {
@@ -595,10 +595,10 @@ public class BrokerAckOfflinePaymentMonitorAgent2
 
             String negotiationId = customerBrokerContractSale.getNegotiatiotId();
             String brokerPublicKey = customerBrokerContractSale.getPublicKeyBroker();
-            ObjectChecker.checkArgument(negotiationId, new StringBuilder().append("The negotiationId for contractHash ").append(contractHash).append(" is null").toString());
+            ObjectChecker.checkArgument(negotiationId, "The negotiationId for contractHash " + contractHash + " is null");
 
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-            ObjectChecker.checkArgument(customerBrokerSaleNegotiation, new StringBuilder().append("The customerBrokerSaleNegotiation by Id").append(negotiationId).append(" is null").toString());
+            ObjectChecker.checkArgument(customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation by Id" + negotiationId + " is null");
 
             Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
             ClauseType clauseType;
@@ -640,11 +640,11 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                     pluginId.toString(),
                     brokerAmount,
                     brokerCurrency,
-                    new StringBuilder().append("Payment from Customer ").append(customerAlias).toString(),
+                    "Payment from Customer " + customerAlias,
                     TransactionType.CREDIT);
 
         } catch (CantGetListCustomerBrokerContractSaleException e) {
-            throw new CantGetCashTransactionParameterException(e, "Getting the CashTransactionParametersRecord", new StringBuilder().append("Cannot get the CustomerBrokerContractSale by contractHash/Id:\n").append(contractHash).toString());
+            throw new CantGetCashTransactionParameterException(e, "Getting the CashTransactionParametersRecord", "Cannot get the CustomerBrokerContractSale by contractHash/Id:\n" + contractHash);
         } catch (ObjectNotSetException e) {
             throw new CantGetCashTransactionParameterException(e, "Getting the CashTransactionParametersRecord", "An object to set is null");
         } catch (CantGetListSaleNegotiationsException e) {
@@ -674,8 +674,10 @@ public class BrokerAckOfflinePaymentMonitorAgent2
     /**
      * This method returns the currency type from a contract
      *
-     * @param contractSale
-     * @return
+     * @param contractSale the sale contract
+     *
+     * @return the currency type
+     *
      * @throws CantGetListSaleNegotiationsException
      */
     private MoneyType getMoneyTypeFromContract(CustomerBrokerContractSale contractSale) throws CantGetListSaleNegotiationsException {
@@ -707,8 +709,10 @@ public class BrokerAckOfflinePaymentMonitorAgent2
     /**
      * This method returns the currency type from a contract
      *
-     * @param contractSale
-     * @return
+     * @param contractSale the sale contract
+     *
+     * @return the fiat currency
+     *
      * @throws CantGetListSaleNegotiationsException
      */
     private FiatCurrency getCurrencyTypeFromContract(CustomerBrokerContractSale contractSale) throws CantGetListSaleNegotiationsException {
@@ -743,4 +747,76 @@ public class BrokerAckOfflinePaymentMonitorAgent2
 
     }
 
+    private void applySalePaymentCredit(String brokerWalletPublicKey, CustomerBrokerContractSale contractSale, String negotiationId) throws FermatException, ParseException {
+
+       // final NumberFormat numberFormat = NumberFormat.getInstance();
+        final CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.
+                getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+
+        // Obtengo info de las clausulas de la negociacion
+        final Collection<Clause> saleNegotiationClauses = saleNegotiation.getClauses();
+
+        String clauseValue;
+
+        clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.EXCHANGE_RATE);
+     //   final BigDecimal priceReference = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
+        System.out.println("LOSTWOOD_BAOPMONITORAGENT2_PRICEREFERENCE:"+clauseValue);
+        final BigDecimal priceReference = new BigDecimal(Double.valueOf(clauseValue));
+
+        clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_CURRENCY_QUANTITY);
+    //    BigDecimal amount = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
+        System.out.println("LOSTWOOD_BAOPMONITORAGENT2_AMOUNT:"+clauseValue);
+        BigDecimal amount = new BigDecimal(Double.valueOf(clauseValue));
+
+        clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_BANK_ACCOUNT);
+        final String bankAccount = NegotiationClauseHelper.getAccountNumberFromString(clauseValue);
+
+        clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
+        final MoneyType paymentMethod = MoneyType.getByCode(clauseValue);
+
+        final String currencyCode = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_CURRENCY);
+
+        //Ejecuto el restock dependiendo del tipo de transferencia a realizar
+        switch (paymentMethod) {
+            case BANK:
+                bankMoneyRestockManager.createTransactionRestock(
+                        contractSale.getPublicKeyBroker(),
+                        FiatCurrency.getByCode(currencyCode),
+                        brokerWalletPublicKey,
+                        WalletsPublicKeys.BNK_BANKING_WALLET.getCode(), // TODO: obtenerlo de installed wallets
+                        bankAccount,
+                        amount,
+                        "Payment from a Customer",
+                        priceReference,
+                        OriginTransaction.SALE,
+                        contractSale.getContractId());
+                break;
+            case CASH_ON_HAND:
+                cashMoneyRestockManager.createTransactionRestock(
+                        contractSale.getPublicKeyBroker(),
+                        FiatCurrency.getByCode(currencyCode),
+                        brokerWalletPublicKey,
+                        WalletsPublicKeys.CSH_MONEY_WALLET.getCode(),  // TODO: obtenerlo de installed wallets
+                        "cashReference",
+                        amount,
+                        "Cash on Hand Payment from a Customer",
+                        priceReference,
+                        OriginTransaction.SALE,
+                        contractSale.getContractId());
+                break;
+            case CASH_DELIVERY:
+                cashMoneyRestockManager.createTransactionRestock(
+                        contractSale.getPublicKeyBroker(),
+                        FiatCurrency.getByCode(currencyCode),
+                        brokerWalletPublicKey,
+                        WalletsPublicKeys.CSH_MONEY_WALLET.getCode(),  // TODO: obtenerlo de installed wallets
+                        "cashReference",
+                        amount,
+                        "Cash Delivery Payment from a Customer",
+                        priceReference,
+                        OriginTransaction.SALE,
+                        contractSale.getContractId());
+                break;
+        }
+    }
 }

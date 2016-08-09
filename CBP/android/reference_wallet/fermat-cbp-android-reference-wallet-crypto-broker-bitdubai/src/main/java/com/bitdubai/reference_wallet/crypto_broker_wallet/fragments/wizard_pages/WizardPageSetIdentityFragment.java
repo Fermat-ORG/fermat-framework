@@ -108,7 +108,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                         errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                                 UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
-                        Toast.makeText(WizardPageSetIdentityFragment.this.getActivity(), "Sorry, Can't associate the identity whit this wallet", Toast.LENGTH_LONG).show();
+                        Toast.makeText(WizardPageSetIdentityFragment.this.getActivity(), getResources().getString(R.string.cant_associate_identity_wallet), Toast.LENGTH_LONG).show();
                     }
 
                 } else {
@@ -167,7 +167,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                             presentationDialog.show();
                         }
                     } catch (FermatException e) {
-                        makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+                        makeText(getActivity(), getResources().getString(R.string.error_opps), Toast.LENGTH_SHORT).show();
                     }
                     //presentationDialog.show();
                 }
@@ -228,7 +228,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                         presentationDialog.show();
                     }
                 } catch (FermatException e) {
-                    makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+                    makeText(getActivity(), getResources().getString(R.string.error_opps), Toast.LENGTH_SHORT).show();
                 }
                 //presentationDialog.show();
             }

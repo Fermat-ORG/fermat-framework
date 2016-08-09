@@ -1,14 +1,11 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util;
 
-import android.util.Log;
-
-import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySessionReferenceApp;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantUpdateChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 /**
  * Created by Lozadaa 23/04/2016.
@@ -29,22 +26,23 @@ public class EditIdentityExecutor {
     private ChatIdentity identity;
     private String Publickey;
     private String identityConnectionState;
-    public EditIdentityExecutor(byte[] imageInBytes,String Publickey , String identityName, String identityConnectionState) {
+
+    public EditIdentityExecutor(byte[] imageInBytes, String Publickey, String identityName, String identityConnectionState) {
         this.imageInBytes = imageInBytes;
         this.Publickey = Publickey;
         this.identityName = identityName;
         this.identityConnectionState = identityConnectionState;
     }
 
-    public EditIdentityExecutor(ReferenceAppFermatSession<ChatIdentityModuleManager> session,String Publickey , String identityName, byte[] imageInBytes, String identityConnectionState) {
-        this(imageInBytes, Publickey ,identityName, identityConnectionState);
+    public EditIdentityExecutor(ReferenceAppFermatSession<ChatIdentityModuleManager> session, String Publickey, String identityName, byte[] imageInBytes, String identityConnectionState) {
+        this(imageInBytes, Publickey, identityName, identityConnectionState);
         identity = null;
         if (session != null) {
             //ChatIdentitySessionReferenceApp subAppSession = (ChatIdentitySessionReferenceApp) session;
             //Log.i("*****CHT IDENTITY******", "LA SESION tiene valorrrrrr!!!!!!!");
             this.moduleManager = session.getModuleManager();
             this.errorManager = session.getErrorManager();
-        }else{
+        } else {
             //Log.i("*****CHT IDENTITY******", "LA SESION ES NULA!!!!!!!");
         }
     }

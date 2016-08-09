@@ -36,7 +36,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
     protected int clausePosition;
 
     public ClauseViewHolder(View itemView) {
-        super(itemView);
+        super(itemView, 0);
 
         res = itemView.getResources();
         actualStatus = NegotiationStepStatus.CONFIRM;
@@ -46,7 +46,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
         clauseNumberImageView = (ImageView) itemView.findViewById(getClauseNumberImageViewRes());
         titleTextView = (TextView) itemView.findViewById(getTitleTextViewRes());
 
-        configClauseViews(itemView);
+        configClauseViews();
     }
 
     public Button getConfirmButton() {
@@ -77,7 +77,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
         void onConfirmCLicked(ClauseInformation clause);
     }
 
-    private void configClauseViews(View itemView) {
+    private void configClauseViews() {
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override

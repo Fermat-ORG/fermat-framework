@@ -72,13 +72,11 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     private InstalledWallet selectedBitcoinWallet;
     private InstalledWallet selectedFermatWallet;
     private CryptoCustomerIdentity selectedIdentity;
-    private boolean walletConfigured;
 
 
     // UI
     private RecyclerView recyclerView;
     private FermatTextView emptyView;
-    private LinearLayout fragmentContainer;
 
     // Fermat Managers
     private CryptoCustomerWalletModuleManager moduleManager;
@@ -116,10 +114,8 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
 
             // Verify if wallet has been configured, if it is, go to wallet's home!
-            walletConfigured = walletSettings.isWalletConfigured();
+            boolean walletConfigured = walletSettings.isWalletConfigured();
             if (walletConfigured) {
-                //getRuntimeManager().changeStartActivity(1);
-                //changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
                 return;
             }
 
@@ -157,7 +153,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         recyclerView.setAdapter(adapter);
 
         emptyView = (FermatTextView) layout.findViewById(R.id.ccw_selected_providers_empty_view);
-        fragmentContainer = (LinearLayout) layout.findViewById(R.id.ccw_fragment_container);
+        LinearLayout fragmentContainer = (LinearLayout) layout.findViewById(R.id.ccw_fragment_container);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.ccw_spinner_item, getFormattedCurrencies(currencies));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -356,14 +352,13 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             }
 
             final SimpleListDialogFragment<CurrencyPairAndProvider> dialogFragment = new SimpleListDialogFragment<>();
-            dialogFragment.configure("Select a Provider", providers);
+            dialogFragment.configure(R.string.ccw_select_a_provider, providers);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<CurrencyPairAndProvider>() {
                 @Override
                 public void onItemSelected(CurrencyPairAndProvider selectedItem) {
                     if (!containProvider(selectedItem)) {
                         selectedProviders.add(selectedItem);
                         adapter.changeDataSet(selectedProviders);
-                        Log.i("DATA PROVIDERS:", new StringBuilder().append("").append(selectedProviders).append(" Item seleccionado: ").append(selectedItem).toString());
                         showOrHideNoProvidersView();
                     }
                 }
@@ -505,7 +500,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     private List<String> getFormattedCurrencies(List<Currency> currencies) {
         ArrayList<String> data = new ArrayList<>();
         for (Currency currency : currencies) {
-            data.add(new StringBuilder().append(currency.getFriendlyName()).append(" (").append(currency.getCode()).append(")").toString());
+            data.add(currency.getFriendlyName() + " (" + currency.getCode() + ")");
         }
 
         return data;

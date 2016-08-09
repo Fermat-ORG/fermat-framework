@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -174,9 +175,14 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
 //        if(checkbox_not_show.isChecked()){
             //noinspection TryWithIdenticalCatches
             try {
+                getSession().setData(SessionConstant.PRESENTATION_HELP_ENABLED, Boolean.FALSE);
                     BitcoinWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
-                    bitcoinWalletSettings.setIsPresentationHelpEnabled(!checkbox_not_show.isChecked());
-                    getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
+                    if(bitcoinWalletSettings!=null) {
+                        bitcoinWalletSettings.setIsPresentationHelpEnabled(!checkbox_not_show.isChecked());
+                        getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
+                    }else{
+                        Log.e(TAG,"BitcoinWalletSettings null");
+                    }
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {

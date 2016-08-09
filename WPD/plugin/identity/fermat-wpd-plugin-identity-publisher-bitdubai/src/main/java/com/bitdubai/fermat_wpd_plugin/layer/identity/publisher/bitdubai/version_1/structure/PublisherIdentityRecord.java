@@ -7,7 +7,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.Publi
 /**
  * The class <code>com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.PublisherIdentityRecord</code>
  * represents a developer identity record.
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/07/15.
  * Updated by Raul Pena   - (raul.pena@gmail.com)  on 16/07/15.
  *
@@ -21,12 +21,12 @@ public class PublisherIdentityRecord implements PublisherIdentity {
     private String websiteurl;
 
     public PublisherIdentityRecord() {
-        super ();
+        super();
     }
 
     public PublisherIdentityRecord(String alias, String publicKey, String privateKey, String websiteurl) {
 
-        super ();
+        super();
 
         this.alias = alias;
         this.publicKey = publicKey;
@@ -35,16 +35,16 @@ public class PublisherIdentityRecord implements PublisherIdentity {
     }
 
     @Override
-    public String getAlias () {
+    public String getAlias() {
         return alias;
     }
 
-    public void setAlias (String alias) {
+    public void setAlias(String alias) {
         this.alias = alias;
     }
 
     @Override
-    public String getPublicKey () {
+    public String getPublicKey() {
         return publicKey;
     }
 
@@ -53,14 +53,14 @@ public class PublisherIdentityRecord implements PublisherIdentity {
         return websiteurl;
     }
 
-    public void setPublicKey (String publicKey) {
+    public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
     }
 
     @Override
     public String createMessageSignature(String mensage) throws CantSingMessageException {
 
-        try{
+        try {
 
             /*
              * Get the message hash
@@ -71,10 +71,8 @@ public class PublisherIdentityRecord implements PublisherIdentity {
              * Create the message signature
              */
             return AsymmetricCryptography.createMessageSignature(messageHash, privateKey);
-        }
-        catch(Exception e)
-        {
-            throw new CantSingMessageException("Fatal Error Signed message",e,"","");
+        } catch (Exception e) {
+            throw new CantSingMessageException("Fatal Error Signed message", e, "", "");
         }
 
 

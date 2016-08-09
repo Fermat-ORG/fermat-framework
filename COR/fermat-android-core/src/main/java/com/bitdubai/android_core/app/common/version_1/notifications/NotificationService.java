@@ -169,7 +169,7 @@ public class NotificationService extends Service {
             try {
                 fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(publicKey, this, FermatApplication.getInstance().getAppManager().getAppsSession(publicKey));
             } catch (Exception e) {
-                Log.e(LOG_TAG, new StringBuilder().append("Exception params: ").append(publicKey).toString());
+                Log.e(LOG_TAG, "Exception params: " + publicKey);
                 e.printStackTrace();
             }
             NotificationPainter notificationPainter = null;
@@ -184,9 +184,8 @@ public class NotificationService extends Service {
                 if (notificationPainter.showNotification()) {  //get if notification settings enabled view
                     RemoteViews remoteViews = notificationPainter.getNotificationView(code);
                     Intent intent = new Intent();
-                    intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
-                    //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.setAction("org.fermat.APP_LAUNCHER");
+                    intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
                     intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN, notificationPainter.getActivityCodeResult());
                     //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     PendingIntent pi = PendingIntent
@@ -211,7 +210,7 @@ public class NotificationService extends Service {
                                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                                 .setLights(Color.YELLOW, 3000, 3000);
                     }
-                    Log.i(LOG_TAG, new StringBuilder().append("Launcher: ").append(publicKey).toString());
+                    Log.i(LOG_TAG, "Launcher: " + publicKey);
                 }
             } else {
                 Intent intent = new Intent();
@@ -228,7 +227,7 @@ public class NotificationService extends Service {
                         .setContentIntent(pi)
                         .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                         .setLights(Color.YELLOW, 3000, 3000);
-                Log.i(LOG_TAG, new StringBuilder().append("Launcher: ").append(publicKey).toString());
+                Log.i(LOG_TAG, "Launcher: " + publicKey);
             }
 
         } else {
@@ -261,7 +260,10 @@ public class NotificationService extends Service {
 
             //todo: sumar notificationId con sourcePlugin.
 
-            if (!dataIsValid(owner, sourcePlugin, notificationId)) return;
+            if (!dataIsValid(owner, sourcePlugin, notificationId)){
+                Log.e(LOG_TAG,"NotificationData is not valid, please check. Owner:"+owner+", Plugin:"+sourcePlugin+",notificationId:"+notificationId);
+                return;
+            }
 
             char[] letters = sourcePlugin.toCharArray();
             int leeterCount = 0;
@@ -300,9 +302,8 @@ public class NotificationService extends Service {
             if (notificationPainter != null) {
                 if (notificationPainter.showNotification()) {
                     RemoteViews remoteViews = notificationPainter.getNotificationView(fermatBundle);
-                    Intent intent = new Intent();
+                    Intent intent = new Intent("org.fermat.APP_LAUNCHER");
                     intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appToOpenPublicKey);
-                    intent.setAction("org.fermat.APP_LAUNCHER");
                     intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN, notificationPainter.getActivityCodeResult());
                     PendingIntent pi = PendingIntent
                             .getBroadcast(this, notificationId, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -330,9 +331,8 @@ public class NotificationService extends Service {
                     }
                 }
             } else {
-                Intent intent = new Intent();
+                Intent intent = new Intent("org.fermat.APP_LAUNCHER");
                 intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appToOpenPublicKey);
-                intent.setAction("org.fermat.APP_LAUNCHER");
                 PendingIntent pi = PendingIntent
                         .getBroadcast(this, notificationId, intent, PendingIntent.FLAG_ONE_SHOT);
                 builder = new Notification.Builder(this)

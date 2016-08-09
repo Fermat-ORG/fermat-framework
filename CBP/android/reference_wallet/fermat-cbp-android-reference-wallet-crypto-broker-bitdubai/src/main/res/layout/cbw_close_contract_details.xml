@@ -139,7 +139,7 @@
                 android:layout_row="2"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                tools:text="Crypto Transfer"/>
+                tools:text="@string/crypto_transfer"/>
 
         </GridLayout>
 

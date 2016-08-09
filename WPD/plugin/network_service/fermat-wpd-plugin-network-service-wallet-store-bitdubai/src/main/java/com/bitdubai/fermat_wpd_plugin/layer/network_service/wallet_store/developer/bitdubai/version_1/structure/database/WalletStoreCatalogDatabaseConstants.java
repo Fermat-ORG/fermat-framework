@@ -27,7 +27,7 @@ public class WalletStoreCatalogDatabaseConstants {
     /**
      * New field on WalletSkin table Screen Size information
      */
-    public static final String WALLETSKIN_SCREEN_SIZE="screenSize";
+    public static final String WALLETSKIN_SCREEN_SIZE = "screenSize";
 
     static final String WALLETSKIN_FIRST_KEY_COLUMN = "id";
 

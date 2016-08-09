@@ -204,15 +204,15 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
             PluginVersionReference[] pluginVersionReferences = null;
             if (fermatAppConnection != null)
                 pluginVersionReferences = fermatAppConnection.getPluginVersionReference();
-            else Log.e(TAG, new StringBuilder().append("AppConnection null, App publicKey: ").append(fermatApp.getAppPublicKey()).toString());
+            else Log.e(TAG, "AppConnection null, App publicKey: " + fermatApp.getAppPublicKey());
             FermatStructure fermatStructure = getAppStructure(fermatApp.getAppPublicKey());
             switch (fermatStructure.getAppStructureType()) {
                 case REFERENCE:
                     try {
                         if (pluginVersionReferences == null)
-                            throw new CantOpenSessionException("", new StringBuilder().append("PluginVersionReference null in app: ").append(fermatApp.getAppPublicKey()).toString());
+                            throw new CantOpenSessionException("", "PluginVersionReference null in app: " + fermatApp.getAppPublicKey());
                         if (pluginVersionReferences.length != 1)
-                            throw new CantOpenSessionException("", new StringBuilder().append("ReferenceApp can't have more or less than one module to assign, check your AppConnections getPluginVersionReference method, App publicKey: ").append(fermatApp.getAppPublicKey()).toString());
+                            throw new CantOpenSessionException("", "ReferenceApp can't have more or less than one module to assign, check your AppConnections getPluginVersionReference method, App publicKey: " + fermatApp.getAppPublicKey());
                         ModuleManager moduleManager = FermatApplication.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference()[0]);
                         referenceAppFermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), moduleManager, isForSubSession);
                     } catch (CantCreateProxyException e) {
@@ -300,7 +300,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
                 return selectRuntimeManager(FermatAppType.WALLET).getAppByPublicKey(appPublicKey);
             }
         } catch (Exception e) {
-            Log.e(TAG, new StringBuilder().append("App instaled in device null: ").append(appPublicKey).toString());
+            Log.e(TAG, "App instaled in device null: " + appPublicKey);
             Log.e(TAG, "If the public key of the app is fine, try removing data and restart app. filesystem problem..");
             e.printStackTrace();
             return null;

@@ -42,8 +42,7 @@ public class ChatConnectionRequestNewsEventHandler implements FermatEventHandler
 
             } else {
                 EventType eventExpected = EventType.CHAT_ACTOR_CONNECTION_REQUEST_NEW;
-                String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode() + "\n" +
-                        "Event expected: " + eventExpected.toString() + " - " + eventExpected.getCode();
+                String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode() + "\n" + "Event expected: " + eventExpected.toString() + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);
             }
         } else {

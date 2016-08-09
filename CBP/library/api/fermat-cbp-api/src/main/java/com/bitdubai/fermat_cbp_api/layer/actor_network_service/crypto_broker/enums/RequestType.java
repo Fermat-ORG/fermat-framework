@@ -35,7 +35,7 @@ public enum RequestType implements FermatEnum {
 
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code Received: ").append(code).toString(),
+                        "Code Received: " + code,
                         "This code is not valid for the RequestType enum."
                 );
         }

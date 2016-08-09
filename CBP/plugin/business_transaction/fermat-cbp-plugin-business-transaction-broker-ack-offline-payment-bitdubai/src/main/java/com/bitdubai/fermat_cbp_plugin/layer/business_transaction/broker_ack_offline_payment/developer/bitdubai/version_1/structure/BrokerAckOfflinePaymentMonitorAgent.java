@@ -245,7 +245,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                  */
                 try {
 
-                    logManager.log(BrokerAckOfflinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
+                    logManager.log(BrokerAckOfflinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CantCreateDepositTransactionException | CantMakeDepositTransactionException | CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
                     pluginRoot.reportError(
@@ -561,10 +561,10 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                 String negotiationId = customerBrokerContractSale.getNegotiatiotId();
                 String brokerPublicKey = customerBrokerContractSale.getPublicKeyBroker();
-                ObjectChecker.checkArgument(negotiationId, new StringBuilder().append("The negotiationId for contractHash ").append(contractHash).append(" is null").toString());
+                ObjectChecker.checkArgument(negotiationId, "The negotiationId for contractHash " + contractHash + " is null");
 
                 CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-                ObjectChecker.checkArgument(customerBrokerSaleNegotiation, new StringBuilder().append("The customerBrokerSaleNegotiation by Id").append(negotiationId).append(" is null").toString());
+                ObjectChecker.checkArgument(customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation by Id" + negotiationId + " is null");
 
                 Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
                 ClauseType clauseType;
@@ -606,11 +606,11 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         pluginId.toString(),
                         brokerAmount,
                         brokerCurrency,
-                        new StringBuilder().append("Payment from Customer ").append(customerAlias).toString(),
+                        "Payment from Customer " + customerAlias,
                         TransactionType.CREDIT);
 
             } catch (CantGetListCustomerBrokerContractSaleException e) {
-                throw new CantGetCashTransactionParameterException(e, "Getting the CashTransactionParametersRecord", new StringBuilder().append("Cannot get the CustomerBrokerContractSale by contractHash/Id:\n").append(contractHash).toString());
+                throw new CantGetCashTransactionParameterException(e, "Getting the CashTransactionParametersRecord", "Cannot get the CustomerBrokerContractSale by contractHash/Id:\n" + contractHash);
             } catch (ObjectNotSetException e) {
                 throw new CantGetCashTransactionParameterException(e, "Getting the CashTransactionParametersRecord", "An object to set is null");
             } catch (CantGetListSaleNegotiationsException e) {
@@ -642,10 +642,10 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                 String negotiationId = customerBrokerContractSale.getNegotiatiotId();
                 String actorPublicKey = customerBrokerContractSale.getPublicKeyBroker();
-                ObjectChecker.checkArgument(negotiationId, new StringBuilder().append("The negotiationId for contractHash ").append(contractHash).append(" is null").toString());
+                ObjectChecker.checkArgument(negotiationId, "The negotiationId for contractHash " + contractHash + " is null");
 
                 CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-                ObjectChecker.checkArgument(customerBrokerSaleNegotiation, new StringBuilder().append("The customerBrokerSaleNegotiation by Id ").append(negotiationId).append(" is null").toString());
+                ObjectChecker.checkArgument(customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation by Id " + negotiationId + " is null");
 
                 Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
                 ClauseType clauseType;
@@ -692,10 +692,10 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         brokerAmount,
                         account,
                         brokerCurrency,
-                        new StringBuilder().append("Payment from Customer ").append(customerAlias).toString());
+                        "Payment from Customer " + customerAlias);
 
             } catch (CantGetListCustomerBrokerContractSaleException e) {
-                throw new CantGetBankTransactionParametersRecordException(e, "Getting the BankTransactionParametersRecord", new StringBuilder().append("Cannot get the CustomerBrokerContractSale by contractHash/Id:\n").append(contractHash).toString());
+                throw new CantGetBankTransactionParametersRecordException(e, "Getting the BankTransactionParametersRecord", "Cannot get the CustomerBrokerContractSale by contractHash/Id:\n" + contractHash);
             } catch (ObjectNotSetException e) {
                 throw new CantGetBankTransactionParametersRecordException(e, "Getting the BankTransactionParametersRecord", "An object to set is null");
             } catch (CantGetListSaleNegotiationsException e) {
@@ -725,10 +725,12 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 throw new InvalidParameterException("Cannot parse a null string value to long");
             } else {
                 try {
-                    return NumberFormat.getInstance().parse(stringValue).doubleValue();
+                    System.out.println("LOSTWOOD_BrokerAckOfflinePaymentMonitorAgent PARSE:"+stringValue);
+                    //return NumberFormat.getInstance().parse(stringValue).doubleValue();
+                    return Double.valueOf(stringValue);
                 } catch (Exception exception) {
                     throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
-                            "Parsing String object to long", new StringBuilder().append("Cannot parse ").append(stringValue).append(" string value to long").toString());
+                            "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
                 }
             }
         }

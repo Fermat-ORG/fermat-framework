@@ -19,7 +19,7 @@ android:orientation="vertical">
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="Profile picture"
+            android:text="@string/profile_picture"
             android:textColor="#ffffff"
             android:textSize="20sp"
             tools:ignore="HardcodedText" />
@@ -45,7 +45,7 @@ android:orientation="vertical">
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:id="@+id/img_cam"
+            android:id="@+id/img_cam_cht_btn"
             android:src="@drawable/icon_cam"
             android:layout_marginRight="20dp"
             android:layout_marginEnd="20dp"
@@ -66,7 +66,7 @@ android:orientation="vertical">
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:id="@+id/img_gallery"
+            android:id="@+id/img_gallery_cht_btn"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="100dp"
             android:src="@drawable/icon_gallery"

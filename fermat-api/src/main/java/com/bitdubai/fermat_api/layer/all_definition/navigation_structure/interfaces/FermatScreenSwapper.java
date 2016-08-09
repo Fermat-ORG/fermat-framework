@@ -12,6 +12,8 @@ public interface FermatScreenSwapper {
 
     void changeActivity(String activityName, String appBackPublicKey, Object... objects);
 
+//    void changeActivity(String activityName,String appPublicKey, String appBackPublicKey, Object... objects);
+
     void connectWithOtherApp(String fermatAppPublicKey, Object[] objectses);
 
     void onControlledActivityBack(String activityCodeBack);

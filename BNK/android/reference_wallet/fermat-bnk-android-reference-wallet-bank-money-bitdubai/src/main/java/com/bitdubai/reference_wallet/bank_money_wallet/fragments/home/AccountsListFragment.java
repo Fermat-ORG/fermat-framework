@@ -98,7 +98,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
                 presentationDialog.show();
             }
         }catch (FermatException e){
-            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.bnk_error_msg_std), Toast.LENGTH_SHORT).show();
             errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
     }
@@ -114,13 +114,12 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        try {
-            BankMoneyWalletNavigationViewPainter navigationViewPainter = new BankMoneyWalletNavigationViewPainter(getActivity());
-//            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
-        } catch (Exception e) {
-            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
-        }
+//        try {
+//        //            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+//        } catch (Exception e) {
+//            Toast.makeText(getActivity(), getResources().getString(R.string.bnk_error_msg_std), Toast.LENGTH_SHORT).show();
+//            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+//        }
     }
 
     @Override

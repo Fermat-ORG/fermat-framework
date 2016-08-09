@@ -112,18 +112,6 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkService
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("CryptoBrokerActorNetworkServiceQuotesRequest{")
-                .append("requestId=").append(requestId)
-                .append(", requesterPublicKey='").append(requesterPublicKey)
-                .append('\'')
-                .append(", requesterActorType=").append(requesterActorType)
-                .append(", cryptoBrokerPublicKey='").append(cryptoBrokerPublicKey)
-                .append('\'')
-                .append(", updateTime=").append(updateTime)
-                .append(", quotes=").append(quotes)
-                .append(", type=").append(type)
-                .append(", state=").append(state)
-                .append('}').toString();
+        return "CryptoBrokerActorNetworkServiceQuotesRequest{" + "requestId=" + requestId + ", requesterPublicKey='" + requesterPublicKey + '\'' + ", requesterActorType=" + requesterActorType + ", cryptoBrokerPublicKey='" + cryptoBrokerPublicKey + '\'' + ", updateTime=" + updateTime + ", quotes=" + quotes + ", type=" + type + ", state=" + state + '}';
     }
 }

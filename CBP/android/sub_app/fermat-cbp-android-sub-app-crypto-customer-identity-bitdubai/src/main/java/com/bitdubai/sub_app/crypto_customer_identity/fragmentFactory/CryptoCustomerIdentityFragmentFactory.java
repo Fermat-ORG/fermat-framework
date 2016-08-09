@@ -7,7 +7,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.sub_app.crypto_customer_identity.fragments.CreateCryptoCustomerIdentityFragment;
+import com.bitdubai.sub_app.crypto_customer_identity.fragments.CreateAndEditCryptoCustomerIdentityFragment;
 import com.bitdubai.sub_app.crypto_customer_identity.fragments.CryptoCustomerIdentityListFragment;
 import com.bitdubai.sub_app.crypto_customer_identity.fragments.CryptoCustomerImageCropperFragment;
 import com.bitdubai.sub_app.crypto_customer_identity.fragments.EditCryptoCustomerIdentityFragment;
@@ -36,7 +36,8 @@ public class CryptoCustomerIdentityFragmentFactory extends FermatFragmentFactory
 
 
         if (fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT)
-            return CreateCryptoCustomerIdentityFragment.newInstance();
+            //return CreateCryptoCustomerIdentityFragment.newInstance();
+            return CreateAndEditCryptoCustomerIdentityFragment.newInstance();
 
         if (fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT)
             return EditCryptoCustomerIdentityFragment.newInstance();

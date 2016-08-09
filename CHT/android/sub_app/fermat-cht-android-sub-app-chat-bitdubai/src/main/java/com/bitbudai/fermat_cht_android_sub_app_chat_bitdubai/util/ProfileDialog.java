@@ -32,11 +32,11 @@ public class ProfileDialog extends FermatDialog implements View.OnClickListener 
 
     }
 
-    public void setProfilePhoto (Bitmap photo){
+    public void setProfilePhoto(Bitmap photo) {
         image = photo;
     }
 
-    public void setProfileName (String name){
+    public void setProfileName(String name) {
         bodyName = name;
     }
 
@@ -77,7 +77,7 @@ public class ProfileDialog extends FermatDialog implements View.OnClickListener 
         BUTTON_TOUCH = touch;
     }
 
-    public int getButtonTouch(){
+    public int getButtonTouch() {
         return BUTTON_TOUCH;
     }
 }

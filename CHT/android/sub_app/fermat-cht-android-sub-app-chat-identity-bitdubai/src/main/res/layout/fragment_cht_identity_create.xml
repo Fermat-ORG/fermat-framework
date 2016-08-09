@@ -31,7 +31,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User Name"
+        android:text="@string/cht_identity_name"
         android:layout_marginTop="24dp"
         android:id="@+id/textViewChtTitle"
         android:textColor="#09D261"
@@ -46,7 +46,7 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/editTextName"
-        android:hint="Name"
+        android:hint="@string/cht_identity_name"
         android:textColor="#808080"
         android:foregroundTint="#808080"
         android:layout_below="@+id/textViewChtTitle"
@@ -60,7 +60,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Status"
+        android:text="@string/cht_identity_status"
         android:textColor="#09D261"
         android:id="@+id/statusView"
         android:layout_below="@+id/editTextName"
@@ -76,7 +76,7 @@
         android:ems="10"
         android:textColor="#808080"
         android:id="@+id/editTextStatus"
-        android:hint="Status"
+        android:hint="@string/cht_identity_status"
         android:textColorHint="#808080"
         android:foregroundTint="#808080"
         android:layout_below="@+id/statusView"
@@ -90,7 +90,7 @@
         android:layout_width="188dp"
         android:layout_height="38dp"
         android:layout_alignParentBottom="true"
-        android:background="#09D261"
+        android:background="#ffffff"
         android:drawableStart="@drawable/chort_buttom_accept"
         android:drawableLeft="@drawable/chort_buttom_accept"
         android:textColor="@android:color/white"
@@ -102,7 +102,8 @@
         android:layout_alignEnd="@+id/editTextStatus"
         android:layout_alignRight="@+id/editTextStatus"
         android:layout_alignStart="@+id/editTextStatus"
-        android:layout_alignLeft="@+id/editTextStatus" />
+        android:layout_alignLeft="@+id/editTextStatus"
+        style="?android:attr/borderlessButtonStyle"/>
 
     <Button
         android:id="@+id/btnRotate"

@@ -108,15 +108,11 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         try {
             cryptoWallet = fermatWalletSessionReferenceApp.getModuleManager();
 
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
-
-            FermatWalletSettings fermatWalletSettings;
-            try {
-                fermatWalletSettings = cryptoWallet.loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
-                this.blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
-            }catch (Exception e){
-
-            }
             onRefresh();
         } catch (Exception ex) {
             ex.printStackTrace();

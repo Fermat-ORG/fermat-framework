@@ -8,8 +8,8 @@ public class LinkedChatActorIdentityImpl implements com.bitdubai.fermat_cht_api.
 
     private final UUID connectionId;
     private final String publicKey;
-    private final String alias    ;
-    private final byte[] image    ;
+    private final String alias;
+    private final byte[] image;
 
     public LinkedChatActorIdentityImpl(final UUID connectionId,
                                        final String publicKey,
@@ -18,19 +18,17 @@ public class LinkedChatActorIdentityImpl implements com.bitdubai.fermat_cht_api.
 
         this.connectionId = connectionId;
         this.publicKey = publicKey;
-        this.alias     = alias    ;
-        this.image     = image    ;
+        this.alias = alias;
+        this.image = image;
     }
 
     public LinkedChatActorIdentityImpl(final ChatActorConnection actorConnection) {
 
         this.connectionId = actorConnection.getConnectionId();
         this.publicKey = actorConnection.getPublicKey();
-        this.alias     = actorConnection.getAlias()    ;
-        this.image     = actorConnection.getImage()    ;
+        this.alias = actorConnection.getAlias();
+        this.image = actorConnection.getImage();
     }
-
-
 
 
     @Override
@@ -49,7 +47,9 @@ public class LinkedChatActorIdentityImpl implements com.bitdubai.fermat_cht_api.
     }
 
     @Override
-    public byte[] getImage() { return image; }
+    public byte[] getImage() {
+        return image;
+    }
 
 
 }

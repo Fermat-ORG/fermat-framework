@@ -33,60 +33,48 @@ public class ChatFragmentFactory extends FermatFragmentFactory<ChatSessionRefere
             throw createFragmentNotFoundException(null);
         }
 
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT))
-        {
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT)) {
             return ChatListFragment.newInstance();
         }
 
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT))
-        {
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT)) {
             return ContactsListFragment.newInstance();
         }
 
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT))
-        {
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT)) {
             return ChatErrorReportFragment.newInstance();
         }
 
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACTLIST_FRAGMENT))
-        {
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACTLIST_FRAGMENT)) {
             return ContactsListFragment.newInstance();
         }
 
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT))
-        {
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT)) {
             return ChatFragment.newInstance();
         }
 
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT))
-        {
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT)) {
             return ContactFragment.newInstance();
         }
 
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_EDIT_CONTACT_FRAGMENT))
-        {
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_EDIT_CONTACT_FRAGMENT)) {
             return ContactEditFragment.newInstance();
         }
 
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT))
-        {
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT)) {
             return ProfileFragment.newInstance();
         }
 
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT))
-        {
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT)) {
             return ProfileListFragment.newInstance();
         }
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL))
-        {
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL)) {
             return WizardFirstStepBroadcastFragment.newInstance();
         }
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL))
-        {
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL)) {
             return WizardTwoStepBroadcastFragment.newInstance();
         }
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL))
-        {
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL)) {
             return WizardScheduledTwoStepBroadcastFragment.newInstance();
         }
         throw createFragmentNotFoundException(fragments);

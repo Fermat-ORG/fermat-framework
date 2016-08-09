@@ -20,7 +20,7 @@ import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSessionReferenceApp, ResourceProviderManager,DesktopFragmentsEnumType> {
+public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSessionReferenceApp, ResourceProviderManager, DesktopFragmentsEnumType> {
 
 
     @Override
@@ -28,7 +28,7 @@ public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSession
 
         Fragment abstractFermatFragment = null;
 
-        switch (fragments){
+        switch (fragments) {
             case DESKTOP_MAIN:
                 abstractFermatFragment = DesktopFragment.newInstance();
                 break;

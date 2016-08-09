@@ -43,7 +43,7 @@ public class CryptoAddress implements Serializable {
 
     @Override
     public String toString() {
-        return new StringBuilder().append(cryptoCurrency.toString()).append(":").append(address).toString();
+        return cryptoCurrency.toString() + ":" + address;
     }
 
     @Override

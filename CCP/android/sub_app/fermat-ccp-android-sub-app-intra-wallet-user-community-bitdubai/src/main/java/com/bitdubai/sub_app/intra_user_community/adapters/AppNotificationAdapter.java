@@ -12,14 +12,12 @@ import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.holders.AppNotificationsHolder;
 import com.ibm.icu.util.Calendar;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author Jose Manuel De Sousa.
- * updated Andres Abreu aabreu1 20/07/2016
+ * updated Andres Abreu aabreu1 03/08/2016
  */
 public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, AppNotificationsHolder> {
 
@@ -39,9 +37,15 @@ public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, 
 
     @Override
     protected void bindHolder(AppNotificationsHolder holder, IntraUserInformation data, int position) {
+
+        if (data.getCity()!=null||data.getCountry()!=null)
+            holder.notification_location.setText(data.getCountry()+", "+data.getCity());
+        else holder.notification_location.setText("No Location");
+
         if (data.getPublicKey() != null) {
             holder.userName.setText(data.getName());
             holder.receptionTime.setText(convertToTimeAgo(data.getContactRegistrationDate()));
+           // holder.userLocation.setText(data.getCountry()+" - "+data.getCity());
             if (data.getProfileImage() != null && data.getProfileImage().length > 0) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);

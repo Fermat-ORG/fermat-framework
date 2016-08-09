@@ -61,6 +61,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Re
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -143,6 +144,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Re
     }
 
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 

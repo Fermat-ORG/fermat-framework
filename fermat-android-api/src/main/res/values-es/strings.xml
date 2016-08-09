@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_title">Bienvenido!</string>
+    <string name="text_subtitle">Se trata de una cartera básica de Bitcoin. Sus principales características incluyen:</string>
+    <string name="text_body">* Verificación de Saldo.\n* Enviar y Recibir Bitcoins.\n* Solicitar Bitcoins.\n* Explorar historial de Transacciones.</string>
+    <string name="text_footer">Para Empezar, Elija un Avatar a continuacion. Mas adelante podra personalizar la Imagen y el Alias</string>
+    <string name="name_left">John Doe</string>
+    <string name="name_right">Jane Doe</string>
+    <string name="checkbox_show">No mostrar</string>
+    <string name="dialog_button_close">Cerrar</string>
+
+    <string name="confirm_dialog_title">Titulo</string>
+    <string name="confirm_dialog_body">Quieres Guardar esto?</string>
+    <string name="confirm_dialog_yes">Si</string>
+    <string name="confirm_dialog_no">No</string>
+
+    <!-- dialog_blockchain_download.xml-->
+    <string name="advertisement_text">Notificación!</string>
+    <string name="the_process_of_downloading_text">El proceso de descarga de bloques de la Blockchain está en curso. \nMientras esto ocurre, la barra de acción se muestra en rojo.</string>
+</resources>

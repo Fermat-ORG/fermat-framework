@@ -21,8 +21,7 @@ public class ChatUserIdentityImpl implements ChatUserIdentity {
     /**
      * Constructor
      */
-    public ChatUserIdentityImpl(String alias, String phrase,String publicKey, String privateKey, byte[] image, Actors actors, PlatformComponentType platformComponentType)
-    {
+    public ChatUserIdentityImpl(String alias, String phrase, String publicKey, String privateKey, byte[] image, Actors actors, PlatformComponentType platformComponentType) {
         this.alias = alias;
         this.phrase = phrase;
         this.publicKey = publicKey;
@@ -33,6 +32,7 @@ public class ChatUserIdentityImpl implements ChatUserIdentity {
 //        this.pluginFileSystem = pluginFileSystem;
 //        this.pluginId = pluginId;
     }
+
     /**
      * The method <code>getPhrase</code> returns the phrase created by the intra user
      *

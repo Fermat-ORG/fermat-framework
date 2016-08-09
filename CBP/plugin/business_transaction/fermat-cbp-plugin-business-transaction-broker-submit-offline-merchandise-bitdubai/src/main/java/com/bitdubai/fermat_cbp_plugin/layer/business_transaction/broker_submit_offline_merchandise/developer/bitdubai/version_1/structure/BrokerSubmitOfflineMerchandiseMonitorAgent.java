@@ -242,7 +242,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                  */
                 try {
 
-                    logManager.log(BrokerSubmitOfflineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
+                    logManager.log(BrokerSubmitOfflineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException | CantCreateBankMoneyDestockException | CantSubmitMerchandiseException | CantCreateCryptoMoneyDestockException | CantCreateCashMoneyDestockException e) {
                     pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -358,7 +358,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
 
                     contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
-                    System.out.println(new StringBuilder().append("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitConfirmList(): ").append(contractHash).append("\n").toString());
+                    System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitConfirmList(): " + contractHash + "\n");
 
                     transactionTransmissionManager.confirmNotificationReception(
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
@@ -411,18 +411,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
             final String accountNumber = getAccountNumber(destockRecord.getCbpWalletPublicKey(), destockRecord.getFiatCurrency());
             destockRecord.setBankAccount(accountNumber);
 
-            System.out.println(new StringBuilder()
-                    .append("TEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeBankDeStock():")
-                    .append("\n - deStockRecord.getPublicKeyActor(): ").append(destockRecord.getPublicKeyActor())
-                    .append("\n - deStockRecord.getFiatCurrency(): ").append(destockRecord.getFiatCurrency())
-                    .append("\n - deStockRecord.getCbpWalletPublicKey(): ").append(destockRecord.getCbpWalletPublicKey())
-                    .append("\n - deStockRecord.getBankWalletPublicKey(): ").append(destockRecord.getBankWalletPublicKey())
-                    .append("\n - deStockRecord.getBankAccount(): ").append(destockRecord.getBankAccount())
-                    .append("\n - deStockRecord.getAmount(): ").append(destockRecord.getAmount())
-                    .append("\n - deStockRecord.getMemo(): ").append(destockRecord.getMemo())
-                    .append("\n - deStockRecord.getPriceReference(): ").append(destockRecord.getPriceReference())
-                    .append("\n - deStockRecord.getOriginTransaction(): ").append(destockRecord.getOriginTransaction())
-                    .append("\n - pendingToDeStockTransaction.getContractHash(): ").append(pendingToDeStockTransaction.getContractHash()).toString());
+            System.out.println("TEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeBankDeStock():" + "\n - deStockRecord.getPublicKeyActor(): " + destockRecord.getPublicKeyActor() + "\n - deStockRecord.getFiatCurrency(): " + destockRecord.getFiatCurrency() + "\n - deStockRecord.getCbpWalletPublicKey(): " + destockRecord.getCbpWalletPublicKey() + "\n - deStockRecord.getBankWalletPublicKey(): " + destockRecord.getBankWalletPublicKey() + "\n - deStockRecord.getBankAccount(): " + destockRecord.getBankAccount() + "\n - deStockRecord.getAmount(): " + destockRecord.getAmount() + "\n - deStockRecord.getMemo(): " + destockRecord.getMemo() + "\n - deStockRecord.getPriceReference(): " + destockRecord.getPriceReference() + "\n - deStockRecord.getOriginTransaction(): " + destockRecord.getOriginTransaction() + "\n - pendingToDeStockTransaction.getContractHash(): " + pendingToDeStockTransaction.getContractHash());
 
             bankMoneyDestockManager.createTransactionDestock(
                     destockRecord.getPublicKeyActor(),
@@ -451,18 +440,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
             final BigDecimal amount = getAmount(pendingToDeStockTransaction.getContractHash());
             destockRecord.setAmount(amount);
 
-            System.out.println(new StringBuilder()
-                    .append("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeCashDeStock():")
-                    .append("\n - destockRecord.getPublicKeyActor(): ").append(destockRecord.getPublicKeyActor())
-                    .append("\n - destockRecord.getFiatCurrency(): ").append(destockRecord.getFiatCurrency())
-                    .append("\n - destockRecord.getCbpWalletPublicKey(): ").append(destockRecord.getCbpWalletPublicKey())
-                    .append("\n - destockRecord.getBankWalletPublicKey(): ").append(destockRecord.getCshWalletPublicKey())
-                    .append("\n - destockRecord.getCashReference(): ").append(destockRecord.getCashReference())
-                    .append("\n - destockRecord.getAmount(): ").append(destockRecord.getAmount())
-                    .append("\n - destockRecord.getMemo(): ").append(destockRecord.getMemo())
-                    .append("\n - destockRecord.getPriceReference(): ").append(destockRecord.getPriceReference())
-                    .append("\n - destockRecord.getOriginTransaction(): ").append(destockRecord.getOriginTransaction())
-                    .append("\n - pendingToDeStockTransaction.getContractHash(): ").append(pendingToDeStockTransaction.getContractHash()).toString());
+            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeCashDeStock():" + "\n - destockRecord.getPublicKeyActor(): " + destockRecord.getPublicKeyActor() + "\n - destockRecord.getFiatCurrency(): " + destockRecord.getFiatCurrency() + "\n - destockRecord.getCbpWalletPublicKey(): " + destockRecord.getCbpWalletPublicKey() + "\n - destockRecord.getBankWalletPublicKey(): " + destockRecord.getCshWalletPublicKey() + "\n - destockRecord.getCashReference(): " + destockRecord.getCashReference() + "\n - destockRecord.getAmount(): " + destockRecord.getAmount() + "\n - destockRecord.getMemo(): " + destockRecord.getMemo() + "\n - destockRecord.getPriceReference(): " + destockRecord.getPriceReference() + "\n - destockRecord.getOriginTransaction(): " + destockRecord.getOriginTransaction() + "\n - pendingToDeStockTransaction.getContractHash(): " + pendingToDeStockTransaction.getContractHash());
 
             cashMoneyDestockManager.createTransactionDestock(
                     destockRecord.getPublicKeyActor(),
@@ -514,7 +492,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                 String negotiationId = customerBrokerContractSale.getNegotiatiotId();
 
                 CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-                ObjectChecker.checkArgument(customerBrokerSaleNegotiation, new StringBuilder().append("The customerBrokerSaleNegotiation by Id ").append(negotiationId).append(" is null").toString());
+                ObjectChecker.checkArgument(customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation by Id " + negotiationId + " is null");
 
                 Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
                 ClauseType clauseType;
@@ -560,10 +538,12 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                 throw new InvalidParameterException("Cannot parse a null string value to long");
             } else {
                 try {
-                    return NumberFormat.getInstance().parse(stringValue).doubleValue();
+                  //  return NumberFormat.getInstance().parse(stringValue).doubleValue();
+                    System.out.println("LOSTOOW_BrokerSubmitOfflineMerchandiseMonitorAgent_PARSE:"+stringValue);
+                    return Double.valueOf(stringValue);
                 } catch (Exception exception) {
                     throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
-                            "Parsing String object to long", new StringBuilder().append("Cannot parse ").append(stringValue).append(" string value to long").toString());
+                            "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
                 }
             }
         }

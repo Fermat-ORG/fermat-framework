@@ -21,9 +21,9 @@ import java.util.List;
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/05/2016.
  *
- * @author  lnacosta
+ * @author lnacosta
  * @version 1.0
- * @since   Java JDK 1.7
+ * @since Java JDK 1.7
  */
 public class ChatActorNetworkServiceSearch extends ChatSearch {
 
@@ -59,27 +59,27 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
-            System.out.println("Chat Actor Network Service Search Test Listing through communication layer... SUCCESS: "+list.size()+" actors found.");
+            System.out.println("Chat Actor Network Service Search Test Listing through communication layer... SUCCESS: " + list.size() + " actors found.");
 
             final List<ChatExposingData> chatExposingDataArrayList = new ArrayList<>();
 
             for (final ActorProfile actorProfile : list) {
 
-                JsonParser parser = new JsonParser();
+//                JsonParser parser = new JsonParser();
+//
+//                Gson gson = new Gson();
+//
+//                JsonObject extraData = parser.parse(actorProfile.getExtraData()).getAsJsonObject();
+//
+//                String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
+//
+//                String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
+//
+//                String status = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS), String.class);
+//
+//                String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY), String.class);
 
-                Gson gson = new Gson();
-
-                JsonObject extraData = parser.parse(actorProfile.getExtraData()).getAsJsonObject();
-
-                String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
-
-                String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
-
-                String status= gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS),String.class);
-
-                String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
-
-                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status, actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
+                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), "", "", "", "", actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             System.out.println("Chat Actor Network Service Search Test RETURNING LIST OF ACTORS.");
@@ -128,26 +128,25 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             ActorProfile actorProfile;
 
-            if(list !=null && !list.isEmpty()) {
+            if (list != null && !list.isEmpty()) {
                 actorProfile = list.get(0);
-            }
-            else return null;
+            } else return null;
 
-            JsonParser parser = new JsonParser();
+//            JsonParser parser = new JsonParser();
+//
+//            Gson gson = new Gson();
+//
+//            JsonObject extraData = parser.parse(actorProfile.getExtraData()).getAsJsonObject();
+//
+//            String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
+//
+//            String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
+//
+//            String status = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS), String.class);
+//
+//            String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY), String.class);
 
-            Gson gson = new Gson();
-
-            JsonObject extraData = parser.parse(actorProfile.getExtraData()).getAsJsonObject();
-
-            String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
-
-            String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
-
-            String status= gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS),String.class);
-
-            String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY), String.class);
-
-            return new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status, actorProfile.getLocation(), 0, 0, actorProfile.getStatus());
+            return new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), "", "", "", "", actorProfile.getLocation(), 0, 0, actorProfile.getStatus());
 
         } catch (final CantRequestProfileListException e) {
 
@@ -229,7 +228,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 //
 //                    String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY), String.class);
 //                }
-                    System.out.println("************** I\'m a crypto Chat: " + actorProfile.getAlias() + " - " + actorProfile.getStatus());
+                System.out.println("************** I\'m a crypto Chat: " + actorProfile.getAlias() + " - " + actorProfile.getStatus());
 
                 chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), "", "", "", "", actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
@@ -274,21 +273,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             for (final ActorProfile actorProfile : list) {
 
-                JsonParser parser = new JsonParser();
-
-                Gson gson = new Gson();
-
-                JsonObject extraData = parser.parse(actorProfile.getExtraData()).getAsJsonObject();
-
-                String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
-
-                String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
-
-                String status= gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS),String.class);
-
-                String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
-
-                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status, actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
+                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), "", "", "", "", actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return chatExposingDataArrayList;
@@ -331,21 +316,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             for (final ActorProfile actorProfile : list) {
 
-                JsonParser parser = new JsonParser();
-
-                Gson gson = new Gson();
-
-                JsonObject extraData = parser.parse(actorProfile.getExtraData()).getAsJsonObject();
-
-                String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
-
-                String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
-
-                String status= gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS),String.class);
-
-                String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
-
-                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status, actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
+                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), "", "", "", "", actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return chatExposingDataArrayList;
@@ -388,21 +359,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             for (final ActorProfile actorProfile : list) {
 
-                JsonParser parser = new JsonParser();
-
-                Gson gson = new Gson();
-
-                JsonObject extraData = parser.parse(actorProfile.getExtraData()).getAsJsonObject();
-
-                String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
-
-                String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
-
-                String status= gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS),String.class);
-
-                String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
-
-                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status, actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
+                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), "", "", "", "", actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return chatExposingDataArrayList;

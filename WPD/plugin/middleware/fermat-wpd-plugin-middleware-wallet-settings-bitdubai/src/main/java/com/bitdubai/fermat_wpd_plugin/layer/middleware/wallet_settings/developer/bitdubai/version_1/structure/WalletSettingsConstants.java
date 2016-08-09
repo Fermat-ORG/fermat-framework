@@ -14,7 +14,4 @@ public class WalletSettingsConstants {
     public static final String WALLET_SETTINGS_XML_SKIN_NODE = "skin_id";
 
 
-
-
-
 }

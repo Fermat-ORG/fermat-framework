@@ -143,7 +143,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private Bitmap contactImageBitmap;
     private WalletContact walletContact;
 
-    LossProtectedWalletSettings lossProtectedWalletSettings;
+
     private boolean isScrolled = false;
     private FrameLayout contacts_container;
     private boolean connectionDialogIsShow = false;
@@ -170,12 +170,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
             errorManager = appSession.getErrorManager();
             lossProtectedWalletManager = lossWalletSession.getModuleManager();
 
-            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossWalletSession.getAppPublicKey());
 
-
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -201,7 +197,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
-                            boolean isHelpEnabled = lossProtectedWalletSettings.isContactsHelpEnabled();
+                            boolean isHelpEnabled = (Boolean) appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED);
 
                             if (isHelpEnabled)
                                 setUpTutorial(true);
@@ -930,6 +926,30 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         if(fermatWorker != null)
             fermatWorker.shutdownNow();
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        try {
+
+            FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+            actionButton.detach();
+            actionButton.removeAllViewsInLayout();
+
+
+            button1.removeAllViewsInLayout();
+            button2.removeAllViewsInLayout();
+
+            actionButton = null;
+            button1 = null;
+            button2 = null;
+
+            actionMenu = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+//        ((ViewGroup)button1.getParent()).removeView(button1);
+        super.onDestroy();
     }
 
     /**

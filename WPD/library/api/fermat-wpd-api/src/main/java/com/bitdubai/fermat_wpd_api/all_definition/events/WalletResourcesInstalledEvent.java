@@ -9,19 +9,19 @@ import java.util.UUID;
  * Created by loui on 18/02/15.
  */
 public class WalletResourcesInstalledEvent extends AbstractWPDEvent {
-   //Loui TODO: cambiar walletType por la variable correspodiente del tipo de dato correspondiente.
+    //Loui TODO: cambiar walletType por la variable correspodiente del tipo de dato correspondiente.
     private UUID walletType;
     private EventSource eventSource;
 
-    public void setWalletType (UUID walletType){
+    public void setWalletType(UUID walletType) {
         this.walletType = walletType;
     }
 
-    public UUID getWalletType(){
+    public UUID getWalletType() {
         return this.walletType;
     }
 
-    public WalletResourcesInstalledEvent (EventType eventType){
+    public WalletResourcesInstalledEvent(EventType eventType) {
         super(eventType);
     }
 

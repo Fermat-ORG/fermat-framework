@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
@@ -65,6 +66,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.FermatWallet</code>
@@ -114,6 +116,7 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      *
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<FermatWalletWalletContact> listWalletContacts(String walletPublicKey, String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException;
 
 
@@ -125,13 +128,14 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * @return
      * @throws CantGetAllWalletContactsException
      */
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<FermatWalletWalletContact> listAllActorContactsAndConnections(String walletPublicKey, String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException;
 
     /**
      * List all wallet contact related to an specific wallet.
      *
      * @param walletPublicKey public key of the wallet in which we are working.
-    * @param intraUserLoggedInPublicKey public key of the wallet intra user identity.
+     * @param intraUserLoggedInPublicKey public key of the wallet intra user identity.
      * @param max             quantity of instance you want to return
      * @param offset          the point of start in the list you're trying to bring.
      *
@@ -390,10 +394,10 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * @throws CantListTransactionsException if something goes wrong.
      */
     List<FermatWalletModuleTransaction> getTransactions(String intraUserLoggedInPublicKey, BalanceType balanceType,
-                                                  TransactionType transactionType,
-                                                  String walletPublicKey,
-                                                  int max,
-                                                  int offset) throws CantListTransactionsException;
+                                                        TransactionType transactionType,
+                                                        String walletPublicKey,
+                                                        int max,
+                                                        int offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>listTransactionsByActor</code> you cant get all the transactions related with an specific actor.
@@ -408,12 +412,13 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<FermatWalletModuleTransaction> listTransactionsByActor(BalanceType balanceType,
-                                                          String walletPublicKey,
-                                                          String actorPublicKey,
-                                                          String intraUserLoggedInPublicKey,
-                                                          int max,
-                                                          int offset) throws CantListTransactionsException;
+                                                                String walletPublicKey,
+                                                                String actorPublicKey,
+                                                                String intraUserLoggedInPublicKey,
+                                                                int max,
+                                                                int offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>getActorTransactionHistory</code> you can get the transaction history of an specific actor.
@@ -444,37 +449,16 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<FermatWalletModuleTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
-                                                                             TransactionType transactionType,
-                                                                             String walletPublicKey,
-                                                                             String actorPublicKey,
-                                                                             BlockchainNetworkType blockchainNetworkType,
-                                                                             int max,
-                                                                             int offset) throws CantListTransactionsException;
+                                                                                   TransactionType transactionType,
+                                                                                   String walletPublicKey,
+                                                                                   String actorPublicKey,
+                                                                                   BlockchainNetworkType blockchainNetworkType,
+                                                                                   int max,
+                                                                                   int offset) throws CantListTransactionsException;
 
-    /**
-     * Throw the method <code>listTransactionsByActorAndType</code> you can get the transactions for each actor
-     * who have made transactions with the specified wallet.
-     *
-     * @param balanceType
-     * @param transactionType
-     * @param walletPublicKey
-     * @param actorPublicKey
-     * @param intraUserLoggedInPublicKey
-     * @param max
-     * @param offset
-     * @return
-     * @throws CantListTransactionsException
-     */
-    List<FermatWalletModuleTransaction> listTransactionsByActorAndType(BalanceType balanceType,
-                                                                 TransactionType transactionType,
-                                                                 String walletPublicKey,
-                                                                 String actorPublicKey,
-                                                                 String intraUserLoggedInPublicKey,
-                                                                 BlockchainNetworkType blockchainNetworkType,
-                                                                 int max,
-                                                                 int offset) throws CantListTransactionsException;
+
 
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
@@ -496,6 +480,7 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * @param walletPublicKey
      * @return List of PaymentRequest object
      */
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<PaymentRequest> listSentPaymentRequest(String walletPublicKey, BlockchainNetworkType blockchainNetworkType, int max, int offset) throws CantListSentPaymentRequestException;
 
 
@@ -554,23 +539,23 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      *
      * @throws CantSendCryptoPaymentRequestException  if something goes wrong.
      */
-     void sendCryptoPaymentRequest(final String walletPublicKey,
-                                   final String identityPublicKey,
-                                   final Actors identityType,
-                                   final String actorPublicKey,
-                                   final Actors actorType,
-                                   final CryptoAddress cryptoAddress,
-                                   final String description,
-                                   final long amount,
-                                   final BlockchainNetworkType networkType,
-                                   final ReferenceWallet referenceWallet,
-                                   final CryptoCurrency cryptoCurrency) throws CantSendCryptoPaymentRequestException;
+    void sendCryptoPaymentRequest(final String walletPublicKey,
+                                  final String identityPublicKey,
+                                  final Actors identityType,
+                                  final String actorPublicKey,
+                                  final Actors actorType,
+                                  final CryptoAddress cryptoAddress,
+                                  final String description,
+                                  final long amount,
+                                  final BlockchainNetworkType networkType,
+                                  final ReferenceWallet referenceWallet,
+                                  final CryptoCurrency cryptoCurrency) throws CantSendCryptoPaymentRequestException;
 
     void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException;
 
-     void registerIdentities();
+    void registerIdentities();
 
-     FermatWalletWalletContact findWalletContactByName(String alias, String walletPublicKey, String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException;
+    FermatWalletWalletContact findWalletContactByName(String alias, String walletPublicKey, String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException;
 
     /**
      *
@@ -616,7 +601,7 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * @throws CantGetBlockchainDownloadProgress
      */
 
-     BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress;
+    BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress;
 
     /**
      *The method <code>getInstalledWallets</code> return the list of installed wallets on platform.
@@ -645,5 +630,5 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
 
     void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantLoadExistingVaultSeed;
 
-
+    void testNetGiveMeCoins(BlockchainNetworkType blockchainNetworkType, CryptoAddress cryptoAddress) throws CantGetCoinsFromFaucetException;
 }

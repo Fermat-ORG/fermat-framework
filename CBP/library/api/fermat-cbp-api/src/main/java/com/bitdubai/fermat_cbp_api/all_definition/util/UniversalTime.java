@@ -137,7 +137,7 @@ public class UniversalTime {
             throw new CantGetUTCException(
                     FermatException.wrapException(e),
                     "Getting UTC date string from external API",
-                    new StringBuilder().append("The URL ").append(TIME_ORG_URL).append(" is malformed").toString());
+                    "The URL " + TIME_ORG_URL + " is malformed");
         } catch (IOException e) {
             throw new CantGetUTCException(
                     FermatException.wrapException(e),

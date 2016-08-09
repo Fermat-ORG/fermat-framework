@@ -51,6 +51,7 @@ import java.util.UUID;
 
 /**
  * Created by guillermo on 16/02/16.
+ *
  */
 public class SettingsProvidersFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
         implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<CurrencyPairAndProvider>, AdapterView.OnItemSelectedListener, DialogInterface.OnDismissListener {
@@ -65,7 +66,6 @@ public class SettingsProvidersFragment extends AbstractFermatFragment<ReferenceA
     private Currency currencyTo;
     private List<InstalledWallet> bitcoinWallets;
     private List<InstalledWallet> fermatWallets;
-    private InstalledWallet selectedBitcoinWallet;
 
     // UI
     private RecyclerView recyclerView;
@@ -173,6 +173,7 @@ public class SettingsProvidersFragment extends AbstractFermatFragment<ReferenceA
         return layout;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -212,8 +213,6 @@ public class SettingsProvidersFragment extends AbstractFermatFragment<ReferenceA
         } else if (parent.getId() == R.id.currency_to_spinner) {
             currencyTo = currencies.get(position);
 
-        } else if (parent.getId() == R.id.bitcoin_wallets_spinner) {
-            selectedBitcoinWallet = bitcoinWallets.get(position);
         }
     }
 
@@ -254,7 +253,7 @@ public class SettingsProvidersFragment extends AbstractFermatFragment<ReferenceA
                     if (!containProvider(selectedItem)) {
                         selectedProviders.add(selectedItem);
                         adapter.changeDataSet(selectedProviders);
-                        Log.i("DATA PROVIDERSS:", new StringBuilder().append("").append(selectedProviders).append(" Item seleccionado: ").append(selectedItem).toString());
+                        Log.i("DATA PROVIDERSS:", "" + selectedProviders + " Item seleccionado: " + selectedItem);
                         showOrHideNoProvidersView();
                     }
                 }
@@ -376,7 +375,7 @@ public class SettingsProvidersFragment extends AbstractFermatFragment<ReferenceA
     private List<String> getFormattedCurrencies(List<Currency> currencies) {
         ArrayList<String> data = new ArrayList<>();
         for (Currency currency : currencies) {
-            data.add(new StringBuilder().append(currency.getFriendlyName()).append(" (").append(currency.getCode()).append(")").toString());
+            data.add(currency.getFriendlyName() + " (" + currency.getCode() + ")");
         }
 
         return data;

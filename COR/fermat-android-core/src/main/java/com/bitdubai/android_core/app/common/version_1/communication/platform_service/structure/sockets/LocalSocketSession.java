@@ -28,8 +28,11 @@ public abstract class LocalSocketSession {
     private boolean isSenderActive;
     private boolean isReceiverActive;
 
-    ObjectOutputStream objectOutputStream;
-    ObjectInputStream objectInputStream;
+    /**
+     * Streams
+     */
+    private ObjectOutputStream objectOutputStream;
+    private ObjectInputStream objectInputStream;
 
     private boolean isReConnecting;
 
@@ -53,13 +56,13 @@ public abstract class LocalSocketSession {
 
     public void startSender(){
         if(objectOutputStream!=null)throw new RuntimeException("InvalidState: objectOutputStream!=null");
-            try {
-                objectOutputStream = new ObjectOutputStream(localSocket.getOutputStream());
-                isSenderActive = true;
-                objectOutputStream.flush();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+        try {
+            objectOutputStream = new ObjectOutputStream(localSocket.getOutputStream());
+            isSenderActive = true;
+            objectOutputStream.flush();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -69,6 +72,7 @@ public abstract class LocalSocketSession {
                 if (objectOutputStream != null) {
                     objectOutputStream.close();
                 }
+                isSenderActive = false;
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -89,15 +93,16 @@ public abstract class LocalSocketSession {
             }catch (Exception e){
                 e.printStackTrace();
             }
+            isReceiverActive = false;
         }
     }
 
     public void destroy() throws IOException {
-        Log.e(TAG,"destroy method, stopReciever");
+        Log.i(TAG,"destroy method, stopReciever");
         stopReceiver();
-        Log.e(TAG, "destroy method, stopSender");
+        Log.i(TAG, "destroy method, stopSender");
         stopSender();
-        Log.e(TAG, "destroy method, clear");
+        Log.i(TAG, "destroy method, clear");
         clear();
     }
 
@@ -115,24 +120,11 @@ public abstract class LocalSocketSession {
         if(! (object instanceof Serializable)) throw new IllegalArgumentException("Object :"+object.getClass().getName()+" is nos Serializable");
         if(localSocket!=null){
             FermatModuleObjectWrapper fermatModuleObjectWrapper = new FermatModuleObjectWrapper((Serializable) object,true,requestId);
-//            ObjectOutput out = null;
             try {
 //                objectOutputStream.flush();
 //                Log.e(TAG,"LocalSocket states: "+ "connected: "+localSocket.isConnected()+", bound: "+localSocket.isBound());
                 Log.i(TAG, "send method: object type return" + object.getClass().getName() + ", number: " + i++);
                 sendPackage(fermatModuleObjectWrapper);
-//                if (localSocket.isBound()) {
-//                    sendPackage(fermatModuleObjectWrapper);
-//                }else{
-//                    Log.e(TAG,"Socket disconnected, reconnecting");
-//                    try {
-//                        reconnect(true,false);
-////                        sendMessage(requestId, object);
-//
-//                    }catch (Exception e){
-//                        e.printStackTrace();
-//                    }
-//                }
             } catch (IOException e) {
                 Log.e(TAG,"send IOException");
                 if(!localSocket.isConnected()){
@@ -144,11 +136,13 @@ public abstract class LocalSocketSession {
                         }
                     }else Log.e(TAG, "send method: isOutputShutdown true");
                     //test
-                    try {
-                        Log.e(TAG, "send method: reconnecting");
-                        reconnect(true,false);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
+                    if (isSenderActive) {
+                        try {
+                            Log.e(TAG, "send method: reconnecting");
+                            reconnect(true, false);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 }else Log.e(TAG, "send method: localSocket connected");
                 e.printStackTrace();
@@ -184,14 +178,14 @@ public abstract class LocalSocketSession {
             if (!localSocket.isConnected()) {
                 //todo: sacar ese nombre del path del server
                 try {
-                    Log.e(TAG,"Connect method, connecting localsocket");
+                    Log.i(TAG,"Connect method, connecting localsocket");
                     localSocket.connect(new LocalSocketAddress(PlatformService.SERVER_NAME));
                     localSocket.setReceiveBufferSize(500000);
                     localSocket.setSoTimeout(0);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }else Log.e(TAG,"Connect method, localsocket connected");
+            }else Log.i(TAG,"Connect method, localsocket connected");
         }else Log.e(TAG,"Connect method, localsocket null");
     }
 
@@ -227,55 +221,55 @@ public abstract class LocalSocketSession {
                 if(localSocket!=null) {
                     isReceiverActive = true;
                     int read = -1;
-                        while (isReceiverActive) {
+                    while (isReceiverActive) {
 //                                if(objectInputStream.available()!=0) {
-                                    read = objectInputStream.read();
+                        read = objectInputStream.read();
 //                                }else {
 //                                    read = 0;
-                                    if (read != -1) {
-                                        Log.i(TAG, "pidiendo objeto");
-                                        FermatModuleObjectWrapper object = null;
-                                        try {
+                        if (read != -1) {
+                            Log.i(TAG, "pidiendo objeto");
+                            FermatModuleObjectWrapper object = null;
+                            try {
 //                                            Log.e(TAG,"LocalSocket states: "+ "connected: "+localSocket.isConnected()+", bound: "+localSocket.isBound());
-                                            if(localSocket.isConnected()) {
-                                                Object o = objectInputStream.readObject();
-                                                if(o instanceof FermatModuleObjectWrapper){
-                                                    object = (FermatModuleObjectWrapper) o;
-                                                }else{
-                                                    Log.e(TAG,"ERROR, object returned is not FermatModuleObjectWrapper. Object: "+o.getClass().getName());
-                                                }
-                                            }
-                                            else Log.e(TAG,"Socket cerrado, hace falta cerrar hilo");
-                                        } catch (OptionalDataException e) {
-                                            e.printStackTrace();
-                                            read = +objectInputStream.read();
-                                            Log.e(TAG, String.valueOf(read));
-                                        }
-                                        //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
-                                        if (object != null) {
-                                            onReceiveMessage(object);
-                                            read--;
-                                            //messageSize.decrementAndGet();
-                                        } else {
-                                            Log.e(TAG, "Object receiver null");
-                                            Log.e(TAG, "Read: " + read);
-//                                        TimeUnit.SECONDS.sleep(2);
-                                        }
-                                    } else {
-                                        //Log.e(TAG,"end of input stream");
-//                                    isReceiverActive = false;
+                                if(localSocket.isConnected()) {
+                                    Object o = objectInputStream.readObject();
+                                    if(o instanceof FermatModuleObjectWrapper){
+                                        object = (FermatModuleObjectWrapper) o;
+                                    }else{
+                                        Log.e(TAG,"ERROR, object returned is not FermatModuleObjectWrapper. Object: "+o.getClass().getName());
                                     }
-//                                }
+                                }
+                                else Log.e(TAG,"Socket cerrado, hace falta cerrar hilo");
+                            } catch (OptionalDataException e) {
+                                e.printStackTrace();
+                                read = +objectInputStream.read();
+                                Log.e(TAG, String.valueOf(read));
+                            }
+                            //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
+                            if (object != null) {
+                                onReceiveMessage(object);
+                            } else {
+                                Log.e(TAG, "Object receiver null");
+                                Log.e(TAG, "Read: " + read);
+//                                        TimeUnit.SECONDS.sleep(2);
+                            }
+                        } else {
+                            //Log.e(TAG,"end of input stream");
+//                                    isReceiverActive = false;
                         }
+//                                }
+                    }
                 }
 
             } catch (IOException e) {
-                e.printStackTrace();
-                try {
-                    reconnect(false,true);
-                    startReceiving();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+                Log.e(TAG,"SessionRunner IOException. Message"+e.getMessage()+". This is only for debug (no jode en absoluto)");
+                if(isReceiverActive) {
+                    try {
+                        reconnect(false, true);
+                        startReceiving();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
 
             }catch (Exception e){
@@ -284,18 +278,6 @@ public abstract class LocalSocketSession {
         }
     }
 
-
-
-
-
-    public void addWaitingMessage(String dataId){
-        Log.i(TAG,"Message arrive, unlocking wait..");
-//        messageSize.incrementAndGet();
-//        waitMessageLocker.unblock();
-//        synchronized (waitMessageLocker){
-//            waitMessageLocker.notify();
-//        }
-    }
 
 
     public abstract void onReceiveMessage(FermatModuleObjectWrapper object);

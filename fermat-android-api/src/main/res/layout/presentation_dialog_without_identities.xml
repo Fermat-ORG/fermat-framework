@@ -44,7 +44,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="Welcome!"
+                    android:text="@string/dialog_title"
                     android:textColor="#00a99d"
                     android:textSize="20sp"
                     app:typeface="CAVIAR_DREAMS_BOLD" />
@@ -95,7 +95,7 @@
                 android:paddingRight="30dp"
                 android:paddingStart="20dp"
                 android:paddingTop="7sp"
-                android:text="This is a simple bitcoin only wallet. It's main features are:"
+                android:text="@string/text_subtitle"
                 android:textColor="#1d1d26"
                 android:textSize="14sp" />
 
@@ -125,7 +125,7 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
                     android:paddingStart="16dp"
-                    android:text="* See your balance.\n* Send and receive bitcoins.\n* Request bitcoins.\n* Browse your transaction history."
+                    android:text="@string/text_body"
                     android:textColor="#1d1d26"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -161,7 +161,7 @@
                     android:layout_marginEnd="32dp"
                     android:layout_marginRight="32dp"
                     android:gravity="center_vertical"
-                    android:text="Don´t show this again"
+                    android:text="@string/checkbox_show"
                     android:textColor="#7c7c7c"
                     android:textSize="12sp" />
             </RelativeLayout>
@@ -178,7 +178,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:textSize="14sp"
-                android:text="Close" />
+                android:text="@string/dialog_button_close" />
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

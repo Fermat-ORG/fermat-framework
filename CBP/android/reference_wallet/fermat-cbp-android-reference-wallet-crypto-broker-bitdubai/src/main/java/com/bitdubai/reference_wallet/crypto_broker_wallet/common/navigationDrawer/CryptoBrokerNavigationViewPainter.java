@@ -45,21 +45,20 @@ import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.
  * Created by Nelson Ramirez
  * on 2015.11.24
  */
-public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter {
+public class CryptoBrokerNavigationViewPainter extends NavigationViewPainter {
 
     private static final String TAG = "BrokerNavigationView";
 
     private CryptoBrokerWalletModuleManager moduleManager;
     private ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session;
     private CryptoBrokerIdentity actorIdentity;
-    private WeakReference<Context> activity;
     private ErrorManager errorManager;
     private NumberFormat numberFormat;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
 
     public CryptoBrokerNavigationViewPainter(Context activity, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session,
                                              FermatApplicationCaller applicationsHelper) {
-        this.activity = new WeakReference<>(activity);
+        super(activity);
         this.session = session;
 
         errorManager = session.getErrorManager();
@@ -81,8 +80,8 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     @Override
     public View addNavigationViewHeader() {
         try {
-            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentity, applicationsHelper.get());
+            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) getContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE),getContext(), actorIdentity, applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -95,9 +94,9 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
             List<NavViewFooterItem> stockData = getStockData();
             List<NavViewFooterItem> earningsData = getEarningsData();
 
-            final CryptoBrokerNavigationViewAdapter adapter = new CryptoBrokerNavigationViewAdapter(activity.get(), stockData, earningsData);
-            adapter.setStockTitle("Current Stock");
-            adapter.setEarningsTitle("Daily Earnings");
+            final CryptoBrokerNavigationViewAdapter adapter = new CryptoBrokerNavigationViewAdapter(getContext(), stockData, earningsData);
+            adapter.setStockTitle(getContext().getResources().getString(R.string.current_stock));
+            adapter.setEarningsTitle(getContext().getResources().getString(R.string.daily_earnings));
 
             return adapter;
         } catch (Exception e) {
@@ -118,7 +117,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = true;
             options.inSampleSize = 5;
-            drawable = BitmapFactory.decodeResource(activity.get().getResources(), R.drawable.cbw_navigation_drawer_background, options);
+            drawable = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.cbw_navigation_drawer_background, options);
         } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }
@@ -195,7 +194,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
                 final Currency earningCurrency = earningsPair.getEarningCurrency();
                 final String earningCurrencyCode = earningCurrency.getCode();
 
-                String currencies = new StringBuilder().append(linkedCurrencyCode).append(" / ").append(earningCurrencyCode).toString();
+                String currencies = linkedCurrencyCode + " / " + earningCurrencyCode;
                 String value = "0.0";
 
                 final List<EarningTransaction> earnings = moduleManager.searchEarnings(earningsPair);
@@ -220,5 +219,12 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
         }
 
         return earningsItems;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //TODO: acá des registrá tu receiver
+        //unregisterReceiver();
     }
 }

@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -117,6 +118,7 @@ public class GeolocationBrokerIdentityFragment
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
+        configureToolbar();
     }
 
     @Override
@@ -126,7 +128,7 @@ public class GeolocationBrokerIdentityFragment
 
     private void saveIdentityGeolocation() {
         if (accuracy.getText().length() == 0) {
-            Toast.makeText(getActivity(), "Accuracy is empty, please add a value", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.cbi_empty_accuracy, Toast.LENGTH_SHORT).show();
         } else {
             accuracyData = Integer.parseInt(accuracy.getText().toString());
 
@@ -151,4 +153,15 @@ public class GeolocationBrokerIdentityFragment
             frequency.setSelection(1);
         }
     }
+
+    @SuppressWarnings("deprecation")
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbp_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbp_action_bar_gradient_colors));
+    }
+
 }

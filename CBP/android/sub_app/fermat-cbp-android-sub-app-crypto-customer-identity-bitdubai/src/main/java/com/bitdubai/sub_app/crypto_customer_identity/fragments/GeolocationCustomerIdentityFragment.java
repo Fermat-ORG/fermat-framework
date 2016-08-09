@@ -71,7 +71,7 @@ public class GeolocationCustomerIdentityFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootLayout = inflater.inflate(R.layout.fragment_cbp_identity_geolocation, container, false);
+        View rootLayout = inflater.inflate(R.layout.fragment_cbp_identity_geolocation_v2, container, false);
         initViews(rootLayout);
 
         configureToolbar();
@@ -84,9 +84,9 @@ public class GeolocationCustomerIdentityFragment
         Toolbar toolbar = getToolbar();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            toolbar.setBackground(getResources().getDrawable(R.drawable.cci_action_bar_gradient_colors, null));
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cci_action_bar_gradient_colors_v2, null));
         else
-            toolbar.setBackground(getResources().getDrawable(R.drawable.cci_action_bar_gradient_colors));
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cci_action_bar_gradient_colors_v2));
     }
 
     private void initViews(View layout) {
@@ -139,7 +139,7 @@ public class GeolocationCustomerIdentityFragment
 
     private void saveIdentityGeolocation() {
         if (accuracy.getText().length() == 0) {
-            Toast.makeText(getActivity(), "Accuracy is empty, please add a value", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.crypto_customer_empty_accuracy, Toast.LENGTH_SHORT).show();
         } else {
             accuracyData = Integer.parseInt(accuracy.getText().toString());
 

@@ -25,8 +25,7 @@ public class ProviderViewHolder extends SingleDeletableItemViewHolder<CurrencyPa
 
     @Override
     public void bind(CurrencyPairAndProvider data) {
-//        title.setText(data.getCurrencyFrom().getCode()+"/"+data.getCurrencyTo().getCode()+" - "+data.getProviderName());
-        title.setText(new StringBuilder().append(data.getCurrencyFrom().getCode()).append("/").append(data.getCurrencyTo().getCode()).toString());
+        title.setText(data.getCurrencyFrom().getCode() + "/" + data.getCurrencyTo().getCode());
         subtitle.setText(data.getProviderName());
     }
 
