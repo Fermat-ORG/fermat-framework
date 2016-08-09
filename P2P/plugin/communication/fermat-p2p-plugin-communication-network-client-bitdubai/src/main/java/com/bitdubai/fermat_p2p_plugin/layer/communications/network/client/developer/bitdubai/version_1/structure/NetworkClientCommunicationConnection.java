@@ -886,6 +886,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         System.out.println("CommunicationsNetworkClientConnection - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_LOST");
     }
 
+    //TODO: Esto no tiene sentido, si el web socket ya está abierto porqué hacen un pedido rest preguntando si el actor está en el mismo nodo..
     private boolean isActorOnlineInTheSameNode(final ActorProfile actorProfile) {
 
         try {
