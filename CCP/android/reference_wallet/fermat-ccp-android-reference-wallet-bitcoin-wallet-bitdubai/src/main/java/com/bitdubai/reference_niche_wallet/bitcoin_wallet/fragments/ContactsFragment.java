@@ -824,7 +824,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         // hashMap to group the items by number (#), symbol (@), and letter (a)
                         HashMap<HeaderTypes, ArrayList<String>> hashMap = new HashMap<>();
                         hashMap.put(HeaderTypes.NUMBER, new ArrayList<String>());
-                        hashMap.put(HeaderTypes.SYMBOL, new ArrayList<String>());
+                       // hashMap.put(HeaderTypes.SYMBOL, new ArrayList<String>());
                         hashMap.put(HeaderTypes.LETTER, new ArrayList<String>());
 
                         // list of symbols, numbers and letter items contained in the hashMap
@@ -837,7 +837,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         final String letterRegex = HeaderTypes.LETTER.getRegex();
 
                         // for each item in the list look if is number, symbol o letter and put it in the corresponding list
-                        for (int i = 0; i < items.size(); i++) {//) {
+                        for (int i = 0; i < items.size(); i++) {
                             CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
                             if (currentSection.matches(numberRegex)) {
@@ -845,17 +845,21 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 numbers.add(cryptoWalletWalletContact.getActorName());
                                 numberPositions.put(i, cryptoWalletWalletContact);
 
-                            }else if (currentSection.matches(letterRegex)) {
+                            }
+                        }
+
+                        for (int i = 0; i < items.size(); i++) {
+                            CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
+                            String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
+                          if (currentSection.matches(letterRegex)) {
 
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
                                 positions.put(i, cryptoWalletWalletContact);
-                            } else
-                                // Is other symbol
-                                symbols.add(cryptoWalletWalletContact.getActorName());
+                            }
                         }
 
-                        final String symbolCode = HeaderTypes.SYMBOL.getCode();
+                       final String symbolCode = HeaderTypes.SYMBOL.getCode();
                         if (!symbols.isEmpty()) {
                             // add the section in the list of items
                             mListItems.add(symbolCode);
@@ -890,7 +894,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     prevSection = currentSection;
                                 }
 
-                                mListItems.add(positions.get(i));
+                                    mListItems.add(positions.get(i));
                             }
                         }catch (Exception e){
                             e.printStackTrace();
