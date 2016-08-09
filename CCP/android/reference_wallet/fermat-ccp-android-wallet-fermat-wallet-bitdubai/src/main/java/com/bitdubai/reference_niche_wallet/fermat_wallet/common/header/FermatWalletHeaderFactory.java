@@ -35,11 +35,11 @@ public class FermatWalletHeaderFactory extends HeaderFactory<FermatWalletHeaderC
         txt_amount_type = (FermatTextView) header.findViewById(R.id.txt_balance_amount_type);
         txt_balance_amount = (FermatTextView) header.findViewById(R.id.txt_balance_amount);
 
-        circularProgressBar.setProgressValue(20);
-        circularProgressBar.setProgressValue2(28);
-        circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
-        circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
-        circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
+       // circularProgressBar.setProgressValue(20);
+        //circularProgressBar.setProgressValue2(28);
+       // circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
+        //circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
+       // circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
 
         txt_type_balance.setOnClickListener(onClickListener);
         txt_balance_amount.setOnClickListener(onClickListener);
@@ -53,7 +53,7 @@ public class FermatWalletHeaderFactory extends HeaderFactory<FermatWalletHeaderC
 
     @Override
     public int setLayoutId() {
-        return R.layout.donut_header;
+        return R.layout.fermat_wallet_home_header;
     }
 
     @Override
