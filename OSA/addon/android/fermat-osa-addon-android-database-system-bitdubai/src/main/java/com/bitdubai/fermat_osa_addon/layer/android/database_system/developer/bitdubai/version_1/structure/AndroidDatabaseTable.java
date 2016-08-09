@@ -277,7 +277,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
             database = this.database.getWritableDatabase();
 
 //            database.execSQL("DELETE FROM " + tableName);
-            Log.i("AndroidDatabase", "Truncate table, records quantity: " + database.delete(tableName, null, null));
+            Log.i("AndroidDatabase", "Truncate table: "+tableName+", records quantity: " + database.delete(tableName, null, null));
         } catch (Exception exception) {
 
             throw new CantTruncateTableException(
