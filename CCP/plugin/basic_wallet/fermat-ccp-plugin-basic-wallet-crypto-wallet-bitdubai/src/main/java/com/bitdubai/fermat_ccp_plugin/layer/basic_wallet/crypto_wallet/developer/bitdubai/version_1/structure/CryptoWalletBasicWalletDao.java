@@ -173,6 +173,7 @@ public class CryptoWalletBasicWalletDao {
                                                                   final int offset,
                                                                         BlockchainNetworkType blockchainNetworkType,
                                                                         final Actors actorType) throws CantListTransactionsException, CantLoadTableToMemoryException {
+
         try {
 
 
@@ -196,11 +197,13 @@ public class CryptoWalletBasicWalletDao {
 
             if (transactionType == TransactionType.CREDIT)
                 if(actorType.equals(Actors.INTRA_USER))
-                 bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+                    bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
                 else
                     bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+            else
+                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
 
-             bitcoinWalletTable.loadToMemory();
+            bitcoinWalletTable.loadToMemory();
 
             return createTransactionList(bitcoinWalletTable.getRecords());
 
@@ -257,9 +260,9 @@ public class CryptoWalletBasicWalletDao {
 
             bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
 
-
            // if ( transactionType == TransactionType.CREDIT){
                // bitcoinWalletTable.clearAllFilters();
+
 
             bitcoinWalletTable.addFilterOrder(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
@@ -267,7 +270,7 @@ public class CryptoWalletBasicWalletDao {
 
             bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
 
-                bitcoinWalletTable.loadToMemory();
+             bitcoinWalletTable.loadToMemory();
 
 
           /*  }

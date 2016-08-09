@@ -887,8 +887,13 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                                                                         String actorPublicKey, String intraUserLoggedInPublicKey,
                                                                         BlockchainNetworkType blockchainNetworkType,
                                                                         int max,
+<<<<<<< HEAD
                                                                         int offset, Actors actorType) throws CantListTransactionsException {
 
+=======
+                                                                        int offset,
+                                                                         Actors actorType) throws CantListTransactionsException {
+>>>>>>> f89aee22bf493f5f6c571cb2593b0411f88d556f
         try {
             CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(walletPublicKey);
             List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();

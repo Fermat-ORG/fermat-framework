@@ -136,6 +136,8 @@
     <string name="new_message_fragment_title">New message</string>
     <string name="select_chat_fragment_title">Select chat</string>
     <string name="copy_message_toast">Copiado: </string>
+    <string name="cht_notif_new_msg_title">Chat - Nuevo Mensaje</string>
+    <string name="cht_notif_new_msg_content">Tiene un nuevo mensaje en Chat.</string>
 
     <string name="text_web_search">web search</string>
     <string name="text_find_images">FIND IMAGES</string>

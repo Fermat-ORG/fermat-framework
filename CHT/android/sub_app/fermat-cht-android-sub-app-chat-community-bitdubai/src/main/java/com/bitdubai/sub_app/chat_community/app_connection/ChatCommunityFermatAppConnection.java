@@ -82,7 +82,7 @@ public class ChatCommunityFermatAppConnection
 
     @Override
     public NotificationPainter getNotificationPainter(FermatBundle fermatBundle) {
-        return CommunityNotificationPainterBuilder.getNotification(fermatBundle);
+        return CommunityNotificationPainterBuilder.getNotification(fermatBundle, getContext());
     }
 
     @Override

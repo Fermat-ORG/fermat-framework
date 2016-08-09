@@ -49,4 +49,8 @@
     <string name="cht_creation_name_left">Chat</string>
     <string name="cht_creation_name_right">Users</string>
     <string name="cht_comm_show_more">Show more</string>
+    <string name="cht_comm_notif_request_title">Chat Community - New request</string>
+    <string name="cht_comm_notif_request_content">A new chat connection request was received.</string>
+    <string name="cht_comm_notif_accepted_title">Chat Community - New connection</string>
+    <string name="cht_comm_notif_accepted_content">A Chat user accepted your connection request.</string>
 </resources>

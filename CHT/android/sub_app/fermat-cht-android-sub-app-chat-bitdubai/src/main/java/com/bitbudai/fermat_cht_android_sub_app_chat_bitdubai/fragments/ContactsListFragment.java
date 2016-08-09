@@ -155,7 +155,7 @@ public class ContactsListFragment
 
         if (chatIdentity != null) {
             BackgroundAsyncTaskList batl = new BackgroundAsyncTaskList(chatIdentity, MAX, offset);
-            batl.execute();
+            //batl.execute();
         }
 
         // Let this fragment contribute menu items
@@ -292,7 +292,7 @@ public class ContactsListFragment
         try {
             if (chatIdentity != null) {
                 BackgroundAsyncTaskList back = new BackgroundAsyncTaskList(chatIdentity, MAX, offset);
-                back.execute();
+                //back.execute();
             }
         } catch (Exception e) {
             if (errorManager != null)

@@ -2,11 +2,13 @@
 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckedTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/text1"
-    style="?attr/spinnerDropDownItemStyle"
+    style="?android:attr/spinnerItemStyle"
     android:singleLine="true"
     android:layout_width="match_parent"
-    android:layout_height="?attr/dropdownListPreferredItemHeight"
+    android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:textSize="16sp"
-    android:textStyle="bold"
+    android:text="ItemText"
+    android:textAlignment="inherit"
+    android:padding="15dp"
     />

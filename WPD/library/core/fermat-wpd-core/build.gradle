@@ -39,7 +39,7 @@ dependencies {
 
 //    compile project(':fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai')
 //    compile project(':fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai')
-    compile project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
+//    compile project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
