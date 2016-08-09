@@ -82,22 +82,22 @@ public class ChatFragment
             //contactData = (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA)
 
             //Obtain chatSettings  or create new chat settings if first time opening chat platform
-//            chatSettings = null;
-//            try {
-//                chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
-//            } catch (Exception e) {
-//                chatSettings = null;
-//            }
+            chatSettings = null;
+            try {
+                chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
+            } catch (Exception e) {
+                chatSettings = null;
+            }
 
-//            if (chatSettings == null) {
-//                chatSettings = new ChatPreferenceSettings();
-//                chatSettings.setIsPresentationHelpEnabled(true);
-//                try {
-//                    chatManager.persistSettings(appSession.getAppPublicKey(), chatSettings);
-//                } catch (Exception e) {
-//                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//                }
-//            }
+            if (chatSettings == null) {
+                chatSettings = new ChatPreferenceSettings();
+                chatSettings.setIsPresentationHelpEnabled(true);
+                try {
+                    chatManager.persistSettings(appSession.getAppPublicKey(), chatSettings);
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+            }
 
             try {
                 chatIdentity = chatSettings.getIdentitySelected();
