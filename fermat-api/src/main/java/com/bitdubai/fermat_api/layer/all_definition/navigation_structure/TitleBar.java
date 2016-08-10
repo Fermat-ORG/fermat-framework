@@ -20,6 +20,8 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
 
     private String iconName;
 
+    private String subTitle;
+
     private RuntimeFernatComboBox comboBox;
     private int labelSize = -1;
     private String titleColor;
@@ -28,6 +30,8 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
     private String font;
 
     private FermatDrawable backgroundDrawable;
+
+    private FermatDrawable logoDrawable;
 
     /**
      * This icon will be used for open the navigationDrawer, go back
@@ -166,5 +170,21 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setBackgroundDrawable(FermatDrawable backgroundDrawable) {
         this.backgroundDrawable = backgroundDrawable;
+    }
+
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
+    public FermatDrawable getLogoDrawable() {
+        return logoDrawable;
+    }
+
+    public void setLogoDrawable(FermatDrawable logoDrawable) {
+        this.logoDrawable = logoDrawable;
     }
 }

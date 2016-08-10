@@ -452,8 +452,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             selectLayout(header!=null);
 
             SideMenu sideMenu = activity.getSideMenu();
-
-//            initMainViews(header);
             // Log.i("FERMAT ACTIVITY loadUI", "initMainViews " + System.currentTimeMillis());
 
             setOptionsMenu(optionsMenu);
@@ -772,9 +770,21 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 
                     }
-
-
                 }
+
+                if (titleBar.getSubTitle()!=null){
+                    mToolbar.setSubtitle(titleBar.getSubTitle());
+                }else{
+                    mToolbar.setSubtitle("");
+                }
+                if (titleBar.getLogoDrawable()!=null){
+                    FermatDrawable logoDrawable = titleBar.getLogoDrawable();
+                    mToolbar.setLogo(ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE, this, logoDrawable.getId(), logoDrawable.getSourceLocation(), logoDrawable.getOwner().getOwnerAppPublicKey()));
+                }else{
+                    mToolbar.setLogo(null);
+                }
+
+
 
                 if (titleBar.getBackgroundDrawable() != null) {
                     FermatDrawable backgroundDrawable = titleBar.getBackgroundDrawable();
