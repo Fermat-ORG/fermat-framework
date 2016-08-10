@@ -155,6 +155,7 @@
             android:layout_width="90dp"
             android:layout_height="46dp"
             android:layout_gravity="center"
+            android:textColor="#FFF"
             android:text="@string/close_text"
             android:background="#DC5A0F"
             android:focusable="false"

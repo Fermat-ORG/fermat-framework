@@ -838,7 +838,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                                 if (txtType.equals("[btc]")) {
                                     newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                                    newFee = fee;
+                                    newFee = bitcoinConverter.getSathoshisFromBTC(fee);
                                      msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
 
                                    // newAmount = String.valueOf(Integer.valueOf(newAmount)); //without decimal .00000
@@ -848,7 +848,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
                                 } else if (txtType.equals("[bits]")) {
                                     newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                                    newFee = fee;
+                                    newFee = bitcoinConverter.getSathoshisFromBits(fee);
                                     msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                                 }
 
@@ -857,10 +857,14 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                // amountDecimal.setScale(1,BigDecimal.ROUND_HALF_DOWN);
 
                                 BigDecimal decimalFeed = new BigDecimal(newFee);
+                                //long decimalFeed =  Long.parseLong(newFee, 10);
+
                                 //decimalFeed.setScale(1, BigDecimal.ROUND_HALF_DOWN);
 
                                 //BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                                 BigDecimal operator = new BigDecimal(newAmount);
+                               // long operator =  Long.parseLong(newAmount, 10);
+
 
                                 if (amountDecimal.longValueExact() > minSatoshis) {
 
@@ -903,11 +907,11 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                             long total = 0;
                                             if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode()))
                                                 total =  operator.longValueExact() +  decimalFeed.longValueExact();
+                                               // total = operator + decimalFeed;
                                             else{
-                                                //String o = operator.toString().replace(".", ",");
-                                                //String d = decimalFeed.toString().replace(".",",");
-                                               // total = Long.parseLong(o, 10) -  Long.parseLong(d, 10);
                                                 total =  operator.longValueExact() -  decimalFeed.longValueExact();
+                                               // total = operator - decimalFeed;
+
                                             }
 
 
@@ -915,6 +919,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                             {
                                                 ConfirmSendDialog_feeCase sendConfirmDialog = new ConfirmSendDialog_feeCase(getActivity(),
                                                         lossProtectedWalletManager,
+                                                      //  operator,
+                                                     //   decimalFeed,
                                                         operator.longValueExact(),
                                                         decimalFeed.longValueExact(),
                                                         total,

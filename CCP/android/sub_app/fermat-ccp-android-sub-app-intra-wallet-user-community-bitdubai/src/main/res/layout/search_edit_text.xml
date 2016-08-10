@@ -17,7 +17,7 @@
             android:layout_marginEnd="40dp"
             android:layout_marginRight="40dp"
             android:background="@drawable/transparent"
-            android:hint="Username"
+            android:hint="@string/username"
             android:lines="1"
             android:padding="8dp"
             android:singleLine="true"

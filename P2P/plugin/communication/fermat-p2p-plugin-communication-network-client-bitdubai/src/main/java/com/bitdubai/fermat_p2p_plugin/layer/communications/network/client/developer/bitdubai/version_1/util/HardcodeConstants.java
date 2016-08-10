@@ -21,6 +21,7 @@ public class HardcodeConstants {
 
 
 
+
     /**
      * Represent the WS_PROTOCOL
      */

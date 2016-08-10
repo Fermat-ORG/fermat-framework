@@ -4,7 +4,7 @@
         android:layout_height="wrap_content"
         android:id="@android:id/text1"
         android:gravity="left"
-        android:text="LOW"
+        android:text="@string/low"
         android:textColor="#616161"
         android:background="#00000000"
         android:textColorHighlight="#CFCFCF"

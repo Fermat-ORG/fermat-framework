@@ -560,17 +560,19 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
             for (ActorProfile actorProfile : list) {
 
                 String actorPhrase = "";
-                if(!actorProfile.getExtraData().equals("")) {
-                    try {
-                        JsonParser jParser = new JsonParser();
-                        JsonObject jsonObject = jParser.parse(actorProfile.getExtraData()).getAsJsonObject();
+                if(actorProfile.getExtraData() != null)
+                {
+                    if(!actorProfile.getExtraData().equals("")) {
+                        try {
+                            JsonParser jParser = new JsonParser();
+                            JsonObject jsonObject = jParser.parse(actorProfile.getExtraData()).getAsJsonObject();
 
-                        actorPhrase = jsonObject.get("PHRASE").getAsString();
-                    } catch(Exception e){
+                            actorPhrase = jsonObject.get("PHRASE").getAsString();
+                        } catch(Exception e){
 
+                        }
                     }
                 }
-
 
                 lstIntraUser.add(new IntraUserNetworkService(actorProfile.getIdentityPublicKey(), actorProfile.getPhoto(), actorProfile.getAlias(), actorPhrase,actorProfile.getStatus(),actorProfile.getLocation()));
             }
