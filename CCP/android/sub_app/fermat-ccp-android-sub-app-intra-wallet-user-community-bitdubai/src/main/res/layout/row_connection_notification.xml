@@ -6,7 +6,8 @@
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingTop="8dp">
+    android:paddingTop="8dp"
+    tools:showIn="@layout/fragment_connections_notifications">
 
     <RelativeLayout
         android:layout_width="330dp"
@@ -42,7 +43,7 @@
                     android:maxLines="1"
                     android:paddingLeft="4dp"
                     android:singleLine="true"
-                    android:text="UserName"
+                    android:text="@string/username"
                     android:textColor="#000000"
                     android:textSize="16sp"
                     tools:ignore="HardcodedText,RtlHardcoded"
@@ -70,7 +71,7 @@
                         android:layout_height="24dp"
                         android:id="@+id/notification_location"
                         android:layout_gravity="center"
-                        android:text="No Location"
+                        android:text="@string/no_location"
                         android:textSize="12dp"
                         android:textColor="#aaaaab"
                         android:layout_weight="0.70"
@@ -88,7 +89,7 @@
                 android:gravity="center_vertical|right"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="a few moments ago"
+                android:text="@string/few_moments"
                 android:textSize="11sp"
                 tools:ignore="HardcodedText,RtlHardcoded"
                 android:textColor="#aaeae5"

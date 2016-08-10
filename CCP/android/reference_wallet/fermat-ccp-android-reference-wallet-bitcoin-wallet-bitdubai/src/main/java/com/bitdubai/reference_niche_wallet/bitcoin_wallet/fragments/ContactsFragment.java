@@ -803,6 +803,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             Map<Integer, CryptoWalletWalletContact> positions = new HashMap<>();
 
+            Map<Integer, CryptoWalletWalletContact> numberPositions = new HashMap<>();
+
             if (items != null)
                 if (items.size() > 0) {
                     MyComparator icc = new MyComparator();
@@ -835,25 +837,33 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         final String letterRegex = HeaderTypes.LETTER.getRegex();
 
                         // for each item in the list look if is number, symbol o letter and put it in the corresponding list
-                        for (int i = 0; i < items.size(); i++) {//) {
+                        for (int i = 0; i < items.size(); i++) {
                             CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
                             if (currentSection.matches(numberRegex)) {
                                 // is Digit
                                 numbers.add(cryptoWalletWalletContact.getActorName());
-                                positions.put(i, cryptoWalletWalletContact);
+                                numberPositions.put(i, cryptoWalletWalletContact);
 
-                            }else if (currentSection.matches(letterRegex)) {
-
-                                // is Letter
-                                letters.add(cryptoWalletWalletContact.getActorName());
-                                positions.put(i, cryptoWalletWalletContact);
-                            } else
-                                // Is other symbol
-                                symbols.add(cryptoWalletWalletContact.getActorName());
+                            }
                         }
 
-                        final String symbolCode = HeaderTypes.SYMBOL.getCode();
+                        int pos= 0;
+
+                        for (int i = 0; i < items.size(); i++) {
+
+                            CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
+                            String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
+                          if (currentSection.matches(letterRegex)) {
+                                // is Letter
+                                letters.add(cryptoWalletWalletContact.getActorName());
+                                positions.put(pos, cryptoWalletWalletContact);
+                                pos++;
+                            }
+
+                        }
+
+                       final String symbolCode = HeaderTypes.SYMBOL.getCode();
                         if (!symbols.isEmpty()) {
                             // add the section in the list of items
                             mListItems.add(symbolCode);
@@ -868,9 +878,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         if (!numbers.isEmpty()) {
                             mListItems.add(numberCode);
                             mListSectionPos.add(mListItems.indexOf(numberCode));
-                          //  mListItems.addAll(numbers);
-                            mListItems.addAll(positions.values());
+                            mListItems.addAll(numberPositions.values());
                         }
+
+
 
                         // add the letters items in the list and his corresponding sections based on its first letter
                         String prevSection = "";
@@ -887,7 +898,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     prevSection = currentSection;
                                 }
 
-                                mListItems.add(positions.get(i));
+                                    mListItems.add(positions.get(i));
                             }
                         }catch (Exception e){
                             e.printStackTrace();

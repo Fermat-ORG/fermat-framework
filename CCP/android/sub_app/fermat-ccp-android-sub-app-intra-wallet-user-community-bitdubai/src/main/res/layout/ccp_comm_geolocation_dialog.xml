@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:textColor="@color/color_black"
             android:background="#F9F9F9"
-            android:hint="Search"
+            android:hint="@string/search_text"
             android:textColorHint="#848484"
             android:layout_weight="@android:integer/config_longAnimTime"
             />
@@ -66,7 +66,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No data available"
+            android:text="@string/no_data"
             android:id="@+id/nodatalabel_geo"
             android:textColor="#BCBEC0"
             android:textStyle="normal"

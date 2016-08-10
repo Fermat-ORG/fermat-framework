@@ -20,7 +20,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"
-            android:text="Connection"
+            android:text="@string/connect_text"
             android:textColor="#47BF73"
             android:textSize="20sp"
             tools:ignore="HardcodedText" />
@@ -59,7 +59,7 @@
             android:paddingRight="8dp"
             android:paddingStart="8dp"
             android:paddingBottom="8dp"
-            android:text="Description of dialog"
+            android:text="@string/description_dialog"
             android:textColor="#212121"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
@@ -108,7 +108,7 @@
                 android:gravity="center"
                 android:padding="8dp"
                 android:singleLine="true"
-                android:text="Cancel"
+                android:text="@string/cancel_label"
                 android:textColor="#47BF73"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />
@@ -128,7 +128,7 @@
                 android:gravity="center"
                 android:padding="8dp"
                 android:singleLine="true"
-                android:text="Ok"
+                android:text="@string/ok_label"
                 android:textColor="#47BF73"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />

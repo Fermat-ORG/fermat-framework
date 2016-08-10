@@ -15,6 +15,7 @@ import java.util.UUID;
 /**
  * Created by eze on 2015.06.25..
  * Modified by Leon Acosta (laion.cj91@gmail.com) on 29/09/2015.
+ * updated by Andres Abreu aabreu1 2016.08.05..
  */
 public class TransactionWrapper implements CryptoWalletTransactionRecord,BitcoinLossProtectedWalletTransactionRecord {
 
@@ -123,7 +124,10 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord,Bitcoin
 
     @Override
     public FeeOrigin getFeeOrigin() {
-        return this.feeOrigin;
+        if (feeOrigin == null)
+            return com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+        else
+            return feeOrigin;
     }
 
     @Override

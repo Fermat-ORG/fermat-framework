@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="16dp"
-        android:text="Fermat Network Offline"
+        android:text="@string/fermat_network_offline_text"
         android:background="#7DD5CA"
         android:textColor="#FFF"
         android:textSize="17sp"
@@ -82,7 +82,7 @@
                 android:gravity="center"
                 android:padding="12dp"
                 android:singleLine="true"
-                android:text="Cancel"
+                android:text="@string/cancel_text"
                 android:textColor="#6d6e70"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />
@@ -97,7 +97,7 @@
                 android:gravity="center"
                 android:padding="12dp"
                 android:singleLine="true"
-                android:text="Connect"
+                android:text="@string/connect_text"
                 android:textColor="#6d6e70"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />

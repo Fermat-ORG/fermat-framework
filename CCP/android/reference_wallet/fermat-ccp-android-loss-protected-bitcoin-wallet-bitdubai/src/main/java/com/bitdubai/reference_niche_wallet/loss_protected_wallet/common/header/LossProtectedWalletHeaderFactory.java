@@ -53,7 +53,7 @@ public class LossProtectedWalletHeaderFactory extends HeaderFactory<LossProtecte
 
     @Override
     public int setLayoutId() {
-        return R.layout.donut_header;
+        return R.layout.loss_donut_header;
     }
 
     @Override
