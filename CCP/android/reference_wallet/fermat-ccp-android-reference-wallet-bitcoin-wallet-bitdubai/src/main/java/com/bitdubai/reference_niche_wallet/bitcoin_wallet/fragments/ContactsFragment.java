@@ -824,7 +824,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         // hashMap to group the items by number (#), symbol (@), and letter (a)
                         HashMap<HeaderTypes, ArrayList<String>> hashMap = new HashMap<>();
                         hashMap.put(HeaderTypes.NUMBER, new ArrayList<String>());
-                       // hashMap.put(HeaderTypes.SYMBOL, new ArrayList<String>());
+                        hashMap.put(HeaderTypes.SYMBOL, new ArrayList<String>());
                         hashMap.put(HeaderTypes.LETTER, new ArrayList<String>());
 
                         // list of symbols, numbers and letter items contained in the hashMap
@@ -848,15 +848,19 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             }
                         }
 
+                        int pos= 0;
+
                         for (int i = 0; i < items.size(); i++) {
+
                             CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
                           if (currentSection.matches(letterRegex)) {
-
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
-                                positions.put(i, cryptoWalletWalletContact);
+                                positions.put(pos, cryptoWalletWalletContact);
+                                pos++;
                             }
+
                         }
 
                        final String symbolCode = HeaderTypes.SYMBOL.getCode();
