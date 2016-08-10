@@ -571,7 +571,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_create_toast), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_created_toast), Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                         }
                         break;
@@ -589,7 +589,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_create_toast), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_created_toast), Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                         }
                         break;
