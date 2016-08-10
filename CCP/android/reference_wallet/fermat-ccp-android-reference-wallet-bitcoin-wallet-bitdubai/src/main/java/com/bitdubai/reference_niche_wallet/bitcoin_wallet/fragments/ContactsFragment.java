@@ -81,8 +81,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
@@ -603,8 +601,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         dialog.dismiss();
         walletContact = new WalletContact();
         walletContact.setName("");
-       // registerForContextMenu(mClearSearchImageButton);
-        //getActivity().openContextMenu(mClearSearchImageButton);
+        registerForContextMenu(mClearSearchImageButton);
+        getActivity().openContextMenu(mClearSearchImageButton);
     }
 
     public void setWalletSession(ReferenceAppFermatSession appSession) {
