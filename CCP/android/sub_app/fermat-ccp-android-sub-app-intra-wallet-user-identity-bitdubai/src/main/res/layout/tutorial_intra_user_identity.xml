@@ -44,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/txt_title"
-                    android:text="Welcome!"
+                    android:text="@string/welcome_text"
                     android:paddingLeft="5dp"
                     android:layout_weight="1"
                     android:textSize="20sp"
@@ -99,7 +99,7 @@
                 android:paddingRight="30dp"
                 android:paddingStart="20dp"
                 android:paddingTop="7sp"
-                android:text="This app helps you create your Fermat network identity. Its main features include:"
+                android:text="@string/intra_identity"
                 android:textColor="#1d1d26"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />
@@ -130,7 +130,7 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
                     android:paddingStart="16dp"
-                    android:text="* Managing your identity. \n * Setting your own phrase and sharing it with all the Fermat users."
+                    android:text="@string/Intra_identity_desc"
                     android:textColor="#1d1d26"
                     android:textSize="14sp"
                     tools:ignore="HardcodedText" />
@@ -177,7 +177,7 @@
                     android:layout_marginEnd="32dp"
                     android:layout_marginRight="32dp"
                     android:gravity="center_vertical"
-                    android:text="Don´t show this again"
+                    android:text="@string/no_id_dont_show_this_again_text"
                     android:textColor="#7c7c7c"
                     android:textSize="12dp"
                     tools:ignore="HardcodedText,RtlCompat,SpUsage" />
@@ -207,7 +207,7 @@
                 android:layout_marginTop="8dp"
                 android:background="#0072bb"
                 android:gravity="center"
-                android:text="Start"
+                android:text="@string/start"
                 android:textColor="#ffffff"
                 tools:ignore="HardcodedText" />
 

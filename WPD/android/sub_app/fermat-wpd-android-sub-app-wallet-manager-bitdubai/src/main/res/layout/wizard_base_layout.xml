@@ -42,7 +42,7 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Don't show again"
+            android:text="@string/title_dont_show_button"
             android:gravity="center"
             android:paddingLeft="3dp"
             android:textColor="#58595B"
@@ -116,7 +116,7 @@
     <Button
         android:layout_width="250dp"
         android:layout_height="38dp"
-        android:text="Got it"
+        android:text="@string/title_go_button"
         android:layout_gravity="center"
         android:gravity="center"
         android:layout_marginBottom="28dp"

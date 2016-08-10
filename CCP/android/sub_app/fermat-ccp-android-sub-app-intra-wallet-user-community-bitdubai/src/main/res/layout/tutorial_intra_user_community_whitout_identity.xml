@@ -45,7 +45,7 @@
                     android:layout_weight="1"
                     android:gravity="left"
                     android:paddingLeft="5dp"
-                    android:text="Welcome!"
+                    android:text="@string/welcome_text"
                     android:textColor="#00a99d"
                     android:textSize="20sp"
                     app:typeface="CAVIAR_DREAMS_BOLD"
@@ -102,7 +102,7 @@
                         android:paddingRight="30dp"
                         android:paddingStart="20dp"
                         android:paddingTop="7sp"
-                        android:text="This app will allow you to find other crypto wallet users within the Fermat Network. Its main features include:"
+                        android:text="@string/crypto_wallet"
                         android:textColor="#1d1d26"
                         android:textSize="14sp"
                         tools:ignore="HardcodedText" />
@@ -131,7 +131,7 @@
                             android:paddingLeft="16dp"
                             android:paddingRight="30dp"
                             android:paddingStart="16dp"
-                            android:text="* Browsing users nearby \n* Looking for users anywhere \n* Seeing other users profiles \n* Sending connection requests"
+                            android:text="@string/community_desc"
                             android:textColor="#1d1d26"
                             android:textSize="12sp"
                             tools:ignore="HardcodedText" />
@@ -146,7 +146,7 @@
                             android:paddingLeft="16dp"
                             android:paddingRight="30dp"
                             android:paddingStart="16dp"
-                            android:text="More..."
+                            android:text=""
                             android:textColor="#1d1d26"
                             android:textSize="12sp"
                             tools:ignore="HardcodedText" />
@@ -175,7 +175,7 @@
                             android:paddingLeft="16dp"
                             android:paddingRight="30dp"
                             android:paddingStart="16dp"
-                            android:text="You need to establish connections to other users first in order to add them as contacts in your wallets"
+                            android:text="@string/stablish_connection"
                             android:textColor="#1d1d26"
                             android:textSize="12sp"
                             tools:ignore="HardcodedText" />
@@ -198,7 +198,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:text="Don´t show this again"
+                            android:text="@string/no_id_dont_show_this_again_text"
                             android:textColor="#7c7c7c"
                             android:textSize="12dp"
                             tools:ignore="HardcodedText,RtlCompat,SpUsage" />
@@ -224,7 +224,7 @@
                             android:layout_marginTop="8dp"
                             android:background="#0072bb"
                             android:gravity="center"
-                            android:text="Start"
+                            android:text="@string/start"
                             android:textColor="#ffffff"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>

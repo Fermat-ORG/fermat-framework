@@ -18,7 +18,7 @@
     <string name="add_fermat_user_text">Contacto fermat</string>
     <string name="add_user_in_your_contact_list_text">Anadir usuario a la lista de contactos o\nbuscarlo en la comunidad</string>
     <string name="address_text">Direccion</string>
-    <string name="advertisement_text">Advertencia!</string>
+    <string name="advertisement_text">Noticia!</string>
     <string name="alias_text">Sufijo de alias</string>
     <string name="amount_text">Cantidad</string>
     <string name="available_balance">Balance actual</string>
@@ -56,7 +56,7 @@
     <string name="fee_amount_text">Taza</string>
     <string name="fee_low">Lento</string>
     <string name="fee_option_text">Restar taza al  monto</string>
-    <string name="fermat_network_offline_text">Red Fermat offline</string>
+    <string name="fermat_network_offline_text">Red Fermat Offline</string>
     <string name="footer_message_text"></string>
     <string name="fragment_send_account_details_summary">Detalles de cuenta</string>
     <string name="fragment_send_account_name_hint">Nombre (*)</string>
@@ -94,7 +94,7 @@
     <string name="receive_text">Recibir</string>
     <string name="refuse_text">Negar</string>
     <string name="remittance">Remitentes</string>
-    <string name="request_text">Solicitud</string>
+    <string name="request_text">Solicitar</string>
     <string name="save_text">Guardar</string>
     <string name="search_contacts_hint">Buscar contactos...</string>
     <string name="search_hint">Nombre de Contacto</string>
@@ -121,7 +121,7 @@
     <string name="trade_crypto_wallet">Comerciantes</string>
     <string name="txtLastTransactions_text">Ultimas transacciones</string>
     <string name="txtSeeAlltransactions_text">Ver todo</string>
-    <string name="txtViewDetailTransaction_text"></string>
+    <string name="txtViewDetailTransaction_text">Ver transaccion detalladamente</string>
     <string name="txt_conference_ticket_text">Ticket de conferencia</string>
     <string name="txt_title_text">Ayuda para anadir contacto</string>
     <string name="type_text">tipo</string>
@@ -148,7 +148,7 @@
     <string name="error_msg_invalid_amount_2">Monto invalido</string>
     <string name="error_msg_loading_img">Error al cargar imagen</string>
     <string name="error_msg_mnemonic_text">Error al obtener el texto mnemonico</string>
-    <string name="error_msg_no_address">No se tiene una direccion para inviar\nPor favor, espere un rato</string>
+    <string name="error_msg_no_address">No se tiene una direccion para enviar\nPor favor, espere un rato</string>
     <string name="error_msg_trying_to_reconnect">Por favor espere un momento, intentando reconectar...</string>
     <string name="error_std_message">Ha habido un error. Por favor intente de nuevo</string>
     <string name="request_sent">Solicitud enviada</string>
@@ -160,42 +160,31 @@
     <string name="settings_send_error_report">Enviar reporte de Error</string>
     <string name="wallet_type">Esta cartera permite dos tipos diferentes de usuarios:</string>
     <string name="btc_loss">Ingresa la cantidad de BTC que quieres enviar a Loss Protected Wallet</string>
-    <string name="phone_notifications">Notificaciones de telefono</string>
-    <string name="middle_name_text" translatable="false">Segundo nombre</string>
-    <string name="title_activity_account_detail" translatable="false">Detalles de cuenta</string>
-    <string name="title_activity_accounts" translatable="false">Cuentas</string>
-    <string name="title_activity_activity_main">Principal</string>
-    <string name="title_activity_balance_available">Balance disponible</string>
-    <string name="title_activity_contacts">Contactos</string>
-    <string name="title_activity_daily_discounts" translatable="false">Descuentos diarios</string>
-    <string name="title_activity_edit_personal_profile">Editar perfil personal</string>
-    <string name="title_activity_main">Cartera Joven</string>
-    <string name="title_activity_monthly_discounts">Descuentos mensuales</string>
-    <string name="title_activity_navegation_drawler">Cartera inteligente</string>
-    <string name="title_activity_pay_to_new_contact">Pagar a un nuevo contacto</string>
-    <string name="title_activity_receive_from_contact">Recibir de un contacto</string>
-    <string name="title_activity_receive_from_new_contact">Recibir de un nuevo contacto</string>
-    <string name="title_activity_received_detail">Detalles recibidos</string>
-    <string name="title_activity_refill_point">Recargar puntos</string>
-    <string name="title_activity_requests_sent">Solicitudes enviadas</string>
-    <string name="title_activity_sent_detail">Detalles de envio</string>
-    <string name="title_activity_store">Tienda</string>
-    <string name="title_activity_wallet">Cartera</string>
-    <string name="title_activity_weekly_discount">Descuento semanal</string>
-    <string name="title_section10">Infantes</string>
-    <string name="title_section11">Salida</string>
-    <string name="title_section12">Cartera personal</string>
-    <string name="title_section13">Tiendas</string>
-    <string name="title_section14">Carteras comerciales</string>
-    <string name="title_section15">Fabrica de proyectos</string>
-    <string name="title_section16">Carteras publicadas</string>
-    <string name="title_section17">Tiendas</string>
-    <string name="title_section2">Contactos</string>
-    <string name="title_section3">Cuentas</string>
-    <string name="title_section4">Bancos</string>
-    <string name="title_section5">Cupones</string>
-    <string name="title_section6">Descuentos</string>
-    <string name="title_section7">Vouchers</string>
-    <string name="title_section8">Tarjetas de regalo</string>
-    <string name="title_section9">Clones</string>
+    <string name="this_is_a_simple_bitcoint_only_wallet_text">Esta es una cartera de solo bitcoin. sus principales caracteristicas son:</string>
+    <string name="fermat_address">Direccion Fermat</string>
+    <string name="date">Fecha</string>
+    <string name="to">Para:</string>
+    <string name="amount_insert">Ingrese cantidad</string>
+    <string name="insert_notes">Insertar notas</string>
+    <string name="currency">Moneda</string>
+    <string name="advance_configuration">Configuracion avanzada</string>
+    <string name="from">De</string>
+    <string name="transaction_concept">Concepto de transferencia</string>
+    <string name="phone_notification">Notificationes al telefono</string>
+    <string name="description_dialog">Descripcion de un dialogo</string>
+    <string name="rotate">Rotar</string>
+    <string name="username_label">Nombre de usuario</string>
+    <string name="status">Estado</string>
+    <string name="accuracy">Precision(km)</string>
+    <string name="frecuency">FRECUENCIA</string>
+    <string name="low">BAJO</string>
+    <string name="Intra_user_dialog">Esta parte te ayuda a configurar tu identidad de localizacion en la red Fermat</string>
+    <string name="intra_user_desc">*Colocar la presicion en Kms: Este es el rango de presicion que mostrara donde estas localizado en la red Fermat. \n *Seleccionar Frecuencia: Esto es para seleccionar que tan seguido se actualizara la localizacion.</string>
+    <string name="start">Empezar</string>
+    <string name="Intra_identity_desc">* Gestiona tu identidad. \n * Configura tu propia frase y compartela con todos los usuarios de la red Fermat.</string>
+    <string name="intra_identity">Esta aplicacion te ayuda a crear tu identidad en la red Fermat. sus principales caracteristicas son:</string>
+    <string name="broker_name">Nombre del broker</string>
+    <string name="create">Crear</string>
+    <string name="hello_blank_fragment"></string>
+    <string name="identity_img"></string>
 </resources>

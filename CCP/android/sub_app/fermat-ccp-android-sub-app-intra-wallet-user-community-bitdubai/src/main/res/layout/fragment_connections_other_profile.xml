@@ -46,7 +46,7 @@
             android:drawableStart="@drawable/ic_profile_connect"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
-            android:text="Connect"
+            android:text="@string/connect_text"
             android:textColor="#ffffff"
             android:visibility="visible"
             tools:ignore="HardcodedText" />
@@ -119,7 +119,7 @@
             android:layout_marginTop="32dp"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:text="Name"
+            android:text="@string/name_text"
             android:textColor="#0072bc"
             android:textSize="12sp"
             tools:ignore="HardcodedText" />
@@ -157,7 +157,7 @@
             android:layout_marginTop="32dp"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:text="Status"
+            android:text="@string/state"
             android:textColor="#0072bc"
             android:textSize="12sp"
             tools:ignore="HardcodedText" />
@@ -166,7 +166,7 @@
             android:id="@+id/userPhrase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="User Phrase"
+            android:hint="@string/user_phrase"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
             android:textColor="#292929"

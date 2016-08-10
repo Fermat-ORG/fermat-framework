@@ -7,7 +7,7 @@
     <string name="txt_total_balance_15_btc_text" translatable="false">15 BTC</string>
     <!-- ccp_transaction_list_item.xml -->
     <string name="txt_amount_btc_text" translatable="false">1.4 BTC</string>
-    <string name="txt_conference_ticket_text" translatable="false">Conference ticket</string>
+    <string name="txt_conference_ticket_text">Conference ticket</string>
     <string name="txt_time_date_text" translatable="false">03 Feb 2014</string>
     <!-- connection_with_community_dialog.xml -->
     <string name="new_user_text">New User</string>
@@ -120,7 +120,7 @@
     <string name="txtViewDetailTransaction_text" translatable="false">Taza de café</string>
     <!-- wallets_bitcoin_fragment_create_contact.xml -->
     <string name="name_prefix_text" translatable="false">name prefix</string>
-    <string name="middle_name_text" translatable="false">middle name</string>
+    <string name="middle_name_text">middle name</string>
     <string name="last_name_text">last name</string>
     <string name="name_suffix_text" translatable="false">name suffix</string>
     <string name="alias_text">alias suffix</string>
@@ -136,28 +136,28 @@
     <string name="action_edit">Edit</string>
     <string name="action_wallet_store">Wallet Store</string>
     <string name="title_section1" translatable="false">Luis Fernando Molina</string>
-    <string name="title_section2" translatable="false">Contacts</string>
-    <string name="title_section3" translatable="false">Accounts</string>
-    <string name="title_section4" translatable="false">Banks</string>
-    <string name="title_section5" translatable="false">Coupons</string>
-    <string name="title_section6" translatable="false">Discounts</string>
-    <string name="title_section7" translatable="false">Vouchers</string>
-    <string name="title_section8" translatable="false">Gift cards</string>
-    <string name="title_section9" translatable="false">Clones</string>
-    <string name="title_section10" translatable="false">Childs</string>
-    <string name="title_section11" translatable="false">Exit</string>
-    <string name="title_section12" translatable="false">Personal Wallets</string>
-    <string name="title_section13" translatable="false">Shops</string>
-    <string name="title_section14" translatable="false">Commercial wallets</string>
-    <string name="title_section15" translatable="false">Factory Projects</string>
-    <string name="title_section16" translatable="false">Published Wallets</string>
-    <string name="title_section17" translatable="false">Shops</string>
+    <string name="title_section2">Contacts</string>
+    <string name="title_section3">Accounts</string>
+    <string name="title_section4">Banks</string>
+    <string name="title_section5">Coupons</string>
+    <string name="title_section6">Discounts</string>
+    <string name="title_section7">Vouchers</string>
+    <string name="title_section8">Gift cards</string>
+    <string name="title_section9">Clones</string>
+    <string name="title_section10">Childs</string>
+    <string name="title_section11">Exit</string>
+    <string name="title_section12">Personal Wallets</string>
+    <string name="title_section13">Shops</string>
+    <string name="title_section14">Commercial wallets</string>
+    <string name="title_section15">Factory Projects</string>
+    <string name="title_section16">Published Wallets</string>
+    <string name="title_section17">Shops</string>
     <string name="app_name">Fermat Bitcoin Wallet</string>
     <string name="button_send">Send</string>
-    <string name="title_activity_main" translatable="false">Young Wallet</string>
+    <string name="title_activity_main">Young Wallet</string>
     <string name="action_search">Search</string>
     <string name="kid_wallet">Kids</string>
-    <string name="young_wallet" translatable="false">Young</string>
+    <string name="young_wallet">Young</string>
     <string name="professional_wallet">Professional</string>
     <string name="bank_wallet">Bank</string>
     <string name="store_wallet">Store</string>
@@ -181,7 +181,7 @@
     <string name="title_activity_app_desktop" translatable="false">AppDesktop</string>
     <string name="dummy_button" translatable="false">Dummy Button</string>
     <string name="dummy_content" translatable="false">DUMMY\nCONTENT</string>
-    <string name="title_activity_navegation_drawler" translatable="false">Smart Wallets</string>
+    <string name="title_activity_navegation_drawler">Smart Wallets</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
@@ -194,26 +194,26 @@
     <string name="icono5" translatable="false">Barcelona</string>
     <string name="lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_contacts" translatable="false">Contacts Activity</string>
-    <string name="title_activity_requests_sent" translatable="false">Requests Sent Activity</string>
-    <string name="title_activity_sent_detail" translatable="false">Sent Detail Activity</string>
-    <string name="title_activity_account_detail" translatable="false">Account Detail Activity</string>
-    <string name="title_activity_store" translatable="false">Store Activity</string>
-    <string name="title_activity_refill_point" translatable="false">Refill Point Activity</string>
-    <string name="title_activity_daily_discounts" translatable="false">Daily Discounts Activity</string>
-    <string name="title_activity_weekly_discount" translatable="false">Weekly Discount Activity</string>
-    <string name="title_activity_monthly_discounts" translatable="false">Monthly Discounts Activity</string>
-    <string name="title_activity_accounts" translatable="false">Accounts Activity</string>
-    <string name="title_activity_edit_personal_profile" translatable="false">Edit Personal Profile Activity</string>
+    <string name="title_activity_contacts">Contacts Activity</string>
+    <string name="title_activity_requests_sent">Requests Sent Activity</string>
+    <string name="title_activity_sent_detail">Sent Detail Activity</string>
+    <string name="title_activity_account_detail">Account Detail Activity</string>
+    <string name="title_activity_store">Store Activity</string>
+    <string name="title_activity_refill_point">Refill Point Activity</string>
+    <string name="title_activity_daily_discounts">Daily Discounts Activity</string>
+    <string name="title_activity_weekly_discount">Weekly Discount Activity</string>
+    <string name="title_activity_monthly_discounts">Monthly Discounts Activity</string>
+    <string name="title_activity_accounts">Accounts Activity</string>
+    <string name="title_activity_edit_personal_profile">Edit Personal Profile Activity</string>
     <string name="title_activity_pay_to_contact">Pay To Contact</string>
-    <string name="title_activity_pay_to_new_contact" translatable="false">Pay To New Contact Activity</string>
-    <string name="title_activity_received_detail" translatable="false">ReceivedDetailActivity</string>
-    <string name="title_activity_receive_from_new_contact" translatable="false">ReceiveFromNewContactActivity</string>
-    <string name="title_activity_receive_from_contact" translatable="false">Receive From Contact Activity</string>
+    <string name="title_activity_pay_to_new_contact">Pay To New Contact Activity</string>
+    <string name="title_activity_received_detail">ReceivedDetailActivity</string>
+    <string name="title_activity_receive_from_new_contact">ReceiveFromNewContactActivity</string>
+    <string name="title_activity_receive_from_contact">Receive From Contact Activity</string>
     <string name="title_activity_chat_over_trx" translatable="false">Chat Over Trx Activity</string>
     <string name="title_activity_blank_activity_with_fragment" translatable="false">BlankActivityWithFragment</string>
-    <string name="title_activity_balance_available" translatable="false">BalanceAvailableActivity</string>
-    <string name="title_activity_wallet" translatable="false">Wallet Activity</string>
+    <string name="title_activity_balance_available">BalanceAvailableActivity</string>
+    <string name="title_activity_wallet">Wallet Activity</string>
     <string-array name="account_name">
         <item>Saving account: My savings</item>
         <item>Current account: Pocket money</item>
@@ -226,7 +226,7 @@
         <item>Send to Message</item>
     </string-array>
     <string name="title_activity_requests_received">Requests Received</string>
-    <string name="title_activity_activity_main" translatable="false">Main Activity</string>
+    <string name="title_activity_activity_main">Main Activity</string>
     <string name="empty_view">Empty List view</string>
     <!-- TAB BALANCE STRINGS -->
     <string name="available_balance">Current balance</string>
@@ -287,6 +287,10 @@
     <string name="settings_fee_level">Fee Level</string>
     <string name="settings_send_error_report">Send Error Report</string>
     <string name="advertisement_text">Notice!</string>
+    <string name="wallet_type">This wallet allows for two different types of contacts:</string>
+    <string name="btc_loss">Enter the BTC amount that you want send to Loss Protected Wallet</string>
+    <string name="phone_notifications">Phone notifications</string>
+    <string name="close_text">Close</string>
 
 
     <!--Texto de Dialogs Movidos para RES de fermat-android-api para su uso general con traduccion incluida.-->

@@ -44,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/txt_title"
-                    android:text="Welcome!"
+                    android:text="@string/welcome_text"
                     android:paddingLeft="5dp"
                     android:layout_weight="1"
                     android:textSize="20sp"
@@ -99,7 +99,7 @@
                 android:paddingRight="30dp"
                 android:paddingStart="20dp"
                 android:paddingTop="7sp"
-                android:text="This params helps you configure your Fermat network identity location."
+                android:text="@string/Intra_user_dialog"
                 android:textColor="#1d1d26"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />
@@ -130,7 +130,7 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
                     android:paddingStart="16dp"
-                    android:text="*Set Accuracy in Kms: This is the range of precision to show where you're located on the Fermat network. \n *Select Frequency: This is the rate of how often the location is updated."
+                    android:text="@string/intra_user_desc"
                     android:textColor="#1d1d26"
                     android:textSize="12sp"
                     tools:ignore="HardcodedText" />
