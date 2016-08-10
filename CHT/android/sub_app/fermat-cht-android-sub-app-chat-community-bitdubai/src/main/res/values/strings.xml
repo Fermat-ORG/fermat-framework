@@ -32,7 +32,7 @@
     <string name="cht_comm_text_resend2">a connection request?</string>
     <string name="cht_comm_text_resend_toast">The connection request has been sent\n you need to wait until the user responds</string>
     <string name="cht_comm_text_block_toast">The connection request has been rejected</string>
-    <string name="cht_comm_text_accpet_toast"> Accepted connection request</string>
+    <string name="cht_comm_text_accpet_toast">Connection request accepted from</string>
     <string name="cht_comm_text_connect_toast">Connection request sent</string>
     <string name="cht_comm_text_state">User connection state </string>
     <string name="cht_comm_text_gps">Please, turn on your GPS</string>

@@ -104,7 +104,7 @@ public class AcceptDialog
                             .acceptChatActor(chatUserInformation.getConnectionId());
                     getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED, Boolean.TRUE);
                     Toast.makeText(getContext(),
-                            chatUserInformation.getAlias() + " " + activity.getResources().getString(R.string.cht_comm_text_accpet_toast),
+                             activity.getResources().getString(R.string.cht_comm_text_accpet_toast) + " " + chatUserInformation.getAlias() ,
                             Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();
