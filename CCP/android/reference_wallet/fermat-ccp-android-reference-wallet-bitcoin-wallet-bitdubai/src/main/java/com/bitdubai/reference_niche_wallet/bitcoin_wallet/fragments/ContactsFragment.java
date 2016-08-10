@@ -81,8 +81,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
@@ -254,7 +252,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         button1 = itemBuilder
                 .setSize(65)
                 .setPadding(0,0,padding,0)
-                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.extra_user_button))
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.btc_extra_user_button))
                 .setText(getResources().getString(R.string.add_extra_user_text))
                 .setTextColor(Color.WHITE)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
@@ -265,7 +263,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         button2 = itemBuilder
                 .setSize(65)
                 .setPadding(0,0,padding,0)
-                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.intra_user_button))
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.btc_intra_user_button))
                 .setText(getResources().getString(R.string.add_fermat_user_text))
                 .setTextColor(Color.WHITE)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
