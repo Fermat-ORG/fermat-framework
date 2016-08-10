@@ -357,18 +357,22 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 final List<ChatActorConnection> actorConnections = search.getResult(max, offset);
 
                 for (ChatActorConnection cac : actorConnections) {
-                    chatExposingData = getChatActorSearch().getResult(cac.getPublicKey());
-                    if (chatExposingData != null)
-                        chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac, chatExposingData.getLocation()));
-                    else
-                        //TODO:Que location debemos usar si esto no se persiste en la Tabla de los actores Connection
-                        chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac, null));
+                    chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac,null));
                 }
+
+//                for (ChatActorConnection cac : actorConnections) {
+//                    chatExposingData = getChatActorSearch().getResult(cac.getPublicKey());
+//                    if (chatExposingData != null)
+//                        chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac, chatExposingData.getLocation()));
+//                    else
+//                        //TODO:Que location debemos usar si esto no se persiste en la Tabla de los actores Connection
+//                        chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac, null));
+//                }
             }
         } catch (CantListActorConnectionsException e) {
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
-        } catch (CantListChatException cantGetChtActorSearchResult) {
-            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantGetChtActorSearchResult));
+//        } catch (CantListChatException cantGetChtActorSearchResult) {
+//            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantGetChtActorSearchResult));
         }
         return chatActorCommunityInformationList;
 

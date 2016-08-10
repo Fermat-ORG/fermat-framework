@@ -14,6 +14,7 @@ import android.widget.SearchView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -31,6 +32,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
@@ -61,6 +63,7 @@ public class ChatFragment
     private ChatAdapterView adapterView;
     private ChatAdapter adapter;
     private SearchView searchView;
+    private Contact contactData;
 
     public static ChatFragment newInstance() {
         return new ChatFragment();
@@ -75,6 +78,8 @@ public class ChatFragment
 
             FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
             registerReceiver(fermatIntentFilter, new ChatBroadcastReceiver());
+
+            //contactData = (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA)
 
             //Obtain chatSettings  or create new chat settings if first time opening chat platform
             chatSettings = null;
