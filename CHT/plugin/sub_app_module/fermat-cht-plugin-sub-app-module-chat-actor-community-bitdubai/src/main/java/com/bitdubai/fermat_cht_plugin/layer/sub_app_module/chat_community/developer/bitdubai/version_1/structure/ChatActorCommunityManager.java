@@ -84,7 +84,9 @@ import java.util.UUID;
  * Edited by Miguel Rincon on 18/04/2016
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 15/06/16.
  */
-public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommunitySettings> implements ChatActorCommunitySubAppModuleManager, Serializable {
+public class ChatActorCommunityManager
+        extends ModuleManagerImpl<ChatActorCommunitySettings>
+        implements ChatActorCommunitySubAppModuleManager, Serializable {
 
     private final ChatIdentityManager chatIdentityManager;
     private final ChatActorConnectionManager chatActorConnectionManager;
@@ -342,7 +344,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     @Override
     public List<ChatActorCommunityInformation> listAllConnectedChatActor(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
         List<ChatActorCommunityInformation> chatActorCommunityInformationList = new ArrayList<>();
-        ChatExposingData chatExposingData = null;
+        //ChatExposingData chatExposingData = null;
         try {
             if (selectedIdentity != null) {
                 final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(
