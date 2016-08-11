@@ -16,7 +16,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="15dp"
         android:background="@drawable/search_contacts_container"
-        android:orientation="horizontal"   >
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="30dp"
@@ -31,7 +31,7 @@
 
         <EditText
             android:id="@+id/search_view"
-            android:layout_width="268dp"
+            android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:background="@android:color/transparent"
@@ -58,7 +58,6 @@
             android:src="@drawable/ic_action_cancel_grey"
             android:visibility="gone"
             />
-
     </LinearLayout>
 
     <FrameLayout

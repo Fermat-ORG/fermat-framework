@@ -459,7 +459,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void setupViews(View rootView) {
         mSearchView = (EditText) rootView.findViewById(R.id.search_view);
 
-        //mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+        mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
 
         contacts_container = (FrameLayout) rootView.findViewById(R.id.contacts_container);
         mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
@@ -601,8 +601,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         dialog.dismiss();
         walletContact = new WalletContact();
         walletContact.setName("");
-       // registerForContextMenu(mClearSearchImageButton);
-        //getActivity().openContextMenu(mClearSearchImageButton);
+       registerForContextMenu(mClearSearchImageButton);
+        getActivity().openContextMenu(mClearSearchImageButton);
     }
 
     public void setWalletSession(ReferenceAppFermatSession appSession) {
@@ -700,9 +700,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     }
                     break;
             }
-            //take_picture_btn.setBackground(new RoundedDrawable(imageBitmap, take_picture_btn));
-            //take_picture_btn.setImageDrawable(null);
-            //contactPicture = imageBitmap;
+
             this.lauchCreateContactDialog(true);
 
         }
