@@ -362,7 +362,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void onRefresh() {
 
-      fermatWorker = new FermatWorker(getActivity()) {
+        fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
 
@@ -413,23 +413,23 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     }
 
     private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
-       // if (isHelpEnabled) {
-            ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), appSession, null, checkButton);
-            contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    Object b = appSession.getData(SessionConstant.CREATE_EXTRA_USER);
-                    if (b != null) {
-                        if ((Boolean) b) {
-                            lauchCreateContactDialog(false);
-                            appSession.removeData(SessionConstant.CREATE_EXTRA_USER);
-                        }
+        // if (isHelpEnabled) {
+        ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), appSession, null, checkButton);
+        contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Object b = appSession.getData(SessionConstant.CREATE_EXTRA_USER);
+                if (b != null) {
+                    if ((Boolean) b) {
+                        lauchCreateContactDialog(false);
+                        appSession.removeData(SessionConstant.CREATE_EXTRA_USER);
                     }
-
                 }
-            });
-            contactsTutorialPart1.show();
-      //  }
+
+            }
+        });
+        contactsTutorialPart1.show();
+        //  }
     }
 
     private void refreshAdapter() {
@@ -459,7 +459,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void setupViews(View rootView) {
         mSearchView = (EditText) rootView.findViewById(R.id.search_view);
 
-        //mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+        mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
 
         contacts_container = (FrameLayout) rootView.findViewById(R.id.contacts_container);
         mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
@@ -601,8 +601,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         dialog.dismiss();
         walletContact = new WalletContact();
         walletContact.setName("");
-       // registerForContextMenu(mClearSearchImageButton);
-        //getActivity().openContextMenu(mClearSearchImageButton);
+        registerForContextMenu(mClearSearchImageButton);
+        getActivity().openContextMenu(mClearSearchImageButton);
     }
 
     public void setWalletSession(ReferenceAppFermatSession appSession) {
@@ -700,9 +700,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     }
                     break;
             }
-            //take_picture_btn.setBackground(new RoundedDrawable(imageBitmap, take_picture_btn));
-            //take_picture_btn.setImageDrawable(null);
-            //contactPicture = imageBitmap;
+
             this.lauchCreateContactDialog(true);
 
         }
@@ -852,7 +850,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                             CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
-                          if (currentSection.matches(letterRegex)) {
+                            if (currentSection.matches(letterRegex)) {
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
                                 positions.put(pos, cryptoWalletWalletContact);
@@ -861,7 +859,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                         }
 
-                       final String symbolCode = HeaderTypes.SYMBOL.getCode();
+                        final String symbolCode = HeaderTypes.SYMBOL.getCode();
                         if (!symbols.isEmpty()) {
                             // add the section in the list of items
                             mListItems.add(symbolCode);
@@ -896,7 +894,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     prevSection = currentSection;
                                 }
 
-                                    mListItems.add(positions.get(i));
+                                mListItems.add(positions.get(i));
                             }
                         }catch (Exception e){
                             e.printStackTrace();
