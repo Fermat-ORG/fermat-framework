@@ -38,8 +38,7 @@ public class NetworkClientCommunicationSupervisorConnectionAgent implements Runn
     @Override
     public void run() {
 
-        if(networkClientCommunicationPluginRoot.isStarted() &&
-                networkClientCommunicationPluginRoot.getNetworkClientCommunicationConnection() != null &&
+        if(networkClientCommunicationPluginRoot.getNetworkClientCommunicationConnection() != null &&
                 getCommunicationsNetworkClientChannel() != null){
 
             Session session = getConnection();

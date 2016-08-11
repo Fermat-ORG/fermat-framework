@@ -703,7 +703,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     public void sendPackageMessage(final PackageContent     packageContent              ,
                                    final NetworkServiceType networkServiceType          ,
                                    final String             destinationIdentityPublicKey) throws CantSendMessageException {
-        System.out.println("******* IS CONNECTED: "+ isConnected() + " - TRYING NO SEND = "+ packageContent.toJson());
+        System.out.println("******* IS CONNECTED: " + isConnected() + " - TRYING NO SEND = " + packageContent.toJson());
         if (isConnected()){
 
             try {
@@ -1065,5 +1065,13 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     public synchronized void close() throws IOException {
         if (networkClientCommunicationChannel.getClientConnection().isOpen())
             networkClientCommunicationChannel.getClientConnection().close();
+    }
+
+    public void stopConnectionSuperVisorAgent(){
+        pluginRoot.stopConnectionSuperVisorAgent();
+    }
+
+    public void startConnectionSuperVisorAgent(){
+        pluginRoot.startConnectionSuperVisorAgent();
     }
 }
