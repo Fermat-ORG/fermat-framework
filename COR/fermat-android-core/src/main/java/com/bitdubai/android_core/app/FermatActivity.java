@@ -255,7 +255,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     /**
      * Builders
      */
-    private ToolbarBuilder toolbarBuilder;
+//    private ToolbarBuilder toolbarBuilder;
 
     /**
      * Called when the activity is first created
@@ -452,8 +452,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             selectLayout(header!=null);
 
             SideMenu sideMenu = activity.getSideMenu();
-
-            initMainViews(header);
             // Log.i("FERMAT ACTIVITY loadUI", "initMainViews " + System.currentTimeMillis());
 
             setOptionsMenu(optionsMenu);
@@ -465,7 +463,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             paintStatusBar(activity.getStatusBar());
             // Log.i("FERMAT ACTIVITY loadUI", " paintStatusBar " + System.currentTimeMillis());
 
-            paintTitleBar(titleBar, activity);
+            paintTitleBar(titleBar);
             //Log.i("FERMAT ACTIVITY loadUI", " paintTitleBar " + System.currentTimeMillis());
 
             paintSideMenu(activity, sideMenu, appConnections);
@@ -501,11 +499,57 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
     private void pantHeader(FermatHeader header, HeaderViewPainter headerViewPainter) {
-        if (header != null && headerViewPainter != null) {
-            if (header.hasExpandable()) {
-                headerViewPainter.addExpandableHeader(getToolbarHeader());
-            }
+        try {
+            if (header == null) {
+                if (appBarLayout != null) {
+                    appBarLayout.setExpanded(false);
+//                    appBarLayout.setEnabled(false);
+                }
+            } else {
 
+                if (header.getRemoveHeaderScroll()) {
+                    final AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) collapsingToolbarLayout.getLayoutParams();
+                    params.setScrollFlags(0);
+                    collapsingToolbarLayout.setLayoutParams(params);
+                }
+
+                if (header.getStartCollapsed()) {
+                    appBarLayout.setExpanded(false);
+                }
+
+                //AppBarLayout
+                if (appBarLayout != null)
+                    appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                        int scrollRange = -1;
+                        boolean alreadyPerform = false;
+
+                        @Override
+                        public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                            if (scrollRange == -1) {
+                                scrollRange = appBarLayout.getTotalScrollRange();
+                            }
+                            if (verticalOffset == 0) {
+                                alreadyPerform = false;
+                                for (ElementsWithAnimation element : elementsWithAnimation)
+                                    element.startCollapseAnimation(getApplicationContext(), verticalOffset);
+                            } else if (verticalOffset < 0 && !alreadyPerform) {
+                                alreadyPerform = true;
+                                for (ElementsWithAnimation element : elementsWithAnimation)
+                                    element.startExpandAnimation(getApplicationContext(), verticalOffset);
+                            }
+                        }
+                    });
+
+                //Header Painter
+                if (headerViewPainter != null) {
+                    if (header.hasExpandable()) {
+                        headerViewPainter.addExpandableHeader(getToolbarHeader());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, e);
+            handleExceptionAndRestart();
         }
     }
 
@@ -639,9 +683,16 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     navigationView.setBackgroundResource(ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE, this, backgroundDrawableColor.getId(), backgroundDrawableColor.getSourceLocation(), backgroundDrawableColor.getOwner().getOwnerAppPublicKey()));
                 }
             } else {
-                mDrawerLayout.setEnabled(false);
+//                mDrawerLayout.setEnabled(false);
                 navigationView.setVisibility(View.GONE);
                 mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                mToolbar.setVisibility(View.VISIBLE);
+                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onBackPressed();
+                    }
+                });
                 //test
                 //mDrawerToggle.onDrawerClosed(mDrawerLayout);
             }
@@ -659,12 +710,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Method in charge of painting the titleBar
      * @param titleBar
      */
-    protected void paintTitleBar(TitleBar titleBar, Activity activity) {
+    protected void paintTitleBar(TitleBar titleBar) {
         try {
             if (titleBar != null) {
-//                getSupportActionBar().setWindowTitle("");
-//                getSupportActionBar().setDisplayShowTitleEnabled(false);
-//                mToolbar.setTitleTextColor(Color.TRANSPARENT);
+                appBarLayout.setVisibility(View.VISIBLE);
                 Typeface typeface = null;
                 try {
                     if (titleBar.getFont() != null)
@@ -721,18 +770,32 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 
                     }
-
-
                 }
+
+                if (titleBar.getSubTitle()!=null){
+                    mToolbar.setSubtitle(titleBar.getSubTitle());
+                }else{
+                    mToolbar.setSubtitle("");
+                }
+                if (titleBar.getLogoDrawable()!=null){
+                    FermatDrawable logoDrawable = titleBar.getLogoDrawable();
+                    mToolbar.setLogo(ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE, this, logoDrawable.getId(), logoDrawable.getSourceLocation(), logoDrawable.getOwner().getOwnerAppPublicKey()));
+                }else{
+                    mToolbar.setLogo(null);
+                }
+
+
 
                 if (titleBar.getBackgroundDrawable() != null) {
                     FermatDrawable backgroundDrawable = titleBar.getBackgroundDrawable();
                     mToolbar.setBackgroundResource(ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE, this, backgroundDrawable.getId(), backgroundDrawable.getSourceLocation(), backgroundDrawable.getOwner().getOwnerAppPublicKey()));
                 }
+                //Title builder
                 setActionBarProperties(title);
+                // Navigation Icon
                 paintToolbarIcon(titleBar);
                 //Toolbar
-                if (mToolbar != null && !isLayoutRecicled)
+                if (mToolbar != null)
                     setSupportActionBar(mToolbar);
 
                 if (title!=null){
@@ -740,14 +803,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     getSupportActionBar().setDisplayShowHomeEnabled(true);
                 }
             } else {
-                if (appBarLayout != null)
+                if (appBarLayout != null) {
+                    Log.e(TAG,"AppBarLayout visibility gone");
                     appBarLayout.setVisibility(View.GONE);
+                }
                 if (collapsingToolbarLayout != null)
                     collapsingToolbarLayout.setVisibility(View.GONE);
             }
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -798,12 +860,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Check if no view has focus:
-                        View view = getCurrentFocus();
-                        if (view != null) {
-                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                        }
+                        Log.e(TAG,"OnBackPressed");
                         onBackPressed();
                     }
                 });
@@ -861,7 +918,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         int tabsSize = tabStrip.getTabs().size();
         final List<Tab> tabs = tabStrip.getTabs();
         Fragment[] fragments = new Fragment[tabsSize];
-        String[] tabTitles = new String[tabsSize];
         FermatFragment[] fermatFragments = new FermatFragment[tabsSize];
         FermatDrawable[] tabsDrawables = new FermatDrawable[tabsSize];
         View[] tabsViews = new View[tabsSize];
@@ -886,7 +942,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 } catch (FragmentNotFoundException e) {
                     throw new InvalidParameterException(e, "Fragment not found: " + fragment.getType() + " with owner: " + fragment.getOwner(), "Framework building tabs");
                 }
-                tabTitles[i] = tab.getLabel();
+//                tabTitles[i] = tab.getLabel();
                 tabsDrawables[i] = tab.getDrawable();
 
                 FermatView fermatView = tab.getFermatView();
@@ -899,7 +955,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }
             tabLayout.setVisibility(View.VISIBLE);
             pagertabs.setVisibility(View.VISIBLE);
-            adapter = new TabsPagerAdapter2(this, getFragmentManager(), tabTitles, fragments, tabsDrawables);
+            adapter = new TabsPagerAdapter2(this, getFragmentManager(), tabs.toArray(new Tab[tabs.size()]), fragments, tabsDrawables);
             pagertabs.setAdapter(adapter);
             if (tabStrip.isHasIcon()) {
                 for (int i = 0; i < tabLayout.getTabCount(); i++) {
@@ -1136,65 +1192,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }
     }
 
-    /**
-     * Init the basic views in the layout
-     *
-     * @param header
-     */
-    protected void initMainViews(FermatHeader header) {
-        try {
-
-            //CollapsingToolbar
-            if (collapsingToolbarLayout != null) {
-                collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
-                collapsingToolbarLayout.setTitle("");
-                collapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
-            }
-            //AppBarLayout
-            if (appBarLayout != null)
-                appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                    int scrollRange = -1;
-                    boolean alreadyPerform = false;
-
-                    @Override
-                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                        if (scrollRange == -1) {
-                            scrollRange = appBarLayout.getTotalScrollRange();
-                        }
-                        if (verticalOffset == 0) {
-                            alreadyPerform = false;
-                            for (ElementsWithAnimation element : elementsWithAnimation)
-                                element.startCollapseAnimation(getApplicationContext(), verticalOffset);
-                        } else if (verticalOffset < 0 && !alreadyPerform) {
-                            alreadyPerform = true;
-                            for (ElementsWithAnimation element : elementsWithAnimation)
-                                element.startExpandAnimation(getApplicationContext(), verticalOffset);
-                        }
-                    }
-                });
-            if (header == null) {
-                if (appBarLayout != null) {
-                    appBarLayout.setExpanded(false);
-                    appBarLayout.setEnabled(false);
-                }
-
-            } else {
-                if (header.getRemoveHeaderScroll()) {
-                    final AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) collapsingToolbarLayout.getLayoutParams();
-                    params.setScrollFlags(0);
-                    collapsingToolbarLayout.setLayoutParams(params);
-                }
-                if (header.getStartCollapsed()) {
-                    appBarLayout.setExpanded(false);
-                }
-            }
-
-        } catch (Exception e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, e);
-            handleExceptionAndRestart();
-        }
-    }
-
 
     @Override
     protected void onResume() {
@@ -1251,6 +1248,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     //  System.out.println("TOOLBARTAMANO:"+heightDp);
                     lp.height = (int) heightDp;
                 }
+
 
                 if (tabs.getBackgroundDrawable() != null) {
                     FermatDrawable fermatDrawable = tabs.getBackgroundDrawable();
@@ -1430,10 +1428,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }
 
             if (mToolbar!=null) {
-                if (toolbarBuilder != null) {
-                    toolbarBuilder.clear();
-                    toolbarBuilder = null;
-                }
+//                if (toolbarBuilder != null) {
+//                    toolbarBuilder.clear();
+//                    toolbarBuilder = null;
+//                }
             }
 
             try{
@@ -1783,11 +1781,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             if (runtimeStructureManager != null) {
                 runtimeStructureManager.clear();
-            }
-
-            if (toolbarBuilder!=null){
-                toolbarBuilder.clear();
-                toolbarBuilder = null;
             }
 
             resetThisActivity();
@@ -2352,9 +2345,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             throw new InvalidParameterException("OptionMenu in activity: " + activity.getType().getCode() + " in app: " + appPublicKey);
         }
     }
-
-
-
 
     public FermatFramework getFermatFramework() {
         return FermatApplication.getInstance().getFermatFramework();

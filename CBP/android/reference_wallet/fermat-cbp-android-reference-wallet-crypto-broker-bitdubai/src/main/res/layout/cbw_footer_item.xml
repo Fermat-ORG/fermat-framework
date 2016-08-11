@@ -55,7 +55,7 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/cbw_circular_shape"
         android:gravity="center"
-        android:text="SEND"
+        android:text="@string/send"
         android:textAllCaps="true"
         android:textColor="@color/white"/>
 </LinearLayout>

@@ -24,7 +24,7 @@ public class CatalogItemViewHolder extends FermatViewHolder {
         walletName = (FermatTextView) itemView.findViewById(R.id.wallet_name);
         walletPublisherName = (FermatTextView) itemView.findViewById(R.id.ws_wallet_publisher_name);
         installStatus = (FermatTextView) itemView.findViewById(R.id.wallet_installation_status);
-        menu =(ImageView) itemView.findViewById(R.id.options);
+        menu = (ImageView) itemView.findViewById(R.id.options);
     }
 
     public ImageView getWalletIcon() {

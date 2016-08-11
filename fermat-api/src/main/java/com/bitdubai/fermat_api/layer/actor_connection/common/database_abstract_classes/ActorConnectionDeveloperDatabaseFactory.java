@@ -71,7 +71,7 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
 
             throw new CantInitializeActorConnectionDatabaseException(
                     cantOpenDatabaseException,
-                    new StringBuilder().append("databaseName: ").append(ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME).toString(),
+                    "databaseName: " + ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
                     "There was an error trying to open database."
             );
 
@@ -90,7 +90,7 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
 
                 throw new CantInitializeActorConnectionDatabaseException(
                         cantCreateDatabaseException,
-                        new StringBuilder().append("databaseName: ").append(ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME).toString(),
+                        "databaseName: " + ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
                         "There was an error trying to create database."
                 );
             }

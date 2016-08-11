@@ -1,31 +1,27 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
-
-import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
-import com.bitdubai.fermat_wpd_api.all_definition.exceptions.CantGetWalletNavigationStructureException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetImageResourceException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetSkinFileException;
-
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Language;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.exceptions.CantGetWalletNavigationStructureException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Language;
 
 import java.util.UUID;
 
 /**
+ * <p>The abstract class <code>com.bitdubai.fermat_api.layer.network_service.wallet_resources.WalletResourcesInstalationManager/code> is a interface
+ * that define the methods to retrieve wallets resource files.
  *
- *  <p>The abstract class <code>com.bitdubai.fermat_api.layer.network_service.wallet_resources.WalletResourcesInstalationManager/code> is a interface
- *     that define the methods to retrieve wallets resource files.
- *
- *
- *  @author  Loui
- *  @version 1.0.0
- *  @since   18/02/15.
- * */
+ * @author Loui
+ * @version 1.0.0
+ * @since 18/02/15.
+ */
 public interface WalletResourcesProviderManager extends ResourceProviderManager {
 
 
@@ -43,7 +39,7 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager 
      * @return The content of the file
      * @throws CantGetSkinFileException
      */
-    Skin getSkinFile(UUID skinId, String walletPublicKey) throws CantGetSkinFileException,CantGetResourcesException;
+    Skin getSkinFile(UUID skinId, String walletPublicKey) throws CantGetSkinFileException, CantGetResourcesException;
 
     /**
      * This method let us get a language file referenced by a name
@@ -55,11 +51,12 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager 
     String getLanguageFile(UUID skinId, String walletPublicKey, String fileName) throws CantGetLanguageFileException;
 
 
-    Language getLanguage(UUID skinId, String walletPublicKey,String languageName) throws CantGetLanguageFileException;
+    Language getLanguage(UUID skinId, String walletPublicKey, String languageName) throws CantGetLanguageFileException;
 
 
     /**
      * Returns the language specified by Id.
+     *
      * @param languageId
      * @param walletPublicKey
      * @return
@@ -70,6 +67,7 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager 
 
     /**
      * returns the associated navigation structure of the wallet
+     *
      * @param publicKey
      * @param skinId
      * @return
@@ -122,7 +120,6 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager 
      * @throws CantGetResourcesException
      */
     String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId, String walletPublicKey) throws CantGetResourcesException;
-
 
 
 }

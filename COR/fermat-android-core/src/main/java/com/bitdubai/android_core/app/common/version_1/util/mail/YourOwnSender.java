@@ -22,7 +22,7 @@ public class YourOwnSender implements ReportSender {
     @Override
     public void send(Context context, CrashReportData errorContent) throws ReportSenderException {
 
-        final String subject = new StringBuilder().append(mContext.getPackageName()).append(" Crash Report").toString();
+        final String subject = mContext.getPackageName() + " Crash Report";
         final String body = buildBody(errorContent);
 
 //        final Intent emailIntent = new Intent(android.content.Intent.ACTION_SENDTO);

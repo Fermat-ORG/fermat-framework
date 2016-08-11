@@ -149,7 +149,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
          * If the directory does not exist, we create it here.
          */
 
-        File storagePath = new File(new StringBuilder().append(path).append("/").append(ownerId.toString()).append("/").append(this.directoryName).toString());
+        File storagePath = new File(path + "/" + ownerId.toString() + "/" + this.directoryName);
         if (!storagePath.exists())
             storagePath.mkdirs();
 
@@ -174,21 +174,21 @@ public class AndroidPluginTextFile implements PluginTextFile {
         } catch (CantEncryptException ex) {
             String message = CantPersistFileException.DEFAULT_MESSAGE;
             FermatException cause = ex;
-            String context = new StringBuilder().append("Storage Path: ").append(storagePath.toString()).append(" exists? ").append(storagePath.exists()).toString();
+            String context = "Storage Path: " + storagePath.toString() + " exists? " + storagePath.exists();
             context += CantPersistFileException.CONTEXT_CONTENT_SEPARATOR;
-            context += new StringBuilder().append("FileName: ").append(fileName).toString();
+            context += "FileName: " + fileName;
             context += CantPersistFileException.CONTEXT_CONTENT_SEPARATOR;
-            context += new StringBuilder().append("Owner Id: ").append(this.ownerId).toString();
+            context += "Owner Id: " + this.ownerId;
             String possibleReason = "This might have something to do specifically with the encryption algorithm and its implementation";
             throw new CantPersistFileException(message, cause, context, possibleReason);
         } catch (IOException ex) {
             String message = CantPersistFileException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(ex);
-            String context = new StringBuilder().append("Storage Path: ").append(storagePath.toString()).append(" exists? ").append(storagePath.exists()).toString();
+            String context = "Storage Path: " + storagePath.toString() + " exists? " + storagePath.exists();
             context += CantPersistFileException.CONTEXT_CONTENT_SEPARATOR;
-            context += new StringBuilder().append("FileName: ").append(fileName).toString();
+            context += "FileName: " + fileName;
             context += CantPersistFileException.CONTEXT_CONTENT_SEPARATOR;
-            context += new StringBuilder().append("Owner Id: ").append(this.ownerId).toString();
+            context += "Owner Id: " + this.ownerId;
             String possibleReason = "This problem should be related with the FileOutputStream either in the construction or the write operation";
             throw new CantPersistFileException(message, cause, context, possibleReason);
         } catch (Exception e) {
@@ -215,7 +215,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
         /**
          * We open the file and read its encrypted content.
          */
-        File file = new File(new StringBuilder().append(path).append("/").append(ownerId.toString()).append("/").append(this.directoryName).toString(), this.fileName);
+        File file = new File(path + "/" + ownerId.toString() + "/" + this.directoryName, this.fileName);
         String decryptedContent = "";
         try {
             InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
@@ -237,9 +237,9 @@ public class AndroidPluginTextFile implements PluginTextFile {
                 decryptedContent = this.decrypt(stringBuilder.toString());
             } catch (CantDecryptException ex) {
                 String message = CantPersistFileException.DEFAULT_MESSAGE;
-                String context = new StringBuilder().append("File Path: ").append(file.getPath()).toString();
+                String context = "File Path: " + file.getPath();
                 context += CantPersistFileException.CONTEXT_CONTENT_SEPARATOR;
-                context += new StringBuilder().append("Owner Id: ").append(this.ownerId).toString();
+                context += "Owner Id: " + this.ownerId;
                 String possibleReason = "This might have something to do specifically with the encryption algorithm and its implementation";
                 throw new CantLoadFileException(message, ex, context, possibleReason);
             }
@@ -251,7 +251,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
         } catch (IOException ex) {
             String message = CantPersistFileException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(ex);
-            String context = new StringBuilder().append("File Path: ").append(file.getPath()).toString();
+            String context = "File Path: " + file.getPath();
             String possibleReason = "This problem should be related with the FileInputStream either in the construction or the read operation";
             throw new CantLoadFileException(message, cause, context, possibleReason);
         } catch (Exception e) {
@@ -273,7 +273,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
             path = Environment.getExternalStorageDirectory().toString();
         else
             path = contextPath;
-        File file = new File(new StringBuilder().append(path).append("/").append(ownerId.toString()).append("/").append(this.directoryName).toString(), this.fileName);
+        File file = new File(path + "/" + ownerId.toString() + "/" + this.directoryName, this.fileName);
         file.delete();
     }
 
@@ -303,7 +303,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
             path = Environment.getExternalStorageDirectory().toString();
         else
             path = contextPath;
-        return new StringBuilder().append(path).append("/").append(this.directoryName).append("/").append(fileName).toString();
+        return path + "/" + this.directoryName + "/" + fileName;
     }
 
     /**
@@ -332,11 +332,11 @@ public class AndroidPluginTextFile implements PluginTextFile {
         } catch (Exception ex) {
             String message = CantEncryptException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(ex);
-            String context = new StringBuilder().append("Encription Digest Algorithm: ").append(DIGEST_ALGORITHM).toString();
+            String context = "Encription Digest Algorithm: " + DIGEST_ALGORITHM;
             context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
-            context += new StringBuilder().append("Encription KeySpec Algorithm: ").append(KEYSPEC_ALGORITHM).toString();
+            context += "Encription KeySpec Algorithm: " + KEYSPEC_ALGORITHM;
             context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
-            context += new StringBuilder().append("Charset: ").append(CHARSET_NAME).toString();
+            context += "Charset: " + CHARSET_NAME;
             String possibleReason = "This is most likely to happen due to a bad Secret Key passing";
             throw new CantEncryptException(message, cause, context, possibleReason);
         }
@@ -370,11 +370,11 @@ public class AndroidPluginTextFile implements PluginTextFile {
         } catch (Exception ex) {
             String message = CantEncryptException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(ex);
-            String context = new StringBuilder().append("Encription Digest Algorithm: ").append(DIGEST_ALGORITHM).toString();
+            String context = "Encription Digest Algorithm: " + DIGEST_ALGORITHM;
             context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
-            context += new StringBuilder().append("Encription KeySpec Algorithm: ").append(KEYSPEC_ALGORITHM).toString();
+            context += "Encription KeySpec Algorithm: " + KEYSPEC_ALGORITHM;
             context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
-            context += new StringBuilder().append("Charset: ").append(CHARSET_NAME).toString();
+            context += "Charset: " + CHARSET_NAME;
             String possibleReason = "This is most likely to happen due to a bad Secret Key passing";
             throw new CantDecryptException(message, cause, context, possibleReason);
 

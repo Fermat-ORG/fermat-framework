@@ -24,24 +24,24 @@ public interface WalletInstallationProcess {
     /**
      * This method starts the wallet installation process
      *
-     * @param walletType The type of wallet to install
-     * @param walletName  the name of the wallet
-     * @param walletPublicKey  the public key of the wallet
-     * @param walletPrivateKey the private key of wallet
+     * @param walletType                 The type of wallet to install
+     * @param walletName                 the name of the wallet
+     * @param walletPublicKey            the public key of the wallet
+     * @param walletPrivateKey           the private key of wallet
      * @param deviceUserPublicKey
-     * @param walletIconName  the name of the icon of the wallet
-     * @param walletCatalogueId  the name of the icon of the wallet
-     * @param walletVersion   the wallet version
-     * @param screenSize   the screen size
-      * @param skinId      the skin id
-     * @param skinVersion   the skin version
-     * @param skinName   the skin name
-     * @param skinPreview the skin preview image name
-     * @param languageId  the language id
-     * @param languageVersion  the language version
-     * @param languageName   the wallet name
-     * @param languageLabel  the wallet label
-     * @param developer the developer name
+     * @param walletIconName             the name of the icon of the wallet
+     * @param walletCatalogueId          the name of the icon of the wallet
+     * @param walletVersion              the wallet version
+     * @param screenSize                 the screen size
+     * @param skinId                     the skin id
+     * @param skinVersion                the skin version
+     * @param skinName                   the skin name
+     * @param skinPreview                the skin preview image name
+     * @param languageId                 the language id
+     * @param languageVersion            the language version
+     * @param languageName               the wallet name
+     * @param languageLabel              the wallet label
+     * @param developer                  the developer name
      * @param navigationStructureVersion
      * @throws CantInstallWalletException
      */

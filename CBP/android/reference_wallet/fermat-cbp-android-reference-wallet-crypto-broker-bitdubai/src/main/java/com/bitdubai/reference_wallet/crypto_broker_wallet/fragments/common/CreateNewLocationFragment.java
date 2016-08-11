@@ -247,7 +247,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
                 }
             */
         } else {
-            Toast.makeText(getActivity(), "Need to set the fields", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.need_set_fields), Toast.LENGTH_LONG).show();
         }
     }
 

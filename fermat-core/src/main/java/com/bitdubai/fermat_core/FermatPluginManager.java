@@ -397,7 +397,7 @@ public final class FermatPluginManager {
 
         if (!abstractPlugin.isStarted()) {
             throw new UnexpectedServiceStatusException(
-                    new StringBuilder().append("Service Status: ").append(abstractPlugin.getStatus()).append(" || ").append(abstractPlugin.getPluginVersionReference().toString()).toString(),
+                    "Service Status: " + abstractPlugin.getStatus() + " || " + abstractPlugin.getPluginVersionReference().toString(),
                     "The plugin cannot be stopped because is not started."
             );
         }
@@ -426,7 +426,7 @@ public final class FermatPluginManager {
 
         if (!abstractPlugin.isStarted()) {
             throw new UnexpectedServiceStatusException(
-                    new StringBuilder().append("Service Status: ").append(abstractPlugin.getStatus()).append(" || ").append(abstractPlugin.getPluginVersionReference().toString()).toString(),
+                    "Service Status: " + abstractPlugin.getStatus() + " || " + abstractPlugin.getPluginVersionReference().toString(),
                     "The plugin cannot be paused because is not started."
             );
         }
@@ -455,7 +455,7 @@ public final class FermatPluginManager {
 
         if (!abstractPlugin.isPaused()) {
             throw new UnexpectedServiceStatusException(
-                    new StringBuilder().append("Service Status: ").append(abstractPlugin.getStatus()).append(" || ").append(abstractPlugin.getPluginVersionReference().toString()).toString(),
+                    "Service Status: " + abstractPlugin.getStatus() + " || " + abstractPlugin.getPluginVersionReference().toString(),
                     "The plugin cannot be resumed because is not paused."
             );
         }
@@ -486,7 +486,7 @@ public final class FermatPluginManager {
             for (final PluginVersionReference ref2 : subReferenceReferences) {
                 if (referenceAnalyzing.equals(ref2))
                     throw new CyclicalRelationshipFoundException(
-                            new StringBuilder().append("Comparing: ").append(referenceAnalyzing.toString3()).append("\n with: ").append(subReferenceAnalyzed.toString3()).toString(),
+                            "Comparing: " + referenceAnalyzing.toString3() + "\n with: " + subReferenceAnalyzed.toString3(),
                             "Cyclical relationship found."
                     );
             }

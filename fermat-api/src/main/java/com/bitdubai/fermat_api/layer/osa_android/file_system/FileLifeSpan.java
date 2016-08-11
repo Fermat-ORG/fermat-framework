@@ -39,11 +39,7 @@ public enum FileLifeSpan {
             case "TEMP":
                 return FileLifeSpan.TEMPORARY;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the FileLifeSpan enum");
-
-
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the FileLifeSpan enum");
         }
-
     }
-
 }

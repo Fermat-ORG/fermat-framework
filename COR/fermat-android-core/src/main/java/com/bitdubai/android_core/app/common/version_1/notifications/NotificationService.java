@@ -227,7 +227,7 @@ public class NotificationService extends Service {
                         .setContentIntent(pi)
                         .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                         .setLights(Color.YELLOW, 3000, 3000);
-                Log.i(LOG_TAG, new StringBuilder().append("Launcher: ").append(publicKey).toString());
+                Log.i(LOG_TAG, "Launcher: " + publicKey);
             }
 
         } else {

@@ -88,7 +88,7 @@ public enum NetworkServiceType implements FermatEnum {
 
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code received: ").append(code).toString(),
+                        "Code received: " + code,
                         "The code received is not valid for NetworkServiceType enum."
                 );
         }

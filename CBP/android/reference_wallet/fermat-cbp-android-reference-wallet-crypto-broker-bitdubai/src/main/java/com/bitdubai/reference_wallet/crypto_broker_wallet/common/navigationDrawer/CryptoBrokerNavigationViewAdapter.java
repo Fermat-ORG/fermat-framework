@@ -25,8 +25,8 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
 
     private List<NavViewFooterItem> earningsItems;
     private List<NavViewFooterItem> stockItems;
-    private String stockTitle = "Current Stock";
-    private String earningsTitle = "Daily Earnings";
+    private String stockTitle;
+    private String earningsTitle;
 
     public CryptoBrokerNavigationViewAdapter(Context context) {
         super(context);
@@ -46,6 +46,9 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
 
         stockItems = stock;
         earningsItems = earnings;
+
+        stockTitle = context.getResources().getString(R.string.current_stock);
+        earningsTitle = context.getResources().getString(R.string.daily_earnings);
     }
 
     @Override

@@ -23,7 +23,7 @@ import java.util.UUID;
  * The Class  <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.Wallet PublisherMiddlewareDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/08/15.
  *
  * @version 1.0

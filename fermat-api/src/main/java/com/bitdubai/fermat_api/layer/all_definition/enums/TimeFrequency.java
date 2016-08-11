@@ -41,7 +41,7 @@ public enum TimeFrequency implements FermatEnum {
 
             default:
                 throw new InvalidParameterException(
-                        new StringBuilder().append("Code Received: ").append(code).toString(),
+                        "Code Received: " + code,
                         "The code is not valid for the TimeFrequency enum."
                 );
         }

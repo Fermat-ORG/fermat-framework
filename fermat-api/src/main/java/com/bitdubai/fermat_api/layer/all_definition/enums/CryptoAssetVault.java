@@ -27,7 +27,7 @@ public enum CryptoAssetVault implements FermatVaultEnum {
             if (vault.getCode().equals(code))
                 return vault;
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This code is not valid for the CryptoCurrencyVault enum.");
+        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code is not valid for the CryptoCurrencyVault enum.");
     }
 
     public static CryptoAssetVault getByCryptoCurrency(CryptoCurrency cryptoCurrency) throws InvalidParameterException {
@@ -36,7 +36,7 @@ public enum CryptoAssetVault implements FermatVaultEnum {
             if (vault.getCryptoCurrency().equals(cryptoCurrency))
                 return vault;
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("CryptoCurrency Received: ").append(cryptoCurrency).toString(), "This CryptoCurrency is not valid for the CryptoCurrencyVault enum.");
+        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "CryptoCurrency Received: " + cryptoCurrency, "This CryptoCurrency is not valid for the CryptoCurrencyVault enum.");
     }
 
     @Override

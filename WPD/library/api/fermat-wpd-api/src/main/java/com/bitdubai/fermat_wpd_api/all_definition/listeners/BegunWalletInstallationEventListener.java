@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_wpd_api.all_definition.listeners;
 
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 
 /**
@@ -15,7 +15,7 @@ public class BegunWalletInstallationEventListener implements FermatEventListener
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
 
-    public BegunWalletInstallationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor){
+    public BegunWalletInstallationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }
@@ -38,12 +38,9 @@ public class BegunWalletInstallationEventListener implements FermatEventListener
     @Override
     public void raiseEvent(FermatEvent fermatEvent) {
 
-        try
-        {
+        try {
             this.fermatEventHandler.handleEvent(fermatEvent);
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             fermatEventMonitor.handleEventException(exception, fermatEvent);
         }
     }

@@ -72,7 +72,7 @@ public class ToolbarBuilder {
 
     public void setTypeface(Typeface typeface) {
         if (typeface!=null)
-        txtTitle.setTypeface(typeface);
+            txtTitle.setTypeface(typeface);
     }
 
     public void setTextSize(float textSize) {

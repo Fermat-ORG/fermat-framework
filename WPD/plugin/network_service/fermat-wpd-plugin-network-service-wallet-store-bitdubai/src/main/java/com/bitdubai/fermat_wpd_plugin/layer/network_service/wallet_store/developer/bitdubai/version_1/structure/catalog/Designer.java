@@ -2,6 +2,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.develo
 
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
+
 import java.util.UUID;
 
 /**
@@ -20,6 +21,7 @@ public class Designer implements DesignerIdentity {
 
     /**
      * Overloaded constructor
+     *
      * @param id
      * @param alias
      * @param publicKey
@@ -31,26 +33,30 @@ public class Designer implements DesignerIdentity {
     }
 
     @Override
-    public String getAlias() { return alias; }
+    public String getAlias() {
+        return alias;
+    }
 
     /**
      * Get the public key of the represented designer
+     *
      * @return String publicKey
      */
     @Override
     public String getPublicKey() {
         return this.publicKey;
     }
+
     /**
-     Sign a message with designer private key
-     * @param  mensage to sign
+     * Sign a message with designer private key
+     *
+     * @param mensage to sign
      * @return string signed message
      * @throws CantSingMessageException
      */
 
     @Override
-    public String createMessageSignature(String mensage) throws CantSingMessageException
-    {
+    public String createMessageSignature(String mensage) throws CantSingMessageException {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }

@@ -855,7 +855,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
                     List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(
                             BalanceType.AVAILABLE, TransactionType.DEBIT, appSession.getAppPublicKey(),
-                            cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+
+         cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0,cryptoWalletTransaction.getActorFromType());
 
                     GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction> grouperItem = new GrouperItem<>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);
@@ -897,7 +898,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
-           swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 //noinspection unchecked
                 openNegotiationList = (ArrayList) result[0];

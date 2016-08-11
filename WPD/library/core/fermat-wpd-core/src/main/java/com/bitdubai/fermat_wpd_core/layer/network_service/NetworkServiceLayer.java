@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_wpd_core.layer.network_service;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_wpd_core.layer.network_service.wallet_community.WalletCommunityPluginSubsystem;
 import com.bitdubai.fermat_wpd_core.layer.network_service.wallet_resources.WalletResourcesPluginSubsystem;
 import com.bitdubai.fermat_wpd_core.layer.network_service.wallet_statistics.WalletStatisticsPluginSubsystem;
@@ -25,12 +25,12 @@ public class NetworkServiceLayer extends AbstractLayer {
 
         try {
 
-            registerPlugin(new WalletCommunityPluginSubsystem( ));
-            registerPlugin(new WalletResourcesPluginSubsystem() );
+            registerPlugin(new WalletCommunityPluginSubsystem());
+            registerPlugin(new WalletResourcesPluginSubsystem());
             registerPlugin(new WalletStatisticsPluginSubsystem());
-            registerPlugin(new WalletStorePluginSubsystem()     );
+            registerPlugin(new WalletStorePluginSubsystem());
 
-        } catch(CantRegisterPluginException e) {
+        } catch (CantRegisterPluginException e) {
 
             throw new CantStartLayerException(
                     e,

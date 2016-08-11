@@ -75,7 +75,7 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<Refe
         View layout = inflater.inflate(R.layout.cbw_wizard_step_other_settings, container, false);
 
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
-        spreadTextView.setText(String.format("%1$s %%", spreadValue));
+        spreadTextView.setText(String.format(getResources().getString(R.string.spread_format), spreadValue));
 
         if (isHomeTutorialDialogEnabled) {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
@@ -114,7 +114,7 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<Refe
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 spreadValue = progress;
-                spreadTextView.setText(String.format("%1$s %%", spreadValue));
+                spreadTextView.setText(String.format(getResources().getString(R.string.spread_format), spreadValue));
             }
 
             @Override
@@ -144,7 +144,7 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<Refe
             // TODO Solo para testing, eliminar despues
             changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
         } catch (FermatException ex) {
-            Toast.makeText(WizardPageOtherSettingsFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(WizardPageOtherSettingsFragment.this.getActivity(), getResources().getString(R.string.error_opps2), Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {

@@ -15,7 +15,7 @@ import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitd
  */
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
-    public DeveloperBitDubai () {
+    public DeveloperBitDubai() {
         super(new PluginDeveloperReference(Developers.BITDUBAI));
     }
 

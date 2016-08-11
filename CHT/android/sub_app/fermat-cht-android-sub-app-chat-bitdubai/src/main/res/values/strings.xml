@@ -54,6 +54,8 @@
     <string name="cht_typing">Typing...</string>
     <string name="cht_today">today at </string>
     <string name="cht_yesterday">yesterday at </string>
+    <string name="status">Status</string>
+    <string name="profile_status">Available</string>
 
     <string name="cht_select">Select</string>
     
@@ -76,6 +78,9 @@
     <string name="cht_send_error_text2">...Or hold a tap in the empty   box below to load the log and then copy and paste in another place to send it</string>
     <string name="cht_send_error_hint">Type email of support personal</string>
     <string name="cht_send_error_hint_hold">Hold a tap here</string>
+    <string name="copy_message_toast">Copied: </string>
+    <string name="cht_notif_new_msg_title">Chat - New Message</string>
+    <string name="cht_notif_new_msg_content">You have a new message in Chat.</string>
 
 
     <!-- Used for the AlphabetIndexer in ContactsListFragment to provide quick navigation by

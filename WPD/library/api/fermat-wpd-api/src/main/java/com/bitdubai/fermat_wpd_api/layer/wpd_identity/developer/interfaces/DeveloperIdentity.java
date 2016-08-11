@@ -10,19 +10,16 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.exceptions.CantS
 public interface DeveloperIdentity {
 
     /**
-     *
      * @return the alias of the represented developer identity
      */
     String getAlias();
 
     /**
-     *
      * @return the public key of the represented developer
      */
     String getPublicKey();
 
     /**
-     *
      * @param mensage unsigned
      * @return signed message
      */

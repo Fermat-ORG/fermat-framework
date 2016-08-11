@@ -22,7 +22,6 @@ import java.util.UUID;
  *
  * @author Ezequiel Postan (ezequiel.postan@gmail.com)
  * @author Update by Roberto Requena - (rart3001@gmail.com) on 06/08/15.
- *
  * @version 1.0
  * @since Java JDK 1.7
  */

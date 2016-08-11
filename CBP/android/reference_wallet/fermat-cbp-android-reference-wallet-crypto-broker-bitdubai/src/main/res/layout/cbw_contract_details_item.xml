@@ -40,7 +40,7 @@
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:textColor="#1271A7"
-                tools:text="Contract Detail Step"/>
+                tools:text="@string/detail_step"/>
 
             <View
                 android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                 android:layout_marginTop="16dp"
                 android:textColor="@color/description_text_status_confirm"
                 android:textSize="18sp"
-                tools:text="You receive:"/>
+                tools:text="@string/your_recieve"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbw_contract_detail_amount_and_method"

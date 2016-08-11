@@ -54,7 +54,7 @@ public class AsymmetricCryptography_NEW {
                 fermatCipher = new FermatSpongyCastleCipher();
             }
 
-            System.out.println(new StringBuilder().append("AsymmetricCryptography - SecurityProvider Loaded = ").append(Security.getProviders()[0]).toString());
+            System.out.println("AsymmetricCryptography - SecurityProvider Loaded = " + Security.getProviders()[0]);
 
         } catch (Exception e) {
             e.printStackTrace();

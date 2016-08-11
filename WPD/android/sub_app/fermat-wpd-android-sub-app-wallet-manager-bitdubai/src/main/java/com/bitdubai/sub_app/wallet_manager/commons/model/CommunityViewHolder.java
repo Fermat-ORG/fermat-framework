@@ -22,7 +22,6 @@ public class CommunityViewHolder extends ChildViewHolder {
     BitmapWorkerTaskWithRes bitmapWorkerTask;
 
 
-
     /**
      * Public constructor for the custom child ViewHolder
      *
@@ -41,21 +40,21 @@ public class CommunityViewHolder extends ChildViewHolder {
         try {
             if (installedApp.getBannerRes() != 0) {
 //            contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));
-                bitmapWorkerTask = new BitmapWorkerTaskWithRes(imgBanner,res,installedApp.getBannerRes(),false);
+                bitmapWorkerTask = new BitmapWorkerTaskWithRes(imgBanner, res, installedApp.getBannerRes(), false);
                 bitmapWorkerTask.execute(installedApp.getBannerRes());
             } else
                 Picasso.with(imgBanner.getContext()).load(R.drawable.ic_profile_male).into(imgBanner);
-        }catch (Exception e){
+        } catch (Exception e) {
             Picasso.with(imgBanner.getContext()).load(R.drawable.ic_profile_male).into(imgBanner);
 
         }
         return this;
     }
 
-    public void cancelTaskIfRunning(){
-        try{
+    public void cancelTaskIfRunning() {
+        try {
             bitmapWorkerTask.cancel(true);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
