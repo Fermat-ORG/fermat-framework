@@ -90,13 +90,30 @@
     <string name="title_activity_blank_activity_with_fragment">BlankActivityWithFragment</string>
     <string name="title_activity_balance_available">BalanceAvailableActivity</string>
     <string name="title_activity_wallet">Wallet Activity</string>
+    <string name="title_go_button">Got it</string>
+    <string name="title_dont_show_button">Don\'t show again</string>
 
     <string-array name="account_name">
         <item>Saving account: My savings</item>
         <item>Current account: Pocket money</item>
         <item>Saving account: Holiday saving</item>
     </string-array>
+    <string name="import_text">Mnemonic password can be used to recover your password if you forget it in the folder. Without the mnemonic there is no way we can help recover a forgotten password.</string>
+    <string name="import_input">Input your mnemonic code to import your balance inside a Fermat Wallet:</string>
+    <string name="import_put">Put your Mnemonic code here!</string>
+    <string name="import_date_put">Put your Mnemonic date here!</string>
+    <string name="import_title">Import</string>
+    <string name="export_text">Mnemonic password can be used to recover your password if you forget it in the folder. Without the mnemonic there is no way we can help recover a forgotten password.</string>
+    <string name="export_choose">Choose what key do you want to export:</string>
+    <string name="export_see_code">Press to see the mnemonic code</string>
+    <string name="export_code_put">mNemonic Code:</string>
+    <string name="export_code_input">Your Mnemonic code will appair here</string>
+    <string name="export_date_put">mNemonic Date:</string>
+    <string name="export_date_input">Your Mnemonic date will appair here</string>
 
+    <string name="title_activity_dating_profile">Dating\nProfile</string>
+    <string name="title_activity_alternative_profile">Alternative\nProfile</string>
+    <string name="title_activity_profesional_profile">Professional\nProfile</string>
     <string name="title_activity_requests_received">Requests Received</string>
     <string name="title_activity_activity_main">Main Activity</string>
     <string name="wizzard_welcome_text">Here you will be able to chat, get a taxi, rent apartments, find a date, publish and search classifieds, find a job, hire or provide freelance services, get digital coupons, vouchers, and discounts, buy and sell goods and services and much more!  Fermat is open source and it is under construction.</string>
@@ -106,6 +123,12 @@
     <string name="welcome_wizzard_third_title">User Profiles</string>
     <string name="welcome_wizzard_fourth_title">Communities</string>
     <string name="welcome_wizzard_fifth_title" >Ready to go!</string>
-
+    <string name="welcome_get_started" >To get started please follow these steps:</string>
+    <string name="welcome_goto_profile" >Go to Chat Profile App to create your first Fermat profile.</string>
+    <string name="welcome_goto_chat" >Then go to the Chat Community to connect with some people.</string>
+    <string name="welcome_goto_community" >Finally go to the Chat App and start chatting.</string>
+    <string name="welcome_text_community" >In Fermat each type of user profile has a community app where you can browse, search and find people with that type of profile around you or globally. In order to interact with others you must send a connection request and wait for the other party to accept to be connected with you. After you are accepted you can use any of the apps available that allow you to be logged in with that type of profile.</string>
+    <string name="welcome_text_third" >In Fermat you can have multiple profiles.\nFor example you can have a profile for chatting apps, another for job seeking apps, another for dating apps and so on. From the outside no one can link these profiles to you or between each other. In this way you are not going to be ridiculed when targeting different audiences with the wrong profile pictures.</string>
+    <string name="welcome_text_fermat_app" >In Fermat you will find several apps, and many more are being built right now. What makes them different is that:</string>
 
 </resources>

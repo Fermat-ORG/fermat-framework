@@ -355,7 +355,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     //    super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            contextMenuInUse = true;
+         //   contextMenuInUse = true;
             ImageView pictureView = mBrokerImage;
 
             switch (requestCode) {
@@ -388,7 +388,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                         if (checkCameraPermission()) {
                             if (checkWriteExternalPermission()) {
                                 if (imageBitmap != null) {
-                                  //  if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
+                                    //if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
                                         final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, imageBitmap);
                                         dialogCropImage.show();
                                         dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -409,11 +409,11 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                                 }
                                             }
                                         });
-                                   // } else {
-                                  //      Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
-                                        // cryptoBrokerBitmap = null;
-                                        //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
-                                   // }
+                                   /* } else {
+                                        Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                         //cryptoBrokerBitmap = null;
+                                        Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                                    }*/
                                 } else {
                                     Toast.makeText(getActivity(), "Error on upload image", Toast.LENGTH_LONG).show();
                                     //  cryptoBrokerBitmap = null;
@@ -505,6 +505,8 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
         }
         super.onActivityResult(requestCode, resultCode, data);
+        contextMenuInUse = false;
+
     }
 
     @Override

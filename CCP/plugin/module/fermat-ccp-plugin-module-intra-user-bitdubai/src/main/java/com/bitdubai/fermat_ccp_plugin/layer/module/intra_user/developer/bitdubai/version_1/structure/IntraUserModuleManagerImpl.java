@@ -285,14 +285,14 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
                     //get actor location
                     Location actorLocation = intraUser.getLocation();
-                    try {
-                        final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
-                        country = address.getCountry();
-                        place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
-                    } catch (CantCreateAddressException ignore) {
+                    if(actorLocation != null){
+                        try {
+                            final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
+                            country = address.getCountry();
+                            place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
+                        } catch (CantCreateAddressException ignore) {
+                        }
                     }
-
-
                     //return intra user information - if not connected - status return null
                     IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(),
                                                                                                 connectionState,intraUser.getState(),intraUser.getContactRegistrationDate(),

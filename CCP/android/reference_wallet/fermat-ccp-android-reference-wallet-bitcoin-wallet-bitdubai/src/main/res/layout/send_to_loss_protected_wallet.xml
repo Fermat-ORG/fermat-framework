@@ -46,7 +46,7 @@
                         android:textSize="16sp"
                         android:textColor="@color/black"
                         android:gravity="center"
-                        android:text="Enter the BTC amount that you want send to Loss Protected Wallet"/>
+                        android:text="@string/btc_loss"/>
 
                 </LinearLayout>
 

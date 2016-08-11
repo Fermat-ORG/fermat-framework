@@ -25,7 +25,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mnemonic password can be used to recover your password if you forget it in the folder. Without the mnemonic there is no way we can help recover a forgotten password."
+                android:text="@string/export_text"
                 android:gravity="center"
                 android:textSize="16sp"
                 android:paddingLeft="12dp"
@@ -45,7 +45,7 @@
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Choose what key do you want to export:"
+                        android:text="@string/export_choose"
                         android:paddingLeft="5dp"
                         android:textColor="#272727"/>
 
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:id="@+id/btn_show_seed"
-                android:text="Press to see the mnemonic code"
+                android:text="@string/export_see_code"
                 android:layout_marginTop="20dp"
                 android:textColor="#000"
                 />
@@ -81,7 +81,7 @@
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="mNemonic Code:"
+                        android:text="@string/export_code_put"
                         android:textColor="#000000"/>
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -95,7 +95,7 @@
                         android:textSize="18sp"
                         android:layout_marginTop="5dp"
                         android:textColor="#272727"
-                        android:hint="Your Mnemonic code will appair here"
+                        android:hint="@string/export_code_input"
                         android:textIsSelectable="true"
                         />
 
@@ -103,7 +103,7 @@
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="mNemonic Date:"
+                        android:text="@string/export_date_put"
                         android:textColor="#000000"
                         android:layout_marginTop="15dp"/>
 
@@ -118,7 +118,7 @@
                         android:paddingRight="12dp"
                         android:textSize="18sp"
                         android:textColor="#272727"
-                        android:hint="Your Mnemonic code will appair here"
+                        android:hint="@string/export_date_input"
                         android:textIsSelectable="true"
                         />
 
