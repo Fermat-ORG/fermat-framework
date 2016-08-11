@@ -58,6 +58,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
             final DatabaseTableRecord record = actorConnectionsTable.getRecords().get(0);
             record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME, chatActorConnection.getAlias());
             record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATUS_COLUMN_NAME, chatActorConnection.getStatus());
+            record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATUS_COLUMN_NAME, chatActorConnection.getStatus());
 
             actorConnectionsTable.updateRecord(record);
         }

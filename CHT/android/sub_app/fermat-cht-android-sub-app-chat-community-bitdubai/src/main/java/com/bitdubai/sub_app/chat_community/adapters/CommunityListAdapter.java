@@ -225,8 +225,11 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     @Override
     protected void bindHolder(final CommunityWorldHolder holder, ChatActorCommunityInformation data, final int position) {
         final ConnectionState connectionState = data.getConnectionState();
+        int max = 10;
         updateConnectionState(connectionState, holder);
-        holder.name.setText(data.getAlias());
+        if(max > data.getAlias().length())
+            max = data.getAlias().length();
+        holder.name.setText(data.getAlias().substring(0, max));
         byte[] profileImage = data.getImage();
         if (profileImage != null && profileImage.length > 0) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);

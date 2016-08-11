@@ -14,17 +14,23 @@
             android:layout_height="match_parent"
             android:divider="@drawable/cht_list_divider"
             />
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/empty_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="true"
+            android:isScrollContainer="true"
+            android:verticalScrollbarPosition="right"
+            android:orientation="vertical">
             <ImageView
                 android:id="@+id/nodata"
-                android:layout_width="180dp"
-                android:layout_height="180dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/cht_icon_no_contacts"
                 android:gravity="center"
                 android:layout_gravity="center"
-                android:layout_marginTop="130dp"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentTop="true"/>
             <TextView
@@ -45,7 +51,8 @@
                 android:id="@+id/nochatssubtitle"
                 android:textColor="#D1D3D4"
                 android:textStyle="normal"
-                android:textSize="8pt"
+                android:textSize="7pt"
+                android:textAlignment="center"
                 android:layout_marginTop="20dp"
                 android:layout_below="@+id/nodatalabel"
                 android:layout_centerHorizontal="true"/>
@@ -57,7 +64,8 @@
                 android:id="@+id/nochatssubtitle1"
                 android:textColor="#D1D3D4"
                 android:textStyle="normal"
-                android:textSize="8pt"
+                android:textSize="7pt"
+                android:textAlignment="center"
                 android:layout_below="@+id/nochatssubtitle"
                 android:layout_centerHorizontal="true"/>
 
@@ -68,9 +76,10 @@
                 android:id="@+id/nochatssubtitle2"
                 android:textColor="#D1D3D4"
                 android:textStyle="normal"
-                android:textSize="8pt"
+                android:textSize="7pt"
+                android:textAlignment="center"
                 android:layout_below="@+id/nochatssubtitle1"
                 android:layout_centerHorizontal="true"/>
-        </RelativeLayout>
+        </LinearLayout>
     </FrameLayout>
 </android.support.v4.widget.SwipeRefreshLayout>
