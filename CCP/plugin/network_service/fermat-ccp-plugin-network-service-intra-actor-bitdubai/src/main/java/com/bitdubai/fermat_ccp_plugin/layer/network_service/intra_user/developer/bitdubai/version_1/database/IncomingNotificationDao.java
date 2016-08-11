@@ -387,9 +387,11 @@ public class IncomingNotificationDao implements DAO {
             record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, notificationDescriptor.getCode());
             record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, actorProtocolState.getCode());
 
-            cryptoPaymentRequestTable.updateRecord(record);
+            //search this record to return data
+            cryptoPaymentRequestTable.loadToMemory();
 
-                return buildActorNetworkServiceRecord(record);
+            return buildActorNetworkServiceRecord(cryptoPaymentRequestTable.getRecords().get(0));
+
 
 
         } catch (CantUpdateRecordException exception) {

@@ -820,6 +820,10 @@ public class BrowserTabFragment
     public void onStop() {
         if(fermatWorker != null)
             fermatWorker.shutdownNow();
+
+        if(_executor != null)
+            _executor.shutdownNow();
+
         super.onStop();
     }
 
