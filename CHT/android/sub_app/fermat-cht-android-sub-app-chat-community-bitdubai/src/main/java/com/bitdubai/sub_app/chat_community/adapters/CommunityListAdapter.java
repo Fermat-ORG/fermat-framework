@@ -239,16 +239,16 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
             holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
 
 //            if (data.getState().equals("null") || data.getState().equals(""))
-                stateAddress = "";
+        stateAddress = "";
 //            else stateAddress = data.getState() + " ";
-            if (data.getCity().equals("null") || data.getCity().equals("")) cityAddress = "";
-            else cityAddress = data.getCity() + ", ";
-            if (data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
-            else countryAddress = data.getCountry();
-            if (/*stateAddress.equalsIgnoreCase("") &&*/ cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
-                holder.location_text.setText(context.getResources().getString(R.string.cht_comm_not_found));
-            }else
-                holder.location_text.setText(cityAddress + countryAddress);//+ stateAddress
+        if (data.getCity().equals("null") || data.getCity().equals("")) cityAddress = "";
+        else cityAddress = data.getCity() + ", ";
+        if (data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
+        else countryAddress = data.getCountry();
+        if (/*stateAddress.equalsIgnoreCase("") &&*/ cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
+            holder.location_text.setText(context.getResources().getString(R.string.cht_comm_not_found));
+        }else
+            holder.location_text.setText(cityAddress + countryAddress);//+ stateAddress
 
         if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
             holder.location_text.setTextColor(Color.parseColor("#47BF73"));
