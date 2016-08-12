@@ -109,7 +109,11 @@
             android:layout_width="90dp"
             android:layout_height="46dp"
             android:layout_gravity="center"
-            android:text="@string/dialog_button_close" />
+            android:text="@string/dialog_button_close"
+            android:background="#12aca1"
+            android:textColor="#FFF"
+
+            />
 
     </LinearLayout>
 
