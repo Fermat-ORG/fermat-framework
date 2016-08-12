@@ -35,7 +35,7 @@
         android:id="@+id/btn_create"
         android:text="@string/create_text"
         android:textColor="#ffffff"
-        android:background="#1173aa"
+        android:background="#12aca1"
         android:layout_marginLeft="16dp"
         android:textStyle="bold"
         android:layout_marginRight="16dp"/>

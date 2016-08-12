@@ -72,7 +72,7 @@ public class SendConfirmDialog extends Dialog implements
 
     public SendConfirmDialog(Activity a,
                              CryptoWallet moduleManager,
-                               long cryptoAmount,
+                             long cryptoAmount,
                              long fee,
                              long total,
                              FeeOrigin feeOrigin,
