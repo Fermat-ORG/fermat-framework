@@ -71,6 +71,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -481,7 +482,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                 fullUpdateRegisteredProfile(profile);
                 break;
             case GEOLOCATION:
-                geolocationUpdateRegisteredProfile(profile);
+            System.out.print("updateRegisteredProfile Geolocation:  INHABILITADO***");
+//                geolocationUpdateRegisteredProfile(profile);
                 break;
         }
     }
@@ -828,6 +830,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     @Override
+    //todo: agregarle el timeout como parametro.
     public List<ActorProfile> listRegisteredActorProfiles(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException {
 
         System.out.println("NetworkClientCommunicationConnection - new listRegisteredActorProfiles");
@@ -857,6 +860,10 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             conn.setRequestProperty("Content-Length", Integer.toString(formParameters.length()));
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Content-Encoding", "gzip");
+
+            //timeout
+            conn.setConnectTimeout((int)TimeUnit.MINUTES.toMillis(2));
+
 
             os = conn.getOutputStream();
             os.write(formParameters.getBytes());
@@ -915,6 +922,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         return resultList;
     }
+
+
 
     /**
      * Notify when the network client connection is lost.
