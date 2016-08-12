@@ -25,4 +25,6 @@
     <color name="black">#000000</color>
     <color name="black_translucent">#b9000000</color>
     <color name="background_activity">#F9F9F9</color>
+
+    <color name="transparent">#00000000</color>
 </resources>
