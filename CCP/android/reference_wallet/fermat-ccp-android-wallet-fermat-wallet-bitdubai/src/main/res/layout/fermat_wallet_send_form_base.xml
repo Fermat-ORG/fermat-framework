@@ -211,7 +211,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Currency"
+                                android:text="@string/currency"
                                 android:textColor="#F78803"
                                 android:textSize="12sp"
                                 android:layout_marginLeft="16dp"/>
@@ -263,7 +263,7 @@
                             android:layout_gravity="end"
                             android:background="@null"
                             android:gravity="left"
-                            android:hint="@string/reason_text"
+                            android:hint="@string/notes_text"
                             android:paddingBottom="7dip"
                             android:paddingLeft="14dip"
                             android:paddingRight="14dip"
@@ -292,7 +292,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="16dp"
-                            android:text="Advance configuration"
+                            android:text="@string/advance_configuration"
                             android:textColor="#F78803"
                             android:textSize="12sp" />
 
@@ -309,7 +309,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/feed_advances"
                         android:orientation="vertical"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <View
                             android:layout_width="match_parent"
@@ -325,7 +325,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="16dp"
                                 android:paddingTop="10dp"
-                                android:text="Fee"
+                                android:text="@string/fee_amount_text"
                                 android:textColor="#F78803"
                                 android:textSize="12sp" />
 
@@ -372,7 +372,7 @@
                                 android:id="@+id/checkBoxSubstract"
                                 android:checked="true"
                                 android:gravity="center_vertical"
-                                android:text="Substract fee from amount"
+                                android:text="@string/fee_option_text"
                                 android:textColor="#333"
                                 android:textSize="12sp"
                                 android:buttonTint="#F78803"
@@ -389,7 +389,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="16dp"
                                 android:paddingTop="0dp"
-                                android:text="Fee Level Settings"
+                                android:text="@string/settings_fee_level"
                                 android:textColor="#F78803"
                                 android:textSize="12sp" />
 

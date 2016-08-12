@@ -126,7 +126,7 @@
 
     <string name="identity_img" translatable="false">person_img</string>
 
-    <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
+    <string name="market_exchange_rate">Market Exchange Rate</string>
 
     <string name="negotiation_closed">Close</string>
     <string name="negotiation_cancelled">Cancelled</string>

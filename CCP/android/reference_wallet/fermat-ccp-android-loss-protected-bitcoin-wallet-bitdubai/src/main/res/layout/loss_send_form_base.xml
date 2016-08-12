@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/transacion_form"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:background="#f9f9f9">
 
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:id="@+id/scrollView" >
+        android:id="@+id/scrollView"
+        android:background="#ffffff">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/send_form"
@@ -148,7 +150,7 @@
                         <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Available Balance:"
+                        android:text="@string/available_balance"
                             android:textColor="#DC5A0F"
                             android:focusable="false"
                             android:focusableInTouchMode="false"/>
@@ -320,7 +322,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/feed_advances"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <View
                             android:layout_width="match_parent"

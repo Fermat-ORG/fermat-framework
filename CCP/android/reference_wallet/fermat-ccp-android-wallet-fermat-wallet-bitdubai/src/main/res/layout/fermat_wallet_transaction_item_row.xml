@@ -49,7 +49,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#2481BA"
-                        android:text="From"
+                        android:text="@string/from"
                         android:textSize="12sp"
                         android:layout_marginRight="5dp"/>
 
@@ -83,7 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#414042"
-                        android:text="Date: "
+                        android:text="@string/date"
                         android:textSize="12sp"
                         android:layout_marginRight="5dp"/>
 
@@ -104,7 +104,7 @@
                         android:id="@+id/transaction_memo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Transaction concept"
+                        android:text="@string/transaction_concept"
                         android:textColor="#F78803"
                         android:textSize="12sp"/>
                 </LinearLayout>

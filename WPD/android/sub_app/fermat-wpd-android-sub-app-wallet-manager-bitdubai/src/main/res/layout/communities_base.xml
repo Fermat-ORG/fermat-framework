@@ -54,7 +54,7 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Communities"
+                    android:text="@string/welcome_wizzard_fourth_title"
                     android:gravity="center"
                     android:id="@+id/txt_title_communities"
                     android:layout_centerHorizontal="true"

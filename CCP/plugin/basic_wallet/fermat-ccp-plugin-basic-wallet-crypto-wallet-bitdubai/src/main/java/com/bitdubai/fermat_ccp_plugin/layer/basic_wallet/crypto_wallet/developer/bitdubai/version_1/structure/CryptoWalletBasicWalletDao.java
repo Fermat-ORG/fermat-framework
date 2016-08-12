@@ -167,13 +167,16 @@ public class CryptoWalletBasicWalletDao {
     }
 
     public List<CryptoWalletTransaction> listTransactionsByActorAndType(final String actorPublicKey,
-                                                                        final BalanceType balanceType,
-                                                                        final TransactionType  transactionType,
-                                                                        final int max,
-                                                                        final int offset,
+                                                                  final BalanceType balanceType,
+                                                                  final TransactionType  transactionType,
+                                                                  final int max,
+                                                                  final int offset,
                                                                         BlockchainNetworkType blockchainNetworkType,
-                                                                        Actors actorType) throws CantListTransactionsException {
+                                                                        final Actors actorType) throws CantListTransactionsException, CantLoadTableToMemoryException {
+
         try {
+
+
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
             bitcoinWalletTable.setFilterTop   (String.valueOf(max)   );
@@ -200,15 +203,13 @@ public class CryptoWalletBasicWalletDao {
             else
                 bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
 
-
             bitcoinWalletTable.loadToMemory();
-
 
             return createTransactionList(bitcoinWalletTable.getRecords());
 
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, cantLoadTableToMemory, "Error loading wallet table ", "");
+            throw new CantLoadTableToMemoryException(CantListTransactionsException.DEFAULT_MESSAGE, cantLoadTableToMemory, "Error loading wallet table ", "");
         } catch (Exception exception){
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Unhandled exception.");
         }
@@ -259,8 +260,9 @@ public class CryptoWalletBasicWalletDao {
 
             bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
 
-            // if ( transactionType == TransactionType.CREDIT){
-            // bitcoinWalletTable.clearAllFilters();
+           // if ( transactionType == TransactionType.CREDIT){
+               // bitcoinWalletTable.clearAllFilters();
+
 
             bitcoinWalletTable.addFilterOrder(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
@@ -268,8 +270,8 @@ public class CryptoWalletBasicWalletDao {
 
             bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
 
+             bitcoinWalletTable.loadToMemory();
 
-            bitcoinWalletTable.loadToMemory();
 
           /*  }
             if ( transactionType == TransactionType.DEBIT){
@@ -654,7 +656,9 @@ public class CryptoWalletBasicWalletDao {
 
         for(DatabaseTableRecord record : records)
         {
-            // CryptoWalletTransaction transaction = constructBitcoinWalletTransactionFromRecord(record);
+
+           // CryptoWalletTransaction transaction = constructBitcoinWalletTransactionFromRecord(record);
+
             transactions.add(constructBitcoinWalletTransactionFromRecord(record));
 
           /*  if(transaction.getTransactionHash().equals("fab23065-5b3a-4ec1-8a51-6c9bae62bb36"))
