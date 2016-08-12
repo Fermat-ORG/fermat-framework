@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -91,6 +92,7 @@ public class ContactsListFragment
     ArrayList<String> contactStatus = new ArrayList<>();
     SwipeRefreshLayout mSwipeRefreshLayout;
     ImageView noData;
+    LinearLayout emptyView;
     View layout;
     TextView noDatalabel;
     TextView nochatssubtitle;
@@ -189,7 +191,7 @@ public class ContactsListFragment
 //                contacticon.clear();
 //                contactStatus.clear();
                 if (identity != null) {
-                    con = chatManager.listWorldChatActor(identity, MAX, offset);
+                    con = null;//chatManager.listWorldChatActor(identity, MAX, offset);
                     if (con != null) {
                         int size = con.size();
                         if (size > 0) {
@@ -250,6 +252,7 @@ public class ContactsListFragment
                             }
                             contactStatus.add(conta.getStatus());
                         }
+                        emptyView.setVisibility(View.GONE);
                         noData.setVisibility(View.GONE);
                         noDatalabel.setVisibility(View.GONE);
                         nochatssubtitle.setVisibility(View.GONE);
@@ -259,6 +262,7 @@ public class ContactsListFragment
                         ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
                         layout.setBackground(bgcolor);
                     } else {
+                        emptyView.setVisibility(View.VISIBLE);
                         noData.setVisibility(View.VISIBLE);
                         noDatalabel.setVisibility(View.VISIBLE);
                         nochatssubtitle.setVisibility(View.VISIBLE);
@@ -267,6 +271,7 @@ public class ContactsListFragment
                         //layout.setBackgroundResource(R.drawable.cht_background_1);
                     }
                 } else {
+                    emptyView.setVisibility(View.VISIBLE);
                     noData.setVisibility(View.VISIBLE);
                     noDatalabel.setVisibility(View.VISIBLE);
                     nochatssubtitle.setVisibility(View.VISIBLE);
@@ -275,6 +280,7 @@ public class ContactsListFragment
                     //layout.setBackgroundResource(R.drawable.cht_background_1);
                 }
             } else {
+                emptyView.setVisibility(View.VISIBLE);
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
                 nochatssubtitle.setVisibility(View.VISIBLE);
@@ -304,11 +310,13 @@ public class ContactsListFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
+        emptyView = (LinearLayout) layout.findViewById(R.id.empty_view);
         noData = (ImageView) layout.findViewById(R.id.nodata);
         noDatalabel = (TextView) layout.findViewById(R.id.nodatalabel);
         nochatssubtitle = (TextView) layout.findViewById(R.id.nochatssubtitle);
         nochatssubtitle1 = (TextView) layout.findViewById(R.id.nochatssubtitle1);
         nochatssubtitle2 = (TextView) layout.findViewById(R.id.nochatssubtitle2);
+        emptyView.setVisibility(View.VISIBLE);
         noData.setVisibility(View.VISIBLE);
         noDatalabel.setVisibility(View.VISIBLE);
         nochatssubtitle.setVisibility(View.VISIBLE);
@@ -342,7 +350,7 @@ public class ContactsListFragment
                     @Override
                     public void run() {
                         try {
-                            Toast.makeText(getActivity(), "Contacts Updated", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), "Contacts Updated", Toast.LENGTH_SHORT).show();
                             updateValuesNS();
                             updateValues();
                             final ContactListAdapter adaptador =
@@ -392,7 +400,14 @@ public class ContactsListFragment
                     list.invalidateViews();
                     list.requestLayout();
                 }
-            } else noData.setVisibility(View.VISIBLE);
+            } else {
+                emptyView.setVisibility(View.VISIBLE);
+                noData.setVisibility(View.VISIBLE);
+                noDatalabel.setVisibility(View.VISIBLE);
+                nochatssubtitle.setVisibility(View.VISIBLE);
+                nochatssubtitle1.setVisibility(View.VISIBLE);
+                nochatssubtitle2.setVisibility(View.VISIBLE);
+            }
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }

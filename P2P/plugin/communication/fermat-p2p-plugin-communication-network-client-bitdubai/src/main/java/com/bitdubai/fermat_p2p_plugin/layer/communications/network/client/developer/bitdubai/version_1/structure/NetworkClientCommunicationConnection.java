@@ -18,6 +18,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientCall;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.P2PLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
@@ -145,17 +146,23 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     private WaiterObjectsBuffer waiterObjectsBuffer;
 
     /*
+     * Represents the P2P layer manager
+     */
+    private P2PLayerManager p2PLayerManager;
+
+    /*
      * Constructor
      */
-    public NetworkClientCommunicationConnection(final String                               nodeUrl          ,
-                                                final EventManager                         eventManager     ,
-                                                final LocationManager                      locationManager  ,
-                                                final ECCKeyPair                           clientIdentity   ,
-                                                final NetworkClientCommunicationPluginRoot pluginRoot       ,
-                                                final Integer                              nodesListPosition,
-                                                final boolean                              isExternalNode   ,
-                                                final NodeProfile                          nodeProfile      ,
-                                                ConnectivityManager connectivityManager){
+    public NetworkClientCommunicationConnection(final String nodeUrl                                    ,
+                                                final EventManager eventManager                         ,
+                                                final LocationManager locationManager                   ,
+                                                final ECCKeyPair clientIdentity                         ,
+                                                final NetworkClientCommunicationPluginRoot pluginRoot   ,
+                                                final Integer nodesListPosition                         ,
+                                                final boolean isExternalNode                            ,
+                                                final NodeProfile nodeProfile                           ,
+                                                ConnectivityManager connectivityManager                 ,
+                                                final P2PLayerManager p2PLayerManager){
 
         URI uri = null;
         try {
@@ -178,6 +185,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         this.activeCalls            = new CopyOnWriteArrayList<>();
         this.container              = ClientManager.createClient();
         this.connectivityManager = connectivityManager;
+
+        this.p2PLayerManager = p2PLayerManager;
 
         this.networkClientCommunicationChannel = new NetworkClientCommunicationChannel(this, isExternalNode);
         this.waiterObjectsBuffer = new WaiterObjectsBuffer();
@@ -223,6 +232,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             @Override
             public boolean onConnectFailure(Exception exception) {
+                p2PLayerManager.setNetworkServicesRegisteredFalse();
                 if(nodesListPosition >= 0){
                     i++;
 
@@ -1121,4 +1131,11 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
 
 
+    public void stopConnectionSuperVisorAgent(){
+        pluginRoot.stopConnectionSuperVisorAgent();
+    }
+
+    public void startConnectionSuperVisorAgent(){
+        pluginRoot.startConnectionSuperVisorAgent();
+    }
 }

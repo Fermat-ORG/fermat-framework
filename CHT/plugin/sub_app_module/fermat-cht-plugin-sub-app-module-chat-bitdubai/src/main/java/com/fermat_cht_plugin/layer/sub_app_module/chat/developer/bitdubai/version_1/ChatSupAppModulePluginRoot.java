@@ -14,12 +14,14 @@ import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.structure.ChatSupAppModuleManager;
 
 
@@ -45,6 +47,12 @@ public class ChatSupAppModulePluginRoot extends AbstractModule<ChatPreferenceSet
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.CHAT_MIDDLEWARE)
     private MiddlewareChatManager chatMiddlewareManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
+
+    @NeededPluginReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.EXTERNAL_API, plugin = Plugins.GEOLOCATION)
+    private GeolocationManager geolocationManager;
+
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CHAT_IDENTITY)
     private ChatIdentityManager chatIdentityManager;
 
@@ -59,15 +67,23 @@ public class ChatSupAppModulePluginRoot extends AbstractModule<ChatPreferenceSet
         /**
          * Init the plugin manager
          */
-        chatManager = new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, chatActorConnectionManager, pluginId, this, chatActorNetworkServiceManager);
-
+        chatManager = new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager,
+                pluginFileSystem, chatActorConnectionManager, pluginId, this,
+                chatActorNetworkServiceManager,
+                geolocationManager,
+                locationManager);
         System.out.println("******* Init Chat Sup App Module Chat ******");
     }
 
     @Override
-    public ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> getModuleManager()
+            throws CantGetModuleManagerException {
         if (chatManager == null)
-            chatManager = new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, chatActorConnectionManager, pluginId, this, chatActorNetworkServiceManager);
+            chatManager = new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager,
+                    pluginFileSystem, chatActorConnectionManager, pluginId, this,
+                    chatActorNetworkServiceManager,
+                    geolocationManager,
+                    locationManager);
         return chatManager;
     }
 }

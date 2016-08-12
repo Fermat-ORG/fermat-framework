@@ -150,7 +150,7 @@ public class NetworkClientCommunicationChannel {
          * set ServerIdentity
          */
         connection.setServerIdentity((String) session.getUserProperties().get(HeadersAttName.NPKI_ATT_HEADER_NAME));
-
+        connection.startConnectionSuperVisorAgent();
         //raiseClientConnectedNotificationEvent();
     }
 
@@ -184,6 +184,7 @@ public class NetworkClientCommunicationChannel {
         System.out.println(" NetworkClientCommunicationChannel - Starting method onClose "+(isExternalNode ? "external node ---" : ""));
 
         // if it is not an external node i raise the event.
+        connection.stopConnectionSuperVisorAgent();
         if (!isExternalNode) {
             isRegistered = Boolean.FALSE;
 

@@ -25,7 +25,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mnemonic password can be used to recover your password if you forget it in the folder. Without the mnemonic there is no way we can help recover a forgotten password."
+                android:text="@string/import_text"
                 android:gravity="center"
                 android:textSize="16sp"
                 android:paddingLeft="12dp"
@@ -42,7 +42,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="24dp"
                 android:paddingRight="20dp"
-                android:text="Input your mnemonic code to import your balance inside a Fermat Wallet:"
+                android:text="@string/import_input"
                 android:gravity="center"
                 android:textColor="#000"
                 android:paddingLeft="20dp"
@@ -60,7 +60,7 @@
                 android:minLines="3"
                 android:gravity="top|left"
                 android:maxLines="10"
-                android:hint="Put your Mnemonic code here!"
+                android:hint="@string/import_put"
                 android:scrollbars="vertical"
                 android:textColor="#000"
                 android:textColorHint="#a9a9a9"
@@ -79,7 +79,7 @@
                 android:minLines="1"
                 android:gravity="top|left"
                 android:maxLines="10"
-                android:hint="Put your Mnemonic date here!"
+                android:hint="@string/import_date_put"
                 android:scrollbars="vertical"
                 android:textColor="#000"
                 android:textColorHint="#a9a9a9"
@@ -92,7 +92,7 @@
                 android:id="@+id/btn_import"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:text="Import"
+                android:text="@string/import_title"
                 android:layout_gravity="center"/>
 
         </LinearLayout>
