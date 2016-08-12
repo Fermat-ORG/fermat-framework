@@ -145,6 +145,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private Bitmap contactImageBitmap;
     private WalletContact walletContact;
     private FrameLayout contacts_container;
+    ImageView ExtContactImage;
     private boolean connectionDialogIsShow = false;
     private boolean isScrolled = false;
     private Toolbar toolbar;
@@ -459,7 +460,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void setupViews(View rootView) {
         mSearchView = (EditText) rootView.findViewById(R.id.search_view);
 
-        //mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+       // mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
 
         contacts_container = (FrameLayout) rootView.findViewById(R.id.contacts_container);
         mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
@@ -467,12 +468,6 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
 
-       /* mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSearchView.getText().clear();
-            }
-        });*/
 
         mEmptyView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -493,6 +488,12 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 connectionDialogIsShow = true;
             }
         });
+     /*   mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSearchView.getText().clear();
+            }
+        });*/
     }
 
 
@@ -601,8 +602,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         dialog.dismiss();
         walletContact = new WalletContact();
         walletContact.setName("");
-        registerForContextMenu(mClearSearchImageButton);
-        getActivity().openContextMenu(mClearSearchImageButton);
+       // registerForContextMenu(mClearSearchImageButton);
+       // getActivity().openContextMenu(mClearSearchImageButton);
     }
 
     public void setWalletSession(ReferenceAppFermatSession appSession) {
@@ -662,6 +663,13 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 ((withImage) ? contactImageBitmap : null),
                 this);
         dialog.setOnDismissListener(this);
+      //  ExtContactImage = (ImageView) rootView.findViewById(take_picture_btn);
+        /*   ExtContactImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSearchView.getText().clear();
+            }
+        });*/
         dialog.show();
     }
 
@@ -700,9 +708,9 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     }
                     break;
             }
-            //take_picture_btn.setBackground(new RoundedDrawable(imageBitmap, take_picture_btn));
-            //take_picture_btn.setImageDrawable(null);
-            //contactPicture = imageBitmap;
+           // take_picture_btn.setBackground(new RoundedDrawable(imageBitmap, take_picture_btn));
+           // take_picture_btn.setImageDrawable(null);
+           // contactPicture = imageBitmap;
             this.lauchCreateContactDialog(true);
 
         }
