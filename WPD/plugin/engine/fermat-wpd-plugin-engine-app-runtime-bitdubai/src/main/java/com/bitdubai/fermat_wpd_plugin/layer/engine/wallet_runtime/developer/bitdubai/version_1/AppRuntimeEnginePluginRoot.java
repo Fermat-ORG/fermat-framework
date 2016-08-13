@@ -4942,6 +4942,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         //action bar menu
          optionsMenu = new OptionsMenu();
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+
         optionMenuItem = new OptionMenuItem(4);
         optionMenuItem.setFermatDrawable(new FermatDrawable(6, "send_request", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Send Request");
