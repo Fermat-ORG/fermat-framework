@@ -22,6 +22,8 @@ public class SessionConstant {
     public static final String PRESENTATION_HELP_ENABLED = "PresentationHelpEnabled";
     public static final String RUNNIBLE_BALANCE = "RunningDailyBalance";
     public static final String SETTINGS_LOADED = "SettingLoaded";
+    public static final String PAYMENT_REQUEST_HELP_ENABLED = "PaymentRequestHelpEnabled";
+
 
 
 }

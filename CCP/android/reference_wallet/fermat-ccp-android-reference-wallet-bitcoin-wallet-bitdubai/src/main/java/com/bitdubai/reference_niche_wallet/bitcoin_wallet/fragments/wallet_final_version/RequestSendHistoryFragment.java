@@ -230,10 +230,10 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-           e.printStackTrace();
-       }
+            e.printStackTrace();
+        }
 
-            return lstPaymentRequest;
+        return lstPaymentRequest;
 
     }
 
