@@ -1,7 +1,16 @@
 apply plugin: 'java'
-
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 sourceCompatibility = 1.7
-version = '1.0'
+group = "com.bitdubai.fermat.pip"
+version = '2.0'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'fermat-event-manager',
+                'Implementation-Version': '2'
+    }
+}
 
 repositories {
     mavenCentral()
@@ -13,4 +22,23 @@ dependencies {
     compile project(':fermat-pip-api')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            // telling gradle to publish project's jar archive (2)
+            from components.java
+
+        }
+    }
+    // telling gradle to publish artifact to local directory (3)
+    repositories {
+        maven {
+            //url "file:/${project.projectDir}/artifacts",
+            url "file:/${System.properties['user.home']}/artifacts"
+
+        }
+    }
 }
