@@ -63,7 +63,7 @@ public abstract class AbstractPluginDeveloper implements DeveloperPluginInterfac
 
     public Collection<AbstractPlugin> getVersions() {
         if (versions == null) {
-            System.out.println(new StringBuilder().append("Versions null, pluginDeveloper code: ").append(pluginDeveloperReference.getPluginReference().getPlugin().getCode()).toString());
+            System.out.println("Versions null, pluginDeveloper code: " + pluginDeveloperReference.getPluginReference().getPlugin().getCode());
             return Collections.emptyList();
         }
         return versions.values();
@@ -145,7 +145,7 @@ public abstract class AbstractPluginDeveloper implements DeveloperPluginInterfac
 //                }
             }
         } else {
-            System.out.println(new StringBuilder().append("Versions null, pluginDeveloper code: ").append(pluginDeveloperReference.getPluginReference().getPlugin().getCode()).toString());
+            System.out.println("Versions null, pluginDeveloper code: " + pluginDeveloperReference.getPluginReference().getPlugin().getCode());
         }
         return pluginVersionReferences;
     }

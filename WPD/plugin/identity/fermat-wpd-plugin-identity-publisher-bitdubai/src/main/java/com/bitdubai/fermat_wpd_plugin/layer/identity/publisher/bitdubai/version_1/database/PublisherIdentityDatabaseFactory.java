@@ -13,10 +13,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.PublisherIdentityDatabaseFactory</code>
+ * The Class  <code>com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.PublisherIdentityDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
- *
+ * <p/>
  * Created by Ezequiel Postan - (ezequiel.postan@gmail.com) on 14/07/15.
  *
  * @version 1.0

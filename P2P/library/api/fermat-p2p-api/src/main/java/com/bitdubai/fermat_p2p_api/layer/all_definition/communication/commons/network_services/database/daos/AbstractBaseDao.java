@@ -420,20 +420,12 @@ public abstract class AbstractBaseDao<T extends AbstractBaseEntity> {
         if (id == null)
             throw new IllegalArgumentException("The id is required, can not be null.");
 
-        try {
+        final DatabaseTable table = getDatabaseTable();
+        table.addStringFilter(tableIdName, id, DatabaseFilterType.EQUAL);
+//            table.loadToMemory();
+//            List<DatabaseTableRecord> records = table.getRecords();
+        return table.numRecords()>0;
 
-            final DatabaseTable table = getDatabaseTable();
-            table.addStringFilter(tableIdName, id, DatabaseFilterType.EQUAL);
-            table.loadToMemory();
-
-            List<DatabaseTableRecord> records = table.getRecords();
-
-            return !records.isEmpty();
-
-        } catch (final CantLoadTableToMemoryException e) {
-
-            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "The data no exist");
-        }
     }
 
     /**

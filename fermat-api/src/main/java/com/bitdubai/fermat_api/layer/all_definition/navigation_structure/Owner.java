@@ -27,6 +27,6 @@ public class Owner implements Serializable {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("ownerAppPublicKey='").append(ownerAppPublicKey).toString();
+        return "ownerAppPublicKey='" + ownerAppPublicKey;
     }
 }

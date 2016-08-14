@@ -14,7 +14,7 @@ import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 /**
  * Created by Matias Furszyfer on 2016.05.26..
  */
-public class MoreSettingsFragment extends AbstractFermatSettingsFragment<DesktopSessionReferenceApp,ResourceProviderManager> implements Preference.OnPreferenceClickListener {
+public class MoreSettingsFragment extends AbstractFermatSettingsFragment<DesktopSessionReferenceApp, ResourceProviderManager> implements Preference.OnPreferenceClickListener {
 
     private final String PREFERENCE_IMPORT = "preference_import_key";
     private final String PREFERENCE_EXPORT = "preference_export_key";
@@ -50,7 +50,7 @@ public class MoreSettingsFragment extends AbstractFermatSettingsFragment<Desktop
     @Override
     public boolean onPreferenceClick(Preference preference) {
 
-        switch (preference.getKey()){
+        switch (preference.getKey()) {
             case PREFERENCE_IMPORT:
                 changeActivity(Activities.DESKTOP_SETTING_IMPORT_KEY);
                 break;

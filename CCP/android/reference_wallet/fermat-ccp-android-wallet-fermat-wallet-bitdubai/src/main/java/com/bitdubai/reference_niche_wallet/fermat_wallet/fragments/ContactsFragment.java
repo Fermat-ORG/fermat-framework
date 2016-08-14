@@ -333,7 +333,6 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         if(fermatWorker != null)
             fermatWorker.shutdownNow();
 
-
         super.onStop();
     }
 
@@ -750,10 +749,12 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     public void onDestroy() {
         try {
 
-            FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+            actionButton.setVisibility(View.GONE);
+            button1.setVisibility(View.GONE);
+            button2.setVisibility(View.GONE);
+
             actionButton.detach();
             actionButton.removeAllViewsInLayout();
-
 
             button1.removeAllViewsInLayout();
             button2.removeAllViewsInLayout();
@@ -815,7 +816,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
             mListSectionPos.clear();
 
             ArrayList<FermatWalletWalletContact> items = params[0];
-
+            Map<Integer, FermatWalletWalletContact> numberPositions = new HashMap<>();
             Map<Integer, FermatWalletWalletContact> positions = new HashMap<>();
 
             if (items != null)
@@ -850,19 +851,30 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         final String letterRegex = HeaderTypes.LETTER.getRegex();
 
                         // for each item in the list look if is number, symbol o letter and put it in the corresponding list
-                        for (int i = 0; i < items.size(); i++) {//) {
+                        for (int i = 0; i < items.size(); i++) {
                             FermatWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
-                            if (currentSection.matches(numberRegex))
+                            if (currentSection.matches(numberRegex)) {
                                 // is Digit
                                 numbers.add(cryptoWalletWalletContact.getActorName());
-                            else if (currentSection.matches(letterRegex)) {
+                                numberPositions.put(i, cryptoWalletWalletContact);
+
+                            }
+                        }
+
+                        int pos= 0;
+
+                        for (int i = 0; i < items.size(); i++) {
+
+                            FermatWalletWalletContact cryptoWalletWalletContact = items.get(i);
+                            String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
+                            if (currentSection.matches(letterRegex)) {
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
-                                positions.put(i, cryptoWalletWalletContact);
-                            } else
-                                // Is other symbol
-                                symbols.add(cryptoWalletWalletContact.getActorName());
+                                positions.put(pos, cryptoWalletWalletContact);
+                                pos++;
+                            }
+
                         }
 
                         final String symbolCode = HeaderTypes.SYMBOL.getCode();
@@ -877,10 +889,14 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                         final String numberCode = HeaderTypes.NUMBER.getCode();
                         if (!numbers.isEmpty()) {
-                            mListItems.add(numberCode);
+                            //mListItems.add(numberCode);
+
+
                             mListSectionPos.add(mListItems.indexOf(numberCode));
-                            mListItems.addAll(numbers);
+                            mListItems.addAll(numberPositions.values());
                         }
+
+
 
                         // add the letters items in the list and his corresponding sections based on its first letter
                         String prevSection = "";

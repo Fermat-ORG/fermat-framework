@@ -23,6 +23,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.CheckOutNetworkServiceRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.MessageTransmitProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.MessageTransmitRespondProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.MessageTransmitSyncACKProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.NearNodeListRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.ServerHandshakeRespondProcessor;
@@ -127,6 +128,9 @@ public class NetworkClientCommunicationChannel {
         registerMessageProcessor(new ServerHandshakeRespondProcessor(this));
         registerMessageProcessor(new UpdateActorProfileRespondProcessor(this));
 
+        //Este lo uso para las llamadas sincronas
+        registerMessageProcessor(new MessageTransmitSyncACKProcessor(this,connection));
+
     }
 
     @OnOpen
@@ -146,7 +150,7 @@ public class NetworkClientCommunicationChannel {
          * set ServerIdentity
          */
         connection.setServerIdentity((String) session.getUserProperties().get(HeadersAttName.NPKI_ATT_HEADER_NAME));
-
+        connection.startConnectionSuperVisorAgent();
         //raiseClientConnectedNotificationEvent();
     }
 
@@ -180,6 +184,7 @@ public class NetworkClientCommunicationChannel {
         System.out.println(" NetworkClientCommunicationChannel - Starting method onClose "+(isExternalNode ? "external node ---" : ""));
 
         // if it is not an external node i raise the event.
+        connection.stopConnectionSuperVisorAgent();
         if (!isExternalNode) {
             isRegistered = Boolean.FALSE;
 

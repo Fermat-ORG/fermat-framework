@@ -33,7 +33,7 @@ public class ComboType2FermatSession<A extends FermatApp, R extends ResourceProv
     @Override
     public <T extends FermatSession> T getFermatSession(String appPublicKey, Class<T> sessionType) throws InvalidParameterException {
         if (!sessionMap.containsKey(appPublicKey))
-            throw new InvalidParameterException(new StringBuilder().append("Session not exist for pk: ").append(appPublicKey).toString(), new StringBuilder().append("Pk valids in this ComboSession: ").append(Arrays.toString(sessionMap.keySet().toArray())).toString());
+            throw new InvalidParameterException("Session not exist for pk: " + appPublicKey, "Pk valids in this ComboSession: " + Arrays.toString(sessionMap.keySet().toArray()));
         return (T) sessionMap.get(appPublicKey);
     }
 }

@@ -18,13 +18,13 @@
     <string name="add_fermat_user_text">Contacto fermat</string>
     <string name="add_user_in_your_contact_list_text">Anadir usuario a la lista de contactos o\nbuscarlo en la comunidad</string>
     <string name="address_text">Direccion</string>
-    <string name="advertisement_text">Noticia!</string>
+    <string name="advertisement_text">Advertencia!</string>
     <string name="alias_text">Sufijo de alias</string>
     <string name="amount_text">Cantidad</string>
     <string name="available_balance">Balance actual</string>
     <string name="available_balance_text">Balance actual</string>
     <string name="back_text">Atras</string>
-    <string name="bank_wallet">Banco</string>
+    <string name="bank_wallet">Banco </string>
     <string name="be_jane_doe__text">Jane Doe</string>
     <string name="be_john_doe_text">John Doe</string>
     <string name="bits_text"></string>
@@ -70,7 +70,7 @@
     <string name="home_text">Home</string>
     <string name="in_this_wallet_you_can_have_text">Esta cartera le permite agregar dos tipos de contacto</string>
     <string name="institutional_wallets">Carteras institucionales</string>
-    <string name="kid_wallet">Ninos</string>
+    <string name="kid_wallet">infantil</string>
     <string name="last_name_text">Apellido</string>
     <string name="loading_text">Cargando.........</string>
     <string name="menu_settings">Configuracion</string>
@@ -78,10 +78,10 @@
     <string name="navigation_drawer_close">Cerrar menu lateral</string>
     <string name="navigation_drawer_open">Cerrar menu lateral</string>
     <string name="new_user_text">Usuario nuevo</string>
-    <string name="no_history_send_or_receive">No hay data</string>
+    <string name="no_history_send_or_receive">No existen transacciones</string>
     <string name="no_id_In_this_wallet_text">Esta cartera permite dos tipos de contacto:</string>
     <string name="no_id_Select_below_which_text">Seleccione debajo el tipo de contacto que desea anadir:</string>
-    <string name="no_id_Users_of_other_text_Fermat_wallets">Usuarios de carteras Fermat: No es necesario compartir mannualmante direcciones con ellos</string>
+    <string name="no_id_Users_of_other_text_Fermat_wallets">Usuarios de carteras Fermat: No es necesario compartir manualmante direcciones con ellos</string>
     <string name="no_id_Users_of_other_text_wallets_outside">Usuarios de otras carteras fuera de Fermat: Es necesario compartir las direcciones manualmente</string>
     <string name="no_id_dont_show_this_again_text">No mostrar mas</string>
     <string name="no_transactions_text">No hay transacciones</string>
@@ -95,7 +95,7 @@
     <string name="refuse_text">Negar</string>
     <string name="remittance">Remitentes</string>
     <string name="request_text">Solicitud</string>
-    <string name="save_text">Salvar</string>
+    <string name="save_text">Guardar</string>
     <string name="search_contacts_hint">Buscar contactos...</string>
     <string name="search_hint">Nombre de Contacto</string>
     <string name="search_text">Buscar</string>
@@ -111,7 +111,7 @@
     <string name="swype_refresh">Deslice hacia abajo para refrescar</string>
     <string name="the_process_of_downloading_text">Se estan bajando los bloques de\nla  Blockchain.\n  Mientras esto ocurre, la barra superior se mostrara en rojo.</string>
     <string name="this_is_a_simple_bitcoin_only_wallet_text">Esta cartera maneja bitcoins\nCon ella se puede:</string>
-    <string name="title_Fee">Configuracion de fees</string>
+    <string name="title_Fee">Configuracion de Taza</string>
     <string name="title_activity_blank">Administrador de Carteras</string>
     <string name="title_activity_requests_received">Solicitudes recibidas</string>
     <string name="title_activity_pay_to_contact">Pagar a contacto</string>
@@ -122,7 +122,7 @@
     <string name="txtLastTransactions_text">Ultimas transacciones</string>
     <string name="txtSeeAlltransactions_text">Ver todo</string>
     <string name="txtViewDetailTransaction_text"></string>
-    <string name="txt_conference_ticket_text"></string>
+    <string name="txt_conference_ticket_text">Ticket de conferencia</string>
     <string name="txt_title_text">Ayuda para anadir contacto</string>
     <string name="type_text">tipo</string>
     <string name="waiting_text">Esperando...</string>
@@ -132,7 +132,7 @@
     <string name="you_dont_have_transactions_received_text">No posee ninguna transaccion</string>
     <string name="you_dont_have_transactions_sent_text">No ha enviado ninguna transaccion</string>
     <string name="you_need_an_identity_before_you_can_enter_text">Es necesaria una identidad para poder ingresar</string>
-    <string name="young_wallet"></string>
+    <string name="young_wallet">Joven</string>
     <string name="accepted">Aceptado</string>
     <string name="contact_created_msg">Contacto creado</string>
     <string name="contact_failed_msg">Por favor intente de nuevo</string>
@@ -157,5 +157,45 @@
     <string name="settings_fee_level">Nivel de Fee</string>
     <string name="settings_notifications">Notificaciones</string>
     <string name="settings_select_network">Seleccionar una Red</string>
-    <string name="settings_send_error_report">Envair reporte de Error</string>
+    <string name="settings_send_error_report">Enviar reporte de Error</string>
+    <string name="wallet_type">Esta cartera permite dos tipos diferentes de usuarios:</string>
+    <string name="btc_loss">Ingresa la cantidad de BTC que quieres enviar a Loss Protected Wallet</string>
+    <string name="phone_notifications">Notificaciones de telefono</string>
+    <string name="middle_name_text" translatable="false">Segundo nombre</string>
+    <string name="title_activity_account_detail" translatable="false">Detalles de cuenta</string>
+    <string name="title_activity_accounts" translatable="false">Cuentas</string>
+    <string name="title_activity_activity_main">Principal</string>
+    <string name="title_activity_balance_available">Balance disponible</string>
+    <string name="title_activity_contacts">Contactos</string>
+    <string name="title_activity_daily_discounts" translatable="false">Descuentos diarios</string>
+    <string name="title_activity_edit_personal_profile">Editar perfil personal</string>
+    <string name="title_activity_main">Cartera Joven</string>
+    <string name="title_activity_monthly_discounts">Descuentos mensuales</string>
+    <string name="title_activity_navegation_drawler">Cartera inteligente</string>
+    <string name="title_activity_pay_to_new_contact">Pagar a un nuevo contacto</string>
+    <string name="title_activity_receive_from_contact">Recibir de un contacto</string>
+    <string name="title_activity_receive_from_new_contact">Recibir de un nuevo contacto</string>
+    <string name="title_activity_received_detail">Detalles recibidos</string>
+    <string name="title_activity_refill_point">Recargar puntos</string>
+    <string name="title_activity_requests_sent">Solicitudes enviadas</string>
+    <string name="title_activity_sent_detail">Detalles de envio</string>
+    <string name="title_activity_store">Tienda</string>
+    <string name="title_activity_wallet">Cartera</string>
+    <string name="title_activity_weekly_discount">Descuento semanal</string>
+    <string name="title_section10">Infantes</string>
+    <string name="title_section11">Salida</string>
+    <string name="title_section12">Cartera personal</string>
+    <string name="title_section13">Tiendas</string>
+    <string name="title_section14">Carteras comerciales</string>
+    <string name="title_section15">Fabrica de proyectos</string>
+    <string name="title_section16">Carteras publicadas</string>
+    <string name="title_section17">Tiendas</string>
+    <string name="title_section2">Contactos</string>
+    <string name="title_section3">Cuentas</string>
+    <string name="title_section4">Bancos</string>
+    <string name="title_section5">Cupones</string>
+    <string name="title_section6">Descuentos</string>
+    <string name="title_section7">Vouchers</string>
+    <string name="title_section8">Tarjetas de regalo</string>
+    <string name="title_section9">Clones</string>
 </resources>

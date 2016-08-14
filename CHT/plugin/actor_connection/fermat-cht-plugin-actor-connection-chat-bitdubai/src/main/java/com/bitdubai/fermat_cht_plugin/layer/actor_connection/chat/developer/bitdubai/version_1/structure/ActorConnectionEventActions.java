@@ -161,7 +161,22 @@ public class ActorConnectionEventActions {
             if (connectionState != null && connectionState.getCode().equals(ConnectionState.CONNECTED.getCode()))
                 return;
 
-            connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
+            if (connectionState != null && connectionState.getCode().equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE.getCode())){
+                final ChatActorConnection actorConnectionAccepted = new ChatActorConnection(
+                        oldActorConnection.getConnectionId(),
+                        oldActorConnection.getLinkedIdentity(),
+                        oldActorConnection.getPublicKey(),
+                        oldActorConnection.getAlias(),
+                        oldActorConnection.getImage(),
+                        ConnectionState.CONNECTED,
+                        oldActorConnection.getCreationTime(),
+                        oldActorConnection.getUpdateTime(),
+                        oldActorConnection.getStatus()
+                );
+                dao.updateChatActorConnectionRequest(actorConnectionAccepted);
+                return;
+            }
+            else connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
 
             final ChatActorConnection actorConnection = new ChatActorConnection(
                     request.getRequestId(),

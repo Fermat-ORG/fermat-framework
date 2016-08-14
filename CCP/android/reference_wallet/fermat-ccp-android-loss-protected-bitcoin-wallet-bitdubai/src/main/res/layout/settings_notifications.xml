@@ -19,7 +19,7 @@
         android:paddingRight="20dp"
         android:paddingStart="20dp"
         android:paddingTop="8dp"
-        android:text="Notifications"
+        android:text="@string/settings_notifications"
         android:textColor="#12aca1"
         app:typeface="ROBOTO_REGULAR"
         tools:ignore="HardcodedText" />
@@ -35,7 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Phone notifications"
+            android:text="@string/phone_notification"
             android:textColor="#4f4f4f"
             app:typeface="ROBOTO_REGULAR"
             tools:ignore="HardcodedText" />

@@ -11,11 +11,11 @@ public class BegunWalletInstallationEvent extends AbstractWPDEvent {
 
     private UUID walletId;
 
-    public void setWalletId (UUID walletId){
+    public void setWalletId(UUID walletId) {
         this.walletId = walletId;
     }
 
-    public UUID getWalletId(){
+    public UUID getWalletId() {
         return this.walletId;
     }
 

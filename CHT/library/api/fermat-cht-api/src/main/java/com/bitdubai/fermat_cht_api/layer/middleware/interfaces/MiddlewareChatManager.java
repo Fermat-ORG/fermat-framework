@@ -99,4 +99,6 @@ public interface MiddlewareChatManager extends FermatManager {
     void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException;
 
     List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException;
+
+    public void updateActorConnection(ChatActorConnection chatActorConnection);
 }

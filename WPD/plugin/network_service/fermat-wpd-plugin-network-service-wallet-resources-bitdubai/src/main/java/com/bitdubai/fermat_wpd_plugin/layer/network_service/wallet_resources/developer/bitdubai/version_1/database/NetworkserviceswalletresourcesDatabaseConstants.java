@@ -4,7 +4,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.de
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_services.network_services_wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Matias Furszyfer - (matiasfurszyfer@gmail.com) on 03/08/15.
  *
  * @version 1.0
@@ -12,7 +12,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.de
  */
 public class NetworkserviceswalletresourcesDatabaseConstants {
 
-    public static final String DATABASE_NAME= "walletResources";
+    public static final String DATABASE_NAME = "walletResources";
 
     /**
      * Repositories database table definition.

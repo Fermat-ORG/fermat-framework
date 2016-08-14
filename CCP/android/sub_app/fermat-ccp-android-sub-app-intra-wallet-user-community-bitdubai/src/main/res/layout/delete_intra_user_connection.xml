@@ -19,7 +19,7 @@
             android:textColor="#ffffff"
             android:textSize="16sp"
             android:gravity="center"
-            android:text="User Name"/>
+            android:text="@string/username"/>
 
         <ImageView
             android:id="@+id/image_user_profile"

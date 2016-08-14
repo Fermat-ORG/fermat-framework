@@ -283,7 +283,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                     GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction> grouperItem = new GrouperItem<>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);
                 }
-
                 if(!data.isEmpty())
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {

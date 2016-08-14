@@ -452,8 +452,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             selectLayout(header!=null);
 
             SideMenu sideMenu = activity.getSideMenu();
-
-//            initMainViews(header);
             // Log.i("FERMAT ACTIVITY loadUI", "initMainViews " + System.currentTimeMillis());
 
             setOptionsMenu(optionsMenu);
@@ -772,9 +770,21 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 
                     }
-
-
                 }
+
+                if (titleBar.getSubTitle()!=null){
+                    mToolbar.setSubtitle(titleBar.getSubTitle());
+                }else{
+                    mToolbar.setSubtitle("");
+                }
+                if (titleBar.getLogoDrawable()!=null){
+                    FermatDrawable logoDrawable = titleBar.getLogoDrawable();
+                    mToolbar.setLogo(ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE, this, logoDrawable.getId(), logoDrawable.getSourceLocation(), logoDrawable.getOwner().getOwnerAppPublicKey()));
+                }else{
+                    mToolbar.setLogo(null);
+                }
+
+
 
                 if (titleBar.getBackgroundDrawable() != null) {
                     FermatDrawable backgroundDrawable = titleBar.getBackgroundDrawable();
@@ -854,6 +864,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         onBackPressed();
                     }
                 });
+            }else{
+                mToolbar.setNavigationIcon(null);
             }
         }
 
@@ -863,8 +875,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 Bitmap bitmap = BitmapFactory.decodeByteArray(titleBar.getNavigationIcon(), 0, titleBar.getNavigationIcon().length);
                 mToolbar.setNavigationIcon(new BitmapDrawable(getResources(), bitmap));
             }
-
     }
+
 
     /**
      * @param title

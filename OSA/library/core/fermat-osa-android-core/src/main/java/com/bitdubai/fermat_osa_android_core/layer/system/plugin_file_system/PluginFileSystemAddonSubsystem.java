@@ -23,7 +23,7 @@ public class PluginFileSystemAddonSubsystem extends AbstractAddonSubsystem {
         try {
             registerDeveloper(new PluginFileSystemDeveloperBitDubai());
         } catch (Exception e) {
-            System.err.println(new StringBuilder().append("Exception: ").append(e.getMessage()).toString());
+            System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);
         }
     }

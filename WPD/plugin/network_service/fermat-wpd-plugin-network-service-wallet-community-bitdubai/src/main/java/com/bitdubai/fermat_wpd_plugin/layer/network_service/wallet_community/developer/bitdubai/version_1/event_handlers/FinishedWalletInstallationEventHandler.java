@@ -2,11 +2,11 @@ package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_community.de
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_community.interfaces.WalletCommunityManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_community.interfaces.WalletCommunityManager;
 
 
 /**
@@ -15,11 +15,11 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 public class FinishedWalletInstallationEventHandler implements FermatEventHandler {
     WalletCommunityManager walletCommunityManager;
 
-    public void setWalletCommunityManager(WalletCommunityManager walletCommunityManager){
+    public void setWalletCommunityManager(WalletCommunityManager walletCommunityManager) {
         this.walletCommunityManager = walletCommunityManager;
     }
-    
-    
+
+
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         EventSource eventSource = fermatEvent.getSource();
@@ -27,9 +27,8 @@ public class FinishedWalletInstallationEventHandler implements FermatEventHandle
 
 
             if (((Service) this.walletCommunityManager).getStatus() == ServiceStatus.STARTED) {
-         
-         
-         
+
+
             }
         }
     }

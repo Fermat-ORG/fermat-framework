@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantLoadPlatformInformationException extends FermatException {
     public static final String DEFAULT_MESSAGE = "There was an error trying to load platform information values.";
+
     public CantLoadPlatformInformationException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

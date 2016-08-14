@@ -28,7 +28,7 @@ public class VersionCompatibility implements Serializable {
         this.finalVersion = finalVersion;
 
         if (initialVersion.isAbove(finalVersion))
-            throw new InvalidParameterException("The final version must be greater or equal than the initial version", null, new StringBuilder().append("Initial Version: ").append(initialVersion.toString()).append(", final version: ").append(finalVersion.toString()).toString(), null);
+            throw new InvalidParameterException("The final version must be greater or equal than the initial version", null, "Initial Version: " + initialVersion.toString() + ", final version: " + finalVersion.toString(), null);
     }
 
     public Version getInitialVersion() {
@@ -37,7 +37,7 @@ public class VersionCompatibility implements Serializable {
 
     public void setInitialVersion(Version initialVersion) throws InvalidParameterException {
         if (!finalVersion.isAbove(initialVersion))
-            throw new InvalidParameterException("The initial version must be lower or equal than the final version", null, new StringBuilder().append("Initial Version: ").append(initialVersion.toString()).append(", final version: ").append(finalVersion.toString()).toString(), null);
+            throw new InvalidParameterException("The initial version must be lower or equal than the final version", null, "Initial Version: " + initialVersion.toString() + ", final version: " + finalVersion.toString(), null);
         else
             this.initialVersion = initialVersion;
     }
@@ -48,7 +48,7 @@ public class VersionCompatibility implements Serializable {
 
     public void setFinalVersion(Version finalVersion) throws InvalidParameterException {
         if (this.initialVersion.isAbove(finalVersion))
-            throw new InvalidParameterException("The final version must be greater or equal than the initial version", null, new StringBuilder().append("Initial Version: ").append(initialVersion.toString()).append(", final version: ").append(finalVersion.toString()).toString(), null);
+            throw new InvalidParameterException("The final version must be greater or equal than the initial version", null, "Initial Version: " + initialVersion.toString() + ", final version: " + finalVersion.toString(), null);
         else
             this.finalVersion = finalVersion;
     }

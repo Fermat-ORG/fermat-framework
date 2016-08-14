@@ -49,6 +49,7 @@ public enum UtilsFuncs {
 
     /**
      * Configura el ProgressDialog para que muestre el titulo y mensaje deseado
+     *
      * @param dialog
      * @param context
      * @param title

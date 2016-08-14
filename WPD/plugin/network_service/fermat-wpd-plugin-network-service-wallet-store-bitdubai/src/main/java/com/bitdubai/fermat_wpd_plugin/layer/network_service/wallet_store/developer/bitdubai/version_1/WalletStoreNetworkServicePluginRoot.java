@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -37,7 +38,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.all_definition.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
@@ -96,25 +96,27 @@ import java.util.regex.Pattern;
  * <p/>
  * * * * *
  */
-
+@PluginInfo(difficulty = PluginInfo.Dificulty.LOW,
+        maintainerMail = "matias.furszyfer@gmail.com",
+        createdBy = "matias",
+        layer = Layers.NETWORK_SERVICE,
+        platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
+        plugin = Plugins.WALLET_STORE)
 public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implements
         WalletStoreManager,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
-    private ErrorManager errorManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM    )
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER    )
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
     /**
@@ -261,7 +263,7 @@ public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implemen
          * I will try to open the database first, if it doesn't exists, then I create it
          */
         try {
-          //  TestPublishWallet();
+            //  TestPublishWallet();
             database = pluginDatabaseSystem.openDatabase(pluginId, WalletStoreCatalogDatabaseConstants.WALLET_STORE_DATABASE);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
@@ -307,6 +309,7 @@ public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implemen
     /**
      * Creates the database with the Database Factory
      * Creates the database with the Database Factory
+     *
      * @throws CantCreateDatabaseException
      */
     private void createWalletStoreNetworkServiceDatabase() throws CantCreateDatabaseException {
@@ -460,13 +463,13 @@ public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implemen
             catalogItemImpl.setDescription("Prueba de insert");
             catalogItemImpl.setpublisherWebsiteUrl(new URL("http://examples.com/pages"));
 
-            byte[] myIcon = new byte[]{0xa,0x2,0xf,(byte)0xff,(byte)0xff,(byte)0xff};
+            byte[] myIcon = new byte[]{0xa, 0x2, 0xf, (byte) 0xff, (byte) 0xff, (byte) 0xff};
             catalogItemImpl.setIcon(myIcon);
             catalogItemImpl.setWalletCatalogId(walletId);
 
             com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin skin;
             skin = new com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
-            byte[] presentationImage = new byte[]{0xa,0x2,0xf,(byte)0xff,(byte)0xff,(byte)0xff};
+            byte[] presentationImage = new byte[]{0xa, 0x2, 0xf, (byte) 0xff, (byte) 0xff, (byte) 0xff};
             skin.setPresentationImage(presentationImage);
             skin.setSkinSizeInBytes(100);
             skin.setFinalWalletVersion(new Version(1, 0, 0));
@@ -588,10 +591,8 @@ public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implemen
             byte[] loadedIcon = loadedFile.getContent().getBytes(Charset.forName("UTF-8"));
 
 
-
             this.publishWallet(catalogItemImpl);
-        }
-        catch(Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
             throw new CantPublishWalletInCatalogException("Publish Wallet Test", exception, "Franklin", CatalogItemImpl.class.toString());
         }
@@ -619,8 +620,7 @@ public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implemen
                                       List<URL> videoPreviews,
                                       long languageSizeInBytes,
                                       TranslatorIdentity translator,
-                                      boolean isDefault)
-    {
+                                      boolean isDefault) {
         com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language languageImpl;
         languageImpl = new com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language();
 
@@ -651,8 +651,7 @@ public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implemen
                               List<URL> videoPreviews,
                               long skinSizeInBytes,
                               DesignerIdentity designer,
-                              boolean isDefault )
-    {
+                              boolean isDefault) {
         com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin skinImpl;
         skinImpl = new com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
 

@@ -110,7 +110,24 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
                 //    connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
 
             } else connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+
             final long currentTime = System.currentTimeMillis();
+
+            if (oldActorConnection != null && oldActorConnection.getConnectionState().getCode().equals(ConnectionState.PENDING_LOCALLY_ACCEPTANCE.getCode())){
+                final ChatActorConnection actorConnectionAccepted = new ChatActorConnection(
+                        oldActorConnection.getConnectionId(),
+                        oldActorConnection.getLinkedIdentity(),
+                        oldActorConnection.getPublicKey(),
+                        oldActorConnection.getAlias(),
+                        oldActorConnection.getImage(),
+                        ConnectionState.CONNECTED,
+                        oldActorConnection.getCreationTime(),
+                        oldActorConnection.getUpdateTime(),
+                        oldActorConnection.getStatus()
+                );
+                dao.updateChatActorConnectionRequest(actorConnectionAccepted);
+                return;
+            }
 
             final ChatActorConnection actorConnection = new ChatActorConnection(
                     newConnectionId,
@@ -125,8 +142,8 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
             );
 
             /**
-             * I register the actor connection.
-             */
+            * I register the actor connection.
+                    */
             if (!dao.registerChatActorConnection(actorConnection, oldActorConnection)) return;
 
             final ChatConnectionInformation connectionInformation = new ChatConnectionInformation(
@@ -404,6 +421,11 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantAcceptActorConnectionRequestException(exception, "connectionId: " + connectionId, "Unhandled error.");
         }
+    }
+
+    @Override
+    public void updateActorConnection(ChatActorConnection chatActorConnection) {
+        this.dao.updateChatActorConnection(chatActorConnection);
     }
 }
 

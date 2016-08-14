@@ -6,7 +6,11 @@
     android:layout_height="match_parent"
     android:background="@null">
 
-    <LinearLayout
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -58,7 +62,7 @@
                     android:layout_width="match_parent"
                     android:paddingTop="3dp"
                     android:layout_height="wrap_content"
-                    android:text="Professional\nProfile"
+                    android:text="@string/title_activity_profesional_profile"
                     android:textColor="#58595B"
 
                     android:textSize="12sp"
@@ -90,7 +94,7 @@
                     android:layout_width="match_parent"
                     android:paddingTop="3dp"
                     android:layout_height="wrap_content"
-                    android:text="Dating\nProfile"
+                    android:text="@string/title_activity_dating_profile"
                     android:textColor="#58595B"
 
                     android:textSize="12sp"
@@ -121,7 +125,7 @@
                     android:layout_width="match_parent"
                     android:paddingTop="3dp"
                     android:layout_height="wrap_content"
-                    android:text="Alternative\nProfile"
+                    android:text="@string/title_activity_alternative_profile"
                     android:textColor="#58595B"
 
                     android:textSize="12sp"
@@ -149,11 +153,11 @@
             app:typeface="CAVIAR_DREAMS"
             android:textColor="#58595B"
             android:textSize="14sp"
-            android:text="In Fermat you can have multiple profiles.\nFor example you can have a profile for chatting apps, another for job seeking apps, another for dating apps and so on. From the outside no one can link these profiles to you or between each other. In this way you are not going to be ridiculed when targeting different audiences with the wrong profile pictures."/>
+            android:text="@string/welcome_text_third"/>
 
 
     </LinearLayout>
-
+    </ScrollView>
 
 
 

@@ -92,7 +92,7 @@
     <string name="back_text">Back</string>
     <string name="mnrr3141fa124_text">mnrr3141fa124</string>
     <!-- refresh_footer.xml -->
-    <string name="footer_message_text">Footer Message</string>
+    <string name="footer_message_text" translatable="false">Footer Message</string>
     <!-- refresh_header.xml -->
     <string name="loading_text">Loading..........</string>
     <!-- fermat_wallet_request_form_baseuest_form_base.xml -->
@@ -127,7 +127,7 @@
     <string name="action_disable">Disable / Enable</string>
     <string name="action_edit">Edit</string>
     <string name="action_wallet_store">Wallet Store</string>
-    <string name="title_section1">Luis Fernando Molina</string>
+    <string name="title_section1" translatable="false">Luis Fernando Molina</string>
     <string name="title_section2">Contacts</string>
     <string name="title_section3">Accounts</string>
     <string name="title_section4">Banks</string>
@@ -170,9 +170,9 @@
         <item>Hockey</item>
     </string-array>
     <string name="action_contact">Wallets</string>
-    <string name="title_activity_app_desktop">AppDesktop</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_app_desktop" translatable="false">AppDesktop</string>
+    <string name="dummy_button" translatable="false">Dummy Button</string>
+    <string name="dummy_content" translatable="false">DUMMY\nCONTENT</string>
     <string name="title_activity_navegation_drawler">Smart Wallets</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -249,6 +249,45 @@
         <item>MainNet</item>
         <item>TestNet</item>
     </array>
+    <string name="btc_loss">Insert the amount of BTC that you want to send to Loss Protected Wallet</string>
+    <string name="advertisement_text">Advertisement!</string>
+    <string name="accepted">Accepted</string>
+    <string name="wallet_type">This wallet allows two types of diferent users:</string>
+    <string name="fermat_address">Fermats Address</string>
+    <string name="request_sent">Request Send</string>
+    <string name="date">Date</string>
+    <string name="to">To:</string>
+    <string name="amount_insert" >Insert amount</string>
+    <string name="insert_notes" >Insert notes</string>
+    <string name="currency">Currency</string>
+    <string name="advance_configuration">Advance configuration</string>
+    <string name="from">From</string>
+    <string name="transaction_concept">Transaction concept</string>
+    <string name="phone_notification" >Phone notifications</string>
+    <string name="confirm_text">Confirm</string>
+    <string name="contact_created_msg">Contact created</string>
+    <string name="contact_failed_msg">Please try again</string>
+    <string name="denied">Denied</string>
+    <string name="error_msg_address_not_found">Address not found</string>
+    <string name="error_msg_cannot_find_address_clipboard">cannot find address clipboard</string>
+    <string name="error_msg_contact_not_found">Contact not found</string>
+    <string name="error_msg_getting_contact_list">Error getting contact list</string>
+    <string name="error_msg_incompatible_wallet">Incompatible wallet</string>
+    <string name="error_msg_insufficient_funds">Insuficient funds</string>
+    <string name="error_msg_invalid_address">Invalid address</string>
+    <string name="error_msg_invalid_amount">Invalid amount, must be greater than</string>
+    <string name="error_msg_invalid_amount_2">Invalid amount</string>
+    <string name="error_msg_loading_img">Error loading image</string>
+    <string name="error_msg_mnemonic_text">Error mnemonic text</string>
+    <string name="error_msg_no_address">Error no address</string>
+    <string name="error_msg_trying_to_reconnect">trying to reconnect</string>
+    <string name="error_std_message">Please try again</string>
+    <string name="fee_High">Fast</string>
+    <string name="fee_Medium">Normal</string>
+    <string name="fee_advances_text">Fee advances</string>
+    <string name="fee_amount_text">Fee amount</string>
+    <string name="fee_low">Slow</string>
+    <string name="fee_option_text">Fee option</string>
 
 </resources>
 

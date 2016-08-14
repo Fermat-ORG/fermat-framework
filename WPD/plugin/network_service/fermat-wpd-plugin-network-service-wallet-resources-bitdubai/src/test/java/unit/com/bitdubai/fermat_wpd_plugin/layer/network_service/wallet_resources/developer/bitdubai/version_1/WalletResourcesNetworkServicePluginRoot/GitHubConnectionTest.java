@@ -58,9 +58,9 @@ public class GitHubConnectionTest {
         GHRepository ghRepository = gitHub.getRepository("furszy/fermat");
 
 
-        GHUser hub=ghRepository.getOwner();
+        GHUser hub = ghRepository.getOwner();
 
-        GHContent ghContent= ghRepository.getFileContent("seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/1.0.0/navigation_structure.xml");
+        GHContent ghContent = ghRepository.getFileContent("seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/1.0.0/navigation_structure.xml");
 
         InputStream inputStream = ghContent.read();
 
@@ -84,17 +84,18 @@ public class GitHubConnectionTest {
         GHRepository ghRepository = gitHub.getRepository("furszy/fermat");
 
 
-        GHUser hub=ghRepository.getOwner();
+        GHUser hub = ghRepository.getOwner();
 
         ghRepository.createContent("mati", "testeando", "seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/text.txt");
 
 
     }
+
     @Ignore
     @Test
     public void testuploadFilesFromRepo1() throws Exception {
 
-        String c ="<com.bitdubai.fermat__api.layer.all__definition.navigation__structure.AppNavigationStructure>\n" +
+        String c = "<com.bitdubai.fermat__api.layer.all__definition.navigation__structure.AppNavigationStructure>\n" +
                 "    <activities/>\n" +
                 "    <publicKey>04ffe37e-e5e5-4dd7-bade-d4fd4b4801a0</publicKey>\n" +
                 "    <size>100</size>\n" +
@@ -102,14 +103,12 @@ public class GitHubConnectionTest {
                 "    </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.AppNavigationStructure>";
 
 
-        GitHubConnection gitHubConnection = new GitHubConnection("acostarodrigo/fermat","acostarodrigo","passs");
+        GitHubConnection gitHubConnection = new GitHubConnection("acostarodrigo/fermat", "acostarodrigo", "passs");
 
-        gitHubConnection.createGitHubTextFile("seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/RODRI_TE_QUIERO!!.xml",c,"probando github connection");
+        gitHubConnection.createGitHubTextFile("seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/RODRI_TE_QUIERO!!.xml", c, "probando github connection");
 
 
     }
-
-
 
 
 }

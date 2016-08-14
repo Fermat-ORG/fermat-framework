@@ -5,8 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by eze on 2015.07.18..
  */
-public class CantStartUninstallSkinException extends FermatException
-{
+public class CantStartUninstallSkinException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *

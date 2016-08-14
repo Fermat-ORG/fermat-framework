@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantPublishDesignerInCatalogException extends FermatException {
     public static final String DEFAULT_MESSAGE = "error trying to publish Designer into Wallet Store catalog.";
+
     public CantPublishDesignerInCatalogException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

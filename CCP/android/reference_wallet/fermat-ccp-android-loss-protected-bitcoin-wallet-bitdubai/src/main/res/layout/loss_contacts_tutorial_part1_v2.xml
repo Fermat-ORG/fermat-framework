@@ -234,6 +234,7 @@
                             android:layout_height="40dp"
                             android:text="@string/add_fermat_user_text"
                             android:textSize="11sp"
+                            android:textColor="#FFF"
                             android:background="#DC5A0F" />
                     </LinearLayout>
 
@@ -256,6 +257,7 @@
                             android:layout_height="40dp"
                             android:text="@string/add_extra_user_text"
                             android:textSize="11sp"
+                            android:textColor="#FFF"
                             android:background="#073487"/>
                     </LinearLayout>
 

@@ -15,7 +15,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.exc
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.exceptions.CantLoadPlatformInformationException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.exceptions.CantPublishComponentException;
 
-
 import java.net.URL;
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +23,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.WalletPublisherModuleManager</code>
  * indicates the functionality of a WalletPublisherModuleManager
  * <p/>
- *
+ * <p/>
  * Created by Ezequiel on 09/07/15.
  * Update by Roberto Requena - (rart3001@gmail.com) on 04/08/2015
  *
@@ -74,7 +73,7 @@ public interface WalletPublisherModuleManager extends ModuleManager {
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    List<InformationPublishedComponent>  getPublishedLanguages(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException;
+    List<InformationPublishedComponent> getPublishedLanguages(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the published component with his details

@@ -23,14 +23,14 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_android_api.utils.ScreenUtils;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_wpd.wallet_manager.R;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResources;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd.wallet_manager.R;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.WalletManagerModule;
 import com.bitdubai.sub_app.wallet_manager.adapter.DesktopAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.EmptyItem;
@@ -48,7 +48,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by mati on 2016.03.09..
  */
-public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSessionReferenceApp,SubAppResources> implements SearchView.OnCloseListener,
+public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSessionReferenceApp, SubAppResources> implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
         OnStartDragListener,
@@ -60,7 +60,7 @@ public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSe
     /**
      * MANAGERS
      */
-    private  static ErrorManager errorManager;
+    private static ErrorManager errorManager;
 
     private SearchView mSearchView;
 
@@ -79,7 +79,7 @@ public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSe
 
     ArrayList<Item> lstItems;
 
-    private boolean started=false;
+    private boolean started = false;
     private List<Item> lstItemsWithIcon;
 
     /**
@@ -143,15 +143,14 @@ public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSe
 
             //adapter.setFermatListEventListener(this);
 
-        } catch(Exception ex) {
+        } catch (Exception ex) {
 //            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             //         Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             ex.printStackTrace();
 
-        }catch (OutOfMemoryError outOfMemoryError){
+        } catch (OutOfMemoryError outOfMemoryError) {
             outOfMemoryError.printStackTrace();
         }
-
 
 
         lstInstalledApps = new ArrayList<>();
@@ -164,7 +163,6 @@ public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSe
         super.onViewCreated(view, savedInstanceState);
         onRefresh();
     }
-
 
 
     @Override
@@ -206,7 +204,7 @@ public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSe
 
     @Override
     public void onRefresh() {
-        if(!started) {
+        if (!started) {
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -278,8 +276,6 @@ public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSe
     }
 
 
-
-
     @Override
     public boolean onQueryTextSubmit(String name) {
         return true;
@@ -293,13 +289,12 @@ public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSe
 
     @Override
     public boolean onClose() {
-        if(!mSearchView.isActivated()){
+        if (!mSearchView.isActivated()) {
             //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
         }
 
         return true;
     }
-
 
 
     private synchronized List<Item> getMoreData() {
@@ -351,25 +346,24 @@ public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSe
 //            lstItemsWithIcon.add(item);
 
 
-            for(int i=0;i<12;i++){
-                Item emptyItem = new Item(new EmptyItem(0,i));
+            for (int i = 0; i < 12; i++) {
+                Item emptyItem = new Item(new EmptyItem(0, i));
                 emptyItem.setIconResource(-1);
                 arrItemsWithoutIcon[i] = emptyItem;
             }
 
-            for(Item itemIcon: lstItemsWithIcon){
-                arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
+            for (Item itemIcon : lstItemsWithIcon) {
+                arrItemsWithoutIcon[itemIcon.getPosition()] = itemIcon;
             }
 
             dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return dataSet;
     }
-
 
 
     @Override
@@ -382,25 +376,25 @@ public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSe
 
     }
 
-    private void select(AppsStatus appsStatus){
+    private void select(AppsStatus appsStatus) {
         List<Item> list = new ArrayList<>();
         for (Item installedWallet : lstItemsWithIcon) {
-            if(appsStatus.isAppStatusAvailable(((InstalledWallet) installedWallet.getInterfaceObject()).getAppStatus())){
+            if (appsStatus.isAppStatusAvailable(((InstalledWallet) installedWallet.getInterfaceObject()).getAppStatus())) {
                 list.add(installedWallet);
             }
         }
         Item[] arrItemsWithoutIcon = new Item[12];
-        for(int i=0;i<12;i++){
-            Item emptyItem = new Item(new EmptyItem(0,i));
+        for (int i = 0; i < 12; i++) {
+            Item emptyItem = new Item(new EmptyItem(0, i));
             emptyItem.setIconResource(-1);
             arrItemsWithoutIcon[i] = emptyItem;
         }
 
-        for(Item itemIcon: list){
-            arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
+        for (Item itemIcon : list) {
+            arrItemsWithoutIcon[itemIcon.getPosition()] = itemIcon;
         }
 
-        if(adapter!=null) {
+        if (adapter != null) {
             adapter.changeDataSet(Arrays.asList(arrItemsWithoutIcon));
             adapter.notifyDataSetChanged();
         }
@@ -418,7 +412,7 @@ public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSe
     @Override
     public void onUpdateViewOnUIThread(String code) {
         AppsStatus appsStatus = AppsStatus.getByCode(code);
-        switch (appsStatus){
+        switch (appsStatus) {
             case RELEASE:
                 break;
             case BETA:

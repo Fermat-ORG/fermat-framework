@@ -941,7 +941,7 @@ public class BitcoinWalletLossProtectedWalletDao {
                                                              final long bookRunningBalance,
                                                              final String exchangeRate) throws CantLoadTableToMemoryException {
 
-        DatabaseTableRecord record = getBitcoinWalletEmptyRecord();
+         DatabaseTableRecord record = getBitcoinWalletEmptyRecord();
 
         record.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_ID_COLUMN_NAME, UUID.randomUUID());
         record.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, transactionRecord.getTransactionId());

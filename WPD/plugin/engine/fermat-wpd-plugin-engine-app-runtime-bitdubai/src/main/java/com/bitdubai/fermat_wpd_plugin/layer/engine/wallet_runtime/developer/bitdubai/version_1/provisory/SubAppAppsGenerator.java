@@ -1,14 +1,12 @@
 package com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.provisory;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FontType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatRuntimeFragment;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatTextViewRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -18,19 +16,16 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.drawables.Badge;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardPageTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuViewsAvailables;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.search_view.SearchMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.search_view.SearchViewOnPressEvent;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.tab_layout.TabBadgeView;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 
 import java.util.HashMap;
@@ -982,7 +977,6 @@ public class SubAppAppsGenerator {
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeActivity.setTitleBar(runtimeTitleBar);
-
 
 
             optionsMenu = new OptionsMenu();
@@ -4768,7 +4762,7 @@ public class SubAppAppsGenerator {
         listSubApp.put(chtChat.getPublicKey(), chtChat);
     }
 
-    private void createIntraUserCommunitySubAppNavigationStructure() throws InvalidParameterException{
+    private void createIntraUserCommunitySubAppNavigationStructure() throws InvalidParameterException {
 
         AppNavigationStructure subAppIntraUser;
         Activity runtimeActivity;
@@ -4853,8 +4847,6 @@ public class SubAppAppsGenerator {
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
 
-
-
         runtimeFragment.setOptionsMenu(optionsMenuBrowser);
 
         runtimeTab.setFragment(runtimeFragment);
@@ -4872,14 +4864,14 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuConn = new OptionsMenu();
 
-        OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
-        optionMenuItemConn.setFermatDrawable(new FermatDrawable(1, "search_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemConn.setLabel("Search");
+        /*OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
+        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(1, "search_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setLabel("Search");
         optionMenuItemConn.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenuConn.addMenuItem(optionMenuItemConn);
+        optionsMenuConn.addMenuItem(optionMenuItemConn);*/
 
-        optionMenuItemConn = new OptionMenuItem(2);
+        OptionMenuItem optionMenuItemConn = new OptionMenuItem(2);
         optionMenuItemConn.setFermatDrawable(new FermatDrawable(2, "geolocalitation_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Geolocalitation");
         optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -4907,7 +4899,7 @@ public class SubAppAppsGenerator {
 
         runtimeTab.setFragment(runtimeFragment);
         runtimeTabStrip.addTab(runtimeTab);
-       // runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT.getKey(), runtimeFragment);
+        // runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT.getKey(), runtimeFragment);
 
         //Tabs Notifications
         runtimeTab = new Tab();
@@ -4920,14 +4912,14 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuNot = new OptionsMenu();
 
-        OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
+       /* OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(1, "search_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Search");
         optionMenuItemNot.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenuNot.addMenuItem(optionMenuItemNot);
+        optionsMenuNot.addMenuItem(optionMenuItemNot);*/
 
-        optionMenuItemNot = new OptionMenuItem(2);
+        OptionMenuItem optionMenuItemNot = new OptionMenuItem(2);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(2, "geolocalitation_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Geolocalitation");
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -4944,7 +4936,6 @@ public class SubAppAppsGenerator {
         optionMenuItemNot.setLabel("Help");
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenuNot.addMenuItem(optionMenuItemNot);
-
 
 
         runtimeFragment.setOptionsMenu(optionsMenuNot);
@@ -5046,6 +5037,7 @@ public class SubAppAppsGenerator {
         //Tabs Browser
         runtimeTab = new Tab();
         runtimeTab.setLabel("   BROWSER   ");
+        runtimeTab.setTabTextSize(10);
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
@@ -5093,6 +5085,7 @@ public class SubAppAppsGenerator {
         //Tabs Connections
         runtimeTab = new Tab();
         runtimeTab.setLabel(" CONNECTIONS ");
+        runtimeTab.setTabTextSize(10);
 
         runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();
@@ -5134,6 +5127,7 @@ public class SubAppAppsGenerator {
         //Tabs Notifications
         runtimeTab = new Tab();
         runtimeTab.setLabel("NOTIFICATIONS");
+        runtimeTab.setTabTextSize(10);
 
         runtimeTab.setFragment(new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();
@@ -5362,7 +5356,7 @@ public class SubAppAppsGenerator {
         Activity runtimeActivity;
         //Fragment runtimeFragment;
         String tabTitleColor = "#555759";
-        String tabBarColor="#E6E7E8";
+        String tabBarColor = "#E6E7E8";
         FermatRuntimeFragment runtimeFragment;
 
         AppNavigationStructure subAppFanCommunity = new AppNavigationStructure();

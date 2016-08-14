@@ -324,7 +324,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 }
 
                 try {
-                    cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
+                    bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
                     bitcoinWalletSettings.setFeedLevel(feeLevel);
 
                     cryptoWallet.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);

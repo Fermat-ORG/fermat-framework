@@ -20,7 +20,7 @@ public class CreatePrivateKeyStressLoad {
         }
         long after = System.currentTimeMillis();
         long diff = after - now;
-        System.out.println(new StringBuilder().append("total: ").append(diff).append(". Time each: ").append(diff / times).toString());
+        System.out.println("total: " + diff + ". Time each: " + diff / times);
         // Duration (ms) of previous implementation: 39 ms each. not too bad. do we need bitcoinJ?
     }
 }

@@ -1,17 +1,17 @@
 package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
-import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
+import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException;
+import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProject;
-import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException;
-import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,6 +29,7 @@ public class GithubManager {
 
     /**
      * Default Constructor
+     *
      * @throws GitHubRepositoryNotFoundException
      * @throws GitHubNotAuthorizedException
      */
@@ -38,13 +39,14 @@ public class GithubManager {
 
     /**
      * Will create the paths and folder in git hub and upload the appropiate files
+     *
      * @param walletFactoryProject
      * @throws CantSaveWalletFactoryProyect
      */
     public void saveWalletFactoryProject(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
         this.walletPath = ROOT_PATH + walletFactoryProject.getName() + "/";
 
-        try{
+        try {
             //save the navigation structure if any
             if (walletFactoryProject.getNavigationStructure() != null)
                 saveNavigationStructure(walletFactoryProject.getNavigationStructure());
@@ -52,24 +54,24 @@ public class GithubManager {
             //save the languages if any
             if (walletFactoryProject.getDefaultLanguage() != null)
                 saveLanguage(walletFactoryProject.getDefaultLanguage(), true);
-            for (Language language : walletFactoryProject.getLanguages()){
+            for (Language language : walletFactoryProject.getLanguages()) {
                 saveLanguage(language, false);
             }
 
             //save the skins if any
             if (walletFactoryProject.getDefaultSkin() != null)
                 saveSkin(walletFactoryProject.getDefaultSkin(), true);
-            for (Skin skin : walletFactoryProject.getSkins()){
+            for (Skin skin : walletFactoryProject.getSkins()) {
                 saveSkin(skin, false);
             }
-        } catch (Exception exception){
+        } catch (Exception exception) {
             throw new CantSaveWalletFactoryProyect("There was an error trying to upload project items to GitHub.", exception, null, null);
         }
 
 
     }
 
-    private void saveLanguage(Language language, boolean isDefault){
+    private void saveLanguage(Language language, boolean isDefault) {
         String languageFileName = language.getType().getCode() + ".xml";
 
 
@@ -82,7 +84,7 @@ public class GithubManager {
         gitHubConnection.createGitHubTextFile(savingPath, XMLParser.parseObject(language), "new language");
     }
 
-    private void saveNavigationStructure (AppNavigationStructure navigationStructure){
+    private void saveNavigationStructure(AppNavigationStructure navigationStructure) {
         String savingPath = walletPath + "navigation_structure/navigation_structure.xml";
         String content = XMLParser.parseObject(navigationStructure);
 
@@ -112,23 +114,23 @@ public class GithubManager {
 
     private void savePortraitLayouts(String savingPath, Map<String, Layout> portraitLayouts) {
         savingPath = savingPath + "portrait/layouts/";
-        for (Layout layout : portraitLayouts.values()){
+        for (Layout layout : portraitLayouts.values()) {
             gitHubConnection.createGitHubTextFile(savingPath + layout.getFilename(), "", "new layout");
         }
     }
 
     private void saveLandscapeLayouts(String savingPath, Map<String, Layout> landscapeLayouts) {
         savingPath = savingPath + "landscape/layouts/";
-        for (Layout layout : landscapeLayouts.values()){
+        for (Layout layout : landscapeLayouts.values()) {
             gitHubConnection.createGitHubTextFile(savingPath + layout.getFilename(), "", "new layout");
         }
     }
 
     private void saveSkinResources(String savingPath, Map<String, Resource> resources) throws IOException {
         savingPath = savingPath + "resources/";
-        for (Resource resource : resources.values()){
+        for (Resource resource : resources.values()) {
             //right now I can only support images types to upload to github
-            if (resource.getResourceType() == ResourceType.IMAGE){
+            if (resource.getResourceType() == ResourceType.IMAGE) {
                 gitHubConnection.createGitHubImageFile(savingPath + resource.getResourceDensity().toString() + "drawables/" + resource.getFileName(), getGithubImage(resource.getResourceFile()), "new image uploaded.");
             }
         }
@@ -142,7 +144,7 @@ public class GithubManager {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] buf = new byte[1024];
 
-        for (int readNum; (readNum = fis.read(buf)) != -1;) {
+        for (int readNum; (readNum = fis.read(buf)) != -1; ) {
             //Writes to this byte array output stream
             bos.write(buf, 0, readNum);
             System.out.println("read " + readNum + " bytes,");

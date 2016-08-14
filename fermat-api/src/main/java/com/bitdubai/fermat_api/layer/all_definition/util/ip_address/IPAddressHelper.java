@@ -50,7 +50,7 @@ public final class IPAddressHelper {
             throw new CantGetCurrentIPAddressException(
                     ioException,
                     "",
-                    new StringBuilder().append("There was an error trying to get the ip address from the site: ").append(PUBLIC_ADDRESS_URL).toString()
+                    "There was an error trying to get the ip address from the site: " + PUBLIC_ADDRESS_URL
             );
         } finally {
 

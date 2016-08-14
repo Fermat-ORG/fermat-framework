@@ -54,7 +54,7 @@ public class TabbedDialogEmptyFragment extends Fragment {
         v.setLayoutParams(params);
         v.setGravity(Gravity.CENTER);
         v.setBackgroundResource(R.drawable.background_card);
-        v.setText(new StringBuilder().append("CARD ").append(position + 1).toString());
+        v.setText("CARD " + (position + 1));
 
         fl.addView(v);
         return fl;

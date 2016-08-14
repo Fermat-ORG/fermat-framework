@@ -20,7 +20,7 @@
             android:gravity="center"
             android:padding="8dp"
             android:singleLine="true"
-            android:text="Cancel"
+            android:text="@string/cancel_label"
             android:textColor="#2d3e50"
             android:textSize="14sp"
            />
@@ -39,7 +39,7 @@
             android:gravity="center"
             android:padding="8dp"
             android:singleLine="true"
-            android:text="Rotate"
+            android:text="@string/rotate"
             android:textColor="#2d3e50"
             android:textSize="14sp"
             />
@@ -59,7 +59,7 @@
             android:gravity="center"
             android:padding="8dp"
             android:singleLine="true"
-            android:text="Ok"
+            android:text="@string/ok_label"
             android:textColor="#2d3e50"
             android:textSize="14sp"
            />
