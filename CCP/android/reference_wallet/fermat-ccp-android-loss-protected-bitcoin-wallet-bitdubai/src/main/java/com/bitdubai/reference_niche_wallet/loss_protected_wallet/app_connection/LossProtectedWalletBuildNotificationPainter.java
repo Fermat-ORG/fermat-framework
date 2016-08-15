@@ -20,27 +20,27 @@ public class LossProtectedWalletBuildNotificationPainter {
 
             switch (code){
                 case CCPBroadcasterConstants.TRANSACTION_ARRIVE:
-                    notification = new LossProtectedWalletNotificationPainter("Received money",  WalletUtils.formatBalanceStringNotDecimal(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC Arrived","","",true,codeReturn);
+                    notification = new LossProtectedWalletNotificationPainter("Received money",  WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC Arrived","","",true,codeReturn);
 
                     break;
                 case CCPBroadcasterConstants.TRANSACTION_REVERSE:
-                    notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceStringNotDecimal(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC could not be completed.", "", "",true,codeReturn);
+                    notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC could not be completed.", "", "",true,codeReturn);
 
                     break;
 
 
                 case CCPBroadcasterConstants.PAYMENT_REQUEST_ARRIVE:
-                    notification = new LossProtectedWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceStringNotDecimal(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC","","",true,codeReturn);
+                    notification = new LossProtectedWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC","","",true,codeReturn);
 
                     break;
 
                 case CCPBroadcasterConstants.PAYMENT_DENIED:
-                    notification = new LossProtectedWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceStringNotDecimal(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC was deny.","","",true,codeReturn);
+                    notification = new LossProtectedWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC was deny.","","",true,codeReturn);
                     break;
 
                 case CCPBroadcasterConstants.PAYMENT_ERROR:
 
-                    notification = new LossProtectedWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceStringNotDecimal(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC was reverted.","","",true,codeReturn);
+                    notification = new LossProtectedWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC was reverted.","","",true,codeReturn);
 
                     break;
 
