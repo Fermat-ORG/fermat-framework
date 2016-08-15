@@ -116,7 +116,7 @@ public class ListIdentitiesDialog extends FermatDialog<ReferenceAppFermatSession
 
             @Override
             public void onErrorOccurred(Exception ex) {
-                Toast.makeText(getActivity(), "Error trying to get list of selectable identities", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.error_identities, Toast.LENGTH_SHORT).show();
 
                 getSession().getErrorManager().reportUnexpectedUIException(UISource.ADAPTER,
                         UnexpectedUIExceptionSeverity.UNSTABLE, ex);
