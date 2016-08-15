@@ -794,7 +794,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
                                 newFee    = bitcoinConverter.getSathoshisFromBTC(fee);
-                                msg       = bitcoinConverter.getBTC(WalletUtils.formatBalanceString(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND, ShowMoneyType.BITCOIN.getCode()))+" BTC.";
+                                msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = amount;
                                 newFee = fee;
@@ -802,7 +802,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             } else if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
                                 newFee = bitcoinConverter.getSathoshisFromBits(fee);
-                                msg       = bitcoinConverter.getBits(WalletUtils.formatBalanceString(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND, ShowMoneyType.BITS.getCode()))+" BITS.";
+                                msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                             }
 
                             BigDecimal decimalFeed = new BigDecimal(newFee);
