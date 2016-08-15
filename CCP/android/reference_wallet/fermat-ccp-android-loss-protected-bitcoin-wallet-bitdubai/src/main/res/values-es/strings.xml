@@ -36,7 +36,7 @@
     <string name="click_me_to_search_text">Pulsar aqui \npara buscar contactos</string>
     <string name="close_text">Cerrar</string>
     <string name="confirm_request_text">Confirmar request</string>
-    <string name="confirm_text">Ud. envia</string>
+    <string name="confirm_text">Accion no permitida, Ud. Perdera dinero.\nRealmente desea continuar?</string>
     <string name="connect_text">Conectar</string>
     <string name="corporate_wallet">Corporativo</string>
     <string name="create_external_contact_text">Crear contacto Externo</string>

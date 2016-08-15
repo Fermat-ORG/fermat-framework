@@ -878,6 +878,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                                     blockchainNetworkType,
                                                     appSession);
                                             confirm_send_dialog.show();
+
                                             confirm_send_dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
                                                 @Override
