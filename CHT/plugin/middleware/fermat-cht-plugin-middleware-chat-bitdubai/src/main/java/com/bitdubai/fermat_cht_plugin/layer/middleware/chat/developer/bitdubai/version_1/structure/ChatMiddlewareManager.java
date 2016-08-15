@@ -974,6 +974,11 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         return chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(groupId);
     }
 
+    @Override
+    public void updateActorConnection(ChatActorConnection chatActorConnection) {
+        chatActorConnectionManager.updateActorConnection(chatActorConnection);
+    }
+
     /**
      * This method return a ChatMetadata from a Chat and Message objects.
      *
