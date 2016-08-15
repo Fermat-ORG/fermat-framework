@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
@@ -44,6 +45,53 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
     public ChatActorConnectionDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         super(pluginDatabaseSystem, pluginFileSystem, pluginId);
         this.pluginId = pluginId;
+    }
+
+    public void updateChatActorConnection(final ChatActorConnection chatActorConnection){
+        final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
+
+        try {
+
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, chatActorConnection.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.loadToMemory();
+
+            final DatabaseTableRecord record = actorConnectionsTable.getRecords().get(0);
+            record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME, chatActorConnection.getAlias());
+            record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATUS_COLUMN_NAME, chatActorConnection.getStatus());
+            record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATUS_COLUMN_NAME, chatActorConnection.getStatus());
+
+            actorConnectionsTable.updateRecord(record);
+        }
+        catch (CantLoadTableToMemoryException e) {
+            e.printStackTrace();
+        } catch (CantUpdateRecordException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void updateChatActorConnectionRequest(final ChatActorConnection chatActorConnection){
+        final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
+
+        try {
+
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, chatActorConnection.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+
+            if(records!=null && !records.isEmpty()){
+                final DatabaseTableRecord record = records.get(0);
+                buildDatabaseRecord(record, chatActorConnection);
+                actorConnectionsTable.updateRecord(record);
+            }
+        }
+        catch (CantLoadTableToMemoryException e) {
+            e.printStackTrace();
+        } catch (CantUpdateRecordException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public ChatActorConnection chatActorConnectionExists(ChatLinkedActorIdentity linkedIdentity,

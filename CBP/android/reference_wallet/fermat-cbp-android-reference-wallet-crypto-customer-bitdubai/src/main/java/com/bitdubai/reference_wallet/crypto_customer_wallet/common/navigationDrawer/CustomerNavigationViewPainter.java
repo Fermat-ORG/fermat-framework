@@ -29,6 +29,10 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.lang.ref.WeakReference;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 
 /**
@@ -41,6 +45,7 @@ public class CustomerNavigationViewPainter extends NavigationViewPainter {
     private CryptoCustomerIdentity actorIdentity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
     private CryptoCustomerWalletModuleManager moduleManager;
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
 
     public CustomerNavigationViewPainter(Context activity, ReferenceAppFermatSession<CryptoCustomerWalletModuleManager> session,
                                          FermatApplicationCaller applicationsHelper) {
@@ -95,8 +100,8 @@ public class CustomerNavigationViewPainter extends NavigationViewPainter {
         long satoshisFER = moduleManager.getBalanceBitcoinWallet(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode());
         double fermats = BitcoinConverter.convert(satoshisFER, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.FERMAT);
 
-        bitcoinBalance.setText(String.format("%1$s %2$s", bitcoins, CryptoCurrency.BITCOIN.getCode()));
-        fermatBalance.setText(String.format("%1$s %2$s", fermats, CryptoCurrency.FERMAT.getCode()));
+        bitcoinBalance.setText(String.format("%1$s %2$s", fixFormat(bitcoins), CryptoCurrency.BITCOIN.getCode()));
+        fermatBalance.setText(String.format("%1$s %2$s", fixFormat(fermats), CryptoCurrency.FERMAT.getCode()));
 
         return layout;
     }
@@ -135,4 +140,29 @@ public class CustomerNavigationViewPainter extends NavigationViewPainter {
     public boolean hasClickListener() {
         return false;
     }
+
+
+    private String fixFormat(Double value) {
+
+
+        if (compareLessThan1(value)) {
+            numberFormat.setMaximumFractionDigits(8);
+        } else {
+            numberFormat.setMaximumFractionDigits(2);
+        }
+
+        return String.valueOf(numberFormat.format(new BigDecimal(value)));
+
+    }
+
+    private Boolean compareLessThan1(Double value) {
+        Boolean lessThan1 = true;
+
+        lessThan1 = BigDecimal.valueOf(value).compareTo(BigDecimal.ONE) == -1;
+
+
+        return lessThan1;
+    }
+
+
 }

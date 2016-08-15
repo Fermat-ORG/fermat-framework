@@ -54,7 +54,6 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.profileStatus = profileStatus;
     }
 
-
     public ChatActorCommunitySubAppModuleInformationImpl(final ChatActorConnection exposingData, Location location) {
 
         this.publicKey = exposingData.getPublicKey();
@@ -131,42 +130,52 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         return this.connectionId;
     }
 
+    @Override
     public String getStatus() {
         return status;
     }
 
+    @Override
     public String getCity() {
         return city;
     }
 
+    @Override
     public String getCountry() {
         return country;
     }
 
+    @Override
     public String getState() {
         return state;
     }
 
+    @Override
     public Location getLocation() {
         return location;
     }
 
+    @Override
     public ProfileStatus getProfileStatus() {
         return profileStatus;
     }
 
+    @Override
     public void setConnectionState(ConnectionState connectionState) {
         this.connectionState=connectionState;
     }
 
+    @Override
     public void setCity(String city) {
         this.city = city;
     }
 
+    @Override
     public void setCountry(String country) {
         this.country = country;
     }
 
+    @Override
     public void setState(String state) {
         this.state = state;
     }
