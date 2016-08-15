@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
@@ -20,7 +21,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
@@ -77,11 +77,10 @@ import java.util.UUID;
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
 public class ChatMiddlewareMonitorAgent implements
-        CHTTransactionAgent,
         DealsWithLogger,
         DealsWithEvents,
         DealsWithPluginDatabaseSystem,
-        DealsWithPluginIdentity {
+        DealsWithPluginIdentity, Agent {
 
     Database database;
     MonitorAgent monitorAgent;
