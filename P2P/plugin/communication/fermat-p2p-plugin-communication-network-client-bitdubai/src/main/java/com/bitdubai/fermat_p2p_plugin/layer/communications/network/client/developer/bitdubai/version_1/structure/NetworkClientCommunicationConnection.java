@@ -760,7 +760,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                    final NetworkServiceType networkServiceType          ,
                                    final String             destinationIdentityPublicKey,
                                        UUID messageId) throws CantSendMessageException {
-        System.out.println("******* IS CONNECTED: "+ isConnected() + " - TRYING NO SEND = "+ packageContent.toJson());
+        System.out.println("******* IS CONNECTED: " + isConnected() + " - TRYING NO SEND = " + packageContent.toJson());
         if (isConnected()){
 
             try {
@@ -911,8 +911,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             throw cantRequestListException;
 
         }finally {
-            if (conn != null)
+            if (conn != null) {
                 conn.disconnect();
+            }
             if(reader!=null){
                 try {
                     reader.close();
@@ -950,15 +951,16 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
     //TODO: Esto no tiene sentido, si el web socket ya está abierto porqué hacen un pedido rest preguntando si el actor está en el mismo nodo..
     private boolean isActorOnlineInTheSameNode(final ActorProfile actorProfile) {
-
+        HttpURLConnection conn = null;
+        BufferedReader reader = null;
         try {
             URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/online/component/actor/" + actorProfile.getIdentityPublicKey());
 
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String respond = reader.readLine();
 
             if (conn.getResponseCode() == 200 && respond != null && respond.contains("success")) {
@@ -974,20 +976,32 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                //nothing
+            }
         }
     }
 
     @Override
     public final Boolean isActorOnline(final String publicKey) {
-
+        HttpURLConnection conn = null;
+        BufferedReader reader = null;
         try {
             URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/online/component/actor/" + publicKey);
 
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String respond = reader.readLine();
 
             if (conn.getResponseCode() == 200 && respond != null && respond.contains("success")) {
@@ -1002,6 +1016,18 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
