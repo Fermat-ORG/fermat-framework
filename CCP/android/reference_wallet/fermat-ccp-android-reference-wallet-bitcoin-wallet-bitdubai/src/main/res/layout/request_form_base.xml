@@ -265,7 +265,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="#1173aa"
+                        android:background="#12aca1"
                         android:clickable="true"
                         android:padding="3dp"
                         android:src="@drawable/ic_action_send_now_grey"
