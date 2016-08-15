@@ -95,7 +95,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
      */
     private ChatNetworkServiceDeveloperDatabaseFactory chatNetworkServiceDeveloperDatabaseFactory;
 
-    ExecutorService executorService;
 
 
     Timer timer = new Timer();
@@ -144,9 +143,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
             chatMetadataRecordDAO = new ChatMetadataRecordDAO(dataBaseCommunication);
 
-            //executorService = Executors.newFixedThreadPool(2);
-            executorService = Executors.newFixedThreadPool(3);
-
             //declare a schedule to process waiting request message
             this.startTimer();
 
@@ -156,22 +152,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
 
     }
-//    public PlatformComponentProfile constructBasicPlatformComponentProfile(String identityPublicKey,
-//                                                                           PlatformComponentType platformComponentType) {
-//
-//
-//        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-//                .constructBasicPlatformComponentProfileFactory(
-//                        identityPublicKey,
-//                        NetworkServiceType.UNDEFINED,
-//                        platformComponentType
-//
-//                );
-//    }
 
     @Override
     public void stop() {
-        executorService.shutdownNow();
         super.stop();
     }
 
@@ -466,25 +449,20 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                 if (Objects.equals(chatMetadataRecord.getProcessed(), ChatMetadataRecord.PROCESSED)) {
                     chatMetadataRecord.setProcessed(ChatMetadataRecord.PROCESSED);
                     final ChatMetadataRecord chatMetadataTosend = chatMetadataRecord;
-                    executorService.submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
+                    try {
 
-                                sendMessage(
-                                        msjContent,
-                                        localActorPubKey,
-                                        getActorByPlatformComponentType(senderType),
-                                        remoteActorPubKey,
-                                        getActorByPlatformComponentType(receiverType)
-                                );
+                        sendMessage(
+                                msjContent,
+                                localActorPubKey,
+                                getActorByPlatformComponentType(senderType),
+                                remoteActorPubKey,
+                                getActorByPlatformComponentType(receiverType)
+                        );
 
-                                getChatMetadataRecordDAO().update(chatMetadataTosend);
-                            } catch (CantUpdateRecordDataBaseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
+                        getChatMetadataRecordDAO().update(chatMetadataTosend);
+                    } catch (CantUpdateRecordDataBaseException e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }
@@ -528,29 +506,23 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                              final String actorPublicKey,
                              final Actors actorType) {
 
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
+        try {
+            ActorProfile sender = new ActorProfile();
+            sender.setActorType(identityType.getCode());
+            sender.setIdentityPublicKey(identityPublicKey);
 
-                try {
-                    ActorProfile sender = new ActorProfile();
-                    sender.setActorType(identityType.getCode());
-                    sender.setIdentityPublicKey(identityPublicKey);
+            ActorProfile receiver = new ActorProfile();
+            receiver.setActorType(actorType.getCode());
+            receiver.setIdentityPublicKey(actorPublicKey);
 
-                    ActorProfile receiver = new ActorProfile();
-                    receiver.setActorType(actorType.getCode());
-                    receiver.setIdentityPublicKey(actorPublicKey);
-
-                    sendNewMessage(
-                            sender,
-                            receiver,
-                            jsonMessage
-                    );
-                } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
-                    reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-            }
-        });
+            sendNewMessage(
+                    sender,
+                    receiver,
+                    jsonMessage
+            );
+        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
 
     @Override
@@ -595,23 +567,14 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             if (!chatMetadataRecord.getMessageStatus().getCode().equals(messageStatus.getCode())) {
                 chatMetadataRecord.setMessageStatus(messageStatus);
                 final ChatMetadataRecord chatMetadataToSend = chatMetadataRecord;
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            sendMessage(
-                                    msjContent,
-                                    localActorPubKey,
-                                    getActorByPlatformComponentType(senderType),
-                                    remoteActorPubKey,
-                                    getActorByPlatformComponentType(receiverType)
-                            );
-                            getChatMetadataRecordDAO().update(chatMetadataToSend);
-                        } catch (CantUpdateRecordDataBaseException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                sendMessage(
+                        msjContent,
+                        localActorPubKey,
+                        getActorByPlatformComponentType(senderType),
+                        remoteActorPubKey,
+                        getActorByPlatformComponentType(receiverType)
+                );
+                getChatMetadataRecordDAO().update(chatMetadataToSend);
             }
 
 
@@ -662,19 +625,13 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                     chatId
             );
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-
-                    sendMessage(
-                            msjContent,
-                            localActorPubKey,
-                            getActorByPlatformComponentType(senderType),
-                            remoteActorPubKey,
-                            getActorByPlatformComponentType(receiverType)
-                    );
-                }
-            });
+            sendMessage(
+                    msjContent,
+                    localActorPubKey,
+                    getActorByPlatformComponentType(senderType),
+                    remoteActorPubKey,
+                    getActorByPlatformComponentType(receiverType)
+            );
 
         } catch (Exception e) {
 
@@ -763,36 +720,23 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             getChatMetadataRecordDAO().createNotification(chatMetadataRecord);
             System.out.println("*** 12345 case 6:send msg in NS layer" + new Timestamp(System.currentTimeMillis()));
             if (chatMetadata.getTypeChat().equals(TypeChat.INDIVIDUAL)) {
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        sendMessage(
-                                EncodedMsg,
-                                localActorPubKey,
-                                getActorByPlatformComponentType(senderType),
-                                remoteActorPubKey,
-                                getActorByPlatformComponentType(remoteType)
-                        );
-                    }
-                });
+                sendMessage(
+                        EncodedMsg,
+                        localActorPubKey,
+                        getActorByPlatformComponentType(senderType),
+                        remoteActorPubKey,
+                        getActorByPlatformComponentType(remoteType)
+                );
             } else if (chatMetadata.getTypeChat().equals(TypeChat.GROUP)) {
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        for (GroupMember groupMember : chatMetadata.getGroupMembers()) {
-
-                            sendMessage(
-                                    EncodedMsg,
-                                    localActorPubKey,
-                                    getActorByPlatformComponentType(senderType),
-                                    groupMember.getActorPublicKey(),
-                                    getActorByPlatformComponentType(remoteType)
-                            );
-                        }
-                    }
-                });
+                for (GroupMember groupMember : chatMetadata.getGroupMembers()) {
+                    sendMessage(
+                            EncodedMsg,
+                            localActorPubKey,
+                            getActorByPlatformComponentType(senderType),
+                            groupMember.getActorPublicKey(),
+                            getActorByPlatformComponentType(remoteType)
+                    );
+                }
             }
 
         } catch (CantSendChatMessageMetadataException e) {
