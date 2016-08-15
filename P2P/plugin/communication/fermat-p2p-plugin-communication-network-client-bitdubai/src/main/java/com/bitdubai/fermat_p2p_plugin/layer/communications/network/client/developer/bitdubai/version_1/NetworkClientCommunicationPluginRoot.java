@@ -162,7 +162,6 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
      */
     public NetworkClientCommunicationPluginRoot() {
         super(new PluginVersionReference(new Version()));
-        this.scheduledExecutorService = Executors.newScheduledThreadPool(2);
         this.listenersAdded        = new CopyOnWriteArrayList<>();
     }
 
@@ -191,7 +190,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             /*
              * Initialize the networkClientConnectionsManager to the Connections
              */
-            networkClientConnectionsManager = new NetworkClientConnectionsManager(identity, eventManager, locationManager, this,connectivityManager);
+            networkClientConnectionsManager = new NetworkClientConnectionsManager(identity, eventManager, locationManager, this,connectivityManager,p2PLayerManager);
 
             /*
              * Add references to the node context
@@ -218,7 +217,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                         0,
                         Boolean.FALSE,
                         nodesProfileList.get(0),
-                        connectivityManager
+                        connectivityManager,
+                        p2PLayerManager
                 );
 
 
@@ -240,7 +240,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                             0,
                             Boolean.FALSE,
                             nodesProfileList.get(0),
-                            connectivityManager
+                            connectivityManager,
+                            p2PLayerManager
                     );
 
                 } else {
@@ -254,7 +255,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                             -1,
                             Boolean.FALSE,
                             null,
-                            connectivityManager
+                            connectivityManager,
+                            p2PLayerManager
                     );
 
                 }
@@ -326,10 +328,6 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
         }
 
 
-    }
-
-    public void register(){
-        p2PLayerManager.registerReconnect(this);
     }
 
     /**
@@ -512,7 +510,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     i+1,
                     Boolean.FALSE,
                     nodesProfileList.get(i+1),
-                    connectivityManager
+                    connectivityManager,
+                    p2PLayerManager
             );
 
         }else{
@@ -526,15 +525,16 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     -1,
                     Boolean.FALSE,
                     null,
-                    connectivityManager
+                    connectivityManager,
+                    p2PLayerManager
             );
 
         }
 
         if(executorService==null) executorService = Executors.newSingleThreadExecutor();
-        executorService.submit(new Runnable(){
+        executorService.submit(new Runnable() {
             @Override
-            public void run(){
+            public void run() {
                 networkClientCommunicationConnection.initializeAndConnect();
             }
         });
@@ -665,13 +665,6 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
         try {
             if (!networkClientCommunicationConnection.isConnected()) {
                 networkClientCommunicationConnection.initializeAndConnect();
-             /*
-            * Create and Scheduled the supervisorConnectionAgent
-            */
-                final NetworkClientCommunicationSupervisorConnectionAgent supervisorConnectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
-                if (scheduledExecutorService == null)
-                    scheduledExecutorService = Executors.newScheduledThreadPool(2);
-                scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 7, TimeUnit.SECONDS);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -681,8 +674,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     @Override
     public void disconnect() {
         try {
-            scheduledExecutorService.shutdownNow();
-            scheduledExecutorService = null;
+            stopConnectionSuperVisorAgent();
         }catch (Exception e){
 
         }
@@ -695,6 +687,21 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
     }
 
+    public void stopConnectionSuperVisorAgent(){
+        if(scheduledExecutorService != null){
+            scheduledExecutorService.shutdownNow();
+            scheduledExecutorService = null;
+        }
+
+    }
+
+    public void startConnectionSuperVisorAgent(){
+        final NetworkClientCommunicationSupervisorConnectionAgent supervisorConnectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
+        if (scheduledExecutorService == null){
+            scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+            scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 7, TimeUnit.SECONDS);
+        }
+    }
     @Override
     public void stop() {
         if(executorService != null)

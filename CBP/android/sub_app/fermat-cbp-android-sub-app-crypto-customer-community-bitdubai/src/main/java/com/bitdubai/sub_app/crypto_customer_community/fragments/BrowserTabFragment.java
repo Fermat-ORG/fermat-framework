@@ -42,6 +42,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -101,6 +102,7 @@ public class BrowserTabFragment
     private FermatTextView locationFilterBarCountry;
     private FermatTextView locationFilterBarPlace;
     private Toolbar toolbar;
+    private android.app.Activity activity;
 
     //DATA
     private ActiveActorIdentityInformation selectedActorIdentity;
@@ -124,7 +126,7 @@ public class BrowserTabFragment
         moduleManager.setAppPublicKey(appSession.getAppPublicKey());
         loadSelectedActorIdentityInBackground();
 
-
+        activity = (android.app.Activity) BrowserTabFragment.this.getActivity();
         loadSettings();
 
         //Check if a default identity is configured
@@ -543,7 +545,8 @@ public class BrowserTabFragment
         final boolean show = cryptoCustomerCommunityInformationList.isEmpty();
         final int animationResourceId = show ? android.R.anim.fade_in : android.R.anim.fade_out;
 
-        Animation anim = AnimationUtils.loadAnimation(getActivity(), animationResourceId);
+
+        Animation anim = AnimationUtils.loadAnimation(activity, animationResourceId);
         if (show && (noUsers.getVisibility() == View.GONE || noUsers.getVisibility() == View.INVISIBLE)) {
             noUsers.setAnimation(anim);
             noUsers.setVisibility(View.VISIBLE);

@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -97,8 +98,13 @@ public class AcceptDialog
         } else if (i == R.id.negative_button) {
             //try {
             if (linkedCryptoCustomerIdentity != null && identity != null) {
-                Toast.makeText(getContext(), "TODO DENY ->", Toast.LENGTH_SHORT).show();
-                // getSession().getModuleManager().denyConnection(identity.getPublicKey(), information.getPublicKey());
+               // Toast.makeText(getContext(), "TODO DENY ->", Toast.LENGTH_SHORT).show();
+                try {
+                    getSession().getModuleManager().denyConnection(linkedCryptoCustomerIdentity.getConnectionId());
+                } catch (CantDenyActorConnectionRequestException e) {
+                    getSession().getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY,
+                            UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
             } else {
                 Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
             }
