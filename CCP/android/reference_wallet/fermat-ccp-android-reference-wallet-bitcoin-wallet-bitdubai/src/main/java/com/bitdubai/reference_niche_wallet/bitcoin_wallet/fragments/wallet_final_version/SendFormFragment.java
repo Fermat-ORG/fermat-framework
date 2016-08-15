@@ -85,6 +85,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanne
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.SendConfirmDialog;
@@ -227,7 +228,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 setUpUIData();
 
             }
-            setUpContactAddapter();
+            //setUpContactAddapter();
 
             return rootView;
         } catch (Exception e) {
@@ -650,7 +651,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
                                     walletContact.isConnection = cryptoWalletWalletContact.isConnection();
                                 }
-                                setUpUIData();
+                               setUpUIData();
 
                             } catch (
                                     CantCreateWalletContactException e
@@ -793,7 +794,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
                                 newFee    = bitcoinConverter.getSathoshisFromBTC(fee);
-                                msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
+                                msg       = bitcoinConverter.getBTC(WalletUtils.formatBalanceString(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND, ShowMoneyType.BITCOIN.getCode()))+" BTC.";
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = amount;
                                 newFee = fee;
@@ -801,7 +802,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             } else if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
                                 newFee = bitcoinConverter.getSathoshisFromBits(fee);
-                                msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
+                                msg       = bitcoinConverter.getBits(WalletUtils.formatBalanceString(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND, ShowMoneyType.BITS.getCode()))+" BITS.";
                             }
 
                             BigDecimal decimalFeed = new BigDecimal(newFee);
