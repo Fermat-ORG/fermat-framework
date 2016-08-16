@@ -84,7 +84,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     private String chunckAmount = "";
     private double chunckExchangeRate = 0;
     private double chunckAmountSpent = 0;
-    private int chunckPercentageSpent =0;
+    private int    chunckPercentageSpent =0;
 
     private ErrorManager errorManager;
 

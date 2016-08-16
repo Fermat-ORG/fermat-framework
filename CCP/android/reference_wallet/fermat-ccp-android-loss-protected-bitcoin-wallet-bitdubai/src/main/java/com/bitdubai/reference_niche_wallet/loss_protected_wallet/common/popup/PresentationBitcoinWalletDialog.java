@@ -134,7 +134,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
                 return R.layout.loss_presentation_bitcoin_wallet_without_identities;
             case TYPE_CHUNCK_HELP:
-                return R.layout.loss_chunk_help_dialog;
+                return R.layout.loss_chunk_helper_dialog;
         }
         return 0;
     }
