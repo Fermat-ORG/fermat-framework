@@ -4917,15 +4917,15 @@ public class SubAppAppsGenerator {
         optionMenuItemNot.setLabel("Search");
         optionMenuItemNot.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenuNot.addMenuItem(optionMenuItemNot);*/
+        optionsMenuNot.addMenuItem(optionMenuItemNot);
 
         OptionMenuItem optionMenuItemNot = new OptionMenuItem(2);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(2, "geolocalitation_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Geolocalitation");
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenuNot.addMenuItem(optionMenuItemNot);
+        optionsMenuNot.addMenuItem(optionMenuItemNot);*/
 
-        optionMenuItemNot = new OptionMenuItem(3);
+        OptionMenuItem optionMenuItemNot = new OptionMenuItem(3);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Edit My Profile");
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);

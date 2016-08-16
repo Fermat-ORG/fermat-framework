@@ -15,7 +15,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/search_contacts_container"
+        android:background="@drawable/search_contacts_container1"
         android:orientation="horizontal">
 
         <ImageView
