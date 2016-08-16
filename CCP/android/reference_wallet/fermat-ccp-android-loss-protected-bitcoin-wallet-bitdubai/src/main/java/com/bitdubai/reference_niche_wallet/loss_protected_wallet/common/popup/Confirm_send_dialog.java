@@ -138,8 +138,6 @@ public class
 
         accept_btn = (Button) findViewById(R.id.accept_btn);
         cancel_btn = (Button) findViewById(R.id.cancel_btn);
-        confirmText = (FermatTextView) findViewById(R.id.description_msg);
-        confirmText.setText("");
         accept_btn.setOnClickListener(this);
         cancel_btn.setOnClickListener(this);
 
