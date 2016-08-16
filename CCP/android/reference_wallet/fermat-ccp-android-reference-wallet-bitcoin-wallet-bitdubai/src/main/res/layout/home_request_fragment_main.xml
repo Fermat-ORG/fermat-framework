@@ -208,7 +208,7 @@
                                 android:padding="3dp"
                                 android:clickable="true"
                                 android:text="@string/send_request_text"
-                                android:background="#1172aa"
+                                android:background="#12aca1"
                                 android:textColor="#fff"
                                 />
                         </LinearLayout>

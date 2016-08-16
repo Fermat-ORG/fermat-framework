@@ -384,6 +384,7 @@ public class IncomingNotificationDao implements DAO {
 
             DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
 
+
             record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, notificationDescriptor.getCode());
             record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, actorProtocolState.getCode());
 
@@ -391,7 +392,6 @@ public class IncomingNotificationDao implements DAO {
 
             //search this record to return data
             cryptoPaymentRequestTable.loadToMemory();
-
             return buildActorNetworkServiceRecord(cryptoPaymentRequestTable.getRecords().get(0));
 
 
@@ -403,6 +403,7 @@ public class IncomingNotificationDao implements DAO {
             throw new CantUpdateRecordDataBaseException("Cant get the updated record exception.",e);
         } catch (CantLoadTableToMemoryException e) {
             throw new CantUpdateRecordDataBaseException("Cant get the updated record exception. Load Data",e);
+
         }
     }
 

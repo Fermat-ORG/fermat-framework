@@ -21,8 +21,8 @@
     <string name="advertisement_text">Advertencia!</string>
     <string name="alias_text">Sufijo de alias</string>
     <string name="amount_text">Cantidad</string>
-    <string name="available_balance">Balance actual</string>
-    <string name="available_balance_text">Balance actual</string>
+    <string name="available_balance">Balance Disponible</string>
+    <string name="available_balance_text">Balance Disponible</string>
     <string name="back_text">Atras</string>
     <string name="bank_wallet">Banco </string>
     <string name="be_jane_doe__text">Jane Doe</string>
@@ -78,7 +78,7 @@
     <string name="navigation_drawer_close">Cerrar menu lateral</string>
     <string name="navigation_drawer_open">Cerrar menu lateral</string>
     <string name="new_user_text">Usuario nuevo</string>
-    <string name="no_history_send_or_receive">No existen transacciones</string>
+    <string name="no_history_send_or_receive">No existen Requerimientos de Pagos</string>
     <string name="no_id_In_this_wallet_text">Esta cartera permite dos tipos de contacto:</string>
     <string name="no_id_Select_below_which_text">Seleccione debajo el tipo de contacto que desea anadir:</string>
     <string name="no_id_Users_of_other_text_Fermat_wallets">Usuarios de carteras Fermat: No es necesario compartir manualmante direcciones con ellos</string>
@@ -171,7 +171,7 @@
     <string name="from">De</string>
     <string name="transaction_concept">Concepto de transferencia</string>
     <string name="phone_notification">Notificationes al telefono</string>
-    <string name="exchange_rate_error_connection">No se pueden obtener las tasas de cambio, por favor revisa tu coneccion a internet</string>
+    <string name="exchange_rate_error_connection">No se pueden obtener las tasas de cambio, por favor revisa tu conexion a internet</string>
     <string name="this_is_a_loss_protected_wallet_text">Esta es una cartera que te permitira protegerte contra perdidas de dinero, sus principales caracteristicas son:</string>
     <string name="income_expense">Esta es una cartera que te permite ver tus ingresos y gastos en todas las transacciones hechas</string>
     <string name="see_your_loss_balance_text">* Ver su balance.\n* Envio/recepcion de bitcoins.\n* Pedir bitcoins.\n* Ver el historico de transacciones.</string>
@@ -220,6 +220,6 @@
     <string name="title_section7">Vouchers</string>
     <string name="title_section8">Tarjetas de regalo</string>
     <string name="title_section9">Clones</string>
-    <string name="you_dont_have_chunck_datail_values">No tienes ningun \n gasto de este chunk todavia</string>
-    <string name="you_dont_have_chunck_values">No tienes \n ningun chunk todavia</string>
+    <string name="you_dont_have_chunck_datail_values">No tienes ningun \n gasto.</string>
+    <string name="you_dont_have_chunck_values">No tienes \n ningun ingreso de fondos.</string>
 </resources>

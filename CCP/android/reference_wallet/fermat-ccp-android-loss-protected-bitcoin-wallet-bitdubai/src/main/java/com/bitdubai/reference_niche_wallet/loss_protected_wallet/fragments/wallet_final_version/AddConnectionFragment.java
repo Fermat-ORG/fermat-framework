@@ -74,6 +74,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
     LossProtectedWalletSettings lossProtectedWalletSettings;
     BlockchainNetworkType blockchainNetworkType;
 
+    private com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = null;
+    private FloatingActionMenu actionMenu;
+
     public static AddConnectionFragment newInstance() {
         return new AddConnectionFragment();
     }
@@ -161,11 +164,11 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
         frameLayout.addView(view);
         frameLayout.setOnClickListener(onClickListener);
         view.setOnClickListener(onClickListener);
-        final com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
+        actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout).setBackgroundDrawable(R.drawable.floatbutton_community)
                 .build();
 
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+        actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .attachTo(actionButton)
                 .build();
     }
@@ -419,6 +422,23 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
         intraUserInformationList.add(cryptoWalletIntraUserActor);
 
 
+    }
+    @Override
+    public void onDestroy() {
+        try {
+
+            actionButton.setVisibility(View.GONE);
+
+            actionButton.detach();
+            actionButton.removeAllViewsInLayout();
+
+            actionButton = null;
+            actionMenu = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+//        ((ViewGroup)button1.getParent()).removeView(button1);
+        super.onDestroy();
     }
 
     public static void hideSoftKeyboard(Activity activity) {

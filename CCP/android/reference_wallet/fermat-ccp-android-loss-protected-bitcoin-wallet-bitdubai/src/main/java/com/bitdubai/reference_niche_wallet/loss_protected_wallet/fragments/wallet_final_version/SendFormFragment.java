@@ -852,19 +852,12 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                                 }
 
+                                BigDecimal decimalFeed = new BigDecimal(newFee);
                                 long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
                                 BigDecimal amountDecimal = new BigDecimal(newAmount);
-                               // amountDecimal.setScale(1,BigDecimal.ROUND_HALF_DOWN);
 
-                                BigDecimal decimalFeed = new BigDecimal(newFee);
-                                //long decimalFeed =  Long.parseLong(newFee, 10);
 
-                                //decimalFeed.setScale(1, BigDecimal.ROUND_HALF_DOWN);
-
-                                //BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                                 BigDecimal operator = new BigDecimal(newAmount);
-                               // long operator =  Long.parseLong(newAmount, 10);
-
 
                                 if (amountDecimal.longValueExact() > minSatoshis) {
 

@@ -54,7 +54,8 @@ public class NetworkClientCommunicationSupervisorConnectionAgent implements Runn
                         getCommunicationsNetworkClientChannel().sendPong();
 
                 }catch (Exception ex) {
-                    System.out.println(ex.getCause());
+                    ex.printStackTrace();
+//                    System.out.println(ex.getCause());
                 }
             }
 

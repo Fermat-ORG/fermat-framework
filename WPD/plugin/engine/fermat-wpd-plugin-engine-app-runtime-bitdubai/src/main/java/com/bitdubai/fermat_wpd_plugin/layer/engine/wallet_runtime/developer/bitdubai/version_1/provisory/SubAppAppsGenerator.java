@@ -4864,9 +4864,10 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuConn = new OptionsMenu();
 
-       /* OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
-        optionMenuItemConn.setFermatDrawable(new FermatDrawable(1, "search_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemConn.setLabel("Search");
+
+        /*OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
+        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(1, "search_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setLabel("Search");
         optionMenuItemConn.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenuConn.addMenuItem(optionMenuItemConn);*/

@@ -354,6 +354,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             if (id == 2){
                 setUpTutorial((Boolean) appSession.getData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED));
 
+
             }
         } catch (Exception e) {
             // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
