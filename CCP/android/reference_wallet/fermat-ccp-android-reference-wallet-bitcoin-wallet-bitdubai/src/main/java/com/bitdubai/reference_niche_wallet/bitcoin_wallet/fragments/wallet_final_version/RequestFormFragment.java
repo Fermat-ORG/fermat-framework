@@ -351,7 +351,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
             @Override
             public void onPostExecute(Object... result) {
                 if (result != null && result.length > 0) {
-                    contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, (List<WalletContact>)result[0]);
+                    contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, (List<WalletContact>) result[0]);
 
                     contactName.setAdapter(contactsAdapter);
                     //autocompleteContacts.setTypeface(tf);
@@ -613,6 +613,15 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
             fermatWorker.shutdownNow();
 
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        appSession.setData("LastContactSelected",null);
+        contactsAdapter = null;
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        super.onDestroy();
     }
 
     private void sendRequest() {
