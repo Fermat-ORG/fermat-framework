@@ -116,7 +116,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                                     errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                                             UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
                             }
-                        catch (Exception e){
+                            catch (Exception e){
                                 System.out.println("Exception at Geolocation search " + e.getMessage());
                             }
                         }
