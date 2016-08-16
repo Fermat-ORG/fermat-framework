@@ -117,7 +117,7 @@
     <string name="title_go_button">Entendido</string>
     <string name="title_activity_requests_received">Requerimientos Recibidos</string>
     <string name="title_activity_activity_main">Main Activity</string>
-    <string name="wizzard_welcome_text">Aquí podrás chatear, conseguir un taxi, alquilar apartamentos, encontrar una cita, publicar y buscarclasificados, encontrar un trabajo, alquilar o prestar servicios independientes, obtener cupones y descuentos, comprar y vender bienes y servicios, ¡Y mucho más! Fermat es de código abierto y está en construcción.</string>
+    <string name="wizzard_welcome_text">Aquí podrás chatear, conseguir un taxi, alquilar apartamentos, encontrar una cita, publicar y buscar clasificados, encontrar un trabajo, alquilar o prestar servicios independientes, obtener cupones y descuentos, comprar y vender bienes y servicios, ¡Y mucho más! Fermat es de código abierto y está en construcción.</string>
     <string name="welcome_wizzard_first_title" >Bienvenidos a</string>
     <string name="welcome_wizzard_second_title">Aplicaciones Fermat</string>
     <string name="wizzard_welcome_second_text">* Las aplicaciones de Fermat son de código abierto. \n * Las aplicaciones de Fermat son de persona a persona (sin empresas intermediarias o información en la nube). \n * Las aplicaciones de negocios de Fermat son libres de intermediarios resultando en transacciones más baratas.</string>

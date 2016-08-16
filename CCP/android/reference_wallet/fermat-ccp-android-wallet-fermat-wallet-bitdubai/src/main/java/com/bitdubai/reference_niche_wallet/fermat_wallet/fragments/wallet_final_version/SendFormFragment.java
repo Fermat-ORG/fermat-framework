@@ -331,7 +331,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     feeLevel = String.valueOf(BitcoinFee.FAST);
                 }
                 try {
-                    fermatWallet.loadAndGetSettings(appSession.getAppPublicKey());
+                    fermatWalletSettings = fermatWallet.loadAndGetSettings(appSession.getAppPublicKey());
 
                     fermatWalletSettings.setFeedLevel(feeLevel);
 

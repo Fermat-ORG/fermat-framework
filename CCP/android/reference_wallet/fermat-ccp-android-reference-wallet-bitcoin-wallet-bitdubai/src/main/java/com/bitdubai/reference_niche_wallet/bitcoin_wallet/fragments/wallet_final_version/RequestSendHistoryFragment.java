@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +27,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
@@ -34,6 +37,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWall
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ContactsTutorialPart1V2;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.Payment_Request_Help_Dialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
@@ -120,6 +125,9 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                 feeLevel = BitcoinFee.NORMAL.toString();
 
 
+            if (appSession.getData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED)==null){
+                setUpTutorial(false);
+            }
             onRefresh();
 
         } catch (Exception ex) {
@@ -139,7 +147,6 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
-            setUp();
             return rootView;
         }catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
@@ -147,10 +154,25 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         return container;
     }
 
-    private void setUp(){
+    private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
+        // if (isHelpEnabled) {
+        Payment_Request_Help_Dialog payment_request_help_dialog = new Payment_Request_Help_Dialog(getActivity(), appSession, null, checkButton);
+        payment_request_help_dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Object b = appSession.getData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED);
+                if (b != null) {
+                    if ((Boolean) b) {
+                        appSession.removeData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED);
+                    }
+                }
 
-
+            }
+        });
+        payment_request_help_dialog.show();
+        //  }
     }
+
 
     @Override
     public void onFragmentFocus() {
@@ -230,10 +252,10 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-           e.printStackTrace();
-       }
+            e.printStackTrace();
+        }
 
-            return lstPaymentRequest;
+        return lstPaymentRequest;
 
     }
 
@@ -328,6 +350,11 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             if (id == 4) {
                 changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, appSession.getAppPublicKey());
                 return true;
+            }
+            if (id == 2){
+                setUpTutorial((Boolean) appSession.getData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED));
+
+
             }
         } catch (Exception e) {
             // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));

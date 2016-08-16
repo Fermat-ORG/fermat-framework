@@ -115,7 +115,7 @@
             <Button
                 android:id="@+id/accept_btn"
                 android:layout_width="0dp"
-                android:background="#1173aa"
+                android:background="#12aca1"
                 android:text="@string/send_remittance_wallet"
                 android:textColor="#FFFFFF"
                 android:layout_weight="1"

@@ -28,7 +28,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
  * Created by Joaquin Carrasuquero on 11/04/16.
  */
 
-public class Confirm_send_dialog extends Dialog implements
+public class
+        Confirm_send_dialog extends Dialog implements
         View.OnClickListener {
 
 
@@ -70,7 +71,8 @@ public class Confirm_send_dialog extends Dialog implements
                                LossProtectedWallet lossProtectedWallet,//
                                long cryptoAmount,//
                                CryptoAddress destinationAddress,//
-                               String notes, String walletPublicKey,
+                               String notes,
+                               String walletPublicKey,
                                String deliveredByActorPublicKey,//
                                Actors deliveredByActorType,//
                                String deliveredToActorPublicKey,
