@@ -118,6 +118,7 @@
                 android:id="@+id/btn_dismiss"
                 android:text="@string/close_text"
                 android:textColor="#fff"
+                android:backgroundTint="#009CD4"
                 android:background="#009CD4"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal" />

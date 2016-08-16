@@ -6,7 +6,11 @@
     android:layout_height="match_parent"
     android:background="@null">
 
-    <LinearLayout
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -50,7 +54,7 @@
             android:text="@string/welcome_text_community"/>
     </LinearLayout>
 
-
+    </ScrollView>
 
 
 

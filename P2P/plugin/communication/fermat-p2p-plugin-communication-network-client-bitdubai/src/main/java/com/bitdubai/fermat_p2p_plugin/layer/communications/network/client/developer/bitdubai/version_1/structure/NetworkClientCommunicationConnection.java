@@ -30,6 +30,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NearNodeListMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.UpdateActorProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.UpdateProfileGeolocationMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MessageTransmitRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
@@ -47,6 +48,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantSendPackageException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.network_calls.NetworkClientCommunicationCall;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.Sync.WaiterObjectsBuffer;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.util.HardcodeConstants;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.google.gson.JsonObject;
@@ -67,10 +69,13 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EncodeException;
@@ -117,7 +122,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     /*
      * Represent the nodesListPosition
      */
-    private Integer nodesListPosition;
+    private int nodesListPosition;
 
     /*
      * Represent the networkClientCommunicationChannel
@@ -137,6 +142,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     private NodeProfile nodeProfile;
 
     private ConnectivityManager connectivityManager;
+
+    private WaiterObjectsBuffer waiterObjectsBuffer;
 
     /*
      * Represents the P2P layer manager
@@ -182,6 +189,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         this.p2PLayerManager = p2PLayerManager;
 
         this.networkClientCommunicationChannel = new NetworkClientCommunicationChannel(this, isExternalNode);
+        this.waiterObjectsBuffer = new WaiterObjectsBuffer();
     }
 
     /*
@@ -484,7 +492,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                 fullUpdateRegisteredProfile(profile);
                 break;
             case GEOLOCATION:
-                geolocationUpdateRegisteredProfile(profile);
+            System.out.print("updateRegisteredProfile Geolocation:  INHABILITADO***");
+//                geolocationUpdateRegisteredProfile(profile);
                 break;
         }
     }
@@ -718,7 +727,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             try {
 
-                networkClientCommunicationChannel.getClientConnection().getBasicRemote().sendObject(
+                //todo: esto hay que mejorarlo
+                networkClientCommunicationChannel.getClientConnection().getAsyncRemote().sendObject(
                         Package.createInstance(
                                 packageContent.toJson(),
                                 networkServiceType,
@@ -726,7 +736,48 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                 clientIdentity.getPrivateKey(),
                                 destinationIdentityPublicKey
                         )
+                ).get();
+
+            } catch (Exception exception) {
+
+                throw new CantSendMessageException(
+                        exception,
+                        "packageContent:"+packageContent,
+                        "Unhandled error trying to send the message through the session."
                 );
+            }
+        }
+
+    }
+
+
+    public void receiveSyncPackgageMessage(String messageId,boolean status) {
+        waiterObjectsBuffer.addFullDataAndNotificateArrive(messageId, status);
+    }
+
+    //todo: ver que el id del mensaje sea unico
+    public boolean sendSyncPackageMessage(final PackageContent     packageContent              ,
+                                   final NetworkServiceType networkServiceType          ,
+                                   final String             destinationIdentityPublicKey,
+                                       UUID messageId) throws CantSendMessageException {
+        System.out.println("******* IS CONNECTED: " + isConnected() + " - TRYING NO SEND = " + packageContent.toJson());
+        if (isConnected()){
+
+            try {
+                networkClientCommunicationChannel.getClientConnection().getBasicRemote().sendObject(
+                        Package.createInstance(
+                                packageContent.toJson(),
+                                networkServiceType,
+                                PackageType.MESSAGE_TRANSMIT_SYNC_ACK_RESPONSE,
+                                clientIdentity.getPrivateKey(),
+                                destinationIdentityPublicKey
+                        )
+                );
+
+                //lock and wait
+                System.out.println("******* wainting for the sync object");
+                return (boolean) waiterObjectsBuffer.getBufferObject(messageId.toString());
+
 
             } catch (IOException | EncodeException exception){
 
@@ -744,8 +795,10 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                         "Unhandled error trying to send the message through the session."
                 );
             }
+        }else{
+            System.out.println("******* sendSyncPackageMessage, NODE IS NOT CONNECTED");
         }
-
+        return false;
     }
 
     private void sendPackage(final PackageContent packageContent,
@@ -755,7 +808,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             try {
 
-                networkClientCommunicationChannel.getClientConnection().getBasicRemote().sendObject(
+                networkClientCommunicationChannel.getClientConnection().getAsyncRemote().sendObject(
                         Package.createInstance(
                                 packageContent.toJson(),
                                 NetworkServiceType.UNDEFINED,
@@ -763,14 +816,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                 clientIdentity.getPrivateKey(),
                                 serverIdentity
                         )
-                );
-
-            } catch (IOException | EncodeException exception){
-
-                throw new CantSendPackageException(
-                        exception,
-                        "packageContent:"+packageContent,
-                        "Error trying to send the message through the session."
                 );
 
             } catch (Exception exception) {
@@ -795,6 +840,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     @Override
+    //todo: agregarle el timeout como parametro.
     public List<ActorProfile> listRegisteredActorProfiles(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException {
 
         System.out.println("NetworkClientCommunicationConnection - new listRegisteredActorProfiles");
@@ -824,6 +870,10 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             conn.setRequestProperty("Content-Length", Integer.toString(formParameters.length()));
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Content-Encoding", "gzip");
+
+            //timeout
+            conn.setConnectTimeout((int)TimeUnit.MINUTES.toMillis(2));
+
 
             os = conn.getOutputStream();
             os.write(formParameters.getBytes());
@@ -864,8 +914,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             throw cantRequestListException;
 
         }finally {
-            if (conn != null)
+            if (conn != null) {
                 conn.disconnect();
+            }
             if(reader!=null){
                 try {
                     reader.close();
@@ -886,6 +937,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         return resultList;
     }
 
+
+
     /**
      * Notify when the network client connection is lost.
      */
@@ -901,15 +954,16 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
     //TODO: Esto no tiene sentido, si el web socket ya está abierto porqué hacen un pedido rest preguntando si el actor está en el mismo nodo..
     private boolean isActorOnlineInTheSameNode(final ActorProfile actorProfile) {
-
+        HttpURLConnection conn = null;
+        BufferedReader reader = null;
         try {
             URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/online/component/actor/" + actorProfile.getIdentityPublicKey());
 
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String respond = reader.readLine();
 
             if (conn.getResponseCode() == 200 && respond != null && respond.contains("success")) {
@@ -925,20 +979,32 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                //nothing
+            }
         }
     }
 
     @Override
     public final Boolean isActorOnline(final String publicKey) {
-
+        HttpURLConnection conn = null;
+        BufferedReader reader = null;
         try {
             URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/online/component/actor/" + publicKey);
 
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String respond = reader.readLine();
 
             if (conn.getResponseCode() == 200 && respond != null && respond.contains("success")) {
@@ -953,6 +1019,18 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -1079,6 +1157,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         if (networkClientCommunicationChannel.getClientConnection().isOpen())
             networkClientCommunicationChannel.getClientConnection().close();
     }
+
+
 
     public void stopConnectionSuperVisorAgent(){
         pluginRoot.stopConnectionSuperVisorAgent();

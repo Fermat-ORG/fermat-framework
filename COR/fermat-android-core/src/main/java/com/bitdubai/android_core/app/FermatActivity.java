@@ -864,6 +864,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         onBackPressed();
                     }
                 });
+            }else{
+                mToolbar.setNavigationIcon(null);
             }
         }
 
@@ -873,8 +875,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 Bitmap bitmap = BitmapFactory.decodeByteArray(titleBar.getNavigationIcon(), 0, titleBar.getNavigationIcon().length);
                 mToolbar.setNavigationIcon(new BitmapDrawable(getResources(), bitmap));
             }
-
     }
+
 
     /**
      * @param title

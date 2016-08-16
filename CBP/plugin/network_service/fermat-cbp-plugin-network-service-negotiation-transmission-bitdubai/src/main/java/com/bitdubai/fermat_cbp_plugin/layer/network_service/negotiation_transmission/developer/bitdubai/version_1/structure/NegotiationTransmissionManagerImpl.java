@@ -46,8 +46,6 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
 
     private NegotiationTransmissionNetworkServicePluginRoot pluginRoot;
 
-    ExecutorService executorService;
-
     public NegotiationTransmissionManagerImpl(
             OutgoingNotificationDao outgoingNotificationDao,
             IncomingNotificationDao incomingNotificationDao,
@@ -56,7 +54,6 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
         this.outgoingNotificationDao = outgoingNotificationDao;
         this.pluginRoot = pluginRoot;
         this.incomingNotificationDao = incomingNotificationDao;
-        executorService = Executors.newFixedThreadPool(3);
     }
 
     @Override
@@ -340,28 +337,23 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                             final String actorPublicKey,
                             final Actors actorType) {
 
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
+        try {
+            ActorProfile sender = new ActorProfile();
+            sender.setActorType(identityType.getCode());
+            sender.setIdentityPublicKey(identityPublicKey);
 
-                try {
-                    ActorProfile sender = new ActorProfile();
-                    sender.setActorType(identityType.getCode());
-                    sender.setIdentityPublicKey(identityPublicKey);
+            ActorProfile receiver = new ActorProfile();
+            receiver.setActorType(actorType.getCode());
+            receiver.setIdentityPublicKey(actorPublicKey);
 
-                    ActorProfile receiver = new ActorProfile();
-                    receiver.setActorType(actorType.getCode());
-                    receiver.setIdentityPublicKey(actorPublicKey);
+            pluginRoot.sendNewMessage(
+                    sender,
+                    receiver,
+                    jsonMessage
+            );
+        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
 
-                    pluginRoot.sendNewMessage(
-                            sender,
-                            receiver,
-                            jsonMessage
-                    );
-                } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
-                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-            }
-        });
     }
 }

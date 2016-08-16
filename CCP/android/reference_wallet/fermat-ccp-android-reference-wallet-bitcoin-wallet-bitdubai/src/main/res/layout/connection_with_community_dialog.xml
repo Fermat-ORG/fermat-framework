@@ -68,7 +68,7 @@
             android:layout_width="0dp"
             android:layout_weight="0.5"
             android:layout_height="wrap_content"
-            android:background="#1173aa"
+            android:background="#12aca1"
             android:text="@string/search_text"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
