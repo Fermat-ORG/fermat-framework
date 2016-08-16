@@ -306,5 +306,16 @@
     <!--&lt;!&ndash; dialog_blockchain_download.xml&ndash;&gt;-->
     <!--<string name="advertisement_text">Advertisement!</string>-->
     <!--<string name="the_process_of_downloading_text">The process of downloading blocks \nfrom the Blockchain is in progress.\n  As this occurs, the action bar is shown in red.</string>-->
+
+
+    <!--Generic messages -->
+    <string name="msg_report_send">Report sent</string>
+    <!--System Error-->
+    <string name="system_error">Oooops! recovering from system error</string>
+    <!--Fragments-->
+    <!--Request Form Fragment-->
+    <string name="error_connecting_to_fermat_network">Wait a minute please, trying to reconnect...</string>
+
+
 </resources>
 

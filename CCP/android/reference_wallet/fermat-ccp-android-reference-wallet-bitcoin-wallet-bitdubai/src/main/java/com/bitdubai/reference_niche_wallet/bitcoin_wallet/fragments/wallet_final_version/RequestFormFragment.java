@@ -214,7 +214,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                 errorConnectingFermatNetworkDialog.dismiss();
                 try {
                     if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
-                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.error_connecting_to_fermat_network), Toast.LENGTH_SHORT).show();
                         getActivity().onBackPressed();
                     }
                 } catch (CantGetCommunicationNetworkStatusException e) {
@@ -692,10 +692,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                            else
                                onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
                     }else {
-                       Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
+                       Toast.makeText(getActivity(),getResources().getString(R.string.error_msg_invalid_amount) + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    showMessage(getActivity(), "Invalid Request Amount");
+                    showMessage(getActivity(), getResources().getString(R.string.error_msg_invalid_amount));
                 }
             }
 
