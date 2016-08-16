@@ -601,7 +601,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         dialog.dismiss();
         walletContact = new WalletContact();
         walletContact.setName("");
-        registerForContextMenu(mClearSearchImageButton);
+       registerForContextMenu(mClearSearchImageButton);
+
         getActivity().openContextMenu(mClearSearchImageButton);
     }
 

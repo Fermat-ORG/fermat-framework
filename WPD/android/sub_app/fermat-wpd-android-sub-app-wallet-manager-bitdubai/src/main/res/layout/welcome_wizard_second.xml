@@ -11,62 +11,62 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp">
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/welcome_wizzard_second_title"
-            android:gravity="center"
-            android:textColor="#0EAF9E"
-            android:textSize="36sp"
-            app:typeface="CAVIAR_DREAMS"
-            android:paddingTop="20dp"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:src="@drawable/banner_app_fermat_mdpi"
-            android:layout_gravity="center"
-            />
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_wizzard_second_title"
+                android:gravity="center"
+                android:textColor="#0EAF9E"
+                android:textSize="36sp"
+                app:typeface="CAVIAR_DREAMS"
+                android:paddingTop="20dp"
+                />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#0EAF9E"
-            android:layout_marginBottom="16dp"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:src="@drawable/banner_app_fermat_mdpi"
+                android:layout_gravity="center"
+                />
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="left"
-            android:textColor="#58595B"
-            android:textSize="14sp"
-            android:lineSpacingExtra="5dp"
-            app:typeface="CAVIAR_DREAMS"
-            android:text="@string/welcome_text_fermat_app"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0EAF9E"
+                android:layout_marginBottom="16dp"/>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:paddingTop="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:gravity="left"
-            app:typeface="CAVIAR_DREAMS"
-            android:textColor="#58595B"
-            android:lineSpacingExtra="5dp"
-            android:textSize="14sp"
-            android:text="@string/wizzard_welcome_second_text"/>
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="left"
+                android:textColor="#58595B"
+                android:textSize="14sp"
+                android:lineSpacingExtra="5dp"
+                app:typeface="CAVIAR_DREAMS"
+                android:text="@string/welcome_text_fermat_app"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:paddingTop="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="left"
+                app:typeface="CAVIAR_DREAMS"
+                android:textColor="#58595B"
+                android:lineSpacingExtra="5dp"
+                android:textSize="14sp"
+                android:text="@string/wizzard_welcome_second_text"/>
 
 
 
-    </LinearLayout>
+        </LinearLayout>
 
     </ScrollView>
 

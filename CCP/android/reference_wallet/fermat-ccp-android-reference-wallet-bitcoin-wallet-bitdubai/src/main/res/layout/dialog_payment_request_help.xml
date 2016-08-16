@@ -182,7 +182,10 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/dialog_button_close"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:background="#12aca1"
+                android:textColor="#FFF"/>
+
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

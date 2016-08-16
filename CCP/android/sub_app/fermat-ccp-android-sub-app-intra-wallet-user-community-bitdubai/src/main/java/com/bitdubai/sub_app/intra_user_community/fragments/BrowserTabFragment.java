@@ -367,7 +367,7 @@ public class BrowserTabFragment
                     .setHintTextColor(Color.WHITE)
                     .setSearchHintDrawable(R.drawable.search_icon)
                     .setSearchButtonImageResource(R.drawable.search_icon)
-                    .setCloseBtnImageResource(R.drawable.search_icon)
+                    .setCloseBtnImageResource(R.drawable.closewhite_icon)
                     .setSearchPlateTint(Color.WHITE)
                     .setSubmitAreaTint(Color.WHITE);
 
@@ -823,6 +823,7 @@ public class BrowserTabFragment
 
         if(_executor != null)
             _executor.shutdownNow();
+
         super.onStop();
     }
 

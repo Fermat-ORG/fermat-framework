@@ -16,7 +16,6 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="15dp"
         android:background="@drawable/search_contacts_container1"
-
         android:orientation="horizontal">
 
         <ImageView
@@ -27,13 +26,15 @@
             android:layout_marginStart="10dp"
             android:paddingBottom="3dp"
             android:paddingTop="3dp"
+            android:background="@android:color/transparent"
             android:src="@drawable/ic_contact_search" />
 
         <EditText
             android:id="@+id/search_view"
-            android:layout_width="268dp"
+            android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_gravity="center"
+            android:background="@android:color/transparent"
             android:paddingLeft="20dp"
             android:paddingStart="20dp"
             android:paddingRight="0dp"
@@ -42,8 +43,7 @@
             android:hint="@string/search_hint"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:textSize="14sp"
-            android:background="@color/transparent"/>
+            android:textSize="14sp" />
 
         <ImageButton
 
@@ -58,21 +58,6 @@
             android:src="@drawable/ic_action_cancel_grey"
             android:visibility="gone"
             />
-
-        <ImageButton
-
-            android:id="@+id/clear_search_image_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/search_view"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/search_view"
-            android:contentDescription="@string/clear_text_button"
-            android:src="@drawable/ic_action_cancel_grey"
-            android:visibility="gone"
-            />
-
     </LinearLayout>
 
     <FrameLayout

@@ -252,10 +252,10 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-           e.printStackTrace();
-       }
+            e.printStackTrace();
+        }
 
-            return lstPaymentRequest;
+        return lstPaymentRequest;
 
     }
 
@@ -352,7 +352,8 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                 return true;
             }
             if (id == 2){
-               setUpTutorial((Boolean) appSession.getData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED));
+                setUpTutorial((Boolean) appSession.getData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED));
+
 
             }
         } catch (Exception e) {

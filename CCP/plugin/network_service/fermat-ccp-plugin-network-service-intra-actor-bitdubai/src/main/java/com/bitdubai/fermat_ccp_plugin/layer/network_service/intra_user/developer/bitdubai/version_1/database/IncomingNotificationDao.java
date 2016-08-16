@@ -366,8 +366,8 @@ public class IncomingNotificationDao implements DAO {
     }
 
     public ActorNetworkServiceRecord changeIntraUserNotificationDescriptor(final String                 senderPublicKey    ,
-                                                      final NotificationDescriptor notificationDescriptor,
-                                                      final ActorProtocolState actorProtocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException {
+                                                                           final NotificationDescriptor notificationDescriptor,
+                                                                           final ActorProtocolState actorProtocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException {
 
 
         if (senderPublicKey == null)
@@ -392,8 +392,8 @@ public class IncomingNotificationDao implements DAO {
 
             //search this record to return data
             cryptoPaymentRequestTable.loadToMemory();
+            return buildActorNetworkServiceRecord(cryptoPaymentRequestTable.getRecords().get(0));
 
-             return buildActorNetworkServiceRecord(cryptoPaymentRequestTable.getRecords().get(0));
 
 
         } catch (CantUpdateRecordException exception) {
@@ -402,7 +402,8 @@ public class IncomingNotificationDao implements DAO {
         } catch (InvalidParameterException e) {
             throw new CantUpdateRecordDataBaseException("Cant get the updated record exception.",e);
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantUpdateRecordDataBaseException("Cant update record exception. Cant Load data",e);
+            throw new CantUpdateRecordDataBaseException("Cant get the updated record exception. Load Data",e);
+
         }
     }
 

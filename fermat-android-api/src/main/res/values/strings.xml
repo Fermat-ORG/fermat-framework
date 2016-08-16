@@ -21,6 +21,7 @@
     <!--Help Dialog for Payment Request-->
     <string name="payment_title">Payment Request</string>
     <string name="payment_subtitle">This is Payment Request interfaces. You can send a bitcoin request to your contacts.</string>
-    <string name="payment_body">* Browse your Sent/Received Payment Request.\n* Send Bitcoin Payment Request .\n* Send Bitcoin Directly to your contacts.</string>
+    <string name="payment_body">* Browse your Sent/Received Payment Request.\n* Send a new Bitcoin Payment Request.</string>
+
 
 </resources>

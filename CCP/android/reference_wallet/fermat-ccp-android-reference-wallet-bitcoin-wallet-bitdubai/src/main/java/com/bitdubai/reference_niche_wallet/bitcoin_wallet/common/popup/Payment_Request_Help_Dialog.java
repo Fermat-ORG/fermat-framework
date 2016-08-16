@@ -1,33 +1,36 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
-import java.io.ByteArrayOutputStream;
+
+        import android.app.Activity;
+        import android.graphics.Bitmap;
+        import android.graphics.BitmapFactory;
+        import android.os.Bundle;
+        import android.util.Log;
+        import android.view.View;
+        import android.view.Window;
+        import android.widget.Button;
+        import android.widget.CheckBox;
+        import android.widget.CompoundButton;
+        import android.widget.FrameLayout;
+        import android.widget.ImageView;
+
+        import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+        import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
+        import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+        import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+        import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+        import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+        import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+        import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+        import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
+        import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
+        import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
+
+        import java.io.ByteArrayOutputStream;
+
+
 
 /**
  * Created by root on 12/08/16.
@@ -102,10 +105,11 @@ public class Payment_Request_Help_Dialog extends FermatDialog<ReferenceAppFermat
     @Override
     public void onClick(View v) {
         int id = v.getId();
-      if (id == R.id.btn_dismiss) {
-                saveSettings();
-                dismiss();
-            }
+        if (id == R.id.btn_dismiss) {
+            saveSettings();
+            dismiss();
+        }
+
     }
 
     private void saveSettings() {
@@ -117,7 +121,8 @@ public class Payment_Request_Help_Dialog extends FermatDialog<ReferenceAppFermat
             getSession().setData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED, Boolean.FALSE);
             BitcoinWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
             if(bitcoinWalletSettings!=null) {
-                bitcoinWalletSettings.setIsPresentationHelpEnabled(!checkbox_not_show.isChecked());
+                bitcoinWalletSettings.setIsPaymentHelpEnabled(!checkbox_not_show.isChecked());
+
                 getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
             }else{
                 Log.e(TAG, "BitcoinWalletSettings null");
