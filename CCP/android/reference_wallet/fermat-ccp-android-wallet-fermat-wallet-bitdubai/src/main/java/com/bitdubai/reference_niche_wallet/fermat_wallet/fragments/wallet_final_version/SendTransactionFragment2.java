@@ -75,6 +75,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -535,18 +536,18 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         LineData data = null;
 
         /**HARD CORE DATA FOR CHART**/
-       /* long frmt =  100000000;
+       /*long frmt =  100000000;
         long date = System.currentTimeMillis();
         long day = 86400000;
         Map<Long, Long> dailyHardCore = new HashMap<>();
-        for (int i = 0; i < 7 ; i++) {
 
-            long frm1t =+frmt;
-            long dataPlusday =+ date + day;
-            dailyHardCore.put(dataPlusday,frm1t);
-            dataPlusday++;
-            day++;
-        }
+        dailyHardCore.put(date,frmt);
+        dailyHardCore.put(date+day,frmt+frmt);
+        dailyHardCore.put(date+day+day,frmt+frmt-frmt);
+        dailyHardCore.put(date+day+day+day,frmt+frmt-frmt-frmt);
+        dailyHardCore.put(date+day+day+day+day,frmt+frmt-frmt-frmt+frmt);
+        dailyHardCore.put(date+day+day+day+day+day,frmt+frmt-frmt-frmt+frmt+frmt);
+        dailyHardCore.put(date+day+day+day+day+day+day,frmt+frmt-frmt-frmt+frmt+frmt-frmt);
         data = getData(dailyHardCore);*/
         /**END HARD CORE DATA FOR CHART**/
 
@@ -606,18 +607,22 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         ArrayList<Entry> entryList = new ArrayList<>();
         ArrayList<String> xValues = new ArrayList<>();
 
-        xValues.add("M");
+       /* xValues.add("M");
         xValues.add("T");
         xValues.add("W");
         xValues.add("T");
         xValues.add("F");
         xValues.add("S");
-        xValues.add("S");
+        xValues.add("S");*/
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE", Locale.US);
 
         //if statement for validate if the runningDailyBalance has values
        if (runningDailyBalance != null) {
            int i = 0;
            for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet()) {
+
+               xValues.add(sdf.format(entry.getKey()));
 
                 //Set Array Colors
                 //if (valueEntry==0)

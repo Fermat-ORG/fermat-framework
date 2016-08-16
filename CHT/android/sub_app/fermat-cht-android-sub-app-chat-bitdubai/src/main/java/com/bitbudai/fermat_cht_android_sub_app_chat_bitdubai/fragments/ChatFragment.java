@@ -14,11 +14,13 @@ import android.widget.SearchView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatIntentFilter;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -30,7 +32,10 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
@@ -61,6 +66,7 @@ public class ChatFragment
     private ChatAdapterView adapterView;
     private ChatAdapter adapter;
     private SearchView searchView;
+    private Contact contactData;
 
     public static ChatFragment newInstance() {
         return new ChatFragment();
@@ -90,27 +96,27 @@ public class ChatFragment
                 try {
                     chatManager.persistSettings(appSession.getAppPublicKey(), chatSettings);
                 } catch (Exception e) {
+                    if (errorManager != null)
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
             }
-
-            try {
-                chatIdentity = chatSettings.getIdentitySelected();
-                if (chatIdentity == null) {
-                    List<ChatIdentity> chatIdentityList = chatManager
-                            .getIdentityChatUsersFromCurrentDeviceUser();
-                    if (chatIdentityList != null && chatIdentityList.size() > 0) {
-                        chatIdentity = chatManager
-                                .newInstanceChatActorCommunitySelectableIdentity(
-                                        chatIdentityList.get(0));
-                        chatSettings.setIdentitySelected(chatIdentity);
-                        chatSettings.setProfileSelected(chatIdentity.getPublicKey(),
-                                PlatformComponentType.ACTOR_CHAT);
-                    }
+        } catch (Exception e) {
+            if (errorManager != null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+        try {
+            chatIdentity = chatSettings.getIdentitySelected();
+            if (chatIdentity == null) {
+                List<ChatIdentity> chatIdentityList = chatManager
+                        .getIdentityChatUsersFromCurrentDeviceUser();
+                if (chatIdentityList != null && chatIdentityList.size() > 0) {
+                    chatIdentity = chatManager
+                            .newInstanceChatActorCommunitySelectableIdentity(
+                                    chatIdentityList.get(0));
+                    chatSettings.setIdentitySelected(chatIdentity);
+                    chatSettings.setProfileSelected(chatIdentity.getPublicKey(),
+                            PlatformComponentType.ACTOR_CHAT);
                 }
-            } catch (Exception e) {
-                if (errorManager != null)
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
 
             toolbar = getToolbar();
@@ -125,6 +131,17 @@ public class ChatFragment
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
+        //Improve this logic to update data of contact from node, doing it like this, data will be requested every time the user opens a chat
+//        try {
+//            contactData = (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA);
+//            chatManager.updateActorConnection(new ChatActorConnection(contactData.getContactId(), null,
+//                    contactData.getRemoteActorPublicKey(),
+//                    contactData.getAlias(), contactData.getProfileImage(),
+//                    ConnectionState.CONNECTED, 0, 0, ""));
+//        } catch (Exception e) {
+//            if (errorManager != null)
+//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }
     }
 
 //    @Override

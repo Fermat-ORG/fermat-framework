@@ -100,7 +100,6 @@
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
-
         <ImageView
             android:id="@+id/nodata"
             android:layout_width="180dp"

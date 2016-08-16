@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -110,6 +111,7 @@ public class ChatListFragment
     View layout;
     PresentationDialog presentationDialog;
     ImageView noData;
+    LinearLayout emptyView;
     TextView noDatalabel;
     TextView nochatssubtitle;
     TextView nochatssubtitle1;
@@ -228,6 +230,7 @@ public class ChatListFragment
                     }
                 }
                 if (chatscounter == 0) {
+                    emptyView.setVisibility(View.VISIBLE);
                     noData.setVisibility(View.VISIBLE);
                     noDatalabel.setVisibility(View.VISIBLE);
                     nochatssubtitle.setVisibility(View.VISIBLE);
@@ -316,6 +319,7 @@ public class ChatListFragment
         try {
             if (!chatManager.getChats().isEmpty()) {
                 layout.setBackgroundResource(R.drawable.cht_background_white);
+                emptyView.setVisibility(View.GONE);
                 noData.setVisibility(View.GONE);
                 noDatalabel.setVisibility(View.GONE);
                 nochatssubtitle.setVisibility(View.GONE);
@@ -327,6 +331,7 @@ public class ChatListFragment
                 }
                 chatlistview();
             } else {
+                emptyView.setVisibility(View.VISIBLE);
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
                 nochatssubtitle.setVisibility(View.VISIBLE);
@@ -393,6 +398,7 @@ public class ChatListFragment
         super.onCreate(savedInstanceState);
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
+        emptyView = (LinearLayout) layout.findViewById(R.id.empty_view);
         noData = (ImageView) layout.findViewById(R.id.nodata);
         noDatalabel = (TextView) layout.findViewById(R.id.nodatalabel);
         nochatssubtitle = (TextView) layout.findViewById(R.id.nochatssubtitle);

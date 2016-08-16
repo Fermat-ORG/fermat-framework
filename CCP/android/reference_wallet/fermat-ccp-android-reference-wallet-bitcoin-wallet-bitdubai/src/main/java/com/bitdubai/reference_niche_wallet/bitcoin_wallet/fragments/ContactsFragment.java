@@ -81,8 +81,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
@@ -254,7 +252,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         button1 = itemBuilder
                 .setSize(65)
                 .setPadding(0,0,padding,0)
-                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.extra_user_button))
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.btc_extra_user_button))
                 .setText(getResources().getString(R.string.add_extra_user_text))
                 .setTextColor(Color.WHITE)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
@@ -265,7 +263,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         button2 = itemBuilder
                 .setSize(65)
                 .setPadding(0,0,padding,0)
-                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.intra_user_button))
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.btc_intra_user_button))
                 .setText(getResources().getString(R.string.add_fermat_user_text))
                 .setTextColor(Color.WHITE)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
@@ -364,7 +362,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void onRefresh() {
 
-      fermatWorker = new FermatWorker(getActivity()) {
+        fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
 
@@ -415,23 +413,23 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     }
 
     private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
-       // if (isHelpEnabled) {
-            ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), appSession, null, checkButton);
-            contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    Object b = appSession.getData(SessionConstant.CREATE_EXTRA_USER);
-                    if (b != null) {
-                        if ((Boolean) b) {
-                            lauchCreateContactDialog(false);
-                            appSession.removeData(SessionConstant.CREATE_EXTRA_USER);
-                        }
+        // if (isHelpEnabled) {
+        ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), appSession, null, checkButton);
+        contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Object b = appSession.getData(SessionConstant.CREATE_EXTRA_USER);
+                if (b != null) {
+                    if ((Boolean) b) {
+                        lauchCreateContactDialog(false);
+                        appSession.removeData(SessionConstant.CREATE_EXTRA_USER);
                     }
-
                 }
-            });
-            contactsTutorialPart1.show();
-      //  }
+
+            }
+        });
+        contactsTutorialPart1.show();
+        //  }
     }
 
     private void refreshAdapter() {
@@ -461,7 +459,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void setupViews(View rootView) {
         mSearchView = (EditText) rootView.findViewById(R.id.search_view);
 
-        //mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+        mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
 
         contacts_container = (FrameLayout) rootView.findViewById(R.id.contacts_container);
         mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
@@ -603,8 +601,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         dialog.dismiss();
         walletContact = new WalletContact();
         walletContact.setName("");
-       // registerForContextMenu(mClearSearchImageButton);
-        //getActivity().openContextMenu(mClearSearchImageButton);
+        registerForContextMenu(mClearSearchImageButton);
+        getActivity().openContextMenu(mClearSearchImageButton);
     }
 
     public void setWalletSession(ReferenceAppFermatSession appSession) {
@@ -702,9 +700,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     }
                     break;
             }
-            //take_picture_btn.setBackground(new RoundedDrawable(imageBitmap, take_picture_btn));
-            //take_picture_btn.setImageDrawable(null);
-            //contactPicture = imageBitmap;
+
             this.lauchCreateContactDialog(true);
 
         }
@@ -803,6 +799,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             Map<Integer, CryptoWalletWalletContact> positions = new HashMap<>();
 
+            Map<Integer, CryptoWalletWalletContact> numberPositions = new HashMap<>();
+
             if (items != null)
                 if (items.size() > 0) {
                     MyComparator icc = new MyComparator();
@@ -835,22 +833,30 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         final String letterRegex = HeaderTypes.LETTER.getRegex();
 
                         // for each item in the list look if is number, symbol o letter and put it in the corresponding list
-                        for (int i = 0; i < items.size(); i++) {//) {
+                        for (int i = 0; i < items.size(); i++) {
                             CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
                             if (currentSection.matches(numberRegex)) {
                                 // is Digit
                                 numbers.add(cryptoWalletWalletContact.getActorName());
-                                positions.put(i, cryptoWalletWalletContact);
+                                numberPositions.put(i, cryptoWalletWalletContact);
 
-                            }else if (currentSection.matches(letterRegex)) {
+                            }
+                        }
 
+                        int pos= 0;
+
+                        for (int i = 0; i < items.size(); i++) {
+
+                            CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
+                            String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
+                            if (currentSection.matches(letterRegex)) {
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
-                                positions.put(i, cryptoWalletWalletContact);
-                            } else
-                                // Is other symbol
-                                symbols.add(cryptoWalletWalletContact.getActorName());
+                                positions.put(pos, cryptoWalletWalletContact);
+                                pos++;
+                            }
+
                         }
 
                         final String symbolCode = HeaderTypes.SYMBOL.getCode();
@@ -868,9 +874,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         if (!numbers.isEmpty()) {
                             mListItems.add(numberCode);
                             mListSectionPos.add(mListItems.indexOf(numberCode));
-                          //  mListItems.addAll(numbers);
-                            mListItems.addAll(positions.values());
+                            mListItems.addAll(numberPositions.values());
                         }
+
+
 
                         // add the letters items in the list and his corresponding sections based on its first letter
                         String prevSection = "";

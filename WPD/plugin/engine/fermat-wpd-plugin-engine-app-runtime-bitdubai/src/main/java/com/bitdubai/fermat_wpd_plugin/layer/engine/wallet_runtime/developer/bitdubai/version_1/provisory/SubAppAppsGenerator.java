@@ -4864,14 +4864,14 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuConn = new OptionsMenu();
 
-        OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
-        optionMenuItemConn.setFermatDrawable(new FermatDrawable(1, "search_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemConn.setLabel("Search");
+        /*OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
+        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(1, "search_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setLabel("Search");
         optionMenuItemConn.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenuConn.addMenuItem(optionMenuItemConn);
+        optionsMenuConn.addMenuItem(optionMenuItemConn);*/
 
-        optionMenuItemConn = new OptionMenuItem(2);
+        OptionMenuItem optionMenuItemConn = new OptionMenuItem(2);
         optionMenuItemConn.setFermatDrawable(new FermatDrawable(2, "geolocalitation_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Geolocalitation");
         optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -4912,20 +4912,20 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuNot = new OptionsMenu();
 
-        OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
+       /* OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(1, "search_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Search");
         optionMenuItemNot.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenuNot.addMenuItem(optionMenuItemNot);
+        optionsMenuNot.addMenuItem(optionMenuItemNot);*/
 
-        optionMenuItemNot = new OptionMenuItem(2);
+        /*OptionMenuItem optionMenuItemNot = new OptionMenuItem(2);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(2, "geolocalitation_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Geolocalitation");
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenuNot.addMenuItem(optionMenuItemNot);
+        optionsMenuNot.addMenuItem(optionMenuItemNot);*/
 
-        optionMenuItemNot = new OptionMenuItem(3);
+        OptionMenuItem optionMenuItemNot = new OptionMenuItem(3);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Edit My Profile");
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -5037,6 +5037,7 @@ public class SubAppAppsGenerator {
         //Tabs Browser
         runtimeTab = new Tab();
         runtimeTab.setLabel("   BROWSER   ");
+        runtimeTab.setTabTextSize(10);
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
@@ -5084,6 +5085,7 @@ public class SubAppAppsGenerator {
         //Tabs Connections
         runtimeTab = new Tab();
         runtimeTab.setLabel(" CONNECTIONS ");
+        runtimeTab.setTabTextSize(10);
 
         runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();
@@ -5125,6 +5127,7 @@ public class SubAppAppsGenerator {
         //Tabs Notifications
         runtimeTab = new Tab();
         runtimeTab.setLabel("NOTIFICATIONS");
+        runtimeTab.setTabTextSize(10);
 
         runtimeTab.setFragment(new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();

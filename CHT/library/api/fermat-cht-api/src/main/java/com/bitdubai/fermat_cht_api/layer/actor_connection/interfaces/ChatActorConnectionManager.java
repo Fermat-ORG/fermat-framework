@@ -9,5 +9,5 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorI
  */
 public interface ChatActorConnectionManager extends ActorConnectionManager<ChatLinkedActorIdentity, ChatActorConnection, ChatActorConnectionSearch> {
 
-
+   public void updateActorConnection(ChatActorConnection chatActorConnection);
 }
