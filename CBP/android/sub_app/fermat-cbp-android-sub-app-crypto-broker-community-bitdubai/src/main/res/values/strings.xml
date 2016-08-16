@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">fermat-cbp-android-crypto-broker-community</string>
+    <string name="app_name" translatable="false">fermat-cbp-android-crypto-broker-community</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world" translatable="false">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="description_search">Search</string>
-    <string name="wallet_icon">wallet icon</string>
+    <string name="wallet_icon" translatable="false">wallet icon</string>
     <string name="wallet_installs">Installed</string>
     <string name="wallet_status_install">INSTALL</string>
     <string name="wallet_status_installed">INSTALLED</string>
@@ -27,7 +27,7 @@
     <string name="cbc_connection_state_pending_acceptance">Request sent</string>
     <string name="no_data_available">No data available</string>
 
-    <string name="cbc_connection_request_question">You want to send a Connection Request to the user nbroker1?</string>
+    <string name="cbc_connection_request_question">You want to send a Connection Request to the user broker?</string>
     <string name="cbc_cancel">Cancel</string>
     <string name="cbc_ok">OK</string>
     <string name="cbc_welcome">Welcome!</string>
@@ -50,11 +50,36 @@
     <string name="cbc_broker_name">Broker Name</string>
     <string name="cbc_second_identity">Second Identity</string>
     <string name="cbc_no_results">User search don\'t\nhave results</string>
-    <string name="cbc_asking">You want to send a Connection Request to the user nbroker1?</string>
+    <string name="cbc_asking">You want to send a Connection Request to the user broker?</string>
     <string name="cbc_connection_confirm">Is now a connection</string>
     <string name="cbc_connection_state">Is Connected with you</string>
     <string name="cbc_merch">Merchandises: USD, BTC, VEF</string>
     <string name="cbc_home">Home</string>
 
-
+    <string name="title">Crypto Broker Community</string>
+    <string name="connection_request_receiver">A Broker wants to connect with you.</string>
+    <string name="actor_connected">A Broker accepted your connection request.</string>
+    <string name="accept_request">Accept Request</string>
+    <string name="accept_connection_request">Do you want to accept the connection request from %1$s?</string>
+    <string name="error_opps">Oooops! recovering from system error</string>
+    <string name="accepted_connection_request"> Accepted connection request</string>
+    <string name="cancelled_successfully">Cancelled successfully</string>
+    <string name="error_try">There has been an error, please try again</string>
+    <string name="error_try2">Could not cancel, please try again</string>
+    <string name="error_request">Could not request connection, please try again</string>
+    <string name="error_cancel">There has been an error. Could not cancel.</string>
+    <string name="error_connection">The connection has already been requested</string>
+    <string name="error_disconnect">Could not disconnect, please try again</string>
+    <string name="error_disconnect2">There has been an error. Could not disconnect.</string>
+    <string name="connection_request_sent">Connection request sent</string>
+    <string name="disconnected_successfully">Disconnected successfully</string>
+    <string name="error_identities">Error trying to get list of selectable identities</string>
+    <string name="not_available_merchandises">Not Available Merchandises.</string>
+    <string name="search_dots">Search...</string>
+    <string name="send_connection_request">Do you want to send a connection request to %1$s?</string>
+    <string name="error_data">Sorry there was a problem loading the data</string>
+    <string name="unknow">Unknown, for now.</string>
+    <string name="want_disconnect">Want to disconnect from</string>
+    <string name="confirm_disconnection">Confirm Disconnection</string>
+    <string name="want_disconnect2">Do you want to disconnect from %1$s?</string>
 </resources>

@@ -184,8 +184,8 @@ public class NotificationsTabFragment
             AcceptDialog connectDialog = new AcceptDialog(getActivity(), appSession, appResourcesProviderManager,
                     data, moduleManager.getSelectedActorIdentity());
 
-            connectDialog.setTitle("Confirm Disconnection");
-            connectDialog.setDescription(String.format("Do you want to disconnect from %1$s?", data.getAlias()));
+            connectDialog.setTitle(getResources().getString(R.string.confirm_disconnection));
+            connectDialog.setDescription(String.format(getResources().getString(R.string.want_disconnect2), data.getAlias()));
             connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
@@ -197,7 +197,7 @@ public class NotificationsTabFragment
 
         } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-            Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.error_try, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -267,7 +267,7 @@ public class NotificationsTabFragment
             Log.e(TAG, ex.getMessage(), ex);
         }
 
-        Toast.makeText(getActivity(), "Sorry there was a problem loading the data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.error_data, Toast.LENGTH_SHORT).show();
     }
 
     /**

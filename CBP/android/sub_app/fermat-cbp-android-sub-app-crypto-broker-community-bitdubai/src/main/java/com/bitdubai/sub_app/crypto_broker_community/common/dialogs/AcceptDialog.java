@@ -61,9 +61,9 @@ public class AcceptDialog
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
-        title.setText("Connection Request");
-        subTitle.setText("Accept Request");
-        final String text = String.format("Do you want to accept the connection request from %1$s?", cryptoBrokerCommunityInformation.getAlias());
+        title.setText(R.string.connection_request);
+        subTitle.setText(R.string.accept_request);
+        final String text = String.format(getContext().getResources().getString(R.string.accept_connection_request), cryptoBrokerCommunityInformation.getAlias());
         description.setText(text);
     }
 
@@ -87,9 +87,9 @@ public class AcceptDialog
                 //   Toast.makeText(getContext(), "TODO ACCEPT ->", Toast.LENGTH_SHORT).show();
                 //TODO: cuando se puede recibir una solicitud de conexion por parte de un Broker ejecutar lo que esta comentado para aceptarla
                 //getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(), information.getName(), information.getPublicKey(), information.getProfileImage());
-                Toast.makeText(getContext(), cryptoBrokerCommunityInformation.getAlias() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), cryptoBrokerCommunityInformation.getAlias() + getContext().getResources().getString(R.string.accepted_connection_request), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.error_opps, Toast.LENGTH_SHORT).show();
             }
             dismiss();
         } else if (i == R.id.negative_button) {
@@ -98,7 +98,7 @@ public class AcceptDialog
                 //TODO: cuando se puede recibir una solicitud de conexion por parte de un Broker ejecutar lo que esta comentado para rechazarla
                 // getSession().getModuleManager().denyConnection(identity.getPublicKey(), information.getPublicKey());
             } else {
-                Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.error_opps, Toast.LENGTH_SHORT).show();
             }
             dismiss();
         }

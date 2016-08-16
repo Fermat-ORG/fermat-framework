@@ -84,10 +84,10 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Ref
 
         switch (notificationID) {
             case CBPBroadcasterConstants.CBC_CONNECTION_REQUEST_RECEIVED:
-                return new CommunityNotificationPainter("Crypto Broker Community", "A Broker wants to connect with you.",
+                return new CommunityNotificationPainter(getContext().getResources().getString(R.string.title), getContext().getResources().getString(R.string.connection_request_receiver),
                         "", R.drawable.cbc_ic_nav_connections);
             case CBPBroadcasterConstants.CBC_ACTOR_CONNECTED:
-                return new CommunityNotificationPainter("Crypto Broker Community", "A Broker accepted your connection request.",
+                return new CommunityNotificationPainter(getContext().getResources().getString(R.string.title), getContext().getResources().getString(R.string.actor_connected),
                         "", R.drawable.cbc_ic_nav_connections);
             default:
                 return null;

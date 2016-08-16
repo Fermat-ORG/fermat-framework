@@ -265,7 +265,7 @@ public class BrowserTabFragment
                 .setSearchPlateTint(Color.WHITE)
                 .setSubmitAreaTint(Color.WHITE);
 
-        searchView.setQueryHint("Search...");
+        searchView.setQueryHint(getResources().getString(R.string.search_dots));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -322,9 +322,9 @@ public class BrowserTabFragment
             if (data.getConnectionState() == null || data.getConnectionState() != ConnectionState.CONNECTED) {
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager, data, identity);
 
-                connectDialog.setTitle("Connection Request");
-                connectDialog.setSubtitle("New Request");
-                connectDialog.setDescription(String.format("Do you want to send a connection request to %1$s?", data.getAlias()));
+                connectDialog.setTitle(R.string.connection_request);
+                connectDialog.setSubtitle(getResources().getString(R.string.connection_request_new));
+                connectDialog.setDescription(String.format(getResources().getString(R.string.send_connection_request), data.getAlias()));
                 connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -337,7 +337,7 @@ public class BrowserTabFragment
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-            Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.error_try, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -433,7 +433,7 @@ public class BrowserTabFragment
             Log.e(TAG, ex.getMessage(), ex);
         }
 
-        Toast.makeText(getActivity(), "Sorry there was a problem loading the data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.error_data, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -579,7 +579,7 @@ public class BrowserTabFragment
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.error_opps, Toast.LENGTH_SHORT).show();
         }
     }
 
