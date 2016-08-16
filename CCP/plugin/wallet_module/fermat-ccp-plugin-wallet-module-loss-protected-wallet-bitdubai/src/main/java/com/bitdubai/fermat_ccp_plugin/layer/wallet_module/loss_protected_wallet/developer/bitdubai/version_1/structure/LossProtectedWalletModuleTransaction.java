@@ -37,6 +37,7 @@ public class LossProtectedWalletModuleTransaction implements LossProtectedWallet
     private final Actors actorToType;
     private final BalanceType balanceType;
     private final long amount;
+    private final long total;
     private final long runningBookBalance;
     private final long runningAvailableBalance;
     private final long timeStamp;
@@ -64,6 +65,7 @@ public class LossProtectedWalletModuleTransaction implements LossProtectedWallet
         this.actorToType = bitcoinWalletTransaction.getActorToType();
         this.balanceType = bitcoinWalletTransaction.getBalanceType();
         this.amount = bitcoinWalletTransaction.getAmount();
+        this.total = bitcoinWalletTransaction.getTotal();
         this.runningBookBalance = bitcoinWalletTransaction.getRunningBookBalance();
         this.runningAvailableBalance = bitcoinWalletTransaction.getRunningAvailableBalance();
         this.timeStamp = bitcoinWalletTransaction.getTimestamp();
@@ -146,6 +148,9 @@ public class LossProtectedWalletModuleTransaction implements LossProtectedWallet
 
     @Override
     public long getAmount() { return amount; }
+
+    @Override
+    public long getTotal() {return total; }
 
     @Override
     public long getRunningBookBalance() {
