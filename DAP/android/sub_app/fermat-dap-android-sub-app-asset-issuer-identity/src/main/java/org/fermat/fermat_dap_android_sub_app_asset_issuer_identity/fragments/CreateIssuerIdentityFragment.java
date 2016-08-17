@@ -192,7 +192,6 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                     .setBannerRes(R.drawable.banner_asset_issuer_identity)
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_identity_issuer_view_color)
-                    .setTitleTextColor(R.color.dap_identity_issuer_view_color)
                     .setSubTitle(R.string.dap_issuer_identity_welcome_subTitle)
                     .setBody(R.string.dap_issuer_identity_welcome_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)

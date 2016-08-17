@@ -203,7 +203,6 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                     .setBannerRes(R.drawable.banner_redeem_point_identity)
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_identity_redeem_view_color)
-                    .setTitleTextColor(R.color.dap_identity_redeem_view_color)
                     .setSubTitle(R.string.dap_redeem_identity_welcome_subTitle)
                     .setBody(R.string.dap_redeem_identity_welcome_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
