@@ -286,11 +286,23 @@
     <string name="settings_select_network">Select a Network</string>
     <string name="settings_fee_level">Fee Level</string>
     <string name="settings_send_error_report">Send Error Report</string>
-    <string name="advertisement_text">Notice!</string>
+    <string name="advertisement_text">Advertisement!</string>
     <string name="wallet_type">This wallet allows for two different types of contacts:</string>
     <string name="btc_loss">Enter the BTC amount that you want send to Loss Protected Wallet</string>
     <string name="phone_notifications">Phone notifications</string>
     <string name="close_text">Close</string>
+
+    <string name="pr_status_1">Waiting for response</string>
+    <string name="pr_status_2">Accepted</string>
+    <string name="pr_status_3">Paid</string>
+    <string name="pr_status_4">Pending response</string>
+    <string name="pr_status_5">Error</string>
+    <string name="pr_status_6">Not sent yet</string>
+    <string name="pr_status_7">Payment process started</string>
+    <string name="pr_status_8">Denied by incompatibility</string>
+    <string name="pr_status_9">In approving process</string>
+    <string name="pr_status_10">Denied</string>
+    <string name="pr_status_11">Error, contact with support</string>
 
 
     <!--Texto de Dialogs Movidos para RES de fermat-android-api para su uso general con traduccion incluida.-->

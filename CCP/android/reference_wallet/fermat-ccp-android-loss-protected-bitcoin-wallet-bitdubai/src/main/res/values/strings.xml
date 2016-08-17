@@ -271,5 +271,13 @@
     <string name="exchange_title_label">Exchange Rate Providers</string>
     <string name="income_expense" >This is a wallet that will allow you to see your incomes and expenses in every transaction done</string>
     <string name="spending_details" >Spending Details</string>
+
+    <string name="chunck_values_history_rate">Exchange Rate: 1 BTC = </string>
+    <string name="chunck_values_history_spend">Spent</string>
+
+    <string name="chunck_values_btc_spent">BTC Spent</string>
+    <string name="chunck_values_btc_rate">Exchange Rate</string>
+    <string name="chunck_values_btc_date">Date</string>
+
     <!-- Custom Dialog Fragment -->
 </resources>

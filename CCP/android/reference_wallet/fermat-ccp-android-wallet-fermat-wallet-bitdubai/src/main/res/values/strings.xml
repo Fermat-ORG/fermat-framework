@@ -289,5 +289,22 @@
     <string name="fee_low">Slow</string>
     <string name="fee_option_text">Fee option</string>
 
+    <string name="pr_status_1">Waiting for response</string>
+    <string name="pr_status_2">Accepted</string>
+    <string name="pr_status_3">Paid</string>
+    <string name="pr_status_4">Pending response</string>
+    <string name="pr_status_5">Error</string>
+    <string name="pr_status_6">Not sent yet</string>
+    <string name="pr_status_7">Payment process started</string>
+    <string name="pr_status_8">Denied by incompatibility</string>
+    <string name="pr_status_9">In approving process</string>
+    <string name="pr_status_10">Denied</string>
+    <string name="pr_status_11">Error, contact with support</string>
+
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_select_network">Select a Network</string>
+    <string name="settings_fee_level">Fee Level</string>
+    <string name="settings_send_error_report">Send Error Report</string>
+
 </resources>
 
