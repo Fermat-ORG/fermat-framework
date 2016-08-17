@@ -187,7 +187,6 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                     .setIconRes(R.drawable.redeem_point)
                     .setImageLeft(R.drawable.profile_actor)
                     .setVIewColor(R.color.dap_redeem_point_view_color)
-                    .setTitleTextColor(R.color.dap_redeem_point_view_color)
                     .setTextNameLeft(R.string.dap_redeem_wallet_welcome_name_left)
                     .setSubTitle(R.string.dap_redeem_wallet_welcome_subTitle)
                     .setBody(R.string.dap_redeem_wallet_welcome_body)

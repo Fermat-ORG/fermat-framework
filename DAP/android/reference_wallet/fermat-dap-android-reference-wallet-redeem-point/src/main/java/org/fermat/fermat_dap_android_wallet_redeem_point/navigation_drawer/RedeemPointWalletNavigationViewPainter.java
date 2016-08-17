@@ -34,6 +34,7 @@ public class RedeemPointWalletNavigationViewPainter extends NavigationViewPainte
     public RedeemPointWalletNavigationViewPainter(Context activity,
                                                   ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule> redeemPointSession,
                                                   FermatApplicationCaller applicationsHelper) {
+        super(activity);
 
         this.activity = new WeakReference<>(activity);
         this.redeemPointSession = redeemPointSession;
