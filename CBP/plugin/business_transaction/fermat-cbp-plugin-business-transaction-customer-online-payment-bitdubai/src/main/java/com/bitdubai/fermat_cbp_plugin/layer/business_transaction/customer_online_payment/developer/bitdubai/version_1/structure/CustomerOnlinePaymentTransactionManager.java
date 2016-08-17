@@ -185,7 +185,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
             throw new InvalidParameterException("Cannot parse a null string value to long");
 
         try {
-            double amount = DecimalFormat.getInstance().parse(stringValue).doubleValue();
+            double amount = Double.valueOf(stringValue);
 
             switch (currency) {
                 case BITCOIN:

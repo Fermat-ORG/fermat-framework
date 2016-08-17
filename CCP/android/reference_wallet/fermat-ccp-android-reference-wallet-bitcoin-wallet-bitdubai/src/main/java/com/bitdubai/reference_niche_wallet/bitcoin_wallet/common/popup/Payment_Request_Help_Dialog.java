@@ -117,7 +117,7 @@ public class Payment_Request_Help_Dialog extends FermatDialog<ReferenceAppFermat
             getSession().setData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED, Boolean.FALSE);
             BitcoinWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
             if(bitcoinWalletSettings!=null) {
-                bitcoinWalletSettings.setIsPresentationHelpEnabled(!checkbox_not_show.isChecked());
+                bitcoinWalletSettings.setIsPaymentHelpEnabled(!checkbox_not_show.isChecked());
                 getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
             }else{
                 Log.e(TAG, "BitcoinWalletSettings null");
