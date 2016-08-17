@@ -191,7 +191,6 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment<Reference
                 .setBannerRes(R.drawable.banner_asset_user_community)
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)
-                .setTitleTextColor(R.color.dap_community_user_view_color)
                 .setSubTitle(R.string.dap_user_community_group_subTitle)
                 .setBody(R.string.dap_user_community_group_body)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
