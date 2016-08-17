@@ -343,7 +343,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 Platforms.BANKING_PLATFORM,
                 BlockchainNetworkType.getDefaultBlockchainNetworkType()
         );
-        lstInstalledWallet.add(installedWallet);*/
+        lstInstalledWallet.add(installedWallet);
 
         installedWallet = new WalletManagerMiddlewareInstalledWallet(
                 WalletCategory.REFERENCE_WALLET, // CATEGORY
