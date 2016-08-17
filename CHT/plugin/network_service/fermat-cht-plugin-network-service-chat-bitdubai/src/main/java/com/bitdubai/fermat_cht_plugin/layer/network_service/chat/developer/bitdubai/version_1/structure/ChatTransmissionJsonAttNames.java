@@ -42,6 +42,11 @@ public class ChatTransmissionJsonAttNames {
     public final static String CHAT_METADATA = "chtd";
 
     /**
+     * Represent the value of MESSAGE_METADATA
+     */
+    public final static String MESSAGE_METADATA = "msgmtdt";
+
+    /**
      * Represent the value of NEW_DISTRIBUTION_STATUS
      */
     public final static String DISTRIBUTION_STATUS = "ds";
