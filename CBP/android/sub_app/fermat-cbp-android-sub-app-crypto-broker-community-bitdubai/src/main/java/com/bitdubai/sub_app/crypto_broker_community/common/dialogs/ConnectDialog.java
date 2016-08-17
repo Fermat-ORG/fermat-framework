@@ -105,23 +105,23 @@ public class ConnectDialog extends FermatDialog<ReferenceAppFermatSession<Crypto
                     System.out.println("*********** i'm the selected broker information: " + information);
 
                     getSession().getModuleManager().requestConnectionToCryptoBroker(identity, information);
-                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.connection_request_sent, Toast.LENGTH_SHORT).show();
 
                     getSession().setData(FragmentsCommons.CONNECTION_RESULT, ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
 
                 } else {
-                    Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.error_try, Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             } catch (ActorTypeNotSupportedException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.error_try, Toast.LENGTH_SHORT).show();
             } catch (CantRequestConnectionException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "Could not request connection, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.error_request, Toast.LENGTH_SHORT).show();
             } catch (ActorConnectionAlreadyRequestedException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "The connection has already been requested", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.error_connection, Toast.LENGTH_SHORT).show();
             }
 
             dismiss();

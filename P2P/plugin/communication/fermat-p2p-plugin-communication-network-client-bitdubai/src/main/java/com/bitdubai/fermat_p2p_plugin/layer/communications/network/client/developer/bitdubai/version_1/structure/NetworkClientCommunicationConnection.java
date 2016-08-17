@@ -899,7 +899,10 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                 resultList = GsonProvider.getGson().fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<List<ActorProfile>>() {
                 }.getType());
 
-                System.out.println("NetworkClientCommunicationConnection - resultList.size() = " + resultList.size());
+                if(resultList != null)
+                    System.out.println("NetworkClientCommunicationConnection - resultList.size() = " + resultList.size());
+                else
+                    resultList = new ArrayList<>();
 
             }else {
                 System.out.println("NetworkClientCommunicationConnection - Requested list is not available, resultList.size() = " + resultList.size());
