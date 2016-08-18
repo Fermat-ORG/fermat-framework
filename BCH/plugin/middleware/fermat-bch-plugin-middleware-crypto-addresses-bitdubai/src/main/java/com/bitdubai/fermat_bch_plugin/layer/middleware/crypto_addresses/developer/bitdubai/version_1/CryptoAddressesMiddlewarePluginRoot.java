@@ -66,7 +66,7 @@ public class CryptoAddressesMiddlewarePluginRoot extends AbstractPlugin implemen
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 
-//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.FERMAT_VAULT)
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.FERMAT_VAULT)
     private CryptoVaultManager fermatVaultManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_ASSET_VAULT)
