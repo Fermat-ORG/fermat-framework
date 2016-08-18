@@ -231,6 +231,13 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                     FermatException.wrapException(exception),
                     "Initialize Monitor Agent - trying to open the plugin database",
                     "Unexpected exception");
+        } finally {
+            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                    pluginDatabaseSystem,
+                    pluginId,
+                    database,
+                    chatMiddlewarePluginRoot,
+                    pluginFileSystem);
         }
     }
 
@@ -340,12 +347,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             CantListChatException,
             UnexpectedResultReturnedFromDatabaseException {
         try {
-            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                    pluginDatabaseSystem,
-                    pluginId,
-                    database,
-                    chatMiddlewarePluginRoot,
-                    pluginFileSystem);
 
             System.out.println("12345 CHECKING INCOMING CHAT");
 
@@ -438,12 +439,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             CantGetPendingTransactionException,
             UnexpectedResultReturnedFromDatabaseException {
         try {
-            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                    pluginDatabaseSystem,
-                    pluginId,
-                    database,
-                    chatMiddlewarePluginRoot,
-                    pluginFileSystem);
 
             System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == " + messageMetadata.getMessage() + " MESSAGE STATUS == " + messageMetadata.getMessageStatus());
 
@@ -503,18 +498,12 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             CantGetPendingTransactionException,
             UnexpectedResultReturnedFromDatabaseException {
         try {
-            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                    pluginDatabaseSystem,
-                    pluginId,
-                    database,
-                    chatMiddlewarePluginRoot,
-                    pluginFileSystem);
 
             List<ActionOnline> onlineActions = chatMiddlewareDatabaseDao.getOnlineActionsByActiveState();
 
             if (onlineActions == null || onlineActions.isEmpty()) return;
 
-            System.out.println("12345 CHECKING ONLINE STATUS");
+//            System.out.println("12345 CHECKING ONLINE STATUS");
 
 //            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
 
@@ -522,7 +511,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 //                boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
                 boolean isOnline = chatActorNetworkServiceManager.isActorOnline(actionOnline.getPublicKey());
                 actionOnline.setValue(isOnline);
-                System.out.println("12345 is online " + isOnline);
+//                System.out.println("12345 is online " + isOnline);
                 if (isOnline) actionOnline.setLastOn(false);
                 if (!isOnline && actionOnline.getLastOn() != true) {
                     DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm");
@@ -556,12 +545,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
     public void resetWritingStatus() {
         try {
-            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                    pluginDatabaseSystem,
-                    pluginId,
-                    database,
-                    chatMiddlewarePluginRoot,
-                    pluginFileSystem);
 
             boolean changes = false;
 
@@ -573,7 +556,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                 for (UUID chatId : chatsId) {
                     chatMiddlewareDatabaseDao.saveWritingAction(chatId, ActionState.NONE);
 //                    System.out.println("12345 Action writing Updated " + chatId);
-                    changes = true;
+//                    changes = true;
                 }
             }
 
@@ -581,7 +564,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             List<Chat> chats = chatMiddlewareDatabaseDao.getChatListByWriting();
 //            System.out.println("12345 Chats to reset recibidos "+ chatsId.size());
 
-            if (chats == null && chats.isEmpty()) return;
+            if (chats == null || chats.isEmpty()) return;
 
             for (Chat chat : chats) {
                 chat.setIsWriting(false);
@@ -622,17 +605,11 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
     public void resetOnlineStatus() {
         try {
-            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                    pluginDatabaseSystem,
-                    pluginId,
-                    database,
-                    chatMiddlewarePluginRoot,
-                    pluginFileSystem);
 
             boolean changes = false;
 
 
-            List<ActionOnline> actionOnlines = null;
+            List<ActionOnline> actionOnlines;
             actionOnlines = chatMiddlewareDatabaseDao.getOnlineActionsByOnline();
 
             if (actionOnlines == null || actionOnlines.isEmpty()) return;
@@ -697,12 +674,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             CantGetPendingTransactionException,
             UnexpectedResultReturnedFromDatabaseException {
         try {
-            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                    pluginDatabaseSystem,
-                    pluginId,
-                    database,
-                    chatMiddlewarePluginRoot,
-                    pluginFileSystem);
 
             Chat chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(senderPk);
             if (chat != null) {
