@@ -250,7 +250,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 .setSize(65)
                 .setPadding(0,0,padding,0)
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_extra_user_buttom))
-                .setText("External User")
+                .setText(getResources().getString(R.string.add_extra_user_text))
                 .setTextColor(Color.BLACK)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_fermat_contacts))
                 .build();
@@ -261,7 +261,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 .setSize(65)
                 .setPadding(0,0,padding,0)
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_fermat_user_buttom))
-                .setText("Fermat User")
+                .setText(getResources().getString(R.string.add_fermat_user_text))
                 .setTextColor(Color.BLACK)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_fermat_contacts))
                 .build();

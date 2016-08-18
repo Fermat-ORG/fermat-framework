@@ -220,4 +220,10 @@
     <string name="Request_user_list_time_out">Request User List Time Out</string>
     <string name="loading_data_error_msg">Sorry there was a problem loading the data</string>
 
+    <string name="notification_time_1"> a few moments ago</string>
+    <string name="notification_time_2"> minutes ago</string>
+    <string name="notification_time_3"> hours ago</string>
+    <string name="notification_time_4"> days ago</string>
+    <string name="notification_time_5"> year ago</string>
+
 </resources>

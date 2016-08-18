@@ -222,4 +222,11 @@
     <string name="title_section9">Clones</string>
     <string name="you_dont_have_chunck_datail_values">No tienes ningun \n gasto.</string>
     <string name="you_dont_have_chunck_values">No tienes \n ningun ingreso de fondos.</string>
+
+    <string name="chunck_values_history_rate">Cotizacion: 1 BTC = </string>
+    <string name="chunck_values_history_spend">Gastado</string>
+
+    <string name="chunck_values_btc_spent">BTC Gastado</string>
+    <string name="chunck_values_btc_rate">Cotizacion</string>
+    <string name="chunck_values_btc_date">Fecha</string>
 </resources>

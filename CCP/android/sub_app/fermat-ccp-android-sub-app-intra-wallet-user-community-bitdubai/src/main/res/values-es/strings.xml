@@ -199,6 +199,7 @@
     <string name="crypto_wallet">Esta aplicacion te permite encontrar otros usuarios de monederos que estan dentro de la red Fermat. Sus principales caracteristicas son:</string>
     <string name="start">Empezar</string>
     <string name="community_desc">* Buscar usuarios cercanos. \n* Buscar usuarios en cualquier lugar. \n* Ver el perfil de otros usuarios. \n* Enviar solicitudes de conexion.</string>
+
     <string name="system_error">Oooops! Error del sistema</string>
     <!-- Browser Tab -->
     <string name="turn_on_gps">Por favor, Enciende tu GPS</string>
@@ -209,4 +210,11 @@
     <string name="btn_error_fermat_network_connect">CONECTAR</string>
     <string name="Request_user_list_time_out">Se agoto el tiempo de espera por la lista de usarios</string>
     <string name="loading_data_error_msg">Disculpe, ocurrio un problema al cargar los datos</string>
+
+    <string name="notification_time_1"> hace unos momentos</string>
+    <string name="notification_time_2"> minutos</string>
+    <string name="notification_time_3"> horas</string>
+    <string name="notification_time_4"> dias</string>
+    <string name="notification_time_5"> años</string>
+
 </resources>

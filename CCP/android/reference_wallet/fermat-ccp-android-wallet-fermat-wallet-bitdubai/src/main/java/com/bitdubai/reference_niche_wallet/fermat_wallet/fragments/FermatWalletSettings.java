@@ -35,8 +35,6 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantFindWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantRequestFermatAddressException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.ContactNameAlreadyExistsException;
@@ -127,7 +125,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
             if(appSession.getData(SessionConstant.NOTIFICATION_ENABLED) != null)
                 notificationEnabled = (Boolean)appSession.getData(SessionConstant.NOTIFICATION_ENABLED);
 
-            list.add(new PreferenceSettingsSwithItem(1, "Enabled Notifications", notificationEnabled));
+            list.add(new PreferenceSettingsSwithItem(1, getResources().getString(R.string.settings_notifications), notificationEnabled));
 
             if (blockchainNetworkType != null) {
 
@@ -153,7 +151,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
             dataDialog.putString("title", getResources().getString(R.string.title_label));
             dataDialog.putString("mode", "single_option");
             dataDialog.putString("previous_selected_item", previousSelectedItem);
-            list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", dataDialog));
+            list.add(new PreferenceSettingsOpenDialogText(5, getResources().getString(R.string.settings_select_network), dataDialog));
 
 
             //list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.parseColor("#54ACEC")));
