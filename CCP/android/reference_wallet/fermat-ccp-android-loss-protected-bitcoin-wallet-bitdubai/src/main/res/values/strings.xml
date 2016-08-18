@@ -73,6 +73,7 @@
     <!-- header.xml -->
     <string name="header_text">Header</string>
     <!-- loss_history_request_row.xml -->
+    <string name="waiting_receive_text">Waiting for response</string>
     <string name="accepted_text">Accepted</string>
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
@@ -304,7 +305,7 @@
     </array>
 
     <string name="exchange_title_label">Exchange Rate Providers</string>
-    <string name="income_expense" >This is a wallet that will allow you to see your incomes and expenses in every transaction done</string>
+    <string name="income_expense" >On this screen you can see your income and expenses of all transactions sent and received</string>
     <string name="spending_details" >Spending Details</string>
 
     <string name="chunck_values_history_rate">Exchange Rate: 1 BTC = </string>

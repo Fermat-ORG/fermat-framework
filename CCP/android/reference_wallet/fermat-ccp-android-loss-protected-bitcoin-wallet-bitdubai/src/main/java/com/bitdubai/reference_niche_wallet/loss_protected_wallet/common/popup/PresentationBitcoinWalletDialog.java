@@ -112,6 +112,11 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
                 btn_dismiss = (FermatButton) findViewById(R.id.btn_dismiss);
                 btn_dismiss.setOnClickListener(this);
                 break;
+
+            case TYPE_CHUNCK_HELP:
+                btn_dismiss = (FermatButton) findViewById(R.id.btn_dismiss);
+                btn_dismiss.setOnClickListener(this);
+                break;
         }
 
 

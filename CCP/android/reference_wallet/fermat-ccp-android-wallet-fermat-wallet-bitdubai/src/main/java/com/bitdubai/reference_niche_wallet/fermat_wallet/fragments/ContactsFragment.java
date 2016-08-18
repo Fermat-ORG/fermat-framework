@@ -460,7 +460,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void setupViews(View rootView) {
         mSearchView = (EditText) rootView.findViewById(R.id.search_view);
-       // mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+       mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
         contacts_container = (FrameLayout) rootView.findViewById(R.id.contacts_container);
         mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
         mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
