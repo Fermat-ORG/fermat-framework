@@ -37,6 +37,8 @@ public interface BitcoinLossProtectedWalletTransaction {
 
     long getAmount();
 
+    long getTotal();
+
     long getRunningBookBalance();
 
     long getRunningAvailableBalance();

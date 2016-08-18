@@ -8,7 +8,6 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
@@ -16,10 +15,11 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 
-
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+
+import static com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType.CREDIT;
 
 /**
  * Created by Joaquin Carrasquero on 05/04/16.
@@ -67,24 +67,18 @@ public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalle
 
         final int MAX_DECIMAL_FOR_BALANCE_TRANSACTION = 8;
         final int MIN_DECIMAL_FOR_BALANCE_TRANSACTION = 2;
-        //set Amount transaction
-        holder.getTransaction_amount().setText(
-                WalletUtils.formatBalanceStringWithDecimalEntry(
-                        data.getAmount(),
-                        MAX_DECIMAL_FOR_BALANCE_TRANSACTION,
-                        MIN_DECIMAL_FOR_BALANCE_TRANSACTION,
-                        ShowMoneyType.BITCOIN.getCode())+ " BTC");
+
 
         //formatter for date transaction
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.US);
-        holder.getTransaction_date().setText("Date: " + sdf.format(data.getTimestamp()) + ".");
+        holder.getTransaction_date().setText(context.getResources().getString(R.string.Date_text)+" " + sdf.format(data.getTimestamp()) + ".");
 
         //Validate Involved Actor for contact name
         String contactName = "";
         if (data.getInvolvedActor() != null)
                 contactName = data.getInvolvedActor().getName();
         else
-        if (data.getTransactionType() == TransactionType.CREDIT)
+        if (data.getTransactionType() == CREDIT)
             if (data.getActorFromType()== Actors.BITCOIN_BASIC_USER)
                 contactName = "Bitcoin Wallet";
             else
@@ -92,15 +86,28 @@ public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalle
         else
             contactName = "Unknown";
 
+        long TransactionAmount = 0;
+
         //Validate if the transaction is credit or debit
-        if (data.getTransactionType() == TransactionType.CREDIT)
-            holder.getTransaction_user().setText("From: " + contactName + ".");
-        else
-            holder.getTransaction_user().setText("To: " + contactName + ".");
+        if (data.getTransactionType() == CREDIT) {
+            holder.getTransaction_user().setText(context.getResources().getString(R.string.From_text)+" " + contactName + ".");
+            TransactionAmount = data.getAmount();
+        }
+        else {
+            holder.getTransaction_user().setText(context.getResources().getString(R.string.To_text)+" "  + contactName + ".");
+            TransactionAmount = data.getTotal();
+        }
+
+        //set Amount transaction
+        holder.getTransaction_amount().setText(
+                WalletUtils.formatBalanceStringWithDecimalEntry(
+                        TransactionAmount,
+                        MAX_DECIMAL_FOR_BALANCE_TRANSACTION,
+                        MIN_DECIMAL_FOR_BALANCE_TRANSACTION,
+                        ShowMoneyType.BITCOIN.getCode())+ " BTC");
 
         //Set transaction note
-        holder.getTransaction_note().setText("Note: " + data.getMemo() + ".");
-
+        holder.getTransaction_note().setText(context.getResources().getString(R.string.Note_text)+" "  + data.getMemo() + ".");
 
     }
 }

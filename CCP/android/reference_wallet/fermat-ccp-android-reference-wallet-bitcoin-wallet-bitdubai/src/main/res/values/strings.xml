@@ -66,7 +66,9 @@
     <string name="accepted_text">Accepted</string>
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
+
     <!-- home_receive_main11.xml -->
+
     <string name="no_transactions_text">No transactions yet</string>
     <!-- home_request_fragment_main.xml -->
     <string name="reason_text">Reason</string>
@@ -323,7 +325,7 @@
     <!--Generic messages -->
     <string name="msg_report_send">Report sent</string>
     <!--System Error-->
-    <string name="system_error">Oooops! recovering from system error</string>
+    <string name="system_error">recovering from system error</string>
     <!--Fragments-->
     <!--Request Form Fragment-->
     <string name="error_connecting_to_fermat_network">Wait a minute please, trying to reconnect...</string>

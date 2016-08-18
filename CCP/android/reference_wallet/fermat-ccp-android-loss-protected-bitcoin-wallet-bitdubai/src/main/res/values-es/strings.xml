@@ -229,4 +229,38 @@
     <string name="chunck_values_btc_spent">BTC Gastado</string>
     <string name="chunck_values_btc_rate">Cotizacion</string>
     <string name="chunck_values_btc_date">Fecha</string>
+    <string name="Waiting_for_response">Esperando Respuesta</string>
+    <string name="Paid_text">Pagado</string>
+    <string name="Pending_response">Respuesta pendiente</string>
+    <string name="Error">Error</string>
+    <string name="Error_contact_with_support">Error, contactar a soporte</string>
+    <string name="Not_sent_yet">No enviado aún</string>
+    <string name="Payment_process_started">Proceso de pago iniciado</string>
+    <string name="Denied_by_incompatibility">Denegado por incompatibilidad</string>
+    <string name="In_approving_process">En proceso de aprobación</string>
+    <string name="Total_earnings_lost">Ganancias y Perdidas Totales:</string>
+    <string name="Today_text">Hoy: </string>
+    <string name="Earned_text">ganados</string>
+    <string name="Lost_text">perdidos</string>
+
+    <string name="Date_text">Fecha: </string>
+    <string name="Note_text">Nota: </string>
+    <string name="To_text">Para: </string>
+    <string name="From_text">De: </string>
+    <string name="confirmation_text">"Ud. Enviara Amount btc. Confirmar?</string>
+
+    <!-- loss_toast -->
+    <string name="Whooops_text">Recuperandose de un error de sistema</string>
+    <string name="Whooops_text2">Tenemos un problema aquí</string>
+    <string name="Insufficient_funds">Fondos insuficientes.</string>
+    <string name="Wait_a_minute">Espere un minuto por favor , intentando reconectarse...</string>
+    <string name="Contact_without_net_address">El contacto no posee una una dirección de la red</string>
+    <string name="Contact_without_address">El contacto no posee una una dirección</string>
+    <string name="Contact_not_found">Contacto no encontrado, añadalo por favor.</string>
+    <string name="Sending_text">Enviando...</string>
+    <string name="Action_not_allowed_lpw">Accion no permitida, ud. perdera dinero. Restringido por la Configuración LossProtected.</string>
+    <string name="Send_error_text">Error de envio.</string>
+    <string name="Invalid_Amount_small">Monto invalido, debe ser mayor a</string>
+    <string name="Invalid_Amount">Monto invalido</string>
+    <string name="Unexpected_error">Error Inesperado</string>
 </resources>
