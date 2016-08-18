@@ -225,4 +225,10 @@
     <string name="error_connecting_to_fermat_network">Espere un momento por favor, restableciendo conexion...</string>
     <string name="invalid_request_amount">Monto para solicitud de pago invalido</string>
 
+    <string name="notification_receive_btc_1">Recibio Bitcoins</string>
+    <string name="notification_receive_btc_2">BTC recibidos</string>
+    <string name="notification_reversed_1">Transaccion enviada Reversada. </string>
+    <string name="notification_reversed_2">El envio de </string>
+    <string name="notification_reversed_3">BTC no pudo ser completado.</string>
+
 </resources>

@@ -306,6 +306,13 @@
     <string name="pr_status_10">Denied</string>
     <string name="pr_status_11">Error, contact with support</string>
 
+    <string name="notification_receive_btc_1">Received money</string>
+    <string name="notification_receive_btc_2">BTC Arrived</string>
+    <string name="notification_reversed_1">Sent Transaction reversed</string>
+    <string name="notification_reversed_2">Sending</string>
+    <string name="notification_reversed_3">BTC could not be completed.</string>
+
+
 
     <!--Texto de Dialogs Movidos para RES de fermat-android-api para su uso general con traduccion incluida.-->
 
