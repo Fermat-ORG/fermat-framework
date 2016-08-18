@@ -52,6 +52,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.R;
 
+import org.fermat.fermat_dap_android_sub_app_asset_user_identity.dialogs.DialogSelectCamPic;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.util.CommonLogger;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.util.IdentityUserDialogCropImage;
@@ -312,6 +313,25 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
                 createNewIdentity();
                 appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
+            }
+        });
+
+        mIdentityImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CommonLogger.debug(TAG, "Entrando en mIdentityImage.setOnClickListener");
+                final DialogSelectCamPic Dcamgallery = new DialogSelectCamPic(getActivity(), appSession, null);
+                Dcamgallery.show();
+                Dcamgallery.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_CAM) {
+                            dispatchTakePictureIntent();
+                        } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_GALLERY) {
+                            loadImageFromGallery();
+                        }
+                    }
+                });
             }
         });
     }
@@ -696,14 +716,6 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
             return true;
 
         return true;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.dap_user_identity_menu_main, menu);
-//        menu.add(0, SessionConstants.IC_ACTION_USER_IDENTITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_identity_user_help_icon)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
