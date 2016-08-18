@@ -215,7 +215,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
 
         createButton.setText((!isUpdate) ? "Create" : "Update");
         createButton.setEnabled(false);
-        createButton.setBackgroundColor(Color.parseColor("#B3B3B3"));
+//        createButton.setBackgroundColor(Color.parseColor("#B3B3B3"));
 
         mIdentityName.requestFocus();
         registerForContextMenu(mIdentityImage);
@@ -955,12 +955,14 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
 
     private void activateButton() {
         createButton.setEnabled(true);
-        createButton.setBackgroundColor(Color.parseColor("#0072BC"));
+        createButton.setBackgroundResource(R.drawable.bg_v2_create_button_active);
+        createButton.setTextColor(Color.WHITE);
     }
 
     private void deactivatedButton() {
         createButton.setEnabled(false);
-        createButton.setBackgroundColor(Color.GRAY);
+        createButton.setBackgroundResource(R.drawable.bg_v2_create_button);
+        createButton.setTextColor(Color.parseColor("#CCCCCC"));
     }
 
     private void verifyFieldGeo() {
