@@ -718,14 +718,6 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.dap_issuer_identity_menu_main, menu);
-//        menu.add(0, SessionConstants.IC_ACTION_ISSUER_IDENTITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_identity_issuer_help_icon)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
