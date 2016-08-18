@@ -1174,7 +1174,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
         } else {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("image/jpeg");
+            intent.setType("image/*");
             //Intent intent = new Intent(Intent.ACTION_GET_CONTENT,
 //                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, GALLERY_KITKAT_INTENT_CALLED);
