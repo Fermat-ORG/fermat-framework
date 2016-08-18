@@ -1158,7 +1158,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#03A9F4");
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Asset Issuer Identity");
+        runtimeTitleBar.setLabel("Asset Issuer Profile");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setColor("#1B1B1B");
         runtimeTitleBar.setTitleColor("#ffffff");
@@ -1282,7 +1282,8 @@ public class SubAppAppsGenerator {
         //runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Asset User Identity");
+        runtimeTitleBar.setLabel("Asset User Profile");
+        runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setColor("#536DFE");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setLabelSize(18);
@@ -1403,7 +1404,7 @@ public class SubAppAppsGenerator {
 //        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Redeem Point Identity");
+        runtimeTitleBar.setLabel("Redeem Point Profile");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setColor("#009688");
         runtimeTitleBar.setTitleColor("#ffffff");
