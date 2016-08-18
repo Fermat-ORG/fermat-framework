@@ -85,6 +85,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanne
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.SendConfirmDialog;
@@ -227,7 +228,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 setUpUIData();
 
             }
-            setUpContactAddapter();
+            //setUpContactAddapter();
 
             return rootView;
         } catch (Exception e) {
@@ -650,7 +651,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
                                     walletContact.isConnection = cryptoWalletWalletContact.isConnection();
                                 }
-                                setUpUIData();
+                               setUpUIData();
 
                             } catch (
                                     CantCreateWalletContactException e
@@ -904,6 +905,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     @Override
     public void onDestroy() {
+        appSession.setData("LastContactSelected",null);
         contactsAdapter = null;
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);

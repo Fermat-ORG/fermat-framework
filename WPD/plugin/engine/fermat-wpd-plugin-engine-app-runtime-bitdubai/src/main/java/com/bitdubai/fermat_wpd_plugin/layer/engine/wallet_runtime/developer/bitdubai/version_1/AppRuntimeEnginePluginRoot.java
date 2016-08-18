@@ -4949,8 +4949,10 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
 
         //action bar menu
+
+
         optionsMenu = new OptionsMenu();
-        optionMenuItem = new OptionMenuItem(4);
+        optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(6, "send_request", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Send Request");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS); //show always icon
@@ -5853,16 +5855,15 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          * Menu
          *
          * */
-        optionsMenu = new OptionsMenu();
+        OptionsMenu optionsMenuC = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(2);
-        owner = new Owner();
-        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
+
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        optionsMenu.addMenuItem(optionMenuItem);
+        optionsMenuC.addMenuItem(optionMenuItem);
 
-        runtimeActivity.setOptionsMenu(optionsMenu);
+        runtimeActivity.setOptionsMenu(optionsMenuC);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Contacts");

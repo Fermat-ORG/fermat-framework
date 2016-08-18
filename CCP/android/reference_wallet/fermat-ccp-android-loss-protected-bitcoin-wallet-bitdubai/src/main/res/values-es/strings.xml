@@ -223,6 +223,7 @@
     <string name="you_dont_have_chunck_datail_values">No tienes ningun \n gasto.</string>
     <string name="you_dont_have_chunck_values">No tienes \n ningun ingreso de fondos.</string>
 
+<<<<<<< HEAD
     <string name="Waiting_for_response">Esperando Respuesta</string>
     <string name="Paid_text">Pagado</string>
     <string name="Pending_response">Respuesta pendiente</string>
@@ -258,4 +259,12 @@
     <string name="Invalid_Amount">Monto invalido</string>
     <string name="Unexpected_error">Error Inesperado</string>
 
+=======
+    <string name="chunck_values_history_rate">Cotizacion: 1 BTC = </string>
+    <string name="chunck_values_history_spend">Gastado</string>
+
+    <string name="chunck_values_btc_spent">BTC Gastado</string>
+    <string name="chunck_values_btc_rate">Cotizacion</string>
+    <string name="chunck_values_btc_date">Fecha</string>
+>>>>>>> 56fd6e16a301473bde356c7e7993a3090d1120e0
 </resources>
