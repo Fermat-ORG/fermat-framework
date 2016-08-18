@@ -103,29 +103,28 @@ public class ChatMetadataRecord implements ChatMetadata {
         return this.chatMessageStatus;
     }
 
-    @Override
-    public MessageStatus getMessageStatus() {
-        return this.messageStatus;
-    }
-
-    public void setMessageStatus(MessageStatus messageStatus) {
-        this.messageStatus = messageStatus;
-    }
+//    public MessageStatus getMessageStatus() {
+//        return this.messageStatus;
+//    }
+//
+//    public void setMessageStatus(MessageStatus messageStatus) {
+//        this.messageStatus = messageStatus;
+//    }
 
     @Override
     public String getDate() {
         return this.date;
     }
 
-    @Override
-    public UUID getMessageId() {
-        return this.messageId;
-    }
-
-    @Override
-    public String getMessage() {
-        return this.message;
-    }
+//    @Override
+//    public UUID getMessageId() {
+//        return this.messageId;
+//    }
+//
+//    @Override
+//    public String getMessage() {
+//        return this.message;
+//    }
 
     @Override
     public DistributionStatus getDistributionStatus() {

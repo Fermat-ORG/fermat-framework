@@ -12,6 +12,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveEventExcept
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingMessage;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
@@ -103,7 +104,28 @@ public class ChatMiddlewareRecorderService implements CHTService {
 //                    event.getEventType().getCode(),
 //                    event.getSource().getCode(),
 //                    event.getChatId());
-            chatMiddlewareMonitorAgent.checkIncomingChat(event.getChatMetadata());
+//            chatMiddlewareMonitorAgent.checkIncomingChat(event.getChatMetadata());
+        } catch (Exception exception) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantSaveEventException(
+                    exception,
+                    "Saving OutgoingChat event",
+                    "Unexpected Exception");
+        }
+
+        //LOG.info("CHECK THE DATABASE");
+    }
+
+    public void incomingMessageEventHandler(IncomingMessage event) throws CantSaveEventException {
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+        try {
+//            this.chatMiddlewareDatabaseDao.saveNewEvent(
+//                    event.getEventType().getCode(),
+//                    event.getSource().getCode(),
+//                    event.getChatId());
+            chatMiddlewareMonitorAgent.checkIncomingChat(event.getMessageMetadata());
         } catch (Exception exception) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
@@ -124,7 +146,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
 //                    event.getEventType().getCode(),
 //                    event.getSource().getCode(),
 //                    event.getChatId());
-            chatMiddlewareMonitorAgent.checkIncomingStatus(event.getChatMetadata());
+            chatMiddlewareMonitorAgent.checkIncomingStatus(event.getMessageMetadata());
         } catch (Exception exception) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
@@ -139,7 +161,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
 
     public void IncomingNewWritingStatusUpdateEventHandler(IncomingNewWritingStatusUpdate event) throws CantSaveEventException {
         try {
-            chatMiddlewareMonitorAgent.checkIncomingWritingStatus(event.getChatId());
+            chatMiddlewareMonitorAgent.checkIncomingWritingStatus(event.getSenderPk());
         } catch (Exception exception) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
@@ -163,6 +185,13 @@ public class ChatMiddlewareRecorderService implements CHTService {
             fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CHAT);
             fermatEventHandler = new IncomingChatEventHandler();
             ((IncomingChatEventHandler) fermatEventHandler).setChatMiddlewareRecorderService(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_MESSAGE);
+            fermatEventHandler = new IncomingMessageEventHandler();
+            ((IncomingMessageEventHandler) fermatEventHandler).setChatMiddlewareRecorderService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);

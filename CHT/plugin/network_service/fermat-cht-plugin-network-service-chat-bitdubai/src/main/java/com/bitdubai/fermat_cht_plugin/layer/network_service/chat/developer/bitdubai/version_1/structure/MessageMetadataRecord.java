@@ -18,6 +18,15 @@ public class MessageMetadataRecord extends AbstractMetadata implements MessageMe
 
     private MessageStatus messageStatus;
 
+    public MessageMetadataRecord() {
+    }
+
+    public MessageMetadataRecord(UUID messageId, String message, MessageStatus messageStatus) {
+        this.messageId = messageId;
+        this.message = message;
+        this.messageStatus = messageStatus;
+    }
+
     /**
      * Represent the value of PROCESSED
      */

@@ -17,11 +17,11 @@ public abstract class AbstractMetadata implements MetadataToSend , Serializable 
 
     private transient String responseToNotification;
 
-    private PlatformComponentType localActorType;
+    private PlatformComponentType localActorType = PlatformComponentType.ACTOR_CHAT;
 
     private String localActorPublicKey;
 
-    private PlatformComponentType remoteActorType;
+    private PlatformComponentType remoteActorType = PlatformComponentType.ACTOR_CHAT;
 
     private String remoteActorPublicKey;
 

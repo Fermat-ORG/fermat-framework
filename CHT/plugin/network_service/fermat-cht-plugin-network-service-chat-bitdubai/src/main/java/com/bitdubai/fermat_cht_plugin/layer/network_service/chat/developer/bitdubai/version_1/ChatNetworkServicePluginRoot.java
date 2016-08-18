@@ -18,11 +18,6 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotific
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -40,7 +35,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.Distribution
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncommingMessage;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingMessage;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
@@ -68,18 +63,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Gabriel Araujo 15/02/16.
@@ -228,103 +216,117 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                     messageMetadataRecord.changeState(ChatProtocolState.PROCESSING_RECEIVE);
                     messageMetadataRecord.setProcessed(MessageMetadataRecord.NO_PROCESSED);
                     messageMetadataRecord.setFlagReadead(false);
+                    messageMetadataRecord.setDate(new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Timestamp(System.currentTimeMillis())));
                     getChatMetadataRecordDAO().createNotification(messageMetadataRecord);
 
                     launchIncomingMessageNotification(messageMetadataRecord);
                     break;
                 case TRANSACTION_STATUS_UPDATE:
-                    DistributionStatus distributionStatus = (messageData.has(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS).getAsString(), DistributionStatus.class) : null;
+//                    DistributionStatus distributionStatus = (messageData.has(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS).getAsString(), DistributionStatus.class) : null;
                     MessageStatus messageStatus = (messageData.has(ChatTransmissionJsonAttNames.MESSAGE_STATUS)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.MESSAGE_STATUS).getAsString(), MessageStatus.class) : null;
-                    ChatProtocolState chatProtocolState = (messageData.has(ChatTransmissionJsonAttNames.PROTOCOL_STATE)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.PROTOCOL_STATE).getAsString(), ChatProtocolState.class) : null;
-                    UUID responseTo = (messageData.has(ChatTransmissionJsonAttNames.RESPONSE_TO)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.RESPONSE_TO).getAsString(), UUID.class) : null;
+//                    ChatProtocolState chatProtocolState = (messageData.has(ChatTransmissionJsonAttNames.PROTOCOL_STATE)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.PROTOCOL_STATE).getAsString(), ChatProtocolState.class) : null;
+                    UUID messageId = (messageData.has(ChatTransmissionJsonAttNames.MESSAGE_ID)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.MESSAGE_ID).getAsString(), UUID.class) : null;
+
+                    if (messageId != null){
+                        messageMetadataRecord = getChatMetadataRecordDAO().getMessageNotificationByMessageId(messageId);
+                            if(messageMetadataRecord != null) {
+//                                System.out.println("12345 UPDATE RECIBIDO MENSAJE == " + messageMetadataRecord.getMessage() + " MESSAGE STATUS == " + messageStatus);
+
+                                    //NOTIFICATION LAUNCH
+                                    if (messageStatus != null) {
+                                        messageMetadataRecord.setMessageStatus(messageStatus);
+                                        getChatMetadataRecordDAO().update(messageMetadataRecord);
+                                    }else break;
+
+                                    System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + messageMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
+                                    launchIncomingChatStatusNotification(messageMetadataRecord);
+                                }
+                    }else break;
 
                     /*
                      * Get the ChatMetadataRecord
                      */
 
-                    if (responseTo != null) {
-                        chatMetadataRecord = getChatMetadataRecordDAO().getNotificationByResponseTo(responseTo);
-
-                        if (chatMetadataRecord != null) {
-                            messageMetadataRecord = getChatMetadataRecordDAO().getMessageNotificationByResponseTo(responseTo);
-                            System.out.println("12345 UPDATE RECIBIDO MENSAJE == " + messageMetadataRecord.getMessage() + " MESSAGE STATUS == " + messageStatus);
-
-                            if (chatProtocolState == ChatProtocolState.DONE) {
-                                System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE DONE" + chatMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
-                                chatMetadataRecord.setDistributionStatus(DistributionStatus.DELIVERED);
-                                chatMetadataRecord.changeState(chatProtocolState);
-                                messageMetadataRecord.setDistributionStatus(DistributionStatus.DELIVERED);
-                                messageMetadataRecord.changeState(chatProtocolState);
-                                getChatMetadataRecordDAO().update(chatMetadataRecord);
-                                getChatMetadataRecordDAO().update(messageMetadataRecord);
-                            } else {
-                                if (distributionStatus != null) {
-                                    chatMetadataRecord.setDistributionStatus(distributionStatus);
-                                    messageMetadataRecord.setDistributionStatus(distributionStatus);
-                                }
-                                if (messageStatus != null) {
-                                    messageMetadataRecord.setMessageStatus(messageStatus);
-                                }
-                                chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
-                                messageMetadataRecord.setProcessed(MessageMetadataRecord.NO_PROCESSED);
-                                chatMetadataRecord.changeState(ChatProtocolState.DONE);
-
-                                //create incoming notification
-                                chatMetadataRecord.setFlagReadead(false);
-                                messageMetadataRecord.setFlagReadead(false);
-                                getChatMetadataRecordDAO().update(chatMetadataRecord);
-                                getChatMetadataRecordDAO().update(messageMetadataRecord);
-                                //NOTIFICATION LAUNCH
-                                if (messageStatus == null) {
-                                    break;
-                                }
-                                System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + chatMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
-                                //TODO Jose define si es necesario launchear el chat metadata o el message metadata
-                                launchIncomingChatStatusNotification(chatMetadataRecord);
-
-                            }
-                        }else {
-                            messageMetadataRecord = getChatMetadataRecordDAO().getMessageNotificationByResponseTo(responseTo);
-                            if(messageMetadataRecord != null) {
-                                System.out.println("12345 UPDATE RECIBIDO MENSAJE == " + messageMetadataRecord.getMessage() + " MESSAGE STATUS == " + messageStatus);
-
-                                if (chatProtocolState == ChatProtocolState.DONE) {
-                                    System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE DONE" + messageMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
-                                    messageMetadataRecord.setDistributionStatus(DistributionStatus.DELIVERED);
-                                    messageMetadataRecord.changeState(chatProtocolState);
-                                    getChatMetadataRecordDAO().update(messageMetadataRecord);
-                                } else {
-                                    if (distributionStatus != null)
-                                        messageMetadataRecord.setDistributionStatus(distributionStatus);
-                                    if (messageStatus != null) {
-                                        messageMetadataRecord.setMessageStatus(messageStatus);
-                                    }
-                                    messageMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
-                                    messageMetadataRecord.changeState(ChatProtocolState.DONE);
-
-                                    //create incoming notification
-                                    messageMetadataRecord.setFlagReadead(false);
-                                    getChatMetadataRecordDAO().update(messageMetadataRecord);
-                                    //NOTIFICATION LAUNCH
-                                    if (messageStatus == null) {
-                                        break;
-                                    }
-                                    System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + messageMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
-                                    launchIncomingChatStatusNotification(chatMetadataRecord);
-
-                                }
-                            }
-                        }
-                    }
+//                    if (responseTo != null) {
+//                        chatMetadataRecord = getChatMetadataRecordDAO().getNotificationByResponseTo(responseTo);
+//
+//                        if (chatMetadataRecord != null) {
+//                            messageMetadataRecord = getChatMetadataRecordDAO().getMessageNotificationByResponseTo(responseTo);
+//                            System.out.println("12345 UPDATE RECIBIDO MENSAJE == " + messageMetadataRecord.getMessage() + " MESSAGE STATUS == " + messageStatus);
+//
+//                            if (chatProtocolState == ChatProtocolState.DONE) {
+//                                System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE DONE" + chatMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
+//                                chatMetadataRecord.setDistributionStatus(DistributionStatus.DELIVERED);
+//                                chatMetadataRecord.changeState(chatProtocolState);
+//                                messageMetadataRecord.setDistributionStatus(DistributionStatus.DELIVERED);
+//                                messageMetadataRecord.changeState(chatProtocolState);
+//                                getChatMetadataRecordDAO().update(chatMetadataRecord);
+//                                getChatMetadataRecordDAO().update(messageMetadataRecord);
+//                            } else {
+//                                if (distributionStatus != null) {
+//                                    chatMetadataRecord.setDistributionStatus(distributionStatus);
+//                                    messageMetadataRecord.setDistributionStatus(distributionStatus);
+//                                }
+//                                if (messageStatus != null) {
+//                                    messageMetadataRecord.setMessageStatus(messageStatus);
+//                                }
+//                                chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
+//                                messageMetadataRecord.setProcessed(MessageMetadataRecord.NO_PROCESSED);
+//                                chatMetadataRecord.changeState(ChatProtocolState.DONE);
+//
+//                                //create incoming notification
+//                                chatMetadataRecord.setFlagReadead(false);
+//                                messageMetadataRecord.setFlagReadead(false);
+//                                getChatMetadataRecordDAO().update(chatMetadataRecord);
+//                                getChatMetadataRecordDAO().update(messageMetadataRecord);
+//                                //NOTIFICATION LAUNCH
+//                                if (messageStatus == null) {
+//                                    break;
+//                                }
+//                                System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + chatMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
+//                                //TODO Jose define si es necesario launchear el chat metadata o el message metadata
+//                                launchIncomingChatStatusNotification(chatMetadataRecord);
+//
+//                            }
+//                        }else {
+//                            messageMetadataRecord = getChatMetadataRecordDAO().getMessageNotificationByResponseTo(responseTo);
+//                            if(messageMetadataRecord != null) {
+//                                System.out.println("12345 UPDATE RECIBIDO MENSAJE == " + messageMetadataRecord.getMessage() + " MESSAGE STATUS == " + messageStatus);
+//
+//                                if (chatProtocolState == ChatProtocolState.DONE) {
+//                                    System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE DONE" + messageMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
+//                                    messageMetadataRecord.setDistributionStatus(DistributionStatus.DELIVERED);
+//                                    messageMetadataRecord.changeState(chatProtocolState);
+//                                    getChatMetadataRecordDAO().update(messageMetadataRecord);
+//                                } else {
+//                                    if (distributionStatus != null)
+//                                        messageMetadataRecord.setDistributionStatus(distributionStatus);
+//                                    if (messageStatus != null) {
+//                                        messageMetadataRecord.setMessageStatus(messageStatus);
+//                                    }
+//                                    messageMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
+//                                    messageMetadataRecord.changeState(ChatProtocolState.DONE);
+//
+//                                    //create incoming notification
+//                                    messageMetadataRecord.setFlagReadead(false);
+//                                    getChatMetadataRecordDAO().update(messageMetadataRecord);
+//                                    //NOTIFICATION LAUNCH
+//                                    if (messageStatus == null) {
+//                                        break;
+//                                    }
+//                                    System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + messageMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
+//                                    launchIncomingChatStatusNotification(chatMetadataRecord);
+//
+//                                }
+//                            }
+//                        }
+//                    }
                     break;
 
                 case TRANSACTION_WRITING_STATUS:
-                    chatMetadataRecord = null;
-                    UUID responsTo = (messageData.has(ChatTransmissionJsonAttNames.RESPONSE_TO)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.RESPONSE_TO).getAsString(), UUID.class) : null;
-                    if (responsTo != null)
-                        chatMetadataRecord = getChatMetadataRecordDAO().getNotificationByResponseTo(responsTo);
-                    if (chatMetadataRecord != null)
-                        launchIncomingWritingStatusNotification(chatMetadataRecord.getChatId());
+                    String remotePk = (messageData.has(ChatTransmissionJsonAttNames.SENDER_PUBLIC_KEY)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.SENDER_PUBLIC_KEY).getAsString(), String.class) : null;
+                    if (remotePk != null && remotePk.length()>0)
+                        launchIncomingWritingStatusNotification(remotePk);
                 default:
                     break;
 
@@ -366,7 +368,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
     }
 
     private void launchIncomingMessageNotification(MessageMetadata messageMetadata) {
-        IncommingMessage event = (IncommingMessage) eventManager.getNewEvent(EventType.INCOMING_MESSAGE);
+        IncomingMessage event = (IncomingMessage) eventManager.getNewEvent(EventType.INCOMING_MESSAGE);
         event.setMessageMetadata(messageMetadata);
         event.setSource(eventSource);
         eventManager.raiseEvent(event);
@@ -386,16 +388,16 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
         eventManager.raiseEvent(event);
     }
 
-    private void launchIncomingChatStatusNotification(ChatMetadata chatMetadata) {
+    private void launchIncomingChatStatusNotification(MessageMetadata messageMetadata) {
         IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) eventManager.getNewEvent(EventType.INCOMING_STATUS);
-        event.setChatMetadata(chatMetadata);
+        event.setMessageMetadata(messageMetadata);
         event.setSource(eventSource);
         eventManager.raiseEvent(event);
     }
 
-    private void launchIncomingWritingStatusNotification(UUID chatId) {
+    private void launchIncomingWritingStatusNotification(String remotePk) {
         IncomingNewWritingStatusUpdate event = (IncomingNewWritingStatusUpdate) eventManager.getNewEvent(EventType.INCOMING_WRITING_STATUS);
-        event.setChatId(chatId);
+        event.setSenderPk(remotePk);
         event.setSource(eventSource);
         eventManager.raiseEvent(event);
     }
@@ -517,7 +519,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             chatMetadataRecord.setRemoteActorPublicKey(remoteActorPubKey);
             chatMetadataRecord.setRemoteActorType(receiverType);
             chatMetadataRecord.setLocalActorPublicKey(localActorPubKey);
-            chatMetadataRecord.setLocalActorType(senderType);
             chatMetadataRecord.changeState(ChatProtocolState.DONE);
             chatMetadataRecord.setMsgJSON(msjContent);
             chatMetadataRecord.setProcessed(ChatMetadataRecord.PROCESSED);
@@ -612,10 +613,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                 throw new IllegalArgumentException("Argument receiverType can not be null");
             }
 
-            ChatMetadataRecord chatMetadataRecord = getChatMetadataRecordDAO().getNotificationByChat(chatId);
             final String msjContent = EncodeMsjContent.encodeMSjContentTransactionWritingNotification(
-                    chatMetadataRecord.getResponseToNotification(),
-                    chatId
+                    localActorPubKey
             );
 
             sendMessage(
@@ -851,12 +850,12 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             MessageMetadataRecord messageMetadataRecord = getChatMetadataRecordDAO().getMessageNotificationByMessageId(messageID);
             messageMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
             final String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(
-                    messageMetadataRecord.getResponseToNotification(),
+                    messageMetadataRecord.getMessageId().toString(),
                     messageStatus,
                     chatId
             );
 
-            messageMetadataRecord = getChatMetadataRecordDAO().getMessageNotificationById(messageMetadataRecord.getTransactionId());
+//            messageMetadataRecord = getChatMetadataRecordDAO().getMessageNotificationById(messageMetadataRecord.getTransactionId());
             messageMetadataRecord.setDistributionStatus(distributionStatus);
             messageMetadataRecord.setRemoteActorPublicKey(remoteActorPubKey);
             messageMetadataRecord.setRemoteActorType(receiverType);

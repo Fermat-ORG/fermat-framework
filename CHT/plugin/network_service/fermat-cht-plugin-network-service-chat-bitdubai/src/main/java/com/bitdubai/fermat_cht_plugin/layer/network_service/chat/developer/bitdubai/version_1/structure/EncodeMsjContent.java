@@ -94,17 +94,17 @@ public class EncodeMsjContent {
     /**
      * Construct the content of the message fot the type <code>ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE</code>
      *
-     * @param responseTo
+     * @param messageId
      * @param messageStatus
      * @return
      */
-    public static String encodeMSjContentTransactionNewStatusNotification(String responseTo, MessageStatus messageStatus, UUID chatId) {
+    public static String encodeMSjContentTransactionNewStatusNotification(String messageId, MessageStatus messageStatus, UUID chatId) {
 
 
         Gson gson = new Gson();
         JsonObject jsonObjectContent = new JsonObject();
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RESPONSE_TO, responseTo);
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_ID, messageId);
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_STATUS, gson.toJson(messageStatus));
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS, gson.toJson(DistributionStatus.DELIVERED));
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT, chatId.toString());
@@ -112,15 +112,15 @@ public class EncodeMsjContent {
         return gson.toJson(jsonObjectContent);
     }
 
-    public static String encodeMSjContentTransactionWritingNotification(String responseTo, UUID chatId) {
+    public static String encodeMSjContentTransactionWritingNotification( String localPublicKey) {
 
 
         Gson gson = new Gson();
         JsonObject jsonObjectContent = new JsonObject();
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.TRANSACTION_WRITING_STATUS.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RESPONSE_TO, responseTo);
+//        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RESPONSE_TO, responseTo);
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_PUBLIC_KEY, localPublicKey);
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS, gson.toJson(DistributionStatus.DELIVERED));
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT, chatId.toString());
 
         return gson.toJson(jsonObjectContent);
     }

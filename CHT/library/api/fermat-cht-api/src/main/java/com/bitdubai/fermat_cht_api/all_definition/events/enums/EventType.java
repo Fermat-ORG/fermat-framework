@@ -13,7 +13,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingCha
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewOnlineStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncommingMessage;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingMessage;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 
 /**
@@ -55,7 +55,7 @@ public enum EventType implements FermatEventEnum {
         }
     },
     INCOMING_MESSAGE("INMESSAGE"){
-        public final FermatEvent getNewEvent() { return new IncommingMessage(this);}
+        public final FermatEvent getNewEvent() { return new IncomingMessage(this);}
     },
     INCOMING_STATUS("INSTS") {
         public final FermatEvent getNewEvent() {

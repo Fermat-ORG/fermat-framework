@@ -29,6 +29,8 @@ public class AbstractCHTFermatEvent implements FermatEvent {
 
     private UUID messageId;
 
+    private String senderPk;
+
     public AbstractCHTFermatEvent(EventType eventType) {
         this.eventType = eventType;
     }
@@ -54,6 +56,14 @@ public class AbstractCHTFermatEvent implements FermatEvent {
 
     public void setChatId(UUID chatId) {
         this.chatId = chatId;
+    }
+
+    public void setSenderPk(String senderPk) {
+        this.senderPk = senderPk;
+    }
+
+    public String getSenderPk(){
+    return senderPk;
     }
 
     public UUID getMessageId() {
