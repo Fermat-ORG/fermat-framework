@@ -71,7 +71,7 @@ public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalle
 
         //formatter for date transaction
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.US);
-        holder.getTransaction_date().setText("Date: " + sdf.format(data.getTimestamp()) + ".");
+        holder.getTransaction_date().setText(context.getResources().getString(R.string.Date_text)+" " + sdf.format(data.getTimestamp()) + ".");
 
         //Validate Involved Actor for contact name
         String contactName = "";
@@ -90,11 +90,11 @@ public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalle
 
         //Validate if the transaction is credit or debit
         if (data.getTransactionType() == CREDIT) {
-            holder.getTransaction_user().setText("From: " + contactName + ".");
+            holder.getTransaction_user().setText(context.getResources().getString(R.string.From_text)+" " + contactName + ".");
             TransactionAmount = data.getAmount();
         }
         else {
-            holder.getTransaction_user().setText("To: " + contactName + ".");
+            holder.getTransaction_user().setText(context.getResources().getString(R.string.To_text)+" "  + contactName + ".");
             TransactionAmount = data.getTotal();
         }
 
@@ -107,9 +107,7 @@ public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalle
                         ShowMoneyType.BITCOIN.getCode())+ " BTC");
 
         //Set transaction note
-        holder.getTransaction_note().setText("Note: " + data.getMemo() + ".");
-
-
+        holder.getTransaction_note().setText(context.getResources().getString(R.string.Note_text)+" "  + data.getMemo() + ".");
 
     }
 }

@@ -11,9 +11,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
@@ -26,7 +23,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Co
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
-
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -168,37 +164,49 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
         String state = "";
         switch (data.getState()){
             case WAITING_RECEPTION_CONFIRMATION:
-                state = "Waiting for response";
+                //state = "Waiting for response";
+                state = context.getResources().getString(R.string.accept_text);
+
                 break;
             case APPROVED:
-                state = "Accepted";
+                //state = "Accepted";
+                state = context.getResources().getString(R.string.accepted_text);
                 break;
             case PAID:
-                state = "Paid";
+                //state = "Paid";
+                state = context.getResources().getString(R.string.Paid_text);
                 break;
             case PENDING_RESPONSE:
-                state = "Pending response";
+                //state = "Pending response";
+                state = context.getResources().getString(R.string.Pending_response);
                 break;
             case ERROR:
-                state = "Error";
+               // state = "Error";
+                state = context.getResources().getString(R.string.Error);
                 break;
             case NOT_SENT_YET:
-                state = "Not sent yet";
+                //state = "Not sent yet";
+                state = context.getResources().getString(R.string.Not_sent_yet);
                 break;
             case PAYMENT_PROCESS_STARTED:
-                state = "Payment process started";
+                //state = "Payment process started";
+                state = context.getResources().getString(R.string.Payment_process_started);
                 break;
             case DENIED_BY_INCOMPATIBILITY:
-                state = "Denied by incompatibility";
+                //state = "Denied by incompatibility";
+                state = context.getResources().getString(R.string.Denied_by_incompatibility);
                 break;
             case IN_APPROVING_PROCESS:
-                state = "In approving process";
+                //state = "In approving process";
+                state = context.getResources().getString(R.string.In_approving_process);
                 break;
             case REFUSED:
-                state = "Denied";
+                //state = "Denied";
+                state = context.getResources().getString(R.string.denied);
                 break;
             default:
-                state = "Error, contact with support";
+               // state = "Error, contact with support";
+                state = context.getResources().getString(R.string.Error_contact_with_support);
                 break;
 
         }
