@@ -288,7 +288,7 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
             Log.e(TAG, ex.getMessage(), ex);
         }
 
-        Toast.makeText(getActivity(), "Sorry there was a problem loading the data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), getResources().getString(R.string.loading_data_error_msg), Toast.LENGTH_SHORT).show();
     }
 
     @Override

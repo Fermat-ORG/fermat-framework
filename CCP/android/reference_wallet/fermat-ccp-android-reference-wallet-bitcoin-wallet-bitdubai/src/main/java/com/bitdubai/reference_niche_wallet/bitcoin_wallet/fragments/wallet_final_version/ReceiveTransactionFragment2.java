@@ -2,22 +2,30 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_fina
 
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -204,6 +212,20 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         }else{
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer = layout.findViewById(R.id.empty);
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                /*LinearLayoutCompat.LayoutParams lp = new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                lp.gravity= Gravity.CENTER_HORIZONTAL;
+                emptyListViewsContainer.setLayoutParams(lp);
+
+                ImageView imgview = (ImageView) layout.findViewById(R.id.img_empty);
+                imgview.getLayoutParams().height = 60;
+                imgview.getLayoutParams().width  = 60;
+
+                FermatTextView textView = (FermatTextView) layout.findViewById(R.id.txt_empty);
+                textView.setTextSize(18);*/
+            }
+
             FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }

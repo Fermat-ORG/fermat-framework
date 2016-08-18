@@ -193,7 +193,7 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
                         });
                         thread.start();
 
-                        Toast.makeText(getActivity(), "Report Sent", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),getResources().getString(R.string.msg_report_send), Toast.LENGTH_SHORT).show();
                         messageEdit.getText().clear();
                     } catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, e);

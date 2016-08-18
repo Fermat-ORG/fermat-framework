@@ -85,6 +85,8 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     private static final int CREATE_IDENTITY_FAIL_MODULE_EXCEPTION = 2;
     private static final int CREATE_IDENTITY_SUCCESS = 3;
 
+    private static final String HARD_CORE_PUBLIC_KEY = "123456789";
+
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
 
@@ -140,7 +142,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             intraUserIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                         }else{
                             //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-                            intraUserIdentitySettings = moduleManager.loadAndGetSettings("123456789");
+                            intraUserIdentitySettings = moduleManager.loadAndGetSettings(HARD_CORE_PUBLIC_KEY);
                         }
 
                     } catch (Exception e) {
@@ -154,7 +156,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             if (appSession.getAppPublicKey() != null) {
                                 appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), intraUserIdentitySettings);
                             } else {
-                                appSession.getModuleManager().persistSettings("123456789", intraUserIdentitySettings);
+                                appSession.getModuleManager().persistSettings(HARD_CORE_PUBLIC_KEY, intraUserIdentitySettings);
                             }
 
                         }
@@ -256,20 +258,20 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                     case CREATE_IDENTITY_SUCCESS:
 //                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
                         if (!isUpdate) {
-                            Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),getResources().getString(R.string.identity_created_msg), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),getResources().getString(R.string.changes_saved_msg), Toast.LENGTH_SHORT).show();
                         }
                         getActivity().onBackPressed();
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
-                        Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.identity_create_error), Toast.LENGTH_LONG).show();
                         break;
                     case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
-                        Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.invalid_data), Toast.LENGTH_LONG).show();
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
-                        Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.module_manager_error), Toast.LENGTH_LONG).show();
                         break;
                 }
             }
@@ -415,17 +417,17 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                         Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                                     }*/
                                 } else {
-                                    Toast.makeText(getActivity(), "Error on upload image", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), getResources().getString(R.string.upload_image_error), Toast.LENGTH_LONG).show();
                                     //  cryptoBrokerBitmap = null;
                                     //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(),getResources().getString(R.string.error_occurred), Toast.LENGTH_LONG).show();
                                 // cryptoBrokerBitmap = null;
                                 //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.error_occurred), Toast.LENGTH_LONG).show();
                             //  cryptoBrokerBitmap = null;
                             //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                         }
@@ -478,7 +480,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                     }
                                 });
                             } else {
-                                Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(),getResources().getString(R.string.size_image_error), Toast.LENGTH_LONG).show();
                                 // cryptoBrokerBitmap = null;
                                 // Toast.makeText(getActivity(), "The image selected is too small", Toast.LENGTH_SHORT).show();
                             }
@@ -486,7 +488,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                         }
                     } catch (Exception e) {
                        // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-                        Toast.makeText(getActivity().getApplicationContext(), "Error loading the image", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.loading_image_error), Toast.LENGTH_SHORT).show();
                     }
 
                     break;

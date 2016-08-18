@@ -139,7 +139,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.system_error), Toast.LENGTH_SHORT).show();
 
         }
 
@@ -216,7 +216,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.loading_data_error_msg), Toast.LENGTH_LONG).show();
                         ex.printStackTrace();
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -207,6 +207,18 @@
     <string name="you_dont_have_transactions_sent_text">You don\'t have transactions send</string>
     <string name="you_need_an_identity_before_you_can_enter_text">You need an identity before you can enter</string>
     <string name="young_wallet">Young wallet</string>
+    <string name="system_error">Oooops! recovering from system error</string>
+
+
+    <!-- Browser Tab -->
+    <string name="turn_on_gps">Please, turn ON your GPS</string>
+    <string name="connectionState_connected_msg">IS A CONTACT</string>
+    <string name="connectionState_request_sent_msg">REQUEST HAS BEEN SEND</string>
+    <string name="connectionState_user_offline_msg">USER OFFLINE</string>
+    <string name="btn_error_fermat_network_cancel">CANCEL</string>
+    <string name="btn_error_fermat_network_connect">CONNECT</string>
+    <string name="Request_user_list_time_out">Request User List Time Out</string>
+    <string name="loading_data_error_msg">Sorry there was a problem loading the data</string>
 
     <string name="notification_time_1"> a few moments ago</string>
     <string name="notification_time_2"> minutes ago</string>
