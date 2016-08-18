@@ -341,13 +341,9 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if (id == 1) {
-//                moduleManager.launchNotification();
-                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
-                return true;
-            }
 
-            if (id == 4) {
+
+            if (id == 1) {
                 changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, appSession.getAppPublicKey());
                 return true;
             }

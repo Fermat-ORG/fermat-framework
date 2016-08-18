@@ -114,8 +114,8 @@
     <string name="Whooops_text2">Whooops, we have a problem here</string>
     <string name="Insufficient_funds">Insufficient funds.</string>
     <string name="Wait_a_minute">Wait a minute please, trying to reconnect...</string>
-    <string name="Contact_without_net_address">Contact don't have an Address from red</string>
-    <string name="Contact_without_address">Contact don't have an Address</string>
+    <string name="Contact_without_net_address">Contact don\'t have an Address from red</string>
+    <string name="Contact_without_address">Contact don\'t have an Address</string>
     <string name="Contact_not_found">Contact not found, please add it.</string>
     <string name="Sending_text">Sending...</string>
     <string name="Action_not_allowed_lpw">Action not allowed, you will lose money. Restricted by LossProtected Configuration.</string>
