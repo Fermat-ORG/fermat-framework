@@ -463,7 +463,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                         getActivity(),
                         lossProtectedWalletSession,
                         null,
-                        (lossProtectedWalletManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                        ( PresentationBitcoinWalletDialog.TYPE_CHUNCK_HELP) ,
                         checkButton);
 
         presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {

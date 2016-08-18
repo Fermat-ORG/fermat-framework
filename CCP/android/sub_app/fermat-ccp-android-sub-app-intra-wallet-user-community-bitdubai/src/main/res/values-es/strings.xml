@@ -121,10 +121,10 @@
     <string name="trade_crypto_wallet">Comerciantes</string>
     <string name="txtLastTransactions_text">Ultimas transacciones</string>
     <string name="txtSeeAlltransactions_text">Ver todo</string>
-    <string name="txtViewDetailTransaction_text"></string>
-    <string name="txt_conference_ticket_text"></string>
+    <string name="txtViewDetailTransaction_text">Ver detalles de la transaccion</string>
+    <string name="txt_conference_ticket_text">Ticket de conferencia</string>
     <string name="txt_title_text">Ayuda para anadir contacto</string>
-    <string name="type_text">tipo</string>
+    <string name="type_text">Tipo</string>
     <string name="waiting_text">Esperando...</string>
     <string name="wallets">Carteras</string>
     <string name="welcome_text">Bienvenido!</string>
