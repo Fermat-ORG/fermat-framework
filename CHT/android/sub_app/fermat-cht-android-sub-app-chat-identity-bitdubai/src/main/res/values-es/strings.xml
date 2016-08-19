@@ -45,6 +45,7 @@
     <string name="cht_identity_enter_name">Por favor ingreseun nombre o alias</string>
     <string name="cht_identity_available">Disponible</string>
     <string name="cht_identity_no_camera">No tiene cámaras disponibles</string>
+    <string name="cht_identity_picture_canbesave">Su dispositivo no permite guardar la imagen en alamacenamiento. Sin embargo, la identidad puede crearse con la imagen tomada.</string>
     <string name="cht_identity_turn_gps">Por favor, encienda su GPS</string>
 
     <string name="cht_chat_footer">Fermat P2P Chat</string>
