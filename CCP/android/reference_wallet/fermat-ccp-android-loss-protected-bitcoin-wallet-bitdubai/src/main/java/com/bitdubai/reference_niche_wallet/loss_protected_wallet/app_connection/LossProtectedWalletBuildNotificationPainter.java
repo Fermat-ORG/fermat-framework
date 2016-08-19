@@ -2,7 +2,6 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_ccp_api.all_definition.constants.CCPBroadcasterConstants;
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 

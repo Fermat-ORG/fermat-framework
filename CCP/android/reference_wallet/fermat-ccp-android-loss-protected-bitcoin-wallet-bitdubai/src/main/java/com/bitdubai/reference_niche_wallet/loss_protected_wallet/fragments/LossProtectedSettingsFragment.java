@@ -153,12 +153,12 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
                         List<ExchangeRateProvider> providers = new ArrayList<>(lossProtectedWalletManager.getExchangeRateProviderManagers());
                         String itemsProviders[] = new String[providers.size()];
-                        for (int i=0; i<providers.size(); i++) {
+                        for (int i = 0; i < providers.size(); i++) {
                             ExchangeRateProvider provider = providers.get(i);
 
-                                itemsProviders[i] = provider.getProviderName();
+                            itemsProviders[i] = provider.getProviderName();
 
-                            if(provider.getProviderId().equals(exchangeProviderId2))
+                            if (provider.getProviderId().equals(exchangeProviderId2))
                                 previousSelectedItemExchange = provider.getProviderName();
                         }
 
@@ -173,7 +173,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
                         getActivity().runOnUiThread(new Runnable() {
                             public void run() {
-                                list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", providerDialog));
+                                list.add(new PreferenceSettingsOpenDialogText(10, getResources().getString(R.string.exchange_title_label), providerDialog));
 
                                 adapter.changeDataSet(list);
                                 adapter.notifyDataSetChanged();
@@ -183,13 +183,14 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                     }
+                    }
                 }
             });
 
 
 
-            list.add(new PreferenceSettingsLinkText(11, "Received Testnet Bitcoins", "", 15, Color.GRAY));
+           // list.add(new PreferenceSettingsLinkText(11, "Received Testnet Bitcoins", "", 15, Color.GRAY));
+           list.add(new PreferenceSettingsLinkText(11, getResources().getString(R.string.Received_Testnet_Bitcoins), "", 15, Color.GRAY));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -237,7 +238,8 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
                 Runnable _longPressed = new Runnable() {
                     public void run() {
                         Log.i("info", "LongPress");
-                        Toast.makeText(getActivity(), "TestNet download Init", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "TestNet download Init", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.TestNet_download), Toast.LENGTH_SHORT).show();
                         GETTestNet(getActivity());
                     }
                 };
@@ -434,7 +436,8 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
                 if (result != null &&
                         result.length > 0) {
                     if (!result[0].toString().equals("transaccion fallida"))
-                        Toast.makeText(context, "TestNet bitcoin arrived", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "TestNet bitcoin arrived", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, getResources().getString(R.string.TestNet_bitcoin_arrived), Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -442,7 +445,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
             @Override
             public void onErrorOccurred(Exception ex) {
-                Toast.makeText(context, "TestNet Request Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getResources().getString(R.string.TestNet_Request_Error), Toast.LENGTH_SHORT).show();
 
             }
         });

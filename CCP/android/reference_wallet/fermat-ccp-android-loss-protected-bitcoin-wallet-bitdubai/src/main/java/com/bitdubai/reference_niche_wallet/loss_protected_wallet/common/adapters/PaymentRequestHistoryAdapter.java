@@ -32,6 +32,7 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 
 /**
  * Created by Matias Furszyfer on 2015.09.30..
+ *
  */
 public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPaymentRequest, PaymentHistoryItemViewHolder>  {
 
@@ -279,7 +280,8 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                                 }
                                 else
                                 {
-                                    Toast.makeText(context, "Action not allowed, You do not have enough funds", Toast.LENGTH_LONG).show();
+                                    // Toast.makeText(context, "Action not allowed, You do not have enough funds", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, context.getResources().getString(R.string.Insufficient_funds), Toast.LENGTH_LONG).show();
                                 }
                             }
                             else
@@ -287,21 +289,24 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                                 //aprove payment request
                                 lossProtectedWallet.approveRequest(data.getRequestId()
                                         , lossProtectedWallet.getSelectedActorIdentity().getPublicKey());
-                                Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, context.getResources().getString(R.string.Request_accepted), Toast.LENGTH_SHORT).show();
                                 notifyDataSetChanged();
                                 onRefreshList.onRefresh();
                             }
                         }
                         else
                         {
-                            Toast.makeText(context, "Action not allowed.Could not retrieve the dollar exchange rate.\nCheck your internet connection.. ", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(context, "Action not allowed.Could not retrieve the dollar exchange rate.\nCheck your internet connection.. ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, context.getResources().getString(R.string.Action_not_allowed2), Toast.LENGTH_LONG).show();
 
                         }
 
 
 
                     } catch (Exception e) {
-                        showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
+                        //showMessage(context, "Can't Accept or Denied Receive Payment Exception - " + e.getMessage());
+                        showMessage(context, context.getResources().getString(R.string.Cant_accept)+" " + e.getMessage());
                     }
 
                 }
@@ -312,11 +317,11 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
             public void onClick(View view) {
                 try {
                     lossProtectedWallet.refuseRequest(data.getRequestId());
-                    Toast.makeText(context, "Request denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getResources().getString(R.string.Request_denied), Toast.LENGTH_SHORT).show();
                     notifyDataSetChanged();
                     onRefreshList.onRefresh();
                 } catch (Exception e) {
-                    showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
+                    showMessage(context, context.getResources().getString(R.string.Cant_accept)+" " + e.getMessage());
                 }
             }
         });

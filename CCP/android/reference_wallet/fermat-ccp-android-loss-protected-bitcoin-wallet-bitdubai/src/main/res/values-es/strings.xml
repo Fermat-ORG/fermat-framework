@@ -223,7 +223,7 @@
     <string name="you_dont_have_chunck_datail_values">No tienes ningun \n gasto.</string>
     <string name="you_dont_have_chunck_values">No tienes \n ningun ingreso de fondos.</string>
 
-<<<<<<< HEAD
+
     <string name="Waiting_for_response">Esperando Respuesta</string>
     <string name="Paid_text">Pagado</string>
     <string name="Pending_response">Respuesta pendiente</string>
@@ -245,12 +245,15 @@
     <string name="confirmation_text">"Ud. Enviara Amount btc. Confirmar?</string>
 
     <!-- loss_toast -->
-    <string name="Whooops_text">uuuups! recuperandose de un error de sistema</string>
-    <string name="Whooops_text2">uuuups, tenemos un problema aquí</string>
+    <string name="Whooops_text">uuuups! recuperandose de un error de sistema.</string>
+    <string name="Whooops_text2">uuuups, tenemos un problema aquí.</string>
+    <string name="Recovering">recuperandose de un error de sistema.</string>
+    <string name="Whooops_text3">uuuups! recuperandose de un error de sistema en gráfico.</string>
+
     <string name="Insufficient_funds">Fondos insuficientes.</string>
     <string name="Wait_a_minute">Espere un minuto por favor , intentando reconectarse...</string>
-    <string name="Contact_without_net_address">El contacto no posee una una dirección de la red</string>
-    <string name="Contact_without_address">El contacto no posee una una dirección</string>
+    <string name="Contact_without_net_address">El contacto no posee una una dirección de la red.</string>
+    <string name="Contact_without_address">El contacto no posee una una dirección.</string>
     <string name="Contact_not_found">Contacto no encontrado, añadalo por favor.</string>
     <string name="Sending_text">Enviando...</string>
     <string name="Action_not_allowed_lpw">Accion no permitida, ud. perdera dinero. Restringido por la Configuración LossProtected.</string>
@@ -258,13 +261,42 @@
     <string name="Invalid_Amount_small">Monto invalido, debe ser mayor a</string>
     <string name="Invalid_Amount">Monto invalido</string>
     <string name="Unexpected_error">Error Inesperado</string>
+    <string name="Request_accepted">Solicitud Aceptada</string>
+    <string name="Request_denied">Solicitud rechazada</string>
+    <string name="Action_not_allowed2">Acción no permitida. No se pudo recuperar la cotización del dólar.\nCompruebe su conexión a Internet..</string>
+    <string name="Cant_accept">No se puede aceptar o rechazar. Excepción al recibir pago -</string>
+    <string name="Error_spending_chart">Error boteniendo lista de gastos para gráfico</string>
 
-=======
+    <!-- loss_notification_painter.xml -->
+    <string name="lpw_notification1">Dinero recibido</string>
+    <string name="lpw_notification1_1">Llegaron BTC</string>
+    <string name="lpw_notification2">Transacción enviada devuelta</string>
+    <string name="lpw_notification2_1">Enviando</string>
+    <string name="lpw_notification2_2">BTC no se pudo completar.</string>
+    <string name="lpw_notification3">Nueva solicitud de pago recibida</string>
+    <string name="lpw_notification3_1">Ud. ha recibido una solicitud de pago, por</string>
+    <string name="lpw_notification4">Solicitud de pago rechazada</string>
+    <string name="lpw_notification4_1">Su solicitud de pago, por</string>
+    <string name="lpw_notification4_2">BTC fue rechazada.</string>
+    <string name="lpw_notification5">Solicitud de pago devuelta</string>
+    <string name="lpw_notification5_1">Su solicitud de pago, por</string>
+    <string name="lpw_notification5_2">BTC fue devuelta.</string>
+
+    <!-- loss_presentation_settings.xml -->
+    <string name="Enabled_notificacions">Notificaciones Habilitadas</string>
+    <string name="Enabled_loss_protected">Loss Protected Habilitado</string>
+    <string name="Select_network">Selecionar Red</string>
+    <string name="Received_Testnet_Bitcoins">Recibido Testnet Bitcoins </string>
+    <string name="TestNet_download">"Iniciando Descarga TestNet"</string>
+    <string name="TestNet_bitcoin_arrived">Llego TestNet bitcoin</string>
+    <string name="TestNet_Request_Error">Error de solicitud a TestNet</string>
+
+
     <string name="chunck_values_history_rate">Cotizacion: 1 BTC = </string>
     <string name="chunck_values_history_spend">Gastado</string>
 
     <string name="chunck_values_btc_spent">BTC Gastado</string>
     <string name="chunck_values_btc_rate">Cotizacion</string>
     <string name="chunck_values_btc_date">Fecha</string>
->>>>>>> 56fd6e16a301473bde356c7e7993a3090d1120e0
+
 </resources>

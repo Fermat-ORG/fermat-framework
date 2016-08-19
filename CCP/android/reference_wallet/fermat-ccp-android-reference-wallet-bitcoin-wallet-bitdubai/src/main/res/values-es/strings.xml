@@ -199,8 +199,6 @@
     <string name="title_section8">Tarjetas de regalo</string>
     <string name="title_section9">Clones</string>
 
-<<<<<<< HEAD
-=======
     <string name="pr_status_1">Enviado</string>
     <string name="pr_status_2">Aceptado</string>
     <string name="pr_status_3">Pagado</string>
@@ -213,5 +211,5 @@
     <string name="pr_status_10">Denegado</string>
     <string name="pr_status_11">Error, contacte a soporte</string>
 
->>>>>>> 56fd6e16a301473bde356c7e7993a3090d1120e0
+
 </resources>
