@@ -125,6 +125,7 @@ public class ChatActorCommunityManager
         List<ChatActorConnection> actorConnections = null;
         ConnectionState connectionState;
         UUID connectionID;
+        String country, city, state;
         try {
             worldActorList = getChatActorSearch().getResult(publicKey, deviceLocation, distance, alias, offset, max);
         } catch (CantGetChtActorSearchResult exception) {
@@ -143,11 +144,13 @@ public class ChatActorCommunityManager
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
 
-        ChatActorCommunityInformation worldActor;
+
         if (worldActorList != null && worldActorList.size() > 0) {
             for (int i = 0; i < worldActorList.size(); i++) {
-                worldActor = worldActorList.get(i);
-                String country = "", city = "", state = "";
+                ChatActorCommunityInformation worldActor= worldActorList.get(i);
+                country = "";
+                city = "";
+                state = "";
                 connectionID = null;
                 connectionState = null;
                 final Location location = worldActor.getLocation();

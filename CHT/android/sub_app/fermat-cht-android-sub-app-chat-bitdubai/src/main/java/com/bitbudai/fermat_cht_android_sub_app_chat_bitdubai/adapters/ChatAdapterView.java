@@ -489,7 +489,7 @@ public class ChatAdapterView extends LinearLayout {
                         BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
                         batw.execute();
                     }
-                    if (s.length() > 0 && s.charAt(s.length() - 1) == '\n' && !isScrollingUp) {
+                    if ((start > 0 || s.charAt(s.length() - 1) == '\n') && !isScrollingUp) {
                         scroll();
                     }
                 }

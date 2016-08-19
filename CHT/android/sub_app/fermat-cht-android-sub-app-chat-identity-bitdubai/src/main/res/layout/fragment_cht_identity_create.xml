@@ -114,8 +114,6 @@
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:visibility="gone"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_above="@+id/cht_button"
                 android:layout_alignStart="@+id/editTextStatus"
                 android:layout_alignLeft="@+id/editTextStatus"

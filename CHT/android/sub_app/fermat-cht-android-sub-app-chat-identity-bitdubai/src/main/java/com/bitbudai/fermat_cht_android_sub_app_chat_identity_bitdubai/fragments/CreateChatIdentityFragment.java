@@ -66,8 +66,10 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -377,6 +379,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                                     } else {
                                        Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
                                     }
+                                    saveCameraCapture(chatBitmap);
                                 } else {
                                     Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_error_image), Toast.LENGTH_LONG).show();
                                 }
@@ -413,7 +416,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                             } else {
                                 Toast.makeText(getActivity(), getContext().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
                             }
-
                         }
                     } catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -443,9 +445,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                     try {
                         if (isAttached) {
                             chatBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImagee);
-                            //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
                             if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
-                                //cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
                                 final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
                                 dialogCropImagee.show();
                                 dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -461,8 +461,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                                 });
                             } else {
                                 Toast.makeText(getActivity(), getContext().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
-                                //cryptoBrokerBitmap = null;
-                                // Toast.makeText(getActivity(), "The image selected is too small", Toast.LENGTH_SHORT).show();
                             }
                         }
                     } catch (Exception e) {
@@ -474,6 +472,28 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+
+
+    public void saveCameraCapture(Bitmap photo){
+        try {
+            File outFile = new File(Environment.getExternalStorageDirectory(), UUID.randomUUID().toString()+".jpeg");
+            FileOutputStream fos = new FileOutputStream(outFile);
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        }catch (IOException e){
+            if (Build.VERSION.SDK_INT >= 23)
+                Toast.makeText(getActivity().getApplicationContext(), getContext().getResources().getString(R.string.cht_identity_picture_canbesave), Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getActivity().getApplicationContext(), getActivity().getResources().getString(R.string.cht_identity_picture_canbesave), Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            if (Build.VERSION.SDK_INT >= 23)
+                Toast.makeText(getActivity().getApplicationContext(), getContext().getResources().getString(R.string.cht_identity_picture_canbesave), Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getActivity().getApplicationContext(), getActivity().getResources().getString(R.string.cht_identity_picture_canbesave), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void saveAndGoBack() {
