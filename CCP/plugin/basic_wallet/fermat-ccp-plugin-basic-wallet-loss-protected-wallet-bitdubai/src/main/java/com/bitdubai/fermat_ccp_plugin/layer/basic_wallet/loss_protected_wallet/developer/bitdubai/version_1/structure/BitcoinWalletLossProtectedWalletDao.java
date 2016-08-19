@@ -1034,7 +1034,7 @@ public class BitcoinWalletLossProtectedWalletDao {
         }
 
         return new BitcoinLossProtecdWalletTransactionWrapper(transactionId, transactionHash, transactionType, addressFrom, addressTo,
-                actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo, blockchainNetworkType,transactionState,exchangeRate);
+                actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, balanceType, amount, total, runningBookBalance, runningAvailableBalance, timeStamp, memo, blockchainNetworkType,transactionState,exchangeRate);
     }
 
     public void deleteTransaction(UUID transactionID)throws CantFindTransactionException{

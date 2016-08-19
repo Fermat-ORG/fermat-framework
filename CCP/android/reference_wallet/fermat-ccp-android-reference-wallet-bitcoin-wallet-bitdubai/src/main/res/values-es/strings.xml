@@ -200,16 +200,6 @@
     <string name="title_section8">Tarjetas de regalo</string>
     <string name="title_section9">Clones</string>
 
-    <!--Generic messages -->
-    <!-- Amounts Messages-->
-    <string name="invalid_amount_limit">Monto invalido, debe ser mayor que </string>
-    <!--System Error-->
-    <string name="system_error">Oooops! Error del sistema</string>
-    <!--Fragments-->
-    <!--Request Form Fragment-->
-    <string name="error_connecting_to_fermat_network">Espere un momento por favor, restableciendo conexion...</string>
-    <string name="invalid_request_amount">Monto para solicitud de pago invalida</string>
-
     <string name="pr_status_1">Enviado</string>
     <string name="pr_status_2">Aceptado</string>
     <string name="pr_status_3">Pagado</string>
@@ -221,5 +211,21 @@
     <string name="pr_status_9">En Proceso</string>
     <string name="pr_status_10">Denegado</string>
     <string name="pr_status_11">Error, contacte a soporte</string>
+
+    <!--Generic messages -->
+    <!-- Amounts Messages-->
+    <string name="invalid_amount_limit">Monto invalido, debe ser mayor que </string>
+    <!--System Error-->
+    <string name="system_error">Error del sistema</string>
+    <!--Fragments-->
+    <!--Request Form Fragment-->
+    <string name="error_connecting_to_fermat_network">Espere un momento por favor, restableciendo conexion...</string>
+    <string name="invalid_request_amount">Monto para solicitud de pago invalido</string>
+
+    <string name="notification_receive_btc_1">Recibio Bitcoins</string>
+    <string name="notification_receive_btc_2">BTC recibidos</string>
+    <string name="notification_reversed_1">Transaccion enviada Reversada. </string>
+    <string name="notification_reversed_2">El envio de </string>
+    <string name="notification_reversed_3">BTC no pudo ser completado.</string>
 
 </resources>

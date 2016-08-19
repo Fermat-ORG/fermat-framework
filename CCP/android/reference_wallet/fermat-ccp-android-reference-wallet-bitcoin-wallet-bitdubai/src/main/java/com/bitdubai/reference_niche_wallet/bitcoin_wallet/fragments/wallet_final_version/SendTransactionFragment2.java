@@ -616,7 +616,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             txt_balance_amount_type = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
 
-
+            changeAmountType();
         }
         catch (Exception e){
             e.printStackTrace();

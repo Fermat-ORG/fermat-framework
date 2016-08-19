@@ -75,8 +75,8 @@
     <string name="book_balance">Book balance</string>
     <string name="btc_loss">Insert the amount that you want to sent to Loss Protected Wallet</string>
     <string name="button_send">Send</string>
-    <string name="cancel_label">Cance</string>
-    <string name="cancel_text">Cance</string>
+    <string name="cancel_label">Cancel</string>
+    <string name="cancel_text">Cancel</string>
     <string name="clear_text_button">Clear</string>
     <string name="click_me_to_search_text">Click me \nto search contacts</string>
     <string name="close_text">Close</string>
@@ -205,7 +205,7 @@
     <string name="you_dont_have_requests_text">You don\'t have request</string>
     <string name="you_dont_have_transactions_received_text">you don\'t have received transactions</string>
     <string name="you_dont_have_transactions_sent_text">You don\'t have transactions send</string>
-    <string name="you_need_an_identity_before_you_can_enter_text">You nedd an identity before you can enter</string>
+    <string name="you_need_an_identity_before_you_can_enter_text">You need an identity before you can enter</string>
     <string name="young_wallet">Young wallet</string>
     <string name="system_error">Oooops! recovering from system error</string>
 

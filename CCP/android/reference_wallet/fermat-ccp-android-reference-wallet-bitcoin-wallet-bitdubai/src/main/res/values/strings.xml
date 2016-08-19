@@ -66,7 +66,9 @@
     <string name="accepted_text">Accepted</string>
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
+
     <!-- home_receive_main11.xml -->
+
     <string name="no_transactions_text">No transactions yet</string>
     <!-- home_request_fragment_main.xml -->
     <string name="reason_text">Reason</string>
@@ -304,6 +306,13 @@
     <string name="pr_status_10">Denied</string>
     <string name="pr_status_11">Error, contact with support</string>
 
+    <string name="notification_receive_btc_1">Received money</string>
+    <string name="notification_receive_btc_2">BTC Arrived</string>
+    <string name="notification_reversed_1">Sent Transaction reversed</string>
+    <string name="notification_reversed_2">Sending</string>
+    <string name="notification_reversed_3">BTC could not be completed.</string>
+
+
 
     <!--Texto de Dialogs Movidos para RES de fermat-android-api para su uso general con traduccion incluida.-->
 
@@ -323,7 +332,7 @@
     <!--Generic messages -->
     <string name="msg_report_send">Report sent</string>
     <!--System Error-->
-    <string name="system_error">Oooops! recovering from system error</string>
+    <string name="system_error">recovering from system error</string>
     <!--Fragments-->
     <!--Request Form Fragment-->
     <string name="error_connecting_to_fermat_network">Wait a minute please, trying to reconnect...</string>

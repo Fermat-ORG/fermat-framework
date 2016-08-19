@@ -2,7 +2,7 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wall
 
 
 import android.app.Activity;
-import  android.content.DialogInterface;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,26 +32,21 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
-import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.animation.AnimationManager;
@@ -392,7 +387,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
             SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy", Locale.US);
             Date actualDate = new Date();
-            txt_date_home.setText(sdf.format(actualDate));
+            txt_date_home.setText(" "+sdf.format(actualDate));
 
 
 
@@ -446,7 +441,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                                     WalletUtils.formatAmountStringWithDecimalEntry(
                                             totalEarnedAndLostForToday,
                                             EARN_AND_LOST_MAX_DECIMAL_FORMAT,
-                                            EARN_AND_LOST_MIN_DECIMAL_FORMAT) + " earned");
+                                            EARN_AND_LOST_MIN_DECIMAL_FORMAT) + " "+ getResources().getString(R.string.Earned_text));
 
                             earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
 
@@ -460,7 +455,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                             txt_earnOrLost.setText("USD " + WalletUtils.formatAmountStringWithDecimalEntry(
                                     totalEarnedAndLostForToday * -1,
                                     EARN_AND_LOST_MAX_DECIMAL_FORMAT,
-                                    EARN_AND_LOST_MIN_DECIMAL_FORMAT) + " lost");
+                                    EARN_AND_LOST_MIN_DECIMAL_FORMAT) + " "+ getResources().getString(R.string.Lost_text));
 
 
                             earnOrLostImage.setBackgroundResource(R.drawable.lost_icon);

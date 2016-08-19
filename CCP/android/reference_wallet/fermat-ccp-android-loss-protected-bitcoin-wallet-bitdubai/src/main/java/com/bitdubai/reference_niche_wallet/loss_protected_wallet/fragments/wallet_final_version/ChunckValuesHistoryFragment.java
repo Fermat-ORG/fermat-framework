@@ -448,6 +448,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             }
 
 
+
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Oooops! recovering from system error",
@@ -462,7 +463,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                         getActivity(),
                         lossProtectedWalletSession,
                         null,
-                        (lossProtectedWalletManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                        ( PresentationBitcoinWalletDialog.TYPE_CHUNCK_HELP) ,
                         checkButton);
 
         presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -511,7 +512,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     }
 
     private void updateBalances(){
-         realBalance = loadBalance(BalanceType.REAL);
+        realBalance = loadBalance(BalanceType.REAL);
         balanceAvailable = loadBalance(BalanceType.AVAILABLE);
         txt_balance_amount.setText(
                 WalletUtils.formatBalanceString(

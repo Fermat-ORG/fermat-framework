@@ -121,10 +121,10 @@
     <string name="trade_crypto_wallet">Comerciantes</string>
     <string name="txtLastTransactions_text">Ultimas transacciones</string>
     <string name="txtSeeAlltransactions_text">Ver todo</string>
-    <string name="txtViewDetailTransaction_text"></string>
-    <string name="txt_conference_ticket_text"></string>
+    <string name="txtViewDetailTransaction_text">Ver detalles de la transaccion</string>
+    <string name="txt_conference_ticket_text">Ticket de conferencia</string>
     <string name="txt_title_text">Ayuda para anadir contacto</string>
-    <string name="type_text">tipo</string>
+    <string name="type_text">Tipo</string>
     <string name="waiting_text">Esperando...</string>
     <string name="wallets">Carteras</string>
     <string name="welcome_text">Bienvenido!</string>
@@ -200,7 +200,13 @@
     <string name="start">Empezar</string>
     <string name="community_desc">* Buscar usuarios cercanos. \n* Buscar usuarios en cualquier lugar. \n* Ver el perfil de otros usuarios. \n* Enviar solicitudes de conexion.</string>
 
-    <string name="system_error">Oooops! Error del sistema</string>
+    <string name="notification_time_1"> hace unos momentos</string>
+    <string name="notification_time_2"> minutos</string>
+    <string name="notification_time_3"> horas</string>
+    <string name="notification_time_4"> dias</string>
+    <string name="notification_time_5"> años</string>
+
+    <string name="system_error">Error del sistema</string>
     <!-- Browser Tab -->
     <string name="turn_on_gps">Por favor, Enciende tu GPS</string>
     <string name="connectionState_connected_msg">Es un Contacto</string>
@@ -210,11 +216,5 @@
     <string name="btn_error_fermat_network_connect">CONECTAR</string>
     <string name="Request_user_list_time_out">Se agoto el tiempo de espera por la lista de usarios</string>
     <string name="loading_data_error_msg">Disculpe, ocurrio un problema al cargar los datos</string>
-
-    <string name="notification_time_1"> hace unos momentos</string>
-    <string name="notification_time_2"> minutos</string>
-    <string name="notification_time_3"> horas</string>
-    <string name="notification_time_4"> dias</string>
-    <string name="notification_time_5"> años</string>
 
 </resources>

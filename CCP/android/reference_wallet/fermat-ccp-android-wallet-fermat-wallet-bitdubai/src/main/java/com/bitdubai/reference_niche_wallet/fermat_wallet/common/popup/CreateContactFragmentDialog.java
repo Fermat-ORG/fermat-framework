@@ -121,7 +121,7 @@ public class CreateContactFragmentDialog extends FermatDialog<ReferenceAppFermat
         try {
         setUpScreenComponents();
         if( getSession().getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
-            blockchainNetworkType = (BlockchainNetworkType)appFermatSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            blockchainNetworkType = (BlockchainNetworkType)getSession().getData(SessionConstant.BLOCKCHANIN_TYPE);
         else
             blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
