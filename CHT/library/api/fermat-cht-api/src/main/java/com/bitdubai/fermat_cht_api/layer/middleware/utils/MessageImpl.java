@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MessageMetadata;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -31,22 +31,22 @@ public class MessageImpl implements Message {
 
     public MessageImpl(
             UUID chatId,
-            ChatMetadata chatMetadata,
+            MessageMetadata messageMetadata,
             MessageStatus messageStatus,
             TypeMessage typeMessage,
             UUID contactId
     ) {
-        messageId = chatMetadata.getMessageId();
+        messageId = messageMetadata.getMessageId();
 //        messageId=UUID.randomUUID();
         this.chatId = chatId;
-        message = chatMetadata.getMessage();
+        message = messageMetadata.getMessage();
         status = messageStatus;
         type = typeMessage;
 //        messageDate=new Timestamp(System.currentTimeMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
         Date parsedDate = null;
         try {
-            parsedDate = dateFormat.parse(chatMetadata.getDate());
+            parsedDate = dateFormat.parse(messageMetadata.getDate());
         } catch (ParseException e) {
             e.printStackTrace();
         }

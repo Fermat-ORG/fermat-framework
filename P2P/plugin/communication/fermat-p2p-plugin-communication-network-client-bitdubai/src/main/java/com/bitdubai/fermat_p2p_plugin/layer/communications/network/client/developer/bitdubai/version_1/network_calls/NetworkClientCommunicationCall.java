@@ -43,6 +43,17 @@ public class NetworkClientCommunicationCall implements NetworkClientCall {
     }
 
     @Override
+    public void sendSyncPackageMessage(final NetworkServiceMessage packageContent) throws CantSendMessageException {
+
+        connection.sendSyncPackageMessage(
+                packageContent,
+                networkServiceType,
+                profile.getIdentityPublicKey(),
+                packageContent.getId()
+        );
+    }
+
+    @Override
     public void hangUp() {
 
         connection.hangUp(this);

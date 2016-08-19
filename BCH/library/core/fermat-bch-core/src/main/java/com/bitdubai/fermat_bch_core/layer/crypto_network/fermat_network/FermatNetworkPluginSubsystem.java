@@ -22,17 +22,17 @@ public class FermatNetworkPluginSubsystem extends AbstractPluginSubsystem {
     @Override
     public void start() throws CantStartSubsystemException {
         try {
-//            try {
-//                registerDeveloperMati("com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.DeveloperBitDubai");
-//            }catch (Exception e){
-//                System.err.println("##############################################\n");
-//                System.err.println("##############################################\n");
-//                System.err.println("Fermat network not found");
-//                System.err.println("Search type:"+AbstractPluginDeveloper.class.getName());
-//                e.printStackTrace();
-//                System.err.println("##############################################\n");
-//                System.err.println("##############################################\n");
-//            }
+            try {
+                registerDeveloperMati("com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.DeveloperBitDubai");
+            }catch (Exception e){
+                System.err.println("##############################################\n");
+                System.err.println("##############################################\n");
+                System.err.println("Fermat network not found");
+                System.err.println("Search type:"+AbstractPluginDeveloper.class.getName());
+                e.printStackTrace();
+                System.err.println("##############################################\n");
+                System.err.println("##############################################\n");
+            }
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);

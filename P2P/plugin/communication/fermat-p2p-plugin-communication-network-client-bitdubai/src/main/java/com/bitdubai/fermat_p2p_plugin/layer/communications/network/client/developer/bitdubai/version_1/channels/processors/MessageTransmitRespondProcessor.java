@@ -47,7 +47,7 @@ public class MessageTransmitRespondProcessor extends PackageProcessor{
         System.out.println("Processing new package received, packageType: "+packageReceived.getPackageType());
         MessageTransmitRespond messageTransmitRespond = MessageTransmitRespond.parseContent(packageReceived.getContent());
 
-        System.out.println(messageTransmitRespond.toJson());
+        System.out.println("MessageTrasmitRespondProcessor: "+ messageTransmitRespond.toJson());
 
         if(messageTransmitRespond.getStatus() == MessageTransmitRespond.STATUS.SUCCESS){
 

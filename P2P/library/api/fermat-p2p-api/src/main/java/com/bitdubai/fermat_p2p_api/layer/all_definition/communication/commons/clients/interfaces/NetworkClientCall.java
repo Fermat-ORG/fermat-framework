@@ -28,6 +28,14 @@ public interface NetworkClientCall {
     void sendPackageMessage(NetworkServiceMessage packageContent) throws CantSendMessageException;
 
     /**
+     * todo: completar. Manda mensajes sincronamente esperando ack del envio al otro dispositivo.
+     * @param packageContent
+     * @throws CantSendMessageException
+     */
+    void sendSyncPackageMessage(NetworkServiceMessage packageContent) throws CantSendMessageException;
+
+
+    /**
      * Through the method <code>hangUp</code> we can hang up the call.
      */
     void hangUp();

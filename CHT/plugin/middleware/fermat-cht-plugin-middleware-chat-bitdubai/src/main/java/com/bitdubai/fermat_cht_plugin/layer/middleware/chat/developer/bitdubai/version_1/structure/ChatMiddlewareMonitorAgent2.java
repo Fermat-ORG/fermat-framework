@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
@@ -49,18 +48,13 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposin
 import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ActionOnline;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MessageMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
@@ -68,7 +62,6 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingActionListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure.ChatActorCommunitySubAppModuleSearch;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 
 import java.sql.Timestamp;
@@ -230,6 +223,13 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                     FermatException.wrapException(exception),
                     "Initialize Monitor Agent - trying to open the plugin database",
                     "Unexpected exception");
+        } finally {
+            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                    pluginDatabaseSystem,
+                    pluginId,
+                    database,
+                    chatMiddlewarePluginRoot,
+                    pluginFileSystem);
         }
     }
 
@@ -241,7 +241,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
         try {
 
             if (discoverIteration == 0) {
-                sendChatBroadcasting();
+//                sendChatBroadcasting();
                 resetWritingStatus();
                 checkOnlineStatus();
             }
@@ -266,94 +266,87 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
     }
 
-    private void sendChatBroadcasting() {
-        Date date = new Date();
-        chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                pluginDatabaseSystem,
-                pluginId,
-                database,
-                chatMiddlewarePluginRoot,
-                pluginFileSystem);
-
-        try {
-            List<Chat> chats = chatMiddlewareDatabaseDao.getChats(null);
-            for (Chat chat : chats) {
-                if (chat.getTypeChat() == TypeChat.REBROADCASTING) {
-                    long tsTime1 = chat.getDate().getTime();
-                    long tsTime2 = date.getTime();
-
-                    if (tsTime1 >= tsTime2) {
-                        //if (chat.getScheduledDelivery()) {
-                        //Enviar el mensaje pasando como argumento el objeto chat con todos los datos
-                        //Buscar el mensaje creado de ese chat guardado cuando se creo la redifusion
-                        List<Message> messages = chatMiddlewareDatabaseDao.getMessagesByChatId(chat.getChatId());
-                        chat.setMessagesAsociated(messages);
-                        //Buscar los miembros de ese chat en group member para asociarlo al objeto chat leido
-                        List<GroupMember> groupMembers = chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(chat.getChatId());
-                        //Enviar el mensaje
-                        for (GroupMember groupMember : groupMembers) {
-                            chat.setRemoteActorPublicKey(groupMember.getActorPublicKey());
-                            chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
-                            chat.setRemoteActorType(PlatformComponentType.ACTOR_CHAT);
-                            System.out.println("ChatMetadata to send:\n" + constructChatMetadata(chat, messages.get(0)));
-                            try {
-                                chatNetworkServiceManager.sendChatMetadata(
-                                        chat.getLocalActorPublicKey(),
-                                        chat.getRemoteActorPublicKey(),
-                                        constructChatMetadata(chat, messages.get(0))
-                                );
-                            } catch (IllegalArgumentException e) {
-                                /**
-                                 * In this case, any argument in chat or message was null or not properly set.
-                                 * I'm gonna change the status to CANNOT_SEND to avoid send this message.
-                                 */
-                                messages.get(0).setStatus(MessageStatus.CANNOT_SEND);
-                            }
-                        }
-                        messages.get(0).setStatus(MessageStatus.SEND);
-                        chatMiddlewareDatabaseDao.saveMessage(messages.get(0));
-                        //}
-                    }
-                }
-            }
-        } catch (DatabaseOperationException e) {
-            e.printStackTrace();
-        } catch (CantGetChatException e) {
-            e.printStackTrace();
-        } catch (CantGetMessageException e) {
-            e.printStackTrace();
-        } catch (CantSendChatMessageMetadataException e) {
-            e.printStackTrace();
-        } catch (CantSaveMessageException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void sendChatBroadcasting() {
+//        Date date = new Date();
+//        chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+//                pluginDatabaseSystem,
+//                pluginId,
+//                database,
+//                chatMiddlewarePluginRoot,
+//                pluginFileSystem);
+//
+//        try {
+//            List<Chat> chats = chatMiddlewareDatabaseDao.getChats(null);
+//            for (Chat chat : chats) {
+//                if (chat.getTypeChat() == TypeChat.REBROADCASTING) {
+//                    long tsTime1 = chat.getDate().getTime();
+//                    long tsTime2 = date.getTime();
+//
+//                    if (tsTime1 >= tsTime2) {
+//                        //if (chat.getScheduledDelivery()) {
+//                        //Enviar el mensaje pasando como argumento el objeto chat con todos los datos
+//                        //Buscar el mensaje creado de ese chat guardado cuando se creo la redifusion
+//                        List<Message> messages = chatMiddlewareDatabaseDao.getMessagesByChatId(chat.getChatId());
+//                        chat.setMessagesAsociated(messages);
+//                        //Buscar los miembros de ese chat en group member para asociarlo al objeto chat leido
+//                        List<GroupMember> groupMembers = chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(chat.getChatId());
+//                        //Enviar el mensaje
+//                        for (GroupMember groupMember : groupMembers) {
+//                            chat.setRemoteActorPublicKey(groupMember.getActorPublicKey());
+//                            chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
+//                            chat.setRemoteActorType(PlatformComponentType.ACTOR_CHAT);
+//                            System.out.println("ChatMetadata to send:\n" + constructChatMetadata(chat, messages.get(0)));
+//                            try {
+//                                chatNetworkServiceManager.sendChatMetadata(
+//                                        chat.getLocalActorPublicKey(),
+//                                        chat.getRemoteActorPublicKey(),
+//                                        constructChatMetadata(chat, messages.get(0))
+//                                );
+//                            } catch (IllegalArgumentException e) {
+//                                /**
+//                                 * In this case, any argument in chat or message was null or not properly set.
+//                                 * I'm gonna change the status to CANNOT_SEND to avoid send this message.
+//                                 */
+//                                messages.get(0).setStatus(MessageStatus.CANNOT_SEND);
+//                            }
+//                        }
+//                        messages.get(0).setStatus(MessageStatus.SEND);
+//                        chatMiddlewareDatabaseDao.saveMessage(messages.get(0));
+//                        //}
+//                    }
+//                }
+//            }
+//        } catch (DatabaseOperationException e) {
+//            e.printStackTrace();
+//        } catch (CantGetChatException e) {
+//            e.printStackTrace();
+//        } catch (CantGetMessageException e) {
+//            e.printStackTrace();
+//        } catch (CantSendChatMessageMetadataException e) {
+//            e.printStackTrace();
+//        } catch (CantSaveMessageException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /**
      * This method checks the incoming chat event and acts according to this.
      *
      * @throws CantGetPendingTransactionException
      */
-    public void checkIncomingChat(ChatMetadata chatMetadata)
+    public void checkIncomingChat(MessageMetadata messageMetadata)
             throws CantGetPendingTransactionException,
             CantListChatException,
             UnexpectedResultReturnedFromDatabaseException {
         try {
-            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                    pluginDatabaseSystem,
-                    pluginId,
-                    database,
-                    chatMiddlewarePluginRoot,
-                    pluginFileSystem);
 
             System.out.println("12345 CHECKING INCOMING CHAT");
 
-            chatMetadata.getLocalActorPublicKey();
-            ChatExposingData chatExposingData = getChatActorSearch().getResult(chatMetadata.getLocalActorPublicKey());
+            ChatExposingData chatExposingData = chatActorNetworkServiceManager.getSearch().getResult(messageMetadata.getLocalActorPublicKey());
             System.out.println("12345 CHECKING CONTACT EXIST");
             if(chatExposingData != null) {
                 System.out.println("12345 CONTACT ALREADY EXIST");
-                saveChat(chatMetadata);
+                saveMessage(messageMetadata);
                 //Start: Commented trying to avoid messages in wrong chat
 //                    saveMessage(chatMetadata);
                 //End: Commented trying to avoid messages in wrong chat
@@ -423,29 +416,17 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
     }
 
-
-    public ChatActorCommunitySearch getChatActorSearch() {
-        return new ChatActorCommunitySubAppModuleSearch(chatActorNetworkServiceManager) {
-        };
-    }
-
     /**
      * This method checks the incoming status event and acts according to this.
      *
      * @throws CantGetPendingTransactionException
      */
-    public void checkIncomingStatus(ChatMetadata chatMetadata) throws
+    public void checkIncomingStatus(MessageMetadata messageMetadata) throws
             CantGetPendingTransactionException,
             UnexpectedResultReturnedFromDatabaseException {
         try {
-            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                    pluginDatabaseSystem,
-                    pluginId,
-                    database,
-                    chatMiddlewarePluginRoot,
-                    pluginFileSystem);
 
-            System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == " + chatMetadata.getMessage() + " MESSAGE STATUS == " + chatMetadata.getMessageStatus());
+            System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == " + messageMetadata.getMessage() + " MESSAGE STATUS == " + messageMetadata.getMessageStatus());
 
 //                    if (!checkChatMetadata(chatMetadata)) return;
 
@@ -454,8 +435,8 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 //            if(chat!=null){
 //                Message message = chatMiddlewareDatabaseDao.getMessageByMessageId(chatMetadata.getMessageId());
 //                if(message !=null){
-            updateMessageStatus(chatMetadata);
-            if (chatMetadata.getMessageStatus() != MessageStatus.READ) {
+            updateMessageStatus(messageMetadata);
+            if (messageMetadata.getMessageStatus() != MessageStatus.READ) {
                 FermatBundle fermatBundle3 = new FermatBundle();
                 fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
                 fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
@@ -503,18 +484,12 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             CantGetPendingTransactionException,
             UnexpectedResultReturnedFromDatabaseException {
         try {
-            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                    pluginDatabaseSystem,
-                    pluginId,
-                    database,
-                    chatMiddlewarePluginRoot,
-                    pluginFileSystem);
 
             List<ActionOnline> onlineActions = chatMiddlewareDatabaseDao.getOnlineActionsByActiveState();
 
             if (onlineActions == null || onlineActions.isEmpty()) return;
 
-            System.out.println("12345 CHECKING ONLINE STATUS");
+//            System.out.println("12345 CHECKING ONLINE STATUS");
 
 //            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
 
@@ -522,7 +497,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 //                boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
                 boolean isOnline = chatActorNetworkServiceManager.isActorOnline(actionOnline.getPublicKey());
                 actionOnline.setValue(isOnline);
-                System.out.println("12345 is online " + isOnline);
+//                System.out.println("12345 is online " + isOnline);
                 if (isOnline) actionOnline.setLastOn(false);
                 if (!isOnline && actionOnline.getLastOn() != true) {
                     DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm");
@@ -556,12 +531,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
     public void resetWritingStatus() {
         try {
-            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                    pluginDatabaseSystem,
-                    pluginId,
-                    database,
-                    chatMiddlewarePluginRoot,
-                    pluginFileSystem);
 
             boolean changes = false;
 
@@ -573,7 +542,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                 for (UUID chatId : chatsId) {
                     chatMiddlewareDatabaseDao.saveWritingAction(chatId, ActionState.NONE);
 //                    System.out.println("12345 Action writing Updated " + chatId);
-                    changes = true;
+//                    changes = true;
                 }
             }
 
@@ -581,7 +550,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             List<Chat> chats = chatMiddlewareDatabaseDao.getChatListByWriting();
 //            System.out.println("12345 Chats to reset recibidos "+ chatsId.size());
 
-            if (chats == null && chats.isEmpty()) return;
+            if (chats == null || chats.isEmpty()) return;
 
             for (Chat chat : chats) {
                 chat.setIsWriting(false);
@@ -622,17 +591,11 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
     public void resetOnlineStatus() {
         try {
-            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                    pluginDatabaseSystem,
-                    pluginId,
-                    database,
-                    chatMiddlewarePluginRoot,
-                    pluginFileSystem);
 
             boolean changes = false;
 
 
-            List<ActionOnline> actionOnlines = null;
+            List<ActionOnline> actionOnlines;
             actionOnlines = chatMiddlewareDatabaseDao.getOnlineActionsByOnline();
 
             if (actionOnlines == null || actionOnlines.isEmpty()) return;
@@ -693,18 +656,12 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 //        }
 //    }
 
-    public void checkIncomingWritingStatus(UUID chatId) throws
+    public void checkIncomingWritingStatus(String senderPk) throws
             CantGetPendingTransactionException,
             UnexpectedResultReturnedFromDatabaseException {
         try {
-            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                    pluginDatabaseSystem,
-                    pluginId,
-                    database,
-                    chatMiddlewarePluginRoot,
-                    pluginFileSystem);
 
-            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+            Chat chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(senderPk);
             if (chat != null) {
                 System.out.println("12345 Saving is writing chat " + chat.getChatId());
                 chat.setIsWriting(true);
@@ -794,28 +751,28 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
      * @throws CantGetChatException
      * @throws CantGetPendingTransactionException
      */
-    private boolean checkChatMetadata(ChatMetadata chatMetadata) throws
-            CantGetChatException,
-            CantGetPendingTransactionException {
-        UUID chatId = chatMetadata.getChatId();
-        UUID messageId;
-        if (chatMiddlewareDatabaseDao.chatIdExists(
-                chatId)) {
-            messageId = chatMetadata.getMessageId();
-            if (chatMiddlewareDatabaseDao.messageIdExists(messageId)) {
-                return true;
-            } else {
-                //TODO: I need to study how can I handle this case.
-                return false;
-//                    throw new CantGetPendingTransactionException(
-//                            "The Message Id "+messageId+" does not exists in database");
-            }
-        } else {
-            //This is a case that in this version I cannot handle
-            throw new CantGetPendingTransactionException(
-                    "The Chat Id " + chatId + " does not exists in database");
-        }
-    }
+//    private boolean checkChatMetadata(ChatMetadata chatMetadata) throws
+//            CantGetChatException,
+//            CantGetPendingTransactionException {
+//        UUID chatId = chatMetadata.getChatId();
+//        UUID messageId;
+//        if (chatMiddlewareDatabaseDao.chatIdExists(
+//                chatId)) {
+//            messageId = chatMetadata.getMessageId();
+//            if (chatMiddlewareDatabaseDao.messageIdExists(messageId)) {
+//                return true;
+//            } else {
+//                //TODO: I need to study how can I handle this case.
+//                return false;
+////                    throw new CantGetPendingTransactionException(
+////                            "The Message Id "+messageId+" does not exists in database");
+//            }
+//        } else {
+//            //This is a case that in this version I cannot handle
+//            throw new CantGetPendingTransactionException(
+//                    "The Chat Id " + chatId + " does not exists in database");
+//        }
+//    }
 
     /**
      * This method saves a new message in database
@@ -825,74 +782,65 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
      * @throws CantSaveMessageException
      * @throws CantGetMessageException
      */
-    private void saveMessage(
-            ChatMetadata chatMetadata) throws
-            DatabaseOperationException,
-            CantSaveMessageException,
-            CantGetMessageException, SendStatusUpdateMessageNotificationException {
-        System.out.println("12345 SAVING MESSAGE");
-        Message messageRecorded = null;
-        /**
-         * In this case, the message is not created in database, so, is an incoming message,
-         * I need to create a new message
-         */
-        messageRecorded = getMessageFromChatMetadata(
-                chatMetadata);
-        if (messageRecorded == null) return;
-
-        messageRecorded.setStatus(MessageStatus.RECEIVE);
-        chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
-        chatMiddlewareManager.sendDeliveredMessageNotification(messageRecorded);
-    }
+//    private void saveMessage(
+//            ChatMetadata chatMetadata) throws
+//            DatabaseOperationException,
+//            CantSaveMessageException,
+//            CantGetMessageException, SendStatusUpdateMessageNotificationException {
+//        System.out.println("12345 SAVING MESSAGE");
+//        Message messageRecorded = null;
+//        /**
+//         * In this case, the message is not created in database, so, is an incoming message,
+//         * I need to create a new message
+//         */
+//        messageRecorded = getMessageFromChatMetadata(
+//                chatMetadata);
+//        if (messageRecorded == null) return;
+//
+//        messageRecorded.setStatus(MessageStatus.RECEIVE);
+//        chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
+//        chatMiddlewareManager.sendDeliveredMessageNotification(messageRecorded);
+//    }
 
     /**
      * This method saves the new chat in database
      *
-     * @param chatMetadata
+     * @param messageMetadata
      * @throws DatabaseOperationException
      */
-    private void saveChat(ChatMetadata chatMetadata)
+    private void saveMessage(MessageMetadata messageMetadata)
             throws DatabaseOperationException, CantGetChatException,
             CantSaveChatException,
             CantSaveMessageException,
             CantGetMessageException, SendStatusUpdateMessageNotificationException {
 
-        System.out.println("12345 SAVING CHAT");
-        Chat chat=null;
-        //Start: Commented trying to avoid messages in wrong chat
-        //Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatMetadata.getChatId());
-        //if(chat==null)
-        //End: Commented trying to avoid messages in wrong chat
-            chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
+        Chat chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(messageMetadata.getLocalActorPublicKey());
 
-        // change to put in the remote device in the correct place of table chat
         if (chat == null) {
-            chat = getChatFromChatMetadata(chatMetadata);
+            chat = new ChatImpl();
+            chat.setChatId(UUID.randomUUID());
+            chat.setObjectId(UUID.randomUUID());
+            chat.setLocalActorPublicKey(messageMetadata.getRemoteActorPublicKey());
+            chat.setLocalActorType(messageMetadata.getRemoteActorType());
+            chat.setRemoteActorPublicKey(messageMetadata.getLocalActorPublicKey());
+            chat.setRemoteActorType(messageMetadata.getLocalActorType());
+            Long dv = System.currentTimeMillis();
+            chat.setDate(new Timestamp(dv));
+            chat.setTypeChat(TypeChat.INDIVIDUAL);
         }
-        //Start: Commented trying to avoid messages in wrong chat
-        //
-        // else {
-//            localPublicKey = chatMetadata.getRemoteActorPublicKey();
-//            if (!localPublicKey.equals(chat.getRemoteActorPublicKey())) {
-//                chat.setLocalActorPublicKey(localPublicKey);
-//            }
-//        }
-        //End: Commented trying to avoid messages in wrong chat
         chat.setLastMessageDate(new Timestamp(System.currentTimeMillis()));//updating date of last message arrived in chat
 
         chat.setStatus(ChatStatus.VISSIBLE);
 
         chatMiddlewareDatabaseDao.saveChat(chat);
 
-        //Start: Implementation trying to avoid messages in wrong chat
-        Message messageRecorded = null;
 //        if (messageRecorded == null) {
         /**
          * In this case, the message is not created in database, so, is an incoming message,
          * I need to create a new message
          */
-        messageRecorded = getMessageFromChatMetadata(
-                chatMetadata);
+        Message messageRecorded = getMessageFromChatMetadata(
+                messageMetadata);
         if (messageRecorded == null) return;
 //        }
         messageRecorded.setChatId(chat.getChatId());
@@ -905,17 +853,17 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
     /**
      * This method creates a new Message from incoming metadata
      *
-     * @param chatMetadata
+     * @param messageMetadata
      * @return
      */
-    private Message getMessageFromChatMetadata(ChatMetadata chatMetadata)
+    private Message getMessageFromChatMetadata(MessageMetadata messageMetadata)
             throws
             CantGetMessageException {
-        if (chatMetadata == null) {
+        if (messageMetadata == null) {
             throw new CantGetMessageException("The chat metadata from network service is null");
         }
         try {
-            Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
+            Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(messageMetadata.getLocalActorPublicKey());
 
             ChatLinkedActorIdentity chatLinkedActorIdentity = new ChatLinkedActorIdentity(
                     chatFromDatabase.getLocalActorPublicKey(),
@@ -937,7 +885,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
             Message message = new MessageImpl(
                     chatFromDatabase.getChatId(),
-                    chatMetadata,
+                    messageMetadata,
                     MessageStatus.CREATED,
                     TypeMessage.INCOMMING,
                     actorConnection.getConnectionId()//TODO:Revisar esto si afecta el envio ya que el public es un string//UUID.fromString(actorConnection.getPublicKey())
@@ -995,67 +943,37 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
     /**
      * This method updates a message record in database.
      *
-     * @param chatMetadata,
+     * @param messageMetadata,
      * @throws DatabaseOperationException
      * @throws CantSaveMessageException
      * @throws CantGetMessageException
      */
     private void updateMessageStatus(
-            ChatMetadata chatMetadata) throws
+            MessageMetadata messageMetadata) throws
             DatabaseOperationException,
             CantSaveMessageException,
             CantGetMessageException {
         System.out.println("12345 UPDATING MESSAGE STATUS");
-        UUID messageId = chatMetadata.getMessageId();
+        UUID messageId = messageMetadata.getMessageId();
         Message messageRecorded = chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
         if (messageRecorded == null) {
             /**
              * In this case, the message is not created in database, so, is an incoming message,
              * I need to create a new message
              */
+
+            System.out.println("************* MESSAGE DOES NOT EXIST");
             messageRecorded = getMessageFromChatMetadata(
-                    chatMetadata);
+                    messageMetadata);
             if (messageRecorded == null) return;
         }
         if (messageRecorded.getStatus().equals(MessageStatus.READ))
             return;
 
-        messageRecorded.setStatus(chatMetadata.getMessageStatus());
+        messageRecorded.setStatus(messageMetadata.getMessageStatus());
         chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
         System.out.println("12345 MESSAGE STATUS UPDATED");
     }
 
-    /**
-     * This method return a ChatMetadata from a Chat and Message objects.
-     *
-     * @param chat
-     * @param message
-     * @return
-     */
-    private ChatMetadata constructChatMetadata(
-            Chat chat,
-            Message message) {
-        ChatMetadata chatMetadata;
-        Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
-        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(timestamp);
-        chatMetadata = new ChatMetadataRecord(
-                chat.getChatId(),
-                chat.getObjectId(),
-                chat.getLocalActorType(),
-                chat.getLocalActorPublicKey(),
-                chat.getRemoteActorType(),
-                chat.getRemoteActorPublicKey(),
-                chat.getChatName(),
-                ChatMessageStatus.READ_CHAT,
-                MessageStatus.SEND,
-                timeStamp,
-                message.getMessageId(),
-                message.getMessage(),
-                DistributionStatus.OUTGOING_MSG,
-                chat.getTypeChat(),
-                chat.getGroupMembersAssociated()
-        );
-        return chatMetadata;
-    }
 }
 

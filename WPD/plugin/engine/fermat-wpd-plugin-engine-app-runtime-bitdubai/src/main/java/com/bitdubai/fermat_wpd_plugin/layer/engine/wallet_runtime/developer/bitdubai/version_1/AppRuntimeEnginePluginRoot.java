@@ -4898,6 +4898,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#05CFC2");
+
+        leftToolbarIcon = new MenuItem(300);
+        leftToolbarIcon.setAppLinkPublicKey("nav_menu");
+        runtimeTitleBar.setNavItem(leftToolbarIcon);
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#05CFC2");
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
@@ -4941,10 +4949,19 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
 
         //action bar menu
-        optionMenuItem = new OptionMenuItem(4);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(6, "send_request", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Send Request");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS); //show always icon
+
+         optionsMenu = new OptionsMenu();
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -5084,6 +5101,16 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        leftToolbarIcon = new MenuItem(300);
+        leftToolbarIcon.setAppLinkPublicKey("nav_menu");
+        runtimeTitleBar.setNavItem(leftToolbarIcon);
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#05CFC2");
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
@@ -5712,6 +5739,20 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setFragmentCode(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey());
         runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey(), runtimeFragment);
 
+
+        optionsMenu = new OptionsMenu();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
+
+        optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(4, "loss_send_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("send");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
         //Navigation
 
         //Side Menu
@@ -5792,7 +5833,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(3);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(4, "loss_send_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(3, "loss_request_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("send");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenu.addMenuItem(optionMenuItem);

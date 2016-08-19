@@ -18,7 +18,7 @@
     <string name="add_fermat_user_text">Contacto fermat</string>
     <string name="add_user_in_your_contact_list_text">Anadir usuario a la lista de contactos o\nbuscarlo en la comunidad</string>
     <string name="address_text">Direccion</string>
-    <string name="advertisement_text">Noticia!</string>
+    <string name="advertisement_text">Advertencia!</string>
     <string name="alias_text">Sufijo de alias</string>
     <string name="amount_text">Cantidad</string>
     <string name="available_balance">Balance actual</string>
@@ -111,7 +111,7 @@
     <string name="swype_refresh">Deslice hacia abajo para refrescar</string>
     <string name="the_process_of_downloading_text">Se estan bajando los bloques de\nla  Blockchain.\n  Mientras esto ocurre, la barra superior se mostrara en rojo.</string>
     <string name="this_is_a_simple_bitcoin_only_wallet_text">Esta cartera maneja bitcoins\nCon ella se puede:</string>
-    <string name="title_Fee">Configuracion de fees</string>
+    <string name="title_Fee">Configuracion de Taza</string>
     <string name="title_activity_blank">Administrador de Carteras</string>
     <string name="title_activity_requests_received">Solicitudes recibidas</string>
     <string name="title_activity_pay_to_contact">Pagar a contacto</string>

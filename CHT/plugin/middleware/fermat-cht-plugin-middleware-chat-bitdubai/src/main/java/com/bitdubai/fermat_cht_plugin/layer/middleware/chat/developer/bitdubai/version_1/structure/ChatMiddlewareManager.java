@@ -49,6 +49,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageS
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MessageMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
@@ -623,7 +624,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
             String localActorPublicKey = chat.getLocalActorPublicKey();
             String remoteActorPublicKey = chat.getRemoteActorPublicKey();
-            networkServiceChatManager.sendChatMessageNewStatusNotification(
+            networkServiceChatManager.sendMessageStatusUpdate(
                     localActorPublicKey,
                     chat.getLocalActorType(),
                     remoteActorPublicKey,
@@ -650,7 +651,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
             String localActorPublicKey = chat.getLocalActorPublicKey();
             String remoteActorPublicKey = chat.getRemoteActorPublicKey();
-            networkServiceChatManager.sendChatMessageNewStatusNotification(
+            networkServiceChatManager.sendMessageStatusUpdate(
                     localActorPublicKey,
                     chat.getLocalActorType(),
                     remoteActorPublicKey,
@@ -897,17 +898,20 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             }
             String localActorPublicKey = chat.getLocalActorPublicKey();
             String remoteActorPublicKey = chat.getRemoteActorPublicKey();
-            ChatMetadata chatMetadata = constructChatMetadata(
-                    chat,
-                    createdMessage
-            );
-            System.out.println("ChatMetadata to send:\n" + chatMetadata);
+
             try {
-                chatNetworkServiceManager.sendChatMetadata(
-                        localActorPublicKey,
+
+                MessageMetadata messageMetadata = new MessageMetadataRecord(chat.getLocalActorType(),
+                        chat.getLocalActorPublicKey(),
+                        chat.getRemoteActorType(),
+                        chat.getRemoteActorPublicKey(),
+                        createdMessage.getMessageId(),
+                        createdMessage.getMessage(),
+                        createdMessage.getStatus(),
+                        new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Timestamp(System.currentTimeMillis())));
+                chatNetworkServiceManager.sendMessageMetadata(localActorPublicKey,
                         remoteActorPublicKey,
-                        chatMetadata
-                );
+                        messageMetadata);
                 createdMessage.setStatus(MessageStatus.SEND);
             } catch (IllegalArgumentException e) {
                 /**
@@ -986,6 +990,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      * @param message
      * @return
      */
+    @Deprecated
     private ChatMetadata constructChatMetadata(
             Chat chat,
             Message message) {
