@@ -107,9 +107,9 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
 
 
-            list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",(Boolean) appSession.getData(SessionConstant.NOTIFICATION_ENABLED)));
+            list.add(new PreferenceSettingsSwithItem(1,getResources().getString(R.string.Enabled_notificacions),(Boolean) appSession.getData(SessionConstant.NOTIFICATION_ENABLED)));
 
-            list.add(new PreferenceSettingsSwithItem(2,"Enabled Loss Protected",(Boolean) appSession.getData(SessionConstant.LOSS_PROTECTED_ENABLED)));
+            list.add(new PreferenceSettingsSwithItem(2,getResources().getString(R.string.Enabled_loss_protected),(Boolean) appSession.getData(SessionConstant.LOSS_PROTECTED_ENABLED)));
 
 
 
@@ -135,7 +135,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
             networkDialog.putString("title", getResources().getString(R.string.title_label));
             networkDialog.putString("mode", "single_option");
             networkDialog.putString("previous_selected_item", previousSelectedItem);
-            list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", networkDialog));
+            list.add(new PreferenceSettingsOpenDialogText(5, getResources().getString(R.string.Select_network), networkDialog));
 
 
             // Exchange Rate Provider

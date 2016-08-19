@@ -286,9 +286,9 @@
     <string name="Enabled_notificacions">Notificaciones Habilitadas</string>
     <string name="Enabled_loss_protected">Loss Protected Habilitado</string>
     <string name="Select_network">Selecionar Red</string>
-    <string name="Received_Testnet_Bitcoins">Recibido Testnet Bitcoins </string>
-    <string name="TestNet_download">"Iniciando Descarga TestNet"</string>
-    <string name="TestNet_bitcoin_arrived">Llego TestNet bitcoin</string>
+    <string name="Received_Testnet_Bitcoins">Recibir Bitcoins Testnet</string>
+    <string name="TestNet_download">Iniciando Descarga TestNet</string>
+    <string name="TestNet_bitcoin_arrived">Llego Bitcoin TestNet</string>
     <string name="TestNet_Request_Error">Error de solicitud a TestNet</string>
 
 
