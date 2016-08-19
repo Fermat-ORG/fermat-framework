@@ -53,6 +53,7 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 
 /**
  * Created by mati on 2016.02.09..
+ * updated by Andres Abreu on 18/08/16
  */
 public class LossProtectedSettingsFragment extends FermatPreferenceFragment<ReferenceAppFermatSession<LossProtectedWallet>,WalletResourcesProviderManager> {
 

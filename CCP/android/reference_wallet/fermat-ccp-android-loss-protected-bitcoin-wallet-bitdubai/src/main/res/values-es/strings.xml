@@ -268,19 +268,19 @@
     <string name="Error_spending_chart">Error boteniendo lista de gastos para gráfico</string>
 
     <!-- loss_notification_painter.xml -->
-    <string name="lpw_notification1">Dinero recibido</string>
-    <string name="lpw_notification1_1">Llegaron BTC</string>
-    <string name="lpw_notification2">Transacción enviada devuelta</string>
-    <string name="lpw_notification2_1">Enviando</string>
-    <string name="lpw_notification2_2">BTC no se pudo completar.</string>
-    <string name="lpw_notification3">Nueva solicitud de pago recibida</string>
-    <string name="lpw_notification3_1">Ud. ha recibido una solicitud de pago, por</string>
-    <string name="lpw_notification4">Solicitud de pago rechazada</string>
-    <string name="lpw_notification4_1">Su solicitud de pago, por</string>
-    <string name="lpw_notification4_2">BTC fue rechazada.</string>
-    <string name="lpw_notification5">Solicitud de pago devuelta</string>
-    <string name="lpw_notification5_1">Su solicitud de pago, por</string>
-    <string name="lpw_notification5_2">BTC fue devuelta.</string>
+    <string name="lpw_notification_transaction_arrive_1">Dinero recibido</string>
+    <string name="lpw_notification_transaction_arrive_2">Llegaron BTC</string>
+    <string name="lpw_notification_transaction_reverse_1">Transacción enviada devuelta</string>
+    <string name="lpw_notification_transaction_reverse_2">Enviando</string>
+    <string name="lpw_notification_transaction_reverse_3">BTC no se pudo completar.</string>
+    <string name="lpw_notification_request_arrive_1">Nueva solicitud de pago recibida</string>
+    <string name="lpw_notification_request_arrive_2">Ud. ha recibido una solicitud de pago, por</string>
+    <string name="lpw_notification_payment_denied_1">Solicitud de pago rechazada</string>
+    <string name="lpw_notification_payment_denied_2">Su solicitud de pago, por</string>
+    <string name="lpw_notification_payment_denied_3">BTC fue rechazada.</string>
+    <string name="lpw_notification_payment_error_1">Solicitud de pago devuelta</string>
+    <string name="lpw_notification_payment_error_2">Su solicitud de pago, por</string>
+    <string name="lpw_notification_payment_error_3">BTC fue devuelta.</string>
 
     <!-- loss_presentation_settings.xml -->
     <string name="Enabled_notificacions">Notificaciones Habilitadas</string>

@@ -136,19 +136,19 @@
     <string name="Error_spending_chart">Error Get SpendingList for Chart</string>
 
     <!-- loss_notification_painter.xml -->
-    <string name="lpw_notification1">Received money</string>
-    <string name="lpw_notification1_1">BTC Arrived</string>
-    <string name="lpw_notification2">Sent Transaction reversed</string>
-    <string name="lpw_notification2_1">Sending</string>
-    <string name="lpw_notification2_2">BTC could not be completed.</string>
-    <string name="lpw_notification3">Received new Payment Request</string>
-    <string name="lpw_notification3_1">You have received a Payment Request, for</string>
-    <string name="lpw_notification4">Payment Request deny</string>
-    <string name="lpw_notification4_1">Your Payment Request, for </string>
-    <string name="lpw_notification4_2">BTC was deny.</string>
-    <string name="lpw_notification5">Payment Request reverted</string>
-    <string name="lpw_notification5_1">Your Payment Request, for </string>
-    <string name="lpw_notification5_2">BTC was reverted.</string>
+    <string name="lpw_notification_transaction_arrive_1">Received money</string>
+    <string name="lpw_notification_transaction_arrive_2">BTC Arrived</string>
+    <string name="lpw_notification_transaction_reverse_1">Sent Transaction reversed</string>
+    <string name="lpw_notification_transaction_reverse_2">Sending</string>
+    <string name="lpw_notification_transaction_reverse_3">BTC could not be completed.</string>
+    <string name="lpw_notification_request_arrive_1">Received new Payment Request</string>
+    <string name="lpw_notification_request_arrive_2">You have received a Payment Request, for</string>
+    <string name="lpw_notification_payment_denied_1">Payment Request deny</string>
+    <string name="lpw_notification_payment_denied_2">Your Payment Request, for </string>
+    <string name="lpw_notification_payment_denied_3">BTC was deny.</string>
+    <string name="lpw_notification_payment_error_1">Payment Request reverted</string>
+    <string name="lpw_notification_payment_error_2">Your Payment Request, for </string>
+    <string name="lpw_notification_payment_error_3">BTC was reverted.</string>
 
     <!-- loss_presentation_settings.xml -->
     <string name="Enabled_notificacions">Enabled Notifications</string>
