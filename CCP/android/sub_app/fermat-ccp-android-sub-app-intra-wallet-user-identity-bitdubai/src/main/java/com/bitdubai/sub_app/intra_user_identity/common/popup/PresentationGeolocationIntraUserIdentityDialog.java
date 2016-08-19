@@ -49,7 +49,7 @@ public class PresentationGeolocationIntraUserIdentityDialog extends FermatDialog
         startCommunity = (FermatButton) findViewById(R.id.start_community);
         dontShowAgainCheckBox = (CheckBox) findViewById(R.id.checkbox_not_show);
         startCommunity.setOnClickListener(this);
-        dontShowAgainCheckBox.setChecked(true);
+        //dontShowAgainCheckBox.setChecked(true);
 
 
     }
@@ -70,19 +70,9 @@ public class PresentationGeolocationIntraUserIdentityDialog extends FermatDialog
         int id = v.getId();
 
         if (id == R.id.start_community) {
-//            SharedPreferences pref = getContext().getSharedPreferences("don't show dialog more", Context.MODE_PRIVATE);
-//            SharedPreferences.Editor edit = pref.edit();
-            if (dontShowAgainCheckBox.isChecked()) {
-//                edit.putBoolean("isChecked", true);
-//                edit.apply();
-                saveSettings();
+
                 dismiss();
-            } else {
-//                edit.putBoolean("isChecked", false);
-//                edit.apply();
-                saveSettings();
-                dismiss();
-            }
+
         }
     }
 

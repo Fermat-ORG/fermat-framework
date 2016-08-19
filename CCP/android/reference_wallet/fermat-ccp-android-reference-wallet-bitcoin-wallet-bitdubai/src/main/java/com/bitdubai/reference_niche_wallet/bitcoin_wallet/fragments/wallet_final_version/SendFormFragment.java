@@ -228,7 +228,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 setUpUIData();
 
             }
-            //setUpContactAddapter();
+            setUpContactAddapter();
 
             return rootView;
         } catch (Exception e) {

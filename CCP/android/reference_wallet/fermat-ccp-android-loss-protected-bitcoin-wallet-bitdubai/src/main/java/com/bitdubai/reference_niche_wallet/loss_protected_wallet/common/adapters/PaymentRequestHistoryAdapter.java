@@ -166,7 +166,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
         switch (data.getState()){
             case WAITING_RECEPTION_CONFIRMATION:
                 //state = "Waiting for response";
-                state = context.getResources().getString(R.string.accept_text);
+                state = context.getResources().getString(R.string.waiting_receive_text);
 
                 break;
             case APPROVED:

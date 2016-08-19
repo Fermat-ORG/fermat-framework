@@ -214,7 +214,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                 errorConnectingFermatNetworkDialog.dismiss();
                 try {
                     if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
-                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.error_connecting_to_fermat_network), Toast.LENGTH_SHORT).show();
                         getActivity().onBackPressed();
                     }
                 } catch (CantGetCommunicationNetworkStatusException e) {
@@ -650,6 +650,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
 
                     String txtType = txt_type.getText().toString();
                     String newAmount = "";
+                    String msg = "";
 
                     String notes = "";
                     if (txt_notes.getText().toString().length() != 0){
@@ -657,11 +658,16 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                     }
                     if (txtType.equals("[btc]")) {
                         newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                        msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
                     } else if (txtType.equals("[satoshis]")) {
                         newAmount = amount;
+                        msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
                     } else if (txtType.equals("[bits]")) {
                         newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                        msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                     }
+
+
 
 
                     BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
@@ -702,10 +708,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                            else
                                onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
                     }else {
-                       Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
+                       Toast.makeText(getActivity(),getResources().getString(R.string.error_msg_invalid_amount) +" "+ msg, Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    showMessage(getActivity(), "Invalid Request Amount");
+                    showMessage(getActivity(), getResources().getString(R.string.error_msg_invalid_amount));
                 }
             }
 

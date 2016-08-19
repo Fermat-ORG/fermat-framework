@@ -187,4 +187,20 @@
     <string name="create">Crear</string>
     <string name="hello_blank_fragment"></string>
     <string name="identity_img"></string>
+    <string name="system_error">Oooops! Error en el sistema</string>
+
+    <!-- Fragments strings -->
+    <string name="indentity_created_msg">Identidad creada</string>
+    <string name="changes_saved_msg">Cambios guardados</string>
+    <string name="identity_create_error">Error al crear la identidad</string>
+    <string name="invalid_data">Datos invalidos</string>
+    <string name="module_manager_error">Error con el gestor de modulos</string>
+    <string name="upload_image_error">Error al subir la imagen</string>
+    <string name="loading_image_error">Error al descargar la imagen</string>
+    <string name="size_image_error">La imagen seleccionada es muy pequeña. Por favor seleccione una imagen con un tamaño minimo de 192x192</string>
+    <string name="error_occurred">Ha ocurrido un error</string>
+    <string name="empty_accuracy">La caja de texto para el la precision esta vacia, por favor ingrese un valor</string>
+    <string name="geolocation_identity_updated">la geolocalización del usuario esta actualizada</string>
+    <string name="geolocation_identity_not_updated">la geolocalización del usuario no esta actualizada</string>
+    <string name="cant_get_intra_user_list">No se puede obtener la lista de usuarios de fermat</string>
 </resources>
