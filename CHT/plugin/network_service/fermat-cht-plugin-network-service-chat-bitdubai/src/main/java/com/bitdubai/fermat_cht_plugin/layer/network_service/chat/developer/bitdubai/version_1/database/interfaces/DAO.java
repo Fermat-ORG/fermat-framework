@@ -27,30 +27,9 @@ import java.util.UUID;
  */
 public interface DAO {
 
-
-    void createNotification(ChatMetadataRecord chatMetadataRecord) throws CantCreateNotificationException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException;
-
     void createNotification(MessageMetadataRecord messageMetadataRecord) throws CantCreateNotificationException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException;
 
     ChatMetadataRecord getNotificationById(final UUID transactionID) throws CantGetNotificationException, NotificationNotFoundException, CantReadRecordDataBaseException;
-
-
-    void changeChatMessageState(final String senderPublicKey,
-                                final ChatMessageStatus chatMessageStatus) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException, CantReadRecordDataBaseException;
-
-    void changeChatMessageState(final String senderPublicKey,
-                                final MessageStatus messageStatus) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException, CantReadRecordDataBaseException;
-
-    void changeChatProtocolState(final UUID requestId,
-                                 final ChatProtocolState protocolState) throws CHTException, CantGetNotificationException, NotificationNotFoundException;
-
-
-    List<ChatMetadataRecord> listRequestsByChatProtocolStateAndDistributionStatus(final ChatProtocolState chatProtocolState, final DistributionStatus distributionStatus) throws CantReadRecordDataBaseException, CantLoadTableToMemoryException;
-
-
-    List<ChatMetadata> listUnreadNotifications() throws CHTException;
-
-    void markNotificationAsRead(UUID transactionID) throws CantConfirmNotificationException;
 
     void update(ChatMetadataRecord entity) throws CantUpdateRecordDataBaseException;
 

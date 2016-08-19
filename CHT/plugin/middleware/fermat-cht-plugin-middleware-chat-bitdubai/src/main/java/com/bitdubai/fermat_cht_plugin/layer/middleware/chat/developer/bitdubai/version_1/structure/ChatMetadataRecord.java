@@ -16,6 +16,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/01/16.
  */
+@Deprecated
 public class ChatMetadataRecord implements ChatMetadata {
 
     UUID chatId;
@@ -126,10 +127,7 @@ public class ChatMetadataRecord implements ChatMetadata {
 //        return this.message;
 //    }
 
-    @Override
-    public DistributionStatus getDistributionStatus() {
-        return this.distributionStatus;
-    }
+
 
     @Override
     public TypeChat getTypeChat() {

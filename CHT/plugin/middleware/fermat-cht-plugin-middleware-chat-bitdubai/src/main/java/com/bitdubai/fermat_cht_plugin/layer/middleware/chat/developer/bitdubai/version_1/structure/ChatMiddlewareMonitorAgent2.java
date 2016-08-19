@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
@@ -49,19 +48,13 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposin
 import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ActionOnline;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MessageMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
@@ -69,7 +62,6 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingActionListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure.ChatActorCommunitySubAppModuleSearch;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 
 import java.sql.Timestamp;
@@ -350,7 +342,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
             System.out.println("12345 CHECKING INCOMING CHAT");
 
-            ChatExposingData chatExposingData = getChatActorSearch().getResult(messageMetadata.getLocalActorPublicKey());
+            ChatExposingData chatExposingData = chatActorNetworkServiceManager.getSearch().getResult(messageMetadata.getLocalActorPublicKey());
             System.out.println("12345 CHECKING CONTACT EXIST");
             if(chatExposingData != null) {
                 System.out.println("12345 CONTACT ALREADY EXIST");
@@ -422,12 +414,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             e.printStackTrace();
         }
 
-    }
-
-
-    public ChatActorCommunitySearch getChatActorSearch() {
-        return new ChatActorCommunitySubAppModuleSearch(chatActorNetworkServiceManager) {
-        };
     }
 
     /**
@@ -989,37 +975,5 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
         System.out.println("12345 MESSAGE STATUS UPDATED");
     }
 
-    /**
-     * This method return a ChatMetadata from a Chat and Message objects.
-     *
-     * @param chat
-     * @param message
-     * @return
-     */
-    private ChatMetadata constructChatMetadata(
-            Chat chat,
-            Message message) {
-        ChatMetadata chatMetadata;
-        Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
-        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(timestamp);
-        chatMetadata = new ChatMetadataRecord(
-                chat.getChatId(),
-                chat.getObjectId(),
-                chat.getLocalActorType(),
-                chat.getLocalActorPublicKey(),
-                chat.getRemoteActorType(),
-                chat.getRemoteActorPublicKey(),
-                chat.getChatName(),
-                ChatMessageStatus.READ_CHAT,
-                MessageStatus.SEND,
-                timeStamp,
-                message.getMessageId(),
-                message.getMessage(),
-                DistributionStatus.OUTGOING_MSG,
-                chat.getTypeChat(),
-                chat.getGroupMembersAssociated()
-        );
-        return chatMetadata;
-    }
 }
 

@@ -27,16 +27,6 @@ public class MessageMetadataRecord extends AbstractMetadata implements MessageMe
         this.messageStatus = messageStatus;
     }
 
-    /**
-     * Represent the value of PROCESSED
-     */
-    public final static String PROCESSED = "Y";
-
-    /**
-     * Represent the value of NO_PROCESSED
-     */
-    public final static String NO_PROCESSED = "N";
-
     @Override
     public UUID getMessageId() {
         return messageId;

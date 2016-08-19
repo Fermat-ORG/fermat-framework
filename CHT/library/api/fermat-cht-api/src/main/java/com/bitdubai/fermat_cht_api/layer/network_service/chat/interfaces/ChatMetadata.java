@@ -21,8 +21,6 @@ public interface ChatMetadata extends MetadataToSend {
 
     ChatMessageStatus getChatMessageStatus();
 
-    DistributionStatus getDistributionStatus();
-
     TypeChat getTypeChat();
 
     List<GroupMember> getGroupMembers();

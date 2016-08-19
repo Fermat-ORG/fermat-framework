@@ -15,30 +15,15 @@ public abstract class AbstractMetadata implements MetadataToSend , Serializable 
 
     private transient UUID transactionId;
 
-    private transient String responseToNotification;
-
-    private PlatformComponentType localActorType = PlatformComponentType.ACTOR_CHAT;
+    private PlatformComponentType localActorType;
 
     private String localActorPublicKey;
 
-    private PlatformComponentType remoteActorType = PlatformComponentType.ACTOR_CHAT;
+    private PlatformComponentType remoteActorType;
 
     private String remoteActorPublicKey;
 
     private transient String date;
-
-    private transient ChatProtocolState chatProtocolState;
-
-    private DistributionStatus distributionStatus;
-
-    private transient boolean flagReadead;
-
-    private transient int sentCount;
-
-    /**
-     * Represent the value of processed
-     */
-    private transient String processed;
 
     public AbstractMetadata() {
     }
@@ -96,51 +81,4 @@ public abstract class AbstractMetadata implements MetadataToSend , Serializable 
         this.date = date;
     }
 
-    public ChatProtocolState getChatProtocolState() {
-        return chatProtocolState;
-    }
-
-    public void changeState(ChatProtocolState chatProtocolState) {
-        this.chatProtocolState = chatProtocolState;
-    }
-
-    public DistributionStatus getDistributionStatus() {
-        return distributionStatus;
-    }
-
-    public void setDistributionStatus(DistributionStatus distributionStatus) {
-        this.distributionStatus = distributionStatus;
-    }
-
-    public boolean isFlagReadead() {
-        return flagReadead;
-    }
-
-    public void setFlagReadead(boolean flagReadead) {
-        this.flagReadead = flagReadead;
-    }
-
-    public int getSentCount() {
-        return sentCount;
-    }
-
-    public void setSentCount(int sentCount) {
-        this.sentCount = sentCount;
-    }
-
-    public String getProcessed() {
-        return processed;
-    }
-
-    public void setProcessed(String processed) {
-        this.processed = processed;
-    }
-
-    public String getResponseToNotification() {
-        return responseToNotification;
-    }
-
-    public void setResponseToNotification(String responseToNotification) {
-        this.responseToNotification = responseToNotification;
-    }
 }

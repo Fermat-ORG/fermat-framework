@@ -445,21 +445,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
         }
     }
 
-    private void testPublicKeys() {
-        List<String> publicKey = null;
-        try {
-            publicKey = networkServiceChatManager.getRegisteredPubliKey();
-        } catch (CantRequestListException e) {
-            System.out.println("Exception in chat middleware test: " + e.getMessage());
-            e.printStackTrace();
-        }
-        System.out.println("ChatPLuginRoot MY PUBLIC KEY- " + networkServiceChatManager.getNetWorkServicePublicKey());
-        System.out.println("-------------------REGISTED CHAT NETWORK SERVICE PUBLIC KEYS------------------");
-        for (String key : publicKey) {
-            System.out.println(key);
-        }
-        System.out.println("-------------------REGISTED CHAT NETWORK SERVICE PUBLIC KEYS END------------------");
-    }
 
     private void sendMessageTest() {
         try {

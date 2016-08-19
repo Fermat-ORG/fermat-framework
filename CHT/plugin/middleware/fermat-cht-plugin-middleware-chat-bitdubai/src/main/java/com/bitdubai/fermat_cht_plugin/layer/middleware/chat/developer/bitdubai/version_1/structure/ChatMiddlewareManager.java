@@ -55,7 +55,6 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingActionListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.MessageMetadataRecord;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.sql.Timestamp;
@@ -899,15 +898,17 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             }
             String localActorPublicKey = chat.getLocalActorPublicKey();
             String remoteActorPublicKey = chat.getRemoteActorPublicKey();
-            ChatMetadata chatMetadata = constructChatMetadata(
-                    chat,
-                    createdMessage
-            );
-            System.out.println("ChatMetadata to send:\n" + chatMetadata);
+
             try {
 
-                MessageMetadata messageMetadata = new MessageMetadataRecord(createdMessage.getMessageId(),createdMessage.getMessage(),
-                        createdMessage.getStatus());
+                MessageMetadata messageMetadata = new MessageMetadataRecord(chat.getLocalActorType(),
+                        chat.getLocalActorPublicKey(),
+                        chat.getRemoteActorType(),
+                        chat.getRemoteActorPublicKey(),
+                        createdMessage.getMessageId(),
+                        createdMessage.getMessage(),
+                        createdMessage.getStatus(),
+                        new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Timestamp(System.currentTimeMillis())));
                 chatNetworkServiceManager.sendMessageMetadata(localActorPublicKey,
                         remoteActorPublicKey,
                         messageMetadata);
@@ -989,6 +990,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      * @param message
      * @return
      */
+    @Deprecated
     private ChatMetadata constructChatMetadata(
             Chat chat,
             Message message) {

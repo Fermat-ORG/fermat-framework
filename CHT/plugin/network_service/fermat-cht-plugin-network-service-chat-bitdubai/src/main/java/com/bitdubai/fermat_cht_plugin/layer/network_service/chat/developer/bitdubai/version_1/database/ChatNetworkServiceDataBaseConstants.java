@@ -44,7 +44,7 @@ public final class ChatNetworkServiceDataBaseConstants {
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_TABLE = "message_metadata_transaction_record_table";
 
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME = "message_metadata_transaction_id";
-    public static final String MESSAGE_METADATA_TRANSACTION_RECORD_RESPONSE_TO_COLUMN_NAME = "message_metadata_response_to";
+//    public static final String MESSAGE_METADATA_TRANSACTION_RECORD_RESPONSE_TO_COLUMN_NAME = "message_metadata_response_to";
 //    public static final String MESSAGE_METADATA_TRANSACTION_RECORD_CHAT_ID_COLUMN_NAME = "message_chat_id_metadata";
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_LOCALACTORTYPE_COLUMN_NAME = "message_metadata_localactortype";
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_LOCALACTORPUBKEY_COLUMN_NAME = "message_metadata_localactorpubkey";
@@ -54,12 +54,11 @@ public final class ChatNetworkServiceDataBaseConstants {
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_MESSAGE_COLUMN_NAME = "message_metadata_message";
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_MESSAGE_STATUS_COLUMN_NAME = "message_metadata_messagestatus";
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_DATE_COLUMN_NAME = "message_metadata_date";
-    public static final String MESSAGE_METADATA_TRANSACTION_RECORD_DISTRIBUTIONSTATUS_COLUMN_NAME = "message_metadata_distributionstatus";
-    public static final String MESSAGE_METADATA_TRANSACTION_RECORD_PROCCES_STATUS_COLUMN_NAME = "message_metadata_process";
-    public static final String MESSAGE_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME = "message_metadata_protocol_state";
+ //   public static final String MESSAGE_METADATA_TRANSACTION_RECORD_DISTRIBUTIONSTATUS_COLUMN_NAME = "message_metadata_distributionstatus";
+   // public static final String MESSAGE_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME = "message_metadata_protocol_state";
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_SENTDATE_COLUMN_NAME = "message_metadata_sent_date";
-    public static final String MESSAGE_METADATA_TRANSACTION_RECORD_READ_MARK_COLUMN_NAME = "message_metadata_mark_read";
-    public static final String MESSAGE_METADATA_TRANSACTION_RECORD_SENT_COUNT_COLUMN_NAME = "message_metadata_sent_count";
+ //   public static final String MESSAGE_METADATA_TRANSACTION_RECORD_READ_MARK_COLUMN_NAME = "message_metadata_mark_read";
+ //   public static final String MESSAGE_METADATA_TRANSACTION_RECORD_SENT_COUNT_COLUMN_NAME = "message_metadata_sent_count";
 
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_FIRST_KEY_COLUMN = MESSAGE_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME;
 
