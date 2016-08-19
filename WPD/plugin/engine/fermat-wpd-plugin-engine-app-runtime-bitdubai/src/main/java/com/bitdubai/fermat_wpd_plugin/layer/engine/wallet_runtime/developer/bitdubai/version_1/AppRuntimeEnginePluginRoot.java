@@ -5004,6 +5004,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#05DDD2");
+
+        leftToolbarIcon = new MenuItem(400);
+        leftToolbarIcon.setAppLinkPublicKey("nav_menu");
+        runtimeTitleBar.setNavItem(leftToolbarIcon);
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
@@ -5100,9 +5107,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        leftToolbarIcon = new MenuItem(300);
-        leftToolbarIcon.setAppLinkPublicKey("nav_menu");
-        runtimeTitleBar.setNavItem(leftToolbarIcon);
+
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#05CFC2");

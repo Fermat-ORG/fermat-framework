@@ -75,8 +75,8 @@
     <string name="book_balance">Book balance</string>
     <string name="btc_loss">Insert the amount that you want to sent to Loss Protected Wallet</string>
     <string name="button_send">Send</string>
-    <string name="cancel_label">Cance</string>
-    <string name="cancel_text">Cance</string>
+    <string name="cancel_label">Cancel</string>
+    <string name="cancel_text">Cancel</string>
     <string name="clear_text_button">Clear</string>
     <string name="click_me_to_search_text">Click me \nto search contacts</string>
     <string name="close_text">Close</string>
@@ -205,7 +205,25 @@
     <string name="you_dont_have_requests_text">You don\'t have request</string>
     <string name="you_dont_have_transactions_received_text">you don\'t have received transactions</string>
     <string name="you_dont_have_transactions_sent_text">You don\'t have transactions send</string>
-    <string name="you_need_an_identity_before_you_can_enter_text">You nedd an identity before you can enter</string>
+    <string name="you_need_an_identity_before_you_can_enter_text">You need an identity before you can enter</string>
     <string name="young_wallet">Young wallet</string>
+    <string name="system_error">Oooops! recovering from system error</string>
+
+
+    <!-- Browser Tab -->
+    <string name="turn_on_gps">Please, turn ON your GPS</string>
+    <string name="connectionState_connected_msg">IS A CONTACT</string>
+    <string name="connectionState_request_sent_msg">REQUEST HAS BEEN SEND</string>
+    <string name="connectionState_user_offline_msg">USER OFFLINE</string>
+    <string name="btn_error_fermat_network_cancel">CANCEL</string>
+    <string name="btn_error_fermat_network_connect">CONNECT</string>
+    <string name="Request_user_list_time_out">Request User List Time Out</string>
+    <string name="loading_data_error_msg">Sorry there was a problem loading the data</string>
+
+    <string name="notification_time_1"> a few moments ago</string>
+    <string name="notification_time_2"> minutes ago</string>
+    <string name="notification_time_3"> hours ago</string>
+    <string name="notification_time_4"> days ago</string>
+    <string name="notification_time_5"> year ago</string>
 
 </resources>
