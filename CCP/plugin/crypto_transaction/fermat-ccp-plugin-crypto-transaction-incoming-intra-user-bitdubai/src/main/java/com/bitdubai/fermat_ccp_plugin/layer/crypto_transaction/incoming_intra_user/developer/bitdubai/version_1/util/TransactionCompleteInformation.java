@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
@@ -37,20 +38,39 @@ public class TransactionCompleteInformation {
     public CryptoWalletTransactionRecord generateBitcoinTransaction(final CryptoAddressBookManager cryptoAddressBookManager) throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantGenerateTransactionException {
 
         try {
-            CryptoTransaction       cryptoTransaction       = this.cryptoTransactionContainer.getInformation();
+            CryptoTransaction cryptoTransaction = this.cryptoTransactionContainer.getInformation();
             CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTransaction.getAddressTo());
 
             long timestamp = System.currentTimeMillis();
-            String memo     = this.transactionMetadata       .getInformation().getPaymentDescription();
+            String memo = this.transactionMetadata.getInformation().getPaymentDescription();
 
+             String actorFromPublicKey = "";
+             String actorToPublicKey = "";
+             Actors actorFromType;
+             Actors actorToType;
+
+            if (this.transactionMetadata.getInformation().getRequestId() != null)
+            {
+                actorFromPublicKey = cryptoAddressBookRecord.getDeliveredToActorPublicKey();
+                actorToPublicKey = cryptoAddressBookRecord.getDeliveredByActorPublicKey();
+                actorFromType = cryptoAddressBookRecord.getDeliveredToActorType();
+                actorToType =  cryptoAddressBookRecord.getDeliveredByActorType();
+            }
+            else
+            {
+                actorFromPublicKey = cryptoAddressBookRecord.getDeliveredByActorPublicKey();
+                actorToPublicKey = cryptoAddressBookRecord.getDeliveredToActorPublicKey();
+                actorFromType = cryptoAddressBookRecord.getDeliveredByActorType();
+                actorToType =  cryptoAddressBookRecord   .getDeliveredToActorType();
+            }
 
             return new IncomingIntraUserTransactionWrapper(
                     cryptoTransactionContainer.getTransactionID()            ,
                     null,
-                    cryptoAddressBookRecord   .getDeliveredByActorPublicKey(),
-                    cryptoAddressBookRecord   .getDeliveredToActorPublicKey(),
-                    cryptoAddressBookRecord   .getDeliveredByActorType()     ,
-                    cryptoAddressBookRecord   .getDeliveredToActorType()     ,
+                    actorFromPublicKey,
+                    actorToPublicKey,
+                    actorFromType     ,
+                    actorToType     ,
                     cryptoTransaction         .getTransactionHash()          ,
                     cryptoTransaction         .getAddressFrom()              ,
                     cryptoTransaction         .getAddressTo()                ,
