@@ -145,6 +145,8 @@ public interface IntraUserManager extends FermatManager {
 
     void updateActor(Actor actor);
 
+    void updateActor(Actor actor, Location location);
+
     /**
      *
      * @param lstIntraUser

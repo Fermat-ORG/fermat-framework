@@ -223,8 +223,8 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     @Override
     public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantUpdateIdentityException {
             try {
-                intraWalletUserIdentityDao.updateIdentity(identityPublicKey,identityAlias,phrase,profileImage, accuracy, frequency, location);
-                updateIdentity(identityPublicKey,identityAlias,phrase,profileImage);
+                intraWalletUserIdentityDao.updateIdentity(identityPublicKey, identityAlias, phrase, profileImage, accuracy, frequency, location);
+                updateIdentity(identityPublicKey, identityAlias, phrase, profileImage, location);
 
             }
             catch(CantUpdateIntraUserIdentityException e)
@@ -237,8 +237,12 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             }
     }
 
-    private void updateIdentity(String publicKey,String alias,String phrase,byte[] img){
+   /* private void updateIdentity(String publicKey,String alias,String phrase,byte[] img){
         intraActorManager.updateActor(intraActorManager.buildIdentity(publicKey, alias, phrase, Actors.INTRA_USER, img));
+    }*/
+
+    private void updateIdentity(String publicKey,String alias,String phrase,byte[] img, Location location){
+        intraActorManager.updateActor(intraActorManager.buildIdentity(publicKey, alias, phrase, Actors.INTRA_USER, img),location);
     }
 
     @Override

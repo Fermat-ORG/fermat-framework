@@ -291,6 +291,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                             country = address.getCountry();
                             place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
                         } catch (CantCreateAddressException ignore) {
+                            ignore.printStackTrace();
                         }
                     }
                     //return intra user information - if not connected - status return null
