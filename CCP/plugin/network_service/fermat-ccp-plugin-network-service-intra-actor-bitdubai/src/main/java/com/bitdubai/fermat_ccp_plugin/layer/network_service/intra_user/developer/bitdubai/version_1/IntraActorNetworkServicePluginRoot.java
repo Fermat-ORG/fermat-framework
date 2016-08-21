@@ -949,6 +949,36 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
         }
     }
 
+    @Override
+    public void updateActor(Actor actor, Location location) {
+
+        try {
+            Gson gson = new Gson();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("PHRASE", gson.toJson(actor.getPhrase()));
+
+            String extraData = gson.toJson(jsonObject);
+
+            updateRegisteredActor(actor.getActorPublicKey(),
+                    actor.getName()    ,
+                    actor.getName()    ,
+                    location ,
+                    extraData,
+                    actor.getPhoto()   );
+
+        } catch (final CantUpdateRegisteredActorException e) {
+            e.printStackTrace();
+
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+
+        } catch (final Exception e){
+            e.printStackTrace();
+
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+    }
+
+
     //DatabaseManagerForDevelopers Implementation
     /**
      * (non-Javadoc)

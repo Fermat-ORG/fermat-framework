@@ -67,7 +67,9 @@
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
 
+
     <!-- home_receive_main11.xml -->
+
 
     <string name="no_transactions_text">No transactions yet</string>
     <!-- home_request_fragment_main.xml -->
@@ -311,6 +313,16 @@
     <string name="notification_reversed_1">Sent Transaction reversed</string>
     <string name="notification_reversed_2">Sending</string>
     <string name="notification_reversed_3">BTC could not be completed.</string>
+
+
+    <string name="notification_receive_payment_1">Received new Payment Request</string>
+    <string name="notification_receive_payment_2">You have received a Payment Request, for </string>
+    <string name="notification_payment_denied">Payment Request deny</string>
+    <string name="notification_payment_denied_2">Your Payment Request, for </string>
+    <string name="notification_payment_denied_3"> BTC was deny.</string>
+    <string name="notification_payment_error">Payment Request reverted</string>
+    <string name="notification_payment_error_2">Your Payment Request, for </string>
+    <string name="notification_payment_error_3"> BTC was reverted.</string>
 
 
 

@@ -294,7 +294,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
 
         } catch (Exception e){
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), getResources().getString(R.string.Whooops_text), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
