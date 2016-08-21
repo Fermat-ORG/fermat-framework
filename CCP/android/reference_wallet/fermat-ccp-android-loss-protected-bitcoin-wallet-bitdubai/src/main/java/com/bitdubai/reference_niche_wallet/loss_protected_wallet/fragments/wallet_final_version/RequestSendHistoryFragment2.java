@@ -2,6 +2,7 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,12 +30,15 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.PaymentRequestHistoryAdapter;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Payment_Request_Help_Dialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
@@ -223,6 +227,9 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
             if(id == 3){
                 changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_FORM_ACTIVITY,appSession.getAppPublicKey());
                 return true;
+            }else if (id==2){
+                setUpTutorial(true);
+                return true;
             }else {
                 return true;
             }
@@ -232,6 +239,25 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
             e.printStackTrace();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
+        // if (isHelpEnabled) {
+        Payment_Request_Help_Dialog payment_request_help_dialog = new Payment_Request_Help_Dialog(getActivity(), appSession, null, checkButton);
+        payment_request_help_dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Object b = appSession.getData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED);
+                if (b != null) {
+                    if ((Boolean) b) {
+                        appSession.removeData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED);
+                    }
+                }
+
+            }
+        });
+        payment_request_help_dialog.show();
+        //  }
     }
 
     @Override
