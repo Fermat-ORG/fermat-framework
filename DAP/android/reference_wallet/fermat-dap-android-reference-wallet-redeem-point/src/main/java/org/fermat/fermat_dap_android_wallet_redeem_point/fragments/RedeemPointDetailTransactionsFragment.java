@@ -237,7 +237,6 @@ public class RedeemPointDetailTransactionsFragment extends FermatWalletListFragm
                     .setBannerRes(R.drawable.banner_redeem_point_wallet)
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_redeem_point_view_color)
-                    .setTitleTextColor(R.color.dap_redeem_point_view_color)
                     .setSubTitle(R.string.dap_redeem_wallet_detail_subTitle)
                     .setBody(R.string.dap_redeem_wallet_detail_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)

@@ -66,7 +66,9 @@
     <string name="accepted_text">Accepted</string>
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
-    <!-- home_receive_main.xml -->
+
+    <!-- home_receive_main11.xml -->
+
     <string name="no_transactions_text">No transactions yet</string>
     <!-- home_request_fragment_main.xml -->
     <string name="reason_text">Reason</string>
@@ -286,11 +288,33 @@
     <string name="settings_select_network">Select a Network</string>
     <string name="settings_fee_level">Fee Level</string>
     <string name="settings_send_error_report">Send Error Report</string>
-    <string name="advertisement_text">Notice!</string>
+    <string name="advertisement_text">Advertisement!</string>
     <string name="wallet_type">This wallet allows for two different types of contacts:</string>
     <string name="btc_loss">Enter the BTC amount that you want send to Loss Protected Wallet</string>
     <string name="phone_notifications">Phone notifications</string>
     <string name="close_text">Close</string>
+
+    <string name="pr_status_1">Waiting for response</string>
+    <string name="pr_status_2">Accepted</string>
+    <string name="pr_status_3">Paid</string>
+    <string name="pr_status_4">Pending response</string>
+    <string name="pr_status_5">Error</string>
+    <string name="pr_status_6">Not sent yet</string>
+    <string name="pr_status_7">Payment process started</string>
+    <string name="pr_status_8">Denied by incompatibility</string>
+    <string name="pr_status_9">In approving process</string>
+    <string name="pr_status_10">Denied</string>
+    <string name="pr_status_11">Error, contact with support</string>
+
+    <string name="notification_receive_payment_1">Received new Payment Request</string>
+    <string name="notification_receive_payment_2">You have received a Payment Request, for </string>
+    <string name="notification_payment_denied">Payment Request deny</string>
+    <string name="notification_payment_denied_2">Your Payment Request, for </string>
+    <string name="notification_payment_denied_3"> BTC was deny.</string>
+    <string name="notification_payment_error">Payment Request reverted</string>
+    <string name="notification_payment_error_2">Your Payment Request, for </string>
+    <string name="notification_payment_error_3"> BTC was reverted.</string>
+
 
 
     <!--Texto de Dialogs Movidos para RES de fermat-android-api para su uso general con traduccion incluida.-->
@@ -306,5 +330,16 @@
     <!--&lt;!&ndash; dialog_blockchain_download.xml&ndash;&gt;-->
     <!--<string name="advertisement_text">Advertisement!</string>-->
     <!--<string name="the_process_of_downloading_text">The process of downloading blocks \nfrom the Blockchain is in progress.\n  As this occurs, the action bar is shown in red.</string>-->
+
+
+    <!--Generic messages -->
+    <string name="msg_report_send">Report sent</string>
+    <!--System Error-->
+    <string name="system_error">recovering from system error</string>
+    <!--Fragments-->
+    <!--Request Form Fragment-->
+    <string name="error_connecting_to_fermat_network">Wait a minute please, trying to reconnect...</string>
+
+
 </resources>
 

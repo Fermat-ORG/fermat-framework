@@ -34,6 +34,7 @@ public class UserWalletNavigationViewPainter extends NavigationViewPainter {
     public UserWalletNavigationViewPainter(Context activity,
                                            ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager> assetUserSession,
                                            FermatApplicationCaller applicationsHelper) {
+        super(activity);
 
         this.activity = new WeakReference<>(activity);
         this.assetUserSession = assetUserSession;

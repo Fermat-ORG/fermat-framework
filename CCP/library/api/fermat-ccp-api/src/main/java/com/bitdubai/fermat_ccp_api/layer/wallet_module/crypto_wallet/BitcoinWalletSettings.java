@@ -17,13 +17,13 @@ public class BitcoinWalletSettings implements WalletSettings, Serializable {
 
     private IntraUserLoginIdentity lastSelectedIdentity;
     private boolean isPresentationHelpEnabled;
+    private boolean isPaymentHelpEnabled;
     private boolean isContactsHelpEnabled;
     private Map<Long, Long>  runningDailyBalance ;
     private BlockchainNetworkType blockchainNetworkType;
     private boolean notificationEnabled;
     private boolean isBlockchainDownloadEnabled;
     private String feedLeel;
-    private boolean isPaymentHelpEnabled;
 
     public BitcoinWalletSettings() {
         this.lastSelectedIdentity = null;
@@ -63,10 +63,6 @@ public class BitcoinWalletSettings implements WalletSettings, Serializable {
 
     public boolean isPresentationHelpEnabled() {
         return isPresentationHelpEnabled;
-    }
-
-    public boolean isPaymentHelpEnabled() {
-        return isPaymentHelpEnabled;
     }
 
 
@@ -110,6 +106,9 @@ public class BitcoinWalletSettings implements WalletSettings, Serializable {
 
     public boolean getNotificationEnabled() {
         return this.notificationEnabled;
+    }
+    public boolean getPaymentHelpEnabled() {
+        return this.isPaymentHelpEnabled;
     }
 
     public void setNotificationEnabled(boolean notificationEnabled) {

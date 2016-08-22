@@ -95,9 +95,9 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceAp
                 }
 
                 if (enabledNotification)
-                    return BitcoinWalletBuildNotificationPainter.getNotification( notificationID,involvedActor,amount, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    return BitcoinWalletBuildNotificationPainter.getNotification( notificationID,involvedActor,amount,getContext());
                 else
-                    return new BitcoinWalletNotificationPainter("", "", "", "", false, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    return new BitcoinWalletNotificationPainter("", "", "", "", false,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
             } else
                 return null;
         } catch (Exception e) {

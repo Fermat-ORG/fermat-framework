@@ -19,11 +19,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
@@ -36,6 +36,8 @@ import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtr
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
@@ -81,7 +83,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
     private final AssetTransmissionNetworkServiceManager assetTransmission;
     private final AssetVaultManager assetVaultManager;
     private final CryptoVaultManager cryptoVaultManager;
-    private final BitcoinNetworkManager bitcoinNetworkManager;
+    private final BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
     private final CryptoAddressBookManager cryptoAddressBookManager;
     private final ExtraUserManager extraUserManager;
     AssetSellerDigitalAssetTransactionPluginRoot assetSellerDigitalAssetTransactionPluginRoot;
@@ -93,7 +95,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                                    AssetSellerDigitalAssetTransactionPluginRoot assetSellerDigitalAssetTransactionPluginRoot,
                                    AssetTransmissionNetworkServiceManager assetTransmission,
                                    AssetVaultManager assetVaultManager,
-                                   BitcoinNetworkManager bitcoinNetworkManager,
+                                   BlockchainManager<ECKey, Transaction> bitcoinNetworkManager,
                                    CryptoVaultManager cryptoVaultManager,
                                    CryptoAddressBookManager cryptoAddressBookManager,
                                    ExtraUserManager extraUserManager) {

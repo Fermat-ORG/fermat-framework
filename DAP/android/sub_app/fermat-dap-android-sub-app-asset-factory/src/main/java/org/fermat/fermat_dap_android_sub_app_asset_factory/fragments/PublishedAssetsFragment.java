@@ -108,7 +108,6 @@ public class PublishedAssetsFragment extends AbstractFermatFragment<ReferenceApp
                     .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
-                    .setTitleTextColor(R.color.dap_asset_factory_view_color)
                     .setSubTitle(R.string.dap_asset_factory_published_subTitle)
                     .setBody(R.string.dap_asset_factory_published_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)

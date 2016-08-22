@@ -150,6 +150,7 @@
     <string name="error_msg_mnemonic_text">Error al obtener el texto mnemonico</string>
     <string name="error_msg_no_address">No se tiene una direccion para inviar\nPor favor, espere un rato</string>
     <string name="error_msg_trying_to_reconnect">Por favor espere un momento, intentando reconectar...</string>
+    <string name="msg_report_send">Reporte enviado</string>
     <string name="error_std_message">Ha habido un error. Por favor intente de nuevo</string>
     <string name="request_sent">Solicitud enviada</string>
     <string name="success_msg_address_copied_clipboard">Direccion copiada al portapapeles</string>
@@ -198,4 +199,45 @@
     <string name="title_section7">Vouchers</string>
     <string name="title_section8">Tarjetas de regalo</string>
     <string name="title_section9">Clones</string>
+
+    <string name="pr_status_1">Enviado</string>
+    <string name="pr_status_2">Aceptado</string>
+    <string name="pr_status_3">Pagado</string>
+    <string name="pr_status_4">Pendiente de Respuesta</string>
+    <string name="pr_status_5">Error</string>
+    <string name="pr_status_6">No enviado</string>
+    <string name="pr_status_7">Proceso Iniciado</string>
+    <string name="pr_status_8">Denegado por Incompatibilidad</string>
+    <string name="pr_status_9">En Proceso</string>
+    <string name="pr_status_10">Denegado</string>
+    <string name="pr_status_11">Error, contacte a soporte</string>
+
+
+
+
+    <!--Generic messages -->
+    <!-- Amounts Messages-->
+    <string name="invalid_amount_limit">Monto invalido, debe ser mayor que </string>
+    <!--System Error-->
+    <string name="system_error">Error del sistema</string>
+    <!--Fragments-->
+    <!--Request Form Fragment-->
+    <string name="error_connecting_to_fermat_network">Espere un momento por favor, restableciendo conexion...</string>
+    <string name="invalid_request_amount">Monto para solicitud de pago invalido</string>
+
+    <string name="notification_receive_btc_1">Recibio Bitcoins</string>
+    <string name="notification_receive_btc_2">BTC recibidos</string>
+    <string name="notification_reversed_1">Transaccion enviada Reversada. </string>
+    <string name="notification_reversed_2">El envio de </string>
+    <string name="notification_reversed_3">BTC no pudo ser completado.</string>
+
+    <string name="notification_receive_payment_1">Nuevo Requerimiento de Pago</string>
+    <string name="notification_receive_payment_2">Recibio un Requerimiento de Pago por  </string>
+    <string name="notification_payment_denied">Requerimiento de Pago Denegado</string>
+    <string name="notification_payment_denied_2">Su Requerimiento de Pago por </string>
+    <string name="notification_payment_denied_3"> BTC fue denegado.</string>
+    <string name="notification_payment_error">Requerimeinto de Pago Reversado</string>
+    <string name="notification_payment_error_2">Su Requerimiento de Pago por </string>
+    <string name="notification_payment_error_3"> BTC fue reversado.</string>
+
 </resources>

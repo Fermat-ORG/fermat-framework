@@ -64,14 +64,35 @@
     <string name="notes_text">Notes</string>
     <!-- loss_fragment_transaction_main_main.xml -->
     <string name="no_history_send_or_receive">No history\nsend or receive\nto fill this!!</string>
+    <string name="Date_text">Date: </string>
+    <string name="Note_text">Note: </string>
+    <string name="To_text">To: </string>
+    <string name="From_text">From: </string>
+    <string name="confirmation_text">"You will sending Amount btc. Confirm?</string>
+
     <!-- header.xml -->
     <string name="header_text">Header</string>
     <!-- loss_history_request_row.xml -->
     <string name="accepted_text">Accepted</string>
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
+    <string name="Paid_text">Paid</string>
+    <string name="Pending_response">Pending response</string>
+    <string name="Error">Error</string>
+    <string name="Not_sent_yet">Not sent yet</string>
+    <string name="Payment_process_started">Payment process started</string>
+    <string name="Denied_by_incompatibility">Denied by incompatibility</string>
+    <string name="In_approving_process">In approving process</string>
+    <string name="Error_contact_with_support">Error, contact with support</string>
+    <string name="denied">Denied</string>
+    <string name="Waiting_for_response">Waiting for response</string>
+
     <!-- home_receive_main.xml -->
     <string name="no_transactions_text">No transactions</string>
+    <string name="Total_earnings_lost">Total earnings and lost:</string>
+    <string name="Today_text">Today: </string>
+    <string name="Earned_text">earned</string>
+    <string name="Lost_text">lost</string>
     <!-- home_request_fragment_main.xml -->
     <string name="reason_text">Reason</string>
     <string name="you_dont_have_requests_text">You don\t have\n requests</string>
@@ -88,6 +109,20 @@
     <string name="welcome_text">Welcome!</string>
     <string name="this_is_a_loss_protected_wallet_text">This is a wallet that will allow you to protect against loss of money. It\s main features are:</string>
     <string name="close_text">Close</string>
+    <!-- loss_toast -->
+    <string name="Whooops_text">Whooops! recovering from system error</string>
+    <string name="Whooops_text2">Whooops, we have a problem here</string>
+    <string name="Insufficient_funds">Insufficient funds.</string>
+    <string name="Wait_a_minute">Wait a minute please, trying to reconnect...</string>
+    <string name="Contact_without_net_address">Contact don\'t have an Address from red</string>
+    <string name="Contact_without_address">Contact don\'t have an Address</string>
+    <string name="Contact_not_found">Contact not found, please add it.</string>
+    <string name="Sending_text">Sending...</string>
+    <string name="Action_not_allowed_lpw">Action not allowed, you will lose money. Restricted by LossProtected Configuration.</string>
+    <string name="Send_error_text">Send Error.</string>
+    <string name="Invalid_Amount_small">Invalid Amount, must be greater than</string>
+    <string name="Invalid_Amount">Invalid Amount</string>
+    <string name="Unexpected_error">Unexpected Error</string>
 
     <!-- loss_presentation_wallet.xml -->
     <string name="to_begin_choose_an_avatar_below_text">To begin, choose an avatar below. You might change it later with any picture and your own alias.</string>
@@ -271,5 +306,13 @@
     <string name="exchange_title_label">Exchange Rate Providers</string>
     <string name="income_expense" >This is a wallet that will allow you to see your incomes and expenses in every transaction done</string>
     <string name="spending_details" >Spending Details</string>
+
+    <string name="chunck_values_history_rate">Exchange Rate: 1 BTC = </string>
+    <string name="chunck_values_history_spend">Spent</string>
+
+    <string name="chunck_values_btc_spent">BTC Spent</string>
+    <string name="chunck_values_btc_rate">Exchange Rate</string>
+    <string name="chunck_values_btc_date">Date</string>
+
     <!-- Custom Dialog Fragment -->
 </resources>

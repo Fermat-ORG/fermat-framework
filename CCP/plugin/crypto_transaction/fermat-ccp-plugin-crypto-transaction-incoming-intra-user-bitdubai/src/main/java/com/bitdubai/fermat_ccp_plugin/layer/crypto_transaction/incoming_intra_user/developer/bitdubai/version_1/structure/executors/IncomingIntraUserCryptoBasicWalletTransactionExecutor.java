@@ -92,6 +92,7 @@ public class IncomingIntraUserCryptoBasicWalletTransactionExecutor implements Tr
     private void processOnBlockChainTransaction(TransactionCompleteInformation transaction) throws CantRegisterCreditException {
         try {
             CryptoWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
+
             bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(record);
 
 

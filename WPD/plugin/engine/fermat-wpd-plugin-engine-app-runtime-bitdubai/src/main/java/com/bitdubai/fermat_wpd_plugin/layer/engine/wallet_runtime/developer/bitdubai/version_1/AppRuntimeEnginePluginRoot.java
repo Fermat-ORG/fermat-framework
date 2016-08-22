@@ -4950,20 +4950,18 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         //action bar menu
 
-         optionsMenu = new OptionsMenu();
+        optionsMenu = new OptionsMenu();
+        optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(6, "send_request", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Send Request");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS); //show always icon
+        optionsMenu.addMenuItem(optionMenuItem);
+
         optionMenuItem = new OptionMenuItem(2);
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
-
-
-        optionMenuItem = new OptionMenuItem(2);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        optionsMenu.addMenuItem(optionMenuItem);
-
         runtimeActivity.setOptionsMenu(optionsMenu);
         //Navigation
 
@@ -5006,6 +5004,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#05DDD2");
+
+        leftToolbarIcon = new MenuItem(400);
+        leftToolbarIcon.setAppLinkPublicKey("nav_menu");
+        runtimeTitleBar.setNavItem(leftToolbarIcon);
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
@@ -5102,9 +5107,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        leftToolbarIcon = new MenuItem(300);
-        leftToolbarIcon.setAppLinkPublicKey("nav_menu");
-        runtimeTitleBar.setNavItem(leftToolbarIcon);
+
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#05CFC2");

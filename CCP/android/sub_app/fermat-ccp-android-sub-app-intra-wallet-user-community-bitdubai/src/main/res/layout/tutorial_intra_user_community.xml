@@ -253,6 +253,7 @@
                                 android:layout_gravity="center_horizontal"
                                 android:text="@string/be_john_doe_text"
                                 android:textSize="12dp"
+                                android:background="#0072bb"
                                 tools:ignore="HardcodedText,SpUsage" />
                         </LinearLayout>
 
@@ -290,6 +291,7 @@
                                 android:layout_gravity="center_horizontal"
                                 android:text="@string/be_jane_doe__text"
                                 android:textSize="12dp"
+                                android:background="#0072bb"
                                 tools:ignore="HardcodedText,SpUsage" />
                         </LinearLayout>
 

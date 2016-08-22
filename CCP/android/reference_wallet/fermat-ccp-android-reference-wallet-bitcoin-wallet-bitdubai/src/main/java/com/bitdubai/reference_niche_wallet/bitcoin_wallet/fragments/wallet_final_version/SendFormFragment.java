@@ -905,6 +905,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     @Override
     public void onDestroy() {
         contactsAdapter = null;
+        appSession.setData("LastContactSelected",null);
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         super.onDestroy();
