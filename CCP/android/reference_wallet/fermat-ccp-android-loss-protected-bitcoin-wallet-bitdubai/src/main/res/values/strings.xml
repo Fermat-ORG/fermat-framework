@@ -94,6 +94,7 @@
     <string name="Today_text">Today: </string>
     <string name="Earned_text">earned</string>
     <string name="Lost_text">lost</string>
+    <string name="No_data">No Data</string>
     <!-- home_request_fragment_main.xml -->
     <string name="reason_text">Reason</string>
     <string name="you_dont_have_requests_text">You don\'t have\n requests</string>

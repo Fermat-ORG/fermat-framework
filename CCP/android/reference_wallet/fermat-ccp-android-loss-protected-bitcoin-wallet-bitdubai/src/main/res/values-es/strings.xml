@@ -282,6 +282,9 @@
     <string name="lpw_notification_payment_error_2">Su solicitud de pago, por</string>
     <string name="lpw_notification_payment_error_3">BTC fue devuelta.</string>
 
+    <!-- loss_main_chart.xml -->
+    <string name="No_data">No hay Datos</string>
+
     <!-- loss_presentation_settings.xml -->
     <string name="Enabled_notificacions">Notificaciones Habilitadas</string>
     <string name="Enabled_loss_protected">Loss Protected Habilitado</string>
