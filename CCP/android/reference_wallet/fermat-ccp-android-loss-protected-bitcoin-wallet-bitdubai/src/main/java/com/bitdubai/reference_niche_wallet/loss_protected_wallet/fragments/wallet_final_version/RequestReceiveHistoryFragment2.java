@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -292,6 +294,13 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     }
 
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
