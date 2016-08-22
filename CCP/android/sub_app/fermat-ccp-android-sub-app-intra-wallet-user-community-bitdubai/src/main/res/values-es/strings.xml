@@ -44,7 +44,7 @@
     <string name="credit">Recibido</string>
     <string name="debit">Enviar</string>
     <string name="deny_text">Denegar</string>
-    <string name="description_text">Ud. no esta conectado a la red Fermat.</string>
+    <string name="description_text">Ud. no esta conectado a </string>
     <string name="dummy_content"></string>
     <string name="empty_list_msg">No hay contactos</string>
     <string name="empty_transactions_text">No se encontraron Transacciones</string>
@@ -186,7 +186,7 @@
     <string name="delete_contacts_info">Estas seguro que quieres borrar esta conexion?</string>
     <string name="description_search">Buscar</string>
     <string name="tittle">Titulo</string>
-    <string name="description">Descripcion</string>
+    <string name="description">descripcion</string>
     <string name="username">nombre de usuario</string>
     <string name="confirm_connection">CONFIRMAR CONEXION</string>
     <string name="gps_off">Tu GPS esta apagado</string>
