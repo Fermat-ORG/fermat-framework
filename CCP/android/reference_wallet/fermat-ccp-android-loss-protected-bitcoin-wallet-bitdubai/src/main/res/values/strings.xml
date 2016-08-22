@@ -28,10 +28,10 @@
     <!-- loss_contacts_tutorial_part1_v2.xml -->
     <string name="txt_title_text">Add Contact Help</string>
     <string name="no_id_In_this_wallet_text">This wallet allows two different types of contacts:</string>
-    <string name="no_id_Users_of_other_text_Fermat_wallets">Users of other Fermat wallets: you don\t need to manually exchange addresses with them</string>
+    <string name="no_id_Users_of_other_text_Fermat_wallets">Users of other Fermat wallets: you don\'t need to manually exchange addresses with them</string>
     <string name="no_id_Users_of_other_text_wallets_outside">Users of other wallets outside Fermat: You need to exchange addresses manually</string>
     <string name="no_id_Select_below_which_text">Select below which type of contact you want to add:</string>
-    <string name="no_id_dont_show_this_again_text">Don\t show this again</string>
+    <string name="no_id_dont_show_this_again_text">Don\'t show this again</string>
     <string name="add_fermat_user_text">Fermat Contact</string>
     <string name="add_extra_user_text">External Contact</string>
     <!-- loss_create_contact_dialog.xml -->
@@ -53,13 +53,13 @@
     <string name="receive_text">Receive</string>
     <string name="give_me_an_address_address_text">Give me an Address!</string>
     <!-- loss_fragment_transaction_main_receiveceive.xml -->
-    <string name="you_dont_have_transactions_received_text">You don\t have\n any received transactions</string>
+    <string name="you_dont_have_transactions_received_text">You don\'t have\n any received transactions</string>
     <!-- chunck_values_fragment_transaction_main.xml -->
-    <string name="you_dont_have_chunck_values">You don\t have\n any Chunck Values yet</string>
+    <string name="you_dont_have_chunck_values">You don\'t have\n any Chunck Values yet</string>
     <!-- chunck_detail_list_main.xml -->
-    <string name="you_dont_have_chunck_datail_values">You don\t have\n any spending of this Chunck yet</string>
+    <string name="you_dont_have_chunck_datail_values">You don\'t have\n any spending of this Chunck yet</string>
     <!-- fragment_transaction_main_send.xml -->
-    <string name="you_dont_have_transactions_sent_text">You don\t have\n any transaction sent</string>
+    <string name="you_dont_have_transactions_sent_text">You don\'t have\n any transaction sent</string>
     <string name="balance_amount_0_bits_text">0 bits</string>
     <string name="notes_text">Notes</string>
     <!-- loss_fragment_transaction_main_main.xml -->
@@ -96,7 +96,7 @@
     <string name="Lost_text">lost</string>
     <!-- home_request_fragment_main.xml -->
     <string name="reason_text">Reason</string>
-    <string name="you_dont_have_requests_text">You don\t have\n requests</string>
+    <string name="you_dont_have_requests_text">You don\'t have\n requests</string>
     <string name="send_request_text">Send Request</string>
     <!-- loss_navigation_row.xmlw.xml -->
     <string name="home_text">Home</string>
