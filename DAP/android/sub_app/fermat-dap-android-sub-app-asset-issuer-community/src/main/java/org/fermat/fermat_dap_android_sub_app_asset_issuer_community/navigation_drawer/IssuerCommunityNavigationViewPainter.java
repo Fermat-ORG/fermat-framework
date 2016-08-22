@@ -31,6 +31,7 @@ public class IssuerCommunityNavigationViewPainter extends NavigationViewPainter 
     public IssuerCommunityNavigationViewPainter(Context activity,
                                                 ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager> assetIssuerCommunitySubAppSession,
                                                 FermatApplicationCaller applicationsHelper) {
+        super(activity);
 
         this.activity = new WeakReference<>(activity);
         this.assetIssuerCommunitySubAppSession = assetIssuerCommunitySubAppSession;
