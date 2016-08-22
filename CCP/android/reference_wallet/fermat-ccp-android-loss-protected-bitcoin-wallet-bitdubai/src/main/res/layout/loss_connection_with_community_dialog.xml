@@ -40,7 +40,7 @@
         android:layout_gravity="center_horizontal"
         android:paddingLeft="10dp"
         android:textColor="#1d1d26"
-        android:paddingRight="10dp"/>
+        android:paddingRight="30dp"/>
 
     <LinearLayout
         android:id="@+id/linear_create_contact"
@@ -51,12 +51,13 @@
         android:paddingBottom="3dip"
         android:layout_marginTop="20dp"
         android:background="#FFFFFF"
+        android:paddingRight="50dp"
 
         >
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
             android:id="@+id/cancel_btn"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="#073487"
@@ -68,7 +69,7 @@
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
             android:id="@+id/search_contact_btn"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="40dp"
             android:background="#DC5A0F"
