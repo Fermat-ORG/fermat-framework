@@ -173,7 +173,7 @@
     <string name="phone_notification">Notificationes al telefono</string>
     <string name="exchange_rate_error_connection">No se pueden obtener las tasas de cambio, por favor revisa tu conexion a internet</string>
     <string name="this_is_a_loss_protected_wallet_text">Esta es una cartera que te permitira protegerte contra perdidas de dinero, sus principales caracteristicas son:</string>
-    <string name="income_expense">Esta es una cartera que te permite ver tus ingresos y gastos en todas las transacciones hechas</string>
+    <string name="income_expense">Esta es la pantalla que te permite ver tus ingresos y gastos de todas las transacciones hechas</string>
     <string name="see_your_loss_balance_text">* Ver su balance.\n* Envio/recepcion de bitcoins.\n* Pedir bitcoins.\n* Ver el historico de transacciones.</string>
     <string name="spending_details">Detalles de gastos</string>
     <string name="accept_btn">Aceptar</string>

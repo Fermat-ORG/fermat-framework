@@ -130,7 +130,7 @@
     <string name="fragment_send_notes_hint">Notes (Optional)</string>
     <string name="give_me_an_address_address_text">Give me an address</string>
     <string name="header_text">Header</string>
-    <string name="income_expense">This wallet allow you to see your income and expense history</string>
+    <string name="income_expense">On this screen you can see your income and expenses of all transactions sent and received</string>
     <string name="insert_notes">Insert notes</string>
     <string name="institutional_wallets">Institutional wallets</string>
     <string name="kid_wallet">Kid wallet</string>
