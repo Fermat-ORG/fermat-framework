@@ -77,6 +77,26 @@ public class WalletUtils {
         return stringBalance;
     }
 
+
+    public static String formatBalanceString(long balance,int typeAmount, int minDigits, int maxDigits) {
+        String stringBalance = "";
+
+        if(typeAmount== ShowMoneyType.BITCOIN.getCode()){
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(maxDigits);
+            df.setMinimumFractionDigits(minDigits);
+            String BTCFormat = "";
+            BTCFormat = df.format(balance / 100000000.0); //
+            stringBalance = BTCFormat ;//+ " BTC";
+        }else if(typeAmount== ShowMoneyType.BITS.getCode()){
+            stringBalance = String.valueOf(balance / 100);
+        }
+        showMoneyType=!showMoneyType;
+
+
+        return stringBalance;
+    }
+
     public static String formatBalanceStringNotDecimal(long balance,int typeAmount) {
         String stringBalance = "";
 

@@ -22,34 +22,34 @@ public class BitcoinWalletBuildNotificationPainter {
         try {
 
 
-                 //find last transaction
-                switch (code){
-                    case CCPBroadcasterConstants.TRANSACTION_ARRIVE:
-                       notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_receive_btc_1),  WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " " + context.getResources().getString(R.string.notification_receive_btc_2),"","",true, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+            //find last transaction
+            switch (code){
+                case CCPBroadcasterConstants.TRANSACTION_ARRIVE:
+                    notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_receive_btc_1),  WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode(),4,6) + " " + context.getResources().getString(R.string.notification_receive_btc_2),"","",true, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
 
-                        break;
-                    case CCPBroadcasterConstants.TRANSACTION_REVERSE:
-                       notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_reversed_1), context.getResources().getString(R.string.notification_reversed_2) + " " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " " + context.getResources().getString(R.string.notification_reversed_3), "", "",true,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    break;
+                case CCPBroadcasterConstants.TRANSACTION_REVERSE:
+                    notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_reversed_1), context.getResources().getString(R.string.notification_reversed_2) + " " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode(),4,6) + " " + context.getResources().getString(R.string.notification_reversed_3), "", "",true,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
 
-                        break;
+                    break;
 
 
-                    case CCPBroadcasterConstants.PAYMENT_REQUEST_ARRIVE:
-                       notification = new BitcoinWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC","","",true,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+                case CCPBroadcasterConstants.PAYMENT_REQUEST_ARRIVE:
+                    notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_receive_payment_1),context.getResources().getString(R.string.notification_receive_payment_2) +  " " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode(),4,6) + " BTC","","",true,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
 
-                        break;
+                    break;
 
-                    case CCPBroadcasterConstants.PAYMENT_DENIED:
-                       notification = new BitcoinWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC was deny.","","",true,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
-                        break;
+                case CCPBroadcasterConstants.PAYMENT_DENIED:
+                    notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_payment_denied),context.getResources().getString(R.string.notification_payment_denied_2) +  " " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode(),4,6) + context.getResources().getString(R.string.notification_payment_denied_3),"","",true,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+                    break;
 
-                    case CCPBroadcasterConstants.PAYMENT_ERROR:
+                case CCPBroadcasterConstants.PAYMENT_ERROR:
 
-                            notification = new BitcoinWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode()) + " BTC was reverted.","","",true,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+                    notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_payment_error),context.getResources().getString(R.string.notification_payment_error_2) +  " " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode(),4,6) + context.getResources().getString(R.string.notification_payment_error_3),"","",true,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
 
-                        break;
+                    break;
 
-                }
+            }
 
 
 

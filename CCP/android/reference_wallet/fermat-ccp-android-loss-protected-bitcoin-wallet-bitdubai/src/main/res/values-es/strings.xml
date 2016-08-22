@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Fermat Bitcoin Wallet</string>
+    <string name="app_name">Fermat Loss Protected Wallet</string>
     <string name="accept_text">Aceptar</string>
     <string name="accepted_text">Aceptado</string>
     <string name="action_contact">Carteras</string>

@@ -315,6 +315,16 @@
     <string name="notification_reversed_3">BTC could not be completed.</string>
 
 
+    <string name="notification_receive_payment_1">Received new Payment Request</string>
+    <string name="notification_receive_payment_2">You have received a Payment Request, for </string>
+    <string name="notification_payment_denied">Payment Request deny</string>
+    <string name="notification_payment_denied_2">Your Payment Request, for </string>
+    <string name="notification_payment_denied_3"> BTC was deny.</string>
+    <string name="notification_payment_error">Payment Request reverted</string>
+    <string name="notification_payment_error_2">Your Payment Request, for </string>
+    <string name="notification_payment_error_3"> BTC was reverted.</string>
+
+
 
     <!--Texto de Dialogs Movidos para RES de fermat-android-api para su uso general con traduccion incluida.-->
 
