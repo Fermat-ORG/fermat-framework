@@ -253,7 +253,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
         try {
             super.onActivityCreated(savedInstanceState);
         } catch (Exception e){
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), getResources().getString(R.string.Recovering), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
@@ -278,7 +278,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
         }
         catch (Exception e) {
-            makeText(getActivity(), "Recovering from system error. " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), getResources().getString(R.string.Recovering)+" " + e.getMessage(), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
@@ -365,7 +365,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
         }catch (Exception e){
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Recovering from system error - setUpHeader - " + e.getMessage(),
+            makeText(getActivity(), getResources().getString(R.string.Recovering)+" - setUpHeader - " + e.getMessage(),
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -499,7 +499,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                 public void onErrorOccurred(Exception ex) {
                     //  progressBar.setVisibility(View.GONE);
 
-                    makeText(getActivity(), "Error Get SpendingList for Chart ",
+                    makeText(getActivity(), getResources().getString(R.string.Error_spending_chart),
                             Toast.LENGTH_SHORT).show();
                     ErrorManager errorManager = appSession.getErrorManager();
                     if (errorManager != null)
@@ -517,7 +517,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
         }catch (Exception e) {
             e.printStackTrace();
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error In Graphic",
+            makeText(getActivity(), getResources().getString(R.string.Whooops_text3),
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -643,7 +643,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
         } catch (CantListLossProtectedTransactionsException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! Error Exception : CantListLossProtectedTransactionsException",
+            makeText(getActivity(), "Whooops! Error Exception : CantListLossProtectedTransactionsException",
                     Toast.LENGTH_SHORT).show();
 
         } catch (CantGetSelectedActorIdentityException e) {
@@ -729,7 +729,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
+            makeText(getActivity(), getResources().getString(R.string.Whooops_text),
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -757,7 +757,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             }
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Recovering from system error - changeBalanceType", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.Recovering)+" - changeBalanceType", Toast.LENGTH_SHORT).show();
         }
 
     }

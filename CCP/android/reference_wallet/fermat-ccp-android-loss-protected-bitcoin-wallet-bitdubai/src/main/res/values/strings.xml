@@ -111,12 +111,17 @@
     <string name="this_is_a_loss_protected_wallet_text">This is a wallet that will allow you to protect against loss of money. It\s main features are:</string>
     <string name="close_text">Close</string>
     <!-- loss_toast -->
-    <string name="Whooops_text">Whooops! recovering from system error</string>
-    <string name="Whooops_text2">Whooops, we have a problem here</string>
+    <string name="Whooops_text">Whooops! recovering from system error.</string>
+    <string name="Whooops_text2">Whooops, we have a problem here.</string>
+    <string name="Whooops_text3">Whooops! recovering from system error In Graphic"</string>
+
+    <string name="Recovering">Recovering from system error.</string>
     <string name="Insufficient_funds">Insufficient funds.</string>
     <string name="Wait_a_minute">Wait a minute please, trying to reconnect...</string>
+
     <string name="Contact_without_net_address">Contact don\'t have an Address from red</string>
     <string name="Contact_without_address">Contact don\'t have an Address</string>
+
     <string name="Contact_not_found">Contact not found, please add it.</string>
     <string name="Sending_text">Sending...</string>
     <string name="Action_not_allowed_lpw">Action not allowed, you will lose money. Restricted by LossProtected Configuration.</string>
@@ -124,6 +129,36 @@
     <string name="Invalid_Amount_small">Invalid Amount, must be greater than</string>
     <string name="Invalid_Amount">Invalid Amount</string>
     <string name="Unexpected_error">Unexpected Error</string>
+    <string name="Request_accepted">Request accepted</string>
+    <string name="Request_denied">Request denied</string>
+    <string name="Action_not_allowed2">Action not allowed.Could not retrieve the dollar exchange rate.\nCheck your internet connection.. </string>
+    <string name="Cant_accept">Can\'t Accept or Denied Receive Payment Exception -</string>
+    <string name="Error_spending_chart">Error Get SpendingList for Chart</string>
+
+    <!-- loss_notification_painter.xml -->
+    <string name="lpw_notification_transaction_arrive_1">Received money</string>
+    <string name="lpw_notification_transaction_arrive_2">BTC Arrived</string>
+    <string name="lpw_notification_transaction_reverse_1">Sent Transaction reversed</string>
+    <string name="lpw_notification_transaction_reverse_2">Sending</string>
+    <string name="lpw_notification_transaction_reverse_3">BTC could not be completed.</string>
+    <string name="lpw_notification_request_arrive_1">Received new Payment Request</string>
+    <string name="lpw_notification_request_arrive_2">You have received a Payment Request, for</string>
+    <string name="lpw_notification_payment_denied_1">Payment Request deny</string>
+    <string name="lpw_notification_payment_denied_2">Your Payment Request, for </string>
+    <string name="lpw_notification_payment_denied_3">BTC was deny.</string>
+    <string name="lpw_notification_payment_error_1">Payment Request reverted</string>
+    <string name="lpw_notification_payment_error_2">Your Payment Request, for </string>
+    <string name="lpw_notification_payment_error_3">BTC was reverted.</string>
+
+    <!-- loss_presentation_settings.xml -->
+    <string name="Enabled_notificacions">Enabled Notifications</string>
+    <string name="Enabled_loss_protected">Enabled Loss Protected</string>
+    <string name="Select_network">Select Network</string>
+    <string name="Received_Testnet_Bitcoins">Received Testnet Bitcoins</string>
+    <string name="TestNet_download">"TestNet download Init"</string>
+    <string name="TestNet_bitcoin_arrived">TestNet bitcoin arrived</string>
+    <string name="TestNet_Request_Error">TestNet Request Error</string>
+
 
     <!-- loss_presentation_wallet.xml -->
     <string name="to_begin_choose_an_avatar_below_text">To begin, choose an avatar below. You might change it later with any picture and your own alias.</string>
@@ -192,7 +227,7 @@
     <string name="title_section15">Factory Projects</string>
     <string name="title_section16">Published Wallets</string>
     <string name="title_section17">Shops</string>
-    <string name="app_name">Fermat Bitcoin Wallet</string>
+    <string name="app_name">Fermat Loss Protected Wallet</string>
     <string name="button_send">Send</string>
     <string name="title_activity_main">Young Wallet</string>
     <string name="action_search">Buscar</string>

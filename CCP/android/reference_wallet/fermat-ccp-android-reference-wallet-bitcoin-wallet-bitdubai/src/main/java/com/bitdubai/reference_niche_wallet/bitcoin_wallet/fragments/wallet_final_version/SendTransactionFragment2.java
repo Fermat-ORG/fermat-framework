@@ -590,6 +590,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                 public void run() {
                                     txt_balance_amount.setText(WalletUtils.formatBalanceString(balance,typeAmountSelected.getCode()));
 
+                                    txt_type_balance.setText(balanceType.getCode().equals(BalanceType.AVAILABLE.getCode())
+                                            ? R.string.available_balance_text : R.string.book_balance);
+
                                     switch (typeAmountSelected) {
                                         case BITCOIN:
 
@@ -616,7 +619,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             txt_balance_amount_type = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
 
-            changeAmountType();
         }
         catch (Exception e){
             e.printStackTrace();

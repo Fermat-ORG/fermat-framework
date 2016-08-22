@@ -212,9 +212,6 @@
     <string name="pr_status_10">Denegado</string>
     <string name="pr_status_11">Error, contacte a soporte</string>
 
-
-
-
     <!--Generic messages -->
     <!-- Amounts Messages-->
     <string name="invalid_amount_limit">Monto invalido, debe ser mayor que </string>
@@ -230,5 +227,16 @@
     <string name="notification_reversed_1">Transaccion enviada Reversada. </string>
     <string name="notification_reversed_2">El envio de </string>
     <string name="notification_reversed_3">BTC no pudo ser completado.</string>
+
+
+    <string name="notification_receive_payment_1">Nuevo Requerimiento de Pago</string>
+    <string name="notification_receive_payment_2">Recibio un Requerimiento de Pago por  </string>
+    <string name="notification_payment_denied">Requerimiento de Pago Denegado</string>
+    <string name="notification_payment_denied_2">Su Requerimiento de Pago por </string>
+    <string name="notification_payment_denied_3"> BTC fue denegado.</string>
+    <string name="notification_payment_error">Requerimeinto de Pago Reversado</string>
+    <string name="notification_payment_error_2">Su Requerimiento de Pago por </string>
+    <string name="notification_payment_error_3"> BTC fue reversado.</string>
+
 
 </resources>
