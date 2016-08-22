@@ -13,8 +13,8 @@
     <string name="wallet_status_open">UPGRADE</string>
     <string name="wallet_more_details_button">READ MORE</string>
     <string name="no_preview_images" translatable="false">No Preview Images</string>
-    <string name="description_text">You are not connected to the fermat network.</string>
-    <string name="second_description_text">to the fermat network.</string>
+    <string name="description_text">You are not connected to</string>
+    <string name="second_description_text">the fermat network.</string>
 
     <!--Connection tab-->
     <string name="delete_all_contacts_title">DELETE ALL CONTACTS</string>
@@ -130,7 +130,7 @@
     <string name="fragment_send_notes_hint">Notes (Optional)</string>
     <string name="give_me_an_address_address_text">Give me an address</string>
     <string name="header_text">Header</string>
-    <string name="income_expense">This wallet allow you to see your income and expense history</string>
+    <string name="income_expense">On this screen you can see your income and expenses of all transactions sent and received</string>
     <string name="insert_notes">Insert notes</string>
     <string name="institutional_wallets">Institutional wallets</string>
     <string name="kid_wallet">Kid wallet</string>
