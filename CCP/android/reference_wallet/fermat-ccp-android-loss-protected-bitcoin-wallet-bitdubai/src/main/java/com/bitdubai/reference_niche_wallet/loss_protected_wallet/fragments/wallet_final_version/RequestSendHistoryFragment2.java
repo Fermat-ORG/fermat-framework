@@ -224,7 +224,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if(id == 3){
+            if(id == 1){
                 changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_FORM_ACTIVITY,appSession.getAppPublicKey());
                 return true;
             }else if (id==2){

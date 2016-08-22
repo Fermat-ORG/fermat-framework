@@ -5,7 +5,7 @@
     <string name="touch_to_change_text">Tap to change</string>
     <!-- ccp_grouper_list_item.xml -->
     <string name="txt_total_balance_15_btc_text" translatable="false">15 BTC</string>
-    <!-- ccp_transaction_list_item.xml -->
+    <!-- ccp_transaction_list_item11.xml -->
     <string name="txt_amount_btc_text" translatable="false">1.4 BTC</string>
     <string name="txt_conference_ticket_text">Conference ticket</string>
     <string name="txt_time_date_text" translatable="false">03 Feb 2014</string>
