@@ -141,6 +141,7 @@
                 android:layout_height="25dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginEnd="5dp"
+                android:shadowColor="@color/color_blue"
                 android:checked="false" />
         </LinearLayout>
 
