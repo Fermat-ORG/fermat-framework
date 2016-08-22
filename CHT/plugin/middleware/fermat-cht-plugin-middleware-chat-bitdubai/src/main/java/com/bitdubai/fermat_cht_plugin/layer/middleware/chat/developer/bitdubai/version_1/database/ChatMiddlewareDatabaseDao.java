@@ -676,7 +676,8 @@ public class ChatMiddlewareDatabaseDao {
             List<DatabaseTableRecord> records = getMessageData(filter);
             if (records != null && !records.isEmpty()) {
                 for (DatabaseTableRecord record : records) {
-                    table.deleteRecord(record);
+                    if (record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME) == chatId)
+                        table.deleteRecord(record);
                 }
             }
             //I execute the transaction and persist the database side of the chat.
