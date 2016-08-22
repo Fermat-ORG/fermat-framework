@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -41,6 +42,8 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ReferenceAp
      */
     private FermatTextView mDescription;
     private CharSequence description;
+    private FermatTextView description_text;
+    private FermatTextView second_description;
 
     public ErrorConnectingFermatNetworkDialog(final Activity a,
                                               final ReferenceAppFermatSession intraUserSubAppSession,
@@ -58,13 +61,15 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ReferenceAp
         FermatTextView positiveButtonView = (FermatTextView) findViewById(R.id.positive_button);
         FermatTextView negativeButtonView = (FermatTextView) findViewById(R.id.negative_button);
         mDescription = (FermatTextView) findViewById(R.id.description);
+        description_text = (FermatTextView) findViewById(R.id.description_text);
+        second_description = (FermatTextView)findViewById(R.id.second_description);
         positiveButtonView.setOnClickListener(rightClick);
         negativeButtonView.setOnClickListener(leftClick);
         mDescription.setText(description != null ? description : "");
-        positiveButtonView.setText(leftButton != null ? leftButton : "");
-        negativeButtonView.setText(rightButton != null ? rightButton : "");
-        positiveButtonView.setOnClickListener(leftClick);
-        negativeButtonView.setOnClickListener(rightClick);
+        positiveButtonView.setText(rightButton != null ? rightButton : "");
+        negativeButtonView.setText(leftButton != null ? leftButton : "");
+        positiveButtonView.setOnClickListener(rightClick);
+        negativeButtonView.setOnClickListener(leftClick);
     }
 
     @Override
@@ -80,10 +85,10 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ReferenceAp
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.positive_button) {
+        if (i == R.id.negative_button) {
             dismiss();
         }
-        if (i == R.id.negative_button) {
+        if (i == R.id.positive_button) {
             if (errorConnectingFermatNetwork != null) {
                 errorConnectingFermatNetwork.errorConnectingFermatNetwork(false);
             }

@@ -24,7 +24,7 @@
             android:textColor="#272727"
             android:text="@string/delete_all_contacts_title"/>
         <TextView
-            android:id="@+id/description"
+            android:id="@+id/description_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
