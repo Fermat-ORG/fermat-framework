@@ -473,7 +473,7 @@ public class ChatAdapterView extends LinearLayout {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (chatWasCreate) {
+                if (chatWasCreate && s.length()>0) {
                     CounterText++;
                     if (CounterText == 5) {
                         BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
