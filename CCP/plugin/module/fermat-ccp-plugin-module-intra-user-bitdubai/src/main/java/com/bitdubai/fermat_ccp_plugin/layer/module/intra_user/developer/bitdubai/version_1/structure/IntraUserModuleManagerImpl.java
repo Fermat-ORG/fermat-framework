@@ -438,7 +438,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
      */
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPhrase, String intraUserToAddPublicKey, byte[] OthersProfileImage,byte[] MyProfileImage, String identityPublicKey, String identityAlias,Location actorLocation ) throws CantStartRequestException {
+    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPhrase, String intraUserToAddPublicKey, byte[] OthersProfileImage,Location intraUserToLocation,byte[] MyProfileImage, String identityPublicKey, String identityAlias,Location identityLocation ) throws CantStartRequestException {
 
         try {
 
@@ -449,18 +449,25 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             //get actor location
             String country = "--", place = "--";
 
+            String intraUserCountry = "--", intraUserPlace = "--";
+
             try {
-                final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
+                final Address address = geolocationManager.getAddressByCoordinate(identityLocation.getLatitude(), identityLocation.getLongitude());
                 country = address.getCountry();
                 place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
             } catch (CantCreateAddressException ignore) {
             }
 
+            try {
+                final Address address = geolocationManager.getAddressByCoordinate(intraUserToLocation.getLatitude(), intraUserToLocation.getLongitude());
+                intraUserCountry = address.getCountry();
+                intraUserPlace = address.getCity().equals("null") ? address.getCounty() : address.getCity();
+            } catch (CantCreateAddressException ignore) {
+            }
+
 
             if (  this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUserToAddPublicKey)!= ConnectionState.CONNECTED){
-                System.out.println("The User you are trying to connect with is not connected" +
-                        "so we send the message to the intraUserNetworkService");
-                this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, identityAlias, Actors.INTRA_USER, intraUserToAddName,intraUserToAddPhrase, intraUserToAddPublicKey, Actors.INTRA_USER, MyProfileImage,
+                    this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, identityAlias, Actors.INTRA_USER, intraUserToAddName,intraUserToAddPhrase, intraUserToAddPublicKey, Actors.INTRA_USER, MyProfileImage,
                         place,country);
             }else{
                 this.intraUserNertwokServiceManager.acceptIntraUser(identityPublicKey, intraUserToAddPublicKey);
@@ -472,7 +479,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
              */
 
 
-            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPhrase, intraUserToAddPublicKey, OthersProfileImage,place,country);
+            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPhrase, intraUserToAddPublicKey, OthersProfileImage,intraUserPlace,intraUserCountry);
 
 
         } catch (CantCreateIntraWalletUserException e) {
