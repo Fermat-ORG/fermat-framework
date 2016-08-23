@@ -148,20 +148,20 @@ public class ChatActorCommunityManager
         if (worldActorList != null && worldActorList.size() > 0) {
             for (int i = 0; i < worldActorList.size(); i++) {
                 ChatActorCommunityInformation worldActor= worldActorList.get(i);
-                country = "";
-                city = "";
-                state = "";
+                country = "--";
+                city = "--";
+                state = "--";
                 connectionID = null;
                 connectionState = null;
                 final Location location = worldActor.getLocation();
                 try {
                     if(location!=null) {
-                        if(location.getLatitude() != null && location.getAltitude() != null) {
+                        //if(location.getLatitude() != null && location.getAltitude() != null) {
                             final Address address = geolocationManager.getAddressByCoordinate(location.getLatitude(), location.getLongitude());
                             country = address.getCountry();
                             city = address.getCity().equals("null") ? address.getCounty() : address.getCity();
                             state = address.getState().equals("null") ? address.getCounty() : address.getState();
-                        }
+                        //}
                     }
                 } catch (CantCreateAddressException ignore) {
                 }
