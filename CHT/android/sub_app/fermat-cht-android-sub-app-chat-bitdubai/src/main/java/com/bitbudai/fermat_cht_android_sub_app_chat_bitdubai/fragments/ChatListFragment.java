@@ -477,6 +477,7 @@ public class ChatListFragment
                     chat.setChatId(adapter.getChatIdItem(position));
                     appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
                     appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chat);
+                    adapter.clear();
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -486,24 +487,58 @@ public class ChatListFragment
         return layout;
     }
 
-//    @Override
-//    public void onUpdateViewOnUIThread(String code) {
-//        super.onUpdateViewOnUIThread(code);
-//        onUpdateViewUIThread();
-//    }
-
     public void onUpdateViewUIThread() {
-        if (searchView != null) {
-            if (searchView.getQuery().toString().equals("")) {
+        if(isAttached) {
+            if (searchView != null) {
+                if (searchView.getQuery().toString().equals("")) {
+                    updatevalues();
+                    chatlistview();
+                    adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                }
+            } else {
                 updatevalues();
                 chatlistview();
                 adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
             }
-        } else {
-            updatevalues();
-            chatlistview();
-            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+        }else adapter.clear();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        unbindDrawables(layout.findViewById(R.id.list));
+        unbindDrawables(layout.findViewById(R.id.empty_view));
+        System.gc();
+    }
+
+    private void unbindDrawables(View view)
+    {
+        if (view.getBackground() != null)
+        {
+            view.getBackground().setCallback(null);
         }
+        if (view instanceof ViewGroup && !(view instanceof AdapterView))
+        {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+            {
+                unbindDrawables(((ViewGroup) view).getChildAt(i));
+            }
+            ((ViewGroup) view).removeAllViews();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbindDrawables(layout.findViewById(R.id.list));
+        unbindDrawables(layout.findViewById(R.id.empty_view));
+        adapter.clear();
+        chatSettings = null;
+        chatIdentity = null;
+        chatManager = null;
+        applicationsHelper = null;
+        destroy();
     }
 
     @Override
@@ -680,8 +715,8 @@ public class ChatListFragment
         if (id == R.id.menu_clean_chat) {
             try {
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, null, null, null, chatManager, errorManager);
-                alert.setTextTitle("Clean Chat");
-                alert.setTextBody("Do you want to clean this chat? All messages in here will be erased");
+                alert.setTextTitle("Clear Chat");
+                alert.setTextBody("Do you want to clear this chat? All messages in here will be erased");
                 alert.setType("clean-chat");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
