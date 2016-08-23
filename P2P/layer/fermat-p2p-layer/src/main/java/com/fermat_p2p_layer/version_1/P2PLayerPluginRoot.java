@@ -13,14 +13,11 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionClosedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageTransmitEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientProfileRegisteredEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkChannel;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.P2PLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
@@ -29,9 +26,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPN
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
@@ -95,7 +90,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
                                     }
                                 }
                             }
-                        }, 10, 5, TimeUnit.SECONDS);
+                        }, 30, 60, TimeUnit.SECONDS);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -111,13 +106,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
             @Override
             public void handleEvent(FermatEvent fermatEvent) throws FermatException {
                 System.out.println("NETWORK SERVICES STARTED:" + networkServices.size());
-                for (final AbstractNetworkService abstractNetworkService : networkServices.values()) {
-                    try {
-                        abstractNetworkService.handleNetworkClientConnectionClosedEvent(null);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                setNetworkServicesRegisteredFalse();
             }
         });
         eventManager.addListener(connectionClosed);
@@ -190,31 +179,6 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         client.connect();
     }
 
-    @Override
-    public void registerReconnect(NetworkChannel networkChannel) {
-        client = networkChannel;
-//        final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-//        scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (client.isConnected()) {
-//                    for (AbstractNetworkService abstractNetworkService : networkServices.values()) {
-//                        try {
-//                            abstractNetworkService.startConnection();
-//                        } catch (CantRegisterProfileException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                    try {
-//                        scheduledExecutorService.shutdownNow();
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }, 5, 5, TimeUnit.SECONDS);
-    }
-
     /**
      * Handle the event ClientConnectionCloseNotificationEvent
      * @param event
@@ -232,6 +196,16 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
 
     }
 
+    @Override
+    public void setNetworkServicesRegisteredFalse() {
+        for (final AbstractNetworkService abstractNetworkService : networkServices.values()) {
+            try {
+                abstractNetworkService.handleNetworkClientConnectionClosedEvent(null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
     /**
      * Handle the event CompleteComponentConnectionRequestNotificationEvent
      * @param event

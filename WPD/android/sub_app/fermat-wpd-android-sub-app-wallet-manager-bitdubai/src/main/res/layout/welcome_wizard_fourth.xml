@@ -6,52 +6,55 @@
     android:layout_height="match_parent"
     android:background="@null">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp">
+        android:layout_height="match_parent">
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/welcome_wizzard_fourth_title"
-            android:gravity="center"
-            android:textColor="#0EAF9E"
-            android:textSize="36sp"
-            app:typeface="CAVIAR_DREAMS"
-            android:paddingTop="20dp"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="150dp"
-            android:src="@drawable/banner_communities_hdpi"
-            android:layout_gravity="center"
-            android:layout_marginBottom="8dp"/>
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_wizzard_fourth_title"
+                android:gravity="center"
+                android:textColor="#0EAF9E"
+                android:textSize="36sp"
+                app:typeface="CAVIAR_DREAMS"
+                android:paddingTop="20dp"
+                />
 
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#0EAF9E"
-            android:layout_marginBottom="16dp"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="left"
-            app:typeface="CAVIAR_DREAMS"
-            android:textColor="#58595B"
-            android:textSize="15sp"
-            android:lineSpacingExtra="5dp"
-            android:text="In Fermat each type of user profile has a community app where you can browse, search and find people with that type of profile around you or globally. In order to interact with others you must send a connection request and wait for the other party to accept to be connected with you. After you are accepted you can use any of the apps available that allow you to be logged in with that type of profile."/>
-
-    </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:src="@drawable/banner_communities_hdpi"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"/>
 
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0EAF9E"
+                android:layout_marginBottom="16dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="left"
+                app:typeface="CAVIAR_DREAMS"
+                android:textColor="#58595B"
+                android:textSize="15sp"
+                android:lineSpacingExtra="5dp"
+                android:text="@string/welcome_text_community"/>
+        </LinearLayout>
+
+    </ScrollView>
 
 
 

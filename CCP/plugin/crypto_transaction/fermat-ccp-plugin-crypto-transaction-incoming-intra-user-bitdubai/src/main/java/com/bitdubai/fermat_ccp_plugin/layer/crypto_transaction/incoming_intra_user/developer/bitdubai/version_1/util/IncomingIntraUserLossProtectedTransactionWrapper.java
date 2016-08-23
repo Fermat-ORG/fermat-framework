@@ -149,7 +149,10 @@ public class IncomingIntraUserLossProtectedTransactionWrapper implements Bitcoin
 
     @Override
     public FeeOrigin getFeeOrigin() {
-        return FeeOrigin;
+        if (FeeOrigin == null)
+            return com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+        else
+            return FeeOrigin;
     }
 
     @Override

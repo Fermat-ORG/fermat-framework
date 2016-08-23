@@ -153,7 +153,7 @@
             android:text="@string/accept_text"
             android:layout_marginLeft="7dp"
             android:textColor="#fff"
-            android:background="#1173aa"/>
+            android:background="#05CFC2"/>
     </LinearLayout>
 
 </LinearLayout>

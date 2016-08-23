@@ -62,7 +62,7 @@
             android:layout_weight="1"
             android:background="#073487"
             android:text="@string/cancel_text"
-            android:textColor="#666666"
+            android:textColor="#FFF"
             android:textStyle="bold"
             android:textSize="14sp"
             />

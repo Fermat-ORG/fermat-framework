@@ -42,7 +42,7 @@ public class InitializeDatabaseTest {
 
 
     @Before
-    public void SetUp() throws  Exception {
+    public void SetUp() throws Exception {
         UUID testOwnerId = UUID.randomUUID();
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
@@ -55,6 +55,7 @@ public class InitializeDatabaseTest {
         DatabaseFactory.setPluginDatabaseSystem(mockPluginDatabaseSystem);
         DatabaseFactory.setPluginId(testOwnerId);
     }
+
     @Test
     public void initializeDatabaseTest() throws CantInitializeNetworkServicesWalletResourcesDatabaseException {
 
@@ -65,7 +66,7 @@ public class InitializeDatabaseTest {
     }
 
     @Test
-    public void initializeDatabaseTest_InitError_ThrowsCantInitializeNetworkServicesWalletResourcesDatabaseException() throws Exception{
+    public void initializeDatabaseTest_InitError_ThrowsCantInitializeNetworkServicesWalletResourcesDatabaseException() throws Exception {
 
         DatabaseFactory.setPluginDatabaseSystem(null);
 
@@ -75,7 +76,7 @@ public class InitializeDatabaseTest {
     }
 
     @Test
-    public void initializeDatabaseTest_DatabaseNotFound_ThrowsCantInitializeNetworkServicesWalletResourcesDatabaseException() throws Exception{
+    public void initializeDatabaseTest_DatabaseNotFound_ThrowsCantInitializeNetworkServicesWalletResourcesDatabaseException() throws Exception {
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenThrow(DatabaseNotFoundException.class);
         catchException(DatabaseFactory).initializeDatabase();
         assertThat(caughtException()).isNull();

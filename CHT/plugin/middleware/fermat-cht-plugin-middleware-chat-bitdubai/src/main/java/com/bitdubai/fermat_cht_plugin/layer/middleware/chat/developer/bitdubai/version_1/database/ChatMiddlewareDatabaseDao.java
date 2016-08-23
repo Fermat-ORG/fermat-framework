@@ -673,10 +673,12 @@ public class ChatMiddlewareDatabaseDao {
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(chatId.toString());
             filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
             List<DatabaseTableRecord> records = getMessageData(filter);
             if (records != null && !records.isEmpty()) {
                 for (DatabaseTableRecord record : records) {
-                    table.deleteRecord(record);
+                    if (record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME).equals(chatId))
+                        table.deleteRecord(record);
                 }
             }
             //I execute the transaction and persist the database side of the chat.

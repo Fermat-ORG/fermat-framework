@@ -44,6 +44,7 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
     private final WeakReference<Context> activity;
     private ErrorManager errorManager;
     private CryptoBrokerWalletModuleManager moduleManager;
+    private View container;
 
 
     public CryptoBrokerWalletHeaderPainter(Context activity, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> fullyLoadedSession) {
@@ -66,17 +67,17 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
     public void addExpandableHeader(ViewGroup viewGroup) {
         LayoutInflater layoutInflater = (LayoutInflater) activity.get().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View container = (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) ?
+        container = (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) ?
                 layoutInflater.inflate(R.layout.cbw_header_layout_pre_lollipop, viewGroup, true) :
                 layoutInflater.inflate(R.layout.cbw_header_layout, viewGroup, true);
 
         ProgressBar progressBar = (ProgressBar) container.findViewById(R.id.cbw_header_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
-        getAndShowMarketExchangeRateData(container, progressBar);
+        getAndShowMarketExchangeRateData( progressBar);
     }
 
-    private void getAndShowMarketExchangeRateData(final View container, final ProgressBar progressBar) {
+    private void getAndShowMarketExchangeRateData( final ProgressBar progressBar) {
 
         FermatWorker fermatWorker = new FermatWorker(activity.get()) {
             @Override

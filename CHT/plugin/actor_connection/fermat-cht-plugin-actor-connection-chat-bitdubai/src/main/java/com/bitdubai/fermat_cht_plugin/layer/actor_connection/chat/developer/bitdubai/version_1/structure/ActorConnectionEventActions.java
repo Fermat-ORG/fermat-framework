@@ -117,25 +117,12 @@ public class ActorConnectionEventActions {
                         fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
 
                         broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
-
-//                        FermatBundle fermatBundle = new FermatBundle();
-//                        fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-//                        fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
-
-//                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), fermatBundle);
-//                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), ActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
-
                         break;
-                   /* case CANCEL:
-                        this.handleCancelConnection(request.getRequestId());
-                        break;*/
                     case DENY:
                         this.handleDenyConnection(request.getRequestId());
                         break;
                     case DISCONNECT:
-//                        if (request.getRequestType() == RequestType.SENT)
                         this.handleDisconnect(request.getRequestId());
-
                         break;
 
                 }
@@ -170,11 +157,26 @@ public class ActorConnectionEventActions {
             ConnectionState connectionState = null;
             if (oldActorConnection != null)
                 connectionState = oldActorConnection.getConnectionState();
-//
-            if (connectionState != null && connectionState.equals(ConnectionState.CONNECTED))
+
+            if (connectionState != null && connectionState.getCode().equals(ConnectionState.CONNECTED.getCode()))
                 return;
-//            else
-            connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
+
+            if (connectionState != null && connectionState.getCode().equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE.getCode())){
+                final ChatActorConnection actorConnectionAccepted = new ChatActorConnection(
+                        oldActorConnection.getConnectionId(),
+                        oldActorConnection.getLinkedIdentity(),
+                        oldActorConnection.getPublicKey(),
+                        oldActorConnection.getAlias(),
+                        oldActorConnection.getImage(),
+                        ConnectionState.CONNECTED,
+                        oldActorConnection.getCreationTime(),
+                        oldActorConnection.getUpdateTime(),
+                        oldActorConnection.getStatus()
+                );
+                dao.updateChatActorConnectionRequest(actorConnectionAccepted);
+                return;
+            }
+            else connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
 
             final ChatActorConnection actorConnection = new ChatActorConnection(
                     request.getRequestId(),
@@ -200,16 +202,6 @@ public class ActorConnectionEventActions {
                     fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
 
                     broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
-
-//                    FermatBundle fermatBundle = new FermatBundle();
-//                    fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-//                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
-//
-//                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), fermatBundle);
-
-//
-//            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), ActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
-
 
                     chatNetworkService.confirm(request.getRequestId());
                     break;

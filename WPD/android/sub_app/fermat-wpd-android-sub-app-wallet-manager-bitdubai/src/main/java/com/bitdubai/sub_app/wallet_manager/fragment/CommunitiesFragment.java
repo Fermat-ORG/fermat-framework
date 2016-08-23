@@ -16,6 +16,9 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -27,9 +30,6 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledApp;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_wpd.wallet_manager.R;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.wallet_manager.adapter.CommunitiesScreenAdapter;
 import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * Created by Matias Furszyfer on 2016.03.10..
  */
-public class CommunitiesFragment extends FermatWalletListFragment<InstalledApp,ReferenceAppFermatSession,ResourceProviderManager> implements FermatListItemListeners<InstalledApp> {
+public class CommunitiesFragment extends FermatWalletListFragment<InstalledApp, ReferenceAppFermatSession, ResourceProviderManager> implements FermatListItemListeners<InstalledApp> {
 
 
     private static final Integer MAX_USER_SHOW = 20;
@@ -81,7 +81,7 @@ public class CommunitiesFragment extends FermatWalletListFragment<InstalledApp,R
                 }
             });
 
-        } catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
@@ -145,7 +145,7 @@ public class CommunitiesFragment extends FermatWalletListFragment<InstalledApp,R
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
         if (layoutManager == null) {
-            layoutManager = new GridLayoutManager(getActivity(),2);
+            layoutManager = new GridLayoutManager(getActivity(), 2);
         }
         return layoutManager;
     }
@@ -181,7 +181,7 @@ public class CommunitiesFragment extends FermatWalletListFragment<InstalledApp,R
                 "Wallet Users",
                 SubAppsPublicKeys.CCP_COMMUNITY.getCode(),
                 "intra_user_community_sub_app",
-                new Version(1,0,0),
+                new Version(1, 0, 0),
                 Platforms.CRYPTO_CURRENCY_PLATFORM, AppsStatus.DEV);
 
         installedSubApp.setIconResource(R.drawable.cryptou_community);
@@ -238,7 +238,7 @@ public class CommunitiesFragment extends FermatWalletListFragment<InstalledApp,R
                 SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode(),
                 "sub_app_crypto_broker_community",
                 new Version(1, 0, 0)
-                ,Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.ALPHA);
+                , Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.ALPHA);
 
         installedSubApp.setIconResource(R.drawable.cbroker_community);
         data.add(installedSubApp);
@@ -282,7 +282,7 @@ public class CommunitiesFragment extends FermatWalletListFragment<InstalledApp,R
         //data.setSelected(!data.isSelected());
         //adapter.notifyDataSetChanged();
 
-        ((DesktopAppSelector)getActivity()).selectSubApp((com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp) data);
+        ((DesktopAppSelector) getActivity()).selectSubApp((com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp) data);
 
     }
 

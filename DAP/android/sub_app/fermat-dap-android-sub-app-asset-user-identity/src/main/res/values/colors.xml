@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dap_identity_user_view_color">#0072bc</color>
-
+    <color name="dap_identity_user_view_color">#2C4B97</color>
     <color name="background_tab_pressed">#6633B5E5</color>
 </resources>

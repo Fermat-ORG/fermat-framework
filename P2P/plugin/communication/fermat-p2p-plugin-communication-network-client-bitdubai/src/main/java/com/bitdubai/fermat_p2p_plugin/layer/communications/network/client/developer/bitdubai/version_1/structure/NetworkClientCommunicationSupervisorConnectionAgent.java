@@ -38,8 +38,7 @@ public class NetworkClientCommunicationSupervisorConnectionAgent implements Runn
     @Override
     public void run() {
 
-        if(networkClientCommunicationPluginRoot.isStarted() &&
-                networkClientCommunicationPluginRoot.getNetworkClientCommunicationConnection() != null &&
+        if(networkClientCommunicationPluginRoot.getNetworkClientCommunicationConnection() != null &&
                 getCommunicationsNetworkClientChannel() != null){
 
             Session session = getConnection();
@@ -55,7 +54,8 @@ public class NetworkClientCommunicationSupervisorConnectionAgent implements Runn
                         getCommunicationsNetworkClientChannel().sendPong();
 
                 }catch (Exception ex) {
-                    System.out.println(ex.getCause());
+                    ex.printStackTrace();
+//                    System.out.println(ex.getCause());
                 }
             }
 

@@ -52,7 +52,7 @@ public class ToolbarBuilder {
             }catch (Exception e){
                 //nothing
             }
-            toolabarContainer.removeAllViewsInLayout();
+            if (toolabarContainer!=null)toolabarContainer.removeAllViewsInLayout();
             toolabarContainer = null;
             txtTitle = null;
         }
@@ -60,9 +60,7 @@ public class ToolbarBuilder {
     }
 
     public void clear(){
-        txtTitle = null;
-        toolabarContainer.removeAllViewsInLayout();
-        toolabarContainer = null;
+        clearToolbarViews();
         mToolbar.clear();
         fermatActivity.clear();
     }
@@ -74,7 +72,7 @@ public class ToolbarBuilder {
 
     public void setTypeface(Typeface typeface) {
         if (typeface!=null)
-        txtTitle.setTypeface(typeface);
+            txtTitle.setTypeface(typeface);
     }
 
     public void setTextSize(float textSize) {

@@ -36,6 +36,7 @@ import com.bitdubai.fermat_wpd_api.all_definition.listeners.WalletWentOnlineEven
 /**
  * The enum <code>EventType</code>
  * represent the different type for the events<p/>
+ *
  * @version 1.0
  * @since Java JDK 1.7
  */

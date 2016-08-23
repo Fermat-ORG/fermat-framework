@@ -2,7 +2,7 @@ package com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.inter
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.*;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 
 import java.util.UUID;
 
@@ -17,8 +17,11 @@ public interface Language {
      * Language identifiers
      */
     UUID getLanguageId();
+
     UUID getWalletId(); //Todo: Refactor a String para que acepte PublicKey
+
     Languages getLanguageName();
+
     String getLanguageLabel();
 
     /**
@@ -31,7 +34,9 @@ public interface Language {
      * Version information, current, Initial and Final.
      */
     Version getVersion();
+
     Version getInitialWalletVersion();
+
     Version getFinalWalletVersion();
 
     /**

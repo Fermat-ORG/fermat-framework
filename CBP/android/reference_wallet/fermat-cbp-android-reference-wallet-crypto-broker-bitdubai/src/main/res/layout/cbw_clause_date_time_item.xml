@@ -23,7 +23,7 @@
             android:layout_gravity="top|end"
             android:layout_margin="9dp"
             android:scaleType="fitXY"
-            android:src="@drawable/bg_detail_number_01"
+            android:src="@drawable/bg_detail_number_02"
             tools:ignore="contentDescription"/>
 
         <LinearLayout
@@ -35,52 +35,55 @@
                 android:id="@+id/cbw_card_view_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
+                android:maxLines="2"
+                android:paddingEnd="48dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="48dp"
+                android:paddingStart="16dp"
                 android:textAllCaps="true"
                 android:textColor="#1271A7"
                 android:textSize="14sp"
-                tools:text="Negotiation Expiration Date"/>
+                tools:text="@string/expiration_date_title"/>
 
             <View
+                android:id="@+id/cbw_line_up"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#1271A7"
-                android:id="@+id/cbw_line_up" />
+                android:layout_marginBottom="16dp"
+                android:background="#1271A7"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                >
+                android:layout_marginStart="16dp">
 
                 <TextView
                     android:id="@+id/cbw_date_time_description_text"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_alignBottom="@+id/cbw_date_value"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
                     android:gravity="center_vertical"
                     android:textColor="@color/description_text_status_confirm"
                     android:textSize="14sp"
-                    tools:text="Expiration Date:"/>
+                    tools:text="@string/expiration_date_text"/>
 
                 <Button
                     android:id="@+id/cbw_date_value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="30dp"
+                    android:layout_below="@+id/cbw_date_time_description_text"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_toEndOf="@+id/cbw_date_time_description_text"
-                    android:layout_toRightOf="@+id/cbw_date_time_description_text"
                     android:background="#DDD"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
@@ -91,8 +94,9 @@
 
                 <Button
                     android:id="@+id/cbw_time_value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="30dp"
+                    android:layout_below="@+id/cbw_date_time_description_text"
                     android:layout_toEndOf="@+id/cbw_date_value"
                     android:layout_toRightOf="@+id/cbw_date_value"
                     android:background="#DDD"
@@ -103,27 +107,27 @@
                     android:textAllCaps="false"
                     android:textColor="#222"
                     android:textSize="14sp"
-                    tools:text="3:30 pm"/>
+                    tools:text="11:30 pm"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/cbw_text_you_time_zone"
                     android:layout_width="wrap_content"
                     android:layout_height="16dp"
-                    android:layout_alignLeft="@+id/cbw_date_value"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignStart="@+id/cbw_date_value"
-                    android:layout_below="@id/cbw_date_value"
+                    android:layout_alignBottom="@+id/cbw_time_value"
+                    android:layout_alignTop="@+id/cbw_time_value"
                     android:layout_gravity="end"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@+id/cbw_time_value"
+                    android:layout_toRightOf="@+id/cbw_time_value"
                     android:ellipsize="end"
-                    android:gravity="start"
-                    android:maxLines="1"
+                    android:gravity="start|center_vertical"
+                    android:maxLines="2"
                     android:textColor="#969696"
                     android:textSize="11sp"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     tools:ignore="SmallSp"
-                    tools:text="Time Zone: America/Caracas"/>
+                    tools:text="Time Zone:\nAmerica/Caracas"/>
 
             </RelativeLayout>
 
@@ -131,12 +135,11 @@
                 android:id="@+id/cbw_text_other_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:textColor="#5a6a7c"
@@ -152,10 +155,11 @@
                 android:orientation="vertical">
 
                 <View
+                    android:id="@+id/cbw_line_down"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#1271A7"
-                    android:id="@+id/cbw_line_down" />
+                    android:layout_marginTop="16dp"
+                    android:background="#1271A7"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/cbw_confirm_button"

@@ -25,7 +25,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"
-            android:text="CONFIRM CONNECTION"
+            android:text="@string/confirm_connection"
             android:textColor="#272727"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
@@ -42,7 +42,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send Connection Request"
+            android:text="@string/send_request_text"
             android:layout_gravity="center"
             android:textColor="#7DD5CA"
             android:textSize="16dp"
@@ -108,7 +108,7 @@
 
 
                 android:singleLine="true"
-                android:text="CANCEL"
+                android:text="@string/cancel_label"
                 android:textColor="#2d3e50"
                 android:textSize="16sp"
                 tools:ignore="HardcodedText" />
@@ -123,7 +123,7 @@
                 android:gravity="center"
                 android:padding="8dp"
                 android:singleLine="true"
-                android:text="OK"
+                android:text="@string/ok_label"
                 android:textColor="#2d3e50"
                 android:textSize="16sp"
                 tools:ignore="HardcodedText" />

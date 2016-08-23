@@ -6,210 +6,212 @@
     android:layout_height="match_parent"
     android:background="@null"
     >
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/welcome_wizzard_fifth_title"
-            android:gravity="center"
-            android:textColor="#0EAF9E"
-            android:textSize="36sp"
-            app:typeface="CAVIAR_DREAMS"
-            android:paddingTop="20dp"
-            android:paddingBottom="16dp"
-            />
-
-
-
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:lineSpacingExtra="5dp"
-            android:paddingBottom="14dp"
-            android:textColor="#58595B"
-            android:layout_marginBottom="7dp"
-
-            app:typeface="CAVIAR_DREAMS_BOLD"
-            android:text="To get started please follow these steps:"
-            />
-
-
-
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="7dp"
-                  >
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-
-
-            <View
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="32dp"
-                android:layout_marginRight="32dp"
-                android:background="#0EAF9E"
-                android:layout_marginTop="7dp"
-                android:layout_marginBottom="12dp"/>
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_wizzard_fifth_title"
+                android:gravity="center"
+                android:textColor="#0EAF9E"
+                android:textSize="36sp"
+                app:typeface="CAVIAR_DREAMS"
+                android:paddingTop="20dp"
+                android:paddingBottom="16dp"
+                />
+
+
+
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:lineSpacingExtra="5dp"
+                android:paddingBottom="14dp"
+                android:textColor="#58595B"
+                android:layout_marginBottom="7dp"
+
+                app:typeface="CAVIAR_DREAMS_BOLD"
+                android:text="@string/welcome_get_started"
+                />
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:layout_marginBottom="7dp"
+                >
 
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/number_1"
-                    android:gravity="center"
-                    android:text="1"
-                    android:textColor="#fff"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="7dp"
-                    app:typeface="CAVIAR_DREAMS_BOLD"
-                    />
 
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="0dp"
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginRight="32dp"
+                    android:background="#0EAF9E"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="12dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Go to Chat Profile App to create your first Fermat profile."
-                    android:layout_weight="1"
-                    android:paddingLeft="1.5dp"
-                    android:gravity="left"
-                    android:textSize="14sp"
-                    app:typeface="CAVIAR_DREAMS"
-                    android:lineSpacingExtra="5dp"
-                    android:textColor="#58595B"
-                    android:paddingRight="12dp"
-                    />
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/number_1"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textColor="#fff"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="7dp"
+                        app:typeface="CAVIAR_DREAMS_BOLD"
+                        />
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/welcome_goto_profile"
+                        android:layout_weight="1"
+                        android:paddingLeft="1.5dp"
+                        android:gravity="left"
+                        android:textSize="14sp"
+                        app:typeface="CAVIAR_DREAMS"
+                        android:lineSpacingExtra="5dp"
+                        android:textColor="#58595B"
+                        android:paddingRight="12dp"
+                        />
+
+                </LinearLayout>
+
+
+
+                <ImageView
+                    android:layout_width="96dp"
+                    android:layout_gravity="center"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingBottom="9dp"
+                    android:src="@drawable/iconos_chat_hdpi_01"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="7dp"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/number_1"
+                        android:gravity="center"
+                        android:text="2"
+                        android:textColor="#fff"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="7dp"
+                        app:typeface="CAVIAR_DREAMS_BOLD"
+                        />
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/welcome_goto_chat"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:textSize="14sp"
+                        app:typeface="CAVIAR_DREAMS"
+                        android:textColor="#58595B"
+                        android:paddingRight="12dp"
+                        android:lineSpacingExtra="5dp"
+
+                        />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="96dp"
+                    android:layout_gravity="center"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingBottom="9dp"
+
+                    android:src="@drawable/iconos_chat_communities"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/number_1"
+                        android:gravity="center"
+                        android:text="3"
+                        android:textColor="#fff"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="7dp"
+                        app:typeface="CAVIAR_DREAMS_BOLD"
+                        />
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/welcome_goto_community"
+                        android:gravity="left"
+                        android:textSize="14sp"
+                        android:paddingBottom="3dp"
+                        app:typeface="CAVIAR_DREAMS"
+                        android:lineSpacingExtra="5dp"
+                        android:paddingRight="12dp"
+                        android:textColor="#58595B"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+
+
+                <ImageView
+                    android:layout_width="96dp"
+                    android:layout_gravity="center"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="12dp"
+                    android:paddingBottom="9dp"
+
+                    android:src="@drawable/iconos_chat_hdpi_03"/>
 
             </LinearLayout>
 
 
-
-            <ImageView
-                android:layout_width="96dp"
-                android:layout_gravity="center"
-                android:layout_height="56dp"
-                android:layout_marginTop="8dp"
-                android:paddingBottom="9dp"
-                android:src="@drawable/iconos_chat_hdpi_01"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="7dp"
-            >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/number_1"
-                    android:gravity="center"
-                    android:text="2"
-                    android:textColor="#fff"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="7dp"
-                    app:typeface="CAVIAR_DREAMS_BOLD"
-                    />
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Then go to the Chat Community to connect with some people."
-                android:layout_weight="1"
-                android:gravity="left"
-                android:textSize="14sp"
-                app:typeface="CAVIAR_DREAMS"
-                android:textColor="#58595B"
-                android:paddingRight="12dp"
-                android:lineSpacingExtra="5dp"
-
-                />
-
-                </LinearLayout>
-
-            <ImageView
-                android:layout_width="96dp"
-                android:layout_gravity="center"
-                android:layout_height="56dp"
-                android:layout_marginTop="8dp"
-                android:paddingBottom="9dp"
-
-                android:src="@drawable/iconos_chat_communities"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/number_1"
-                    android:gravity="center"
-                    android:text="3"
-                    android:textColor="#fff"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="7dp"
-                    app:typeface="CAVIAR_DREAMS_BOLD"
-                    />
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Finally go to the Chat App and start chatting."
-                android:gravity="left"
-                android:textSize="14sp"
-                android:paddingBottom="3dp"
-                app:typeface="CAVIAR_DREAMS"
-                android:lineSpacingExtra="5dp"
-                android:paddingRight="12dp"
-                android:textColor="#58595B"
-                android:layout_weight="1"/>
-
-                </LinearLayout>
-
-
-            <ImageView
-                android:layout_width="96dp"
-                android:layout_gravity="center"
-                android:layout_height="56dp"
-                android:layout_marginTop="12dp"
-                android:paddingBottom="9dp"
-
-                android:src="@drawable/iconos_chat_hdpi_03"/>
-
-        </LinearLayout>
-
-
-        <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView-->
+            <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
             <!--app:typeface="CAVIAR_DREAMS"-->
@@ -222,14 +224,16 @@
 
 
 
-        <!--<ImageView-->
+            <!--<ImageView-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="150dp"-->
             <!--android:src="@drawable/screen_setting_hdpi"-->
             <!--android:layout_gravity="center"-->
             <!--android:layout_marginBottom="16dp"/>-->
 
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
 
 
 

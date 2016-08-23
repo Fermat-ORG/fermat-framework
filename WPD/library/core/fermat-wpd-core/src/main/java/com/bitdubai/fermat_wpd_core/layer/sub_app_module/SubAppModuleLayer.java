@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_wpd_core.layer.sub_app_module;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_wpd_core.layer.sub_app_module.wallet_factory.WalletFactoryPluginSubsystem;
 import com.bitdubai.fermat_wpd_core.layer.sub_app_module.wallet_publisher.WalletPublisherPluginSubsystem;
 import com.bitdubai.fermat_wpd_core.layer.sub_app_module.wallet_store.WalletStorePluginSubsystem;
@@ -24,11 +24,11 @@ public class SubAppModuleLayer extends AbstractLayer {
 
         try {
 
-            registerPlugin(new WalletFactoryPluginSubsystem()  );
+            registerPlugin(new WalletFactoryPluginSubsystem());
             registerPlugin(new WalletPublisherPluginSubsystem());
-            registerPlugin(new WalletStorePluginSubsystem()    );
+            registerPlugin(new WalletStorePluginSubsystem());
 
-        } catch(CantRegisterPluginException e) {
+        } catch (CantRegisterPluginException e) {
 
             throw new CantStartLayerException(
                     e,

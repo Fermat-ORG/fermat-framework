@@ -80,22 +80,22 @@ public class ImageUtil {
         long terabyte = gigabyte * 1024;
 
         if ((bytes >= 0) && (bytes < kilobyte)) {
-            return new StringBuilder().append(bytes).append(" B").toString();
+            return String.valueOf(bytes) + " B";
 
         } else if ((bytes >= kilobyte) && (bytes < megabyte)) {
-            return new StringBuilder().append(bytes / kilobyte).append(" KB").toString();
+            return String.valueOf(bytes / kilobyte) + " KB";
 
         } else if ((bytes >= megabyte) && (bytes < gigabyte)) {
-            return new StringBuilder().append(bytes / megabyte).append(" MB").toString();
+            return String.valueOf(bytes / megabyte) + " MB";
 
         } else if ((bytes >= gigabyte) && (bytes < terabyte)) {
-            return new StringBuilder().append(bytes / gigabyte).append(" GB").toString();
+            return String.valueOf(bytes / gigabyte) + " GB";
 
         } else if (bytes >= terabyte) {
-            return new StringBuilder().append(bytes / terabyte).append(" TB").toString();
+            return String.valueOf(bytes / terabyte) + " TB";
 
         } else {
-            return new StringBuilder().append(bytes).append(" Bytes").toString();
+            return String.valueOf(bytes) + " Bytes";
         }
     }
 
@@ -150,7 +150,7 @@ public class ImageUtil {
              */
             Iterator<ImageWriter> writers = ImageIO.getImageWritersBySuffix(format);
             if (!writers.hasNext()) {
-                throw new IllegalStateException(new StringBuilder().append("No writers found for the specified format ").append(format).toString());
+                throw new IllegalStateException("No writers found for the specified format " + format);
             }
 
             /*
@@ -274,7 +274,7 @@ public class ImageUtil {
             File file = new File("/home/rrequena/Imágenes/Test/original_image.jpg");
             BufferedImage originalImage = ImageIO.read(file);
 
-            System.out.println(new StringBuilder().append("Original image Size = ").append(ImageUtil.bytesIntoHumanReadable(file.length())).toString());
+            System.out.println("Original image Size = " + ImageUtil.bytesIntoHumanReadable(file.length()));
 
        /*     BufferedImage resizeImage = ImageUtil.resize(originalImage, 100, 100);
             System.out.println("Resize image Size = " + ImageUtil.bytesIntoHumanReadable(getSize(originalImage, JPG_FORMAT)));
@@ -301,7 +301,7 @@ public class ImageUtil {
             ImageIO.write(resizeCompressImage, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/resize_compress_image.jpg")); */
 
             BufferedImage thumbnail = ImageUtil.generateThumbnail(originalImage, JPG_FORMAT);
-            System.out.println(new StringBuilder().append("thumbnail image Size = ").append(ImageUtil.bytesIntoHumanReadable(getSize(thumbnail, JPG_FORMAT))).toString());
+            System.out.println("thumbnail image Size = " + ImageUtil.bytesIntoHumanReadable(getSize(thumbnail, JPG_FORMAT)));
             ImageIO.write(thumbnail, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/thumbnail5.jpg"));
 
         } catch (IOException e) {

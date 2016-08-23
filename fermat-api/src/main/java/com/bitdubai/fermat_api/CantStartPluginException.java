@@ -36,12 +36,12 @@ public class CantStartPluginException extends CantStartException {
     }
 
     public CantStartPluginException(final Exception exception, final Plugins plugin) {
-        this(new StringBuilder().append(plugin.toString()).append(" ").append(exception.getMessage()).toString());
+        this(plugin.toString() + " " + exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
 
     public CantStartPluginException(final Exception exception, final PluginVersionReference plugin) {
-        this(new StringBuilder().append(plugin.toString()).append(" ").append(exception.getMessage()).toString());
+        this(plugin.toString() + " " + exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
 

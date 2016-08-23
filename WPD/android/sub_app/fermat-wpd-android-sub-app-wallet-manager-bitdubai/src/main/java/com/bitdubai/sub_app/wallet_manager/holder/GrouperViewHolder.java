@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_wpd.wallet_manager.R;
 
 
-
 /**
  * Created by nelson on 21/10/15.
  */
@@ -50,14 +49,12 @@ public class GrouperViewHolder extends ParentViewHolder {
 
     /**
      * Set the data to the views
-     *
      */
-    public void bind(int childCount,Platforms platforms) {
+    public void bind(int childCount, Platforms platforms) {
         txt_grouper.setText(platforms.getTextForm());
         txt_grouper.setFont(FontType.CAVIAR_DREAMS_BOLD);
         txt_grouper.setTextColor(Color.WHITE);
     }
-
 
 
     @Override

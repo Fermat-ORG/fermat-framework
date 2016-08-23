@@ -71,6 +71,7 @@ public class LossProtectedWalletModuleTransaction implements LossProtectedWallet
         this.memo = bitcoinWalletTransaction.getMemo();
         this.blockchainNetworkType = bitcoinWalletTransaction.getBlockchainNetworkType();
         this.transactionState = bitcoinWalletTransaction.getTransactionState();
+
     }
 
     @Override

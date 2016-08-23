@@ -239,7 +239,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
 
         for (int f = 0; f < 100; f++) {
 
-            final ChatExposingData chatExposingData = new ChatExposingData(UUID.randomUUID().toString(), new StringBuilder().append(chatExposingDataSingle.getAlias()).append(" ").append(f + 1).toString(), chatExposingDataSingle.getImage(), "", "", "",
+            final ChatExposingData chatExposingData = new ChatExposingData(UUID.randomUUID().toString(), chatExposingDataSingle.getAlias() + " " + (f + 1), chatExposingDataSingle.getImage(), "", "", "",
                     "", null, refreshInterval, 0,
                     ProfileStatus.UNKNOWN);
 

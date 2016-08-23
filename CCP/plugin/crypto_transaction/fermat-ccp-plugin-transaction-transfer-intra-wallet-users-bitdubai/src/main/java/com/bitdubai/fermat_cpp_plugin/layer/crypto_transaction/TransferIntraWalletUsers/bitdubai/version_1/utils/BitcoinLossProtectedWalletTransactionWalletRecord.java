@@ -163,6 +163,9 @@ public class BitcoinLossProtectedWalletTransactionWalletRecord implements Bitcoi
 
     @Override
     public FeeOrigin getFeeOrigin() {
+        if (FeeOrigin == null)
+            return com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+        else
         return FeeOrigin;
     }
 

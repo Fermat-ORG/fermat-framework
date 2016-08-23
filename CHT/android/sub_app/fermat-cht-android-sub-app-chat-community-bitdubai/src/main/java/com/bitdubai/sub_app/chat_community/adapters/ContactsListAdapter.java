@@ -62,8 +62,11 @@ public class ContactsListAdapter
 
     @Override
     protected void bindHolder(ContactsListHolder holder, ChatActorCommunityInformation data, int position) {
+        int max = 10;
+        if(max > data.getAlias().length())
+            max = data.getAlias().length();
         if (data.getPublicKey() != null) {
-            holder.friendName.setText(data.getAlias());
+            holder.friendName.setText(data.getAlias().substring(0, max));
             if (data.getImage() != null && data.getImage().length > 0) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);

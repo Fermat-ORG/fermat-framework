@@ -173,16 +173,16 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
              * load file content
              */
 
-            loadSettingsFile();
+           // loadSettingsFile();
 
 
             /**
              * get last logged intra user
              */
-            this.intraUserLoggedPublicKey = intraUserSettings.getLoggedInPublicKey();
+           // this.intraUserLoggedPublicKey = intraUserSettings.getLoggedInPublicKey();
 
-        } catch (CantLoadLoginsFileException e) {
-            throw new CantStartPluginException("Error load logins xml file", e);
+       // } catch (CantLoadLoginsFileException e) {
+       //     throw new CantStartPluginException("Error load logins xml file", e);
         } catch (Exception e) {
             throw new CantStartPluginException("Unknown Error", e);
         }
@@ -270,16 +270,6 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
     public ModuleManager<IntraUserWalletSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         if(intraUserModuleManager==null){
 
-            Location location = null;
-            DeviceLocation deviceLocation = null;
-
-            //try {
-              //  location = locationManager.getLocation();
-
-               // deviceLocation = new DeviceLocation(location.getLatitude(),location.getLongitude(),location.getTime(),location.getAltitude(),location.getSource());
-           // } catch (CantGetDeviceLocationException e) {
-               // e.printStackTrace();
-            //}
             intraUserModuleManager = new IntraUserModuleManagerImpl(pluginFileSystem,pluginId,intraUserLoginXml,intraWalletUser,intraWalletUserIdentityManager,intraWalletUserManager,intraUserNertwokServiceManager,errorManager,intraUserLoggedPublicKey,locationManager,geolocationManager);
         }
         return intraUserModuleManager;

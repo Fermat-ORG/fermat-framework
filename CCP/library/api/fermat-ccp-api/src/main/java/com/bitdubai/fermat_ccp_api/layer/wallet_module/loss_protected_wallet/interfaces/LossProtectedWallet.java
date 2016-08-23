@@ -320,7 +320,8 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
 
     void send(long cryptoAmount,
               CryptoAddress destinationAddress,
-              String notes, String walletPublicKey,
+              String notes,
+              String walletPublicKey,
               String deliveredByActorPublicKey,
               Actors deliveredByActorType,
               String deliveredToActorPublicKey,

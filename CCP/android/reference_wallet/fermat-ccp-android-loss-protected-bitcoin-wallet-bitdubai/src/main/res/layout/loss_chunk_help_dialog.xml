@@ -73,7 +73,7 @@
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:scaleType="fitXY"
                     android:src="@drawable/banner_loss"/>
             </RelativeLayout>
@@ -84,7 +84,7 @@
                 android:textSize="16sp"
                 android:paddingBottom="5dp"
                 android:paddingTop="7sp"
-                android:text="This is a wallet that will allow you to see your incomes and expenses in every transaction done"
+                android:text="@string/income_expense"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center_horizontal"
                 android:paddingLeft="20dp"
@@ -141,6 +141,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_dismiss"
                 android:text="@string/close_text"
+                android:textColor="#FFF"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:background="#DC5A0F"/>

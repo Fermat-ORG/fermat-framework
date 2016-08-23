@@ -7,8 +7,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
 /**
  * Created by natalia on 09/09/15.
  */

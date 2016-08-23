@@ -2,7 +2,6 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wall
 
 import android.content.Context;
 import android.content.DialogInterface;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -40,7 +39,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -57,9 +55,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -74,11 +70,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.Los
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantCreateLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantFindLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllLossProtectedWalletContactsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code_scanner.IntentIntegrator;
@@ -92,8 +85,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Er
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.DecimalDigitsInputFilter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
-
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.squareup.picasso.Picasso;
 
@@ -833,7 +824,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             money = new BigDecimal("0");
                         else
                             money = new BigDecimal(amount);
-
                         if(!amount.equals("") && !money.equals(new BigDecimal("0"))) {
                             try {
                                 String notes = "";
@@ -848,7 +838,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                                 if (txtType.equals("[btc]")) {
                                     newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                                    newFee = fee;
+                                    newFee = bitcoinConverter.getSathoshisFromBTC(fee);
                                      msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
 
                                    // newAmount = String.valueOf(Integer.valueOf(newAmount)); //without decimal .00000
@@ -858,20 +848,16 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
                                 } else if (txtType.equals("[bits]")) {
                                     newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                                    newFee = fee;
+                                    newFee = bitcoinConverter.getSathoshisFromBits(fee);
                                     msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                                 }
 
+                                BigDecimal decimalFeed = new BigDecimal(newFee);
                                 long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
                                 BigDecimal amountDecimal = new BigDecimal(newAmount);
 
-                                BigDecimal decimalFeed = new BigDecimal(newFee);
-                                //BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
+
                                 BigDecimal operator = new BigDecimal(newAmount);
-
-
-
-
 
                                 if (amountDecimal.longValueExact() > minSatoshis) {
 
@@ -914,13 +900,20 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                             long total = 0;
                                             if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode()))
                                                 total =  operator.longValueExact() +  decimalFeed.longValueExact();
-                                            else
+                                               // total = operator + decimalFeed;
+                                            else{
                                                 total =  operator.longValueExact() -  decimalFeed.longValueExact();
+                                               // total = operator - decimalFeed;
+
+                                            }
+
 
                                             if(total < Balance)
                                             {
                                                 ConfirmSendDialog_feeCase sendConfirmDialog = new ConfirmSendDialog_feeCase(getActivity(),
                                                         lossProtectedWalletManager,
+                                                      //  operator,
+                                                     //   decimalFeed,
                                                         operator.longValueExact(),
                                                         decimalFeed.longValueExact(),
                                                         total,

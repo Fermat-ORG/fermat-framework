@@ -10,8 +10,7 @@ public enum WalletStoreFragmentsEnumType implements FermatFragmentsEnumType<Wall
 
     CWP_WALLET_STORE_MAIN_ACTIVITY("CWPWSMA"),
     CWP_WALLET_STORE_DETAIL_ACTIVITY("CWPWSDA"),
-    CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY("CWPWSMDA")
-    ;
+    CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY("CWPWSMDA");
 
 
     private String key;

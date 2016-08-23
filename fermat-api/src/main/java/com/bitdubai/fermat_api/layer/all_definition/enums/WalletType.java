@@ -30,7 +30,7 @@ public enum WalletType implements FermatEnum {
                 return WalletType.REFERENCE;
             //Modified by Manuel Perez on 03/08/2015
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the WalletType enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the WalletType enum");
         }
     }
 }

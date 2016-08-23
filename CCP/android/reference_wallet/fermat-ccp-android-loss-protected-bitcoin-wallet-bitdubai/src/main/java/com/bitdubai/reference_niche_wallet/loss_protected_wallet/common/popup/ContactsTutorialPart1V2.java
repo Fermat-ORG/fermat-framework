@@ -89,8 +89,8 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceAppFermatSess
         }
     }
 
-    private void changeActivity(Activities ccpBitcoinWalletAddConnectionActivity) {
-        ((FermatScreenSwapper)activity).changeActivity(ccpBitcoinWalletAddConnectionActivity.getCode(),getSession().getAppPublicKey());
+    private void changeActivity(Activities activities) {
+        ((FermatScreenSwapper)activity).changeActivity(activities.getCode(),getSession().getAppPublicKey(),null,null);
     }
 
 

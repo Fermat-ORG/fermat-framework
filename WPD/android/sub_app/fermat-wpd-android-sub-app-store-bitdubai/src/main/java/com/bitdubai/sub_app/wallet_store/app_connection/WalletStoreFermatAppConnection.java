@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.wallet_store.app_connection;
 
 import android.content.Context;
+
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -21,7 +22,7 @@ import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferen
  *
  * @since 2015.12.17
  */
-public class WalletStoreFermatAppConnection extends AppConnections<WalletStoreSubAppSessionReferenceApp> {
+public class WalletStoreFermatAppConnection extends AppConnections<WalletStoreSubAppSessionReferenceApp> {//AppConnections<ReferenceAppFermatSession<WalletStoreModuleManager>> {
 
     public WalletStoreFermatAppConnection(Context activity) {
         super(activity);
@@ -34,7 +35,7 @@ public class WalletStoreFermatAppConnection extends AppConnections<WalletStoreSu
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return new PluginVersionReference[]{ new PluginVersionReference(
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
                 Layers.SUB_APP_MODULE,
                 Plugins.WALLET_STORE,

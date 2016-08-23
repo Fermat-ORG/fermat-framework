@@ -49,7 +49,7 @@ public class PresentationGeolocationIntraUserIdentityDialog extends FermatDialog
         startCommunity = (FermatButton) findViewById(R.id.start_community);
         dontShowAgainCheckBox = (CheckBox) findViewById(R.id.checkbox_not_show);
         startCommunity.setOnClickListener(this);
-        dontShowAgainCheckBox.setChecked(true);
+        //dontShowAgainCheckBox.setChecked(true);
 
 
     }
@@ -70,53 +70,43 @@ public class PresentationGeolocationIntraUserIdentityDialog extends FermatDialog
         int id = v.getId();
 
         if (id == R.id.start_community) {
-//            SharedPreferences pref = getContext().getSharedPreferences("don't show dialog more", Context.MODE_PRIVATE);
-//            SharedPreferences.Editor edit = pref.edit();
-            if (dontShowAgainCheckBox.isChecked()) {
-//                edit.putBoolean("isChecked", true);
-//                edit.apply();
-                saveSettings();
-                dismiss();
-            } else {
-//                edit.putBoolean("isChecked", false);
-//                edit.apply();
-                saveSettings();
-                dismiss();
-            }
+
+            dismiss();
+
         }
     }
 
     private void saveSettings(){
-            if(dontShowAgainCheckBox.isChecked()){
-                try {
-                    if(getSession().getAppPublicKey() != null ){
-                        IntraUserIdentitySettings intraUserIdentitySettings = moduleManager.loadAndGetSettings(getSession().getAppPublicKey());
-                        if(intraUserIdentitySettings!=null) {
-                            intraUserIdentitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
-                            moduleManager.persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
-                        }else{
-                            Log.e(getClass().getName(),"identity settings null, please verify this");
-                        }
-
-                    }else{
-                         IntraUserIdentitySettings intraUserIdentitySettings = moduleManager.loadAndGetSettings(getSession().getAppPublicKey());
+        if(dontShowAgainCheckBox.isChecked()){
+            try {
+                if(getSession().getAppPublicKey() != null ){
+                    IntraUserIdentitySettings intraUserIdentitySettings = moduleManager.loadAndGetSettings(getSession().getAppPublicKey());
+                    if(intraUserIdentitySettings!=null) {
                         intraUserIdentitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
-                        if (getSession().getAppPublicKey()!=null){
-                            moduleManager.persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
-                        }else{
-                            moduleManager.persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
-                        }
-
+                        moduleManager.persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
+                    }else{
+                        Log.e(getClass().getName(),"identity settings null, please verify this");
                     }
 
+                }else{
+                    IntraUserIdentitySettings intraUserIdentitySettings = moduleManager.loadAndGetSettings(getSession().getAppPublicKey());
+                    intraUserIdentitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
+                    if (getSession().getAppPublicKey()!=null){
+                        moduleManager.persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
+                    }else{
+                        moduleManager.persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
+                    }
 
-                } catch (CantGetSettingsException e) {
-                    e.printStackTrace();
-                } catch (SettingsNotFoundException e) {
-                    e.printStackTrace();
-                } catch (CantPersistSettingsException e) {
-                    e.printStackTrace();
                 }
+
+
+            } catch (CantGetSettingsException e) {
+                e.printStackTrace();
+            } catch (SettingsNotFoundException e) {
+                e.printStackTrace();
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
             }
+        }
     }
 }

@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/txt_rate_amount"
             android:textColor="#787878"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:text="000.00"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"/>

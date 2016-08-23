@@ -2,13 +2,12 @@ package com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bit
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-
-import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_wpd_api.all_definition.events.WalletClosedEvent;
+import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 
 /**
  * Created by loui on 05/02/15.
@@ -28,12 +27,9 @@ public class WalletClosedEventHandler implements FermatEventHandler {
 
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
 
-            try
-            {
+            try {
                 this.walletRuntimeManager.removeNavigationStructure(publicKey);
-            }
-            catch (CantRemoveWalletNavigationStructureException cantRecordClosedWalletException)
-            {
+            } catch (CantRemoveWalletNavigationStructureException cantRecordClosedWalletException) {
                 /**
                  * The main module could not handle this exception. Me neither. Will throw it again.
                  */

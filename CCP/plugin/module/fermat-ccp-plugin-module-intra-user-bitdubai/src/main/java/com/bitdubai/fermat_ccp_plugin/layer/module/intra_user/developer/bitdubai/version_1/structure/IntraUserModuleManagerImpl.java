@@ -111,7 +111,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
         this.intraWalletUserManager = intraWalletUserManager;
         this.intraUserNertwokServiceManager = intraUserNertwokServiceManager;
         this.errorManager = errorManager;
-        this.intraUserLoggedPublicKey = intraUserLoggedPublicKey;
+       // this.intraUserLoggedPublicKey = intraUserLoggedPublicKey;
         this.locationManager = locationManager;
         this.geolocationManager = geolocationManager;
     }
@@ -285,14 +285,15 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
                     //get actor location
                     Location actorLocation = intraUser.getLocation();
-                    try {
-                        final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
-                        country = address.getCountry();
-                        place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
-                    } catch (CantCreateAddressException ignore) {
+                    if(actorLocation != null){
+                        try {
+                            final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
+                            country = address.getCountry();
+                            place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
+                        } catch (CantCreateAddressException ignore) {
+                            ignore.printStackTrace();
+                        }
                     }
-
-
                     //return intra user information - if not connected - status return null
                     IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(),
                                                                                                 connectionState,intraUser.getState(),intraUser.getContactRegistrationDate(),

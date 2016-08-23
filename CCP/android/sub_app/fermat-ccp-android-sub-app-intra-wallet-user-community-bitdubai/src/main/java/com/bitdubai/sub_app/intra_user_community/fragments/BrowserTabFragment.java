@@ -367,7 +367,7 @@ public class BrowserTabFragment
                     .setHintTextColor(Color.WHITE)
                     .setSearchHintDrawable(R.drawable.search_icon)
                     .setSearchButtonImageResource(R.drawable.search_icon)
-                    .setCloseBtnImageResource(R.drawable.search_icon)
+                    .setCloseBtnImageResource(R.drawable.closewhite_icon)
                     .setSearchPlateTint(Color.WHITE)
                     .setSubmitAreaTint(Color.WHITE);
 
@@ -445,7 +445,9 @@ public class BrowserTabFragment
 
             ConnectionState connectionState = data.getConnectionState();
 
+
             if ((data.getState().equals(ProfileStatus.ONLINE) || data.getState().equals(ProfileStatus.UNKNOWN)) && connectionState.equals(ConnectionState.NO_CONNECTED)) {
+
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
                         appSession.setData(INTRA_USER_SELECTED, data);
@@ -818,6 +820,10 @@ public class BrowserTabFragment
     public void onStop() {
         if(fermatWorker != null)
             fermatWorker.shutdownNow();
+
+        if(_executor != null)
+            _executor.shutdownNow();
+
         super.onStop();
     }
 

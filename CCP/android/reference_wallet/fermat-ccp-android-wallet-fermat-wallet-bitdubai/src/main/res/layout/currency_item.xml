@@ -7,7 +7,7 @@
         android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="curreny"
+        android:text="currency"
         android:layout_marginLeft="6dp"
         android:textSize="22sp"
         android:textColor="#F000"

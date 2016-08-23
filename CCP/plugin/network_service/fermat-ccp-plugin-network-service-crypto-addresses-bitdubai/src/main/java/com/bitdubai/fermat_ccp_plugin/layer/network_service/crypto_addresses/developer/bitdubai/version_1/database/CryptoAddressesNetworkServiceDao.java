@@ -544,17 +544,17 @@ public final class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            addressExchangeRequestTable.loadToMemory();
+            addressExchangeRequestTable.numRecords();
 
             List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
 
 
-            if (!records.isEmpty())
+            if (addressExchangeRequestTable.numRecords() > 0)
                 return true;
             else
                 return false;
 
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (Exception exception) {
 
             throw new CantGetPendingAddressExchangeRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }

@@ -16,6 +16,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/01/16.
  */
+@Deprecated
 public class ChatMetadataRecord implements ChatMetadata {
 
     UUID chatId;
@@ -103,34 +104,30 @@ public class ChatMetadataRecord implements ChatMetadata {
         return this.chatMessageStatus;
     }
 
-    @Override
-    public MessageStatus getMessageStatus() {
-        return this.messageStatus;
-    }
-
-    public void setMessageStatus(MessageStatus messageStatus) {
-        this.messageStatus = messageStatus;
-    }
+//    public MessageStatus getMessageStatus() {
+//        return this.messageStatus;
+//    }
+//
+//    public void setMessageStatus(MessageStatus messageStatus) {
+//        this.messageStatus = messageStatus;
+//    }
 
     @Override
     public String getDate() {
         return this.date;
     }
 
-    @Override
-    public UUID getMessageId() {
-        return this.messageId;
-    }
+//    @Override
+//    public UUID getMessageId() {
+//        return this.messageId;
+//    }
+//
+//    @Override
+//    public String getMessage() {
+//        return this.message;
+//    }
 
-    @Override
-    public String getMessage() {
-        return this.message;
-    }
 
-    @Override
-    public DistributionStatus getDistributionStatus() {
-        return this.distributionStatus;
-    }
 
     @Override
     public TypeChat getTypeChat() {

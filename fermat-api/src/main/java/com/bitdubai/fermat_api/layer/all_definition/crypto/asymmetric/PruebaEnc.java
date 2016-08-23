@@ -157,7 +157,7 @@ publicKey : MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKB
             PrivateKey privateKey = keyPair.getPrivate();
             PublicKey publicKey = keyPair.getPublic();
 
-            System.out.println(new StringBuilder().append("\n").append("Generating key/value pair using ").append(privateKey.getAlgorithm()).append(" algorithm").toString());
+            System.out.println("\n" + "Generating key/value pair using " + privateKey.getAlgorithm() + " algorithm");
 
             // Get the bytes of the public and private keys
             byte[] privateKeyBytes = privateKey.getEncoded();
@@ -168,9 +168,9 @@ publicKey : MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKB
             String formatPublic = publicKey.getFormat(); // X.509
 
             //   System.out.println("Private Key : " + AsymmetricCryptography.getFermatCipher().encode((privateKeyBytes)));
-            System.out.println(new StringBuilder().append("formatPrivate : ").append(formatPrivate).toString());
+            System.out.println("formatPrivate : " + formatPrivate);
             // System.out.println("Public Key : " + AsymmetricCryptography.getFermatCipher().encode((publicKeyBytes)));
-            System.out.println(new StringBuilder().append("formatPublic : ").append(formatPublic).toString());
+            System.out.println("formatPublic : " + formatPublic);
 
             // The bytes can be converted back to public and private key objects
             KeyFactory keyFactory = KeyFactory.getInstance(keyAlgorithm);
@@ -181,14 +181,14 @@ publicKey : MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKB
             PublicKey publicKey2 = keyFactory.generatePublic(publicKeySpec);
 
             // The original and new keys are the same
-            System.out.println(new StringBuilder().append("  Are both private keys equal? ").append(privateKey.equals(privateKey2)).toString());
-            System.out.println(new StringBuilder().append("  Are both public keys equal? ").append(publicKey.equals(publicKey2)).toString());
+            System.out.println("  Are both private keys equal? " + privateKey.equals(privateKey2));
+            System.out.println("  Are both public keys equal? " + publicKey.equals(publicKey2));
         } catch (InvalidKeySpecException specException) {
             System.out.println("Exception");
             System.out.println("Invalid Key Spec Exception");
         } catch (NoSuchAlgorithmException e) {
             System.out.println("Exception");
-            System.out.println(new StringBuilder().append("No such algorithm: ").append(keyAlgorithm).toString());
+            System.out.println("No such algorithm: " + keyAlgorithm);
         }
 
     }

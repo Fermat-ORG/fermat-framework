@@ -37,15 +37,15 @@
     <string name="cht_identity_accuracy">PRECISIÓN (km)</string>
     <string name="cht_identity_frequency">FRECUENCIA</string>
     <string name="cht_identity_accuracy_toast">El campo Precisión está vacío, por favor ingrese un valor</string>
-    <string name="cht_identity_geo_toast">Geolocalización de Chat Identity actualizada.</string>
+    <string name="cht_identity_geo_toast">Geolocalización de Chat Identity actualizada</string>
     <string name="cht_identity_menu_option">Debe crear una identidad para abrir este menú.</string>
-    <string name="cht_identity_create_toast">Geolocalización de Chat Identity actualizada</string>
     <string name="cht_identity_created_toast">Chat Identity creada</string>
     <string name="cht_identity_image_small">La imagen seleccionada es muy pequeña. Por favor seleccione una de altura y ancho de al menos 192x192px</string>
     <string name="cht_identity_error_image">Error al cargar imagen</string>
     <string name="cht_identity_enter_name">Por favor ingreseun nombre o alias</string>
     <string name="cht_identity_available">Disponible</string>
     <string name="cht_identity_no_camera">No tiene cámaras disponibles</string>
+    <string name="cht_identity_picture_canbesave">Su dispositivo no permite guardar la imagen en alamacenamiento. Sin embargo, la identidad puede crearse con la imagen tomada.</string>
     <string name="cht_identity_turn_gps">Por favor, encienda su GPS</string>
 
     <string name="cht_chat_footer">Fermat P2P Chat</string>
@@ -61,6 +61,7 @@
          ContactsListFragment when a search query match occurs that is not the display name.
          -->
     <string name="search_match_other">Matches Other Field</string>
+    <string name="profile_picture">Foto del Perfil</string>
 
     <string name="no_address">No addresses found</string>
     <string name="no_intent_found">No application found to handle this action</string>

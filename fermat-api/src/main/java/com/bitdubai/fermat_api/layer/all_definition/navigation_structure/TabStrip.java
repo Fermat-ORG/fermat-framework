@@ -47,6 +47,8 @@ public class TabStrip implements FermatTabStrip, Serializable {
 
     String tabsIndicateColor;
 
+    int tabTextSize;
+
     boolean hasIcon = false;
 
     boolean hasText;
@@ -288,5 +290,13 @@ public class TabStrip implements FermatTabStrip, Serializable {
 
     public void setBackgroundDrawable(FermatDrawable backgroundDrawable) {
         this.backgroundDrawable = backgroundDrawable;
+    }
+
+    public int getTabTextSize() {
+        return tabTextSize;
+    }
+
+    public void setTabTextSize(int tabTextSize) {
+        this.tabTextSize = tabTextSize;
     }
 }

@@ -59,9 +59,9 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
         this.savedInstanceState = savedInstanceState;
 //        setRetainInstance(true);
 
-        if (savedInstanceState != null){
-            Integer  count  = savedInstanceState.getInt("tabsCount");
-            for (int i = 0; i < count; i++){
+        if (savedInstanceState != null) {
+            Integer count = savedInstanceState.getInt("tabsCount");
+            for (int i = 0; i < count; i++) {
                 fragments.add((AbstractFermatFragment) getFragment(i));
             }
         }
@@ -69,7 +69,7 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
         super.onCreate(savedInstanceState);
     }
 
-    private Fragment getFragment(int position){
+    private Fragment getFragment(int position) {
         return savedInstanceState == null ? wizardPageAdapter.getItem(position) : getFragmentManager().findFragmentByTag(getFragmentTag(position));
     }
 
@@ -80,7 +80,7 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("tabsCount",      wizardPageAdapter.getCount());
+        outState.putInt("tabsCount", wizardPageAdapter.getCount());
 //        outState.putStringArray("titles", wizardPageAdapter.getTitles().toArray(new String[0]));
     }
 
@@ -89,7 +89,7 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.wizard_base_layout, container, false);
 
-        if(fragments.isEmpty()) {
+        if (fragments.isEmpty()) {
             fragments.add(WelcomeWizardFirstFragment.newInstance());
             fragments.add(WelcomeWizardSecondFragment.newInstance());
             fragments.add(WelcomeWizardThridFragment.newInstance());
@@ -182,8 +182,8 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
         return view;
     }
 
-    private void checkRadioButton(int position){
-        switch (position){
+    private void checkRadioButton(int position) {
+        switch (position) {
             case 0:
                 radio_group.check(R.id.radio_first);
                 break;
@@ -230,13 +230,13 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
     public void onClick(View v) {
         int id = v.getId();
 
-        if(id==R.id.btn_got_it){
-            if(position==fragments.size()-1){
+        if (id == R.id.btn_got_it) {
+            if (position == fragments.size() - 1) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         saveSettings(!checkbox.isChecked());
-                        if(checkbox.isChecked()){
+                        if (checkbox.isChecked()) {
                             Log.i(TAG, "Starting desktop");
 //                            try {
 //                                wizardPageAdapter.getActiveFragment(viewPager, 3).changeStartActivity(Activities.CCP_DESKTOP.getCode());
@@ -255,14 +255,14 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
                 }).start();
 
 //                home();
-            }else {
+            } else {
                 doNext();
 
             }
         }
     }
 
-    private void saveSettings(boolean isHelpEnabled){
+    private void saveSettings(boolean isHelpEnabled) {
 //        settingsSettingsManager = appSession.getModuleManager().getSettingsManager();
 
         try {
@@ -272,7 +272,7 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
         } catch (SettingsNotFoundException e) {
             appManagerSettings = new DesktopManagerSettings();
         }
-        if(appManagerSettings!=null) {
+        if (appManagerSettings != null) {
             appManagerSettings.setIsPresentationHelpEnabled(isHelpEnabled);
             try {
                 appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), appManagerSettings);

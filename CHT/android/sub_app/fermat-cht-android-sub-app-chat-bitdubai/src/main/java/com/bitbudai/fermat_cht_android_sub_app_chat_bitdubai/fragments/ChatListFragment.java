@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -75,6 +77,8 @@ import java.util.UUID;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 
 /**
  * Chat List Fragment
@@ -110,6 +114,7 @@ public class ChatListFragment
     View layout;
     PresentationDialog presentationDialog;
     ImageView noData;
+    LinearLayout emptyView;
     TextView noDatalabel;
     TextView nochatssubtitle;
     TextView nochatssubtitle1;
@@ -228,6 +233,7 @@ public class ChatListFragment
                     }
                 }
                 if (chatscounter == 0) {
+                    emptyView.setVisibility(View.VISIBLE);
                     noData.setVisibility(View.VISIBLE);
                     noDatalabel.setVisibility(View.VISIBLE);
                     nochatssubtitle.setVisibility(View.VISIBLE);
@@ -256,7 +262,6 @@ public class ChatListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         try {
             chatManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
@@ -307,15 +312,28 @@ public class ChatListFragment
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-
+        cancelChatMessagesNotifications();
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);
+    }
+
+    public void cancelChatMessagesNotifications(){
+        //cancel notification of any message if the user is on this fragment
+        try {
+            FermatBundle fermatBundle = new FermatBundle();
+            fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+            fermatBundle.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE_NOTIFICATION);
+            cancelNotification(fermatBundle);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
     }
 
     void updatevalues() {
         try {
             if (!chatManager.getChats().isEmpty()) {
                 layout.setBackgroundResource(R.drawable.cht_background_white);
+                emptyView.setVisibility(View.GONE);
                 noData.setVisibility(View.GONE);
                 noDatalabel.setVisibility(View.GONE);
                 nochatssubtitle.setVisibility(View.GONE);
@@ -327,6 +345,7 @@ public class ChatListFragment
                 }
                 chatlistview();
             } else {
+                emptyView.setVisibility(View.VISIBLE);
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
                 nochatssubtitle.setVisibility(View.VISIBLE);
@@ -393,6 +412,7 @@ public class ChatListFragment
         super.onCreate(savedInstanceState);
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
+        emptyView = (LinearLayout) layout.findViewById(R.id.empty_view);
         noData = (ImageView) layout.findViewById(R.id.nodata);
         noDatalabel = (TextView) layout.findViewById(R.id.nodatalabel);
         nochatssubtitle = (TextView) layout.findViewById(R.id.nochatssubtitle);
@@ -457,6 +477,7 @@ public class ChatListFragment
                     chat.setChatId(adapter.getChatIdItem(position));
                     appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
                     appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chat);
+                    adapter.clear();
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -466,24 +487,58 @@ public class ChatListFragment
         return layout;
     }
 
-//    @Override
-//    public void onUpdateViewOnUIThread(String code) {
-//        super.onUpdateViewOnUIThread(code);
-//        onUpdateViewUIThread();
-//    }
-
     public void onUpdateViewUIThread() {
-        if (searchView != null) {
-            if (searchView.getQuery().toString().equals("")) {
+        if(isAttached) {
+            if (searchView != null) {
+                if (searchView.getQuery().toString().equals("")) {
+                    updatevalues();
+                    chatlistview();
+                    adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                }
+            } else {
                 updatevalues();
                 chatlistview();
                 adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
             }
-        } else {
-            updatevalues();
-            chatlistview();
-            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+        }else adapter.clear();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        unbindDrawables(layout.findViewById(R.id.list));
+        unbindDrawables(layout.findViewById(R.id.empty_view));
+        System.gc();
+    }
+
+    private void unbindDrawables(View view)
+    {
+        if (view.getBackground() != null)
+        {
+            view.getBackground().setCallback(null);
         }
+        if (view instanceof ViewGroup && !(view instanceof AdapterView))
+        {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+            {
+                unbindDrawables(((ViewGroup) view).getChildAt(i));
+            }
+            ((ViewGroup) view).removeAllViews();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbindDrawables(layout.findViewById(R.id.list));
+        unbindDrawables(layout.findViewById(R.id.empty_view));
+        adapter.clear();
+        chatSettings = null;
+        chatIdentity = null;
+        chatManager = null;
+        applicationsHelper = null;
+        destroy();
     }
 
     @Override
@@ -660,8 +715,8 @@ public class ChatListFragment
         if (id == R.id.menu_clean_chat) {
             try {
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, null, null, null, chatManager, errorManager);
-                alert.setTextTitle("Clean Chat");
-                alert.setTextBody("Do you want to clean this chat? All messages in here will be erased");
+                alert.setTextTitle("Clear Chat");
+                alert.setTextBody("Do you want to clear this chat? All messages in here will be erased");
                 alert.setType("clean-chat");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {

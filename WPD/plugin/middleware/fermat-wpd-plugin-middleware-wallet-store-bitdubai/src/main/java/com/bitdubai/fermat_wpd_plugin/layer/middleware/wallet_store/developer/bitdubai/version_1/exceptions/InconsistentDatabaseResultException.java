@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class InconsistentDatabaseResultException extends FermatException {
     public static final String DEFAULT_MESSAGE = "Inconsistent database result detected.";
+
     public InconsistentDatabaseResultException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

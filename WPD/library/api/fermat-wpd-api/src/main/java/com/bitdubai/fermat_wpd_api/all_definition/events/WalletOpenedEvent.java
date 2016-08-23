@@ -9,15 +9,15 @@ public class WalletOpenedEvent extends AbstractWPDEvent {
 
     private String publicKey;
 
-    public void setWalletPublicKey (String publicKey){
+    public void setWalletPublicKey(String publicKey) {
         this.publicKey = publicKey;
     }
-    
+
     public String getWalletPublicKey() {
         return this.publicKey;
     }
-    
-    public WalletOpenedEvent (EventType eventType){
+
+    public WalletOpenedEvent(EventType eventType) {
         super(eventType);
     }
 }

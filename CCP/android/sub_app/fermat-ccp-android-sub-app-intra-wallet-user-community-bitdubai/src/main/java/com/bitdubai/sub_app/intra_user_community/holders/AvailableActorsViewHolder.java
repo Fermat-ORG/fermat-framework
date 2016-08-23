@@ -37,7 +37,7 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
     private TextView button_add;
     private Resources res;
     private TextView response;
-
+    private FermatTextView location;
 
     /**
      * Constructor
@@ -54,12 +54,18 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
         row_connection_state = (FermatTextView) itemView.findViewById(R.id.connection_state_user);
         thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
         name = (FermatTextView) itemView.findViewById(R.id.community_name);
+        location =(FermatTextView) itemView.findViewById(R.id.location);
+
        // progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
 
 
     }
 
     public void bind(IntraUserInformation data) {
+
+        if (data.getCity()!=null||data.getCountry()!=null)
+            location.setText(data.getCountry()+", "+data.getCity());
+        else location.setText("No Location");
 
         row_connection_state.setText((data.getState().equals(ProfileStatus.ONLINE)) ? "Online" : "offline");
         if(data.getState().equals(ProfileStatus.OFFLINE))

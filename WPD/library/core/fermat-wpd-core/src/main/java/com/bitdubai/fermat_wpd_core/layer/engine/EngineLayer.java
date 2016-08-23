@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_wpd_core.layer.engine;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_wpd_core.layer.engine.wallet_runtime.WalletRuntimePluginSubsystem;
 
 /**
@@ -24,7 +24,7 @@ public class EngineLayer extends AbstractLayer {
 
             registerPlugin(new WalletRuntimePluginSubsystem());
 
-        } catch(CantRegisterPluginException e) {
+        } catch (CantRegisterPluginException e) {
 
             throw new CantStartLayerException(
                     e,

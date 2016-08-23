@@ -3,12 +3,8 @@ package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_factory.developer
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.enums.FactoryProjectType;
-import com.bitdubai.fermat_wpd_api.all_definition.enums.WalletFactoryProjectState;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -21,6 +17,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.enums.FactoryProjectType;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.MissingProjectDataException;
 
@@ -103,7 +103,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         return record;
     }
 
-    private DatabaseTableRecord getLanguageDataRecord(String projectPublicKey, UUID id, boolean isDefault) throws DatabaseOperationException, MissingProjectDataException{
+    private DatabaseTableRecord getLanguageDataRecord(String projectPublicKey, UUID id, boolean isDefault) throws DatabaseOperationException, MissingProjectDataException {
         DatabaseTable databaseTable = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_PROJECT_PUBLICKEY_COLUMN_NAME, projectPublicKey);
@@ -112,7 +112,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         return record;
     }
 
-    private DatabaseTableRecord getNavigationStructureDataRecord(String projectPublicKey, String publicKey) throws DatabaseOperationException, MissingProjectDataException{
+    private DatabaseTableRecord getNavigationStructureDataRecord(String projectPublicKey, String publicKey) throws DatabaseOperationException, MissingProjectDataException {
         DatabaseTable databaseTable = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PROJECT_PUBLICKEY_COLUMN_NAME, projectPublicKey);
@@ -124,7 +124,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         Skin defaultSkin = null;
 
         defaultSkin = walletFactoryProject.getDefaultSkin();
-        if (defaultSkin != null){
+        if (defaultSkin != null) {
             // if a skin was defined in the project, then I will prepare the database record and add it to the transaction
             DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME);
 
@@ -140,8 +140,8 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
 
             // I will add all the skins defined, if there are more than one.
-            if (walletFactoryProject.getSkins() != null){
-                for (Skin skin : walletFactoryProject.getSkins()){
+            if (walletFactoryProject.getSkins() != null) {
+                for (Skin skin : walletFactoryProject.getSkins()) {
                     DatabaseTableRecord skinRecord = getSkinDataRecord(walletFactoryProject.getProjectPublicKey(), skin.getId(), false);
                     filter.setValue(skin.getId().toString());
                     if (isNewRecord(table, filter))
@@ -172,7 +172,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
         defaultLanguage = walletFactoryProject.getDefaultLanguage();
 
-        if (defaultLanguage != null){
+        if (defaultLanguage != null) {
             DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_TABLE_NAME);
             DatabaseTableRecord defaultLanguageRecord = getLanguageDataRecord(walletFactoryProject.getProjectPublicKey(), defaultLanguage.getId(), true);
 
@@ -185,13 +185,13 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             }
 
             //I will add any other language defined
-            if (walletFactoryProject.getLanguages() != null){
-                for (Language language : walletFactoryProject.getLanguages()){
+            if (walletFactoryProject.getLanguages() != null) {
+                for (Language language : walletFactoryProject.getLanguages()) {
                     DatabaseTableRecord record = getLanguageDataRecord(walletFactoryProject.getProjectPublicKey(), language.getId(), false);
                     filter.setValue(language.getId().toString());
                     if (isNewRecord(table, filter))
                         transaction.addRecordToInsert(table, record);
-                    else{
+                    else {
                         table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                         transaction.addRecordToUpdate(table, record);
                     }
@@ -216,11 +216,11 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         AppNavigationStructure navigationStructure = null;
 
         navigationStructure = walletFactoryProject.getNavigationStructure();
-        if (navigationStructure != null){
+        if (navigationStructure != null) {
             DatabaseTableRecord record = getNavigationStructureDataRecord(walletFactoryProject.getProjectPublicKey(), navigationStructure.getPublicKey());
             DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_TABLE_NAME);
             DatabaseTableFilter filter = getNavigationStructureFilter(navigationStructure.getPublicKey());
-            if (isNewRecord(table, filter)){
+            if (isNewRecord(table, filter)) {
                 //If it is a new record, then I ll insert it
                 transaction.addRecordToInsert(table, record);
             } else {
@@ -251,11 +251,12 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
      * Saves the Wallet Factory Project in the database.
      * If it doesn't exists, it insert, if they already exists, everything is updated.
      * If it has skins and languages, it persists all of them.
+     *
      * @param walletFactoryProject
      * @throws DatabaseOperationException
      * @throws MissingProjectDataException
      */
-    public void saveWalletFactoryProjectData(WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException{
+    public void saveWalletFactoryProjectData(WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException {
         try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
@@ -318,17 +319,17 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
         // I should only have 1 or none navigation structure for each project.
         if (table.getRecords().size() > 1)
-            throw new DatabaseOperationException("Multiples navigation structure for single project found in database." , null, "Project key: " + walletFactoryPublicKey, null);
+            throw new DatabaseOperationException("Multiples navigation structure for single project found in database.", null, "Project key: " + walletFactoryPublicKey, null);
 
         if (table.getRecords().size() == 1) {
             return table.getRecords().get(0);
-        }else {
+        } else {
             //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             return null;
         }
     }
 
-    private List<DatabaseTableRecord> getWalletFactoryProjectsData (DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
+    private List<DatabaseTableRecord> getWalletFactoryProjectsData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_TABLE_NAME);
         if (filter != null)
             table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
@@ -338,7 +339,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         return table.getRecords();
     }
 
-    private WalletFactoryProject getEmptyWalletFactoryProject(){
+    private WalletFactoryProject getEmptyWalletFactoryProject() {
         WalletFactoryProject walletFactoryProject = new WalletFactoryProject() {
             String publicKey;
             String name;
@@ -520,7 +521,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             walletFactoryProject.setDescription(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME));
         if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME) != null)
             walletFactoryProject.setProjectState(WalletFactoryProjectState.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME)));
-        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME) != null){
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME) != null) {
             try {
                 walletFactoryProject.setWalletType(WalletType.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME)));
             } catch (InvalidParameterException e) {
@@ -529,7 +530,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             }
         }
 
-        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME) != null){
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME) != null) {
             try {
                 walletFactoryProject.setWalletCategory(WalletCategory.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME)));
             } catch (InvalidParameterException e) {
@@ -552,27 +553,29 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
         return walletFactoryProject;
     }
+
     /**
      * Gets the WalletFactoryProject filled with information from the database that matches the specified filter.
+     *
      * @param filter
      * @return
      * @throws CantLoadTableToMemoryException
      * @throws DatabaseOperationException
      */
-    public List<WalletFactoryProject> getWalletFactoryProjects (DatabaseTableFilter filter) throws DatabaseOperationException {
-        Database database= null;
-        try{
+    public List<WalletFactoryProject> getWalletFactoryProjects(DatabaseTableFilter filter) throws DatabaseOperationException {
+        Database database = null;
+        try {
             database = openDatabase();
 
             List<WalletFactoryProject> walletFactoryProjects = new ArrayList<>();
 
             // I will add the WalletFactoryProject header information from the database
-            for (DatabaseTableRecord projectsRecord : getWalletFactoryProjectsData(filter)){
-                WalletFactoryProject walletFactoryProject = getWalletFactoryProjectHeader (projectsRecord);
+            for (DatabaseTableRecord projectsRecord : getWalletFactoryProjectsData(filter)) {
+                WalletFactoryProject walletFactoryProject = getWalletFactoryProjectHeader(projectsRecord);
 
                 // I will add the Skin information from database
                 List<Skin> skins = new ArrayList<>();
-                for (DatabaseTableRecord skinRecords : getSkinsData (walletFactoryProject.getProjectPublicKey())){
+                for (DatabaseTableRecord skinRecords : getSkinsData(walletFactoryProject.getProjectPublicKey())) {
                     Skin skin = new Skin();
                     skin.setId(skinRecords.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.SKIN_SKIN_ID_COLUMN_NAME));
                     boolean isDefaultSkin = Boolean.valueOf(skinRecords.getStringValue(WalletFactoryMiddlewareDatabaseConstants.SKIN_DEFAULT_COLUMN_NAME));
@@ -585,7 +588,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
                 // I will add the language information from database
                 List<Language> languages = new ArrayList<>();
-                for (DatabaseTableRecord languageRecords : getLanguagesData(walletFactoryProject.getProjectPublicKey())){
+                for (DatabaseTableRecord languageRecords : getLanguagesData(walletFactoryProject.getProjectPublicKey())) {
                     Language language = new Language();
                     language.setId(languageRecords.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_LANGUAGE_ID_COLUMN_NAME));
                     boolean isDefaultLanguage = Boolean.valueOf(languageRecords.getStringValue(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_DEFAULT_COLUMN_NAME));
@@ -598,7 +601,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
                 // I will add the navigation structure information from the database
                 DatabaseTableRecord navigationStructureRecord = getNavigationStructureData(walletFactoryProject.getProjectPublicKey());
-                if (navigationStructureRecord != null){
+                if (navigationStructureRecord != null) {
                     AppNavigationStructure navigationStructure = new AppNavigationStructure();
                     navigationStructure.setPublicKey(navigationStructureRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME));
                     walletFactoryProject.setNavigationStructure(navigationStructure);
@@ -609,7 +612,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             }
             database.closeDatabase();
             return walletFactoryProjects;
-        } catch (Exception e){
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get projects from the database with filter: " + filter.toString(), null);

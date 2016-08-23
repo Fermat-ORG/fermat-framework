@@ -17,7 +17,9 @@ public interface CatalogItem {
      * Catalog Wallet identifiers
      */
     UUID getId(); //Todo: Refactor a String para que acepte PublicKey
+
     String getName();
+
     WalletCategory getCategory();
 
 
@@ -25,8 +27,11 @@ public interface CatalogItem {
      * Catalog wallet information to be shown
      */
     String getDescription();
+
     int getDefaultSizeInBytes();
+
     byte[] getIcon() throws CantGetWalletIconException;
+
     URL getpublisherWebsiteUrl();
 
     /**

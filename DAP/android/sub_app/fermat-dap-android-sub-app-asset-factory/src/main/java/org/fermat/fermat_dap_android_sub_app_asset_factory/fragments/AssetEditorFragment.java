@@ -366,7 +366,6 @@ public class AssetEditorFragment extends AbstractFermatFragment<ReferenceAppFerm
                     .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
-                    .setTitleTextColor(R.color.dap_asset_factory_view_color)
                     .setSubTitle(R.string.dap_asset_factory_editor_subTitle)
                     .setBody(R.string.dap_asset_factory_editor_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)

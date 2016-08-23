@@ -31,6 +31,8 @@ public class ChatTransmissionJsonAttNames {
      */
     public final static String SENDER_TYPE = "st";
 
+    public final static String SENDER_PUBLIC_KEY = "spk";
+
     /**
      * Represent the value of RECEIVER_TYPE
      */
@@ -40,6 +42,11 @@ public class ChatTransmissionJsonAttNames {
      * Represent the value of CHAT_METADATA
      */
     public final static String CHAT_METADATA = "chtd";
+
+    /**
+     * Represent the value of MESSAGE_METADATA
+     */
+    public final static String MESSAGE_METADATA = "msgmtdt";
 
     /**
      * Represent the value of NEW_DISTRIBUTION_STATUS
@@ -55,6 +62,8 @@ public class ChatTransmissionJsonAttNames {
      * Represents the value of MESSAGE_STATUS
      */
     public final static String MESSAGE_STATUS = "msgst";
+
+    public final static String MESSAGE_ID = "msgid";
 
     /**
      * Represents the value of TRANSACTION_ID

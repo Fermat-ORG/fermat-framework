@@ -39,7 +39,7 @@ public enum LogLevel {
             case "AGGLOG":
                 return LogLevel.AGGRESSIVE_LOGGING;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the logLevel enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the logLevel enum");
 
 
         }

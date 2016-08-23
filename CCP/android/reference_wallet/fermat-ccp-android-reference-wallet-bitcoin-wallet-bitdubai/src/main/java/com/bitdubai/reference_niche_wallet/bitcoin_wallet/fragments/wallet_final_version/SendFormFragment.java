@@ -324,12 +324,11 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 }
 
                 try {
-                    cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
-
+                    bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
                     bitcoinWalletSettings.setFeedLevel(feeLevel);
 
-
                     cryptoWallet.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+                    appSession.setData(SessionConstant.FEE_LEVEL, feeLevel);
                 } catch (CantPersistSettingsException e) {
                     e.printStackTrace();
                 } catch (CantGetSettingsException e) {
@@ -906,6 +905,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     @Override
     public void onDestroy() {
         contactsAdapter = null;
+        appSession.setData("LastContactSelected",null);
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         super.onDestroy();
