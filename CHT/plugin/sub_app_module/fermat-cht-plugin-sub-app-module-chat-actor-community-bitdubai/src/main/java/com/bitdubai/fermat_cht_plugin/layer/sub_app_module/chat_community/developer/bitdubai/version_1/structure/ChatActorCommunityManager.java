@@ -181,7 +181,7 @@ public class ChatActorCommunityManager
                         worldActor.getImage(), connectionState,
                         connectionID, worldActor.getStatus(),
                         country, state,
-                        city, null, worldActor.getProfileStatus()));
+                        city, location, worldActor.getProfileStatus()));
 
                 System.out.println("************** Actor Chat Register: " + worldActor.getAlias() + " - " + worldActor.getStatus() + " - " + worldActor.getConnectionState());
 
