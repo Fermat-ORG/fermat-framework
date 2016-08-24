@@ -91,7 +91,7 @@ public class Payment_Request_Help_Dialog extends FermatDialog<ReferenceAppFermat
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_payment_request_help;
+        return R.layout.dialog_payment_request_help_fermat;
     }
 
     @Override
