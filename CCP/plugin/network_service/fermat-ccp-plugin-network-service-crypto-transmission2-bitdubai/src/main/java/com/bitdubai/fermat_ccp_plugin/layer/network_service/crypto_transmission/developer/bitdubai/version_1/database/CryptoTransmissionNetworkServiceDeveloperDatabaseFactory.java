@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -9,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -101,35 +99,6 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory {//impleme
     }
 
 
-    public void initializeDatabaseCommunication() throws CantInitializeTemplateNetworkServiceDatabaseException {
-
-        try {
-
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException);
-
-        } catch (DatabaseNotFoundException e) {
-
-            CryptoTransmissionNetworkServiceDatabaseFactory communicationDatabase = new CryptoTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-
-            try {
-
-                database = communicationDatabase.createDatabase(
-                        pluginId,
-                        com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME
-                );
-
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-
-                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantCreateDatabaseException);
-
-            }
-        }
-    }
-
 
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         /**
@@ -137,7 +106,6 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory {//impleme
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
         databases.add(developerObjectFactory.getNewDeveloperDatabase(CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
 
         return databases;
     }
@@ -196,50 +164,6 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory {//impleme
         return tables;
     }
 
-
-    public List<DeveloperDatabaseTable> getDatabaseTableListCommunication(final DeveloperObjectFactory developerObjectFactory) {
-
-
-        List<DeveloperDatabaseTable> tables = new ArrayList<>();
-
-        /**
-         * Table Crypto Address Request columns.
-         */
-        List<String> cryptoIncomingColumns = new ArrayList<>();
-
-        cryptoIncomingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME         );
-        cryptoIncomingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME);
-        cryptoIncomingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME      );
-        cryptoIncomingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME   );
-        cryptoIncomingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME         );
-        cryptoIncomingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME        );
-        cryptoIncomingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME     );
-        cryptoIncomingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME    );
-        /**
-         * Table Crypto Address Request addition.
-         */
-        DeveloperDatabaseTable cryptoIncomingTable = developerObjectFactory.getNewDeveloperDatabaseTable(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME, cryptoIncomingColumns);
-        tables.add(cryptoIncomingTable);
-
-        List<String> cryptoOutgoingColumns = new ArrayList<>();
-        cryptoOutgoingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME         );
-        cryptoOutgoingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME);
-        cryptoOutgoingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME      );
-        cryptoOutgoingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME   );
-        cryptoOutgoingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME         );
-        cryptoOutgoingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME        );
-        cryptoOutgoingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME     );
-        cryptoOutgoingColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME    );
-        /**
-         * Table Crypto Address Request addition.
-         */
-        DeveloperDatabaseTable cryptoOutgoingTable = developerObjectFactory.getNewDeveloperDatabaseTable(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, cryptoOutgoingColumns);
-        tables.add(cryptoOutgoingTable);
-
-
-        return tables;
-    }
-
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase,DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
@@ -247,11 +171,7 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory {//impleme
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
         try {
 
-
-            if(!developerDatabase.getName().equals(CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME))
-                initializeDatabaseCommunication();
-            else
-                initializeDatabase();
+            initializeDatabase();
         /**
          * I load the passed table name from the SQLite database.
          */
