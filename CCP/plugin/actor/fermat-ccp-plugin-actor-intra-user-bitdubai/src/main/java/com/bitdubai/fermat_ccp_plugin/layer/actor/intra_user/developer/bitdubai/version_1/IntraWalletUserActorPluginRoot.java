@@ -54,6 +54,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntr
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantSetPhotoException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantUpdateIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.IntraUserNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
@@ -393,7 +394,23 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
     }
 
+    @Override
+    public void updateIntraWalletUserdata(String intraUserToUpdatePublicKey, String intraUserName, String intraUserPhrase, byte[] profileImage, String city, String country) throws CantUpdateIntraWalletUserException {
 
+        try {
+            intraWalletUserActorDao.updateIntraWalletUserdata(
+                    intraUserToUpdatePublicKey,
+                    intraUserName,
+                    intraUserPhrase,
+                    profileImage,
+                    city,
+                    country);
+
+        }catch (Exception e){
+            throw  new CantUpdateIntraWalletUserException("Can't update intra wallet user",e,"","Database error");
+        }
+        
+    }
 
 
     @Override
