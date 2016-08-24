@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.intra_user_identity.fragments;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
@@ -13,10 +14,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.hardware.Camera;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
@@ -258,9 +261,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                     case CREATE_IDENTITY_SUCCESS:
 //                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
                         if (!isUpdate) {
-                            Toast.makeText(getActivity(),getResources().getString(R.string.identity_created_msg), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.identity_created_msg), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getActivity(),getResources().getString(R.string.changes_saved_msg), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.changes_saved_msg), Toast.LENGTH_SHORT).show();
                         }
                         getActivity().onBackPressed();
                         break;
@@ -362,8 +365,8 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
-                    Bundle extras = data.getExtras();
-                    imageBitmap = (Bitmap) extras.get("data");
+                   // Bundle extras = data.getExtras();
+                   // imageBitmap = (Bitmap) extras.get("data");
                     if (imageToUploadUri != null) {
                         String provider = "com.android.providers.media.MediaProvider";
                         Uri selectedImage = imageToUploadUri;
@@ -390,7 +393,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                         if (checkCameraPermission()) {
                             if (checkWriteExternalPermission()) {
                                 if (imageBitmap != null) {
-                                    //if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
+                                    if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
                                         final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, imageBitmap);
                                         dialogCropImage.show();
                                         dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -411,11 +414,11 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                                 }
                                             }
                                         });
-                                   /* } else {
+                                    } else {
                                         Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
                                          //cryptoBrokerBitmap = null;
                                         Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
-                                    }*/
+                                    }
                                 } else {
                                     Toast.makeText(getActivity(), getResources().getString(R.string.upload_image_error), Toast.LENGTH_LONG).show();
                                     //  cryptoBrokerBitmap = null;
@@ -625,15 +628,64 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         return stream.toByteArray();
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private void dispatchTakePictureIntent() {
         Log.i(TAG, "Opening Camera app to take the picture...");
 
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+       /* Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
+        }*/
 
+        // Check available cameras
+        PackageManager pm = getActivity().getPackageManager();
+        boolean frontCam = false, rearCam = false;
+        //Must have a targetSdk >= 9 defined in the AndroidManifest
+        frontCam = pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
+        rearCam = pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
+        if ((frontCam || rearCam) && availableCameras()) {
+            // Check permission for CAMERA
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        getActivity().requestPermissions(
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                REQUEST_IMAGE_CAPTURE);
+                    } else {
+                        getActivity().requestPermissions(
+                                new String[]{Manifest.permission.CAMERA},
+                                REQUEST_IMAGE_CAPTURE);
+                    }
+                } else {
+                    if (checkWriteExternalPermission()) {
+                        Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+                        chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                        imageToUploadUri = Uri.fromFile(f);
+                        startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
+                    } else {
+                        Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                    }
+                }
+            } else {
+                Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+                chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                imageToUploadUri = Uri.fromFile(f);
+                startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= 23) {
+               // Toast.makeText(getContext(), getContext().getResources().getString(R.string.cht_identity_no_camera), Toast.LENGTH_SHORT).show();
+            }else {
+               // Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_no_camera), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+    }
+    @TargetApi(Build.VERSION_CODES.M)
     private void loadImageFromGallery() {
         Log.i(TAG, "Loading Image from Gallery...");
 
@@ -863,6 +915,19 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         }
     }
 
+    private boolean availableCameras() {
+        int numberOfCameras = Camera.getNumberOfCameras();
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.CameraInfo info = new Camera.CameraInfo();
+            Camera.getCameraInfo(i, info);
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                return true;
+            } else if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 }
