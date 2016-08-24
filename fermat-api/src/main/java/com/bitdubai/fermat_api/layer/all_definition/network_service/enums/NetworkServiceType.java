@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.network_service.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * The enum <code>com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType</code> represent
@@ -45,7 +44,7 @@ public enum NetworkServiceType implements FermatEnum {
         this.code = code;
     }
 
-    public static NetworkServiceType getByCode(final String code) throws InvalidParameterException {
+    public static NetworkServiceType getByCode(final String code) {
 
         switch (code) {
 
@@ -87,10 +86,7 @@ public enum NetworkServiceType implements FermatEnum {
                 return UNDEFINED;
 
             default:
-                throw new InvalidParameterException(
-                        "Code received: " + code,
-                        "The code received is not valid for NetworkServiceType enum."
-                );
+                return UNDEFINED;
         }
 
     }
