@@ -269,7 +269,7 @@
 
     <!-- loss_notification_painter.xml -->
     <string name="lpw_notification_transaction_arrive_1">Dinero recibido</string>
-    <string name="lpw_notification_transaction_arrive_2">Llegaron BTC</string>
+    <string name="lpw_notification_transaction_arrive_2">BTC Llegaron</string>
     <string name="lpw_notification_transaction_reverse_1">Transacción enviada devuelta</string>
     <string name="lpw_notification_transaction_reverse_2">Enviando</string>
     <string name="lpw_notification_transaction_reverse_3">BTC no se pudo completar.</string>
