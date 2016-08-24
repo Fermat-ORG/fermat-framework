@@ -202,6 +202,7 @@
     <string name="geolocation_identity_updated">the geolocation of the user identity is updated</string>
     <string name="geolocation_identity_not_updated">the geolocation of the user identity is not updated</string>
     <string name="cant_get_intra_user_list">Can not Get Intra User List</string>
+    <string name="more">More...</string>
 
 
 </resources>

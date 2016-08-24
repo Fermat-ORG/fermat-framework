@@ -203,4 +203,5 @@
     <string name="geolocation_identity_updated">la geolocalización del usuario esta actualizada</string>
     <string name="geolocation_identity_not_updated">la geolocalización del usuario no esta actualizada</string>
     <string name="cant_get_intra_user_list">No se puede obtener la lista de usuarios de fermat</string>
+    <string name="more">Mas...</string>
 </resources>
