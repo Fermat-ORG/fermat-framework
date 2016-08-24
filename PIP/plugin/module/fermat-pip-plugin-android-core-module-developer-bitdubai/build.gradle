@@ -37,7 +37,7 @@ dependencies {
     testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
-    compile project(':fermat-p2p-api')
+    compile project(':fermat-p2p-api-new')
 //    compile project(':fermat-bch-api')
 
 }

@@ -61,9 +61,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    protected PluginDatabaseSystem pluginDatabaseSystem;
-
     //todo: esto va por ahora, más adelante se saca si o si
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.P2P_LAYER)
     private P2PLayerManager p2PLayerManager;
@@ -481,18 +478,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     public NetworkServiceType getNetworkServiceType() {
         return networkServiceType;
-    }
-
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    public void setP2PLayerManager(P2PLayerManager p2PLayerManager) {
-        this.p2PLayerManager = p2PLayerManager;
-    }
-
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
 }

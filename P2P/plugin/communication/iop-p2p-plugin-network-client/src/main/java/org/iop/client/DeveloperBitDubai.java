@@ -8,6 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 
+import org.iop.client.version_1.IoPClientPluginRoot;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.DeveloperBitDubai</code>
  * <p/>
@@ -27,7 +29,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-//            this.registerVersion(new NetworkClientCommunicationPluginRoot());
+            this.registerVersion(new IoPClientPluginRoot());
 
         } catch (Exception e) {
 

@@ -340,7 +340,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
     @Override
     public boolean isActorOnline(String publicKey) {
-        return pluginRoot.isActorOnline(publicKey);
+        return true;
     }
 
     private void sendMessage(final String jsonMessage,
@@ -365,7 +365,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
                     pluginRoot.sendNewMessage(
                             sender,
                             receiver,
-                            jsonMessage
+                            jsonMessage,true
                     );
                 } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
                     pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

@@ -42,7 +42,6 @@ import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidC
 import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
 
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getAndroidCoreModule;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getCloudClient;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
@@ -169,7 +168,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                     Thread threadChangeIP = new Thread() {
                         @Override
                         public void run() {
-                            getCloudClient().changeIpAndPortProperties(ip, Integer.parseInt(port));
+                           // todo getCloudClient().changeIpAndPortProperties(ip, Integer.parseInt(port));
                         }
                     };
 

@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -9,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -17,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ProtocolState;
@@ -35,10 +39,9 @@ import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.structure.ChatActorNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractActorNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * This plug-in is the responsible for the managing of the actor connections and actor publishing of the chat actors.
@@ -51,6 +54,12 @@ import java.util.List;
  */
 @PluginInfo(createdBy = "José D. Vilchez A", maintainerMail = "franklinmarcano1970@gmail.com", platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE)
 public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkService implements DatabaseManagerForDevelopers {
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    protected PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
     /**
      * Chat Actor Network Service member variables.
@@ -98,10 +107,10 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
 
 
     @Override
-    public final void onSentMessage(final com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage fermatMessage) {
-        System.out.println("************ Mensaje supuestamente enviado chat actor network service");
+    public final void onSentMessage(final UUID packageId) {
+        System.out.println("************ Mensaje supuestamente enviado chat actor network service: "+packageId);
 
-        try {
+       /* try {
 
             String jsonMessage = fermatMessage.getContent();
 
@@ -135,11 +144,13 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
         } catch (Exception e) {
             System.out.println(e.toString());
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }
+        }*/
     }
 
+
+
     @Override
-    public void onNewMessageReceived(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage fermatMessage) {
+    public void onNewMessageReceived(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.entities.NetworkServiceMessage fermatMessage) {
 
         System.out.println("****** CHAT ACTOR NETWORK SERVICE NEW MESSAGE RECEIVED: " + fermatMessage);
         try {
@@ -181,12 +192,6 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
 
         } catch (Exception e) {
             System.out.println(e.toString());
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }
-
-        try {
-            getNetworkServiceConnectionManager().getIncomingMessagesDao().markAsRead(fermatMessage);
-        } catch (CantUpdateRecordDataBaseException | RecordNotFoundException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
