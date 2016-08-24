@@ -279,7 +279,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
 
                 for (IntraUserInformation intraUser : intraUserInformationList) {
-                    String country = "--", place = "--";
+                    String country = "----", place = "----";
                     //get connection state status
                     ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
 
@@ -288,8 +288,8 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                     if(actorLocation != null){
                         try {
                             final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
-                            country = address.getCountry();
-                            place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
+                            country = address.getCountry().equals("null")? "----" : address.getCountry();
+                            place = address.getCity().equals("null") ? country : address.getCity();
                         } catch (CantCreateAddressException ignore) {
                             ignore.printStackTrace();
                         }
