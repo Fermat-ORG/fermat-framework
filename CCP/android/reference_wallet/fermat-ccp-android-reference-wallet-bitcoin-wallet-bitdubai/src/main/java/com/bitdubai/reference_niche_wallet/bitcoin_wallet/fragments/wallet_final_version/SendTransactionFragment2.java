@@ -600,10 +600,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                                 txt_balance_amount.setTextSize(18);
                                             else
                                                 txt_balance_amount.setTextSize(26);
+
+                                            txt_amount_type.setText("btc");
                                             break;
+
+
                                         case BITS:
 
                                             txt_balance_amount.setTextSize(16);
+                                            txt_amount_type.setText("bits");
                                             break;
                                     }
                                 }

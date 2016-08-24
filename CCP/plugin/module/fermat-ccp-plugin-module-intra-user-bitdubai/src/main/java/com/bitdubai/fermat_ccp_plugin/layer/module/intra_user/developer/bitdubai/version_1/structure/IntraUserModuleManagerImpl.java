@@ -291,7 +291,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                             country = address.getCountry().equals("null")? "----" : address.getCountry();
                             place = address.getCity().equals("null") ? country : address.getCity();
                         } catch (CantCreateAddressException ignore) {
-                            ignore.printStackTrace();
+
                         }
                     }
                     //return intra user information - if not connected - status return null
@@ -447,21 +447,21 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
              *Call Network Service Intra User to add request connection
              */
             //get actor location
-            String country = "--", place = "--";
+            String country = "----", place = "----";
 
-            String intraUserCountry = "--", intraUserPlace = "--";
+            String intraUserCountry = "----", intraUserPlace = "----";
 
             try {
                 final Address address = geolocationManager.getAddressByCoordinate(identityLocation.getLatitude(), identityLocation.getLongitude());
-                country = address.getCountry();
-                place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
+                country = address.getCountry().equals("null") ? "----" : address.getCounty();
+                place = address.getCity().equals("null") ? country : address.getCity();
             } catch (CantCreateAddressException ignore) {
             }
 
             try {
                 final Address address = geolocationManager.getAddressByCoordinate(intraUserToLocation.getLatitude(), intraUserToLocation.getLongitude());
-                intraUserCountry = address.getCountry();
-                intraUserPlace = address.getCity().equals("null") ? address.getCounty() : address.getCity();
+                intraUserCountry = address.getCountry().equals("null") ? "----": address.getCounty();
+                intraUserPlace = address.getCity().equals("null") ? intraUserCountry : address.getCity();
             } catch (CantCreateAddressException ignore) {
             }
 

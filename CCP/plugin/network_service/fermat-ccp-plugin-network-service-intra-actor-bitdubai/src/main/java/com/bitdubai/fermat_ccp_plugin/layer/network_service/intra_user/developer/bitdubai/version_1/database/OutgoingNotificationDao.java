@@ -500,8 +500,8 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         long timestamp           = record.getLongValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
         String protocolState         = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
         String flagReaded  = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME);
-            String city   = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME      );
-            String country   = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME      );
+            String city   = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_CITY_COLUMN_NAME      );
+            String country   = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_COUNTRY_COLUMN_NAME      );
 
             int sentCount =  record.getIntegerValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME);
             UUID   responseToNotificationId            = record.getUUIDValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
@@ -632,18 +632,18 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
             try {
 
-                DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+                DatabaseTable outgoingTable = getDatabaseTable();
 
-                cryptoPaymentRequestTable.addUUIDFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
+                outgoingTable.addUUIDFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
 
-                cryptoPaymentRequestTable.loadToMemory();
+                if(outgoingTable.numRecords()== 0)
+                    return false;
+                else
+                    return true;
 
-                List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
 
-                return !records.isEmpty();
-
-            } catch (CantLoadTableToMemoryException exception) {
+            } catch (Exception exception) {
 
                 throw new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
             }
