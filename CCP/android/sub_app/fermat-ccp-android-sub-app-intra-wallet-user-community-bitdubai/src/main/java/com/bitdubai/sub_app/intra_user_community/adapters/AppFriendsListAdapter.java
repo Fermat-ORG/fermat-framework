@@ -1,19 +1,14 @@
 package com.bitdubai.sub_app.intra_user_community.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.holders.AppFriendsListHolder;
 import com.bitdubai.sub_app.intra_user_community.holders.AvailableIntraUserViewHolder;
 import com.bitdubai.sub_app.intra_user_community.holders.LoadingMoreViewHolder;
 

@@ -370,10 +370,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
 
 
     @Override
-    public List<BitcoinLossProtectedWalletSpend> getMoreDataAsync(FermatRefreshTypes refreshType,int pos) throws
-            CantListCryptoWalletIntraUserIdentityException,
-            CantGetCryptoLossProtectedWalletException,
-            CantListLossProtectedTransactionsException {
+    public List<BitcoinLossProtectedWalletSpend> getMoreDataAsync(FermatRefreshTypes refreshType,int pos) {
             long spendingAmount = 0;
         try {
             //when refresh offset set 0

@@ -18,9 +18,6 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.interfaces.RecyclerListFragment;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -144,7 +141,7 @@ public abstract class FermatWalletListFragment<M, S extends FermatSession, RP ex
      *
      * @param refreshType Fermat Refresh Enum Type
      */
-    public List<M> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoLossProtectedWalletException, CantListLossProtectedTransactionsException {
+    public List<M> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         return null;
     }
 
