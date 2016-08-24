@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -30,6 +29,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageFailedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageTransmitEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientProfileRegisteredEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClienteEventPublishEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
@@ -42,6 +42,9 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.en
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.events_op_codes.EventOp;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.fermat_p2p_layer.version_1.structure.PackageInformation;
+import com.fermat_p2p_layer.version_1.structure.database.P2PLayerEventsDao;
 import com.fermat_p2p_layer.version_1.structure.exceptions.CantInitializeP2PLayerDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
@@ -78,11 +81,6 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
 
     private MessageSender messageSender;
 
-    @Override
-    public FermatManager getManager() {
-        return this;
-    }
-
     /**
      * Represents the plugin database
      */
@@ -92,6 +90,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
      * Represents the plugin database dao
      */
     private P2PLayerDao p2PLayerDao;
+    private P2PLayerEventsDao p2PLayerEventsDao;
 
     private static final int MINIMUM_COUNT_TO_SEND_FULL_MESSAGE = 3;
 
@@ -130,6 +129,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
             initializeDatabase();
             //Init dao
             p2PLayerDao = new P2PLayerDao(database);
+            p2PLayerEventsDao = new P2PLayerEventsDao(database);
 
             packageIdNotForInstantResend = new HashMap<>();
 
@@ -227,9 +227,9 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
             @Override
             public void handleEvent(NetworkClientProfileRegisteredEvent fermatEvent) throws FermatException {
                 System.out.println("NETWORK SERVICES registered event");
-                NetworkServiceType networkServiceType = messageSender.packageAck(fermatEvent.getPackageId());
-                System.out.println("NETWORK SERVICE TYPE ? " + networkServiceType);
-                AbstractNetworkService abstractNetworkService = networkServices.get(networkServiceType);
+                PackageInformation packageInformation = messageSender.packageAck(fermatEvent.getPackageId());
+                System.out.println("NETWORK SERVICE TYPE ? " + packageInformation.getNetworkServiceType());
+                AbstractNetworkService abstractNetworkService = networkServices.get(packageInformation.getNetworkServiceType());
                 if (abstractNetworkService.isStarted()) {
                     abstractNetworkService.handleNetworkServiceRegisteredEvent();
                 } else {
@@ -248,9 +248,9 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
             @Override
             public void handleEvent(NetworkClientProfileRegisteredEvent fermatEvent) throws FermatException {
                 System.out.println("The Actor was registered");
-                NetworkServiceType networkServiceType = messageSender.packageAck(fermatEvent.getPackageId());
-                System.out.println("ACTOR NETWORK SERVICE TYPE : " + networkServiceType);
-                AbstractNetworkService abstractNetworkService = networkServices.get(networkServiceType);
+                PackageInformation packageInformation = messageSender.packageAck(fermatEvent.getPackageId());
+                System.out.println("ACTOR NETWORK SERVICE TYPE : " + packageInformation.getNetworkServiceType());
+                AbstractNetworkService abstractNetworkService = networkServices.get(packageInformation.getNetworkServiceType());
                 if (abstractNetworkService.isStarted()) {
                     abstractNetworkService.handleProfileRegisteredSuccessfully(ProfileTypes.ACTOR, fermatEvent.getPackageId(), fermatEvent.getPublicKey());
                 } else {
@@ -350,15 +350,15 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         actorListReceivedListener.setEventHandler(new FermatEventHandler<NetworkClientActorListReceivedEvent>() {
             @Override
             public void handleEvent(NetworkClientActorListReceivedEvent fermatEvent) throws FermatException {
-                NetworkServiceType networkServiceType = messageSender.packageAck(fermatEvent.getPackageId());
+                PackageInformation packageInformation = messageSender.packageAck(fermatEvent.getPackageId());
                 //todo: no hace falta pasar el type del ns acá..
-                AbstractNetworkService abstractNetworkService = networkServices.get(fermatEvent.getNetworkServiceType());
+                AbstractNetworkService abstractNetworkService = networkServices.get(packageInformation.getNetworkServiceType());
                 if (abstractNetworkService.isStarted()) {
-                    System.out.println("P2PLayer discoveryList: "+ fermatEvent.getQueryID());
+                    System.out.println("P2PLayer discoveryList: "+ fermatEvent.getPackageId());
                     if (fermatEvent.getStatus() == NetworkClientActorListReceivedEvent.STATUS.SUCCESS)
-                        abstractNetworkService.handleNetworkClientActorListReceivedEvent(fermatEvent.getQueryID(), fermatEvent.getActorList());
+                        abstractNetworkService.handleNetworkClientActorListReceivedEvent(fermatEvent.getPackageId(), fermatEvent.getActorList());
                     else
-                        System.out.println("ERROR IN THE QUERY WITH ID: "+ fermatEvent.getQueryID());
+                        System.out.println("ERROR IN THE QUERY WITH ID: "+ fermatEvent.getPackageId());
                 }
             }
         });
@@ -395,8 +395,8 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         ackEventListener.setEventHandler(new FermatEventHandler<NetworkClientACKEvent>() {
             @Override
             public void handleEvent(NetworkClientACKEvent fermatEvent) throws FermatException {
-                NetworkServiceType networkServiceType = messageSender.packageAck(fermatEvent.getContent().getPackageId());
-                AbstractNetworkService abstractNetworkService = networkServices.get(networkServiceType);
+                PackageInformation packageInformation = messageSender.packageAck(fermatEvent.getContent().getPackageId());
+                AbstractNetworkService abstractNetworkService = networkServices.get( packageInformation.getNetworkServiceType());
                 if (abstractNetworkService.isStarted()) {
                     if (fermatEvent.getContent().getStatus() == MsgRespond.STATUS.SUCCESS) {
                         System.out.println("##### ACK MENSAJE LLEGÓ BIEN A LA LAYER!!!##### ID:" + fermatEvent.getContent().getPackageId());
@@ -405,6 +405,10 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
                         //If the sending if successful and exists in P2P layer database, we need to delete from there
                         p2PLayerDao.deleteMessageByPackageId(fermatEvent.getContent().getPackageId());
                         packageIdNotForInstantResend.remove(fermatEvent.getContent().getPackageId());
+                        if (packageInformation.getPackageType() == PackageType.EVENT_SUBSCRIBER){
+                            //save event on database
+                            p2PLayerEventsDao.persistEvent(fermatEvent.getContent().getPackageId(),packageInformation.getNetworkServiceType());
+                        }
                     } else {
                         //mensaje no llegó, acá entra en juego el agente de re envio manuel
                         System.out.println("##### ACK MENSAJE NO LLEGÓ AL OTRO LADO ##### ID:" + fermatEvent.getContent().getPackageId());
@@ -428,6 +432,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
 
         /**
          * Is Online listener
+         * esto no deberia ser tan poco general..
          */
         FermatEventListener isOnlineListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_IS_ACTOR_ONLINE);
         isOnlineListener.setEventHandler(new FermatEventHandler<NetworkClientIsActorOnlineEvent>() {
@@ -435,8 +440,8 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
             public void handleEvent(NetworkClientIsActorOnlineEvent fermatEvent) throws FermatException {
                 System.out.println("Is Online message is in P2PLayer with ID: "+fermatEvent.getPackageId());
                 //Todo: notify to anyone.
-                NetworkServiceType networkServiceType = messageSender.packageAck(fermatEvent.getPackageId());
-                AbstractNetworkService abstractNetworkService = networkServices.get(networkServiceType);
+                PackageInformation packageInformation = messageSender.packageAck(fermatEvent.getPackageId());
+                AbstractNetworkService abstractNetworkService = networkServices.get(packageInformation.getNetworkServiceType());
                 if(abstractNetworkService.isStarted()){
                     System.out.println("The actor "+fermatEvent.getActorProfilePublicKey()+" is "+fermatEvent.getProfileStatus());
                     /*abstractNetworkService.putActorOnlineStatus(
@@ -447,6 +452,25 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         });
         eventManager.addListener(isOnlineListener);
         listenersAdded.add(isOnlineListener);
+
+        /**
+         *
+         * NetworkClienteEventPublishEvent event = getEventManager().getNewEventMati(P2pEventType.NETWORK_CLIENT_EVENT_PUBLISH, NetworkClienteEventPublishEvent.class);
+         */
+        FermatEventListener eventPublishListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_EVENT_PUBLISH);
+        eventPublishListener.setEventHandler(new FermatEventHandler<NetworkClienteEventPublishEvent>() {
+            @Override
+            public void handleEvent(NetworkClienteEventPublishEvent fermatEvent) throws FermatException {
+                System.out.println("Evemt published from node ID: "+fermatEvent.getEventPublishRespond());
+                NetworkServiceType networkServiceType = p2PLayerEventsDao.getEventOwnerById(fermatEvent.getPackageId());
+                AbstractNetworkService abstractNetworkService = networkServices.get(networkServiceType);
+                if(abstractNetworkService.isStarted()){
+                    abstractNetworkService.handleOnNodeEventArrive(fermatEvent.getPackageId());
+                }
+            }
+        });
+        eventManager.addListener(eventPublishListener);
+        listenersAdded.add(eventPublishListener);
 
     }
 
@@ -567,6 +591,11 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
     @Override
     public UUID subscribeActorOnlineEvent(NetworkServiceType networkServiceType, String actorToFollowPk) throws CantSendMessageException {
         return messageSender.subscribeNodeEvent(networkServiceType, EventOp.EVENT_OP_IS_PROFILE_ONLINE, actorToFollowPk);
+    }
+
+    @Override
+    public UUID unSubscribeActorOnlineEvent(NetworkServiceType networkServiceType,UUID eventSubscribedId) throws CantSendMessageException {
+        return messageSender.unSubscribeNodeEvent(networkServiceType,eventSubscribedId);
     }
 
     public Collection<AbstractNetworkService> getNetworkServices() {

@@ -388,7 +388,7 @@ public class P2PLayerDao {
 
             table.addUUIDFilter(P2P_LAYER_PACKAGE_ID_COLUMN_NAME, packageId, DatabaseFilterType.EQUAL);
 
-            table.deleteRecord(null);
+            table.deleteRecord();
 
         } catch (com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException e) {
             throw new CantDeleteRecordException(

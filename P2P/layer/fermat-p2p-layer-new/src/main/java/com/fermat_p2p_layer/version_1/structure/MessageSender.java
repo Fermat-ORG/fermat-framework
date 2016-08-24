@@ -10,6 +10,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.IsActorOnlineMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.SubscriberMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.UnSubscribeMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.UpdateActorProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
@@ -36,7 +37,7 @@ public class MessageSender {
      * this map is for the outgoing messages quienes no retornó el ack aún,
      * PackageId + NetworkServiceType
      */
-    private ConcurrentHashMap<UUID,NetworkServiceType> messagesSentWaitingForAck;
+    private ConcurrentHashMap<UUID,PackageInformation> messagesSentWaitingForAck;
 
 
     public MessageSender(P2PLayerPluginRoot p2PLayerPluginRoot) {
@@ -56,7 +57,7 @@ public class MessageSender {
             }
             UUID packageId = p2PLayerPluginRoot.getNetworkClient().sendMessage(profileCheckInMsgRequest, packageType, networkServiceType);
             if (packageId != null)
-                messagesSentWaitingForAck.put(packageId, networkServiceType);
+                messagesSentWaitingForAck.put(packageId,createPackageInformation(networkServiceType,packageType));
             return packageId;
         }
         throw new CantSendMessageException("Client is not connected");
@@ -66,14 +67,14 @@ public class MessageSender {
         //todo: ver porqué el ultimo parametro del metodo sendMessage es el destination del actor,ns o lo que sea. ver si agrego el nodo ahí o que hago
         UUID packageId = p2PLayerPluginRoot.getNetworkClient().sendMessage(networkServiceMessage, PackageType.MESSAGE_TRANSMIT, networkServiceType, networkServiceMessage.getReceiverPublicKey());
         if (packageId != null)
-            messagesSentWaitingForAck.put(packageId,networkServiceType);
+            messagesSentWaitingForAck.put(packageId,createPackageInformation(networkServiceType,PackageType.MESSAGE_TRANSMIT));
         return packageId;
     }
 
     public UUID sendIsOnlineActorMessage(IsActorOnlineMsgRequest isActorOnlineMsgRequest, NetworkServiceType networkServiceType, String nodeDestinationPublicKey) throws CantSendMessageException {
         UUID packageId = p2PLayerPluginRoot.getNetworkClient().sendMessage(isActorOnlineMsgRequest, PackageType.MESSAGE_TRANSMIT,networkServiceType,nodeDestinationPublicKey);
         if (packageId != null)
-            messagesSentWaitingForAck.put(packageId,networkServiceType);
+            messagesSentWaitingForAck.put(packageId,createPackageInformation(networkServiceType,PackageType.MESSAGE_TRANSMIT));
         return packageId;
     }
 
@@ -81,7 +82,7 @@ public class MessageSender {
         //todo: esto deberia ser para todos los discovery y no solo para el actorList
         UUID packageId = p2PLayerPluginRoot.getNetworkClient().sendMessage(networkServiceMessage,PackageType.ACTOR_LIST_REQUEST,networkServiceType,nodeDestinationPublicKey);
         if (packageId != null)
-            messagesSentWaitingForAck.put(packageId,networkServiceType);
+            messagesSentWaitingForAck.put(packageId,createPackageInformation(networkServiceType,PackageType.ACTOR_LIST_REQUEST));
         return packageId;
     }
 
@@ -90,7 +91,7 @@ public class MessageSender {
      * @param packageId
      * @return network service type
      */
-    public NetworkServiceType packageAck(UUID packageId){
+    public PackageInformation packageAck(UUID packageId){
         return messagesSentWaitingForAck.remove(packageId);
     }
 
@@ -117,7 +118,7 @@ public class MessageSender {
         }
         UUID packageId = p2PLayerPluginRoot.getNetworkClient().sendMessage(packageContent, packageType,networkServiceType);
         if (packageId != null)
-            messagesSentWaitingForAck.put(packageId,networkServiceType);
+            messagesSentWaitingForAck.put(packageId,createPackageInformation(networkServiceType,packageType));
         return packageId;
 
     }
@@ -125,9 +126,26 @@ public class MessageSender {
     public UUID subscribeNodeEvent(NetworkServiceType networkServiceType,short eventCode, String actorToFollowPk) throws CantSendMessageException {
         if (p2PLayerPluginRoot.getNetworkClient().isConnected()) {
             SubscriberMsgRequest subscriberMsgRequest = new SubscriberMsgRequest(eventCode,actorToFollowPk);
-            UUID packageId = p2PLayerPluginRoot.getNetworkClient().sendMessage(subscriberMsgRequest,PackageType.SUBSCRIBER);
+            UUID packageId = p2PLayerPluginRoot.getNetworkClient().sendMessage(subscriberMsgRequest,PackageType.EVENT_SUBSCRIBER);
             if (packageId != null)
-                messagesSentWaitingForAck.put(packageId,networkServiceType);
+                messagesSentWaitingForAck.put(packageId,createPackageInformation(networkServiceType,PackageType.EVENT_SUBSCRIBER));
+            return packageId;
+        }else {
+            throw new CantSendMessageException("SubscribeNodeEvent, The network client is not connected");
+        }
+    }
+
+
+    private PackageInformation createPackageInformation(NetworkServiceType networkServiceType,PackageType packageType){
+        return new PackageInformation(networkServiceType,packageType);
+    }
+
+    public UUID unSubscribeNodeEvent(NetworkServiceType networkServiceType,UUID eventSubscribedId) throws CantSendMessageException {
+        if (p2PLayerPluginRoot.getNetworkClient().isConnected()) {
+            UnSubscribeMsgRequest unSubscribeMsgRequest = new UnSubscribeMsgRequest(eventSubscribedId.toString());
+            UUID packageId = p2PLayerPluginRoot.getNetworkClient().sendMessage(unSubscribeMsgRequest,PackageType.EVENT_UNSUBSCRIBER);
+            if (packageId != null)
+                messagesSentWaitingForAck.put(packageId,createPackageInformation(networkServiceType,PackageType.EVENT_UNSUBSCRIBER));
             return packageId;
         }else {
             throw new CantSendMessageException("SubscribeNodeEvent, The network client is not connected");

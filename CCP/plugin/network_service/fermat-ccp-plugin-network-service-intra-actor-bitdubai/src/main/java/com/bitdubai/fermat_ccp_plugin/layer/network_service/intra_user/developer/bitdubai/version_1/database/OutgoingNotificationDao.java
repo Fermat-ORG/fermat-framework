@@ -606,24 +606,12 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             DatabaseTable table = getDatabaseTable();
             table.addUUIDFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
 
-            table.loadToMemory();
-
-            List<DatabaseTableRecord> records = table.getRecords();
-
-
-            for (DatabaseTableRecord record : records) {
-                table.deleteRecord(record);
-            }
-
+            table.deleteRecord();
 
         } catch (CantDeleteRecordException e) {
 
             throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-        } catch(CantLoadTableToMemoryException exception){
-
-            throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Exception invalidParameterException.","");
         }
-
     }
 
 

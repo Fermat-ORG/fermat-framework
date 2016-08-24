@@ -72,4 +72,7 @@ public interface P2PLayerManager {
      * @return
      */
     UUID subscribeActorOnlineEvent(NetworkServiceType networkServiceType,String actorToFollowPk) throws CantSendMessageException;
+
+
+    UUID unSubscribeActorOnlineEvent(NetworkServiceType networkServiceType,UUID eventSubscribedId) throws CantSendMessageException;
 }

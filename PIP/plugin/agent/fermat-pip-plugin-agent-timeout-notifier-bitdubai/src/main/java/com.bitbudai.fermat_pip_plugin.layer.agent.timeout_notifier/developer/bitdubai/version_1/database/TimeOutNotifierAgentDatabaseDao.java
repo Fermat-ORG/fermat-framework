@@ -327,17 +327,9 @@ public class TimeOutNotifierAgentDatabaseDao {
         databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME, timeOutNotifierAgent.getUUID(), DatabaseFilterType.EQUAL);
 
         try {
-            databaseTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException e) {
-            thrownCantExecuteQueryException(e, databaseTable.getTableName());
-        }
-
-
-        DatabaseTableRecord record = databaseTable.getRecords().get(0);
-        try {
-            databaseTable.deleteRecord(record);
+            databaseTable.deleteRecord();
         } catch (CantDeleteRecordException e) {
-            throw new CantExecuteQueryException(e, "Can't delete existing record." + record.toString(), "Database issue");
+            throw new CantExecuteQueryException(e, "Can't delete record", "Database issue");
         }
 
         // I will delete any registered event for this Agent
@@ -350,18 +342,9 @@ public class TimeOutNotifierAgentDatabaseDao {
         databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME, uuid, DatabaseFilterType.EQUAL);
 
         try {
-            databaseTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException e) {
-            thrownCantExecuteQueryException(e, databaseTable.getTableName());
-        }
-
-        if (!databaseTable.getRecords().isEmpty()) {
-            DatabaseTableRecord record = databaseTable.getRecords().get(0);
-            try {
-                databaseTable.deleteRecord(record);
-            } catch (CantDeleteRecordException e) {
-                throw new CantExecuteQueryException(e, "Error deleting event record. " + uuid.toString(), "database issue");
-            }
+            databaseTable.deleteRecord();
+        } catch (CantDeleteRecordException e) {
+            throw new CantExecuteQueryException(e, "Error deleting event record. " + uuid.toString(), "database issue");
         }
     }
 

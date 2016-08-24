@@ -87,6 +87,22 @@ public class P2PLayerDatabaseFactory {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
+
+                /**
+                 * Create P2P Layer events table.
+                 */
+                table = databaseFactory.newTableFactory(ownerId, P2P_LAYER_EVENT_TABLE_NAME);
+
+                table.addColumn(P2P_LAYER_EVENT_ID_COLUMN_NAME                 , DatabaseDataType.STRING       ,  36, Boolean.TRUE );
+                table.addColumn(P2P_LAYER_EVENT_NS_OWNER_COLUMN_NAME                    , DatabaseDataType.STRING       , 10, Boolean.FALSE);
+
+                try {
+                    //Create the table
+                    databaseFactory.createTable(ownerId, table);
+                } catch (CantCreateTableException cantCreateTableException) {
+                    throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                }
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,

@@ -420,10 +420,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
             cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
-
-            cryptoPaymentRequestTable.deleteRecord(record);
-
+            cryptoPaymentRequestTable.deleteRecord();
 
         } catch (CantDeleteRecordException e) {
             throw new CantDeletePaymentRequestException(e, "", "Cant delete record exception.");

@@ -16,6 +16,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels
 import org.iop.client.version_1.channels.conf.ClientChannelConfigurator;
 import org.iop.client.version_1.channels.processors.ACKProcessor;
 import org.iop.client.version_1.channels.processors.ActorListRespondProcessor;
+import org.iop.client.version_1.channels.processors.EventPublishProcessor;
 import org.iop.client.version_1.channels.processors.IsActorOnlineRespondProcessor;
 import org.iop.client.version_1.channels.processors.MessageTransmitProcessor;
 import org.iop.client.version_1.channels.processors.PackageProcessor;
@@ -114,6 +115,7 @@ public class NetworkClientCommunicationChannel {
         registerMessageProcessor(new CheckInActorRespondProcessor(this));
         registerMessageProcessor(new CheckInNetworkServiceRespondProcessor(this));
         registerMessageProcessor(new IsActorOnlineRespondProcessor(this));
+        registerMessageProcessor(new EventPublishProcessor(this));
 
 
     }

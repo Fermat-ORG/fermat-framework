@@ -77,7 +77,7 @@ public class Package implements Serializable {
 //            throw new InvalidParameterException("networkServiceTypeSource can't be null.");
 
         if (packageType == null)
-            throw new InvalidParameterException("packageType can't be null. ns type: "+networkServiceTypeSource);
+            throw new InvalidParameterException("packageType can't be null. ns type: "+networkServiceTypeSource+", content: "+content);
 
 //        if (signature == null)
 //            throw new InvalidParameterException("signature can't be null.");

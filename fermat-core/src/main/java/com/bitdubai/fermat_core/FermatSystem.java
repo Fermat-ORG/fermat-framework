@@ -104,7 +104,7 @@ public final class FermatSystem {
 
         try {
 
-            //if(isPlatformStart) {
+            if(isPlatformStart) {
                 // fermatSystemContext.registerPlatform(new ARTPlatform());
                 fermatSystemContext.registerPlatform(new BCHPlatform(fermatContext));
 //                fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
@@ -118,16 +118,16 @@ public final class FermatSystem {
                 fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));
                 // fermatSystemContext.registerPlatform(new TKYPlatform());
                 fermatSystemContext.registerPlatform(new WPDPlatform());
-           // }else{
+            }else{
 //                fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
 //                fermatSystemContext.registerPlatform(new CBPPlatform());
 //                fermatSystemContext.registerPlatform(new CCPPlatform());
 //                fermatSystemContext.registerPlatform(new CHTPlatform());
 //                fermatSystemContext.registerPlatform(new CSHPlatform());
-            /*    fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));
+                fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));
                 // fermatSystemContext.registerPlatform(new TKYPlatform());
                 fermatSystemContext.registerPlatform(new WPDPlatform());
-            }*/
+            }
 
         } catch (CantRegisterPlatformException e) {
             throw new CantStartSystemException(e, "", "There was a problem registering a Platform.");

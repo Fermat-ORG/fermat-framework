@@ -54,7 +54,7 @@ public class ActorListRespondProcessor extends PackageProcessor {
         actorListReceived.setSource(EventSource.NETWORK_CLIENT);
 
         actorListReceived.setActorList(actorListMsgRespond.getActors());
-        actorListReceived.setNetworkServiceType(NetworkServiceType.getByCode(actorListMsgRespond.getNetworkServiceType()));
+//        actorListReceived.setNetworkServiceType(NetworkServiceType.getByCode(actorListMsgRespond.getNetworkServiceType()));
 
 
         if(actorListMsgRespond.getStatus() == ActorListMsgRespond.STATUS.SUCCESS){

@@ -24,26 +24,6 @@ public class PackageEncoder implements Encoder.Binary<Package>{
     public ByteBuffer encode(Package packageToSend) throws EncodeException {
         try {
             FlatBufferBuilder flatBufferBuilder = new FlatBufferBuilder();
-
-//            com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.common.Package.startPackage(flatBufferBuilder);
-//
-//            int packageId = flatBufferBuilder.createString(packageToSend.getPackageId().toString());
-//            com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.common.Package.addId(flatBufferBuilder, packageId);
-//
-//            int content = flatBufferBuilder.createString(packageToSend.getContent());
-//            com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.common.Package.addContent(flatBufferBuilder, content);
-//
-//            if (packageToSend.getNetworkServiceTypeSource()!=null) {
-//                int networkServiceType = flatBufferBuilder.createString(packageToSend.getNetworkServiceTypeSource().getCode());
-//                com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.common.Package.addNetworkServiceType(flatBufferBuilder, networkServiceType);
-//            }
-//            if (packageToSend.getDestinationPublicKey()!=null) {
-//                int destinationPublicKey = flatBufferBuilder.createString(packageToSend.getDestinationPublicKey());
-//                com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.common.Package.addDestinationPk(flatBufferBuilder, destinationPublicKey);
-//            }
-//
-//            int pack = com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.common.Package.endPackage(flatBufferBuilder);
-
             int packageId = flatBufferBuilder.createString(packageToSend.getPackageId().toString());
             int content = flatBufferBuilder.createString(packageToSend.getContent());
             int networkServiceType = 0;

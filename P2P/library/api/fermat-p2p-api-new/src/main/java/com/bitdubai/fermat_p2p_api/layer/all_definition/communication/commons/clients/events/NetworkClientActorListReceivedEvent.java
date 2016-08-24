@@ -29,7 +29,7 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
     /**
      * Represent the query id
      */
-    private UUID queryID;
+//    private UUID queryID;
 
     private UUID packageId;
     /**
@@ -37,7 +37,7 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
      */
 //    private String networkServicePublicKey;
 
-    private NetworkServiceType networkServiceType;
+//    private NetworkServiceType networkServiceType;
 
     /**
      * Represent the network service type.
@@ -58,9 +58,9 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
         super(p2pEventType);
     }
 
-    public UUID getQueryID() {
-        return queryID;
-    }
+//    public UUID getQueryID() {
+//        return queryID;
+//    }
 
 //    public String getNetworkServicePublicKey() {
 //        return networkServicePublicKey;
@@ -74,9 +74,9 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
         return actorList;
     }
 
-    public void setQueryID(UUID queryID) {
-        this.queryID = queryID;
-    }
+//    public void setQueryID(UUID queryID) {
+//        this.queryID = queryID;
+//    }
 
     public void setActorList(List<ActorProfile> actorList) {
         this.actorList = actorList;
@@ -90,13 +90,13 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
         this.status = status;
     }
 
-    public NetworkServiceType getNetworkServiceType() {
-        return networkServiceType;
-    }
-
-    public void setNetworkServiceType(NetworkServiceType networkServiceType) {
-        this.networkServiceType = networkServiceType;
-    }
+//    public NetworkServiceType getNetworkServiceType() {
+//        return networkServiceType;
+//    }
+//
+//    public void setNetworkServiceType(NetworkServiceType networkServiceType) {
+//        this.networkServiceType = networkServiceType;
+//    }
 
     public UUID getPackageId() {
         return packageId;
@@ -109,8 +109,8 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
     @Override
     public String toString() {
         return "NetworkClientActorListReceivedEvent{" +
-                "queryID=" + queryID +
-                ", networkServiceType='" + networkServiceType + '\'' +
+//                "queryID=" + queryID +
+//                ", networkServiceType='" + networkServiceType + '\'' +
                 ", actorList=" + actorList +
                 ", status=" + status +
                 '}';

@@ -36,8 +36,13 @@ public enum PackageType {
 
     IS_ACTOR_ONLINE, //This represents a request to check if an actor in online in this or any node
 
-    //
-    SUBSCRIBER,
+    // request to subscribe an specific event
+    EVENT_SUBSCRIBER,
+    // unsubscribe specific event
+    EVENT_UNSUBSCRIBER,
+
+    // event pushed from node to client
+    EVENT_PUBLISH,
 
 
     //todo: esto no creo que vaya
@@ -163,8 +168,14 @@ public enum PackageType {
             case CHECK_IN_ACTOR_RESPONSE:
                 packageType = 12;
                 break;
-            case SUBSCRIBER:
+            case EVENT_SUBSCRIBER:
                 packageType = 13;
+                break;
+            case EVENT_PUBLISH:
+                packageType = 14;
+                break;
+            case EVENT_UNSUBSCRIBER:
+                packageType = 15;
                 break;
         }
         return packageType;
@@ -210,7 +221,13 @@ public enum PackageType {
                 packageType = CHECK_IN_ACTOR_RESPONSE;
                 break;
             case 13:
-                packageType = SUBSCRIBER;
+                packageType = EVENT_SUBSCRIBER;
+                break;
+            case 14:
+                packageType = EVENT_PUBLISH;
+                break;
+            case 15:
+                packageType = EVENT_UNSUBSCRIBER;
                 break;
         }
         return packageType;

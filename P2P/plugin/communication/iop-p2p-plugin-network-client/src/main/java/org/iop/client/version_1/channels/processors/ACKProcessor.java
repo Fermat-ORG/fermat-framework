@@ -43,7 +43,6 @@ public class ACKProcessor extends PackageProcessor{
         NetworkClientACKEvent event = getEventManager().getNewEventMati(P2pEventType.NETWORK_CLIENT_ACK, NetworkClientACKEvent.class);
         event.setSource(EventSource.NETWORK_CLIENT);
         event.setContent(ackRespond);
-        event.setNetworkServiceTypeSource(packageReceived.getNetworkServiceTypeSource());
 
         /*
          * Raise the event

@@ -61,6 +61,9 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    protected PluginDatabaseSystem pluginDatabaseSystem;
+
     //todo: esto va por ahora, más adelante se saca si o si
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.P2P_LAYER)
     private P2PLayerManager p2PLayerManager;
@@ -388,9 +391,14 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     }
 
-    protected UUID subscribeActorOnline(String remoteActorPk) throws com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException {
+    protected final UUID subscribeActorOnline(String remoteActorPk) throws com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException {
         return p2PLayerManager.subscribeActorOnlineEvent(getNetworkServiceType(), remoteActorPk);
     }
+
+    protected final UUID unSubscribeActorOnline(UUID previousSubscribePackageId) throws com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException {
+        return p2PLayerManager.unSubscribeActorOnlineEvent(getNetworkServiceType(), previousSubscribePackageId);
+    }
+
 
     /**
      * This method is automatically called when the network service receive
@@ -429,6 +437,18 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         } catch (Exception e) {
             this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+
+    }
+
+    public final void handleOnNodeEventArrive(UUID packageId) {
+        onNodeEventArrive(packageId);
+    }
+
+    /**
+     * Method to override if you want to subscribe and listen for event from node
+     * @param eventPackageId
+     */
+    public void onNodeEventArrive(UUID eventPackageId){
 
     }
 
@@ -479,5 +499,18 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     public NetworkServiceType getNetworkServiceType() {
         return networkServiceType;
     }
+
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
+    public void setP2PLayerManager(P2PLayerManager p2PLayerManager) {
+        this.p2PLayerManager = p2PLayerManager;
+    }
+
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
 
 }

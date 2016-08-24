@@ -23,6 +23,16 @@ public class P2PLayerDatabaseConstants {
     public static final String P2P_LAYER_IS_BETWEEN_ACTORS_COLUMN_NAME = "is_between_actors";
     public static final String P2P_LAYER_FERMAT_MESSAGE_STATUS_COLUMN_NAME = "fermat_messages_status";
     public static final String P2P_LAYER_SIGNATURE_COLUMN_NAME = "signature";
-    public static final String P2P_LAYER_FAIL_COUNT_COLUMN_NAME = "fail_count"
-            ;
+    public static final String P2P_LAYER_FAIL_COUNT_COLUMN_NAME = "fail_count";
+
+
+    /**
+     * Messages Failed database table definition.
+     */
+    public static final String P2P_LAYER_EVENT_TABLE_NAME = "p2p_layer_events"  ;
+
+    //Columns
+    public static final String P2P_LAYER_EVENT_ID_COLUMN_NAME = "package_id";
+    public static final String P2P_LAYER_EVENT_NS_OWNER_COLUMN_NAME = "ns_owner";
+
 }

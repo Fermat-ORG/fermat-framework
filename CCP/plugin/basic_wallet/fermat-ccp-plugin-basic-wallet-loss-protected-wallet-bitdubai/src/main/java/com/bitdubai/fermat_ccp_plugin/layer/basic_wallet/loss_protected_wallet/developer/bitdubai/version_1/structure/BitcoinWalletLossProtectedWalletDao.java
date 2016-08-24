@@ -1,20 +1,13 @@
 package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.structure;
 
 
-
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
-
-
-
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
@@ -23,11 +16,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-
-
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -56,7 +48,6 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRate
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
-
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -718,17 +709,7 @@ public class BitcoinWalletLossProtectedWalletDao {
 
             bitcoinSpentTable.addUUIDFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
 
-            bitcoinSpentTable.loadToMemory();
-
-
-            for(DatabaseTableRecord record : bitcoinSpentTable.getRecords())
-            {
-                bitcoinSpentTable.deleteRecord(record);
-
-            }
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantFindTransactionException("Transaction Memo Update Error",cantLoadTableToMemory,"Error load Spending table", "");
+            bitcoinSpentTable.deleteRecord();
 
         } catch (CantDeleteRecordException cantUpdateRecord) {
             throw new CantStoreMemoException("Transaction Memo Update Error",cantUpdateRecord,"Error deleting Spendings ", "");
@@ -1047,14 +1028,8 @@ public class BitcoinWalletLossProtectedWalletDao {
              */
             bitcoinwalletTable.addStringFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
 
-            bitcoinwalletTable.loadToMemory();
+            bitcoinwalletTable.deleteRecord();
 
-            // Read record data and create transactions list
-            for(DatabaseTableRecord record : bitcoinwalletTable.getRecords()){
-                bitcoinwalletTable.deleteRecord(record);
-            }
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantFindTransactionException("Transaction Memo Update Error",cantLoadTableToMemory,"Error load Transaction table" + transactionID.toString(), "");
         } catch (CantDeleteRecordException e) {
             e.printStackTrace();
         }
