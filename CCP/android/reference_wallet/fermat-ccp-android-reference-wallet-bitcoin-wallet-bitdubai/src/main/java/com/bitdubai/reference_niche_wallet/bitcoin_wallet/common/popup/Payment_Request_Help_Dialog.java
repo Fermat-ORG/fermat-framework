@@ -22,7 +22,6 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
@@ -91,7 +90,7 @@ public class Payment_Request_Help_Dialog extends FermatDialog<ReferenceAppFermat
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_payment_request_help;
+        return R.layout.dialog_payment_request_help_bitcoin;
     }
 
     @Override
