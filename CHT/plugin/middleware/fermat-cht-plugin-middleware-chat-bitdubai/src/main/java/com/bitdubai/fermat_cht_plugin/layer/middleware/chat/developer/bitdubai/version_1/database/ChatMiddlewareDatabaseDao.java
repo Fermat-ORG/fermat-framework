@@ -1186,8 +1186,7 @@ public class ChatMiddlewareDatabaseDao {
 
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-        table.loadToMemory();
-        return table.getRecords().isEmpty();
+        return table.getCount() == 0;
     }
 
     private DatabaseTableRecord getContactRecord(Contact contact) throws DatabaseOperationException {
