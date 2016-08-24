@@ -19,6 +19,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
@@ -126,17 +127,17 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @param MyProfileImage          The profile image of the logged intra user
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException
      */
-     void askIntraUserForAcceptance(String intraUserToAddName, String intraUserPhrase,String intraUserToAddPublicKey, byte[] OthersProfileImage,byte[] MyProfileImage,String identityPublicKey,String identityAlias,Location location) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
+     void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPhrase, String intraUserToAddPublicKey, byte[] OthersProfileImage,Location intraUserToLocation,byte[] MyProfileImage, String identityPublicKey, String identityAlias,Location identityLocation ) throws CantStartRequestException ;
 
-    /**
-     * The method <code>acceptIntraUser</code> takes the information of a connection request, accepts
-     * the request and adds the intra user to the list managed by this plugin with ContactState CONTACT.
-     *
-     * @param intraUserToAddName      The name of the intra user to add
-     * @param intraUserToAddPublicKey The public key of the intra user to add
-     * @param profileImage            The profile image that the intra user has
-     * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException
-     */
+         /**
+          * The method <code>acceptIntraUser</code> takes the information of a connection request, accepts
+          * the request and adds the intra user to the list managed by this plugin with ContactState CONTACT.
+          *
+          * @param intraUserToAddName      The name of the intra user to add
+          * @param intraUserToAddPublicKey The public key of the intra user to add
+          * @param profileImage            The profile image that the intra user has
+          * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException
+          */
      void acceptIntraUser(String identityPublicKey,String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
 
 

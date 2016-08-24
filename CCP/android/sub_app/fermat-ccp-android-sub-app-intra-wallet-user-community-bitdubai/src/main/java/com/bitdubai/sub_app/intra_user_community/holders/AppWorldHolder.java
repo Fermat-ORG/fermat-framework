@@ -28,7 +28,7 @@ public class AppWorldHolder extends FermatViewHolder {
      */
     public AppWorldHolder(View itemView) {
         super(itemView);
-        connectionState = (ImageView) itemView.findViewById(R.id.connection_state);
+        //connectionState = (ImageView) itemView.findViewById(R.id.connection_state);
         row_connection_state = (FermatTextView) itemView.findViewById(R.id.connection_state_user);
         thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
         name = (FermatTextView) itemView.findViewById(R.id.community_name);
