@@ -52,11 +52,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.CreateContactDialogCallback;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.SubActionButton;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.views_contacts_fragment.PinnedHeaderAdapter;
@@ -66,8 +64,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.He
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ContactsTutorialPart1V2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.CreateContactFragmentDialog;
-
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
@@ -80,8 +76,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 
@@ -294,7 +288,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
             super.onActivityCreated(new Bundle());
             hideSoftKeyboard(getActivity());
         } catch (Exception e) {
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+//            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), getResources().getString(R.string.Whooops_text), Toast.LENGTH_SHORT).show();
             lossWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }

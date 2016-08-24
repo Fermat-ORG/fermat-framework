@@ -100,7 +100,7 @@
     <string name="search_hint">Nombre de Contacto</string>
     <string name="search_text">Buscar</string>
     <string name="second_description_text">la red fermat.</string>
-    <string name="see_your_balance_text">* Ver su balance.\n* Envio/recepcion de bitcoins.\n* Pedir bitcoins.\n* Ver el historico de transacciones.</string>
+    <string name="see_your_balance_text">* Ver su balance.\n* Envio/recepcion de Fermats.\n* Pedir Fermats.\n* Ver el historico de transacciones.</string>
     <string name="send_remittance_wallet">Enviar</string>
     <string name="send_request_text">Enviar Solicitud</string>
     <string name="send_text">Enviar</string>
@@ -110,7 +110,7 @@
     <string name="store_wallet">Tienda</string>
     <string name="swype_refresh">Deslice hacia abajo para refrescar</string>
     <string name="the_process_of_downloading_text">Se estan bajando los bloques de\nla  Blockchain.\n  Mientras esto ocurre, la barra superior se mostrara en rojo.</string>
-    <string name="this_is_a_simple_bitcoin_only_wallet_text">Esta cartera maneja bitcoins\nCon ella se puede:</string>
+    <string name="this_is_a_simple_bitcoin_only_wallet_text">Esta cartera maneja Fermats\nCon ella se puede:</string>
     <string name="title_Fee">Configuracion de Taza</string>
     <string name="title_activity_blank">Administrador de Carteras</string>
     <string name="title_activity_requests_received">Solicitudes recibidas</string>
@@ -160,7 +160,7 @@
     <string name="settings_send_error_report">Enviar reporte de Error</string>
     <string name="wallet_type">Esta cartera permite dos tipos diferentes de usuarios:</string>
     <string name="btc_loss">Ingresa la cantidad de BTC que quieres enviar a Loss Protected Wallet</string>
-    <string name="this_is_a_simple_bitcoint_only_wallet_text">Esta es una cartera de solo bitcoin. sus principales caracteristicas son:</string>
+    <string name="this_is_a_simple_bitcoint_only_wallet_text">Esta es una cartera de solo Fermats. sus principales caracteristicas son:</string>
     <string name="fermat_address">Direccion Fermat</string>
     <string name="date">Fecha</string>
     <string name="to">Para:</string>

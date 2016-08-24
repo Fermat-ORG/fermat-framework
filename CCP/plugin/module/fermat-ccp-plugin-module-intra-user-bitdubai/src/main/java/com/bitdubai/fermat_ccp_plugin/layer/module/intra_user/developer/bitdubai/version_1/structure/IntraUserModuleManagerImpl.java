@@ -117,7 +117,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
         this.intraWalletUserManager = intraWalletUserManager;
         this.intraUserNertwokServiceManager = intraUserNertwokServiceManager;
         this.errorManager = errorManager;
-       // this.intraUserLoggedPublicKey = intraUserLoggedPublicKey;
+        // this.intraUserLoggedPublicKey = intraUserLoggedPublicKey;
         this.locationManager = locationManager;
         this.geolocationManager = geolocationManager;
     }
@@ -150,10 +150,10 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
     public Location getLocationManager() throws CantGetDeviceLocationException
     {
         try {
-          return locationManager.getLocation();
+            return locationManager.getLocation();
 
-        // deviceLocation = new DeviceLocation(location.getLatitude(),location.getLongitude(),location.getTime(),location.getAltitude(),location.getSource());
-         } catch (CantGetDeviceLocationException e) {
+            // deviceLocation = new DeviceLocation(location.getLatitude(),location.getLongitude(),location.getTime(),location.getAltitude(),location.getSource());
+        } catch (CantGetDeviceLocationException e) {
             throw new CantGetDeviceLocationException("CAN'T GET LOCATION MANAGER", FermatException.wrapException(e), "", "CantGetDeviceLocationException");
 
         }
@@ -267,7 +267,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
         try {
 
-                //verifico la cache para mostrar los que tenia antes y los nuevos
+            //verifico la cache para mostrar los que tenia antes y los nuevos
               /*  List<IntraUserInformation> userCacheList = new ArrayList<>();
                 try {
                     userCacheList = getCacheSuggestionsToContact(max, offset);
@@ -275,36 +275,37 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                     e.printStackTrace();
                 }*/
 
-                final List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
+            final List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
 
-                List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
-                intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(distance,alias,max, offset, location);
-
-
+            List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
+            intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(distance,alias,max, offset, location);
 
 
 
-                for (IntraUserInformation intraUser : intraUserInformationList) {
-                    String country = "--", place = "--";
-                    //get connection state status
-                    ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
 
-                    //get actor location
-                    Location actorLocation = intraUser.getLocation();
-                    if(actorLocation != null){
-                        try {
-                            final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
-                            country = address.getCountry();
-                            place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
-                        } catch (CantCreateAddressException ignore) {
-                        }
+
+            for (IntraUserInformation intraUser : intraUserInformationList) {
+                String country = "----", place = "----";
+                //get connection state status
+                ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
+
+                //get actor location
+                Location actorLocation = intraUser.getLocation();
+                if(actorLocation != null){
+                    try {
+                        final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
+                        country = address.getCountry().equals("null")? "----" : address.getCountry();
+                        place = address.getCity().equals("null") ? country : address.getCity();
+                    } catch (CantCreateAddressException ignore) {
+
                     }
-                    //return intra user information - if not connected - status return null
-                    IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(),
-                                                                                                connectionState,intraUser.getState(),intraUser.getContactRegistrationDate(),
-                                                                                                country,place,actorLocation);
-                    intraUserInformationModuleList.add(intraUserInformation);
                 }
+                //return intra user information - if not connected - status return null
+                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(),
+                        connectionState,intraUser.getState(),intraUser.getContactRegistrationDate(),
+                        country,place,actorLocation);
+                intraUserInformationModuleList.add(intraUserInformation);
+            }
 
 
             _executor.submit(new Runnable() {
@@ -437,7 +438,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState,ProfileStatus.OFFLINE,intraUser.getContactRegistrationDate(),"","",null);
 
 
-               // intraUserInformation.setProfileImageNull();
+                // intraUserInformation.setProfileImageNull();
 
                 intraUserInformationModuleList.add(intraUserInformation);
             }
@@ -497,7 +498,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
      */
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPhrase, String intraUserToAddPublicKey, byte[] OthersProfileImage,byte[] MyProfileImage, String identityPublicKey, String identityAlias,Location actorLocation ) throws CantStartRequestException {
+    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPhrase, String intraUserToAddPublicKey, byte[] OthersProfileImage,Location intraUserToLocation,byte[] MyProfileImage, String identityPublicKey, String identityAlias,Location identityLocation ) throws CantStartRequestException {
 
         try {
 
@@ -506,19 +507,26 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
              *Call Network Service Intra User to add request connection
              */
             //get actor location
-            String country = "--", place = "--";
+            String country = "----", place = "----";
+
+            String intraUserCountry = "----", intraUserPlace = "----";
 
             try {
-                final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
-                country = address.getCountry();
-                place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
+                final Address address = geolocationManager.getAddressByCoordinate(identityLocation.getLatitude(), identityLocation.getLongitude());
+                country = address.getCountry().equals("null") ? "----" : address.getCounty();
+                place = address.getCity().equals("null") ? country : address.getCity();
+            } catch (CantCreateAddressException ignore) {
+            }
+
+            try {
+                final Address address = geolocationManager.getAddressByCoordinate(intraUserToLocation.getLatitude(), intraUserToLocation.getLongitude());
+                intraUserCountry = address.getCountry().equals("null") ? "----": address.getCounty();
+                intraUserPlace = address.getCity().equals("null") ? intraUserCountry : address.getCity();
             } catch (CantCreateAddressException ignore) {
             }
 
 
             if (  this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUserToAddPublicKey)!= ConnectionState.CONNECTED){
-                System.out.println("The User you are trying to connect with is not connected" +
-                        "so we send the message to the intraUserNetworkService");
                 this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, identityAlias, Actors.INTRA_USER, intraUserToAddName,intraUserToAddPhrase, intraUserToAddPublicKey, Actors.INTRA_USER, MyProfileImage,
                         place,country);
             }else{
@@ -531,7 +539,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
              */
 
 
-            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPhrase, intraUserToAddPublicKey, OthersProfileImage,place,country);
+            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPhrase, intraUserToAddPublicKey, OthersProfileImage,intraUserPlace,intraUserCountry);
 
 
         } catch (CantCreateIntraWalletUserException e) {

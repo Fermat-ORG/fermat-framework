@@ -57,7 +57,7 @@
         />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal">
@@ -81,15 +81,7 @@
             />
 
 
-        <ImageView
-            android:id="@+id/connection_state"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/ic_home_friend"
-            android:visibility="gone"
-            tools:ignore="ContentDescription,RtlHardcoded" />
+
 
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
