@@ -218,7 +218,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="No Data"
+                    android:text="@string/No_data"
                     android:textColor="#fff"
                     android:visibility="gone"
                     android:id="@+id/noDataInChart"
