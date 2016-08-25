@@ -711,7 +711,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
             System.out.println("PROCESSING NOTIFICATIONS IN INTRA USER WALLET ");
             List<IntraUserNotification> intraUserNotifications = intraUserNetworkServiceManager.getPendingNotifications();
-
+            FermatBundle fermatBundle;
 
             for (IntraUserNotification notification : intraUserNotifications) {
 
@@ -740,7 +740,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                         //notify android view
                         broadcaster.publish(BroadcasterType.UPDATE_VIEW, "ACCEPTED_CONEXION");
 
-                        FermatBundle fermatBundle = new FermatBundle();
+                        fermatBundle = new FermatBundle();
                         fermatBundle.put(SOURCE_PLUGIN, Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR.getCode());
                         fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CCP_COMMUNITY.getCode()));
                         fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CCP_COMMUNITY.getCode());
@@ -754,6 +754,14 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                         break;
                     case DISCONNECTED:
                         this.disconnectIntraWalletUser(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+
+                        fermatBundle = new FermatBundle();
+                        fermatBundle.put(SOURCE_PLUGIN, Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR.getCode());
+                        fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CCP_COMMUNITY.getCode()));
+                        fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CCP_COMMUNITY.getCode());
+                        fermatBundle.put(NOTIFICATION_ID, CCPBroadcasterConstants.CONNECTION_DISCONNECT);
+                        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
+                        fermatBundle.put("InvolvedActor", notification.getActorSenderAlias());
                         break;
                     case RECEIVED:
                         /**
@@ -763,6 +771,16 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                         break;
                     case DENIED:
                         this.denyConnection(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+
+                        fermatBundle = new FermatBundle();
+                        fermatBundle.put(SOURCE_PLUGIN, Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR.getCode());
+                        fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CCP_COMMUNITY.getCode()));
+                        fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CCP_COMMUNITY.getCode());
+                        fermatBundle.put(NOTIFICATION_ID, CCPBroadcasterConstants.CONNECTION_DENIED);
+                        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
+                        fermatBundle.put("InvolvedActor", notification.getActorSenderAlias());
+
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
                         break;
                     case INTRA_USER_NOT_FOUND:
                         this.intraWalletUserActorDao.updateConnectionState(intraUserToConnectPublicKey, intraUserSendingPublicKey, ConnectionState.INTRA_USER_NOT_FOUND);

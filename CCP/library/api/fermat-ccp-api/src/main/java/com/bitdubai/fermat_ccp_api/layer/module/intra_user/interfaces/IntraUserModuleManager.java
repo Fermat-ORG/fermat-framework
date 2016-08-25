@@ -21,6 +21,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetInt
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
@@ -158,6 +159,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      */
     void disconnectIntraUSer(String intraUserLoggedPublicKey, String intraUserToDisconnectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
 
+    void disconnectAllIntraUSer(String intraUserLoggedPublicKey) throws IntraUserDisconnectingFailedException;
     /**
      * The method <code>cancelIntraUser</code> cancels an intra user from the list managed by this
      * @param intraUserToCancelPublicKey
