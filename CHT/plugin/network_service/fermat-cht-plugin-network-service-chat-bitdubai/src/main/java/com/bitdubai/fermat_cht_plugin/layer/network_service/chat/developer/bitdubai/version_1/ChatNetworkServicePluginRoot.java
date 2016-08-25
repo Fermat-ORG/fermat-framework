@@ -591,6 +591,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             throw pluginStartException;
         }
     }
+
+    //todo: no creo que sea necesario implementar esto para este ns, retirar si no hace falta
     @Override
     public void onNodeEventArrive(UUID eventPackageId) {
         try {
