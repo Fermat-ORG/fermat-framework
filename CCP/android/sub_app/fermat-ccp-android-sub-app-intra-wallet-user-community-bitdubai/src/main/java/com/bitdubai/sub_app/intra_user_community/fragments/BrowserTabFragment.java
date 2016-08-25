@@ -216,13 +216,13 @@ public class BrowserTabFragment
 
             if(location==null){
                 //  showErrorGPS();
-                Toast.makeText(getActivity(), "Please, turn ON your GPS", Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(), getResources().getString(R.string.turn_on_gps), Toast.LENGTH_SHORT);
             }
 
             identity =  moduleManager.getActiveIntraUserIdentity();
 
             if(identity != null)
-              distance = identity.getAccuracy();
+                distance = identity.getAccuracy();
 
             // turnGPSOn();
 
@@ -243,11 +243,11 @@ public class BrowserTabFragment
         searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
 
 
-       // locationFilterBar = (RelativeLayout) rootView.findViewById(R.id.cbc_location_filter_footer_bar);
-       // locationFilterBarCountry = (FermatTextView) rootView.findViewById(R.id.cbc_location_filter_footer_bar_country);
-       // locationFilterBarPlace = (FermatTextView) rootView.findViewById(R.id.cbc_location_filter_footer_bar_place);
+        // locationFilterBar = (RelativeLayout) rootView.findViewById(R.id.cbc_location_filter_footer_bar);
+        // locationFilterBarCountry = (FermatTextView) rootView.findViewById(R.id.cbc_location_filter_footer_bar_country);
+        // locationFilterBarPlace = (FermatTextView) rootView.findViewById(R.id.cbc_location_filter_footer_bar_place);
 
-      //  final View locationFilterBarCloseButton = rootView.findViewById(R.id.cbc_location_filter_footer_bar_close_button);
+        //  final View locationFilterBarCloseButton = rootView.findViewById(R.id.cbc_location_filter_footer_bar_close_button);
        /* locationFilterBarCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -435,7 +435,7 @@ public class BrowserTabFragment
 
         }
 
-            return false;
+        return false;
 
     }
 
@@ -446,7 +446,7 @@ public class BrowserTabFragment
             ConnectionState connectionState = data.getConnectionState();
 
 
-            if ((data.getState().equals(ProfileStatus.ONLINE) || data.getState().equals(ProfileStatus.UNKNOWN)) && connectionState.equals(ConnectionState.NO_CONNECTED)) {
+            if ((data.getState().equals(ProfileStatus.ONLINE) || data.getState().equals(ProfileStatus.UNKNOWN))) {
 
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
@@ -468,24 +468,24 @@ public class BrowserTabFragment
                 }
             }else
             {   switch (connectionState)
-                {
-                    case CONNECTED:
-                        Toast.makeText(getActivity(),"IS A CONTACT",Toast.LENGTH_SHORT).show();
-                        break;
+            {
+                case CONNECTED:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_connected_msg),Toast.LENGTH_SHORT).show();
+                    break;
 
-                    case PENDING_REMOTELY_ACCEPTANCE:
-                        Toast.makeText(getActivity(),"REQUEST HAS BEEN SEND",Toast.LENGTH_SHORT).show();
-                        break;
+                case PENDING_REMOTELY_ACCEPTANCE:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_request_sent_msg),Toast.LENGTH_SHORT).show();
+                    break;
 
-                    default:
-                        Toast.makeText(getActivity(),"USER OFFLINE",Toast.LENGTH_SHORT).show();
-                }
+                default:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
+            }
 
             }
 
-            } catch (CantGetActiveLoginIdentityException e) {
-                e.printStackTrace();
-            }
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -496,20 +496,20 @@ public class BrowserTabFragment
 
     public void showErrorFermatNetworkDialog() {
         final ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
-        errorConnectingFermatNetworkDialog.setLeftButton("CANCEL", new View.OnClickListener() {
+        errorConnectingFermatNetworkDialog.setLeftButton(getResources().getString(R.string.btn_error_fermat_network_cancel), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 errorConnectingFermatNetworkDialog.dismiss();
                 getActivity().onBackPressed();
             }
         });
-        errorConnectingFermatNetworkDialog.setRightButton("CONNECT", new View.OnClickListener() {
+        errorConnectingFermatNetworkDialog.setRightButton(getResources().getString(R.string.btn_error_fermat_network_connect), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 errorConnectingFermatNetworkDialog.dismiss();
                 try {
                     if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
-                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.error_msg_trying_to_reconnect), Toast.LENGTH_SHORT).show();
                         //getActivity().onBackPressed();
                     }
                 } catch (CantGetCommunicationNetworkStatusException e) {
@@ -523,7 +523,7 @@ public class BrowserTabFragment
         errorConnectingFermatNetworkDialog.show();
     }
 
-   // @Override
+    // @Override
     public void onLocationItemClicked(ExtendedCity city) {
         offset = 0;
 
@@ -573,7 +573,7 @@ public class BrowserTabFragment
                     dataSet.addAll(lstIntraUserInformations);
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.Request_user_list_time_out), Toast.LENGTH_LONG).show();
                         }
                     });
                 }else{
@@ -588,7 +588,7 @@ public class BrowserTabFragment
             e.printStackTrace();
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.Request_user_list_time_out), Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -630,7 +630,7 @@ public class BrowserTabFragment
             Log.e(TAG, ex.getMessage(), ex);
         }
 
-        Toast.makeText(getActivity(), "Sorry there was a problem loading the data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),getResources().getString(R.string.loading_data_error_msg) , Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -812,7 +812,10 @@ public class BrowserTabFragment
 
     @Override
     public void onMethodCallback(ExtendedCity cityFromList) {
+        location.setLatitude(Double.parseDouble(Float.toString(cityFromList.getLatitude())));
+        location.setLongitude(Double.parseDouble(Float.toString(cityFromList.getLongitude())));
 
+        onRefresh();
     }
 
 
@@ -823,7 +826,6 @@ public class BrowserTabFragment
 
         if(_executor != null)
             _executor.shutdownNow();
-
         super.onStop();
     }
 

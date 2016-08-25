@@ -50,7 +50,7 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
         name = (FermatTextView) itemView.findViewById(R.id.community_name);
         location =(FermatTextView) itemView.findViewById(R.id.location);
 
-       // progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
+        // progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
 
 
     }
@@ -80,10 +80,10 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
 
             switch (data.getConnectionState()) {
                 case CONNECTED:
-                        response.setVisibility(View.VISIBLE);
-                        response.setText("IS A CONTACT");
-                        response.setTextColor(Color.parseColor("#21386D"));
-                        button_add.setVisibility(View.GONE);
+                    response.setVisibility(View.VISIBLE);
+                    response.setText("IS A CONTACT");
+                    response.setTextColor(Color.parseColor("#21386D"));
+                    button_add.setVisibility(View.GONE);
                     break;
                 case BLOCKED_LOCALLY:
                     break;
@@ -92,11 +92,11 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                 case CANCELLED_LOCALLY:
                     break;
                 case CANCELLED_REMOTELY:
-                       //connectionState.setImageResource(R.drawable.icon_contact_no_conect);
-                        response.setText("REQUEST CANCELLED");
-                        response.setVisibility(View.VISIBLE);
-                        response.setTextColor(Color.parseColor("#21386D"));
-                        button_add.setVisibility(View.GONE);
+                    //connectionState.setImageResource(R.drawable.icon_contact_no_conect);
+                    response.setText("REQUEST CANCELLED");
+                    response.setVisibility(View.VISIBLE);
+                    response.setTextColor(Color.parseColor("#21386D"));
+                    button_add.setVisibility(View.GONE);
 
                     break;
                 case NO_CONNECTED:
@@ -120,21 +120,28 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                     break;
                 case DENIED_REMOTELY:
 
-                        response.setText("DENIED BY CONTACT");
+                    response.setText("DENIED BY CONTACT");
                     response.setTextColor(Color.parseColor("#21386D"));
-                        response.setVisibility(View.VISIBLE);
-                        button_add.setVisibility(View.GONE);
+                    response.setVisibility(View.VISIBLE);
+                    button_add.setVisibility(View.GONE);
 
                     break;
                 case DISCONNECTED_LOCALLY:
                     break;
                 case DISCONNECTED_REMOTELY:
-
-                        response.setText("IS NOT CONNECTED");
-                    response.setTextColor(Color.parseColor("#21386D"));
-                        //connectionState.setImageResource(R.drawable.icon_contact_no_conect);
-                        response.setVisibility(View.VISIBLE);
+                    if(data.getState().equals(ProfileStatus.OFFLINE))
+                    {
+                        //button_add.setBackgroundColor(Color.RED);
                         button_add.setVisibility(View.GONE);
+                        response.setText("OFFLINE");
+                        response.setTextColor(Color.RED);
+                        response.setVisibility(View.VISIBLE);
+                    }else
+                    {
+                        response.setText("");
+                        response.setVisibility(View.GONE);
+                        button_add.setVisibility(View.VISIBLE);
+                    }
 
                     break;
                 case ERROR:
@@ -145,35 +152,35 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                     break;
                 case PENDING_REMOTELY_ACCEPTANCE:
 
-                        response.setText("REQUEST SENT");
+                    response.setText("REQUEST SENT");
                     response.setTextColor(Color.parseColor("#21386D"));
-                        //connectionState.setImageResource(R.drawable.icon_contact_standby);
-                        response.setVisibility(View.VISIBLE);
-                        button_add.setVisibility(View.GONE);
+                    //connectionState.setImageResource(R.drawable.icon_contact_standby);
+                    response.setVisibility(View.VISIBLE);
+                    button_add.setVisibility(View.GONE);
 
                     break;
                 default:
                     if (response.getVisibility() == View.VISIBLE)
                         response.setVisibility(View.GONE);
-                        button_add.setVisibility(View.VISIBLE);
+                    button_add.setVisibility(View.VISIBLE);
                     break;
             }
 
 
-          name.setText(data.getName());
+            name.setText(data.getName());
             byte[] profileImage = data.getProfileImage();
             if (profileImage != null && profileImage.length > 0) {
                 //Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
                 //bitmap = Bitmap.createScaledBitmap(bitmap, 480, 480, true);
-               thumbnail.setImageDrawable(  getImgDrawable(profileImage));
+                thumbnail.setImageDrawable(  getImgDrawable(profileImage));
             }else{
                 thumbnail.setVisibility(View.GONE);
 
             }
         }// else {
-           // connectionState.setVisibility(View.INVISIBLE);
+        // connectionState.setVisibility(View.INVISIBLE);
 
-        //}
+        // }
 
 
     }

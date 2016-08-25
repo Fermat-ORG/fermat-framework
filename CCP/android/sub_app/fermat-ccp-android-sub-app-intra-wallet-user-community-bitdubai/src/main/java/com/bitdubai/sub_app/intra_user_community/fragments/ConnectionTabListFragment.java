@@ -211,6 +211,13 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
                 try {
                     deleteAllContactsDialog = new DeleteAllContactsDialog(getActivity(),appSession,null,moduleManager.getActiveIntraUserIdentity());
                     deleteAllContactsDialog.show();
+
+                    deleteAllContactsDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            onRefresh();
+                        }
+                    });
                 } catch (CantGetActiveLoginIdentityException e) {
                     e.printStackTrace();
                 }
@@ -288,7 +295,7 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
             Log.e(TAG, ex.getMessage(), ex);
         }
 
-        Toast.makeText(getActivity(), "Sorry there was a problem loading the data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), getResources().getString(R.string.loading_data_error_msg), Toast.LENGTH_SHORT).show();
     }
 
     @Override

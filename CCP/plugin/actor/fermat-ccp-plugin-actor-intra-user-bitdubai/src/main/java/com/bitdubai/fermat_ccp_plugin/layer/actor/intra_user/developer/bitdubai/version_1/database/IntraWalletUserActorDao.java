@@ -250,7 +250,9 @@ public class IntraWalletUserActorDao {
 
             record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode());
              record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
-             table.updateRecord(record);
+            record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
+
+            table.updateRecord(record);
 
 
         }  catch (CantUpdateRecordException e) {
