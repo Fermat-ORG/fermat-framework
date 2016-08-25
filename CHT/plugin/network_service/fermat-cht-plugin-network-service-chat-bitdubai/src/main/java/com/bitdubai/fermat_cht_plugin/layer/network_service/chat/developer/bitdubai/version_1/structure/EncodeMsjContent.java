@@ -29,25 +29,6 @@ public class EncodeMsjContent {
     /**
      * Construct the content of the message fot the type <code>ChatMessageTransactionType.CHAT_METADATA_TRASMIT</code>
      *
-     * @param chatMetadataRecord
-     * @return String message content
-     */
-    public static String encodeMSjContentChatMetadataTransmit(ChatMetadataRecord chatMetadataRecord,MessageMetadataRecord messageMetadataRecord) {
-
-        /*         * Create the json object
-         */
-        Gson gson = new Gson();
-        JsonObject jsonObjectContent = new JsonObject();
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.CHAT_METADATA_TRASMIT.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_METADATA, chatMetadataRecord.toJson());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_METADATA, messageMetadataRecord.toJson());
-
-        return gson.toJson(jsonObjectContent);
-    }
-
-    /**
-     * Construct the content of the message fot the type <code>ChatMessageTransactionType.CHAT_METADATA_TRASMIT</code>
-     *
      * @param messageMetadataRecord
      * @return String message content
      */
@@ -78,8 +59,6 @@ public class EncodeMsjContent {
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_ID, messageId);
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_STATUS, gson.toJson(messageStatus));
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS, gson.toJson(DistributionStatus.DELIVERED));
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT, chatId.toString());
 
         return gson.toJson(jsonObjectContent);
     }

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MetadataToSend;
@@ -14,6 +15,8 @@ import java.util.UUID;
 public abstract class AbstractMetadata implements MetadataToSend , Serializable {
 
     private transient UUID transactionId;
+
+    private transient ChatMessageTransactionType chatMessageTransactionType;
 
     private PlatformComponentType localActorType;
 
@@ -81,4 +84,11 @@ public abstract class AbstractMetadata implements MetadataToSend , Serializable 
         this.date = date;
     }
 
+    public ChatMessageTransactionType getChatMessageTransactionType() {
+        return chatMessageTransactionType;
+    }
+
+    public void setChatMessageTransactionType(ChatMessageTransactionType chatMessageTransactionType) {
+        this.chatMessageTransactionType = chatMessageTransactionType;
+    }
 }

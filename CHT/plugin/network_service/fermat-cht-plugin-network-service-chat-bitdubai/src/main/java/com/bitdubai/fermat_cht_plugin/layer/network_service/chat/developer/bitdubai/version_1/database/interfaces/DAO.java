@@ -17,9 +17,4 @@ import java.util.UUID;
 public interface DAO {
 
     void createNotification(MessageMetadataRecord messageMetadataRecord) throws CantCreateNotificationException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException;
-
-    ChatMetadataRecord getNotificationById(final UUID transactionID) throws CantGetNotificationException, NotificationNotFoundException, CantReadRecordDataBaseException;
-
-    void update(ChatMetadataRecord entity) throws CantUpdateRecordDataBaseException;
-
 }
