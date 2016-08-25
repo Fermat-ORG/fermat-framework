@@ -565,8 +565,12 @@ public class BrowserTabFragment
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
         try {
-            IntraUserLoginIdentity intraUserLoginIdentity = null;
-            String intraUserLoggedPublicKey = intraUserLoginIdentity.getPublicKey();
+            ActiveActorIdentityInformation intraUserLoginIdentity = null;
+            intraUserLoginIdentity = moduleManager.getSelectedActorIdentity();
+            String intraUserLoggedPublicKey = null;
+            if (intraUserLoginIdentity != null) {
+                intraUserLoggedPublicKey = intraUserLoginIdentity.getPublicKey();
+            }
 
             offset = pos;
             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(intraUserLoggedPublicKey,location, distance, null, MAX, offset);
