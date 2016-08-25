@@ -86,6 +86,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -307,6 +308,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 intraUserInformationModuleList.add(intraUserInformation);
             }
 
+            _executor = Executors.newFixedThreadPool(2);
 
             _executor.submit(new Runnable() {
                 @Override
@@ -374,7 +376,8 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
         }
         catch (Exception e) {
-            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
+            e.printStackTrace();
+           throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
         }
     }
 
@@ -389,7 +392,8 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 for (IntraWalletUserActor intraUserConnectedLst : intraWalletUserConnectedlst){
                     //Connected
                     if (intraUserSuggestionsLst.getPublicKey().equals(intraUserConnectedLst.getPublicKey())){
-
+                        byte[] img1 = intraUserSuggestionsLst.getProfileImage();
+                        byte[] img2 = intraUserConnectedLst.getProfileImage();
                         if (!intraUserSuggestionsLst.getCity().equals(intraUserConnectedLst.getCity()) ||
                             !intraUserSuggestionsLst.getCountry().equals(intraUserConnectedLst.getCountry()) ||
                             !intraUserSuggestionsLst.getPhrase().equals(intraUserConnectedLst.getPhrase()) ||
@@ -1025,4 +1029,5 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, FermatException.wrapException(ex), null, null);
         }
     }
+
 }
