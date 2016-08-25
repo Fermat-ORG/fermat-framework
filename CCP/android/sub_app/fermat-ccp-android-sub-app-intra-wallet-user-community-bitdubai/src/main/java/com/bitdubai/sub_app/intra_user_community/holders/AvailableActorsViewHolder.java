@@ -129,12 +129,19 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                 case DISCONNECTED_LOCALLY:
                     break;
                 case DISCONNECTED_REMOTELY:
-
-                        response.setText("IS NOT CONNECTED");
-                    response.setTextColor(Color.parseColor("#21386D"));
-                        //connectionState.setImageResource(R.drawable.icon_contact_no_conect);
-                        response.setVisibility(View.VISIBLE);
+                    if(data.getState().equals(ProfileStatus.OFFLINE))
+                    {
+                        //button_add.setBackgroundColor(Color.RED);
                         button_add.setVisibility(View.GONE);
+                        response.setText("OFFLINE");
+                        response.setTextColor(Color.RED);
+                        response.setVisibility(View.VISIBLE);
+                    }else
+                    {
+                        response.setText("");
+                        response.setVisibility(View.GONE);
+                        button_add.setVisibility(View.VISIBLE);
+                    }
 
                     break;
                 case ERROR:
