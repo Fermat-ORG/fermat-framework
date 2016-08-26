@@ -379,7 +379,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         }
     }
 
-    protected UUID discoveryActorProfiles(final DiscoveryQueryParameters discoveryQueryParameters, String requesterPublicKey) throws com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException {
+    public UUID discoveryActorProfiles(final DiscoveryQueryParameters discoveryQueryParameters, String requesterPublicKey) throws com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException {
 
          /*
          * Create the query

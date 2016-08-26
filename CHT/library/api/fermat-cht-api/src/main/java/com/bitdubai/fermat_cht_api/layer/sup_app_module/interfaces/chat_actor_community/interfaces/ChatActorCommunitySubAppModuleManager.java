@@ -62,6 +62,8 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Se
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
     List<ChatActorCommunityInformation> listWorldChatActor(String PublicKey, Actors actorType, DeviceLocation deviceLocation, double distance, String alias, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException;
 
+    void listWorldChatActor(String publicKey, Actors actorType, DeviceLocation deviceLocation, double distance, String alias, int max, int offset, String requesterPublicKey) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException;
+
     List<ChatActorCommunitySelectableIdentity> listSelectableIdentities() throws CantListChatIdentitiesToSelectException, CantListChatIdentityException;
 
     void setSelectedActorIdentity(ChatActorCommunitySelectableIdentity identity) throws CantPersistSettingsException, CantGetSettingsException, SettingsNotFoundException;

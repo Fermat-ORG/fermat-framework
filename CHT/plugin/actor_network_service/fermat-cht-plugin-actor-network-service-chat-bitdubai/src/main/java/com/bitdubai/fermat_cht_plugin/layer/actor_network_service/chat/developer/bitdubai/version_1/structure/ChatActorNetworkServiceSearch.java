@@ -371,4 +371,33 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
             throw new CantListChatException(e, "", "Unhandled error.");
         }
     }
+
+    @Override
+    public void getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max, String requesterPublicKey) throws CantListChatException {
+
+        try {
+
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    null, //TODO: Se coloco null ya que leon necesita que esta valor null porque esto solo se usa solo para buscar por publicKey del Actor
+                    NetworkServiceType.UNDEFINED,
+                    Actors.CHAT.getCode(),
+                    null,
+                    alias,
+                    null,
+                    deviceLocation,
+                    distance,
+                    true,
+                    null,
+                    max,
+                    offSet,
+                    false);
+
+            pluginRoot.discoveryActorProfiles(discoveryQueryParameters,requesterPublicKey);
+
+        }catch (final Exception e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatException(e, "", "Unhandled error.");
+        }
+    }
 }

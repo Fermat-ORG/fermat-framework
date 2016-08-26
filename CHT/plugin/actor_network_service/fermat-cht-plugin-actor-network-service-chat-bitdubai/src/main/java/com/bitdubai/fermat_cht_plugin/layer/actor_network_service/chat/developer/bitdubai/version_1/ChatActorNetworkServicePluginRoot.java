@@ -20,7 +20,11 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_cht_api.all_definition.enums.BundleQuery;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ProtocolState;
@@ -39,6 +43,7 @@ import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.structure.ChatActorNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractActorNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 
 import java.util.List;
 import java.util.UUID;
@@ -60,6 +65,9 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
 
     /**
      * Chat Actor Network Service member variables.
@@ -299,6 +307,18 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
         }
+    }
+
+    @Override
+    public void handleNetworkClientActorListReceivedEvent(final UUID               queryId      ,
+                                                          final List<ActorProfile> actorProfiles) {
+
+
+        FermatBundle bundle = new FermatBundle();
+        bundle.put("actorProfiles", actorProfiles);
+
+        System.out.println("AbstractNs: onNetworkServiceActorListReceived");
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, bundle, BundleQuery.LISTACTORS.getCode());
     }
 
     @Override

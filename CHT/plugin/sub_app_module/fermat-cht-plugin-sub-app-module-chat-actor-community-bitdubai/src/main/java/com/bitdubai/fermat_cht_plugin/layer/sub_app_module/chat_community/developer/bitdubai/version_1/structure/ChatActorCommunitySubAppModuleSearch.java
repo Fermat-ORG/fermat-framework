@@ -80,6 +80,20 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
     }
 
     @Override
+    public void getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max, String requesterPublicKey) throws CantGetChtActorSearchResult {
+        try {
+
+            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
+
+           chatActorSearch.getResult(publicKey, deviceLocation, distance, alias, offSet, max, requesterPublicKey);
+
+        } catch (final Exception exception) {
+
+            throw new CantGetChtActorSearchResult(CantGetChtActorSearchResult.CONTEXT_CONTENT_SEPARATOR, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
     public List<ChatActorCommunityInformation> getResultLocation(DeviceLocation deviceLocation) throws CantGetChtActorSearchResult {
         try {
 

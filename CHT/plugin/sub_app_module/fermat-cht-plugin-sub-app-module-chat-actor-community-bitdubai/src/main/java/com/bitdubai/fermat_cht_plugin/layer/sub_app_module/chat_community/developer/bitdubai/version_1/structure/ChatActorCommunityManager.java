@@ -191,6 +191,10 @@ public class ChatActorCommunityManager
         return worldActorList;
     }
 
+    public void listWorldChatActor(String publicKey, Actors actorType, DeviceLocation deviceLocation, double distance, String alias, int max, int offset, String requesterPublicKey) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
+        getChatActorSearch().getResult(publicKey, deviceLocation, distance, alias, offset, max, requesterPublicKey);
+    }
+
     @Override
     public List<ChatActorCommunitySelectableIdentity> listSelectableIdentities()
             throws CantListChatIdentitiesToSelectException, CantListChatIdentityException {

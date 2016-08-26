@@ -329,6 +329,20 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 //        }
 //    }
 
+    public void checkIncomingMessageFail(MessageMetadata messageMetadata){
+        try {
+            Message message = chatMiddlewareDatabaseDao.getMessageByMessageId(messageMetadata.getMessageId());
+            message.setStatus(MessageStatus.CANNOT_SEND);
+            chatMiddlewareDatabaseDao.saveMessage(message);
+        } catch (CantGetMessageException e) {
+            e.printStackTrace();
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        } catch (CantSaveMessageException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * This method checks the incoming chat event and acts according to this.
      *

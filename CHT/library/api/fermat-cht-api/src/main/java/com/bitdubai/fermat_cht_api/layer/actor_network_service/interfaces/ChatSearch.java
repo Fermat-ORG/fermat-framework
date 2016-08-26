@@ -58,6 +58,8 @@ public abstract class ChatSearch {
 
     public abstract List<ChatExposingData> getResultAlias(String alias) throws CantListChatException;
 
+    public abstract void getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max, String requesterPublicKey) throws CantListChatException;
+
     /**
      * Through the method <code>resetFilters</code> you can reset the filters set,
      */

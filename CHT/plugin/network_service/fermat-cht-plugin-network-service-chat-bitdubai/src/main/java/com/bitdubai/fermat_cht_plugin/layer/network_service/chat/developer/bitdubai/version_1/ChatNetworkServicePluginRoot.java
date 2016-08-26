@@ -254,7 +254,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             reportUnexpectedError(pluginStartException);
         }
         if(messageMetadataRecord != null){
-            launcMessageFailNotification(messageMetadataRecord,messageMetadataRecord.getChatMessageTransactionType());
+            launchMessageFailNotification(messageMetadataRecord, messageMetadataRecord.getChatMessageTransactionType());
         }else
             System.out.println("MESSAGE WITH ID:"+messageId.toString()+" was not found");
     }
@@ -266,7 +266,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
         eventManager.raiseEvent(event);
     }
 
-    private void launcMessageFailNotification(MessageMetadata messageMetadata,ChatMessageTransactionType chatMessageTransactionType) {
+    private void launchMessageFailNotification(MessageMetadata messageMetadata, ChatMessageTransactionType chatMessageTransactionType) {
         MessageFail event = (MessageFail) eventManager.getNewEvent(EventType.MESSAGE_FAIL);
         event.setMessageMetadata(messageMetadata);
         event.setChatMessageTransactionType(chatMessageTransactionType);
@@ -591,6 +591,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             throw pluginStartException;
         }
     }
+
+
 
     //todo: no creo que sea necesario implementar esto para este ns, retirar si no hace falta
     @Override
