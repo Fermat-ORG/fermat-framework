@@ -272,10 +272,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
 
             List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
-            intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(distance,alias,max, offset, location);
-
-
-
+            intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(distance, alias, max, offset, location);
 
 
             for (IntraUserInformation intraUser : intraUserInformationList) {
@@ -967,8 +964,6 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 /**
                  * make default xml structure
                  */
-
-                intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
 
                 intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
 

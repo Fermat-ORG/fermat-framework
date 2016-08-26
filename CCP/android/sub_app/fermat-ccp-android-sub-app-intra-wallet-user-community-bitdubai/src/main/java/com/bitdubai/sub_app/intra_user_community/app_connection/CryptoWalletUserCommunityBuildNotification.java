@@ -28,14 +28,15 @@ public class CryptoWalletUserCommunityBuildNotification {
                     break;
 
                 case CCPBroadcasterConstants.CONNECTION_DISCONNECT:
-                    notification = new UserCommunityNotificationPainter("Connection Request",  involvedActor + " is disconnected from you.", "", "",appPublicKey);
+                    notification = new UserCommunityNotificationPainter("Connection Request", " A user remove you from your connections.", "", "",appPublicKey);
 
                     break;
 
                 case CCPBroadcasterConstants.CONNECTION_DENIED:
-                    notification = new UserCommunityNotificationPainter("Connection Request", "Your connection request was denied to " + involvedActor, "", "",appPublicKey);
+                    notification = new UserCommunityNotificationPainter("Connection Request", "Your connection request was denied.", "", "",appPublicKey);
 
                     break;
+
 
             }
 

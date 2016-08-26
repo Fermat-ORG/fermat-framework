@@ -249,8 +249,10 @@ public class IntraWalletUserActorDao {
             DatabaseTableRecord record =  table.getEmptyRecord();
 
             record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode());
-             record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
-             table.updateRecord(record);
+            record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
+            record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
+
+            table.updateRecord(record);
 
 
         }  catch (CantUpdateRecordException e) {
@@ -317,9 +319,9 @@ public class IntraWalletUserActorDao {
         } catch (CantLoadTableToMemoryException e) {
 
             throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
-        //} catch (CantGetIntraWalletUserActorProfileImageException e) {
+            //} catch (CantGetIntraWalletUserActorProfileImageException e) {
             // Failure unknown.
-       //     throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
+            //     throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
 
         } catch (Exception e) {
 
@@ -501,9 +503,9 @@ public class IntraWalletUserActorDao {
 
 
     public List<IntraWalletUserActor> getAllConnectedIntraWalletUsers(final String intraActorSelectedPublicKey,
-                                                                 final ConnectionState contactState,
-                                                                 final int max,
-                                                                 final int offset) throws CantGetIntraWalletUsersListException {
+                                                                      final ConnectionState contactState,
+                                                                      final int max,
+                                                                      final int offset) throws CantGetIntraWalletUsersListException {
 
 
         // Setup method.
@@ -556,9 +558,9 @@ public class IntraWalletUserActorDao {
         } catch (CantLoadTableToMemoryException e) {
 
             throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
-       //} catch (CantGetIntraWalletUserActorProfileImageException e) {
+            //} catch (CantGetIntraWalletUserActorProfileImageException e) {
             // Failure unknown.
-         //   throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
+            //   throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
 
         } catch (Exception e) {
 

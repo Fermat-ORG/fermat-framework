@@ -181,7 +181,7 @@
     <string name="Intra_user_dialog">Esta parte te ayuda a configurar tu identidad de localizacion en la red Fermat</string>
     <string name="intra_user_desc">*Colocar la presicion en Kms: Este es el rango de presicion que mostrara donde estas localizado en la red Fermat. \n *Seleccionar Frecuencia: Esto es para seleccionar que tan seguido se actualizara la localizacion.</string>
     <string name="start">Empezar</string>
-    <string name="Intra_identity_desc">* Gestiona tu identidad. \n * Configura tu propia frase y compartela con todos los usuarios de la red Fermat.</string>
+    <string name="Intra_identity_desc">* Gestiona tu identidad. \n* Configura tu propia imagen y compartela con todos los usuarios de la red Fermat.</string>
     <string name="intra_identity">Esta aplicacion te ayuda a crear tu identidad en la red Fermat. sus principales caracteristicas son:</string>
     <string name="broker_name">Nombre del broker</string>
     <string name="create">Crear</string>
