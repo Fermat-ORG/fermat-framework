@@ -243,10 +243,10 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             if (discoverIteration == 0) {
 //                sendChatBroadcasting();
                 resetWritingStatus();
-                checkOnlineStatus();
+//                checkOnlineStatus();
             }
             if (discoverIteration == 2) {
-                resetOnlineStatus();
+//                resetOnlineStatus();
             }
             discoverIteration++;
             if (discoverIteration == DISCOVER_ITERATION_LIMIT) {
