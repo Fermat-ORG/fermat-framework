@@ -10,6 +10,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateI
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantUpdateIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -218,6 +219,52 @@ public class IntraWalletUserActorDao {
 
 
     */
+    //    void updateIntraWalletUserdata(String intraUserLoggedInPublicKey, String intraUserToUpdatePublicKey,String intraUserName,String intraUserPhrase, byte[] profileImage,String city, String country) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantUpdateIntraWalletUserException;
+
+
+    public void updateIntraWalletUserdata(final String intraUserToUpdatePublicKey,
+                                          final String intraUserName,
+                                          final String intraUserPhrase,
+                                          final byte[] profileImage,
+                                          final String city,
+                                          final String country) throws CantUpdateIntraWalletUserException{
+        try {
+
+            /**Get the Table**/
+            final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
+            if (table == null)
+                throw new CantUpdateIntraWalletUserException("Can't use intra user actor table.",null,"Intra User Actor","table not found.");
+
+            /**Filter by keys**/
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME,intraUserToUpdatePublicKey,DatabaseFilterType.EQUAL);
+
+            /**Get a Record to set Data **/
+            DatabaseTableRecord record = table.getEmptyRecord();
+
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_NAME_COLUMN_NAME,intraUserName);
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME,intraUserPhrase);
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CITY_COLUMN_NAME,city);
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_COUNTRY_COLUMN_NAME,country);
+
+            table.updateRecord(record);
+
+            /**
+             * Persist profile image on a file
+             */
+            if(profileImage!=null)
+                if (profileImage.length > 0){
+                    deleteUserProfileImage(intraUserToUpdatePublicKey,profileImage);
+                    persistNewUserProfileImage(intraUserToUpdatePublicKey, profileImage);
+                }
+
+
+
+        }catch (Exception e){
+            throw new CantUpdateIntraWalletUserException("CAN'T INSERT INTRA USER", e, "", "Cant Update intra user, insert database problems.");
+
+        }
+
+    }
 
 
     public void updateConnectionState(final String          intraUserLoggedInPublicKey,
@@ -579,6 +626,28 @@ public class IntraWalletUserActorDao {
     /**
      * Private Methods
      */
+
+    private void deleteUserProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException,FileNotFoundException {
+
+        try {
+
+            this.pluginFileSystem.deleteBinaryFile(pluginId,
+                    PROFILE_IMAGE_DIRECTORY_NAME,
+                    buildProfileImageFileName(publicKey),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+        }catch (FileNotFoundException e){
+            throw new FileNotFoundException("File not found",e);
+        } catch (CantCreateFileException e) {
+
+            throw new CantPersistProfileImageException(e, "Error Delete file.", null);
+        } catch (Exception e) {
+
+            throw new CantPersistProfileImageException(FermatException.wrapException(e), "", "");
+        }
+    }
 
 
     private void persistNewUserProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
