@@ -31,6 +31,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantDisconn
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantUpdateIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
@@ -77,10 +78,14 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Ext
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
+import org.spongycastle.util.Arrays;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -101,6 +106,8 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
     private LocationManager locationManager;
 
     private GeolocationManager geolocationManager;
+
+    private ExecutorService _executor;
 
     public IntraUserModuleManagerImpl(PluginFileSystem pluginFileSystem, UUID pluginId, PluginTextFile intraUserLoginXml, IntraWalletUserIdentity intraWalletUser, IntraWalletUserIdentityManager intraWalletUserIdentityManager, IntraWalletUserActorManager intraWalletUserManager, IntraUserManager intraUserNertwokServiceManager, ErrorManager errorManager, String intraUserLoggedPublicKey,LocationManager locationManager,GeolocationManager geolocationManager) {
         super(pluginFileSystem, pluginId);
@@ -256,7 +263,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
      */
     @Override
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 35,timeoutUnit = TimeUnit.SECONDS)
-    public List<IntraUserInformation> getSuggestionsToContact(Location location, double distance, String alias,int max, int offset) throws CantGetIntraUsersListException {
+    public List<IntraUserInformation> getSuggestionsToContact(final String intraUserLoggedPublicKey,Location location, double distance, String alias,int max, int offset) throws CantGetIntraUsersListException {
 
         try {
 
@@ -268,13 +275,10 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                     e.printStackTrace();
                 }*/
 
-            List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
+            final List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
 
             List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
-            intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(distance,alias,max, offset, location);
-
-
-
+            intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(distance, alias, max, offset, location);
 
 
             for (IntraUserInformation intraUser : intraUserInformationList) {
@@ -299,6 +303,21 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                         country,place,actorLocation);
                 intraUserInformationModuleList.add(intraUserInformation);
             }
+
+            _executor = Executors.newFixedThreadPool(2);
+
+            _executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+
+                        updateIntraUsersConnections(intraUserLoggedPublicKey, intraUserInformationModuleList);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
 
          /*   if(intraUserInformationModuleList!=null) {
@@ -353,8 +372,54 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
         }
         catch (Exception e) {
-            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
+            e.printStackTrace();
+           throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
         }
+    }
+
+    private void updateIntraUsersConnections(String intraUserLoggedPublicKey,List<IntraUserInformation> intraUserInformationList){
+
+        try {
+            List<IntraWalletUserActor> intraWalletUserConnectedlst = new ArrayList<>();
+
+            intraWalletUserConnectedlst = intraWalletUserManager.getConnectedIntraWalletUsers(intraUserLoggedPublicKey);
+
+            for (IntraUserInformation intraUserSuggestionsLst : intraUserInformationList){
+                for (IntraWalletUserActor intraUserConnectedLst : intraWalletUserConnectedlst){
+                    //Connected
+                    if (intraUserSuggestionsLst.getPublicKey().equals(intraUserConnectedLst.getPublicKey())){
+                        byte[] img1 = intraUserSuggestionsLst.getProfileImage();
+                        byte[] img2 = intraUserConnectedLst.getProfileImage();
+                        boolean a = false;
+                        if (img1==img2)
+                             a = true;
+
+                        if (!intraUserSuggestionsLst.getCity().equals(intraUserConnectedLst.getCity()) ||
+                            !intraUserSuggestionsLst.getCountry().equals(intraUserConnectedLst.getCountry()) ||
+                            !intraUserSuggestionsLst.getPhrase().equals(intraUserConnectedLst.getPhrase()) ||
+                            !intraUserSuggestionsLst.getName().equals(intraUserConnectedLst.getName()) ||
+                            intraUserSuggestionsLst.getProfileImage() != intraUserConnectedLst.getProfileImage()){
+
+                                            intraWalletUserManager.updateIntraWalletUserdata(
+                                                intraUserConnectedLst.getPublicKey(),
+                                                intraUserSuggestionsLst.getName(),
+                                                intraUserSuggestionsLst.getPhrase(),
+                                                intraUserSuggestionsLst.getProfileImage(),
+                                                intraUserSuggestionsLst.getCity(),
+                                                intraUserSuggestionsLst.getCountry());
+
+                        }
+
+                    }
+                }
+            }
+            //intraWalletUserManager.getConnectedIntraWalletUsers()
+        } catch (CantGetIntraWalletUsersException e) {
+            e.printStackTrace();
+        } catch (CantUpdateIntraWalletUserException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -996,8 +1061,6 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
                 intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
 
-                intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
-
 //                /**
 //                 * If I can not save this file, then this plugin shouldn't be running at all.
 //                 */
@@ -1019,4 +1082,5 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, FermatException.wrapException(ex), null, null);
         }
     }
+
 }

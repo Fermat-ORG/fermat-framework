@@ -17,7 +17,7 @@
     <string name="Intra_user_dialog">This params helps you configure your Fermat network identity location.</string>
     <string name="intra_user_desc">*Set Accuracy in Kms: This is the range of precision to show where you\'re located on the Fermat network. \n *Select Frequency: This is the rate of how often the location is updated.</string>
     <string name="start">Start</string>
-    <string name="Intra_identity_desc">* Managing your identity. \n * Setting your own phrase and sharing it with all the Fermat users.</string>
+    <string name="Intra_identity_desc">* Managing your identity. \n* Setting your own photo and sharing it with all the Fermat users.</string>
     <string name="intra_identity">This app helps you create your Fermat network identity. Its main features include:</string>
     <string name="accept_text">Accept</string>
     <string name="accepted">Accepted</string>
