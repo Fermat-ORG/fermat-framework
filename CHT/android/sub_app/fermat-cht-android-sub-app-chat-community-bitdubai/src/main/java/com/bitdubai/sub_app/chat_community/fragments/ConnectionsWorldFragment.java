@@ -40,7 +40,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
@@ -54,18 +53,14 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
-import com.bitdubai.sub_app.chat_community.app_connection.ChatCommunityFermatAppConnection;
 import com.bitdubai.sub_app.chat_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.SearchAliasDialog;
@@ -74,11 +69,9 @@ import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.makeText;
 
 /**
  * ConnectionsWorldFragment
@@ -353,57 +346,6 @@ public class ConnectionsWorldFragment
                     }
                 };
                 worker.setContext(getActivity());
-//                worker.setCallBack(new FermatWorkerCallBack() {
-//                    @SuppressWarnings("unchecked")
-//                    @Override
-//                    public void onPostExecute(Object... result) {
-//                        isRefreshing = false;
-//                        if (/*swipeRefresh != null &&*/ isAttached) {
-//                            //swipeRefresh.setRefreshing(false);
-//                            if (result != null &&
-//                                    result.length > 0) {
-//                                if (getActivity() != null && adapter != null) {
-//                                    if (offset == 0) {
-//                                        if (lstChatUserInformations != null) {
-//                                            lstChatUserInformations.clear();
-//                                            lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
-//                                        } else {
-//                                            lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
-//                                        }
-//                                        adapter.refreshEvents((ArrayList<ChatActorCommunityInformation>) result[0]);
-//                                    } else {
-//                                        ArrayList<ChatActorCommunityInformation> temp = (ArrayList<ChatActorCommunityInformation>) result[0];
-//                                        for (ChatActorCommunityInformation info : temp)
-//                                            if (notInList(info)) {
-//                                                lstChatUserInformations.add(info);
-//                                            }
-//                                        adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
-//                                    }
-//                                    if (lstChatUserInformations.isEmpty()) {
-//                                        showEmpty(true, emptyView);
-//                                    } else {
-//                                        showEmpty(false, emptyView);
-//                                    }
-//                                }
-//                            } else
-//                                showEmpty(true, emptyView);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onErrorOccurred(Exception ex) {
-//                        try {
-//                            isRefreshing = false;
-//                            /*if (swipeRefresh != null && isAttached)
-//                                swipeRefresh.setRefreshing(false);*/
-//                            worker.shutdownNow();
-//                            if (getActivity() != null)
-//                                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
                 worker.execute();
             }
         } catch (Exception ignore) {
@@ -452,12 +394,8 @@ public class ConnectionsWorldFragment
     private List<ChatActorCommunityInformation> getMoreDataAsync(DeviceLocation location, double distance, String alias, int max, int offset) {
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
-//            List<ChatActorCommunityInformation> result;
             if (identity != null) {
-                moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
-                        location, distance, alias, max, offset, identity.getPublicKey());
-//                dataSet.addAll(result);
-//                offset = dataSet.size();
+                moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(), location, distance, alias, max, offset, identity.getPublicKey());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -488,12 +426,12 @@ public class ConnectionsWorldFragment
                 if (getActivity() != null && adapter != null) {
                     if (offset == 0) {
 
-                        if (lstChatUserInformations != null)
+                        if (lstChatUserInformations != null) {
                             lstChatUserInformations.clear();
-                        else
-                            lstChatUserInformations = new ArrayList<>();
+                            lstChatUserInformations.addAll(profilesList);
+                        } else
+                            lstChatUserInformations = new ArrayList<>(profilesList);
 
-                        lstChatUserInformations.addAll(profilesList);
                         adapter.refreshEvents(lstChatUserInformations);
                     } else {
                         for (ChatActorCommunityInformation info : profilesList)
