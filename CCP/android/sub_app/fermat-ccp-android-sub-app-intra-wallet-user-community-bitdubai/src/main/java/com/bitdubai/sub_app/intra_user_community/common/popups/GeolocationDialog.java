@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.intra_user_community.common.popups;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
     import android.view.Window;
@@ -141,51 +142,58 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     public void onRefresh()
     {
 
-            FermatWorker worker = new FermatWorker()
-            {
-                @Override
-                protected Object doInBackground() throws Exception
-                {
-                    return getMoreData(searchInput.getText().toString());
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack()
-            {
-                @SuppressWarnings("unchecked")
+        final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
+        connectionsProgressDialog.setMessage("Please Wait...");
+        connectionsProgressDialog.setCancelable(false);
+        connectionsProgressDialog.show();
 
-                @Override
-                public void onPostExecute(Object... result)
+        FermatWorker worker = new FermatWorker()
+        {
+            @Override
+            protected Object doInBackground() throws Exception
+            {
+                return getMoreData(searchInput.getText().toString());
+            }
+        };
+        worker.setContext(getActivity());
+        worker.setCallBack(new FermatWorkerCallBack()
+        {
+            @SuppressWarnings("unchecked")
+
+            @Override
+            public void onPostExecute(Object... result)
+            {
+                connectionsProgressDialog.dismiss();
+                if (result != null &&
+                        result.length > 0)
                 {
-                    if (result != null &&
-                            result.length > 0)
+                    if (getActivity()!= null && adapter != null)
                     {
-                        if (getActivity()!= null && adapter != null)
+                        lstChatUserInformations = (ArrayList<ExtendedCity>) result[0];
+                        adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
+                        mListView.setAdapter(adapter);
+                        adapter.refreshEvents(lstChatUserInformations);
+                        if (lstChatUserInformations.isEmpty())
                         {
-                            lstChatUserInformations = (ArrayList<ExtendedCity>) result[0];
-                            adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
-                            mListView.setAdapter(adapter);
-                            adapter.refreshEvents(lstChatUserInformations);
-                            if (lstChatUserInformations.isEmpty())
-                            {
-                                showEmpty(true, emptyView);
-                            } else
-                            {
-                                showEmpty(false, emptyView);
-                            }
+                            showEmpty(true, emptyView);
+                        } else
+                        {
+                            showEmpty(false, emptyView);
                         }
-                    } else
-                        showEmpty(true, emptyView);
-                }
+                    }
+                } else
+                    showEmpty(true, emptyView);
+            }
 
-                @Override
-                 public void onErrorOccurred(Exception ex)
-                {
-                    if (getActivity() != null)
-                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-                }
-            });
-            worker.execute();
+            @Override
+            public void onErrorOccurred(Exception ex)
+            {
+                connectionsProgressDialog.dismiss();
+                if (getActivity() != null)
+                    errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            }
+        });
+        worker.execute();
     }
 
     private synchronized List<ExtendedCity> getMoreData(String filter) {
