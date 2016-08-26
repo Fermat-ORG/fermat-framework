@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -166,6 +165,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                     messageMetadataRecord.setTransactionId(UUID.randomUUID());
                     messageMetadataRecord.setMessageStatus(MessageStatus.CREATED);
                     messageMetadataRecord.setDate(new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Timestamp(System.currentTimeMillis())));
+                    messageMetadataRecord.setChatMessageTransactionType(chatMessageTransactionType);
                     getChatMetadataRecordDAO().createNotification(messageMetadataRecord);
 
                     launchIncomingMessageNotification(messageMetadataRecord);
@@ -179,6 +179,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                             if(messageMetadataRecord != null) {
                                     if (messageStatus != null) {
                                         messageMetadataRecord.setMessageStatus(messageStatus);
+                                        messageMetadataRecord.setChatMessageTransactionType(chatMessageTransactionType);
                                         getChatMetadataRecordDAO().update(messageMetadataRecord);
                                     }else break;
 
@@ -372,29 +373,17 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
         return getIdentity().getPublicKey();
     }
 
-    private Actors getActorByPlatformComponentType(PlatformComponentType platformComponentType) {
-
-        switch (platformComponentType) {
-            case ACTOR_CHAT:
-                return Actors.CHAT;
-            default:
-                return Actors.CHAT;
-        }
-    }
-
     private UUID sendMessage(final String jsonMessage,
                              final String identityPublicKey,
-                             final Actors identityType,
-                             final String actorPublicKey,
-                             final Actors actorType) {
+                             final String actorPublicKey) {
 
         try {
             ActorProfile sender = new ActorProfile();
-            sender.setActorType(identityType.getCode());
+            sender.setActorType(Actors.CHAT.getCode());
             sender.setIdentityPublicKey(identityPublicKey);
 
             ActorProfile receiver = new ActorProfile();
-            receiver.setActorType(actorType.getCode());
+            receiver.setActorType(Actors.CHAT.getCode());
             receiver.setIdentityPublicKey(actorPublicKey);
 
             return sendNewMessage(
@@ -410,20 +399,15 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
     }
 
     @Override
-    public void sendWritingStatus(final String localActorPubKey, final PlatformComponentType senderType, final String remoteActorPubKey, final PlatformComponentType receiverType, final UUID chatId) throws CantSendChatMessageNewStatusNotificationException {
+    public void sendWritingStatus(final String localActorPubKey, final String remoteActorPubKey, final UUID chatId) throws CantSendChatMessageNewStatusNotificationException {
         try {
 
             if (localActorPubKey == null || localActorPubKey.length() == 0) {
                 throw new IllegalArgumentException("Argument localActorPubKey can not be null");
             }
-            if (senderType == null) {
-                throw new IllegalArgumentException("Argument senderType can not be null");
-            }
+
             if (remoteActorPubKey == null || remoteActorPubKey.length() == 0) {
                 throw new IllegalArgumentException("Argument remoteActorPubKey can not be null");
-            }
-            if (receiverType == null) {
-                throw new IllegalArgumentException("Argument receiverType can not be null");
             }
 
             final String msjContent = EncodeMsjContent.encodeMSjContentTransactionWritingNotification(
@@ -433,9 +417,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             sendMessage(
                     msjContent,
                     localActorPubKey,
-                    getActorByPlatformComponentType(senderType),
-                    remoteActorPubKey,
-                    getActorByPlatformComponentType(receiverType)
+                    remoteActorPubKey
             );
 
         } catch (Exception e) {
@@ -476,9 +458,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                 throw new IllegalArgumentException("Argument remoteActorPubKey can not be null");
             }
             messageMetadataRecord.setLocalActorPublicKey(localActorPubKey);
-            messageMetadataRecord.setLocalActorType(messageMetadata.getLocalActorType());
             messageMetadataRecord.setRemoteActorPublicKey(remoteActorPubKey);
-            messageMetadataRecord.setRemoteActorType(messageMetadata.getRemoteActorType());
             messageMetadataRecord.setDate(messageMetadata.getDate());
             messageMetadataRecord.setMessageStatus(messageMetadata.getMessageStatus());
             messageMetadataRecord.setMessage(messageMetadata.getMessage());
@@ -493,9 +473,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             UUID transactionId = sendMessage(
                     EncodedMsg,
                     messageMetadataRecord.getLocalActorPublicKey(),
-                    Actors.CHAT,
-                    messageMetadataRecord.getRemoteActorPublicKey(),
-                    Actors.CHAT);
+                    messageMetadataRecord.getRemoteActorPublicKey()
+            );
             messageMetadataRecord.setTransactionId(transactionId);
             messageMetadataRecord.setChatMessageTransactionType(ChatMessageTransactionType.MESSAGE_METADATA_TRANSMIT);
             getChatMetadataRecordDAO().createNotification(messageMetadataRecord);
@@ -524,21 +503,17 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
     }
 
     @Override
-    public void sendMessageStatusUpdate(String localActorPubKey, PlatformComponentType senderType, String remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus distributionStatus, MessageStatus messageStatus, UUID chatId, UUID messageID) throws CantSendChatMessageNewStatusNotificationException {
+    public void sendMessageStatusUpdate(String localActorPubKey, String remoteActorPubKey, DistributionStatus distributionStatus, MessageStatus messageStatus, UUID chatId, UUID messageID) throws CantSendChatMessageNewStatusNotificationException {
         try {
 
             if (localActorPubKey == null || localActorPubKey.length() == 0) {
                 throw new IllegalArgumentException("Argument localActorPubKey can not be null");
             }
-            if (senderType == null) {
-                throw new IllegalArgumentException("Argument senderType can not be null");
-            }
+
             if (remoteActorPubKey == null || remoteActorPubKey.length() == 0) {
                 throw new IllegalArgumentException("Argument remoteActorPubKey can not be null");
             }
-            if (receiverType == null) {
-                throw new IllegalArgumentException("Argument receiverType can not be null");
-            }
+
             if (messageStatus == null) {
                 throw new IllegalArgumentException("Argument messageStatus can not be null");
             }
@@ -554,17 +529,13 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             );
 
             messageMetadataRecord.setRemoteActorPublicKey(remoteActorPubKey);
-            messageMetadataRecord.setRemoteActorType(receiverType);
             messageMetadataRecord.setLocalActorPublicKey(localActorPubKey);
-            messageMetadataRecord.setLocalActorType(senderType);
             if (!messageMetadataRecord.getMessageStatus().getCode().equals(messageStatus.getCode())) {
                 messageMetadataRecord.setMessageStatus(messageStatus);
                 UUID transactionId = sendMessage(
                         msjContent,
                         localActorPubKey,
-                        getActorByPlatformComponentType(senderType),
-                        remoteActorPubKey,
-                        getActorByPlatformComponentType(receiverType)
+                        remoteActorPubKey
                 );
                 messageMetadataRecord.setTransactionId(transactionId);
                 messageMetadataRecord.setChatMessageTransactionType(ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE);

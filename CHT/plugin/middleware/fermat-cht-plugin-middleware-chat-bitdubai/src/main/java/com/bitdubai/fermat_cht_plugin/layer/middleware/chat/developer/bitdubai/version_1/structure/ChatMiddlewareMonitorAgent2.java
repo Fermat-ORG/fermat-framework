@@ -807,9 +807,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
             chat.setChatId(UUID.randomUUID());
             chat.setObjectId(UUID.randomUUID());
             chat.setLocalActorPublicKey(messageMetadata.getRemoteActorPublicKey());
-            chat.setLocalActorType(messageMetadata.getRemoteActorType());
             chat.setRemoteActorPublicKey(messageMetadata.getLocalActorPublicKey());
-            chat.setRemoteActorType(messageMetadata.getLocalActorType());
             Long dv = System.currentTimeMillis();
             chat.setDate(new Timestamp(dv));
             chat.setTypeChat(TypeChat.INDIVIDUAL);
@@ -913,9 +911,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
         return new ChatImpl(
                 chatMetadata.getChatId(),
                 chatMetadata.getObjectId(),
-                chatMetadata.getRemoteActorType(),
                 chatMetadata.getRemoteActorPublicKey(),
-                chatMetadata.getLocalActorType(),
                 chatMetadata.getLocalActorPublicKey(),
                 chatMetadata.getChatName(),
                 ChatStatus.VISSIBLE,

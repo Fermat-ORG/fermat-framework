@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.mocks;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
@@ -43,16 +42,6 @@ public class ChatMock implements Chat {
     }
 
     @Override
-    public PlatformComponentType getLocalActorType() {
-        return PlatformComponentType.NETWORK_SERVICE;
-    }
-
-    @Override
-    public void setLocalActorType(PlatformComponentType localActorType) {
-
-    }
-
-    @Override
     public String getLocalActorPublicKey() {
         return this.localActorPubKey;
     }
@@ -60,16 +49,6 @@ public class ChatMock implements Chat {
     @Override
     public void setLocalActorPublicKey(String localActorPublicKey) {
         this.localActorPubKey = localActorPublicKey;
-    }
-
-    @Override
-    public PlatformComponentType getRemoteActorType() {
-        return PlatformComponentType.NETWORK_SERVICE;
-    }
-
-    @Override
-    public void setRemoteActorType(PlatformComponentType remoteActorType) {
-
     }
 
     @Override

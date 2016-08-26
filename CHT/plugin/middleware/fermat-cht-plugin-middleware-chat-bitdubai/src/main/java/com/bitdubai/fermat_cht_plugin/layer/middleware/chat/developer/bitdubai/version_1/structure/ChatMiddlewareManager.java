@@ -599,9 +599,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             String remoteActorPublicKey = chat.getRemoteActorPublicKey();
             networkServiceChatManager.sendMessageStatusUpdate(
                     localActorPublicKey,
-                    chat.getLocalActorType(),
                     remoteActorPublicKey,
-                    chat.getRemoteActorType(),
                     DistributionStatus.DELIVERED,
                     MessageStatus.READ,
                     chat.getChatId(),
@@ -626,9 +624,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             String remoteActorPublicKey = chat.getRemoteActorPublicKey();
             networkServiceChatManager.sendMessageStatusUpdate(
                     localActorPublicKey,
-                    chat.getLocalActorType(),
                     remoteActorPublicKey,
-                    chat.getRemoteActorType(),
                     DistributionStatus.DELIVERED,
                     MessageStatus.DELIVERED,
                     chat.getChatId(),
@@ -657,9 +653,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             String remoteActorPublicKey = chat.getRemoteActorPublicKey();
             networkServiceChatManager.sendWritingStatus(
                     localActorPublicKey,
-                    chat.getLocalActorType(),
                     remoteActorPublicKey,
-                    chat.getRemoteActorType(),
                     chat.getChatId()
             );
 //            chatMiddlewareDatabaseDao.saveWritingAction(chatId, ActionState.PENDING);
@@ -794,9 +788,8 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
             try {
 
-                MessageMetadata messageMetadata = new MessageMetadataRecord(chat.getLocalActorType(),
+                MessageMetadata messageMetadata = new MessageMetadataRecord(
                         chat.getLocalActorPublicKey(),
-                        chat.getRemoteActorType(),
                         chat.getRemoteActorPublicKey(),
                         createdMessage.getMessageId(),
                         createdMessage.getMessage(),

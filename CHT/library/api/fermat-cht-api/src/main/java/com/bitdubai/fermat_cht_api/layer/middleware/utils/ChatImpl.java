@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
@@ -23,9 +22,7 @@ public class ChatImpl implements Chat {
     //TODO: Documentar
     private UUID chatId;
     private UUID objectId;
-    private PlatformComponentType localActorType;
     private String localActorPublicKey;
-    private PlatformComponentType remoteActorType;
     private String remoteActorPublicKey;
     private String chatName;
     private ChatStatus status;
@@ -50,9 +47,7 @@ public class ChatImpl implements Chat {
      *
      * @param chatId
      * @param objectId
-     * @param localActorType
      * @param localActorPublicKey
-     * @param remoteActorType
      * @param remoteActorPublicKey
      * @param chatName
      * @param status
@@ -61,9 +56,7 @@ public class ChatImpl implements Chat {
      */
     public ChatImpl(UUID chatId,
                     UUID objectId,
-                    PlatformComponentType localActorType,
                     String localActorPublicKey,
-                    PlatformComponentType remoteActorType,
                     String remoteActorPublicKey,
                     String chatName,
                     ChatStatus status,
@@ -74,9 +67,7 @@ public class ChatImpl implements Chat {
     ) {
         this.chatId = chatId;
         this.objectId = objectId;
-        this.localActorType = localActorType;
         this.localActorPublicKey = localActorPublicKey;
-        this.remoteActorType = remoteActorType;
         this.remoteActorPublicKey = remoteActorPublicKey;
         this.chatName = chatName;
         this.status = status;
@@ -107,16 +98,6 @@ public class ChatImpl implements Chat {
     }
 
     @Override
-    public PlatformComponentType getLocalActorType() {
-        return localActorType;
-    }
-
-    @Override
-    public void setLocalActorType(PlatformComponentType localActorType) {
-        this.localActorType = localActorType;
-    }
-
-    @Override
     public String getLocalActorPublicKey() {
         return localActorPublicKey;
     }
@@ -124,16 +105,6 @@ public class ChatImpl implements Chat {
     @Override
     public void setLocalActorPublicKey(String localActorPublicKey) {
         this.localActorPublicKey = localActorPublicKey;
-    }
-
-    @Override
-    public PlatformComponentType getRemoteActorType() {
-        return this.remoteActorType;
-    }
-
-    @Override
-    public void setRemoteActorType(PlatformComponentType remoteActorType) {
-        this.remoteActorType = remoteActorType;
     }
 
     @Override
@@ -318,6 +289,6 @@ public class ChatImpl implements Chat {
 
     @Override
     public String toString() {
-        return "ChatImpl{" + "chatId=" + chatId + ", objectId=" + objectId + ", localActorType=" + localActorType + ", localActorPublicKey='" + localActorPublicKey + '\'' + ", remoteActorType=" + remoteActorType + ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' + ", chatName='" + chatName + '\'' + ", status=" + status + ", date=" + date + ", lastMessageDate=" + lastMessageDate + ", contactAssociated=" + contactAssociated + '}';
+        return "ChatImpl{" + "chatId=" + chatId + ", objectId=" + objectId + ", localActorPublicKey='" + localActorPublicKey + '\'' + ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' + ", chatName='" + chatName + '\'' + ", status=" + status + ", date=" + date + ", lastMessageDate=" + lastMessageDate + ", contactAssociated=" + contactAssociated + '}';
     }
 }
