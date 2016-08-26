@@ -3,7 +3,6 @@ package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Country;
-import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -176,6 +175,17 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      */
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
     List<IntraUserInformation> getAllIntraUsers(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+
+    /**
+     * The method <code>getAllIntraUsers</code> returns the list of all intra users registered by the
+     * logged in intra user if location match
+     *
+     * @return the list of intra users connected to the logged in intra user
+     * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
+     */
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
+    List<IntraUserInformation> getAllIntraUsersByLocation(String identityPublicKey,int max,int offset, String country, String city) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+
 
     /**
      * The method <code>getIntraUsersWaitingYourAcceptance</code> returns the list of intra users waiting to be accepted

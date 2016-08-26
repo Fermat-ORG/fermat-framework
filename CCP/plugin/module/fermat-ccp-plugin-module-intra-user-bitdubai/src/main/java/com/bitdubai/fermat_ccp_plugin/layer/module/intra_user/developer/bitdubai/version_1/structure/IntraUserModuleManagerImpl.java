@@ -2,8 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
@@ -62,7 +62,6 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.exceptions.CantLoadLoginsFileException;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.utils.IntraUserSettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
@@ -651,6 +650,33 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
 
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getAllIntraWalletUsers(identityPublicKey, max, offset);
+
+            for (IntraWalletUserActor intraUserActor : actorsList) {
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPhrase(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),ProfileStatus.ONLINE,intraUserActor.getContactRegistrationDate(),intraUserActor.getCity(),intraUserActor.getCountry(),null));
+            }
+            return intraUserList;
+        } catch (CantGetIntraWalletUsersException e) {
+            throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER", FermatException.wrapException(e), "", "unknown exception");
+        }
+    }
+
+    /**
+     * That method returns the list of all intra users registered by the
+     * logged in intra user
+     *
+     * @return the list of intra users connected to the logged in intra user
+     * @throws CantGetIntraUsersListException
+     */
+    @Override
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
+    public List<IntraUserInformation> getAllIntraUsersByLocation(String identityPublicKey, int max, int offset, String country, String city) throws CantGetIntraUsersListException {
+        try {
+            List<IntraUserInformation> intraUserList = new ArrayList<IntraUserInformation>();
+
+
+            List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getAllIntraWalletUsersbyLocation(identityPublicKey, max, offset, country, city);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
                 intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPhrase(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),ProfileStatus.ONLINE,intraUserActor.getContactRegistrationDate(),intraUserActor.getCity(),intraUserActor.getCountry(),null));
