@@ -334,6 +334,11 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             Message message = chatMiddlewareDatabaseDao.getMessageByMessageId(messageMetadata.getMessageId());
             message.setStatus(MessageStatus.CANNOT_SEND);
             chatMiddlewareDatabaseDao.saveMessage(message);
+            FermatBundle fermatBundle2 = new FermatBundle();
+            fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+            fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+            fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
         } catch (CantGetMessageException e) {
             e.printStackTrace();
         } catch (DatabaseOperationException e) {
