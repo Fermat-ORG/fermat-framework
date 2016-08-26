@@ -251,7 +251,11 @@ public class IntraWalletUserActorDao {
             /**
              * Persist profile image on a file
              */
-            if(profileImage!=null && profileImage.length > 0) persistNewUserProfileImage(intraUserToUpdatePublicKey, profileImage);
+            if(profileImage!=null)
+                if (profileImage.length > 0){
+                    deleteUserProfileImage(intraUserToUpdatePublicKey,profileImage);
+                    persistNewUserProfileImage(intraUserToUpdatePublicKey, profileImage);
+                }
 
 
 
@@ -620,6 +624,28 @@ public class IntraWalletUserActorDao {
     /**
      * Private Methods
      */
+
+    private void deleteUserProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException,FileNotFoundException {
+
+        try {
+
+            this.pluginFileSystem.deleteBinaryFile(pluginId,
+                    PROFILE_IMAGE_DIRECTORY_NAME,
+                    buildProfileImageFileName(publicKey),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+        }catch (FileNotFoundException e){
+            throw new FileNotFoundException("File not found",e);
+        } catch (CantCreateFileException e) {
+
+            throw new CantPersistProfileImageException(e, "Error Delete file.", null);
+        } catch (Exception e) {
+
+            throw new CantPersistProfileImageException(FermatException.wrapException(e), "", "");
+        }
+    }
 
 
     private void persistNewUserProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {

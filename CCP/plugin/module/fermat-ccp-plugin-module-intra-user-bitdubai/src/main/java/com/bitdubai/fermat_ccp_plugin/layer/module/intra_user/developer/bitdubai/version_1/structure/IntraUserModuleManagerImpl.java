@@ -394,19 +394,23 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                     if (intraUserSuggestionsLst.getPublicKey().equals(intraUserConnectedLst.getPublicKey())){
                         byte[] img1 = intraUserSuggestionsLst.getProfileImage();
                         byte[] img2 = intraUserConnectedLst.getProfileImage();
+                        boolean a = false;
+                        if (img1==img2)
+                             a = true;
+
                         if (!intraUserSuggestionsLst.getCity().equals(intraUserConnectedLst.getCity()) ||
                             !intraUserSuggestionsLst.getCountry().equals(intraUserConnectedLst.getCountry()) ||
                             !intraUserSuggestionsLst.getPhrase().equals(intraUserConnectedLst.getPhrase()) ||
                             !intraUserSuggestionsLst.getName().equals(intraUserConnectedLst.getName()) ||
-                            !Arrays.areEqual(intraUserSuggestionsLst.getProfileImage(),intraUserConnectedLst.getProfileImage())){
+                            intraUserSuggestionsLst.getProfileImage() != intraUserConnectedLst.getProfileImage()){
 
-                                intraWalletUserManager.updateIntraWalletUserdata(
-                                        intraUserConnectedLst.getPublicKey(),
-                                        intraUserSuggestionsLst.getName(),
-                                        intraUserSuggestionsLst.getPhrase(),
-                                        intraUserSuggestionsLst.getProfileImage(),
-                                        intraUserSuggestionsLst.getCity(),
-                                        intraUserSuggestionsLst.getCountry());
+                                            intraWalletUserManager.updateIntraWalletUserdata(
+                                                intraUserConnectedLst.getPublicKey(),
+                                                intraUserSuggestionsLst.getName(),
+                                                intraUserSuggestionsLst.getPhrase(),
+                                                intraUserSuggestionsLst.getProfileImage(),
+                                                intraUserSuggestionsLst.getCity(),
+                                                intraUserSuggestionsLst.getCountry());
 
                         }
 
