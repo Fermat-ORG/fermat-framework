@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseAggregateFunctionType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseTableOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseAggregateFunction;
@@ -103,7 +102,28 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
     @Override
     public long getCount() throws CantLoadTableToMemoryException {
-        return this.records.size();
+
+        Cursor cursor = null;
+
+        SQLiteDatabase database = null;
+        try {
+            database = this.database.getReadableDatabase();
+            String queryString = "SELECT COUNT(*) FROM " + tableName + makeFilter();
+            cursor = database.rawQuery(queryString, null);
+            if (cursor.moveToNext()) {
+                return cursor.getLong(0);
+            } else {
+                return 0;
+            }
+        } catch (Exception e) {
+
+            throw new CantLoadTableToMemoryException(e, null, "Check the cause for this error");
+        } finally {
+            if (cursor != null)
+                cursor.close();
+            if (database != null)
+                database.close();
+        }
     }
 
     /**

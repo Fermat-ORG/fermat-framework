@@ -241,9 +241,9 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
 //            if (data.getState().equals("null") || data.getState().equals(""))
         stateAddress = "";
 //            else stateAddress = data.getState() + " ";
-        if (data.getCity().equals("null") || data.getCity().equals("")) cityAddress = "";
+        if (data.getCity() == null || data.getCity().equals("null") || data.getCity().equals("")) cityAddress = "";
         else cityAddress = data.getCity() + ", ";
-        if (data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
+        if (data.getCountry() == null || data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
         else countryAddress = data.getCountry();
         if (/*stateAddress.equalsIgnoreCase("") &&*/ cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
             holder.location_text.setText(context.getResources().getString(R.string.cht_comm_not_found));

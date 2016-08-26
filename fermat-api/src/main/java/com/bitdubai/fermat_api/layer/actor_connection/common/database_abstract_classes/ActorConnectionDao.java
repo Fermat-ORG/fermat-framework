@@ -361,6 +361,41 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
         }
     }
 
+    public T getActorConnection(Z linkedIdentity, String publicKey) throws CantListActorConnectionsException, ActorConnectionNotFoundException {
+
+        try {
+
+            DatabaseTable actorConnectionsTable = getActorConnectionsTable();
+
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, linkedIdentity.getActorType(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+
+            actorConnectionsTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+
+
+            if (records.size() > 0)
+                return buildActorConnectionNewRecord(records.get(0));
+            else
+                throw new ActorConnectionNotFoundException("publicKey:"+publicKey, "Actor connection not found with the given public key.");
+
+        } catch (ActorConnectionNotFoundException e) {
+
+            throw e;
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantListActorConnectionsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException exception) {
+
+            throw new CantListActorConnectionsException(exception, " ", "Invalid data, we can't get the information for an element of any of the enums used.");
+        } catch (Exception exception) {
+
+            throw new CantListActorConnectionsException(exception, " ", "Unhandled Error");
+        }
+    }
+
     protected DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord record,
                                                       final T actorConnection) {
 

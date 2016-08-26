@@ -13,7 +13,6 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unexpect
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
@@ -23,15 +22,18 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.Settings
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_cht_api.all_definition.enums.BundleQuery;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
-import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
@@ -91,30 +93,27 @@ public class ChatActorCommunityManager
     private final ChatIdentityManager chatIdentityManager;
     private final ChatActorConnectionManager chatActorConnectionManager;
     private final ChatManager chatActorNetworkServiceManager;
+    private Broadcaster broadcaster;
+
     private String subAppPublicKey;
     private final ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot;
-    private final PluginFileSystem pluginFileSystem;
-    private final UUID pluginId;
-    private final PluginVersionReference pluginVersionReference;
     private final GeolocationManager geolocationManager;
     private final LocationManager locationManager;
 
     public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager,
                                      ChatActorConnectionManager chatActorConnectionManager,
                                      ChatManager chatActorNetworkServiceManager,
+                                     Broadcaster broadcaster,
                                      ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot,
                                      PluginFileSystem pluginFileSystem, UUID pluginId,
-                                     PluginVersionReference pluginVersionReference,
                                      GeolocationManager geolocationManager,
                                      LocationManager locationManager) {
         super(pluginFileSystem, pluginId);
         this.chatIdentityManager = chatIdentityManager;
         this.chatActorConnectionManager = chatActorConnectionManager;
         this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
+        this.broadcaster = broadcaster;
         this.chatActorCommunitySubAppModulePluginRoot = chatActorCommunitySubAppModulePluginRoot;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
-        this.pluginVersionReference = pluginVersionReference;
         this.geolocationManager = geolocationManager;
         this.locationManager = locationManager;
     }
@@ -651,4 +650,74 @@ public class ChatActorCommunityManager
         return notifications;
     }
 
+    public void handleActorListReceivedEvent(List<ChatExposingData> actorProfileList) throws FermatException {
+
+        System.out.println("CHAT ACTOR LIST FLOW -> handleActorListReceivedEvent -> INIT");
+
+        List<ChatActorCommunityInformation> worldActorList = new ArrayList<>();
+
+        final ChatActorCommunitySelectableIdentity selectableIdentity = getSelectedActorIdentity();
+
+        final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(selectableIdentity.getPublicKey(), selectableIdentity.getActorType());
+        final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
+
+        ConnectionState connectionState;
+        UUID connectionID;
+        String country, city, state;
+
+        for (ChatExposingData worldActor : actorProfileList) {
+
+            country = "--";
+            city = "--";
+            state = "--";
+            final Location location = worldActor.getLocation();
+            try {
+                if(location!=null) {
+                    //if(location.getLatitude() != null && location.getAltitude() != null) {
+                    final Address address = geolocationManager.getAddressByCoordinate(location.getLatitude(), location.getLongitude());
+                    country = address.getCountry();
+                    city = address.getCity().equals("null") ? address.getCounty() : address.getCity();
+                    state = address.getState().equals("null") ? address.getCounty() : address.getState();
+                    //}
+                }
+            } catch (CantCreateAddressException ignore) {
+            }
+            try {
+
+                ChatActorConnection connectedActor = search.getSingleResult(worldActor.getPublicKey());
+
+                connectionState = connectedActor.getConnectionState();
+                connectionID = connectedActor.getConnectionId();
+            } catch (ActorConnectionNotFoundException ex) {
+                connectionState = null;
+                connectionID = null;
+            }
+
+            worldActorList.add(
+                    new ChatActorCommunitySubAppModuleInformationImpl(
+                            worldActor.getPublicKey(),
+                            worldActor.getAlias(),
+                            worldActor.getImage(),
+                            connectionState,
+                            connectionID,
+                            worldActor.getStatus(),
+                            country,
+                            state,
+                            city,
+                            location,
+                            worldActor.getStatusConnected()
+                    )
+            );
+
+            System.out.println("************** Actor Chat Register: " + worldActor.getAlias() + " - " + worldActor.getStatus() + " - " + worldActor.getStatusConnected());
+
+        }
+
+        FermatBundle bundle = new FermatBundle();
+        bundle.put("worldActorList", worldActorList);
+
+        System.out.println("CHAT ACTOR LIST FLOW -> handleActorListReceivedEvent -> END");
+
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, bundle, BundleQuery.LISTACTORS.getCode());
+    }
 }

@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventLi
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatActorListReceivedEvent;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatConnectionRequestNewEvent;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatConnectionRequestUpdatesEvent;
 import com.bitdubai.fermat_cht_api.layer.middleware.event.IncomingChatMessageNotificationEvent;
@@ -31,6 +32,11 @@ public enum EventType implements FermatEventEnum {
     /**
      * ACTOR CONNECTION
      */
+    CHAT_ACTOR_LIST_RECEIVED("CALR") {
+        public final FermatEvent getNewEvent() {
+            return new ChatActorListReceivedEvent(this);
+        }
+    },
     CHAT_ACTOR_CONNECTION_REQUEST_NEW("CACRN") {
         public final FermatEvent getNewEvent() {
             return new ChatConnectionRequestNewEvent(this);

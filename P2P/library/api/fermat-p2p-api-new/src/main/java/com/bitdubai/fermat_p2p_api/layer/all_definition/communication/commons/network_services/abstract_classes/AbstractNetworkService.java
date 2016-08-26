@@ -500,17 +500,4 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         return networkServiceType;
     }
 
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    public void setP2PLayerManager(P2PLayerManager p2PLayerManager) {
-        this.p2PLayerManager = p2PLayerManager;
-    }
-
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-
 }

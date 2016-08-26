@@ -53,11 +53,14 @@ import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocati
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
@@ -71,6 +74,7 @@ import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -97,17 +101,15 @@ public class ConnectionsWorldFragment
     //Managers
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ChatCommunityFermatAppConnection appConnection;
     FermatApplicationCaller applicationsHelper;
     //Data
-    private ChatActorCommunitySettings appSettings;
+
     private ChatActorCommunitySelectableIdentity identity;
     private int offset = 0;
     private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
     private DeviceLocation location = null;
     private double distance = 0;
     private String alias;
-    Location locationGPS;
 
     //Flags
     private boolean isRefreshing = false, launchActorCreationDialog = false, launchListIdentitiesDialog = false;
@@ -121,7 +123,6 @@ public class ConnectionsWorldFragment
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
     private CommunityListAdapter adapter;
-    private SwipeRefreshLayout swipeRefresh;
     private ExecutorService executor;
     TextView noDatalabel;
     ImageView noData;
@@ -192,7 +193,7 @@ public class ConnectionsWorldFragment
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
             applicationsHelper = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
             //Obtain Settings or create new Settings if first time opening subApp
-            appSettings = null;
+            ChatActorCommunitySettings appSettings;
             try {
                 appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
@@ -352,57 +353,57 @@ public class ConnectionsWorldFragment
                     }
                 };
                 worker.setContext(getActivity());
-                worker.setCallBack(new FermatWorkerCallBack() {
-                    @SuppressWarnings("unchecked")
-                    @Override
-                    public void onPostExecute(Object... result) {
-                        isRefreshing = false;
-                        if (/*swipeRefresh != null &&*/ isAttached) {
-                            //swipeRefresh.setRefreshing(false);
-                            if (result != null &&
-                                    result.length > 0) {
-                                if (getActivity() != null && adapter != null) {
-                                    if (offset == 0) {
-                                        if (lstChatUserInformations != null) {
-                                            lstChatUserInformations.clear();
-                                            lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
-                                        } else {
-                                            lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
-                                        }
-                                        adapter.refreshEvents((ArrayList<ChatActorCommunityInformation>) result[0]);
-                                    } else {
-                                        ArrayList<ChatActorCommunityInformation> temp = (ArrayList<ChatActorCommunityInformation>) result[0];
-                                        for (ChatActorCommunityInformation info : temp)
-                                            if (notInList(info)) {
-                                                lstChatUserInformations.add(info);
-                                            }
-                                        adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
-                                    }
-                                    if (lstChatUserInformations.isEmpty()) {
-                                        showEmpty(true, emptyView);
-                                    } else {
-                                        showEmpty(false, emptyView);
-                                    }
-                                }
-                            } else
-                                showEmpty(true, emptyView);
-                        }
-                    }
-
-                    @Override
-                    public void onErrorOccurred(Exception ex) {
-                        try {
-                            isRefreshing = false;
-                            /*if (swipeRefresh != null && isAttached)
-                                swipeRefresh.setRefreshing(false);*/
-                            worker.shutdownNow();
-                            if (getActivity() != null)
-                                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+//                worker.setCallBack(new FermatWorkerCallBack() {
+//                    @SuppressWarnings("unchecked")
+//                    @Override
+//                    public void onPostExecute(Object... result) {
+//                        isRefreshing = false;
+//                        if (/*swipeRefresh != null &&*/ isAttached) {
+//                            //swipeRefresh.setRefreshing(false);
+//                            if (result != null &&
+//                                    result.length > 0) {
+//                                if (getActivity() != null && adapter != null) {
+//                                    if (offset == 0) {
+//                                        if (lstChatUserInformations != null) {
+//                                            lstChatUserInformations.clear();
+//                                            lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
+//                                        } else {
+//                                            lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
+//                                        }
+//                                        adapter.refreshEvents((ArrayList<ChatActorCommunityInformation>) result[0]);
+//                                    } else {
+//                                        ArrayList<ChatActorCommunityInformation> temp = (ArrayList<ChatActorCommunityInformation>) result[0];
+//                                        for (ChatActorCommunityInformation info : temp)
+//                                            if (notInList(info)) {
+//                                                lstChatUserInformations.add(info);
+//                                            }
+//                                        adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
+//                                    }
+//                                    if (lstChatUserInformations.isEmpty()) {
+//                                        showEmpty(true, emptyView);
+//                                    } else {
+//                                        showEmpty(false, emptyView);
+//                                    }
+//                                }
+//                            } else
+//                                showEmpty(true, emptyView);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onErrorOccurred(Exception ex) {
+//                        try {
+//                            isRefreshing = false;
+//                            /*if (swipeRefresh != null && isAttached)
+//                                swipeRefresh.setRefreshing(false);*/
+//                            worker.shutdownNow();
+//                            if (getActivity() != null)
+//                                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
                 worker.execute();
             }
         } catch (Exception ignore) {
@@ -451,12 +452,12 @@ public class ConnectionsWorldFragment
     private List<ChatActorCommunityInformation> getMoreDataAsync(DeviceLocation location, double distance, String alias, int max, int offset) {
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
-            List<ChatActorCommunityInformation> result;
+//            List<ChatActorCommunityInformation> result;
             if (identity != null) {
-                result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
-                        location, distance, alias, max, offset);
-                dataSet.addAll(result);
-                offset = dataSet.size();
+                moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
+                        location, distance, alias, max, offset, identity.getPublicKey());
+//                dataSet.addAll(result);
+//                offset = dataSet.size();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -474,6 +475,47 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {
+    }
+
+    @Override
+    public void onUpdateView(FermatBundle bundle) {
+
+        try {
+            List<ChatActorCommunityInformation> profilesList = (List<ChatActorCommunityInformation>) bundle.get("worldActorList");
+
+            if (profilesList != null && profilesList.size() > 0) {
+
+                if (getActivity() != null && adapter != null) {
+                    if (offset == 0) {
+
+                        if (lstChatUserInformations != null)
+                            lstChatUserInformations.clear();
+                        else
+                            lstChatUserInformations = new ArrayList<>();
+
+                        lstChatUserInformations.addAll(profilesList);
+                        adapter.refreshEvents(lstChatUserInformations);
+                    } else {
+                        for (ChatActorCommunityInformation info : profilesList)
+                            if (notInList(info)) {
+                                lstChatUserInformations.add(info);
+                            }
+                        adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
+                    }
+                    if (lstChatUserInformations.isEmpty()) {
+                        showEmpty(true, emptyView);
+                    } else {
+                        showEmpty(false, emptyView);
+                    }
+                }
+            } else
+                showEmpty(true, emptyView);
+
+        } catch (Exception e) {
+            System.out.println("OOUPPS THERE WAS AN ERROR HERE - !");
+            e.printStackTrace();
+        }
+
     }
 
     @Override

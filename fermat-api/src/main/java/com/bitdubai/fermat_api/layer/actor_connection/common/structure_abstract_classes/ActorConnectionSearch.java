@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_classes.ActorConnectionDao;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -121,6 +122,11 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
         databaseTable.setFilterOffSet(offset.toString());
 
         return dao.listActorConnections(databaseTable);
+    }
+
+    public T getSingleResult(String publicKey) throws CantListActorConnectionsException, ActorConnectionNotFoundException {
+
+        return dao.getActorConnection(actorIdentity, publicKey);
     }
 
 }
