@@ -493,7 +493,7 @@ public class ChatActorCommunityManager
             }
             try {
 
-                ChatActorConnection connectedActor = search.getSingleResult(worldActor.getPublicKey());
+                ChatActorConnection connectedActor = search.findByPublicKey(worldActor.getPublicKey());
 
                 connectionState = connectedActor.getConnectionState();
                 connectionID = connectedActor.getConnectionId();

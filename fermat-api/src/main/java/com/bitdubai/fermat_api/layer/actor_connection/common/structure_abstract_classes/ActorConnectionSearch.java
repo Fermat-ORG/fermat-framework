@@ -126,7 +126,7 @@ public abstract class ActorConnectionSearch<T extends ActorConnection> {
         return dao.listActorConnections(databaseTable);
     }
 
-    public T getSingleResult(String publicKey) throws CantGetActorConnectionException, ActorConnectionNotFoundException {
+    public T findByPublicKey(String publicKey) throws CantGetActorConnectionException, ActorConnectionNotFoundException {
 
         return dao.getActorConnection(actorIdentity, publicKey);
     }
