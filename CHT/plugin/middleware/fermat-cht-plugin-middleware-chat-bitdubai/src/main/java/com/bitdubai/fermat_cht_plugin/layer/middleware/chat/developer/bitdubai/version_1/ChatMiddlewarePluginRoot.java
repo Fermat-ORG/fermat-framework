@@ -79,9 +79,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     LogManager logManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
-    private DeviceUserManager deviceUserManager;
-
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
@@ -275,7 +272,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     this.chatMiddlewareContactFactory,
                     this,
                     this.networkServiceChatManager,
-                    this.deviceUserManager,
                     this.networkServiceChatManager,
                     this.broadcaster,
                     chatActorConnectionManager

@@ -103,11 +103,10 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
     ChatMiddlewarePluginRoot chatMiddlewarePluginRoot;
     ChatManager chatActorNetworkServiceManager;
     PluginDatabaseSystem pluginDatabaseSystem;
-    public final int SLEEP_TIME = 5000; //2000;
+
     public final int DISCOVER_ITERATION_LIMIT = 2;
     int discoverIteration = 0;
     int iterationNumber = 0;
-    boolean threadWorking;
 
     public ChatMiddlewareMonitorAgent2(long sleepTime,
                                        TimeUnit timeUnit,

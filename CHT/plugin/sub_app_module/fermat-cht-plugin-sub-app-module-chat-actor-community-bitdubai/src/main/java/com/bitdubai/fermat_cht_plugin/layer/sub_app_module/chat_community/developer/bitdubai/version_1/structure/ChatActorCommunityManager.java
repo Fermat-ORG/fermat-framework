@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcce
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantCancelActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
@@ -16,9 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -47,7 +46,6 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantAcceptChatRequestException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantGetChtActorSearchResult;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatIdentitiesToSelectException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantRequestActorConnectionException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantValidateActorConnectionStateException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ChatActorCancellingFailedException;
@@ -60,24 +58,14 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCountryDependenciesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -118,134 +106,14 @@ public class ChatActorCommunityManager
         this.locationManager = locationManager;
     }
 
-    @Override
-    public List<ChatActorCommunityInformation> listWorldChatActor(String publicKey, Actors actorType, DeviceLocation deviceLocation, double distance, String alias, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
-        List<ChatActorCommunityInformation> worldActorList = null;
-        List<ChatActorConnection> actorConnections = null;
-        ConnectionState connectionState;
-        UUID connectionID;
-        String country, city, state;
-        try {
-            worldActorList = getChatActorSearch().getResult(publicKey, deviceLocation, distance, alias, offset, max);
-        } catch (CantGetChtActorSearchResult exception) {
-            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-        }
-
-        try {
-            if (publicKey != null && actorType != null) {
-                final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(publicKey, actorType);
-                final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
-
-                actorConnections = search.getResult(1000, 0);
-                //  actorConnections = search.getResult(Integer.MAX_VALUE, 0);
-            }//else linkedChatActorIdentity=null;
-        } catch (CantListActorConnectionsException exception) {
-            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-        }
-
-
-        if (worldActorList != null && worldActorList.size() > 0) {
-            for (int i = 0; i < worldActorList.size(); i++) {
-                ChatActorCommunityInformation worldActor= worldActorList.get(i);
-                country = "--";
-                city = "--";
-                state = "--";
-                connectionID = null;
-                connectionState = null;
-                final Location location = worldActor.getLocation();
-                try {
-                    if(location!=null) {
-                        //if(location.getLatitude() != null && location.getAltitude() != null) {
-                            final Address address = geolocationManager.getAddressByCoordinate(location.getLatitude(), location.getLongitude());
-                            country = address.getCountry();
-                            city = address.getCity().equals("null") ? address.getCounty() : address.getCity();
-                            state = address.getState().equals("null") ? address.getCounty() : address.getState();
-                        //}
-                    }
-                } catch (CantCreateAddressException ignore) {
-                }
-                if (actorConnections != null && actorConnections.size() > 0) {
-                    for (ChatActorConnection connectedActor : actorConnections) {
-                        if (worldActor.getPublicKey().equals(connectedActor.getPublicKey())) {
-                            connectionState = connectedActor.getConnectionState();
-                            connectionID = connectedActor.getConnectionId();
-                        }
-                    }
-                }
-                worldActor.setCity(city);
-                worldActor.setCountry(country);
-                worldActor.setState(state);
-                worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(
-                        worldActor.getPublicKey(), worldActor.getAlias(),
-                        worldActor.getImage(), connectionState,
-                        connectionID, worldActor.getStatus(),
-                        country, state,
-                        city, location, worldActor.getProfileStatus()));
-
-                System.out.println("************** Actor Chat Register: " + worldActor.getAlias() + " - " + worldActor.getStatus() + " - " + worldActor.getConnectionState());
-
-            }
-        }
-
-        return worldActorList;
-    }
-
     public void listWorldChatActor(String publicKey, Actors actorType, DeviceLocation deviceLocation, double distance, String alias, int max, int offset, String requesterPublicKey) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
         getChatActorSearch().getResult(publicKey, deviceLocation, distance, alias, offset, max, requesterPublicKey);
-    }
-
-    @Override
-    public List<ChatActorCommunitySelectableIdentity> listSelectableIdentities()
-            throws CantListChatIdentitiesToSelectException, CantListChatIdentityException {
-
-        List<ChatActorCommunitySelectableIdentity> selectableIdentities = null;
-        try {
-            selectableIdentities = new ArrayList<>();
-            final List<ChatIdentity> chatActorIdentity = chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
-            for (final ChatIdentity chi : chatActorIdentity)
-                selectableIdentities.add(new ChatActorCommunitySelectableIdentityImpl(chi));
-
-        } catch (CantListChatIdentityException exception) {
-            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-        }
-        return selectableIdentities;
-    }
-
-    @Override
-    public void setSelectedActorIdentity(ChatActorCommunitySelectableIdentity identity) throws CantPersistSettingsException, CantGetSettingsException, SettingsNotFoundException {
-
-        ChatActorCommunitySettings appSettings = null;
-        try {
-            appSettings = this.loadAndGetSettings(this.subAppPublicKey);
-        } catch (CantGetSettingsException | SettingsNotFoundException e) {
-            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            appSettings = null;
-        }
-
-        //If appSettings exist, save identity
-        if (appSettings != null) {
-            if (identity.getPublicKey() != null)
-                appSettings.setLastSelectedIdentityPublicKey(identity.getPublicKey());
-            if (identity.getActorType() != null)
-                appSettings.setLastSelectedActorType(identity.getActorType());
-            try {
-                this.persistSettings(this.subAppPublicKey, appSettings);
-            } catch (CantPersistSettingsException e) {
-                chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
-        }
     }
 
     @Override
     public ChatActorCommunitySearch getChatActorSearch() {
         return new ChatActorCommunitySubAppModuleSearch(chatActorNetworkServiceManager) {
         };
-    }
-
-
-    @Override
-    public ChatActorCommunitySearch searchConnectedChatActor(ChatActorCommunitySelectableIdentity selectedIdentity) {
-        return null;
     }
 
     @Override
@@ -353,12 +221,8 @@ public class ChatActorCommunityManager
         //ChatExposingData chatExposingData = null;
         try {
             if (selectedIdentity != null) {
-                final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(
-                        selectedIdentity.getPublicKey(),
-                        selectedIdentity.getActorType()
-                );
 
-                final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActor);
+                final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(selectedIdentity);
 
                 search.addConnectionState(ConnectionState.CONNECTED);
 
@@ -368,24 +232,13 @@ public class ChatActorCommunityManager
                     chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac,null));
                 }
 
-//                for (ChatActorConnection cac : actorConnections) {
-//                    chatExposingData = getChatActorSearch().getResult(cac.getPublicKey());
-//                    if (chatExposingData != null)
-//                        chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac, chatExposingData.getLocation()));
-//                    else
-//                        //TODO:Que location debemos usar si esto no se persiste en la Tabla de los actores Connection
-//                        chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac, null));
-//                }
             }
         } catch (CantListActorConnectionsException e) {
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
-//        } catch (CantListChatException cantGetChtActorSearchResult) {
-//            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantGetChtActorSearchResult));
         }
         return chatActorCommunityInformationList;
 
     }
-
 
     @Override
     public List<ChatActorCommunityInformation> listChatActorPendingLocalAction(String publicKey, Actors actorType, int max, int offset) throws CantListChatActorException {
@@ -422,12 +275,8 @@ public class ChatActorCommunityManager
         List<ChatActorCommunityInformation> chatActorCommunityInformationList = null;
         try {
             if (selectedIdentity != null) {
-                final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(
-                        selectedIdentity.getPublicKey(),
-                        selectedIdentity.getActorType()
-                );
 
-                final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActor);
+                final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(selectedIdentity);
 
                 search.addConnectionState(ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
 
@@ -484,16 +333,10 @@ public class ChatActorCommunityManager
 
         try {
             ChatActorCommunitySelectableIdentity selectedIdentity = getSelectedActorIdentity();
-            final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
-            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActor);
-            final List<ChatActorConnection> actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(selectedIdentity);
+            return search.getConnectionState(publicKey);
 
-            for (ChatActorConnection connection : actorConnections) {
-                if (publicKey.equals(connection.getPublicKey()))
-                    return connection.getConnectionState();
-            }
-
-        } catch (final CantListActorConnectionsException e) {
+        } catch (final CantGetActorConnectionException e) {
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantValidateActorConnectionStateException(e, "", "Error trying to list actor connections.");
         } catch (Exception e) {
@@ -501,41 +344,6 @@ public class ChatActorCommunityManager
         }
 
         return ConnectionState.DISCONNECTED_REMOTELY;
-    }
-
-    @Override
-    public HashMap<String, Country> getCountryList() throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException {
-        return geolocationManager.getCountryList();
-    }
-
-    @Override
-    public List<CountryDependency> getCountryDependencies(String countryCode) throws CantGetCountryDependenciesListException, CantConnectWithExternalAPIException, CantCreateBackupFileException {
-        return geolocationManager.getCountryDependencies(countryCode);
-    }
-
-    @Override
-    public List<City> getCitiesByCountryCode(String countryCode) throws CantGetCitiesListException {
-        return geolocationManager.getCitiesByCountryCode(countryCode);
-    }
-
-    @Override
-    public List<City> getCitiesByCountryCodeAndDependencyName(String countryName, String dependencyName) throws CantGetCitiesListException, CantCreateCountriesListException {
-        return geolocationManager.getCitiesByCountryCodeAndDependencyName(countryName, dependencyName);
-    }
-
-    @Override
-    public GeoRectangle getGeoRectangleByLocation(String location) throws CantCreateGeoRectangleException {
-        return geolocationManager.getGeoRectangleByLocation(location);
-    }
-
-    @Override
-    public Address getAddressByCoordinate(double latitude, double longitude) throws CantCreateAddressException {
-        return geolocationManager.getAddressByCoordinate(latitude, longitude);
-    }
-
-    @Override
-    public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
-        return geolocationManager.getRandomGeoLocation();
     }
 
     @Override
@@ -547,6 +355,7 @@ public class ChatActorCommunityManager
     public List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException {
         return geolocationManager.getExtendedCitiesByFilter(filter);
     }
+
 
     @Override
     public ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {

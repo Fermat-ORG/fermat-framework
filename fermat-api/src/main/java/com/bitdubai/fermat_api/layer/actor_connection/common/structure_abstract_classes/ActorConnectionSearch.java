@@ -3,7 +3,9 @@ package com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract
 import com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_classes.ActorConnectionDao;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -25,14 +27,14 @@ import static com.bitdubai.fermat_api.layer.actor_connection.common.database_com
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T extends ActorConnection<Z>> {
+public abstract class ActorConnectionSearch<T extends ActorConnection> {
 
-    protected final Z actorIdentity;
-    protected final ActorConnectionDao<Z, T> dao;
+    protected final ActorIdentity actorIdentity;
+    protected final ActorConnectionDao<T> dao;
     protected DatabaseTable databaseTable;
 
-    public ActorConnectionSearch(final Z actorIdentity,
-                                 final ActorConnectionDao<Z, T> dao) {
+    public ActorConnectionSearch(final ActorIdentity actorIdentity,
+                                 final ActorConnectionDao<T> dao) {
 
         this.actorIdentity = actorIdentity;
         this.dao = dao;
@@ -124,9 +126,18 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
         return dao.listActorConnections(databaseTable);
     }
 
-    public T getSingleResult(String publicKey) throws CantListActorConnectionsException, ActorConnectionNotFoundException {
+    public T getSingleResult(String publicKey) throws CantGetActorConnectionException, ActorConnectionNotFoundException {
 
         return dao.getActorConnection(actorIdentity, publicKey);
+    }
+
+    public ConnectionState getConnectionState(String publicKey) throws CantGetActorConnectionException {
+
+        try {
+            return dao.getConnectionState(actorIdentity, publicKey);
+        } catch (ActorConnectionNotFoundException exception) {
+            return ConnectionState.NO_CONNECTED;
+        }
     }
 
 }

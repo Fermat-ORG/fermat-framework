@@ -88,24 +88,17 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      */
     NetworkServiceChatManager networkServiceChatManager;
 
-    /**
-     * Represents the DeviceUserManager
-     */
-    private DeviceUserManager deviceUserManager;
-
     NetworkServiceChatManager chatNetworkServiceManager;
 
     ChatActorConnectionManager chatActorConnectionManager;
 
     private final Broadcaster broadcaster;
-    public final String BROADCAST_CODE = "13";
 
     public ChatMiddlewareManager(
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao,
             ChatMiddlewareContactFactory chatMiddlewareContactFactory,
             ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
             NetworkServiceChatManager networkServiceChatManager,
-            DeviceUserManager deviceUserManager,
             NetworkServiceChatManager chatNetworkServiceManager,
             Broadcaster broadcaster,
             ChatActorConnectionManager chatActorConnectionManager
@@ -114,7 +107,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         this.chatMiddlewareContactFactory = chatMiddlewareContactFactory;
         this.chatMiddlewarePluginRoot = chatMiddlewarePluginRoot;
         this.networkServiceChatManager = networkServiceChatManager;
-        this.deviceUserManager = deviceUserManager;
         this.chatNetworkServiceManager = chatNetworkServiceManager;
         this.broadcaster = broadcaster;
         this.chatActorConnectionManager = chatActorConnectionManager;
