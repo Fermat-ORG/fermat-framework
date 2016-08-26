@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.AbstractAgent;
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
@@ -15,13 +14,10 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
@@ -62,7 +58,6 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingActionListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -84,11 +79,7 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/01/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
-public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
-        DealsWithLogger,
-        DealsWithEvents,
-        DealsWithPluginDatabaseSystem,
-        DealsWithPluginIdentity {
+public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
 
     Database database;
     LogManager logManager;
@@ -97,7 +88,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
     NetworkServiceChatManager chatNetworkServiceManager;
     MiddlewareChatManager chatMiddlewareManager;
     private final Broadcaster broadcaster;
-    private PluginFileSystem pluginFileSystem;
     ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
     ChatActorConnectionManager chatActorConnectionManager;
     ChatMiddlewarePluginRoot chatMiddlewarePluginRoot;
@@ -117,7 +107,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                                        UUID pluginId,
                                        NetworkServiceChatManager chatNetworkServiceManager,
                                        MiddlewareChatManager chatMiddlewareManager,
-                                       Broadcaster broadcaster, PluginFileSystem pluginFileSystem,
+                                       Broadcaster broadcaster,
                                        ChatActorConnectionManager chatActorConnectionManager,
                                        ChatManager chatActorNetworkServiceManager) throws CantSetObjectException {
         super(sleepTime, timeUnit, initDelayTime);
@@ -129,7 +119,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
         this.chatNetworkServiceManager = chatNetworkServiceManager;
         this.chatMiddlewareManager = chatMiddlewareManager;
         this.broadcaster = broadcaster;
-        this.pluginFileSystem = pluginFileSystem;
         this.chatActorConnectionManager = chatActorConnectionManager;
         this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
 
@@ -166,26 +155,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
     protected void onErrorOccur(Exception e) {        chatMiddlewarePluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 Error"));
-    }
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
     public void Initialize() throws CantInitializeCHTAgent {
@@ -227,8 +196,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                     pluginDatabaseSystem,
                     pluginId,
                     database,
-                    chatMiddlewarePluginRoot,
-                    pluginFileSystem);
+                    chatMiddlewarePluginRoot);
         }
     }
 

@@ -36,11 +36,6 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 
     ArrayList<ChatMessage> filteredData;
     private String filterString;
-    private int filterSet = 0;
-
-    public ChatAdapter(Context context) {
-        super(context);
-    }
 
     public ChatAdapter(Context context, ArrayList<ChatMessage> chatMessages) {//ChatFactory
         super(context, chatMessages);
@@ -57,13 +52,6 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
         return R.layout.chat_list_item;
     }
 
-    public void setFilterSetted(int filterSet) {
-        this.filterSet = filterSet;
-    }
-
-    public int getFilterSetted() {
-        return this.filterSet;
-    }
 
     @Override
     protected void bindHolder(ChatHolder holder, ChatMessage data, int position) {

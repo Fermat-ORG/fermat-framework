@@ -31,7 +31,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
@@ -52,10 +51,8 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler.ChatMiddlewareRecorderService;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatMiddlewareDatabaseException;
-import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareContactFactory;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent2;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,9 +75,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     LogManager logManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -111,8 +105,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     private ChatMiddlewareDeveloperDatabaseFactory chatMiddlewareDeveloperDatabaseFactory;
 
     private ChatMiddlewareManager chatMiddlewareManager;
-
-    ChatMiddlewareContactFactory chatMiddlewareContactFactory;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -252,8 +244,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     new ChatMiddlewareDatabaseDao(pluginDatabaseSystem,
                             pluginId,
                             database,
-                            this,
-                            pluginFileSystem);
+                            this
+                    );
             //chatMiddlewareDatabaseDao.initialize();
             /**
              * Init developer database factory
@@ -269,7 +261,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
              */
             chatMiddlewareManager = new ChatMiddlewareManager(
                     chatMiddlewareDatabaseDao,
-                    this.chatMiddlewareContactFactory,
                     this,
                     this.networkServiceChatManager,
                     this.networkServiceChatManager,
@@ -292,7 +283,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     networkServiceChatManager,
                     chatMiddlewareManager,
                     broadcaster,
-                    pluginFileSystem,
                     chatActorConnectionManager,
                     chatActorNetworkService);
             openContractMonitorAgent.start();

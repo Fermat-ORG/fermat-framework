@@ -9,14 +9,12 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
@@ -67,24 +65,17 @@ public interface MiddlewareChatManager extends FermatManager {
 
     void sendDeliveredMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
 
-    public void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException;
+    void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException;
 
-    public boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus;
+    boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus;
 
-    public boolean checkOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus;
+    boolean checkOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus;
 
-    public String checkLastConnection(String remotePublicKey) throws CantGetOnlineStatus;
+    String checkLastConnection(String remotePublicKey) throws CantGetOnlineStatus;
 
-    public void activeOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus;
-
-    void notificationNewIncomingMessage(
-            String publicKey,
-            String tittle,
-            String body) throws CantSendNotificationNewIncomingMessageException;
+    void activeOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus;
 
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
-
-    List<ChatActorConnection> getChatActorConnections(String localPublicKey);
 
     /**
      * This method sends the message through the Chat Network Service
@@ -98,7 +89,5 @@ public interface MiddlewareChatManager extends FermatManager {
 
     void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException;
 
-    List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException;
-
-    public void updateActorConnection(ChatActorConnection chatActorConnection);
+    void updateActorConnection(ChatActorConnection chatActorConnection);
 }

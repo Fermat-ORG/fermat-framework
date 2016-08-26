@@ -19,14 +19,11 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -69,23 +66,17 @@ import static android.widget.Toast.makeText;
  * @version 1.0
  */
 public class ContactsListFragment
-        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>
-        implements ContactListAdapter.AdapterCallback, cht_dialog_connections.AdapterCallbackContacts {
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
     private ContactListAdapter adapter; // The main query adapter
     public List<Contact> contacts;
     private ChatManager chatManager;
     private ErrorManager errorManager;
-    private ChatSessionReferenceApp chatSession;
     private ChatPreferenceSettings chatSettings;
     ChatActorCommunitySelectableIdentity chatIdentity;
-    PresentationDialog presentationDialog;
     FermatApplicationCaller applicationsHelper;
     ListView list;
-    // Defines a tag for identifying log entries
-    String TAG = "CHT_ContactsListFragment";
 
-    private ProgressBar progressBar;
     ArrayList<String> contactname = new ArrayList<>();
     ArrayList<Bitmap> contacticon = new ArrayList<>();
     ArrayList<String> contactid = new ArrayList<>();
@@ -108,11 +99,6 @@ public class ContactsListFragment
     }
 
     @Override
-    public void onMethodCallback() {//solution to access to another activity clicking the photo icon of the list
-        changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -121,8 +107,8 @@ public class ContactsListFragment
             chatManager.setAppPublicKey(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
             applicationsHelper = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
-            adapter = new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,
-                    null, errorManager, chatSession, appSession, this);
+            adapter = new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus,
+                    errorManager, appSession, this);
             chatSettings = null;
 
         } catch (Exception e) {
@@ -185,11 +171,6 @@ public class ContactsListFragment
         @Override
         protected Void doInBackground(Void... params) {
             try {
-//               con = chatManager.listWorldChatActor(identity, MAX, offset);
-//                contactname.clear();
-//                contactid.clear();
-//                contacticon.clear();
-//                contactStatus.clear();
                 if (identity != null) {
                     con = null;//chatManager.listWorldChatActor(identity, MAX, offset);
                     if (con != null) {
@@ -322,11 +303,10 @@ public class ContactsListFragment
         nochatssubtitle.setVisibility(View.VISIBLE);
         nochatssubtitle1.setVisibility(View.VISIBLE);
         nochatssubtitle2.setVisibility(View.VISIBLE);
-        //layout.setBackgroundResource(R.drawable.cht_background_1);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         updateValues();
-        adapter = new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,
-                null, errorManager, chatSession, appSession, this);
+        adapter = new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus,
+                errorManager, appSession, this);
         list = (ListView) layout.findViewById(R.id.list);
         list.setAdapter(adapter);
         registerForContextMenu(list);
@@ -354,8 +334,8 @@ public class ContactsListFragment
                             updateValuesNS();
                             updateValues();
                             final ContactListAdapter adaptador =
-                                    new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,
-                                            null, errorManager, chatSession, appSession, null);
+                                    new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus,
+                                            errorManager, appSession, null);
                             adaptador.refreshEvents(contactname, contacticon, contactid);
                             list.invalidateViews();
                             list.requestLayout();
@@ -369,48 +349,6 @@ public class ContactsListFragment
         });
         // Inflate the list fragment layout
         return layout;//return inflater.inflate(R.layout.contact_list_fragment, container, false);
-    }
-
-    @Override
-    public void onMethodCallbackContacts() {//solution to access to update contacts view
-        try {
-            if (chatIdentity != null) {
-                List<ChatActorCommunityInformation> con = chatManager
-                        .listAllConnectedChatActor(
-                                chatIdentity, MAX, offset); //null;//chatManager.getContacts();
-                if (con.size() > 0) {
-                    contactname.clear();
-                    contactid.clear();
-                    contacticon.clear();
-                    contactStatus.clear();
-                    for (int i = 0; i < con.size(); i++) {
-                        contactname.add(con.get(i).getAlias());
-                        contactid.add(con.get(i).getPublicKey());
-                        ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getImage());
-                        BitmapDrawable bmd = new BitmapDrawable(bytes);
-                        contacticon.add(bmd.getBitmap());
-                        if (con.get(i).getConnectionState() != null)
-                            contactStatus.add(con.get(i).getConnectionState().toString());
-                        else contactStatus.add("");
-                    }
-                    final ContactListAdapter adaptador =
-                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,
-                                    null, errorManager, chatSession, appSession, null);
-                    adaptador.refreshEvents(contactname, contacticon, contactid);
-                    list.invalidateViews();
-                    list.requestLayout();
-                }
-            } else {
-                emptyView.setVisibility(View.VISIBLE);
-                noData.setVisibility(View.VISIBLE);
-                noDatalabel.setVisibility(View.VISIBLE);
-                nochatssubtitle.setVisibility(View.VISIBLE);
-                nochatssubtitle1.setVisibility(View.VISIBLE);
-                nochatssubtitle2.setVisibility(View.VISIBLE);
-            }
-        } catch (Exception e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
     }
 
     @Override
@@ -499,54 +437,6 @@ public class ContactsListFragment
         }
         return super.onOptionsItemSelected(item);
     }
-
-//    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-//        super.onCreateContextMenu(menu, v, menuInfo);
-//        if (v.getId()==R.id.list) {
-//            if (Build.VERSION.SDK_INT < 23) {
-//                MenuInflater inflater = new MenuInflater(getActivity());
-//                inflater.inflate(R.menu.contact_list_context_menu, menu);
-//            }else{
-//                MenuInflater inflater = new MenuInflater(getContext());
-//                inflater.inflate(R.menu.contact_list_context_menu, menu);
-//            }
-//        }
-//        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-//    }
-//
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item) {
-//        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-//        int id =item.getItemId();
-//        if (id == R.id.menu_view_contact) {
-//            try {
-//                appSessionSetDataContact(info.position);
-//                changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
-//            }catch (Exception e){
-//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//            }
-//            return true;
-//        }
-
-
-//        if (id == R.id.menu_edit_contact) {
-//            try {
-//                appSessionSetDataContact(info.position);
-//                changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
-//            }catch (Exception e){
-//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//            }
-//            return true;
-//        }
-//        if (id == R.id.menu_block_contact) {
-//            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-//            return true;
-//        }
-
-//        return super.onContextItemSelected(item);
-//    }
-
     public void appSessionSetDataContact(int position) {
         Contact contact = new ContactImpl();
         contact.setRemoteActorPublicKey(adapter.getContactId(position));
@@ -567,7 +457,6 @@ public class ContactsListFragment
 
     public void displayChat(int position) {
         appSession.setData("whocallme", "contact");
-        //appSessionSetDataContact(position);
         appSessionSetDataContact(position);
         changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
     }
