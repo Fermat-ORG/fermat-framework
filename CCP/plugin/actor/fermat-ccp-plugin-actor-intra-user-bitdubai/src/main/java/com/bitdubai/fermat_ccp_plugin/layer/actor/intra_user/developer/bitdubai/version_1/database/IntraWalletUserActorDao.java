@@ -140,8 +140,7 @@ public class IntraWalletUserActorDao {
             }else {
                 System.out.println("THE INTRA WALLET USER IS ALREADY CREATED IN THE DB, I have to update it");
 
-                updateConnectionState(intraUserLoggedInPublicKey,intraUserToAddPublicKey,contactState);
-
+                updateConnectionStateAndData(intraUserLoggedInPublicKey, intraUserToAddPublicKey, intraUserToAddName, profileImage, contactState,phrase,city,country);
             }
 
 
@@ -253,7 +252,7 @@ public class IntraWalletUserActorDao {
              */
             if(profileImage!=null)
                 if (profileImage.length > 0){
-                    deleteUserProfileImage(intraUserToUpdatePublicKey,profileImage);
+
                     persistNewUserProfileImage(intraUserToUpdatePublicKey, profileImage);
                 }
 
@@ -300,6 +299,67 @@ public class IntraWalletUserActorDao {
             record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
 
             table.updateRecord(record);
+
+
+        }  catch (CantUpdateRecordException e) {
+
+            throw new CantUpdateConnectionException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
+
+        } catch (Exception e) {
+
+            throw new CantUpdateConnectionException(e.getMessage(), FermatException.wrapException(e), "Intra User Actor", "Cant get developer identity list, unknown failure.");
+        }
+    }
+
+
+    public void updateConnectionStateAndData(final String          intraUserLoggedInPublicKey,
+                                            final String          intraUserToAddPublicKey   ,
+                                             String intraUserToAddName,
+                                             byte[] profileImage,
+                                            final ConnectionState contactState,
+                                             String phrase,
+                                             String city,
+                                             String country) throws CantUpdateConnectionException {
+
+        try {
+
+            /**
+             * 1) Get the table.
+             */
+            final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
+
+            if (table == null)
+                throw new CantGetUserDeveloperIdentitiesException("Cant get intra user actor list, table not found.", "Intra User Actor", "");
+
+            // 2) set filter by keys.
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+
+
+            /**
+             * Get actual date
+             */
+            Date d = new Date();
+            long milliseconds = d.getTime();
+
+            // 3) Get a record to set data
+            DatabaseTableRecord record =  table.getEmptyRecord();
+
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode());
+            record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
+            record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_NAME_COLUMN_NAME, intraUserToAddName);
+
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME, phrase);
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CITY_COLUMN_NAME, city);
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_COUNTRY_COLUMN_NAME, country);
+
+
+
+            table.updateRecord(record);
+
+            if(profileImage!=null && profileImage.length > 0) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
+
 
 
         }  catch (CantUpdateRecordException e) {
