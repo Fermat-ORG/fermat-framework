@@ -13,4 +13,6 @@ public interface CCPBroadcasterConstants {
     int PAYMENT_ERROR = 1004;
     int CONNECTION_REQUEST = 1005;
     int CONNECTION_ACCEPT = 1006;
+    int CONNECTION_DENIED = 1007;
+    int CONNECTION_DISCONNECT = 1008;
 }

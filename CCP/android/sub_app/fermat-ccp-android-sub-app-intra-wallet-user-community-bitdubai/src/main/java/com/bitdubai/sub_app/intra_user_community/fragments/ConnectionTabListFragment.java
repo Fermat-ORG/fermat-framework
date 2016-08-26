@@ -211,6 +211,13 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
                 try {
                     deleteAllContactsDialog = new DeleteAllContactsDialog(getActivity(),appSession,null,moduleManager.getActiveIntraUserIdentity());
                     deleteAllContactsDialog.show();
+
+                    deleteAllContactsDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            onRefresh();
+                        }
+                    });
                 } catch (CantGetActiveLoginIdentityException e) {
                     e.printStackTrace();
                 }

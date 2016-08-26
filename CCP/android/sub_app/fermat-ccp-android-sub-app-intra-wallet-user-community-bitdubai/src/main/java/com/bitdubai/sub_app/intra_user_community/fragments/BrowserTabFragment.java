@@ -440,7 +440,7 @@ public class BrowserTabFragment
             ConnectionState connectionState = data.getConnectionState();
 
 
-            if ((data.getState().equals(ProfileStatus.ONLINE) || data.getState().equals(ProfileStatus.UNKNOWN)) && (connectionState.equals(ConnectionState.NO_CONNECTED) || connectionState.equals(ConnectionState.DISCONNECTED_REMOTELY)))  {
+            if ((data.getState().equals(ProfileStatus.ONLINE) || data.getState().equals(ProfileStatus.UNKNOWN))) {
 
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
@@ -806,7 +806,10 @@ public class BrowserTabFragment
 
     @Override
     public void onMethodCallback(ExtendedCity cityFromList) {
+        location.setLatitude(Double.parseDouble(Float.toString(cityFromList.getLatitude())));
+        location.setLongitude(Double.parseDouble(Float.toString(cityFromList.getLongitude())));
 
+        onRefresh();
     }
 
 

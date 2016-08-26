@@ -578,6 +578,34 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
     }
 
 
+    @Override
+    public void disconnectAllIntraUSer(String intraUserLoggedPublicKey) throws IntraUserDisconnectingFailedException {
+        try
+        {
+            // Get all connections
+            List<IntraWalletUserActor> connectionsList = intraWalletUserManager.getConnectedIntraWalletUsers(intraUserLoggedPublicKey);
+
+            for (IntraWalletUserActor intraUserActor : connectionsList) {
+                /**
+                 *Call Actor Intra User to disconnect request connection
+                 */
+                this.intraWalletUserManager.disconnectIntraWalletUser(intraUserLoggedPublicKey, intraUserActor.getPublicKey());
+
+                /**
+                 *Call Network Service Intra User to disconnect request connection
+                 */
+
+                this.intraUserNertwokServiceManager.disconnectIntraUSer(intraUserLoggedPublicKey, intraUserActor.getPublicKey());
+            }
+
+
+        } catch (CantDisconnectIntraWalletUserException e) {
+            throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT ALL INTRA USER CONNECTION" , e, "", "");
+        } catch (Exception e) {
+            throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT ALLINTRA USER CONNECTION- KEY:", FermatException.wrapException(e), "", "unknown exception");
+        }
+    }
+
     /**
      * That method cancels an intra user from the list managed by this
      *
