@@ -191,21 +191,25 @@ public class IncomingNotificationDao implements DAO {
 
         try {
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = getNotificationById(notificationId);
+            DatabaseTable incomingNotificationTable = getDatabaseTable();
 
-            actorNetworkServiceRecord.setFlagReadead(true);
+            incomingNotificationTable.addUUIDFilter(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
 
-            update(actorNetworkServiceRecord);
 
-        } catch (CantGetNotificationException e) {
 
-            throw new CantConfirmNotificationException(e, "notificationId:"+notificationId, "Error trying to get the notification.");
-        } catch (NotificationNotFoundException e) {
+           DatabaseTableRecord record = incomingNotificationTable.getEmptyRecord();
 
-            throw new CantConfirmNotificationException(e, "notificationId:"+notificationId, "Notification not found.");
-        } catch (CantUpdateRecordDataBaseException e) {
+            record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME, "true");
 
-            throw new CantConfirmNotificationException(e, "notificationId:"+notificationId, "Error updating database.");
+            incomingNotificationTable.updateRecord(record);
+
+
+           // actorNetworkServiceRecord.setFlagReadead(true);
+
+
+
+        } catch (CantUpdateRecordException e) {
+            throw new CantConfirmNotificationException(e, "notificationId:"+notificationId, "Update error.");
         }
     }
 
@@ -291,18 +295,16 @@ public class IncomingNotificationDao implements DAO {
 
         try {
 
-            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+            DatabaseTable incomingTable = getDatabaseTable();
 
-            cryptoPaymentRequestTable.addUUIDFilter(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
+            incomingTable.addUUIDFilter(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
 
-            cryptoPaymentRequestTable.loadToMemory();
+            if(incomingTable.numRecords()== 0)
+                return false;
+            else
+              return true;
 
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
-
-
-            return !records.isEmpty();
-
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (Exception exception) {
 
             throw new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
         }

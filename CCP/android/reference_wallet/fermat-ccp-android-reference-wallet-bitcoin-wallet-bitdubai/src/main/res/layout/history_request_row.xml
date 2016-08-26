@@ -52,7 +52,7 @@
                 android:layout_width="155dp"
                 android:layout_height="match_parent"
                 android:id="@+id/txt_notes"
-                tools:text="Conference ticket hghjghjghj jhjghjgjhghj jhghjghjgjh"
+                tools:text="Conference ticket"
                 android:textSize="12sp"
                 android:textColor="#80ffffff"
                 android:fontFamily="roboto"
@@ -76,12 +76,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_amount"
-                tools:text="1.4 BTC"
-                android:textSize="16sp"
+                tools:text="0.000065"
+                android:textSize="15sp"
                 android:textColor="#ffffff"
                 android:fontFamily="roboto"
                 android:textIsSelectable="false"
-               android:gravity="end"
+                android:gravity="end"
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

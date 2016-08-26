@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Intra User Identity</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="action_settings">Settings</string>
     <string name="create">CREATE</string>
@@ -17,7 +17,7 @@
     <string name="Intra_user_dialog">This params helps you configure your Fermat network identity location.</string>
     <string name="intra_user_desc">*Set Accuracy in Kms: This is the range of precision to show where you\'re located on the Fermat network. \n *Select Frequency: This is the rate of how often the location is updated.</string>
     <string name="start">Start</string>
-    <string name="Intra_identity_desc">* Managing your identity. \n * Setting your own phrase and sharing it with all the Fermat users.</string>
+    <string name="Intra_identity_desc">* Managing your identity. \n* Setting your own photo and sharing it with all the Fermat users.</string>
     <string name="intra_identity">This app helps you create your Fermat network identity. Its main features include:</string>
     <string name="accept_text">Accept</string>
     <string name="accepted">Accepted</string>
@@ -186,4 +186,23 @@
     <string name="you_dont_have_transactions_sent_text">You don\'t have transactions send</string>
     <string name="you_need_an_identity_before_you_can_enter_text">You nedd an identity before you can enter</string>
     <string name="young_wallet">Young wallet</string>
+    <string name="system_error">Oooops! recovering from system error</string>
+
+    <!-- Fragments strings -->
+    <string name="identity_created_msg">Identity created</string>
+    <string name="changes_saved_msg">Changes saved</string>
+    <string name="identity_create_error">Create Identity Error</string>
+    <string name="invalid_data">Invalid data</string>
+    <string name="module_manager_error">Module manager error</string>
+    <string name="upload_image_error">Upload image error</string>
+    <string name="loading_image_error">Loading image error</string>
+    <string name="size_image_error">The image selected is too small. Please select a photo with height and width of at least 192x192</string>
+    <string name="error_occurred">An error occurred</string>
+    <string name="empty_accuracy">Accuracy is empty, please set a value</string>
+    <string name="geolocation_identity_updated">the geolocation of the user identity is updated</string>
+    <string name="geolocation_identity_not_updated">the geolocation of the user identity is not updated</string>
+    <string name="cant_get_intra_user_list">Can not Get Intra User List</string>
+    <string name="more">More...</string>
+
+
 </resources>

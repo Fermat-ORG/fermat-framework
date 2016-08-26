@@ -21,9 +21,19 @@ public class CryptoWalletUserCommunityBuildNotification {
                 case CCPBroadcasterConstants.CONNECTION_REQUEST:
 
                     notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received from  " + involvedActor, "", "",appPublicKey);
-                   break;
+                    break;
                 case CCPBroadcasterConstants.CONNECTION_ACCEPT:
-                        notification = new UserCommunityNotificationPainter("Connection Request", "Your connection request was accepted to " + involvedActor, "", "",appPublicKey);
+                    notification = new UserCommunityNotificationPainter("Connection Request", "Your connection request was accepted to " + involvedActor, "", "",appPublicKey);
+
+                    break;
+
+                case CCPBroadcasterConstants.CONNECTION_DISCONNECT:
+                    notification = new UserCommunityNotificationPainter("Connection Request", " A user remove you from your connections.", "", "",appPublicKey);
+
+                    break;
+
+                case CCPBroadcasterConstants.CONNECTION_DENIED:
+                    notification = new UserCommunityNotificationPainter("Connection Request", "Your connection request was denied.", "", "",appPublicKey);
 
                     break;
 

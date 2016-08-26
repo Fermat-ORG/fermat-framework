@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.intra_user_identity.fragments;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
@@ -13,10 +14,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.hardware.Camera;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
@@ -85,6 +88,8 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     private static final int CREATE_IDENTITY_FAIL_MODULE_EXCEPTION = 2;
     private static final int CREATE_IDENTITY_SUCCESS = 3;
 
+    private static final String HARD_CORE_PUBLIC_KEY = "123456789";
+
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
 
@@ -140,7 +145,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             intraUserIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                         }else{
                             //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-                            intraUserIdentitySettings = moduleManager.loadAndGetSettings("123456789");
+                            intraUserIdentitySettings = moduleManager.loadAndGetSettings(HARD_CORE_PUBLIC_KEY);
                         }
 
                     } catch (Exception e) {
@@ -154,7 +159,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             if (appSession.getAppPublicKey() != null) {
                                 appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), intraUserIdentitySettings);
                             } else {
-                                appSession.getModuleManager().persistSettings("123456789", intraUserIdentitySettings);
+                                appSession.getModuleManager().persistSettings(HARD_CORE_PUBLIC_KEY, intraUserIdentitySettings);
                             }
 
                         }
@@ -256,20 +261,20 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                     case CREATE_IDENTITY_SUCCESS:
 //                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
                         if (!isUpdate) {
-                            Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.identity_created_msg), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.changes_saved_msg), Toast.LENGTH_SHORT).show();
                         }
                         getActivity().onBackPressed();
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
-                        Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.identity_create_error), Toast.LENGTH_LONG).show();
                         break;
                     case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
-                        Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.invalid_data), Toast.LENGTH_LONG).show();
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
-                        Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.module_manager_error), Toast.LENGTH_LONG).show();
                         break;
                 }
             }
@@ -353,15 +358,15 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    //    super.onActivityResult(requestCode, resultCode, data);
+        //    super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-         //   contextMenuInUse = true;
+            //   contextMenuInUse = true;
             ImageView pictureView = mBrokerImage;
 
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
-                    Bundle extras = data.getExtras();
-                    imageBitmap = (Bitmap) extras.get("data");
+                    // Bundle extras = data.getExtras();
+                    // imageBitmap = (Bitmap) extras.get("data");
                     if (imageToUploadUri != null) {
                         String provider = "com.android.providers.media.MediaProvider";
                         Uri selectedImage = imageToUploadUri;
@@ -388,7 +393,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                         if (checkCameraPermission()) {
                             if (checkWriteExternalPermission()) {
                                 if (imageBitmap != null) {
-                                    //if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
+                                    if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
                                         final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, imageBitmap);
                                         dialogCropImage.show();
                                         dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -409,23 +414,23 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                                 }
                                             }
                                         });
-                                   /* } else {
+                                    } else {
                                         Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
-                                         //cryptoBrokerBitmap = null;
+                                        //cryptoBrokerBitmap = null;
                                         Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
-                                    }*/
+                                    }
                                 } else {
-                                    Toast.makeText(getActivity(), "Error on upload image", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), getResources().getString(R.string.upload_image_error), Toast.LENGTH_LONG).show();
                                     //  cryptoBrokerBitmap = null;
                                     //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(),getResources().getString(R.string.error_occurred), Toast.LENGTH_LONG).show();
                                 // cryptoBrokerBitmap = null;
                                 //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.error_occurred), Toast.LENGTH_LONG).show();
                             //  cryptoBrokerBitmap = null;
                             //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                         }
@@ -435,20 +440,20 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
                     break;
                 case REQUEST_LOAD_IMAGE:
-                 //   Uri selectedImage = data.getData();
-                 //   try {
-                 //       if (isAttached) {
-                 //           ContentResolver contentResolver = getActivity().getContentResolver();
-                 //           imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                 //           imageBitmap = Bitmap.createScaledBitmap(imageBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-                 //           brokerImageByteArray = toByteArray(imageBitmap);
-                 //           updateProfileImage = true;
-                 //           Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mBrokerImage);
-                 //       }
-                 //   } catch (Exception e) {
-                 //       e.printStackTrace();
-                 //       Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
-                 //   }
+                    //   Uri selectedImage = data.getData();
+                    //   try {
+                    //       if (isAttached) {
+                    //           ContentResolver contentResolver = getActivity().getContentResolver();
+                    //           imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
+                    //           imageBitmap = Bitmap.createScaledBitmap(imageBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
+                    //           brokerImageByteArray = toByteArray(imageBitmap);
+                    //           updateProfileImage = true;
+                    //           Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mBrokerImage);
+                    //       }
+                    //   } catch (Exception e) {
+                    //       e.printStackTrace();
+                    //       Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                    //   }
 
                     Uri selectedImage = data.getData();
                     try {
@@ -478,15 +483,15 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                     }
                                 });
                             } else {
-                                Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(),getResources().getString(R.string.size_image_error), Toast.LENGTH_LONG).show();
                                 // cryptoBrokerBitmap = null;
                                 // Toast.makeText(getActivity(), "The image selected is too small", Toast.LENGTH_SHORT).show();
                             }
 
                         }
                     } catch (Exception e) {
-                       // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-                        Toast.makeText(getActivity().getApplicationContext(), "Error loading the image", Toast.LENGTH_SHORT).show();
+                        // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.loading_image_error), Toast.LENGTH_SHORT).show();
                     }
 
                     break;
@@ -551,7 +556,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         String brokerPhraseText = "";
 
         if (!mBrokerPhrase.getText().toString().isEmpty()){
-             brokerPhraseText = mBrokerPhrase.getText().toString();
+            brokerPhraseText = mBrokerPhrase.getText().toString();
         }else{
             brokerPhraseText = "Available";
         }
@@ -602,7 +607,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                         return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
                     }
 
-                 } catch (Exception e) {
+                } catch (Exception e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
 
                 }
@@ -623,15 +628,64 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         return stream.toByteArray();
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private void dispatchTakePictureIntent() {
         Log.i(TAG, "Opening Camera app to take the picture...");
 
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+       /* Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
+        }*/
 
+        // Check available cameras
+        PackageManager pm = getActivity().getPackageManager();
+        boolean frontCam = false, rearCam = false;
+        //Must have a targetSdk >= 9 defined in the AndroidManifest
+        frontCam = pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
+        rearCam = pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
+        if ((frontCam || rearCam) && availableCameras()) {
+            // Check permission for CAMERA
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        getActivity().requestPermissions(
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                REQUEST_IMAGE_CAPTURE);
+                    } else {
+                        getActivity().requestPermissions(
+                                new String[]{Manifest.permission.CAMERA},
+                                REQUEST_IMAGE_CAPTURE);
+                    }
+                } else {
+                    if (checkWriteExternalPermission()) {
+                        Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+                        chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                        imageToUploadUri = Uri.fromFile(f);
+                        startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
+                    } else {
+                        Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                    }
+                }
+            } else {
+                Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+                chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                imageToUploadUri = Uri.fromFile(f);
+                startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= 23) {
+                // Toast.makeText(getContext(), getContext().getResources().getString(R.string.cht_identity_no_camera), Toast.LENGTH_SHORT).show();
+            }else {
+                // Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_no_camera), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+    }
+    @TargetApi(Build.VERSION_CODES.M)
     private void loadImageFromGallery() {
         Log.i(TAG, "Loading Image from Gallery...");
 
@@ -675,27 +729,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        //inflater.inflate(R.menu.menu_main, menu);
-
-      /*  try {
-            menu.add(1, 99, 1, "help").setIcon(R.drawable.help_icon)
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-
-
-            final MenuItem action_help = menu.findItem(R.id.action_help);
-            menu.findItem(R.id.action_help).setVisible(true);
-            action_help.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    menu.findItem(R.id.action_help).setVisible(false);
-                    return false;
-                }
-            });
-
-        } catch (Exception e) {
-
-        }*/
 
     }
 
@@ -861,6 +894,19 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         }
     }
 
+    private boolean availableCameras() {
+        int numberOfCameras = Camera.getNumberOfCameras();
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.CameraInfo info = new Camera.CameraInfo();
+            Camera.getCameraInfo(i, info);
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                return true;
+            } else if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 }
