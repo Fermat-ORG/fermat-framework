@@ -7,6 +7,7 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnect
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 
 import java.util.List;
 import java.util.UUID;
@@ -67,6 +68,22 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.city = exposingData.getCity();
         this.location = location;
         this.profileStatus = ProfileStatus.ONLINE;
+    }
+
+
+
+    public ChatActorCommunitySubAppModuleInformationImpl(ActorProfile ced) {
+        this.publicKey = ced.getIdentityPublicKey();
+        this.alias = ced.getName()+"("+ced.getAlias()+")";
+        this.image = ced.getPhoto();
+        this.connectionState = null;
+        this.connectionId = null;
+        this.status = null;
+        this.country = null;
+        this.state = null;
+        this.city = null;
+        this.location = ced.getLocation();
+        this.profileStatus = ced.getStatus();
     }
 
     public ChatActorCommunitySubAppModuleInformationImpl(ChatExposingData ced) {

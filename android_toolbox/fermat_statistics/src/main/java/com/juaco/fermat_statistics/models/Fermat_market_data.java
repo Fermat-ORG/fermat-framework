@@ -2,7 +2,7 @@ package com.juaco.fermat_statistics.models;
 
 import android.app.Activity;
 
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+//import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 
 import java.util.Collection;
@@ -13,7 +13,7 @@ import java.util.Collection;
 public class Fermat_market_data {
 
 
-    IndexInfoSummary indexInfo;
+//    IndexInfoSummary indexInfo;
 
     Collection<ExchangeRate> collection;
 
@@ -21,15 +21,15 @@ public class Fermat_market_data {
 
 
 
-    public Fermat_market_data(IndexInfoSummary indexInfo, Collection<ExchangeRate> collection, Activity activity){
-        this.indexInfo = indexInfo;
+    public Fermat_market_data(/*IndexInfoSummary indexInfo,*/ Collection<ExchangeRate> collection, Activity activity){
+//        this.indexInfo = indexInfo;
         this.collection = collection;
         this.activity = activity;
     }
 
-    public IndexInfoSummary getIndexInfo() {
-        return indexInfo;
-    }
+//    public IndexInfoSummary getIndexInfo() {
+//        return indexInfo;
+//    }
 
     public Collection<ExchangeRate> getCollection() {
         return collection;

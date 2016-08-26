@@ -42,7 +42,9 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -53,11 +55,17 @@ import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocati
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
+import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure.ChatActorCommunitySubAppModuleInformationImpl;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
@@ -103,7 +111,8 @@ public class ConnectionsWorldFragment
     private ChatActorCommunitySettings appSettings;
     private ChatActorCommunitySelectableIdentity identity;
     private int offset = 0;
-    private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
+    private List<ChatActorCommunityInformation> lstChatUserInformations = new ArrayList<>();
+    private List<ActorProfile> actorProfiles;
     private DeviceLocation location = null;
     private double distance = 0;
     private String alias;
@@ -191,6 +200,11 @@ public class ConnectionsWorldFragment
             errorManager = appSession.getErrorManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
             applicationsHelper = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
+
+
+            FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
+            registerReceiver(fermatIntentFilter, new ChatListBroadcastReceiver());
+
             //Obtain Settings or create new Settings if first time opening subApp
             appSettings = null;
             try {
@@ -345,71 +359,56 @@ public class ConnectionsWorldFragment
         try {
             if (!isRefreshing) {
                 isRefreshing = true;
-                final FermatWorker worker = new FermatWorker() {
-                    @Override
-                    protected Object doInBackground() throws Exception {
-                        return getMoreDataAsync(location, distance, alias, MAX, offset);
-                    }
-                };
-                worker.setContext(getActivity());
-                worker.setCallBack(new FermatWorkerCallBack() {
-                    @SuppressWarnings("unchecked")
-                    @Override
-                    public void onPostExecute(Object... result) {
-                        isRefreshing = false;
-                        if (/*swipeRefresh != null &&*/ isAttached) {
-                            //swipeRefresh.setRefreshing(false);
-                            if (result != null &&
-                                    result.length > 0) {
-                                if (getActivity() != null && adapter != null) {
-                                    if (offset == 0) {
-                                        if (lstChatUserInformations != null) {
-                                            lstChatUserInformations.clear();
-                                            lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
-                                        } else {
-                                            lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
-                                        }
-                                        adapter.refreshEvents((ArrayList<ChatActorCommunityInformation>) result[0]);
-                                    } else {
-                                        ArrayList<ChatActorCommunityInformation> temp = (ArrayList<ChatActorCommunityInformation>) result[0];
-                                        for (ChatActorCommunityInformation info : temp)
-                                            if (notInList(info)) {
-                                                lstChatUserInformations.add(info);
-                                            }
-                                        adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
-                                    }
-                                    if (lstChatUserInformations.isEmpty()) {
-                                        showEmpty(true, emptyView);
-                                    } else {
-                                        showEmpty(false, emptyView);
-                                    }
-                                }
-                            } else
-                                showEmpty(true, emptyView);
-                        }
-                    }
+                List<ChatActorCommunityInformation> result;
+                if (identity != null) {
+                    moduleManager.listWorldChatActor(null, identity.getActorType(),
+                            location, distance, alias, MAX, offset, identity.getPublicKey());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-                    @Override
-                    public void onErrorOccurred(Exception ex) {
-                        try {
-                            isRefreshing = false;
-                            /*if (swipeRefresh != null && isAttached)
-                                swipeRefresh.setRefreshing(false);*/
-                            worker.shutdownNow();
-                            if (getActivity() != null)
-                                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-                        } catch (Exception e) {
-                            e.printStackTrace();
+    public void onActorReceived(final ArrayList<ChatActorCommunityInformation> result) {
+        try {
+            if (isAttached) {
+                //swipeRefresh.setRefreshing(false);
+                if (result != null &&
+                        result.size() > 0) {
+                    if (getActivity() != null && adapter != null) {
+                        if (offset == 0) {
+                            if (lstChatUserInformations != null) {
+                                lstChatUserInformations.clear();
+                                lstChatUserInformations.addAll(result);
+                            } else {
+                                lstChatUserInformations = result;
+                            }
+                            adapter.refreshEvents(lstChatUserInformations);
+                        } else {
+                            ArrayList<ChatActorCommunityInformation> temp = result;
+                            for (ChatActorCommunityInformation info : temp) {
+                                if (notInList(info)) {
+                                    lstChatUserInformations.add(info);
+                                }
+                            }
+                            adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
                         }
+                        if (lstChatUserInformations.isEmpty()) {
+                            showEmpty(true, emptyView);
+                        } else {
+                            showEmpty(false, emptyView);
+                        }
+                        isRefreshing = false;
+                        offset = lstChatUserInformations.size();
                     }
-                });
-                worker.execute();
+                } else{
+                    showEmpty(true, emptyView);
+                    isRefreshing = false;
+                }
             }
-        } catch (Exception ignore) {
-            if (executor != null) {
-                executor.shutdown();
-                executor = null;
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -448,21 +447,21 @@ public class ConnectionsWorldFragment
         progressBar.setVisibility(View.GONE);
     }
 
-    private List<ChatActorCommunityInformation> getMoreDataAsync(DeviceLocation location, double distance, String alias, int max, int offset) {
-        List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
-        try {
-            List<ChatActorCommunityInformation> result;
-            if (identity != null) {
-                result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
-                        location, distance, alias, max, offset);
-                dataSet.addAll(result);
-                offset = dataSet.size();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return dataSet;
-    }
+//    private List<ChatActorCommunityInformation> getMoreDataAsync(DeviceLocation location, double distance, String alias, int max, int offset) {
+////        List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
+////        try {
+////            List<ChatActorCommunityInformation> result;
+////            if (identity != null) {
+////                moduleManager.listWorldChatActor(null, identity.getActorType(),
+////                        location, distance, alias, max, offset, identity.getPublicKey() );
+////                dataSet.addAll(result);
+////                offset = dataSet.size();
+////            }
+////        } catch (Exception e) {
+////            e.printStackTrace();
+////        }
+////        return dataSet;
+//    }
 
     @Override
     public void onFragmentFocus() {
@@ -717,5 +716,36 @@ public class ConnectionsWorldFragment
         String permission = "android.permission.ACCESS_FINE_LOCATION";
         int res = getActivity().checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+
+    /**
+     * Receiver class implemented
+     */
+    private class ChatListBroadcastReceiver extends FermatBroadcastReceiver {
+
+        @Override
+        public void onReceive(FermatBundle fermatBundle) {
+            try {
+                if (isAttached) {
+                    String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+
+                    if (code.equals(ChatBroadcasterConstants.CHAT_COMM_ACTOR_RECEIVED)) {
+                        ArrayList<ChatActorCommunityInformation> chatActorList = new ArrayList<>();
+                        List<ActorProfile> actorProfiles = (List<ActorProfile>) fermatBundle.get(ChatBroadcasterConstants.CHAT_COMM_ACTOR_LIST);
+                        for (final ActorProfile actorProfile : actorProfiles) {
+                            chatActorList.add(new ChatActorCommunitySubAppModuleInformationImpl(actorProfile));
+                        }
+                        onActorReceived(chatActorList);
+                    }
+                }
+            } catch (ClassCastException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }catch (IllegalAccessException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+        }
     }
 }
