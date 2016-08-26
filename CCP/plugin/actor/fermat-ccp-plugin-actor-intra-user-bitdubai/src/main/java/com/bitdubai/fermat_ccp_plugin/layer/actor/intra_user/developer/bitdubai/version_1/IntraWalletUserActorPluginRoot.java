@@ -54,6 +54,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntr
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantSetPhotoException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantUpdateIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.IntraUserNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
@@ -254,7 +255,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         try {
             this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, ConnectionState.DISCONNECTED_REMOTELY);
 
-            FermatBundle fermatBundle = new FermatBundle();
+           /* FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(SOURCE_PLUGIN, Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR.getCode());
             fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CCP_COMMUNITY.getCode()));
             fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CCP_COMMUNITY.getCode());
@@ -262,7 +263,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
             fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
             fermatBundle.put("InvolvedActor", "");
 
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);*/
         } catch (CantUpdateConnectionException e) {
             throw new CantDisconnectIntraWalletUserException("CAN'T CANCEL INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -413,7 +414,23 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
     }
 
+    @Override
+    public void updateIntraWalletUserdata(String intraUserToUpdatePublicKey, String intraUserName, String intraUserPhrase, byte[] profileImage, String city, String country) throws CantUpdateIntraWalletUserException {
 
+        try {
+            intraWalletUserActorDao.updateIntraWalletUserdata(
+                    intraUserToUpdatePublicKey,
+                    intraUserName,
+                    intraUserPhrase,
+                    profileImage,
+                    city,
+                    country);
+
+        }catch (Exception e){
+            throw  new CantUpdateIntraWalletUserException("Can't update intra wallet user",e,"","Database error");
+        }
+
+    }
 
 
     @Override
@@ -775,7 +792,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                     case DISCONNECTED:
                         this.disconnectIntraWalletUser(intraUserToConnectPublicKey, intraUserSendingPublicKey);
 
-                       break;
+                        break;
                     case RECEIVED:
                         /**
                          * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
