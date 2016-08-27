@@ -33,8 +33,6 @@ public interface MiddlewareChatManager extends FermatManager {
 
     Chat getChatByChatId(UUID chatId) throws CantGetChatException;
 
-    Chat newEmptyInstanceChat() throws CantNewEmptyChatException;
-
     void saveChat(Chat chat) throws CantSaveChatException;
 
     void deleteChat(Chat chat) throws CantDeleteChatException;
@@ -55,11 +53,7 @@ public interface MiddlewareChatManager extends FermatManager {
 
     Message getMessageByMessageId(UUID messageId) throws CantGetMessageException;
 
-    Message newEmptyInstanceMessage() throws CantNewEmptyMessageException;
-
     void saveMessage(Message message) throws CantSaveMessageException;
-
-    void deleteMessage(Message message) throws CantDeleteMessageException;
 
     void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
 
@@ -85,9 +79,4 @@ public interface MiddlewareChatManager extends FermatManager {
      */
     void sendMessage(Message createdMessage) throws CantSendChatMessageException;
 
-    void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException;
-
-    void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException;
-
-    void updateActorConnection(ChatActorConnection chatActorConnection);
 }
