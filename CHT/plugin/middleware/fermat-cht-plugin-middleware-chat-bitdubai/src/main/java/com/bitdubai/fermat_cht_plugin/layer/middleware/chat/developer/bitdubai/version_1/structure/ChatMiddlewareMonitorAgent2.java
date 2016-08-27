@@ -2,7 +2,9 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 
 import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -40,7 +42,6 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnect
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
-import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ActionOnline;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
@@ -48,7 +49,6 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MessageMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
@@ -61,7 +61,6 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -138,7 +137,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
     @Override
     protected void agentJob() {
         try {
-            //logManager.log(null,
             logManager.log(ChatMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()),
                     "Iteration number " + iterationNumber, null, null);
             doTheMainTask();
@@ -164,29 +162,22 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
                     ChatMiddlewareDatabaseConstants.DATABASE_NAME);
         } catch (DatabaseNotFoundException databaseNotFoundException) {
 
-            //Logger LOG = Logger.getGlobal();
-            //LOG.info("Database in Open Contract monitor agent doesn't exists");
-            ChatMiddlewareDatabaseFactory chatMiddlewareDatabaseFactory =
-                    new ChatMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
+            ChatMiddlewareDatabaseFactory chatMiddlewareDatabaseFactory = new ChatMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
             try {
-                database = chatMiddlewareDatabaseFactory.createDatabase(pluginId,
-                        ChatMiddlewareDatabaseConstants.DATABASE_NAME);
+                database = chatMiddlewareDatabaseFactory.createDatabase(pluginId, ChatMiddlewareDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                        cantCreateDatabaseException);
+                chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeCHTAgent(cantCreateDatabaseException,
                         "Initialize Monitor Agent - trying to create the plugin database",
                         "Please, check the cause");
             }
         } catch (CantOpenDatabaseException exception) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantInitializeCHTAgent(exception,
                     "Initialize Monitor Agent - trying to open the plugin database",
                     "Please, check the cause");
         } catch (Exception exception) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantInitializeCHTAgent(
                     FermatException.wrapException(exception),
                     "Initialize Monitor Agent - trying to open the plugin database",
@@ -233,69 +224,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
 
     }
 
-//    private void sendChatBroadcasting() {
-//        Date date = new Date();
-//        chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-//                pluginDatabaseSystem,
-//                pluginId,
-//                database,
-//                chatMiddlewarePluginRoot,
-//                pluginFileSystem);
-//
-//        try {
-//            List<Chat> chats = chatMiddlewareDatabaseDao.getChats(null);
-//            for (Chat chat : chats) {
-//                if (chat.getTypeChat() == TypeChat.REBROADCASTING) {
-//                    long tsTime1 = chat.getDate().getTime();
-//                    long tsTime2 = date.getTime();
-//
-//                    if (tsTime1 >= tsTime2) {
-//                        //if (chat.getScheduledDelivery()) {
-//                        //Enviar el mensaje pasando como argumento el objeto chat con todos los datos
-//                        //Buscar el mensaje creado de ese chat guardado cuando se creo la redifusion
-//                        List<Message> messages = chatMiddlewareDatabaseDao.getMessagesByChatId(chat.getChatId());
-//                        chat.setMessagesAsociated(messages);
-//                        //Buscar los miembros de ese chat en group member para asociarlo al objeto chat leido
-//                        List<GroupMember> groupMembers = chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(chat.getChatId());
-//                        //Enviar el mensaje
-//                        for (GroupMember groupMember : groupMembers) {
-//                            chat.setRemoteActorPublicKey(groupMember.getActorPublicKey());
-//                            chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
-//                            chat.setRemoteActorType(PlatformComponentType.ACTOR_CHAT);
-//                            System.out.println("ChatMetadata to send:\n" + constructChatMetadata(chat, messages.get(0)));
-//                            try {
-//                                chatNetworkServiceManager.sendChatMetadata(
-//                                        chat.getLocalActorPublicKey(),
-//                                        chat.getRemoteActorPublicKey(),
-//                                        constructChatMetadata(chat, messages.get(0))
-//                                );
-//                            } catch (IllegalArgumentException e) {
-//                                /**
-//                                 * In this case, any argument in chat or message was null or not properly set.
-//                                 * I'm gonna change the status to CANNOT_SEND to avoid send this message.
-//                                 */
-//                                messages.get(0).setStatus(MessageStatus.CANNOT_SEND);
-//                            }
-//                        }
-//                        messages.get(0).setStatus(MessageStatus.SEND);
-//                        chatMiddlewareDatabaseDao.saveMessage(messages.get(0));
-//                        //}
-//                    }
-//                }
-//            }
-//        } catch (DatabaseOperationException e) {
-//            e.printStackTrace();
-//        } catch (CantGetChatException e) {
-//            e.printStackTrace();
-//        } catch (CantGetMessageException e) {
-//            e.printStackTrace();
-//        } catch (CantSendChatMessageMetadataException e) {
-//            e.printStackTrace();
-//        } catch (CantSaveMessageException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     public void checkIncomingMessageFail(MessageMetadata messageMetadata){
         try {
             Message message = chatMiddlewareDatabaseDao.getMessageByMessageId(messageMetadata.getMessageId());
@@ -320,26 +248,21 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
      *
      * @throws CantGetPendingTransactionException
      */
-    public void checkIncomingChat(MessageMetadata messageMetadata)
-            throws CantGetPendingTransactionException,
-            CantListChatException,
-            UnexpectedResultReturnedFromDatabaseException {
+    public void checkIncomingChat(MessageMetadata messageMetadata) throws CantGetPendingTransactionException, CantListChatException, UnexpectedResultReturnedFromDatabaseException {
+
         try {
 
             System.out.println("12345 CHECKING INCOMING CHAT");
 
-            ChatExposingData chatExposingData = chatActorNetworkServiceManager.getSearch().getResult(messageMetadata.getLocalActorPublicKey());
-            System.out.println("12345 CHECKING CONTACT EXIST");
-            if(chatExposingData != null) {
-                System.out.println("12345 CONTACT ALREADY EXIST");
+            ChatLinkedActorIdentity identity = new ChatLinkedActorIdentity(messageMetadata.getRemoteActorPublicKey(), Actors.CHAT);
+            ConnectionState connectionState = chatActorConnectionManager.getSearch(identity).getConnectionState(messageMetadata.getLocalActorPublicKey());
+
+            System.out.println("12345 CHECKING CONTACT EXIST: connection state = " + connectionState);
+
+            if(connectionState.equals(ConnectionState.CONNECTED)) {
+
                 saveMessage(messageMetadata);
-                //Start: Commented trying to avoid messages in wrong chat
-//                    saveMessage(chatMetadata);
-                //End: Commented trying to avoid messages in wrong chat
-//            FermatBundle fermatBundle = new FermatBundle();
-//            fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-//            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
-//            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle);
+
                 FermatBundle fermatBundle = new FermatBundle();
                 fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
                 fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode()));
@@ -361,10 +284,14 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
                 fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
 
-//            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
-//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
             }else
-                System.out.println("12345 CONTACT DOES NOT EXIST");
+                System.out.println("12345 CONTACT IS NOT CONNECTED");
+        } catch (CantGetActorConnectionException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking if the actors are connected.",
+                    "Unexpected error in database operation"
+            );
         } catch (DatabaseOperationException e) {
             throw new CantGetPendingTransactionException(
                     e,
@@ -414,13 +341,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
 
             System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == " + messageMetadata.getMessage() + " MESSAGE STATUS == " + messageMetadata.getMessageStatus());
 
-//                    if (!checkChatMetadata(chatMetadata)) return;
-
-            //Check if metadata exists in database
-//            Chat chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
-//            if(chat!=null){
-//                Message message = chatMiddlewareDatabaseDao.getMessageByMessageId(chatMetadata.getMessageId());
-//                if(message !=null){
             updateMessageStatus(messageMetadata);
             if (messageMetadata.getMessageStatus() != MessageStatus.READ) {
                 FermatBundle fermatBundle3 = new FermatBundle();
@@ -429,22 +349,13 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
                 fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
             }
+
             FermatBundle fermatBundle2 = new FermatBundle();
             fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
             fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
             fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
 
-//                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-//                }
-//            }
-
-//        } catch (CantGetChatException e) {
-//            throw new CantGetPendingTransactionException(
-//                    e,
-//                    "Checking the incoming status pending transactions",
-//                    "Cannot get the chat from database"
-//            );
         } catch (DatabaseOperationException e) {
             throw new CantGetPendingTransactionException(
                     e,
@@ -475,15 +386,10 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
 
             if (onlineActions == null || onlineActions.isEmpty()) return;
 
-//            System.out.println("12345 CHECKING ONLINE STATUS");
-
-//            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
 
             for (ActionOnline actionOnline : onlineActions) {
-//                boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
                 boolean isOnline = chatActorNetworkServiceManager.isActorOnline(actionOnline.getPublicKey());
                 actionOnline.setValue(isOnline);
-//                System.out.println("12345 is online " + isOnline);
                 if (isOnline) actionOnline.setLastOn(false);
                 if (!isOnline && actionOnline.getLastOn() != true) {
                     DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm");
@@ -499,7 +405,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
             fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
 
-            //broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
         } catch (CantGetPendingActionListException e) {
             throw new CantGetPendingTransactionException(
                     e,
@@ -522,26 +427,21 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
 
             //Resetear los writing state enviados
             List<UUID> chatsId = chatMiddlewareDatabaseDao.getWritingActions();
-//            System.out.println("12345 Chats to reset enviados "+ chatsId.size());
 
             if (chatsId != null && !chatsId.isEmpty()) {
                 for (UUID chatId : chatsId) {
                     chatMiddlewareDatabaseDao.saveWritingAction(chatId, ActionState.NONE);
-//                    System.out.println("12345 Action writing Updated " + chatId);
-//                    changes = true;
                 }
             }
 
             //Resetear los writing state recibidos
             List<Chat> chats = chatMiddlewareDatabaseDao.getChatListByWriting();
-//            System.out.println("12345 Chats to reset recibidos "+ chatsId.size());
 
             if (chats == null || chats.isEmpty()) return;
 
             for (Chat chat : chats) {
                 chat.setIsWriting(false);
                 chatMiddlewareDatabaseDao.saveChat(chat);
-//                System.out.println("12345 Chat writing Updated "+chat.getChatId());
                 changes = true;
             }
 
@@ -558,7 +458,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
                 fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
                 fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
-//                broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
             }
 
 
@@ -580,7 +479,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
 
             boolean changes = false;
 
-
             List<ActionOnline> actionOnlines;
             actionOnlines = chatMiddlewareDatabaseDao.getOnlineActionsByOnline();
 
@@ -601,8 +499,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
                 fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
                 fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
-
-                //            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
             }
         } catch (CantGetPendingActionListException e) {
             e.printStackTrace();
@@ -610,37 +506,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
             e.printStackTrace();
         }
     }
-
-//    public void checkOutgoingWritingStatus(){
-//        try {
-//            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-//                    pluginDatabaseSystem,
-//                    pluginId,
-//                    database,
-//                    errorManager,
-//                    pluginFileSystem);
-//
-//            List<UUID> chatIds = chatMiddlewareDatabaseDao.getWritingActions();
-//
-//            if(chatIds == null || chatIds.isEmpty()) return;
-//
-//            for(UUID chatId : chatIds){
-//                Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
-//                chat.setIsWriting(false);
-//                chatMiddlewareDatabaseDao.saveChat(chat);
-//            }
-//
-////            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-//        }catch(DatabaseOperationException e){
-//            e.printStackTrace();
-//        } catch (CantGetChatException e) {
-//            e.printStackTrace();
-//        } catch (CantSaveChatException e) {
-//            e.printStackTrace();
-//        } catch (CantGetPendingActionListException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public void checkIncomingWritingStatus(String senderPk) throws
             CantGetPendingTransactionException,
@@ -666,7 +531,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
             fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
             fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
-//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
         } catch (CantSaveChatException e) {
             throw new CantGetPendingTransactionException(
@@ -688,105 +552,6 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
             );
         }
     }
-
-//    public void checkIncomingOnlineStatus(UUID chatId) throws
-//            CantGetPendingTransactionException,
-//            UnexpectedResultReturnedFromDatabaseException {
-//        try {
-//            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-//                    pluginDatabaseSystem,
-//                    pluginId,
-//                    database,
-//                    errorManager,
-//                    pluginFileSystem);
-//
-//            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
-//            chat.setIsOnline(true);
-//            chatMiddlewareDatabaseDao.saveChat(chat);
-//
-//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-//
-//        } catch (CantSaveChatException e) {
-//            throw new CantGetPendingTransactionException(
-//                    e,
-//                    "Checking the incoming status pending transactions",
-//                    "Cannot update message from database"
-//            );
-//        } catch (DatabaseOperationException e) {
-//            throw new CantGetPendingTransactionException(
-//                    e,
-//                    "Checking the incoming status pending transactions",
-//                    "Cannot update message from database"
-//            );
-//        } catch (CantGetChatException e) {
-//            throw new CantGetPendingTransactionException(
-//                    e,
-//                    "Checking the incoming status pending transactions",
-//                    "Cannot update message from database"
-//            );
-//        }
-//    }
-
-    /**
-     * This method returns true if the chat and the message exists in database.
-     * This throws an exception instead return false if any element does not exists in database
-     * because this is not should happen.
-     *
-     * @param chatMetadata
-     * @return
-     * @throws CantGetChatException
-     * @throws CantGetPendingTransactionException
-     */
-//    private boolean checkChatMetadata(ChatMetadata chatMetadata) throws
-//            CantGetChatException,
-//            CantGetPendingTransactionException {
-//        UUID chatId = chatMetadata.getChatId();
-//        UUID messageId;
-//        if (chatMiddlewareDatabaseDao.chatIdExists(
-//                chatId)) {
-//            messageId = chatMetadata.getMessageId();
-//            if (chatMiddlewareDatabaseDao.messageIdExists(messageId)) {
-//                return true;
-//            } else {
-//                //TODO: I need to study how can I handle this case.
-//                return false;
-////                    throw new CantGetPendingTransactionException(
-////                            "The Message Id "+messageId+" does not exists in database");
-//            }
-//        } else {
-//            //This is a case that in this version I cannot handle
-//            throw new CantGetPendingTransactionException(
-//                    "The Chat Id " + chatId + " does not exists in database");
-//        }
-//    }
-
-    /**
-     * This method saves a new message in database
-     *
-     * @param chatMetadata
-     * @throws DatabaseOperationException
-     * @throws CantSaveMessageException
-     * @throws CantGetMessageException
-     */
-//    private void saveMessage(
-//            ChatMetadata chatMetadata) throws
-//            DatabaseOperationException,
-//            CantSaveMessageException,
-//            CantGetMessageException, SendStatusUpdateMessageNotificationException {
-//        System.out.println("12345 SAVING MESSAGE");
-//        Message messageRecorded = null;
-//        /**
-//         * In this case, the message is not created in database, so, is an incoming message,
-//         * I need to create a new message
-//         */
-//        messageRecorded = getMessageFromChatMetadata(
-//                chatMetadata);
-//        if (messageRecorded == null) return;
-//
-//        messageRecorded.setStatus(MessageStatus.RECEIVE);
-//        chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
-//        chatMiddlewareManager.sendDeliveredMessageNotification(messageRecorded);
-//    }
 
     /**
      * This method saves the new chat in database
@@ -840,12 +605,11 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
      * @param messageMetadata
      * @return
      */
-    private Message getMessageFromChatMetadata(MessageMetadata messageMetadata)
-            throws
-            CantGetMessageException {
-        if (messageMetadata == null) {
+    private Message getMessageFromChatMetadata(final MessageMetadata messageMetadata) throws CantGetMessageException {
+
+        if (messageMetadata == null)
             throw new CantGetMessageException("The chat metadata from network service is null");
-        }
+
         try {
             Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(messageMetadata.getLocalActorPublicKey());
 
@@ -853,28 +617,25 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
                     chatFromDatabase.getLocalActorPublicKey(),
                     Actors.CHAT
             );
-            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(chatLinkedActorIdentity);
-            List<ChatActorConnection> chatActorConnections = search.getResult();
-            ChatActorConnection actorConnection = null;
 
-            for (ChatActorConnection chatActorConnection : chatActorConnections) {
-                if (chatActorConnection.getPublicKey().equals(chatFromDatabase.getRemoteActorPublicKey())) {
-                    actorConnection = chatActorConnection;
-                    break;
-                }
-            }
-            if (actorConnection == null) {
+            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(chatLinkedActorIdentity);
+            ChatActorConnection actorConnection;
+
+            try {
+                actorConnection = search.findByPublicKey(chatFromDatabase.getRemoteActorPublicKey());
+            } catch (ActorConnectionNotFoundException ex) {
+
                 return null;
             }
 
-            Message message = new MessageImpl(
+            return new MessageImpl(
                     chatFromDatabase.getChatId(),
                     messageMetadata,
                     MessageStatus.CREATED,
                     TypeMessage.INCOMMING,
                     actorConnection.getConnectionId()//TODO:Revisar esto si afecta el envio ya que el public es un string//UUID.fromString(actorConnection.getPublicKey())
             );
-            return message;
+
         } catch (DatabaseOperationException e) {
             throw new CantGetMessageException(e,
                     "Getting message from ChatMetadata",
@@ -883,43 +644,11 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
             throw new CantGetMessageException(e,
                     "Getting message from ChatMetadata",
                     "Cannot get the chat");
-        } catch (CantListActorConnectionsException e) {
+        } catch (CantGetActorConnectionException e) {
             throw new CantGetMessageException(e,
                     "Getting message from ChatMetadata",
                     "Cannot get the ActorConnection");
         }
-    }
-
-
-    /**
-     * THis Method creates a new Chat from incoming Metadata
-     *
-     * @param chatMetadata
-     * @return
-     */
-    private Chat getChatFromChatMetadata(ChatMetadata chatMetadata) {
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        Date parsedDate = null;
-        try {
-            parsedDate = dateFormat.parse(chatMetadata.getDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Timestamp timestamp = new Timestamp(parsedDate.getTime());
-
-        return new ChatImpl(
-                chatMetadata.getChatId(),
-                chatMetadata.getObjectId(),
-                chatMetadata.getRemoteActorPublicKey(),
-                chatMetadata.getLocalActorPublicKey(),
-                chatMetadata.getChatName(),
-                ChatStatus.VISSIBLE,
-                timestamp,
-                timestamp,
-                TypeChat.INDIVIDUAL, //TODO:Revisar
-                false //TODO:Revisar
-        );
     }
 
     /**

@@ -345,7 +345,7 @@ public class ConnectionsWorldFragment
             if (!isRefreshing) {
                 isRefreshing = true;
                 if (identity != null) {
-                    moduleManager.listWorldChatActor(null, identity.getActorType(),
+                    moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
                             location, distance, alias, MAX, offset, identity.getPublicKey());
                 }
             }
@@ -357,8 +357,7 @@ public class ConnectionsWorldFragment
     public void onActorReceived(final List<ChatActorCommunityInformation> result) {
         try {
             if (isAttached) {
-                if (result != null &&
-                        result.size() > 0) {
+                if (result != null && result.size() > 0) {
                     if (getActivity() != null && adapter != null) {
                         if (offset == 0) {
                             if (lstChatUserInformations != null) {
