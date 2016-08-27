@@ -15,11 +15,8 @@ public class HardcodeConstants {
      */
 
 //    public static final String SERVER_IP_DEFAULT = "190.77.23.196";
-<<<<<<< HEAD
     public static final String SERVER_IP_DEFAULT = "186.23.58.203"; //"193.234.224.198";
-=======
-    public static final String SERVER_IP_DEFAULT = "192.168.1.35";//"193.234.224.198";
->>>>>>> 6bc0c7ef8d87276bc748155457e3c18898054e0b
+
 
 //    public static final String SERVER_IP_DEFAULT = "52.40.221.93";
 //    public static final String SERVER_IP_DEFAULT = "201.209.222.2";
