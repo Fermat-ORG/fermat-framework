@@ -41,7 +41,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -52,7 +54,10 @@ import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocati
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
@@ -99,7 +104,7 @@ public class ConnectionsWorldFragment
 
     private ChatActorCommunitySelectableIdentity identity;
     private int offset = 0;
-    private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
+    private List<ChatActorCommunityInformation> lstChatUserInformations;
     private DeviceLocation location = null;
     private double distance = 0;
     private String alias;
@@ -185,6 +190,10 @@ public class ConnectionsWorldFragment
             errorManager = appSession.getErrorManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
             applicationsHelper = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
+
+            FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
+            registerReceiver(fermatIntentFilter, new ChatListBroadcastReceiver());
+
             //Obtain Settings or create new Settings if first time opening subApp
             ChatActorCommunitySettings appSettings;
             try {
@@ -270,9 +279,6 @@ public class ConnectionsWorldFragment
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
             noData = (ImageView) rootView.findViewById(R.id.nodata);
             //Set up swipeRefresher
-//            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-//            swipeRefresh.setOnRefreshListener(this);
-//            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             showEmpty(true, emptyView);
@@ -339,20 +345,53 @@ public class ConnectionsWorldFragment
         try {
             if (!isRefreshing) {
                 isRefreshing = true;
-                final FermatWorker worker = new FermatWorker() {
-                    @Override
-                    protected Object doInBackground() throws Exception {
-                        return getMoreDataAsync(location, distance, alias, MAX, offset);
+                if (identity != null) {
+                    moduleManager.listWorldChatActor(null, identity.getActorType(),
+                            location, distance, alias, MAX, offset, identity.getPublicKey());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onActorReceived(final List<ChatActorCommunityInformation> result) {
+        try {
+            if (isAttached) {
+                if (result != null &&
+                        result.size() > 0) {
+                    if (getActivity() != null && adapter != null) {
+                        if (offset == 0) {
+                            if (lstChatUserInformations != null) {
+                                lstChatUserInformations.clear();
+                                lstChatUserInformations.addAll(result);
+                            } else {
+                                lstChatUserInformations = result;
+                            }
+                            adapter.refreshEvents(lstChatUserInformations);
+                        } else {
+                            for (ChatActorCommunityInformation info : result) {
+                                if (notInList(info)) {
+                                    lstChatUserInformations.add(info);
+                                }
+                            }
+                            adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
+                        }
+                        if (lstChatUserInformations.isEmpty()) {
+                            showEmpty(true, emptyView);
+                        } else {
+                            showEmpty(false, emptyView);
+                        }
+                        isRefreshing = false;
+                        offset = lstChatUserInformations.size();
                     }
-                };
-                worker.setContext(getActivity());
-                worker.execute();
+                } else{
+                    showEmpty(true, emptyView);
+                    isRefreshing = false;
+                }
             }
-        } catch (Exception ignore) {
-            if (executor != null) {
-                executor.shutdown();
-                executor = null;
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -391,18 +430,6 @@ public class ConnectionsWorldFragment
         progressBar.setVisibility(View.GONE);
     }
 
-    private List<ChatActorCommunityInformation> getMoreDataAsync(DeviceLocation location, double distance, String alias, int max, int offset) {
-        List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
-        try {
-            if (identity != null) {
-                moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(), location, distance, alias, max, offset, identity.getPublicKey());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return dataSet;
-    }
-
     @Override
     public void onFragmentFocus() {
     }
@@ -413,47 +440,6 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {
-    }
-
-    @Override
-    public void onUpdateView(FermatBundle bundle) {
-
-        try {
-            List<ChatActorCommunityInformation> profilesList = (List<ChatActorCommunityInformation>) bundle.get("worldActorList");
-
-            if (profilesList != null && profilesList.size() > 0) {
-
-                if (getActivity() != null && adapter != null) {
-                    if (offset == 0) {
-
-                        if (lstChatUserInformations != null) {
-                            lstChatUserInformations.clear();
-                            lstChatUserInformations.addAll(profilesList);
-                        } else
-                            lstChatUserInformations = new ArrayList<>(profilesList);
-
-                        adapter.refreshEvents(lstChatUserInformations);
-                    } else {
-                        for (ChatActorCommunityInformation info : profilesList)
-                            if (notInList(info)) {
-                                lstChatUserInformations.add(info);
-                            }
-                        adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
-                    }
-                    if (lstChatUserInformations.isEmpty()) {
-                        showEmpty(true, emptyView);
-                    } else {
-                        showEmpty(false, emptyView);
-                    }
-                }
-            } else
-                showEmpty(true, emptyView);
-
-        } catch (Exception e) {
-            System.out.println("OOUPPS THERE WAS AN ERROR HERE - !");
-            e.printStackTrace();
-        }
-
     }
 
     @Override
@@ -683,6 +669,32 @@ public class ConnectionsWorldFragment
                 }else{
                     Toast.makeText(getContext(),getResources().getString(R.string.cht_comm_text_gps), Toast.LENGTH_SHORT).show();
                 }
+            }
+        }
+    }
+
+    /**
+     * Receiver class implemented
+     */
+    private class ChatListBroadcastReceiver extends FermatBroadcastReceiver {
+
+        @Override
+        public void onReceive(FermatBundle fermatBundle) {
+            try {
+                if (isAttached) {
+                    String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+
+                    if (code.equals(ChatBroadcasterConstants.CHAT_COMM_ACTOR_RECEIVED)) {
+                        List<ChatActorCommunityInformation> actorProfiles = (List<ChatActorCommunityInformation>) fermatBundle.get(ChatBroadcasterConstants.CHAT_COMM_ACTOR_LIST);
+                        onActorReceived(actorProfiles);
+                    }
+                }
+            } catch (ClassCastException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            } catch (IllegalAccessException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
         }
     }

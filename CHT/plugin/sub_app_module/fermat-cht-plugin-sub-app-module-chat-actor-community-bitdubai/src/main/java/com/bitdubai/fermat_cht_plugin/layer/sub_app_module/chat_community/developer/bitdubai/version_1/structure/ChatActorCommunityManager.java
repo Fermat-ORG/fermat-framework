@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unsuppor
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
@@ -28,7 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_cht_api.all_definition.enums.BundleQuery;
+import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
@@ -68,6 +69,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 
 /**
  * Created by Eleazar (eorono@protonmail.com) on 3/04/16.
@@ -523,10 +526,14 @@ public class ChatActorCommunityManager
         }
 
         FermatBundle bundle = new FermatBundle();
-        bundle.put("worldActorList", worldActorList);
+
+        bundle.put(SOURCE_PLUGIN, Plugins.CHAT_COMMUNITY_SUP_APP_MODULE.getCode());
+        bundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+        bundle.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_COMM_ACTOR_RECEIVED);
+        bundle.put(ChatBroadcasterConstants.CHAT_COMM_ACTOR_LIST, worldActorList);
 
         System.out.println("CHAT ACTOR LIST FLOW -> handleActorListReceivedEvent -> END");
 
-        broadcaster.publish(BroadcasterType.UPDATE_VIEW, bundle, BundleQuery.LISTACTORS.getCode());
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), bundle);
     }
 }

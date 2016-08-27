@@ -403,7 +403,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         return 0;
     }
 
-    public void refreshEvents(ArrayList<ChatActorCommunityInformation> chatHistory) {
+    public void refreshEvents(List<ChatActorCommunityInformation> chatHistory) {
         for (int i = 0; i < chatHistory.size(); i++) {
             ChatActorCommunityInformation message = chatHistory.get(i);
             add(message);
