@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -232,9 +233,13 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         holder.name.setText(data.getAlias().substring(0, max));
         byte[] profileImage = data.getImage();
         if (profileImage != null && profileImage.length > 0) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
-            bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
-            holder.thumbnail.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+            try {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
+                holder.thumbnail.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+            }catch (Exception e){
+                Log.e(getClass().getName(),"Exception: "+e.getCause().toString()+", please check this..");
+            }
         } else
             holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
 
