@@ -121,7 +121,6 @@ public class ConnectionsWorldFragment
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
     private CommunityListAdapter adapter;
-    private ExecutorService executor;
     TextView noDatalabel;
     ImageView noData;
     private Button refreshButton;
@@ -431,19 +430,11 @@ public class ConnectionsWorldFragment
     }
 
     @Override
-    public void onFragmentFocus() {
-    }
-
-    @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
     }
 
     @Override
     public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {
-    }
-
-    @Override
-    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
     }
 
     public void onOptionMenuPrepared(Menu menu) {
