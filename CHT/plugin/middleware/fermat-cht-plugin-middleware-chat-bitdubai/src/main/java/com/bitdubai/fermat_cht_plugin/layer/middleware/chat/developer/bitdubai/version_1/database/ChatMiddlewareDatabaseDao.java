@@ -699,10 +699,55 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public Message newEmptyInstanceMessage() throws CantNewEmptyMessageException {
-        MessageImpl message = new MessageImpl();
-        message.setMessageId(UUID.randomUUID());
-        return message;
+    public MessageStatus getMessageStatus(final UUID messageId) throws CantGetMessageException, DatabaseOperationException {
+
+        try {
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+
+            table.addUUIDFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME, messageId, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
+
+            if (records.size() > 0)
+                return MessageStatus.getByCode(records.get(0).getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME));
+            else
+                return null;
+
+        } catch (Exception e) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "error trying to get Message from the database with filter: " + messageId.toString(),
+                    null);
+        }
+    }
+
+    public void updateMessageStatus(UUID messageId, MessageStatus status) throws CantSaveMessageException, DatabaseOperationException {
+
+        try {
+
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+
+            table.addUUIDFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME, messageId, DatabaseFilterType.EQUAL);
+
+            DatabaseTableRecord record = table.getEmptyRecord();
+
+            record.setFermatEnum(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME, status);
+
+            table.updateRecord(record);
+
+        } catch (Exception e) {
+
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to save the message Transaction in the database.",
+                    null);
+        }
     }
 
     public void saveMessage(Message message) throws CantSaveMessageException, DatabaseOperationException {

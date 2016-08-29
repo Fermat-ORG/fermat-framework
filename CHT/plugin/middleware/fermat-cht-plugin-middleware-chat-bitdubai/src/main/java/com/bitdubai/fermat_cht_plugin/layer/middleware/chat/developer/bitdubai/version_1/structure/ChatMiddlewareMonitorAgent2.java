@@ -337,11 +337,13 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
     public void checkIncomingStatus(MessageMetadata messageMetadata) throws
             CantGetPendingTransactionException,
             UnexpectedResultReturnedFromDatabaseException {
+
         try {
 
             System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == " + messageMetadata.getMessage() + " MESSAGE STATUS == " + messageMetadata.getMessageStatus());
 
             updateMessageStatus(messageMetadata);
+
             if (messageMetadata.getMessageStatus() != MessageStatus.READ) {
                 FermatBundle fermatBundle3 = new FermatBundle();
                 fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
@@ -659,30 +661,23 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent {
      * @throws CantSaveMessageException
      * @throws CantGetMessageException
      */
-    private void updateMessageStatus(
-            MessageMetadata messageMetadata) throws
+    private void updateMessageStatus(MessageMetadata messageMetadata) throws
             DatabaseOperationException,
             CantSaveMessageException,
             CantGetMessageException {
+
         System.out.println("12345 UPDATING MESSAGE STATUS");
         UUID messageId = messageMetadata.getMessageId();
-        Message messageRecorded = chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
-        if (messageRecorded == null) {
-            /**
-             * In this case, the message is not created in database, so, is an incoming message,
-             * I need to create a new message
-             */
+        MessageStatus messageStatus = chatMiddlewareDatabaseDao.getMessageStatus(messageId);
+        if (messageStatus == null) {
 
             System.out.println("************* MESSAGE DOES NOT EXIST");
-            messageRecorded = getMessageFromChatMetadata(
-                    messageMetadata);
-            if (messageRecorded == null) return;
+            return;
         }
-        if (messageRecorded.getStatus().equals(MessageStatus.READ))
+        if (messageStatus.equals(MessageStatus.READ))
             return;
 
-        messageRecorded.setStatus(messageMetadata.getMessageStatus());
-        chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
+        chatMiddlewareDatabaseDao.updateMessageStatus(messageId, messageMetadata.getMessageStatus());
         System.out.println("12345 MESSAGE STATUS UPDATED");
     }
 
