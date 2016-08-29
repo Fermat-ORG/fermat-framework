@@ -380,10 +380,24 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
                     dataSet.addAll(result);
                     country=null;
                     city=null;
+                    if (result.size()==0){
+                        //Toast.makeText(getActivity(), getResources().getString(R.string.no_users_for_location), Toast.LENGTH_SHORT).show();
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getActivity(), getResources().getString(R.string.no_users_for_location), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }else{
+                        //Toast.makeText(getActivity(), getResources().getString(R.string.users_for_location), Toast.LENGTH_SHORT).show();
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getActivity(), getResources().getString(R.string.users_for_location), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                 }else{
                     List<IntraUserInformation> result = moduleManager.getAllIntraUsers(intraUserIdentity, MAX, offset);
                     dataSet.addAll(result);
-
                 }
             }
         } catch (Exception e) {

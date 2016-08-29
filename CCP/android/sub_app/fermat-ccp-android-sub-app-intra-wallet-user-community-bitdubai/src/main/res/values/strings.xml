@@ -207,7 +207,9 @@
     <string name="you_dont_have_transactions_sent_text">You don\'t have transactions send</string>
     <string name="you_need_an_identity_before_you_can_enter_text">You need an identity before you can enter</string>
     <string name="young_wallet">Young wallet</string>
-    <string name="system_error">Oooops! recovering from system error</string>
+    <string name="system_error">Whoops! recovering from system error</string>
+    <string name="no_users_for_location">No connections near the location you chose</string>
+    <string name="users_for_location">These are the connections near the location you chose</string>
 
 
     <!-- Browser Tab -->
