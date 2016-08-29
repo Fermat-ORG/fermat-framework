@@ -50,13 +50,11 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
 
     void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException;
 
-    List<Message> getMessages() throws CantGetMessageException;
-
     List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException;
 
     Message getMessageByChatId(UUID chatId) throws CantGetMessageException;
 
-    int getCountMessageByChatId(UUID chatId) throws CantGetMessageException;
+    long getUnreadCountMessageByChatId(UUID chatId) throws CantGetMessageException;
 
     Message getMessageByMessageId(UUID messageId) throws CantGetMessageException;
 

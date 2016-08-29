@@ -112,11 +112,6 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
-    public List<Message> getMessages() throws CantGetMessageException {
-        return middlewareChatManager.getMessages();
-    }
-
-    @Override
     public List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException {
         return middlewareChatManager.getMessagesByChatId(chatId);
     }
@@ -127,8 +122,8 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
-    public int getCountMessageByChatId(UUID chatId) throws CantGetMessageException {
-        return middlewareChatManager.getCountMessageByChatId(chatId);
+    public long getUnreadCountMessageByChatId(UUID chatId) throws CantGetMessageException {
+        return middlewareChatManager.getUnreadCountMessageByChatId(chatId);
     }
 
     @Override

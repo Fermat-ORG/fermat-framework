@@ -41,13 +41,11 @@ public interface MiddlewareChatManager extends FermatManager {
 
     void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException;
 
-    List<Message> getMessages() throws CantGetMessageException;
-
     List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException;
 
     Message getMessageByChatId(UUID chatId) throws CantGetMessageException;
 
-    int getCountMessageByChatId(UUID chatId) throws CantGetMessageException;
+    long getUnreadCountMessageByChatId(UUID chatId) throws CantGetMessageException;
 
     Chat getChatByRemotePublicKey(String publicKey) throws CantGetChatException;
 

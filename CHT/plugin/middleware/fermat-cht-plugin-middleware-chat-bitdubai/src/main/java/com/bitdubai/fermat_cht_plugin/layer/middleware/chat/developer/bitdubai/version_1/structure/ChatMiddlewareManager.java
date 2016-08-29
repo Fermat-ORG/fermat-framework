@@ -274,33 +274,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     }
 
     /**
-     * This method returns a full message list.
-     *
-     * @return
-     * @throws CantGetMessageException
-     */
-    @Override
-    public List<Message> getMessages() throws CantGetMessageException {
-        try {
-            return this.chatMiddlewareDatabaseDao.getMessages();
-        } catch (DatabaseOperationException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantGetMessageException(
-                    e,
-                    "Getting the full messages list",
-                    "An unexpected error happened in a database operation");
-        } catch (Exception exception) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantGetMessageException(
-                    FermatException.wrapException(exception),
-                    "Getting the full messages list",
-                    "Unexpected exception");
-        }
-    }
-
-    /**
      * This method returns a message by chat Id.
      *
      * @param chatId
@@ -340,7 +313,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     public Message getMessageByChatId(UUID chatId) throws CantGetMessageException {
         try {
             ObjectChecker.checkArgument(chatId, "The chat id argument is null");
-            return this.chatMiddlewareDatabaseDao.getMessageByChatId(chatId);
+            return this.chatMiddlewareDatabaseDao.getFirstMessageByChatId(chatId);
         } catch (ObjectNotSetException e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
@@ -366,10 +339,10 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     }
 
     @Override
-    public int getCountMessageByChatId(UUID chatId) throws CantGetMessageException {
+    public long getUnreadCountMessageByChatId(UUID chatId) throws CantGetMessageException {
         try {
             ObjectChecker.checkArgument(chatId, "The message Id is null");
-            return this.chatMiddlewareDatabaseDao.getCountMessageByChatId(chatId);
+            return this.chatMiddlewareDatabaseDao.getUnreadCountMessageByChatId(chatId);
         } catch (ObjectNotSetException e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);

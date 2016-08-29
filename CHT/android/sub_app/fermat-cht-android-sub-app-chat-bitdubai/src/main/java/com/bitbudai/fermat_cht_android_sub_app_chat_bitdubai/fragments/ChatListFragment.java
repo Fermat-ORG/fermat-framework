@@ -105,7 +105,7 @@ public class ChatListFragment
     ArrayList<String> contactId = new ArrayList<>();
     ArrayList<String> status = new ArrayList<>();
     ArrayList<String> typeMessage = new ArrayList<>();
-    ArrayList<Integer> noReadMsgs = new ArrayList<>();
+    ArrayList<Long> noReadMsgs = new ArrayList<>();
     ArrayList<Bitmap> imgId = new ArrayList<>();
     View layout;
     PresentationDialog presentationDialog;
@@ -146,7 +146,7 @@ public class ChatListFragment
                                     String pk1 = cont.getPublicKey();
                                     String pk2 = chat.getRemoteActorPublicKey();
                                     if (pk2.equals(pk1)) {
-                                        noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
+                                        noReadMsgs.add(chatManager.getUnreadCountMessageByChatId(chatidtemp));
                                         contactId.add(pk1);
                                         contactName.add(cont.getAlias());
                                         Message mess = null;

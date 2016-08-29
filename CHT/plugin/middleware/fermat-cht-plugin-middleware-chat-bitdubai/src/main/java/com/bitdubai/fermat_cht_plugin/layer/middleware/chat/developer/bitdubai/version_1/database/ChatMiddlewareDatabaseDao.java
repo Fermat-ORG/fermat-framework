@@ -20,12 +20,10 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
@@ -72,33 +70,19 @@ public class ChatMiddlewareDatabaseDao {
         return getChats(null);
     }
 
-    public List<Chat> getChats(DatabaseTableFilter filter) throws
-            CantGetChatException,
-            DatabaseOperationException {
-        //if filter is null all records
-        Database database = null;
+    public List<Chat> getChats(DatabaseTableFilter filter) throws CantGetChatException, DatabaseOperationException {
+
         try {
-            database = openDatabase();
             List<Chat> chats = new ArrayList<>();
-            // I will add the contact information from the database
-            List<DatabaseTableRecord> records = getChatData(filter);
-            if (records == null || records.isEmpty()) {
-                return chats;
-            }
-            for (DatabaseTableRecord record : getChatData(filter)) {
-                final Chat chat = getChatTransaction(record);
 
-                chats.add(chat);
-            }
-
-            database.closeDatabase();
+            for (DatabaseTableRecord record : getChatData(filter))
+                chats.add(getChatTransaction(record));
 
             return chats;
+
         } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
+
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new DatabaseOperationException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
@@ -306,12 +290,9 @@ public class ChatMiddlewareDatabaseDao {
 
 
     public void deleteChats() throws CantDeleteChatException, DatabaseOperationException {
-        try {
-//            database = openDatabase();
-//            DatabaseTransaction transaction = database.newTransaction();
 
-//            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
-//            DatabaseTableFilter filter = null;
+        try {
+
             List<Chat> chats = getChatList();
             for (Chat chat : chats) {
                 deleteChat(chat);
@@ -349,55 +330,6 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    /**
-     * This method returns the full messages list.
-     *
-     * @return
-     * @throws DatabaseOperationException
-     * @throws CantGetMessageException
-     */
-    public List<Message> getMessages() throws
-            DatabaseOperationException,
-            CantGetMessageException {
-        /**
-         * I'll pass null as argument to the next method to get all the chat list.
-         */
-        return getMessages(null);
-    }
-
-    public List<Message> getMessages(DatabaseTableFilter filter) throws CantGetMessageException, DatabaseOperationException {
-        //if filter is null all records
-        Database database = null;
-        try {
-            database = openDatabase();
-            List<Message> messages = new ArrayList<>();
-            // I will add the message information from the database
-            List<DatabaseTableRecord> records = getMessageData(filter);
-            if (records == null || records.isEmpty()) {
-                return messages;
-            }
-            for (DatabaseTableRecord record : records) {
-                final Message message = getMessageTransaction(record);
-                despurifyMessage(message);
-                messages.add(message);
-            }
-
-            database.closeDatabase();
-
-            return messages;
-        } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new DatabaseOperationException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    e.getMessage(),
-                    null);
-        }
-    }
-
     public void purifyMessage(Message message) {
 //        String text = message.getMessage();
 //        char a = 39;
@@ -418,20 +350,26 @@ public class ChatMiddlewareDatabaseDao {
     }
 
     public List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException {
-        Database database = null;
+
         try {
-            database = openDatabase();
-            List<Message> messages = new ArrayList<>();
+
+
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
-            DatabaseTableFilter filter = table.getEmptyTableFilter();
-            filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(chatId.toString());
-            filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
-            // I will add the message information from the database
-            List<DatabaseTableRecord> records = getMessageData(filter);
+
+            table.addUUIDFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, chatId, DatabaseFilterType.EQUAL);
+
+            table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
+
             if (records == null || records.isEmpty()) {
                 return null;
             }
+
+            List<Message> messages = new ArrayList<>();
+
             for (DatabaseTableRecord record : records) {
                 final Message message = getMessageTransaction(record);
                 despurifyMessage(message);
@@ -445,8 +383,6 @@ public class ChatMiddlewareDatabaseDao {
             }
             return messages;
         } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new CantGetMessageException(
@@ -457,40 +393,31 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException {
-        Database database = null;
+    public Message getFirstMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException {
+
         try {
-            database = openDatabase();
-//            List<Message> messages = new ArrayList<>();
+
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
-            DatabaseTableFilter filter = table.getEmptyTableFilter();
-            filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(chatId.toString());
-            filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
 
-            // I will add the message information from the database
+            table.addUUIDFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, chatId, DatabaseFilterType.EQUAL);
 
+            table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
-            List<DatabaseTableRecord> records = getMessageDataDesceding(filter);
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
+
             if (records == null || records.isEmpty())
                 return null;
 
             final Message message = getMessageTransaction(records.get(0));
 
-            database.closeDatabase();
-
-            if (message == null) {
-                return null;
-            }
-
             despurifyMessage(message);
 
             return message;
         } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
+
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new DatabaseOperationException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
@@ -499,50 +426,19 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public int getCountMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException {
-        int countRecord = 0;
-        Database database = null;
+    public long getUnreadCountMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException {
+
         try {
-            database = openDatabase();
-            List<Message> messages = new ArrayList<>();
+
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
-            DatabaseTableFilter filter = table.getEmptyTableFilter();
-            filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(chatId.toString());
-            //filter.setValue(TypeMessage.INCOMMING.getCode());
-            filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
-            //filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME);
-            // I will add the message information from the database
-            List<DatabaseTableRecord> records = getMessageData(filter);
-            if (records == null || records.isEmpty()) {
-                return countRecord;
-            }
-            for (DatabaseTableRecord record : records) {
-                final Message message = getMessageTransaction(record);
 
-                messages.add(message);
-            }
+            table.addUUIDFilter      (ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, chatId               , DatabaseFilterType.EQUAL);
+            table.addFermatEnumFilter(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME , MessageStatus.CREATED, DatabaseFilterType.EQUAL);
 
-            database.closeDatabase();
+            return table.getCount();
 
-            for (Message message : messages) {
-                if (message.getStatus().getCode() != MessageStatus.READ.getCode()) {
-                    if (message.getType().getCode() != TypeMessage.OUTGOING.getCode()) {
-                        countRecord++;
-                    }
-                }
-            }
-
-            if (messages.isEmpty()) {
-                return countRecord;
-            }
-
-            return countRecord;
         } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantGetMessageException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
@@ -578,33 +474,25 @@ public class ChatMiddlewareDatabaseDao {
     }
 
     public Message getMessageByMessageId(UUID messageId) throws CantGetMessageException, DatabaseOperationException {
-        Database database = null;
+
         try {
-            database = openDatabase();
-            List<Message> messages = new ArrayList<>();
+
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
-            DatabaseTableFilter filter = table.getEmptyTableFilter();
-            filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(messageId.toString());
-            filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_FIRST_KEY_COLUMN);
-            // I will add the message information from the database
-            for (DatabaseTableRecord record : getMessageData(filter)) {
-                final Message message = getMessageTransaction(record);
 
-                messages.add(message);
-            }
+            table.addUUIDFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME, messageId, DatabaseFilterType.EQUAL);
 
-            database.closeDatabase();
+            table.loadToMemory();
 
-            if (messages.isEmpty()) {
+            List<DatabaseTableRecord> records = table.getRecords();
+
+            if (records.size() > 0) {
+                Message message = getMessageTransaction(records.get(0));
+                despurifyMessage(message);
+                return message;
+            } else
                 return null;
-            }
-            despurifyMessage(messages.get(0));
-
-            return messages.get(0);
         } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
+
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new DatabaseOperationException(
@@ -669,7 +557,7 @@ public class ChatMiddlewareDatabaseDao {
     public void saveMessage(Message message) throws CantSaveMessageException, DatabaseOperationException {
         try {
             System.out.println("*** 12345 case 4:send msg in Dao layer" + new Timestamp(System.currentTimeMillis()));
-            database = openDatabase();
+
             DatabaseTransaction transaction = database.newTransaction();
 
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
@@ -693,13 +581,9 @@ public class ChatMiddlewareDatabaseDao {
 
             //I execute the transaction and persist the database side of the chat.
             database.executeTransaction(transaction);
-            database.closeDatabase();
 
         } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new DatabaseOperationException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
@@ -772,34 +656,6 @@ public class ChatMiddlewareDatabaseDao {
         return table.getRecords();
     }
 
-    private List<DatabaseTableRecord> getMessageData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-
-        DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
-
-        if (filter != null)
-            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-
-        table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT, DatabaseFilterOrder.ASCENDING);
-
-        table.loadToMemory();
-        return table.getRecords();
-    }
-
-    private List<DatabaseTableRecord> getMessageDataDesceding(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
-
-        if (filter != null)
-            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-
-        //table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
-        //TODO: bring code from the other branch where this issue is fixed
-        table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT, DatabaseFilterOrder.DESCENDING);
-
-        table.loadToMemory();
-
-        return table.getRecords();
-    }
-
     private Chat getChatTransaction(final DatabaseTableRecord chatTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
         ChatImpl chat = new ChatImpl();
 
@@ -816,18 +672,11 @@ public class ChatMiddlewareDatabaseDao {
         chat.setIsWriting(Boolean.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING)));
         chat.setIsOnline(Boolean.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_IS_ONLINE)));
 
-        try {
-            chat.setContactAssociated(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST));
-        } catch (CantGetContactListException e) {
-            //If the contactList String is invalid we need to get to stablest an empty list of contact
-            List<Contact> contactList = new ArrayList<>();
-            chat.setContactAssociated(contactList);
-        }
-
         return chat;
     }
 
     private Message getMessageTransaction(final DatabaseTableRecord messageTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
+
         MessageImpl message = new MessageImpl();
 
         message.setChatId(messageTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME));
@@ -839,39 +688,31 @@ public class ChatMiddlewareDatabaseDao {
         message.setContactId(messageTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID));
         message.setCount(messageTransactionRecord.getLongValue(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT));
 
-
         return message;
     }
 
     public long getLastMessageCount() {
-        Database database = null;
+
         try {
-            database = openDatabase();
-            List<Message> messages = new ArrayList<>();
+
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+
             table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT, DatabaseFilterOrder.DESCENDING);
+
             table.setFilterTop("1");
+
             table.loadToMemory();
 
-            for (DatabaseTableRecord record : table.getRecords()) {
-                final Message message = getMessageTransaction(record);
+            List<DatabaseTableRecord> records = table.getRecords();
 
-                messages.add(message);
-            }
-
-            database.closeDatabase();
-
-            if (messages.isEmpty()) {
+            if (records.isEmpty())
                 return 0;
-            }
+            else
+                return records.get(0).getLongValue(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT);
 
-            return messages.get(0).getCount();
         } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         }
-        return 1;
+        return 0;
     }
 }
