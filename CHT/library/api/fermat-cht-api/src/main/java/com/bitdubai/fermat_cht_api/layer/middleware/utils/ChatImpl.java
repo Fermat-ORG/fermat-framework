@@ -6,7 +6,6 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 
 import java.sql.Timestamp;
@@ -38,43 +37,6 @@ public class ChatImpl implements Chat {
      * Constructor without arguments
      */
     public ChatImpl() {
-    }
-
-    /**
-     * Construct with parameters. In this version we not included the List<Contact> contactAssociated
-     * as a constructor argument because we get the contact from a remote device, this parameter
-     * can be set later.
-     *
-     * @param chatId
-     * @param objectId
-     * @param localActorPublicKey
-     * @param remoteActorPublicKey
-     * @param chatName
-     * @param status
-     * @param date
-     * @param lastMessageDate
-     */
-    public ChatImpl(UUID chatId,
-                    UUID objectId,
-                    String localActorPublicKey,
-                    String remoteActorPublicKey,
-                    String chatName,
-                    ChatStatus status,
-                    Timestamp date,
-                    Timestamp lastMessageDate,
-                    TypeChat typeChat,
-                    boolean scheduledDelivery
-    ) {
-        this.chatId = chatId;
-        this.objectId = objectId;
-        this.localActorPublicKey = localActorPublicKey;
-        this.remoteActorPublicKey = remoteActorPublicKey;
-        this.chatName = chatName;
-        this.status = status;
-        this.date = date;
-        this.lastMessageDate = lastMessageDate;
-        this.typeChat = typeChat;
-        this.scheduledDelivery = scheduledDelivery;
     }
 
     @Override
@@ -158,16 +120,6 @@ public class ChatImpl implements Chat {
     }
 
     /**
-     * This method returns a List<Contact> associated to this chat
-     *
-     * @return
-     */
-    @Override
-    public List<Contact> getContactAssociated() {
-        return this.contactAssociated;
-    }
-
-    /**
      * This method set the contact associated list
      *
      * @param chatContacts
@@ -175,19 +127,6 @@ public class ChatImpl implements Chat {
     @Override
     public void setContactAssociated(List<Contact> chatContacts) {
         this.contactAssociated = chatContacts;
-    }
-
-    /**
-     * This method set one contact in contact associated list
-     *
-     * @param contact
-     */
-    @Override
-    public void setContactAssociated(Contact contact) {
-        if (this.contactAssociated == null) {
-            this.contactAssociated = new ArrayList<>();
-        }
-        this.contactAssociated.add(contact);
     }
 
     /**
@@ -233,11 +172,6 @@ public class ChatImpl implements Chat {
     }
 
     @Override
-    public void setMessagesAsociated(List<Message> messages) {
-
-    }
-
-    @Override
     public TypeChat getTypeChat() {
         return typeChat;
     }
@@ -245,17 +179,6 @@ public class ChatImpl implements Chat {
     @Override
     public void setTypeChat(TypeChat typeChat) {
         this.typeChat = typeChat;
-    }
-
-
-    @Override
-    public List<GroupMember> getGroupMembersAssociated() {
-        return null;
-    }
-
-    @Override
-    public void setGroupMembersAssociated(List<GroupMember> groupMembers) {
-
     }
 
     @Override
@@ -289,6 +212,20 @@ public class ChatImpl implements Chat {
 
     @Override
     public String toString() {
-        return "ChatImpl{" + "chatId=" + chatId + ", objectId=" + objectId + ", localActorPublicKey='" + localActorPublicKey + '\'' + ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' + ", chatName='" + chatName + '\'' + ", status=" + status + ", date=" + date + ", lastMessageDate=" + lastMessageDate + ", contactAssociated=" + contactAssociated + '}';
+        return "ChatImpl{" +
+                "chatId=" + chatId +
+                ", objectId=" + objectId +
+                ", localActorPublicKey='" + localActorPublicKey + '\'' +
+                ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
+                ", chatName='" + chatName + '\'' +
+                ", status=" + status +
+                ", date=" + date +
+                ", lastMessageDate=" + lastMessageDate +
+                ", contactAssociated=" + contactAssociated +
+                ", typeChat=" + typeChat +
+                ", scheduledDelivery=" + scheduledDelivery +
+                ", isWriting=" + isWriting +
+                ", isOnline=" + isOnline +
+                '}';
     }
 }

@@ -263,7 +263,7 @@ public class ChatFragment
                     break;
                 case 2:
                     try {
-                        final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, null, null, null, chatManager, errorManager);
+                        final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
                         alert.setTextTitle("Clear Chat");
                         alert.setTextBody("Do you want to clear this chat? All messages in here will be erased");
                         alert.setType("clean-chat");

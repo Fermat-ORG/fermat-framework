@@ -374,6 +374,41 @@ public abstract class ActorConnectionDao<T extends ActorConnection> {
         }
     }
 
+    public UUID getConnectionId(final ActorIdentity linkedIdentity,
+                                final String        publicKey     ) throws CantGetActorConnectionException, ActorConnectionNotFoundException {
+
+        if (linkedIdentity == null)
+            throw new CantGetActorConnectionException(null, "", "The linkedIdentity is required, can not be null");
+
+        if (publicKey == null)
+            throw new CantGetActorConnectionException(null, "", "The publicKey is required, can not be null");
+
+        try {
+
+            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
+
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+
+            actorConnectionsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+
+
+            if (records != null && !records.isEmpty())
+                return records.get(0).getUUIDValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME);
+            else
+                throw new ActorConnectionNotFoundException("publicKey:"+publicKey, "Actor connection not found with the given public key");
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantGetActorConnectionException(
+                    e,
+                    "linkedIdentity: - publicKey: " + publicKey,
+                    "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
     public List<T> listActorConnections(final DatabaseTable actorConnectionsTable) throws CantListActorConnectionsException {
 
         try {

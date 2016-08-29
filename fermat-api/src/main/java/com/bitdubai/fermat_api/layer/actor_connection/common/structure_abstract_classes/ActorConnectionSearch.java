@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME;
 import static com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME;
@@ -137,6 +138,15 @@ public abstract class ActorConnectionSearch<T extends ActorConnection> {
             return dao.getConnectionState(actorIdentity, publicKey);
         } catch (ActorConnectionNotFoundException exception) {
             return ConnectionState.NO_CONNECTED;
+        }
+    }
+
+    public UUID getConnectionId(String publicKey) throws CantGetActorConnectionException {
+
+        try {
+            return dao.getConnectionId(actorIdentity, publicKey);
+        } catch (ActorConnectionNotFoundException exception) {
+            return null;
         }
     }
 

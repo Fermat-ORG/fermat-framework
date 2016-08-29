@@ -71,7 +71,7 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
     /**
      * Initializes all event listener and configure
      */
-   // private void initializeActorNetworkServiceListeners() {
+    // private void initializeActorNetworkServiceListeners() {
 
         /*
          * 1. Listen and handle Network Client Actor Profile Registered Event
@@ -133,7 +133,6 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
                 exception.printStackTrace();
             }
         }
-        actorToRegister.setNsIdentityPublicKey(this.getPublicKey());
         actorToRegister.setExtraData(extraData);
 
         System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  LOCATION AND DATA SET");
@@ -201,7 +200,7 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
         }
 
-       }
+    }
 
     private ActorProfile getRegisteredActorByPublicKey(final String publicKey) {
 
@@ -272,7 +271,7 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         /*if (this.getConnection() != null)
             return this.getConnection().getActorFullPhoto(publicKey);
         else*/
-            return null;
+        return null;
     }
 
     protected final void onNetworkServiceRegistered() {

@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -11,33 +11,12 @@ import java.util.UUID;
 public class ContactImpl implements Contact {
     //Documentar
     private UUID contactId;
-    private String remoteName;
     private String alias;
-    private PlatformComponentType remoteActorType;
     private String remoteActorPublicKey;
-    private long creationDate;
     private byte[] image;
     private String contactStatus;
 
     public ContactImpl() {
-    }
-
-    public ContactImpl(UUID contactId,
-                       String remoteName,
-                       String alias,
-                       PlatformComponentType remoteActorType,
-                       String remoteActorPublicKey,
-                       long creationDate,
-                       byte[] image,
-                       String contactStatus) {
-        this.contactId = contactId;
-        this.remoteName = remoteName;
-        this.alias = alias;
-        this.remoteActorType = remoteActorType;
-        this.remoteActorPublicKey = remoteActorPublicKey;
-        this.creationDate = creationDate;
-        this.image = image;
-        this.contactStatus = contactStatus;
     }
 
     @Override
@@ -51,16 +30,6 @@ public class ContactImpl implements Contact {
     }
 
     @Override
-    public String getRemoteName() {
-        return this.remoteName;
-    }
-
-    @Override
-    public void setRemoteName(String remoteName) {
-        this.remoteName = remoteName;
-    }
-
-    @Override
     public String getAlias() {
         return this.alias;
     }
@@ -71,16 +40,6 @@ public class ContactImpl implements Contact {
     }
 
     @Override
-    public PlatformComponentType getRemoteActorType() {
-        return this.remoteActorType;
-    }
-
-    @Override
-    public void setRemoteActorType(PlatformComponentType remoteActorType) {
-        this.remoteActorType = remoteActorType;
-    }
-
-    @Override
     public String getRemoteActorPublicKey() {
         return this.remoteActorPublicKey;
     }
@@ -88,16 +47,6 @@ public class ContactImpl implements Contact {
     @Override
     public void setRemoteActorPublicKey(String remoteActorPublicKey) {
         this.remoteActorPublicKey = remoteActorPublicKey;
-    }
-
-    @Override
-    public long getCreationDate() {
-        return this.creationDate;
-    }
-
-    @Override
-    public void setCreationDate(long creationDate) {
-        this.creationDate = creationDate;
     }
 
     @Override
@@ -122,6 +71,12 @@ public class ContactImpl implements Contact {
 
     @Override
     public String toString() {
-        return "ContactImpl{" + "contactId=" + contactId + ", remoteName='" + remoteName + '\'' + ", alias='" + alias + '\'' + ", remoteActorType=" + remoteActorType + ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' + ", creationDate=" + creationDate + '\'' + ", contactStatus=" + contactStatus + '}';
+        return "ContactImpl{" +
+                "contactId=" + contactId +
+                ", alias='" + alias + '\'' +
+                ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
+                ", image=" + Arrays.toString(image) +
+                ", contactStatus='" + contactStatus + '\'' +
+                '}';
     }
 }

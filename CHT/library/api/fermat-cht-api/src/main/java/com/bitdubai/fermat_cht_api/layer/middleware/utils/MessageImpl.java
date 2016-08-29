@@ -7,9 +7,6 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MessageMetadata;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -29,30 +26,18 @@ public class MessageImpl implements Message {
     public MessageImpl() {
     }
 
-    public MessageImpl(
-            UUID chatId,
-            MessageMetadata messageMetadata,
-            MessageStatus messageStatus,
-            TypeMessage typeMessage,
-            UUID contactId
-    ) {
+    public MessageImpl(UUID chatId,
+                       MessageMetadata messageMetadata,
+                       MessageStatus messageStatus,
+                       TypeMessage typeMessage,
+                       UUID contactId) {
+
         messageId = messageMetadata.getMessageId();
-//        messageId=UUID.randomUUID();
         this.chatId = chatId;
         message = messageMetadata.getMessage();
         status = messageStatus;
         type = typeMessage;
-//        messageDate=new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        Date parsedDate = null;
-        try {
-            parsedDate = dateFormat.parse(messageMetadata.getDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        messageDate = new Timestamp(
-                timestamp.getTime());
+        messageDate = new Timestamp(System.currentTimeMillis());
         this.contactId = contactId;
     }
 

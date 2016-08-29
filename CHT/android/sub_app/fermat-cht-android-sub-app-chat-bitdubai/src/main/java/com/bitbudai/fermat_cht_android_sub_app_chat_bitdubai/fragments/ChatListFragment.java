@@ -600,7 +600,7 @@ public class ChatListFragment
                 case 2:
                     try {
                         if (chatId != null && chatId.size() > 0) {
-                            final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, null, null, null, chatManager, errorManager);
+                            final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
                             alert.setTextTitle("Delete All Chats");
                             alert.setTextBody("Do you want to delete all chats? All chats will be erased");
                             alert.setType("delete-chats");
@@ -685,7 +685,7 @@ public class ChatListFragment
         int id = item.getItemId();
         if (id == R.id.menu_delete_chat) {
             try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, null, null, null, chatManager, errorManager);
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
                 alert.setTextTitle("Delete Chat");
                 alert.setTextBody("Do you want to delete this chat?");
                 alert.setType("delete-chat");
@@ -710,7 +710,7 @@ public class ChatListFragment
         }
         if (id == R.id.menu_clean_chat) {
             try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, null, null, null, chatManager, errorManager);
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
                 alert.setTextTitle("Clear Chat");
                 alert.setTextBody("Do you want to clear this chat? All messages in here will be erased");
                 alert.setType("clean-chat");
@@ -733,7 +733,7 @@ public class ChatListFragment
         }
         if (id == R.id.menu_delete_all_chats) {
             try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, null, null, null, chatManager, errorManager);
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
                 alert.setTextTitle("Delete All Chats");
                 alert.setTextBody("Do you want to delete all chats? All chats will be erased");
                 alert.setType("delete-chats");

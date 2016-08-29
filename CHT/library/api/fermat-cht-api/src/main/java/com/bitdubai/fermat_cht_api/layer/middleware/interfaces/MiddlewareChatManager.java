@@ -57,17 +57,7 @@ public interface MiddlewareChatManager extends FermatManager {
 
     void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
 
-    void sendDeliveredMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
-
     void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException;
-
-    boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus;
-
-    boolean checkOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus;
-
-    String checkLastConnection(String remotePublicKey) throws CantGetOnlineStatus;
-
-    void activeOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus;
 
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 

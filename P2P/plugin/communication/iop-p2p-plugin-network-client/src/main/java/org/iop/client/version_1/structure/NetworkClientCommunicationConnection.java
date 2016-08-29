@@ -197,28 +197,28 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             @Override
             public boolean onDisconnect(CloseReason closeReason) {
-                    System.out.println("##########################################################################");
-                    System.out.println("#  NetworkClientCommunicationConnection  - Disconnect -> Reconnecting... #");
-                    System.out.println("##########################################################################");
-                    return closeReason.getCloseCode() != CloseReason.CloseCodes.NORMAL_CLOSURE;
+                System.out.println("##########################################################################");
+                System.out.println("#  NetworkClientCommunicationConnection  - Disconnect -> Reconnecting... #");
+                System.out.println("##########################################################################");
+                return closeReason.getCloseCode() != CloseReason.CloseCodes.NORMAL_CLOSURE;
             }
 
             @Override
             public boolean onConnectFailure(Exception exception) {
-                    try {
+                try {
 
-                        // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
-                        Thread.sleep(5000);
+                    // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
+                    Thread.sleep(5000);
 
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-                    System.out.println("###############################################################################");
-                    System.out.println("#  NetworkClientCommunicationConnection  - Connect Failure -> Reconnecting... #");
-                    System.out.println("###############################################################################");
+                System.out.println("###############################################################################");
+                System.out.println("#  NetworkClientCommunicationConnection  - Connect Failure -> Reconnecting... #");
+                System.out.println("###############################################################################");
 
-                    return tryToReconnect;
+                return tryToReconnect;
             }
 
         };
@@ -308,27 +308,27 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         // if it is not an external node, then i register it
 //        if (!isExternalNode) {
-            ClientProfile clientProfile = new ClientProfile();
-            clientProfile.setIdentityPublicKey(clientIdentity.getPublicKey());
-            clientProfile.setDeviceType("");
+        ClientProfile clientProfile = new ClientProfile();
+        clientProfile.setIdentityPublicKey(clientIdentity.getPublicKey());
+        clientProfile.setDeviceType("");
 
-            try {
-                if (locationManager!=null) {
-                    if (locationManager.getLocation() != null) {
-                        clientProfile.setLocation(locationManager.getLocation());
-                    }
-                }else {
-                    System.out.println("LocationManager null");
+        try {
+            if (locationManager!=null) {
+                if (locationManager.getLocation() != null) {
+                    clientProfile.setLocation(locationManager.getLocation());
                 }
-            } catch (CantGetDeviceLocationException e) {
-                e.printStackTrace();
+            }else {
+                System.out.println("LocationManager null");
             }
+        } catch (CantGetDeviceLocationException e) {
+            e.printStackTrace();
+        }
 
-            try {
-                registerProfile(clientProfile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            registerProfile(clientProfile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //        } else { // if it is an external node, i will raise the event for all the calls done to this connection.
 //
 //            for (NetworkClientCall networkClientCall : activeCalls) {
@@ -366,7 +366,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         if (profile instanceof ActorProfile) {
             packageType = PackageType.CHECK_IN_ACTOR_REQUEST;
             System.out.println("##########################\nRegistering actor profile\n############################");
-            ((ActorProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
+//            ((ActorProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
         }else if (profile instanceof ClientProfile) {
             packageType = PackageType.CHECK_IN_CLIENT_REQUEST;
         }else if (profile instanceof NetworkServiceProfile) {
@@ -417,7 +417,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         if (profile instanceof ActorProfile) {
             packageType = PackageType.UPDATE_ACTOR_PROFILE_REQUEST;
-            ((ActorProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
+//            ((ActorProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
             profileUpdateMsgRequest = new UpdateActorProfileMsgRequest(profile);
             profileUpdateMsgRequest.setMessageContentType(MessageContentType.JSON);
 
@@ -518,7 +518,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                 //todo: esto hay que mejorarlo
                 Package pack = Package.createInstance(
                         packageContent.toJson(),
-                        networkServiceType,
                         packageType,
                         clientIdentity.getPrivateKey(),
                         destinationIdentityPublicKey
@@ -567,9 +566,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
     //todo: ver que el id del mensaje sea unico
     public boolean sendSyncPackageMessage(final PackageContent     packageContent              ,
-                                   final NetworkServiceType networkServiceType          ,
-                                   final String             destinationIdentityPublicKey,
-                                       UUID messageId) throws CantSendMessageException {
+                                          final NetworkServiceType networkServiceType          ,
+                                          final String             destinationIdentityPublicKey,
+                                          UUID messageId) throws CantSendMessageException {
         System.out.println("******* IS CONNECTED: " + isConnected() + " - TRYING NO SEND = " + packageContent.toJson());
         if (isConnected()){
 
@@ -577,7 +576,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                 networkClientCommunicationChannel.getClientConnection().getBasicRemote().sendObject(
                         Package.createInstance(
                                 packageContent.toJson(),
-                                networkServiceType,
                                 PackageType.MESSAGE_TRANSMIT,
                                 clientIdentity.getPrivateKey(),
                                 destinationIdentityPublicKey

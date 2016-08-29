@@ -40,20 +40,19 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.events_op_codes.EventOp;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.fermat_p2p_layer.version_1.structure.PackageInformation;
-import com.fermat_p2p_layer.version_1.structure.database.P2PLayerEventsDao;
-import com.fermat_p2p_layer.version_1.structure.exceptions.CantInitializeP2PLayerDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.fermat_p2p_layer.version_1.structure.MessageSender;
+import com.fermat_p2p_layer.version_1.structure.PackageInformation;
 import com.fermat_p2p_layer.version_1.structure.PendingMessagesSupervisorAgent;
 import com.fermat_p2p_layer.version_1.structure.database.P2PLayerDao;
 import com.fermat_p2p_layer.version_1.structure.database.P2PLayerDatabaseConstants;
 import com.fermat_p2p_layer.version_1.structure.database.P2PLayerDatabaseFactory;
+import com.fermat_p2p_layer.version_1.structure.database.P2PLayerEventsDao;
+import com.fermat_p2p_layer.version_1.structure.exceptions.CantInitializeP2PLayerDatabaseException;
 import com.fermat_p2p_layer.version_1.structure.exceptions.CantPersistsMessageException;
 
 import java.util.Collection;

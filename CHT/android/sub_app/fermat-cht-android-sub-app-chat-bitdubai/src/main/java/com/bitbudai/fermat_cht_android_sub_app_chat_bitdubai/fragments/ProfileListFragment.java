@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
@@ -28,9 +27,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Profile List fragment
@@ -112,20 +109,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
 
         try {
             //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-            List<ChatUserIdentity> con = null;//chatManager.getChatUserIdentities();
-            int size = con.size();
-            if (size > 0) {
-                for (int i = 0; i < size; i++) {
-                    profilename.add(con.get(i).getAlias());
-                    profileid.add(con.get(i).getPublicKey());
-                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getImage());
-                    BitmapDrawable bmd = new BitmapDrawable(bytes);
-                    profileicon.add(bmd.getBitmap());
-                }
-            } else {
-
-                text.setText("No Registered Profile. Please create one in any Fermat Community.");
-            }
+            text.setText("No Registered Profile. Please create one in any Fermat Community.");
 
         } catch (Exception e) {
             if (errorManager != null)

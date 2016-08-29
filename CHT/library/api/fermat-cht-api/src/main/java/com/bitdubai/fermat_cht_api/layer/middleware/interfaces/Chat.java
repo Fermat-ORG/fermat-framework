@@ -46,12 +46,7 @@ public interface Chat extends Serializable {
 
     void setLastMessageDate(Timestamp lastMessageDate);
 
-    //New objects to make a relation between messages and this interface
-    List<Contact> getContactAssociated();
-
     void setContactAssociated(List<Contact> chatContacts);
-
-    void setContactAssociated(Contact contact);
 
     boolean isWriting();
 
@@ -78,15 +73,9 @@ public interface Chat extends Serializable {
 
     List<Message> getMessagesAsociated();
 
-    void setMessagesAsociated(List<Message> messages);
-
     TypeChat getTypeChat();
 
     void setTypeChat(TypeChat typeChat);
-
-    List<GroupMember> getGroupMembersAssociated();
-
-    void setGroupMembersAssociated(List<GroupMember> groupMembers);
 
     boolean getScheduledDelivery();
 

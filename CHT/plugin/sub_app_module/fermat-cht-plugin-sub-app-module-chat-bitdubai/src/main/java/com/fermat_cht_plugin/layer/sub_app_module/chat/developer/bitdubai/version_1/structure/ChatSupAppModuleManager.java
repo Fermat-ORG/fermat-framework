@@ -20,7 +20,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServi
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListChatActorException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
@@ -37,7 +36,6 @@ import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentit
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
@@ -215,27 +213,23 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
 
     @Override
     public boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus {
-        return middlewareChatManager.checkWritingStatus(chatId);
+        return false;
     }
 
     @Override
     public boolean checkOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
-        return middlewareChatManager.checkOnlineStatus(contactPublicKey);
+        return false;
     }
 
     @Override
     public String checkLastConnection(String contactPublicKey) throws CantGetOnlineStatus {
-        return middlewareChatManager.checkLastConnection(contactPublicKey);
+        return "NO last connection recorded.";
+//        return middlewareChatManager.checkLastConnection(contactPublicKey);
     }
 
     @Override
     public void activeOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
-        middlewareChatManager.activeOnlineStatus(contactPublicKey);
-    }
-
-    @Override
-    public List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException {
-        return getGroupMembersByGroupId(groupId);
+//        middlewareChatManager.activeOnlineStatus(contactPublicKey);
     }
 
     @Override
