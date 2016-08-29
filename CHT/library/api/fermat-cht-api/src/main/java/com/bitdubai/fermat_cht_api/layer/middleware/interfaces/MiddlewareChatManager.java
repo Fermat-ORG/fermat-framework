@@ -55,7 +55,9 @@ public interface MiddlewareChatManager extends FermatManager {
 
     void saveMessage(Message message) throws CantSaveMessageException;
 
-    void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
+    void markAsRead(UUID messageId) throws CantSaveMessageException;
+
+    void sendReadMessageNotification(UUID messageId, UUID chatId) throws SendStatusUpdateMessageNotificationException;
 
     void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException;
 

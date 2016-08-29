@@ -143,13 +143,19 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
+    public void markAsRead(UUID messageId) throws CantSaveMessageException {
+
+        middlewareChatManager.markAsRead(messageId);
+    }
+
+    @Override
     public Chat getChatByRemotePublicKey(String publicKey) throws CantGetChatException {
         return middlewareChatManager.getChatByRemotePublicKey(publicKey);
     }
 
     @Override
-    public void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException {
-        middlewareChatManager.sendReadMessageNotification(message);
+    public void sendReadMessageNotification(UUID messageId, UUID chatId) throws SendStatusUpdateMessageNotificationException {
+        middlewareChatManager.sendReadMessageNotification(messageId, chatId);
     }
 
 
@@ -223,7 +229,7 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
 
     @Override
     public String checkLastConnection(String contactPublicKey) throws CantGetOnlineStatus {
-        return "NO last connection recorded.";
+        return null;
 //        return middlewareChatManager.checkLastConnection(contactPublicKey);
     }
 

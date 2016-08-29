@@ -495,9 +495,31 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
-    public void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException {
+    @Override
+    public void markAsRead(UUID messageId) throws CantSaveMessageException {
         try {
-            UUID chatId = message.getChatId();
+
+            System.out.println("*** 12345 case 3:send msg in Manager layer" + new Timestamp(System.currentTimeMillis()));
+            this.chatMiddlewareDatabaseDao.updateMessageStatus(messageId, MessageStatus.READ);
+        } catch (DatabaseOperationException e) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantSaveMessageException(
+                    e,
+                    "Saving a message in database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantSaveMessageException(
+                    FermatException.wrapException(exception),
+                    "Getting a message from database",
+                    "Unexpected exception");
+        }
+    }
+
+    public void sendReadMessageNotification(UUID messageId, UUID chatId) throws SendStatusUpdateMessageNotificationException {
+        try {
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
             if (chat == null) {
                 throw new SendStatusUpdateMessageNotificationException("Chat not found");
@@ -510,8 +532,9 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     remoteActorPublicKey,
                     DistributionStatus.DELIVERED,
                     MessageStatus.READ,
-                    chat.getChatId(),
-                    message.getMessageId());
+                    chatId,
+                    messageId
+            );
         } catch (Exception e) {
             throw new SendStatusUpdateMessageNotificationException(
                     e,

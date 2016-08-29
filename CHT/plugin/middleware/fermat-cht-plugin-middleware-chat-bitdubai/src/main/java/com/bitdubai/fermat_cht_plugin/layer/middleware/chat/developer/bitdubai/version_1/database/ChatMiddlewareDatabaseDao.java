@@ -551,6 +551,32 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+    public UUID getChatIdByMessageId(UUID messageId) throws CantGetMessageException, DatabaseOperationException {
+
+        try {
+
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+
+            table.addUUIDFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME, messageId, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
+
+            if (records.size() > 0)
+                return records.get(0).getUUIDValue(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
+            else
+                return null;
+        } catch (Exception e) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "error trying to get Message from the database with filter: " + messageId.toString(),
+                    null);
+        }
+    }
+
     public Message getMessageByMessageId(UUID messageId) throws CantGetMessageException, DatabaseOperationException {
         Database database = null;
         try {

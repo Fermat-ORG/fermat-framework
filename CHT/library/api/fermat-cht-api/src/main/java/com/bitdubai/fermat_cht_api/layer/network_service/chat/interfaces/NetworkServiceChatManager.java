@@ -23,9 +23,7 @@ public interface NetworkServiceChatManager extends FermatManager {
     void sendMessageMetadata(String localActorPubKey, String remoteActorPubKey, MessageMetadata messageMetadata) throws CantSendChatMessageMetadataException, IllegalArgumentException;
     /**
      * @param localActorPubKey
-     * @param senderType
      * @param remoteActorPubKey
-     * @param receiverType
      * @param messageStatus
      * @param chatId
      * @param messageID

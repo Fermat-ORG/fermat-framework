@@ -174,18 +174,13 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                     MessageStatus messageStatus = (messageData.has(ChatTransmissionJsonAttNames.MESSAGE_STATUS)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.MESSAGE_STATUS).getAsString(), MessageStatus.class) : null;
                     UUID messageId = (messageData.has(ChatTransmissionJsonAttNames.MESSAGE_ID)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.MESSAGE_ID).getAsString(), UUID.class) : null;
 
-                    if (messageId != null) {
-                        messageMetadataRecord = getChatMetadataRecordDAO().getMessageNotificationByMessageId(messageId);
-                            if(messageMetadataRecord != null) {
-                                    if (messageStatus != null) {
-                                        messageMetadataRecord.setMessageStatus(messageStatus);
-                                        messageMetadataRecord.setChatMessageTransactionType(chatMessageTransactionType);
-                                        getChatMetadataRecordDAO().update(messageMetadataRecord);
-                                    }else break;
+                    if (messageId != null && messageStatus != null) {
+                        messageMetadataRecord = new MessageMetadataRecord();
+                        messageMetadataRecord.setMessageId(messageId);
+                        messageMetadataRecord.setMessageStatus(messageStatus);
 
-                                    System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + messageMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
-                                    launchIncomingChatStatusNotification(messageMetadataRecord);
-                                }
+                        System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + messageMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
+                        launchIncomingChatStatusNotification(messageMetadataRecord);
                     }
                     break;
                 case TRANSACTION_WRITING_STATUS:
@@ -197,7 +192,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
             }
 
-        } catch (CantUpdateRecordDataBaseException | CantCreateNotificationException | CantInsertRecordDataBaseException | CantReadRecordDataBaseException | NotificationNotFoundException | CantGetNotificationException e) {
+        } catch (CantUpdateRecordDataBaseException | CantCreateNotificationException | CantInsertRecordDataBaseException e) {
             e.printStackTrace();
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (Exception e) {
@@ -504,6 +499,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
     @Override
     public void sendMessageStatusUpdate(String localActorPubKey, String remoteActorPubKey, DistributionStatus distributionStatus, MessageStatus messageStatus, UUID chatId, UUID messageID) throws CantSendChatMessageNewStatusNotificationException {
+
         try {
 
             if (localActorPubKey == null || localActorPubKey.length() == 0) {
@@ -521,26 +517,22 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                 throw new IllegalArgumentException("Argument chatId can not be null");
             }
 
-            MessageMetadataRecord messageMetadataRecord = getChatMetadataRecordDAO().getMessageNotificationByMessageId(messageID);
+            if (messageID == null) {
+                throw new IllegalArgumentException("Argument messageID can not be null");
+            }
+
             final String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(
-                    messageMetadataRecord.getMessageId().toString(),
+                    messageID.toString(),
                     messageStatus,
                     chatId
             );
 
-            messageMetadataRecord.setRemoteActorPublicKey(remoteActorPubKey);
-            messageMetadataRecord.setLocalActorPublicKey(localActorPubKey);
-            if (!messageMetadataRecord.getMessageStatus().getCode().equals(messageStatus.getCode())) {
-                messageMetadataRecord.setMessageStatus(messageStatus);
-                UUID transactionId = sendMessage(
-                        msjContent,
-                        localActorPubKey,
-                        remoteActorPubKey
-                );
-                messageMetadataRecord.setTransactionId(transactionId);
-                messageMetadataRecord.setChatMessageTransactionType(ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE);
-                getChatMetadataRecordDAO().createNotification(messageMetadataRecord);
-            }
+            sendMessage(
+                    msjContent,
+                    localActorPubKey,
+                    remoteActorPubKey
+            );
+
         } catch (Exception e) {
 
             StringBuilder contextBuffer = new StringBuilder();

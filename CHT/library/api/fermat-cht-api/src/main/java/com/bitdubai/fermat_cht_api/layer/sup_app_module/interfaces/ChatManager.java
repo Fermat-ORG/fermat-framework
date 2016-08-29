@@ -62,9 +62,11 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
 
     void saveMessage(Message message) throws CantSaveMessageException;
 
+    void markAsRead(UUID messageId) throws CantSaveMessageException;
+
     Chat getChatByRemotePublicKey(String publicKey) throws CantGetChatException;
 
-    void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
+    void sendReadMessageNotification(UUID messageId, UUID chatId) throws SendStatusUpdateMessageNotificationException;
 
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 

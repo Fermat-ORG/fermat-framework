@@ -209,11 +209,8 @@ public class ChatAdapterView extends LinearLayout {
                         else {
                             msg.setMe(false);
                             if (!estatus.equals(MessageStatus.READ.toString())) {
-                                messagei = (MessageImpl) chatManager.getMessageByMessageId(msg.getId());
-                                msg.setStatus(MessageStatus.READ.toString());
-                                messagei.setStatus(MessageStatus.READ);
-                                chatManager.saveMessage(messagei);
-                                chatManager.sendReadMessageNotification(messagei);
+                                chatManager.sendReadMessageNotification(msg.getId(), chatId);
+                                chatManager.markAsRead(msg.getId());
                             }
                         }
                         msg.setStatus(mess.getStatus().toString());
