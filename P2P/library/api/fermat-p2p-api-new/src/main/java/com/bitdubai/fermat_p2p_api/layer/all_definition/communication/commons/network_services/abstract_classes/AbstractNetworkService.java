@@ -347,8 +347,10 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     /**
      * Method that send a new Message
+     *
+     * @Exceptions MessageTooBigException
      */
-    public UUID sendNewMessage(final ActorProfile sender        ,
+    public final UUID sendNewMessage(final ActorProfile sender        ,
                                final ActorProfile destination   ,
                                final String       messageContent,
                                final boolean p2pLayerMonitoring) throws CantSendMessageException {
@@ -379,7 +381,16 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         }
     }
 
-    public UUID discoveryActorProfiles(final DiscoveryQueryParameters discoveryQueryParameters, String requesterPublicKey) throws com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException {
+
+    /**
+     *
+     * @param discoveryQueryParameters
+     * @param requesterPublicKey
+     * @return
+     * @throws com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException
+     * @Exceptions MessageTooBigException
+     */
+    public final UUID discoveryActorProfiles(final DiscoveryQueryParameters discoveryQueryParameters, String requesterPublicKey) throws com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException {
 
          /*
          * Create the query

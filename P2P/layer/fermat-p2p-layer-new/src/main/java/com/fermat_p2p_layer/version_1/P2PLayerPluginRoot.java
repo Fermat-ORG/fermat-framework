@@ -315,9 +315,8 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         newMessageTransmitListener.setEventHandler(new FermatEventHandler<NetworkClientNewMessageTransmitEvent>() {
             @Override
             public void handleEvent(NetworkClientNewMessageTransmitEvent fermatEvent) throws FermatException {
-
-                AbstractNetworkService abstractNetworkService = networkServices.get(fermatEvent.getNetworkServiceTypeSource());
-
+                PackageInformation packageInformation = messageSender.packageAck(fermatEvent.getPackageId());
+                AbstractNetworkService abstractNetworkService = networkServices.get(packageInformation.getNetworkServiceType());
                 if (abstractNetworkService.isStarted())
                     abstractNetworkService.onMessageReceived(fermatEvent.getContent());
                 else System.out.println("NetworkService message recive event problem: network service off , NS:"+ abstractNetworkService.getProfile().getNetworkServiceType());
@@ -557,13 +556,13 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         if (packageContent.getSenderPublicKey().equals(packageContent.getReceiverPublicKey())) throw new CantSendMessageException("Sender and Receiver are the same");
         //If the NS wants that the layer monitoring the resend process I'll persist this message in p2p layer database
         if(layerMonitoring){
-            try {
-                p2PLayerDao.persistMessage(packageContent);
-            } catch (CantPersistsMessageException e) {
-                //I will report this error, but, the message process will continue.
-                e.printStackTrace();
-                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-            }
+//            try {
+//                p2PLayerDao.persistMessage(packageContent);
+//            } catch (CantPersistsMessageException e) {
+//                //I will report this error, but, the message process will continue.
+//                e.printStackTrace();
+//                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+//            }
         }
         return messageSender.sendMessage(packageContent,networkServiceType,nodeDestinationPublicKey);
     }
@@ -588,14 +587,32 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         );
     }
 
+    /**
+     *  Bloqueada por ahora
+     *
+     * @param networkServiceType
+     * @param actorToFollowPk
+     * @return
+     * @throws CantSendMessageException
+     */
     @Override
     public UUID subscribeActorOnlineEvent(NetworkServiceType networkServiceType, String actorToFollowPk) throws CantSendMessageException {
-        return messageSender.subscribeNodeEvent(networkServiceType, EventOp.EVENT_OP_IS_PROFILE_ONLINE, actorToFollowPk);
+        throw new UnsupportedOperationException("Method not available");
+//        return messageSender.subscribeNodeEvent(networkServiceType, EventOp.EVENT_OP_IS_PROFILE_ONLINE, actorToFollowPk);
     }
 
+    /**
+     * Bloqueado por ahora
+     *
+     * @param networkServiceType
+     * @param eventSubscribedId
+     * @return
+     * @throws CantSendMessageException
+     */
     @Override
     public UUID unSubscribeActorOnlineEvent(NetworkServiceType networkServiceType,UUID eventSubscribedId) throws CantSendMessageException {
-        return messageSender.unSubscribeNodeEvent(networkServiceType,eventSubscribedId);
+        throw new UnsupportedOperationException("Method not available");
+//        return messageSender.unSubscribeNodeEvent(networkServiceType,eventSubscribedId);
     }
 
     public Collection<AbstractNetworkService> getNetworkServices() {

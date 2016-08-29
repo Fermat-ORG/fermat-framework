@@ -3,36 +3,31 @@ package org.iop.client.version_1.structure;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestActorFullPhotoException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.MessageTooBigException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientCall;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.P2PLayerManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.BlockPackages;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorListMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.UpdateActorProfileMsgRequest;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 
@@ -44,11 +39,12 @@ import org.iop.client.version_1.exceptions.CantSendPackageException;
 import org.iop.client.version_1.network_calls.NetworkClientCommunicationCall;
 import org.iop.client.version_1.structure.Sync.WaiterObjectsBuffer;
 import org.iop.client.version_1.util.HardcodeConstants;
+import org.iop.client.version_1.util.PackageEncoder;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Iterator;
+import java.nio.ByteBuffer;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -69,6 +65,11 @@ import javax.websocket.EncodeException;
  * @since   Java JDK 1.7
  */
 public class NetworkClientCommunicationConnection implements NetworkClientConnection {
+
+    /**
+     * Represent the MAX_MESSAGE_BUFFER_SIZE
+     */
+    public static final int MAX_MESSAGE_BUFFER_SIZE = 65536;
 
     private String                 nodeUrl               ;
     private URI                    uri                   ;
@@ -107,7 +108,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     /**
      * Message waiting to send
      */
-    private ConcurrentLinkedQueue<Package> packagesWaitingToSend;
+    private ConcurrentLinkedQueue<ByteBuffer> packagesWaitingToSend;
 
     private ScheduledExecutorService messageSenderExecutor;
 
@@ -132,6 +133,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      * Represents the P2P layer manager
      */
     private P2PLayerManager p2PLayerManager;
+
+    private PackageEncoder packageEncoder;
 
     /*
      * Constructor
@@ -174,6 +177,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         this.waiterObjectsBuffer = new WaiterObjectsBuffer();
 
         packagesWaitingToSend = new ConcurrentLinkedQueue<>();
+
+        packageEncoder = new PackageEncoder();
     }
 
     /*
@@ -190,8 +195,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
          */
         ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
 
-            int i = 0;
-
             @Override
             public boolean onDisconnect(CloseReason closeReason) {
                     System.out.println("##########################################################################");
@@ -204,7 +207,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             public boolean onConnectFailure(Exception exception) {
                     try {
 
-                        //System.out.println("# NetworkClientCommunicationConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
                         // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
                         Thread.sleep(5000);
 
@@ -212,24 +214,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                         e.printStackTrace();
                     }
 
-
                     System.out.println("###############################################################################");
                     System.out.println("#  NetworkClientCommunicationConnection  - Connect Failure -> Reconnecting... #");
                     System.out.println("###############################################################################");
-
-                    try {
-                        /*
-                        if (!connectivityManager.isOnline()) {
-                            System.out.println("###############################################################################");
-                            System.out.println("#  Interrumpiendo hilo de reconctado, no sirve tener algo intentando conectarse si hay un evento que te avisa eso #");
-                            System.out.println("###############################################################################");
-                            tryToReconnect = false;
-
-                        }
-                        */
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
 
                     return tryToReconnect;
             }
@@ -240,6 +227,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
          * Register the ReconnectHandler
          */
         container.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
+        container.setDefaultMaxBinaryMessageBufferSize(MAX_MESSAGE_BUFFER_SIZE);
+        container.setDefaultMaxTextMessageBufferSize(MAX_MESSAGE_BUFFER_SIZE);
 
         try {
 
@@ -247,7 +236,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         } catch (Exception e) {
             e.printStackTrace();
-//            System.out.println(e.getCause());
         }
     }
 
@@ -522,7 +510,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                    final PackageType        packageType,
                                    final NetworkServiceType networkServiceType          ,
                                    final String             destinationIdentityPublicKey) throws CantSendMessageException, CantSendPackageException {
+
         System.out.println("******* IS CONNECTED: " + isConnected() + " - TRYING NO SEND");
+
         if (isConnected()){
             try {
                 //todo: esto hay que mejorarlo
@@ -533,9 +523,19 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                         clientIdentity.getPrivateKey(),
                         destinationIdentityPublicKey
                 );
-                packagesWaitingToSend.add(pack);
+
+                ByteBuffer encodedPackage = packageEncoder.encode(pack);;
+                int packSize = encodedPackage.position();
+                System.out.println("******* packSize " + packSize);
+                //le puse eso porque vi que el websocket le agrega datos, hay que chequear mejor cuantos..
+                if (packSize > MAX_MESSAGE_BUFFER_SIZE-7648){
+                    throw new MessageTooBigException("Message size is too big, The max size configure is "+MAX_MESSAGE_BUFFER_SIZE);
+                }
+
+                packagesWaitingToSend.add(encodedPackage);
                 return pack.getPackageId();
-            } catch (Exception exception) {
+
+            }catch (Exception exception) {
                 throw new CantSendMessageException(
                         exception,
                         "packageContent:"+packageContent,
@@ -706,21 +706,18 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     if (isConnected()) {
                         boolean flag = false;
                         while (!flag){
-                            Package pack = packagesWaitingToSend.poll();
+                            ByteBuffer pack = packagesWaitingToSend.poll();
                             if (pack==null){
                                 flag = true;
                             }else{
                                 try {
-                                    networkClientCommunicationChannel.getClientConnection().getBasicRemote().sendObject(pack);
+                                    networkClientCommunicationChannel.getClientConnection().getBasicRemote().sendBinary(pack);
                                 } catch (Exception exception) {
                                     System.err.println("CantSendPackage: block package: " + pack);
                                     exception.printStackTrace();
                                 }
                             }
                         }
-
-
-
                     } else {
                         System.err.println("MessageSenderExecutor, connection is close and the executor is on, this is very bad");
                     }

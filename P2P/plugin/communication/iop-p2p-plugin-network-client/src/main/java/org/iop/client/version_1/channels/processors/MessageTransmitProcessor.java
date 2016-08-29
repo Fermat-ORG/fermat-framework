@@ -49,7 +49,7 @@ public class MessageTransmitProcessor extends PackageProcessor {
             event.setSource(EventSource.NETWORK_CLIENT);
 
             event.setContent(packageReceived.getContent());
-            event.setNetworkServiceTypeSource(packageReceived.getNetworkServiceTypeSource());
+//            event.setNetworkServiceTypeSource(packageReceived.getNetworkServiceTypeSource());
             event.setPackageId(packageReceived.getPackageId());
 
             /*

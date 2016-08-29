@@ -26,10 +26,6 @@ public class PackageEncoder implements Encoder.Binary<Package>{
             FlatBufferBuilder flatBufferBuilder = new FlatBufferBuilder();
             int packageId = flatBufferBuilder.createString(packageToSend.getPackageId().toString());
             int content = flatBufferBuilder.createString(packageToSend.getContent());
-            int networkServiceType = 0;
-            if (packageToSend.getNetworkServiceTypeSource()!=null) {
-                networkServiceType = flatBufferBuilder.createString(packageToSend.getNetworkServiceTypeSource().getCode());
-            }
             int destinationPublicKey = 0;
             if (packageToSend.getDestinationPublicKey()!=null) {
                destinationPublicKey = flatBufferBuilder.createString(packageToSend.getDestinationPublicKey());
@@ -39,7 +35,6 @@ public class PackageEncoder implements Encoder.Binary<Package>{
                         packageId,
                         content,
                         packageToSend.getPackageType().getPackageTypeAsShort(),
-                        networkServiceType,
                         destinationPublicKey);
 
             flatBufferBuilder.finish(pack);
