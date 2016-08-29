@@ -8,12 +8,8 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantLi
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.ChatActorNetworkServicePluginRoot;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +53,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             System.out.println("Chat Actor Network Service Search Test Listing through communication layer...");
 
-            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+            final List<ActorProfile> list = new ArrayList<>();//pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
             System.out.println("Chat Actor Network Service Search Test Listing through communication layer... SUCCESS: " + list.size() + " actors found.");
 
@@ -86,12 +82,12 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             return chatExposingDataArrayList;
 
-        } catch (final CantRequestProfileListException e) {
+        }/* catch (final CantRequestProfileListException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListChatException(e, "", "Problem trying to request list of registered components in communication layer.");
 
-        } catch (final Exception e) {
+        } */catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListChatException(e, "", "Unhandled error.");
@@ -124,7 +120,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
                     NetworkServiceType.ACTOR_CHAT
             );
 
-            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+            final List<ActorProfile> list = new ArrayList<>();//pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
             ActorProfile actorProfile;
 
@@ -148,12 +144,12 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             return new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), "", "", "", "", actorProfile.getLocation(), 0, 0, actorProfile.getStatus());
 
-        } catch (final CantRequestProfileListException e) {
+        }/* catch (final CantRequestProfileListException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListChatException(e, "", "Problem trying to request list of registered components in communication layer.");
 
-        } catch (final Exception e) {
+        }*/ catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListChatException(e, "", "Unhandled error.");
@@ -206,7 +202,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 //            );
 
 
-            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+            final List<ActorProfile> list = new ArrayList<>();//= pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
             final List<ChatExposingData> chatExposingDataArrayList = new ArrayList<>();
 
@@ -235,12 +231,12 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             return chatExposingDataArrayList;
 
-        } catch (final CantRequestProfileListException e) {
+        }/* catch (final CantRequestProfileListException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListChatException(e, "", "Problem trying to request list of registered components in communication layer.");
 
-        } catch (final Exception e) {
+        }*/ catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListChatException(e, "", "Unhandled error.");
@@ -267,7 +263,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
             );
 
 
-            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+            final List<ActorProfile> list = new ArrayList<>();//= pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
             final List<ChatExposingData> chatExposingDataArrayList = new ArrayList<>();
 
@@ -278,12 +274,12 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             return chatExposingDataArrayList;
 
-        } catch (final CantRequestProfileListException e) {
+        }/* catch (final CantRequestProfileListException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListChatException(e, "", "Problem trying to request list of registered components in communication layer.");
 
-        } catch (final Exception e) {
+        } */catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListChatException(e, "", "Unhandled error.");
@@ -310,7 +306,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
             );
 
 
-            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+            final List<ActorProfile> list= new ArrayList<>();// = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
             final List<ChatExposingData> chatExposingDataArrayList = new ArrayList<>();
 
@@ -321,12 +317,12 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             return chatExposingDataArrayList;
 
-        } catch (final CantRequestProfileListException e) {
+        } /*catch (final CantRequestProfileListException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListChatException(e, "", "Problem trying to request list of registered components in communication layer.");
 
-        } catch (final Exception e) {
+        } */catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListChatException(e, "", "Unhandled error.");
@@ -353,7 +349,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
             );
 
 
-            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+            final List<ActorProfile> list = new ArrayList<>();//= pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
             final List<ChatExposingData> chatExposingDataArrayList = new ArrayList<>();
 
@@ -364,12 +360,41 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             return chatExposingDataArrayList;
 
-        } catch (final CantRequestProfileListException e) {
+        }/* catch (final CantRequestProfileListException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListChatException(e, "", "Problem trying to request list of registered components in communication layer.");
 
-        } catch (final Exception e) {
+        }*/ catch (final Exception e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
+    public void getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max, String requesterPublicKey) throws CantListChatException {
+
+        try {
+
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    null, //TODO: Se coloco null ya que leon necesita que esta valor null porque esto solo se usa solo para buscar por publicKey del Actor
+                    NetworkServiceType.UNDEFINED,
+                    Actors.CHAT.getCode(),
+                    null,
+                    alias,
+                    null,
+                    deviceLocation,
+                    distance,
+                    true,
+                    null,
+                    max,
+                    offSet,
+                    false);
+
+            pluginRoot.discoveryActorProfiles(discoveryQueryParameters,requesterPublicKey);
+
+        }catch (final Exception e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListChatException(e, "", "Unhandled error.");

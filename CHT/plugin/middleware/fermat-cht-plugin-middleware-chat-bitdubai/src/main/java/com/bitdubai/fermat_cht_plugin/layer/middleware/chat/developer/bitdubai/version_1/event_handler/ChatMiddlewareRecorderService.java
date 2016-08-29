@@ -15,6 +15,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingCha
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingMessage;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.MessageFail;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
@@ -126,6 +127,21 @@ public class ChatMiddlewareRecorderService implements CHTService {
 //                    event.getSource().getCode(),
 //                    event.getChatId());
             chatMiddlewareMonitorAgent.checkIncomingChat(event.getMessageMetadata());
+        } catch (Exception exception) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantSaveEventException(
+                    exception,
+                    "Saving OutgoingChat event",
+                    "Unexpected Exception");
+        }
+
+        //LOG.info("CHECK THE DATABASE");
+    }
+
+    public void incomingMessageFailEventHandler(MessageFail event) throws CantSaveEventException {
+        try {
+            chatMiddlewareMonitorAgent.checkIncomingMessageFail(event.getMessageMetadata());
         } catch (Exception exception) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));

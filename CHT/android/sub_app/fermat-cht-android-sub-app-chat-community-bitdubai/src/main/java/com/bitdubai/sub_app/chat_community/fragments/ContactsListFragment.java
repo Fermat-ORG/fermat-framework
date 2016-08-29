@@ -42,7 +42,6 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
@@ -121,23 +120,6 @@ public class ContactsListFragment
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
             lstChatUserInformations = new ArrayList<>();
             applicationsHelper = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
-            //Obtain Settings or create new Settings if first time opening subApp
-//            appSettings = null;
-//            try {
-//                appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-//            } catch (Exception e) {
-//                appSettings = null;
-//            }
-//
-//            if (appSettings == null) {
-//                appSettings = new ChatActorCommunitySettings();
-//                appSettings.setIsPresentationHelpEnabled(true);
-//                try {
-//                    moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
 
             //Check if a default identity is configured
             try {
@@ -193,7 +175,7 @@ public class ContactsListFragment
         onRefresh();
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetSelectedActorIdentityException {
     }
 
     @Override
@@ -252,46 +234,6 @@ public class ContactsListFragment
                 executor.shutdown();
                 executor = null;
             }
-        }
-    }
-
-    public class BackgroundAsyncTaskList extends
-            AsyncTask<Void, Integer, Void> {
-
-        @Override
-        protected void onPostExecute(Void result) {
-            return;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                if (identity != null) {
-                    List<ChatActorCommunityInformation> con =
-                            moduleManager.listWorldChatActor(identity.getPublicKey(),
-                                    identity.getActorType(), null, 0, "", MAX, offset);
-                    if (con != null) {
-                        int size = con.size();
-                        if (size > 0) {
-                            for (ChatActorCommunityInformation conta : con) {
-                                if (conta.getConnectionState() != null) {
-                                    if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
-                                        try {
-                                            moduleManager.requestConnectionToChatActor(identity, conta);
-                                        } catch (Exception e) {
-                                            if (errorManager != null)
-                                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
         }
     }
 

@@ -28,18 +28,17 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinTransactionConverter;
-
-import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinBlockchainNetworkSelector;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinTransactionConverter;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
 
 import org.apache.commons.lang.StringUtils;
@@ -909,22 +908,13 @@ public class BitcoinCryptoNetworkDatabaseDao {
             return;
 
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_TABLE_NAME);
-        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME, cryptoVault.getCode(), DatabaseFilterType.EQUAL);
-        try {
-            databaseTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException e) {
-            throwLoadToMemoryException(e, databaseTable.getTableName());
-        }
 
-        /**
-         * delete all records. DB should offer a better way to do this.
-         */
-        for (DatabaseTableRecord record : databaseTable.getRecords()){
-            try {
-                databaseTable.deleteRecord(record);
-            } catch (CantDeleteRecordException e) {
-                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to delete statst record.", "database issue");
-            }
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME, cryptoVault.getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.deleteRecord();
+        } catch (CantDeleteRecordException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to delete statst record.", "database issue");
         }
     }
 
@@ -1018,18 +1008,9 @@ public class BitcoinCryptoNetworkDatabaseDao {
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, Status.IDLE.getCode(), DatabaseFilterType.EQUAL);
 
         try {
-            databaseTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException e) {
-            throwLoadToMemoryException(e, databaseTable.getTableName());
-        }
-
-        if (!databaseTable.getRecords().isEmpty()){
-            DatabaseTableRecord record = databaseTable.getRecords().get(0);
-            try {
-                databaseTable.deleteRecord(record);
-            } catch (CantDeleteRecordException e) {
-                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Error deleting a record from Broadcast table", "database issue");
-            }
+            databaseTable.deleteRecord();
+        } catch (CantDeleteRecordException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Error deleting a record from Broadcast table", "database issue");
         }
     }
 

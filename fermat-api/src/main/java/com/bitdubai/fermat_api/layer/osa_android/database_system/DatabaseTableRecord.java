@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
 import java.util.List;
@@ -29,6 +28,8 @@ public interface DatabaseTableRecord {
 
     double getDoubleValue(String columnName);
 
+    Boolean getBooleanValue(String columnName);
+
     void setStringValue(String columnName, String value);
 
     void setUUIDValue(String columnName, UUID value);
@@ -41,7 +42,9 @@ public interface DatabaseTableRecord {
 
     void setDoubleValue(String columnName, double value);
 
-    void setFermatEnum(String columnName, FermatEnum state);
+    void setFermatEnum(String columnName, FermatEnum fermatEnum);
+
+    void setBooleanValue(String columnName, Boolean value);
 
     List<DatabaseRecord> getValues();
 

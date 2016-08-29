@@ -53,8 +53,6 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
 
     Chat getChatByChatId(UUID chatId) throws CantGetChatException;
 
-    Chat newEmptyInstanceChat() throws CantNewEmptyChatException;
-
     void saveChat(Chat chat) throws CantSaveChatException;
 
     void deleteChat(Chat chat) throws CantDeleteChatException;
@@ -73,11 +71,7 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
 
     Message getMessageByMessageId(UUID messageId) throws CantGetMessageException;
 
-    Message newEmptyInstanceMessage() throws CantNewEmptyMessageException;
-
     void saveMessage(Message message) throws CantSaveMessageException;
-
-    void deleteMessage(Message message) throws CantDeleteMessageException;
 
     Chat getChatByRemotePublicKey(String publicKey) throws CantGetChatException;
 
@@ -85,11 +79,7 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
 
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 
-    boolean isIdentityDevice() throws CantListChatIdentityException;
-
     List<ChatIdentity> getIdentityChatUsersFromCurrentDeviceUser() throws CantListChatIdentityException;
-
-    ChatActorCommunitySearch getChatActorSearch();
 
     List<ChatActorCommunityInformation> listAllConnectedChatActor(final ChatActorCommunitySelectableIdentity selectedIdentity,
                                                                   final int max,
@@ -125,15 +115,7 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
 
     void activeOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus;
 
-    void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException;
-
-    void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException;
-
     List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException;
-
-    void clearChatMessageByChatId(UUID chatId) throws CantDeleteMessageException, CantGetMessageException;
-
-    void updateActorConnection(ChatActorConnection chatActorConnection);
 
     ChatActorCommunitySelectableIdentity newInstanceChatActorCommunitySelectableIdentity(ChatIdentity chatIdentity);
 
@@ -147,11 +129,9 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
     @Override
     SettingsManager<ChatPreferenceSettings> getSettingsManager();
 
-    List<ChatActorCommunityInformation> listWorldChatActor(String publicKey, Actors actorType, DeviceLocation deviceLocation, double distance, String alias, int max, int offset) throws com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException;
-
     void requestConnectionToChatActor(final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity selectedIdentity,
                                       final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation chatActorToContact) throws CantRequestActorConnectionException, ActorChatTypeNotSupportedException, ActorChatConnectionAlreadyRequestesException;
 
-    public ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException;
+    ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException;
 
 }

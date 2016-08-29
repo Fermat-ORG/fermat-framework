@@ -12,14 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
@@ -40,19 +37,9 @@ public class ContactFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
     public List<Contact> contacts;
-    private boolean mIsSearchResultView = false;
-    private ChatManager chatManager;
     private ErrorManager errorManager;
-    private cht_dialog_connections.AdapterCallbackContacts mAdapterCallback;
-    private SettingsManager<ChatSettings> settingsManager;
-    private ChatSessionReferenceApp chatSession;
     private Toolbar toolbar;
-    // Defines a tag for identifying log entries
-    String TAG = "CHT_ContactFragment";
-    ArrayList<String> contactname = new ArrayList<>();
     ArrayList<Bitmap> contacticon = new ArrayList<>();
-    ArrayList<String> contactid = new ArrayList<>();
-    ArrayList<String> contactalias = new ArrayList<>();
 
     TextView contactStatus;
     TextView contactName;
@@ -66,9 +53,6 @@ public class ContactFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            //chatSession=((ChatSessionReferenceApp) appSession);
-            chatManager = appSession.getModuleManager();
-            //chatManager=moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));

@@ -13,7 +13,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.SearchView;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -33,7 +32,6 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
@@ -62,12 +60,8 @@ public class ChatFragment
     private Toolbar toolbar;
     ChatActorCommunitySelectableIdentity chatIdentity;
 
-    // Defines a tag for identifying log entries
-    String TAG = "CHT_ChatFragment";
     private ChatAdapterView adapterView;
-    private ChatAdapter adapter;
     private SearchView searchView;
-    private Contact contactData;
 
     public static ChatFragment newInstance() {
         return new ChatFragment();
@@ -135,18 +129,6 @@ public class ChatFragment
         }
 
         cancelChatMessagesNotifications();
-
-        //Improve this logic to update data of contact from node, doing it like this, data will be requested every time the user opens a chat
-//        try {
-//            contactData = (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA);
-//            chatManager.updateActorConnection(new ChatActorConnection(contactData.getContactId(), null,
-//                    contactData.getRemoteActorPublicKey(),
-//                    contactData.getAlias(), contactData.getProfileImage(),
-//                    ConnectionState.CONNECTED, 0, 0, ""));
-//        } catch (Exception e) {
-//            if (errorManager != null)
-//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }
     }
 
     public void cancelChatMessagesNotifications(){
@@ -160,12 +142,6 @@ public class ChatFragment
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
-
-//    @Override
-//    public void onUpdateViewOnUIThread(String code) {
-//        super.onUpdateViewOnUIThread(code);
-//        onUpdateViewUIThread();
-//    }
 
     public void onUpdateViewUIThread() {
         if(isAttached) {
@@ -181,19 +157,12 @@ public class ChatFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {//private void initControls() {}
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-//            }
-//        });
+
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         adapterView = new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
-                .addModuleManager(null)
                 .addErrorManager(errorManager)
-                .addChatSession(null)
                 .addAppSession(appSession)
                 .addChatManager(chatManager)
                 .addChatSettings(chatSettings)

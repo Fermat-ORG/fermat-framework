@@ -2,9 +2,6 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -21,13 +18,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
@@ -35,19 +25,15 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveActionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
@@ -55,16 +41,11 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ActionOnline;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ActionOnlineImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
-import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatUserIdentityImpl;
-import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactConnectionImpl;
-import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
@@ -89,10 +70,6 @@ public class ChatMiddlewareDatabaseDao {
     private PluginDatabaseSystem pluginDatabaseSystem;
     private UUID pluginId;
     private ChatMiddlewarePluginRoot chatMiddlewarePluginRoot;
-    private PluginFileSystem pluginFileSystem;
-    private static String CHAT_USER_IDENTITY_PROFILE_IMAGE_FILE_NAME = "chatUserIdentityProfileImage";
-    private static String CONTACT_IMAGE_FILE_NAME = "contactImage";
-    private static String CONTACT_CONNECTION_IMAGE_FILE_NAME = "contactImage";
 
     /**
      * Constructor
@@ -100,95 +77,11 @@ public class ChatMiddlewareDatabaseDao {
     public ChatMiddlewareDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem,
                                      UUID pluginId,
                                      Database database,
-                                     ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
-                                     PluginFileSystem pluginFileSystem) {
+                                     ChatMiddlewarePluginRoot chatMiddlewarePluginRoot) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.database = database;
         this.chatMiddlewarePluginRoot = chatMiddlewarePluginRoot;
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-
-    public List<ContactConnection> getContactConnections(DatabaseTableFilter filter) throws CantGetContactException, DatabaseOperationException {
-        //if filter is null all records
-        Database database = null;
-        try {
-            database = openDatabase();
-            List<ContactConnection> contactConnections = new ArrayList<>();
-            // I will add the contact information from the database
-            List<DatabaseTableRecord> records = getContactConnectionData(filter);
-            if (records == null || records.isEmpty()) {
-                return contactConnections;
-            }
-            for (DatabaseTableRecord record : records) {
-                final ContactConnection contactConnection = getContactConnectionTransaction(record);
-
-                contactConnection.setProfileImage(getContactImage(contactConnection.getRemoteActorPublicKey()));
-
-                contactConnections.add(contactConnection);
-            }
-
-            database.closeDatabase();
-
-            return contactConnections;
-        } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new DatabaseOperationException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "error trying to get Contact from the database with filter: " + filter.toString(),
-                    null);
-        }
-    }
-
-    /**
-     * This method returns the contact id by local public key.
-     *
-     * @param localPublicKey
-     * @return
-     * @throws CantGetContactException
-     * @throws DatabaseOperationException
-     */
-    //Revisar este metodo ya que de aca no  se van a sacar los actores, se sacaran de los actor connections
-    public Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException, DatabaseOperationException {
-        Database database = null;
-        try {
-            database = openDatabase();
-            List<Contact> contacts = new ArrayList<>();
-            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
-            DatabaseTableFilter filter = table.getEmptyTableFilter();
-            filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(localPublicKey.toString());
-            filter.setColumn(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME);
-            // I will add the contact information from the database
-            for (DatabaseTableRecord record : getContactData(filter)) {
-                final Contact contact = getContactTransaction(record);
-
-                contacts.add(contact);
-            }
-
-            database.closeDatabase();
-
-            if (contacts.isEmpty()) {
-                return null;
-            }
-
-            return contacts.get(0);
-        } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new DatabaseOperationException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "error trying to get Contact from the database with filter: " + localPublicKey,
-                    null);
-        }
     }
 
     public void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException, DatabaseOperationException {
@@ -227,25 +120,19 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public void deleteGroupMember(GroupMember groupMember) throws
-            CantDeleteGroupMemberException,
-            DatabaseOperationException {
+    public void deleteGroupMember(final GroupMember groupMember) throws CantDeleteGroupMemberException, DatabaseOperationException {
+
         try {
             database = openDatabase();
-            DatabaseTransaction transaction = database.newTransaction();
 
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_TABLE_NAME);
-            DatabaseTableRecord record = getGroupMemberRecord(groupMember);
 
-            table.deleteRecord(record);
+            table.addUUIDFilter(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_ID_COLUMN_NAME, groupMember.getGroupMemberId(), DatabaseFilterType.EQUAL);
 
-            //I execute the transaction and persist the database side of the Contact.
-            database.executeTransaction(transaction);
-            database.closeDatabase();
+            table.deleteRecord();
 
         } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
+
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new DatabaseOperationException(
@@ -260,76 +147,6 @@ public class ChatMiddlewareDatabaseDao {
         return null;
     }
 
-    public void saveContact(Contact contact) throws
-            CantSaveContactException,
-            DatabaseOperationException {
-        try {
-            database = openDatabase();
-            DatabaseTransaction transaction = database.newTransaction();
-
-            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
-            DatabaseTableRecord record = getContactRecord(contact);
-            DatabaseTableFilter filter = table.getEmptyTableFilter();
-            filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(contact.getRemoteActorPublicKey().toString());
-            filter.setColumn(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME);
-
-            if (isNewRecord(table, filter))
-                transaction.addRecordToInsert(table, record);
-            else {
-                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-                transaction.addRecordToUpdate(table, record);
-            }
-
-            persistNewContactImage(contact.getRemoteActorPublicKey(), contact.getProfileImage());
-
-            //I execute the transaction and persist the database side of the Contact.
-            database.executeTransaction(transaction);
-            database.closeDatabase();
-
-        } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new DatabaseOperationException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error trying to save the Contact Transaction in the database.",
-                    null);
-        }
-    }
-
-
-    public void deleteContactConnection(ContactConnection contactConnection) throws
-            CantDeleteContactConnectionException,
-            DatabaseOperationException {
-        try {
-            database = openDatabase();
-            DatabaseTransaction transaction = database.newTransaction();
-
-            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_TABLE_NAME);
-            DatabaseTableRecord record = getContactConnectionRecord(contactConnection);
-
-            table.deleteRecord(record);
-
-            //I execute the transaction and persist the database side of the Contact.
-            database.executeTransaction(transaction);
-            database.closeDatabase();
-
-        } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new DatabaseOperationException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error trying to delete the Contact Transaction in the database.",
-                    null);
-        }
-    }
-
     public List<Chat> getChatListByWriting() throws
             DatabaseOperationException,
             CantGetChatException {
@@ -337,18 +154,6 @@ public class ChatMiddlewareDatabaseDao {
                 ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
         DatabaseTableFilter databaseTableFilter = databaseTable.getEmptyTableFilter();
         databaseTableFilter.setColumn(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING);
-        databaseTableFilter.setType(DatabaseFilterType.EQUAL);
-        databaseTableFilter.setValue(Boolean.toString(true));
-        return getChats(databaseTableFilter);
-    }
-
-    public List<Chat> getChatListByOnline() throws
-            DatabaseOperationException,
-            CantGetChatException {
-        DatabaseTable databaseTable = getDatabaseTable(
-                ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
-        DatabaseTableFilter databaseTableFilter = databaseTable.getEmptyTableFilter();
-        databaseTableFilter.setColumn(ChatMiddlewareDatabaseConstants.CHATS_IS_ONLINE);
         databaseTableFilter.setType(DatabaseFilterType.EQUAL);
         databaseTableFilter.setValue(Boolean.toString(true));
         return getChats(databaseTableFilter);
@@ -590,13 +395,6 @@ public class ChatMiddlewareDatabaseDao {
                 transaction.addRecordToUpdate(table, record);
             }
 
-//            DatabaseTableRecord record = getChatRecord(chat);
-
-//            table.deleteRecord(record);
-
-            //transaction.addRecordToUpdate(par, record);
-            //table.updateRecord(record);
-            //I execute the transaction and persist the database side of the chat.
             database.executeTransaction(transaction);
             database.closeDatabase();
 
@@ -626,30 +424,6 @@ public class ChatMiddlewareDatabaseDao {
                 deleteChat(chat);
             }
 
-//            List<DatabaseTableRecord> records= new ArrayList<>();
-//            for(Chat chat : chats){
-//                chat.setStatus(ChatStatus.INVISSIBLE);
-//                records.add(getChatRecord(chat));
-//            }
-//
-//            if(records!=null && !records.isEmpty()){
-//                for (DatabaseTableRecord record : records) {
-//                    table.updateRecord(record);
-//                    deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
-//                }
-//            }
-
-//            List<DatabaseTableRecord> records=getChatData(filter);
-//            if(records!=null && !records.isEmpty()){
-//                for (DatabaseTableRecord record : records) {
-//                    table.deleteRecord(record);
-//                    deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
-//                }
-//            }
-            //I execute the transaction and persist the database side of the chat.
-//            database.executeTransaction(transaction);
-//            database.closeDatabase();
-
         } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
@@ -666,68 +440,23 @@ public class ChatMiddlewareDatabaseDao {
     public void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException, DatabaseOperationException {
         try {
             database = openDatabase();
-            DatabaseTransaction transaction = database.newTransaction();
 
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
-            DatabaseTableFilter filter = table.getEmptyTableFilter();
-            filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(chatId.toString());
-            filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
-            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-            List<DatabaseTableRecord> records = getMessageData(filter);
-            if (records != null && !records.isEmpty()) {
-                for (DatabaseTableRecord record : records) {
-                    if (record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME).equals(chatId))
-                        table.deleteRecord(record);
-                }
-            }
-            //I execute the transaction and persist the database side of the chat.
-            database.executeTransaction(transaction);
-            database.closeDatabase();
+
+            table.addUUIDFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, chatId, DatabaseFilterType.EQUAL);
+
+            table.deleteRecord();
 
         } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
+
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+
             throw new CantDeleteMessageException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
                     "Error trying to delete the Chat Transaction in the database.",
                     null);
         }
-    }
-
-    /**
-     * This method returns a message created list.
-     * The messages in CREATED status are saved in database, but, are not sent through the Network
-     * Service.
-     *
-     * @return
-     * @throws DatabaseOperationException
-     * @throws CantGetMessageException
-     */
-    public List<Message> getCreatedMessages() throws
-            DatabaseOperationException,
-            CantGetMessageException {
-        try {
-            DatabaseTable databaseTable = getDatabaseTable(
-                    ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
-            DatabaseTableFilter databaseTableFilter = databaseTable.getEmptyTableFilter();
-            databaseTableFilter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME);
-            databaseTableFilter.setType(DatabaseFilterType.EQUAL);
-            databaseTableFilter.setValue(MessageStatus.CREATED.getCode());
-            return getMessages(databaseTableFilter);
-        } catch (Exception e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new CantGetMessageException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error trying to delete the Chat Transaction in the database.",
-                    null);
-        }
-
     }
 
     /**
@@ -1018,27 +747,21 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public void deleteMessage(Message message) throws
-            CantDeleteMessageException,
-            DatabaseOperationException {
+    public void deleteMessage(Message message) throws CantDeleteMessageException, DatabaseOperationException {
+
         try {
             database = openDatabase();
-            DatabaseTransaction transaction = database.newTransaction();
 
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
-            DatabaseTableRecord record = getMessageRecord(message);
 
-            table.deleteRecord(record);
+            table.addUUIDFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME, message.getMessageId(), DatabaseFilterType.EQUAL);
 
-            //I execute the transaction and persist the database side of the chat.
-            database.executeTransaction(transaction);
-            database.closeDatabase();
+            table.deleteRecord();
 
         } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
+
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+
             throw new CantDeleteMessageException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
@@ -1047,216 +770,12 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    //TODO:Eliminar metodo
-    public List<ChatUserIdentity> getChatUserIdentities(DatabaseTableFilter filter) throws CantGetChatUserIdentityException, DatabaseOperationException {
-        //if filter is null all records
-        Database database = null;
+    private synchronized Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
         try {
-            database = openDatabase();
-            List<ChatUserIdentity> chatUserIdentities = new ArrayList<>();
-            // I will add the message information from the database
-            List<DatabaseTableRecord> records = getChatUserIdentityData(filter);
-            if (records == null || records.isEmpty()) {
-                return chatUserIdentities;
-            }
-            for (DatabaseTableRecord record : records) {
-                final ChatUserIdentity chatUserIdentity = getChatUserIdentityTransaction(record);
+            if (database == null)
+                database = pluginDatabaseSystem.openDatabase(this.pluginId, ChatMiddlewareDatabaseConstants.DATABASE_NAME);
 
-                chatUserIdentity.setNewProfileImage(getChatUserIdentityProfileImage(chatUserIdentity.getPublicKey()));
-
-                chatUserIdentities.add(chatUserIdentity);
-            }
-
-            database.closeDatabase();
-
-            return chatUserIdentities;
-        } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new DatabaseOperationException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    e.getMessage(),
-                    null);
-        }
-    }
-
-
-    private byte[] getChatUserIdentityProfileImage(String publicKey) throws FileNotFoundException {
-        byte[] profileImage = new byte[0];
-
-        PluginBinaryFile file = null;
-        try {
-            file = this.pluginFileSystem.getBinaryFile(pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName(),
-                    CHAT_USER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
-            );
-            file.loadFromMedia();
-            profileImage = file.getContent();
-        } catch (FileNotFoundException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new FileNotFoundException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error Create File not exist.",
-                    null);
-        } catch (CantCreateFileException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new FileNotFoundException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error Create File.",
-                    null);
-        } catch (Exception e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new FileNotFoundException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error general.",
-                    null);
-        }
-
-        return profileImage;
-    }
-
-    private byte[] getContactImage(String publicKey) throws CantPersistFileException {
-        byte[] profileImage = new byte[0];
-
-        PluginBinaryFile file = null;
-        try {
-            file = this.pluginFileSystem.getBinaryFile(pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName(),
-                    CONTACT_IMAGE_FILE_NAME + "_" + publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
-            );
-            file.loadFromMedia();
-            profileImage = file.getContent();
-        } catch (FileNotFoundException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new CantPersistFileException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error Create File not exist.",
-                    null);
-        } catch (CantCreateFileException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new CantPersistFileException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error Create File.",
-                    null);
-        } catch (Exception e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new CantPersistFileException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error general.",
-                    null);
-        }
-
-        return profileImage;
-    }
-
-
-    private void persistNewChatUserIdentityProfileImage(String publicKey, byte[] profileImage) throws CantPersistFileException {
-
-        PluginBinaryFile file = null;
-        try {
-            file = this.pluginFileSystem.createBinaryFile(pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName(),
-                    CHAT_USER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
-            );
-
-            file.setContent(profileImage);
-
-            file.persistToMedia();
-        } catch (CantPersistFileException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new CantPersistFileException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error Persist File.",
-                    null);
-        } catch (CantCreateFileException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new CantPersistFileException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error Create File.",
-                    null);
-        } catch (Exception e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new CantPersistFileException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error general.",
-                    null);
-        }
-
-    }
-
-    private void persistNewContactImage(String publicKey, byte[] profileImage) throws CantPersistFileException {
-
-        PluginBinaryFile file = null;
-        try {
-            file = this.pluginFileSystem.createBinaryFile(pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName(),
-                    CONTACT_IMAGE_FILE_NAME + "_" + publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
-            );
-
-            file.setContent(profileImage);
-
-            file.persistToMedia();
-        } catch (CantPersistFileException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new CantPersistFileException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error Persist File.",
-                    null);
-        } catch (CantCreateFileException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new CantPersistFileException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error Create File.",
-                    null);
-        } catch (Exception e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-            throw new CantPersistFileException(
-                    DatabaseOperationException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(e),
-                    "Error general.",
-                    null);
-        }
-
-    }
-
-
-    private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
-        try {
-            database = pluginDatabaseSystem.openDatabase(this.pluginId, ChatMiddlewareDatabaseConstants.DATABASE_NAME);
+            return database;
 
         } catch (DatabaseNotFoundException e) {
             ChatMiddlewareDatabaseFactory chatMiddlewareDatabaseFactory = new ChatMiddlewareDatabaseFactory(pluginDatabaseSystem);
@@ -1271,65 +790,17 @@ public class ChatMiddlewareDatabaseDao {
 
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-        table.loadToMemory();
-        return table.getRecords().isEmpty();
-    }
-
-    private DatabaseTableRecord getContactRecord(Contact contact) throws DatabaseOperationException {
-        DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
-        DatabaseTableRecord record = databaseTable.getEmptyRecord();
-
-        record.setUUIDValue(ChatMiddlewareDatabaseConstants.CONTACTS_ID_CONTACT_COLUMN_NAME, contact.getContactId());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_ALIAS_COLUMN_NAME, contact.getAlias());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_NAME_COLUMN_NAME, contact.getRemoteName());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME, contact.getRemoteActorType().getCode());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, contact.getRemoteActorPublicKey());
-        record.setLongValue(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME, contact.getCreationDate());
-        if (contact.getContactStatus() != null) {
-            record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONTACT_STATUS_COLUMN_NAME, contact.getContactStatus());
-        }
-
-        return record;
+        return table.getCount() == 0;
     }
 
     private DatabaseTableRecord getGroupMemberRecord(GroupMember groupMember) throws DatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
-        record.setUUIDValue(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_ID_COLUMN_NAME, groupMember.getGroupId());
+        record.setUUIDValue(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_ID_COLUMN_NAME, groupMember.getGroupMemberId());
         record.setUUIDValue(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_GROUP_ID_COLUMN_NAME, groupMember.getGroupId());
         record.setStringValue(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, groupMember.getActorPublicKey());
         record.setStringValue(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_ALIAS_COLUMN_NAME, groupMember.getActorAlias());
-
-        return record;
-    }
-
-    private DatabaseTableRecord getContactConnectionRecord(ContactConnection contactConnection) throws DatabaseOperationException {
-        DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_TABLE_NAME);
-        DatabaseTableRecord record = databaseTable.getEmptyRecord();
-
-        record.setUUIDValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_ID_CONTACT_COLUMN_NAME, contactConnection.getContactId());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_ALIAS_COLUMN_NAME, contactConnection.getAlias());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_NAME_COLUMN_NAME, contactConnection.getRemoteName());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_ACTOR_TYPE_COLUMN_NAME, contactConnection.getRemoteActorType().getCode());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, contactConnection.getRemoteActorPublicKey());
-        record.setLongValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_CREATION_DATE_COLUMN_NAME, contactConnection.getCreationDate());
-        if (contactConnection.getContactStatus() != null) {
-            record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_CONTACT_STATUS_COLUMN_NAME, contactConnection.getContactStatus());
-        }
-
-        return record;
-    }
-
-    private DatabaseTableRecord getChatUserIdentityRecord(ChatUserIdentity chatUserIdentity, String deviceUserPublicKey) throws DatabaseOperationException {
-        DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME);
-        DatabaseTableRecord record = databaseTable.getEmptyRecord();
-
-        record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME, chatUserIdentity.getPublicKey());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ALIAS_COLUMN_NAME, chatUserIdentity.getAlias());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUserPublicKey);
-        record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ACTOR_TYPE_COLUMN_NAME, chatUserIdentity.getActorType().getCode());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PLATFORM_COMPONENT_TYPE_COLUMN_NAME, chatUserIdentity.getPlatformComponentType().getCode());
 
         return record;
     }
@@ -1341,9 +812,7 @@ public class ChatMiddlewareDatabaseDao {
         record.setUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME, chat.getChatId());
         record.setUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_OBJECT_COLUMN_NAME, chat.getObjectId());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_CHAT_NAME_COLUMN_NAME, chat.getChatName());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME, chat.getLocalActorType().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME, chat.getLocalActorPublicKey());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME, chat.getRemoteActorType().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, chat.getRemoteActorPublicKey());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME, chat.getStatus().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME, chat.getDate().toString());
@@ -1363,20 +832,6 @@ public class ChatMiddlewareDatabaseDao {
 
         record.setUUIDValue(ChatMiddlewareDatabaseConstants.ACTIONS_WRITING_ID_CHAT_COLUMN_NAME, chatId);
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_WRITING_STATE, writingState.getCode());
-
-        return record;
-    }
-
-    private DatabaseTableRecord getOnlineActionRecord(UUID uuid, String publicKey, ActionState onlineState, Boolean value, String lastConnection) throws DatabaseOperationException {
-        DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
-        DatabaseTableRecord record = databaseTable.getEmptyRecord();
-
-        record.setUUIDValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_ID_COLUMN_NAME, uuid);
-        record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_PUBLIC_KEY_COLUMN_NAME, publicKey);
-        record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE, onlineState.getCode());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE, value.toString());
-        if (lastConnection != null)
-            record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION, lastConnection);
 
         return record;
     }
@@ -1408,18 +863,6 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, message.getMessageDate().toString());
         record.setUUIDValue(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID, message.getContactId());
         record.setLongValue(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT, message.getCount());
-
-        return record;
-    }
-
-    private DatabaseTableRecord getCahtUserIdentityRecord(ChatUserIdentity chatUserIdentity) throws DatabaseOperationException {
-        DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME);
-        DatabaseTableRecord record = databaseTable.getEmptyRecord();
-
-        record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ALIAS_COLUMN_NAME, chatUserIdentity.getAlias());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME, chatUserIdentity.getPublicKey());
-        //record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, chatUserIdentity.);
-        record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ACTOR_TYPE_COLUMN_NAME, chatUserIdentity.getActorType().getCode());
 
         return record;
     }
@@ -1465,40 +908,6 @@ public class ChatMiddlewareDatabaseDao {
         return table.getRecords();
     }
 
-    private List<DatabaseTableRecord> getChatUserIdentityData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME);
-
-        if (filter != null)
-            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-
-        table.loadToMemory();
-
-        return table.getRecords();
-    }
-
-    private List<DatabaseTableRecord> getContactData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
-
-        if (filter != null)
-            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-
-        table.loadToMemory();
-
-        return table.getRecords();
-    }
-
-
-    private List<DatabaseTableRecord> getContactConnectionData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_TABLE_NAME);
-
-        if (filter != null)
-            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-
-        table.loadToMemory();
-
-        return table.getRecords();
-    }
-
     private Chat getChatTransaction(final DatabaseTableRecord chatTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
         ChatImpl chat = new ChatImpl();
 
@@ -1508,9 +917,7 @@ public class ChatMiddlewareDatabaseDao {
         chat.setDate(Timestamp.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME)));
         chat.setLastMessageDate(Timestamp.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME)));
         chat.setRemoteActorPublicKey(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME));
-        chat.setRemoteActorType(PlatformComponentType.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME)));
         chat.setLocalActorPublicKey(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME));
-        chat.setLocalActorType(PlatformComponentType.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME)));
         chat.setStatus(ChatStatus.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME)));
         chat.setTypeChat(TypeChat.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT)));
         chat.setScheduledDelivery(Boolean.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY)));
@@ -1556,54 +963,6 @@ public class ChatMiddlewareDatabaseDao {
         if (lastConnection != null) actionOnline.setLastConnection(lastConnection);
 
         return actionOnline;
-    }
-
-    private ChatUserIdentity getChatUserIdentityTransaction(final DatabaseTableRecord chatUserIdentityTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
-        ChatUserIdentityImpl chatUserIdentity = null;
-        try {
-            chatUserIdentity = new ChatUserIdentityImpl(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ALIAS_COLUMN_NAME),
-                    null,
-                    chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                    null,
-                    getChatUserIdentityProfileImage(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                    Actors.getByCode(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ACTOR_TYPE_COLUMN_NAME)),
-                    PlatformComponentType.getByCode(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PLATFORM_COMPONENT_TYPE_COLUMN_NAME))
-            );
-        } catch (FileNotFoundException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-        }
-
-        return chatUserIdentity;
-    }
-
-    private Contact getContactTransaction(final DatabaseTableRecord contactTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
-
-        ContactImpl contact = new ContactImpl();
-
-        contact.setContactId(contactTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.CONTACTS_ID_CONTACT_COLUMN_NAME));
-        contact.setAlias(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_ALIAS_COLUMN_NAME));
-        contact.setRemoteName(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_NAME_COLUMN_NAME));
-        contact.setRemoteActorType(PlatformComponentType.getByCode(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME)));
-        contact.setRemoteActorPublicKey(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME));
-        contact.setCreationDate(contactTransactionRecord.getLongValue(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME));
-        contact.setContactStatus(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONTACT_STATUS_COLUMN_NAME));
-
-        return contact;
-    }
-
-    private ContactConnection getContactConnectionTransaction(final DatabaseTableRecord contactTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
-        ContactConnectionImpl contactConnection = new ContactConnectionImpl();
-
-        contactConnection.setContactId(contactTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_ID_CONTACT_COLUMN_NAME));
-        contactConnection.setAlias(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_ALIAS_COLUMN_NAME));
-        contactConnection.setRemoteName(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_NAME_COLUMN_NAME));
-        contactConnection.setRemoteActorType(PlatformComponentType.getByCode(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_ACTOR_TYPE_COLUMN_NAME)));
-        contactConnection.setRemoteActorPublicKey(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME));
-        contactConnection.setCreationDate(contactTransactionRecord.getLongValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_CREATION_DATE_COLUMN_NAME));
-        contactConnection.setContactStatus(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_CONTACT_STATUS_COLUMN_NAME));
-
-        return contactConnection;
     }
 
     private void checkDatabaseRecords(List<DatabaseTableRecord> records) throws
@@ -1685,12 +1044,9 @@ public class ChatMiddlewareDatabaseDao {
             }
 
             //I execute the transaction and persist the database side of the chat.
-            database.executeTransaction(transaction);
-            database.closeDatabase();
+            transaction.execute();
 
         } catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new CantSaveActionException(

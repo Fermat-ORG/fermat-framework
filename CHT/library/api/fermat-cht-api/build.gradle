@@ -7,7 +7,7 @@ version = '1.0'
 dependencies {
     //compile project(':fermat-cht-api')
     compile project(':fermat-api')
-    compile project(':fermat-p2p-api')
+    compile project(':fermat-p2p-api-new')
     compile project(':fermat-pip-api')
 
 }

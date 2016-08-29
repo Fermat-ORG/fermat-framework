@@ -1,7 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -14,7 +13,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Fermat
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -24,9 +22,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -38,12 +34,8 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
     Button btn_yes, btn_no;
     TextView txt_title, txt_body;
     private ChatManager chatManager;
-    private ChatModuleManager moduleManager;
     private FermatSession appSession;
-    private ResourceProviderManager resources;
     private ErrorManager errorManager;
-    private SettingsManager<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings> settingsManager;
-    private ChatSessionReferenceApp chatSession;
     private AdapterCallbackContacts mAdapterCallback;
     int AlertType = 0;
     String body, title;
@@ -52,19 +44,6 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
     public boolean delete_chat = false;
     public boolean clean_chat = false;
     public boolean delete_chats = false;
-    ArrayList<String> contactname = new ArrayList<String>();
-    ArrayList<Bitmap> contacticon = new ArrayList<>();
-    ArrayList<UUID> contactid = new ArrayList<UUID>();
-    ArrayList<String> contactalias = new ArrayList<String>();
-    ArrayList<String> contactName = new ArrayList<>();
-    ArrayList<String> message = new ArrayList<>();
-    ArrayList<String> dateMessage = new ArrayList<>();
-    ArrayList<UUID> chatId = new ArrayList<>();
-    ArrayList<UUID> contactId = new ArrayList<>();
-    ArrayList<String> status = new ArrayList<>();
-    ArrayList<String> typeMessage = new ArrayList<>();
-    ArrayList<Integer> noReadMsgs = new ArrayList<>();
-    ArrayList<Bitmap> imgId = new ArrayList<>();
 
     public cht_dialog_yes_no(Context activity, FermatSession appSession,
                              ResourceProviderManager resources, ContactConnection contactConnm,
@@ -73,7 +52,6 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
         super(activity, appSession, resources);
         this.appSession = appSession;
         this.contactConn = contactConnm;
-        this.resources = resources;
         this.mAdapterCallback = mAdapterCallback;
         this.chatManager = chatManager;
         this.errorManager = errorManager;

@@ -17,7 +17,9 @@ public interface ChatActorCommunitySearch extends Serializable {
 
     List<ChatActorCommunityInformation> getResult() throws CantGetChtActorSearchResult;
 
-    public List<ChatActorCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantGetChtActorSearchResult;
+    List<ChatActorCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantGetChtActorSearchResult;
+
+    void getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max, String requesterPublicKey) throws CantGetChtActorSearchResult;
 
     List<ChatActorCommunityInformation> getResultLocation(DeviceLocation deviceLocation) throws CantGetChtActorSearchResult;
 

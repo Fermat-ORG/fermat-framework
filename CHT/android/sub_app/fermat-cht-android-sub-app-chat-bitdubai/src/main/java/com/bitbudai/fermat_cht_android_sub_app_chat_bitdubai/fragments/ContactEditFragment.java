@@ -21,20 +21,17 @@ import android.widget.RelativeLayout;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.io.ByteArrayInputStream;
@@ -51,17 +48,11 @@ public class ContactEditFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
     public List<Contact> contacts;
-    // Whether or not this fragment is showing in a two-pane layout
-    private boolean mIsTwoPaneLayout;
 
     // Whether or not this is a search result view of this fragment, only used on pre-honeycomb
     // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
-    private boolean mIsSearchResultView = false;
     private ChatManager chatManager;
-    private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
-    private SettingsManager<ChatSettings> settingsManager;
-    private ReferenceAppFermatSession<ChatManager> chatSession;
     private Toolbar toolbar;
     //Defines a tag for identifying log entries
     private static final String TAG = "CHT_ContactEditFragment";
@@ -112,7 +103,7 @@ public class ContactEditFragment
                     chatManager.newInstanceChatActorCommunitySelectableIdentity((ChatIdentity) chatManager.
                             getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0);
             for (ChatActorCommunityInformation cont : chatActorCommunityInformations) {
-                if (cont.getPublicKey() == chatSession.getData(ChatSessionReferenceApp.CONTACT_DATA)) {
+                if (cont.getPublicKey() == appSession.getData(ChatSessionReferenceApp.CONTACT_DATA)) {
                     contactname.add(cont.getAlias());
                     contactid.add(cont.getPublicKey());
                     contactalias.add(cont.getAlias());

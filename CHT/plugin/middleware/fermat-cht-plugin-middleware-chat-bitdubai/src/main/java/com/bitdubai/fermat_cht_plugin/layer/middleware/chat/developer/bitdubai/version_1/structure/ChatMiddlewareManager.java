@@ -1,65 +1,45 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveActionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
-import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
-import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
-import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
-import com.bitdubai.fermat_cht_api.layer.middleware.event.IncomingChatMessageNotificationEvent;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ActionOnline;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MessageMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingActionListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,8 +50,6 @@ import java.util.UUID;
  */
 public class ChatMiddlewareManager implements MiddlewareChatManager {
 
-    public static String INCOMING_CHAT_MESSAGE_NOTIFICATION = "New Message";
-
     private ChatMiddlewarePluginRoot chatMiddlewarePluginRoot;
     /**
      * Represents the plugin Database Dao.
@@ -79,42 +57,27 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     private ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
 
     /**
-     * Represents the contact factory
-     */
-    private ChatMiddlewareContactFactory chatMiddlewareContactFactory;
-
-    /**
      * Represents the NetworkServiceChatManager
      */
     NetworkServiceChatManager networkServiceChatManager;
-
-    /**
-     * Represents the DeviceUserManager
-     */
-    private DeviceUserManager deviceUserManager;
 
     NetworkServiceChatManager chatNetworkServiceManager;
 
     ChatActorConnectionManager chatActorConnectionManager;
 
     private final Broadcaster broadcaster;
-    public final String BROADCAST_CODE = "13";
 
     public ChatMiddlewareManager(
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao,
-            ChatMiddlewareContactFactory chatMiddlewareContactFactory,
             ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
             NetworkServiceChatManager networkServiceChatManager,
-            DeviceUserManager deviceUserManager,
             NetworkServiceChatManager chatNetworkServiceManager,
             Broadcaster broadcaster,
             ChatActorConnectionManager chatActorConnectionManager
     ) {
         this.chatMiddlewareDatabaseDao = chatMiddlewareDatabaseDao;
-        this.chatMiddlewareContactFactory = chatMiddlewareContactFactory;
         this.chatMiddlewarePluginRoot = chatMiddlewarePluginRoot;
         this.networkServiceChatManager = networkServiceChatManager;
-        this.deviceUserManager = deviceUserManager;
         this.chatNetworkServiceManager = chatNetworkServiceManager;
         this.broadcaster = broadcaster;
         this.chatActorConnectionManager = chatActorConnectionManager;
@@ -183,27 +146,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     "Getting a chat by UUID",
                     "Unexpected exception");
         }
-    }
-
-    /**
-     * This method returns a new empty instance chat.
-     *
-     * @return
-     * @throws CantNewEmptyChatException
-     */
-    @Override
-    public Chat newEmptyInstanceChat() throws CantNewEmptyChatException {
-        try {
-            return this.chatMiddlewareDatabaseDao.newEmptyInstanceChat();
-        } catch (Exception exception) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantNewEmptyChatException(
-                    FermatException.wrapException(exception),
-                    "Getting a new empty instance chat",
-                    "Unexpected exception");
-        }
-
     }
 
     /**
@@ -524,26 +466,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     }
 
     /**
-     * This method return a new empty instance message.
-     *
-     * @return
-     * @throws CantNewEmptyMessageException
-     */
-    @Override
-    public Message newEmptyInstanceMessage() throws CantNewEmptyMessageException {
-        try {
-            return this.chatMiddlewareDatabaseDao.newEmptyInstanceMessage();
-        } catch (Exception exception) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantNewEmptyMessageException(
-                    FermatException.wrapException(exception),
-                    "Getting a new empty instance message",
-                    "Unexpected exception");
-        }
-    }
-
-    /**
      * This method saves a message in database.
      *
      * @param message
@@ -579,41 +501,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
-    /**
-     * This method deletes a message from database.
-     *
-     * @param message
-     * @throws CantDeleteMessageException
-     */
-    @Override
-    public void deleteMessage(Message message) throws CantDeleteMessageException {
-        try {
-            ObjectChecker.checkArgument(message, "The message argument is null");
-            this.chatMiddlewareDatabaseDao.deleteMessage(message);
-        } catch (ObjectNotSetException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantDeleteMessageException(
-                    e,
-                    "Deleting a message from database",
-                    "The message is probably null");
-        } catch (DatabaseOperationException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantDeleteMessageException(
-                    e,
-                    "Deleting a message from database",
-                    "An unexpected error happened in a database operation");
-        } catch (Exception exception) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantDeleteMessageException(
-                    FermatException.wrapException(exception),
-                    "Deleting a message from database",
-                    "Unexpected exception");
-        }
-    }
-
     public void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException {
         try {
             UUID chatId = message.getChatId();
@@ -626,9 +513,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             String remoteActorPublicKey = chat.getRemoteActorPublicKey();
             networkServiceChatManager.sendMessageStatusUpdate(
                     localActorPublicKey,
-                    chat.getLocalActorType(),
                     remoteActorPublicKey,
-                    chat.getRemoteActorType(),
                     DistributionStatus.DELIVERED,
                     MessageStatus.READ,
                     chat.getChatId(),
@@ -653,9 +538,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             String remoteActorPublicKey = chat.getRemoteActorPublicKey();
             networkServiceChatManager.sendMessageStatusUpdate(
                     localActorPublicKey,
-                    chat.getLocalActorType(),
                     remoteActorPublicKey,
-                    chat.getRemoteActorType(),
                     DistributionStatus.DELIVERED,
                     MessageStatus.DELIVERED,
                     chat.getChatId(),
@@ -684,9 +567,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             String remoteActorPublicKey = chat.getRemoteActorPublicKey();
             networkServiceChatManager.sendWritingStatus(
                     localActorPublicKey,
-                    chat.getLocalActorType(),
                     remoteActorPublicKey,
-                    chat.getRemoteActorType(),
                     chat.getChatId()
             );
 //            chatMiddlewareDatabaseDao.saveWritingAction(chatId, ActionState.PENDING);
@@ -773,47 +654,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
-
-    /**
-     * This method will notify PIP to launch a new notification to user
-     *
-     * @param publicKey
-     * @param tittle
-     * @param body
-     * @throws CantSendNotificationNewIncomingMessageException
-     */
-    @Override
-    public void notificationNewIncomingMessage(
-            String publicKey,
-            String tittle,
-            String body) throws CantSendNotificationNewIncomingMessageException {
-        try {
-            //TODO MATIAS PLEASE CHECK THIS
-            IncomingChatMessageNotificationEvent event =
-                    (IncomingChatMessageNotificationEvent) this.chatMiddlewarePluginRoot.
-                            getEventManager().
-                            getNewEvent(
-                                    com.bitdubai.fermat_cht_api.all_definition.events.enums.
-                                            EventType.INCOMING_CHAT_MESSAGE_NOTIFICATION);
-            event.setLocalPublicKey(publicKey);
-            event.setAlertTitle(getSourceString(ChatMiddlewarePluginRoot.EVENT_SOURCE));
-            event.setTextTitle(tittle);
-            event.setTextBody(body);
-            //event.setNotificationType(NotificationType.INCOMING_CHAT_MESSAGE.getCode());
-            event.setSource(ChatMiddlewarePluginRoot.EVENT_SOURCE);
-            this.chatMiddlewarePluginRoot.getEventManager().raiseEvent(event);
-            System.out.println("MiddleWareChatPluginRoot - IncomingChatMessageNotificationEvent fired!: " + event.toString());
-        } catch (Exception exception) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantSendNotificationNewIncomingMessageException(
-                    FermatException.wrapException(exception),
-                    "Notification new incoming message",
-                    "Unexpected exception");
-        }
-
-    }
-
     /**
      * This method returns the Network Service public key
      *
@@ -842,45 +682,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     }
 
-    @Override
-    public List<ChatActorConnection> getChatActorConnections(String localPublicKey) {
-        try {
-            ChatLinkedActorIdentity linkedActorIdentity = new ChatLinkedActorIdentity(
-                    localPublicKey,
-                    Actors.CHAT
-            );
-
-            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedActorIdentity);
-
-            search.addConnectionState(ConnectionState.CONNECTED);
-
-            return search.getResult();
-        } catch (CantListActorConnectionsException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(e));
-        }
-        return null;
-    }
-
-    public void purifyMessage(Message message) {
-//        String text = message.getMessage();
-//        char a = 39;
-//        char b = 182;
-//        text = text.replace(a,b);
-//        message.setMessage(text);
-        message.setMessage(message.getMessage().replace("'", "@alt+39#"));
-    }
-
-    public void despurifyMessage(Message message) {
-//        String text = message.getMessage();
-//        char a = 39;
-//        char b = 182;
-//        text = text.replace(b,a);
-//        message.setMessage(text);
-        //code to decode apostrophe
-        message.setMessage(message.getMessage().replace("@alt+39#", "'"));
-    }
-
     /**
      * This method sends the message through the Chat Network Service
      *
@@ -901,9 +702,8 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
             try {
 
-                MessageMetadata messageMetadata = new MessageMetadataRecord(chat.getLocalActorType(),
+                MessageMetadata messageMetadata = new MessageMetadataRecord(
                         chat.getLocalActorPublicKey(),
-                        chat.getRemoteActorType(),
                         chat.getRemoteActorPublicKey(),
                         createdMessage.getMessageId(),
                         createdMessage.getMessage(),
@@ -955,90 +755,4 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
-    @Override
-    public void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException {
-        try {
-            chatMiddlewareDatabaseDao.saveGroupMember(groupMember);
-        } catch (DatabaseOperationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException {
-        try {
-            chatMiddlewareDatabaseDao.deleteGroupMember(groupMember);
-        } catch (DatabaseOperationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException {
-        return chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(groupId);
-    }
-
-    @Override
-    public void updateActorConnection(ChatActorConnection chatActorConnection) {
-        chatActorConnectionManager.updateActorConnection(chatActorConnection);
-    }
-
-    /**
-     * This method return a ChatMetadata from a Chat and Message objects.
-     *
-     * @param chat
-     * @param message
-     * @return
-     */
-    @Deprecated
-    private ChatMetadata constructChatMetadata(
-            Chat chat,
-            Message message) {
-        ChatMetadata chatMetadata;
-        purifyMessage(message);
-        Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
-        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(timestamp);
-        chatMetadata = new ChatMetadataRecord(
-                chat.getChatId(),
-                chat.getObjectId(),
-                chat.getLocalActorType(),
-                chat.getLocalActorPublicKey(),
-                chat.getRemoteActorType(),
-                chat.getRemoteActorPublicKey(),
-                chat.getChatName(),
-                ChatMessageStatus.READ_CHAT,
-                MessageStatus.SEND,
-                timeStamp,
-                message.getMessageId(),
-                message.getMessage(),
-                DistributionStatus.OUTGOING_MSG,
-                chat.getTypeChat(),
-                chat.getGroupMembersAssociated()
-        );
-        return chatMetadata;
-    }
-
-
-    private HashMap<PlatformComponentType, Object> checkSelfIdentitiesMap(
-            HashMap<PlatformComponentType, Object> selfIdentitiesMap) throws
-            CantGetNetworkServicePublicKeyException {
-        if (selfIdentitiesMap.isEmpty()) {
-            String chatNetworkServicePublicKey = getNetworkServicePublicKey();
-            selfIdentitiesMap.put(
-                    PlatformComponentType.NETWORK_SERVICE,
-                    chatNetworkServicePublicKey);
-            return selfIdentitiesMap;
-        }
-        return selfIdentitiesMap;
-    }
-
-    private String getSourceString(EventSource eventSource) {
-        switch (eventSource) {
-            case MIDDLEWARE_CHAT_MANAGER:
-                return INCOMING_CHAT_MESSAGE_NOTIFICATION;
-            default:
-                return "Method: getSourceString - Invalid value in Source String";
-
-        }
-    }
 }

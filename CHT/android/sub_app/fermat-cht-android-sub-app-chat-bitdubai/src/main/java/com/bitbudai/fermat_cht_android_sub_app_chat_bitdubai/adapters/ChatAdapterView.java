@@ -1,13 +1,11 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -59,7 +57,6 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 
 import java.io.ByteArrayInputStream;
@@ -67,7 +64,6 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -81,13 +77,10 @@ import java.util.UUID;
 public class ChatAdapterView extends LinearLayout {
 
     private RecyclerView messagesContainer;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private ChatAdapter adapter;
     private ArrayList<ChatMessage> chatHistory;
     private ChatManager chatManager;
-    private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ChatSessionReferenceApp chatSession;
     private ChatPreferenceSettings chatSettings;
     private FermatSession appSession;
     private Toolbar toolbar;
@@ -107,27 +100,26 @@ public class ChatAdapterView extends LinearLayout {
     private boolean loadDummyData = false;
     private boolean chatWasCreate = false;
     private boolean isScrollingUp = false;
-    private Calendar today;
     UUID newChatId;
     int CounterText;
-    Boolean isOnline = false;
     Boolean textNeverChange = false;
 
-    public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
-                           ChatManager chatManager, ChatModuleManager moduleManager,
-                           ErrorManager errorManager, ChatSessionReferenceApp chatSession, FermatSession appSession, int background, Toolbar toolbar, ChatPreferenceSettings chatSettings) {
+    public ChatAdapterView(Context context,
+                           ArrayList<ChatMessage> chatHistory,
+                           ChatManager chatManager,
+                           ErrorManager errorManager,
+                           FermatSession appSession,
+                           Toolbar toolbar,
+                           ChatPreferenceSettings chatSettings) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         addView(inflater.inflate(R.layout.chat, (rootView != null) ? rootView : null));
         this.chatHistory = chatHistory;
         this.chatManager = chatManager;
-        this.moduleManager = moduleManager;
         this.errorManager = errorManager;
-        this.chatSession = chatSession;
         this.appSession = appSession;
         this.toolbar = toolbar;
         this.chatSettings = chatSettings;
-        //this.background=background;
         initControls();
     }
 
@@ -137,11 +129,6 @@ public class ChatAdapterView extends LinearLayout {
 
     public ChatAdapterView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ChatAdapterView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     void findValues(Contact contact) { //With contact Id find chatId,pkremote,actortype
@@ -584,7 +571,6 @@ public class ChatAdapterView extends LinearLayout {
                     } else {
                         Contact newContact = (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA);//chatSession.getSelectedContact();
                         remotePublicKey = newContact.getRemoteActorPublicKey();
-                        chat.setRemoteActorType(PlatformComponentType.ACTOR_CHAT);//chat.setRemoteActorType(remoteActorType);
                         chat.setRemoteActorPublicKey(remotePublicKey);
                         Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
                         if (newChatId == null) {
@@ -606,7 +592,6 @@ public class ChatAdapterView extends LinearLayout {
                          * To avoid nulls, I'll put default data in chat object
                          *///
                         chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
-                        chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
                         //if (chatSettings.getLocalPublicKey() != null /*&& chatSettings.getLocalPlatformComponentType() != null*/) {
                         //Asigno pk del usuario y no uso la del NS
                         List<ChatIdentity> chatIdentities = chatManager.getIdentityChatUsersFromCurrentDeviceUser();
@@ -617,10 +602,8 @@ public class ChatAdapterView extends LinearLayout {
                             } else {
                                 chat.setLocalActorPublicKey(chatIdentities.get(0).getPublicKey());
                             }
-                            chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
                         } catch (Exception e) {
                             chat.setLocalActorPublicKey(chatIdentities.get(0).getPublicKey());
-                            chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
                         }
                         chatManager.saveChat(chat);
 
@@ -754,10 +737,6 @@ public class ChatAdapterView extends LinearLayout {
         this.leftName = leftName;
     }
 
-    public void addRightName(String rightName) {
-        this.rightName = rightName;
-    }
-
     public void setBackground(int background) {
         this.background = background;
     }
@@ -770,16 +749,8 @@ public class ChatAdapterView extends LinearLayout {
         this.chatManager = chatManager;
     }
 
-    private void setModuleManager(ChatModuleManager moduleManager) {
-        this.moduleManager = moduleManager;
-    }
-
     private void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
-    }
-
-    private void setChatSession(ChatSessionReferenceApp chatSession) {
-        this.chatSession = chatSession;
     }
 
     private void setChatSettings(ChatPreferenceSettings chatSettings) {
@@ -804,22 +775,13 @@ public class ChatAdapterView extends LinearLayout {
         private ViewGroup rootView;
         private ArrayList<ChatMessage> chatHistory;
         private ChatManager chatManager;
-        private ChatModuleManager moduleManager;
         private ErrorManager errorManager;
-        private ChatSessionReferenceApp chatSession;
         private ChatPreferenceSettings chatSettings;
         private FermatSession appSession;
         private Toolbar toolbar;
         private boolean loadDummyData = false;
         private int background = -1;
-        private float chatTextSize;
-        private int chatTextColor;
-        private float dateTextSize;
-        private int dateTextColor;
-        String rightName;
         String leftName;
-        Button customButtom;
-        EditText editText;
 
         public Builder(Context context) {
             this.context = context;
@@ -830,31 +792,8 @@ public class ChatAdapterView extends LinearLayout {
             return this;
         }
 
-        public Builder addRightName(String rightName) {
-            this.rightName = rightName;
-            return this;
-        }
-
-        public Builder addLeftName(String leftName) {
-            this.leftName = leftName;
-            return this;
-        }
-
-        public void addCustomSendButtom(Button customButtom) {
-            this.customButtom = customButtom;
-        }
-
-        public void addCustomEditText(EditText customEditText) {
-            this.editText = customEditText;
-        }
-
         public Builder setBackground(int background) {
             this.background = background;
-            return this;
-        }
-
-        public Builder addChatHistory(ArrayList<ChatMessage> chatHistory) {
-            this.chatHistory = chatHistory;
             return this;
         }
 
@@ -863,18 +802,8 @@ public class ChatAdapterView extends LinearLayout {
             return this;
         }
 
-        public Builder addModuleManager(ChatModuleManager moduleManager) {
-            this.moduleManager = moduleManager;
-            return this;
-        }
-
         public Builder addErrorManager(ErrorManager errorManager) {
             this.errorManager = errorManager;
-            return this;
-        }
-
-        public Builder addChatSession(ChatSessionReferenceApp chatSession) {
-            this.chatSession = chatSession;
             return this;
         }
 
@@ -893,13 +822,17 @@ public class ChatAdapterView extends LinearLayout {
             return this;
         }
 
-        public void loadDummyData(boolean loadDummyData) {
-            this.loadDummyData = loadDummyData;
-        }
-
         public ChatAdapterView build() {
-            ChatAdapterView chatView = new ChatAdapterView(context, chatHistory,
-                    chatManager, moduleManager, errorManager, chatSession, appSession, background, toolbar, chatSettings);
+            ChatAdapterView chatView = new ChatAdapterView(
+                    context,
+                    chatHistory,
+                    chatManager,
+                    errorManager,
+                    appSession,
+                    toolbar,
+                    chatSettings
+            );
+
             if (rootView != null) {
                 chatView.setRootView(rootView);
             }
@@ -909,26 +842,18 @@ public class ChatAdapterView extends LinearLayout {
             if (chatManager != null) {
                 chatView.setChatManager(chatManager);
             }
-            if (moduleManager != null) {
-                chatView.setModuleManager(moduleManager);
-            }
             if (errorManager != null) {
                 chatView.setErrorManager(errorManager);
             }
             if (chatSettings != null) {
                 chatView.setChatSettings(chatSettings);
             }
-            if (chatSession != null) {
-                chatView.setChatSession(chatSession);
-            }
+
             if (appSession != null) {
                 chatView.setAppSession(appSession);
             }
             if (leftName != null) {
                 chatView.addLeftName(leftName);
-            }
-            if (rightName != null) {
-                chatView.addRightName(rightName);
             }
             if (toolbar != null) {
                 chatView.setToolbar(toolbar);

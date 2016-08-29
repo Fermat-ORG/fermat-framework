@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseAggregateFunctionType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseTableOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseAggregateFunction;
@@ -103,7 +102,28 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
     @Override
     public long getCount() throws CantLoadTableToMemoryException {
-        return this.records.size();
+
+        Cursor cursor = null;
+
+        SQLiteDatabase database = null;
+        try {
+            database = this.database.getReadableDatabase();
+            String queryString = "SELECT COUNT(*) FROM " + tableName + makeFilter();
+            cursor = database.rawQuery(queryString, null);
+            if (cursor.moveToNext()) {
+                return cursor.getLong(0);
+            } else {
+                return 0;
+            }
+        } catch (Exception e) {
+
+            throw new CantLoadTableToMemoryException(e, null, "Check the cause for this error");
+        } finally {
+            if (cursor != null)
+                cursor.close();
+            if (database != null)
+                database.close();
+        }
     }
 
     /**
@@ -177,7 +197,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
             }
             database = this.database.getWritableDatabase();
             String filter = makeFilter2();
-            Log.i("AndroidDatabase","Database name:"+tableName+" update quantity: "+database.update(tableName, contentValues,filter , null));
+            Log.i("AndroidDatabase","Database name:"+tableName+" update quantity: "+database.update(tableName, contentValues, filter, null));
         } catch (Exception exception) {
             throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         } finally {
@@ -277,7 +297,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
             database = this.database.getWritableDatabase();
 
 //            database.execSQL("DELETE FROM " + tableName);
-            Log.i("AndroidDatabase", "Truncate table: "+tableName+", records quantity: " + database.delete(tableName, null, null));
+            Log.i("AndroidDatabase", "Truncate table: " + tableName + ", records quantity: " + database.delete(tableName, null, null));
         } catch (Exception exception) {
 
             throw new CantTruncateTableException(
@@ -636,6 +656,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         this.tableFilterGroup = new AndroidDatabaseTableFilterGroup(tableFilters, filterGroups, filterOperator);
     }
 
+
     /**
      * DatabaseTable interface private void.
      */
@@ -663,7 +684,12 @@ public class AndroidDatabaseTable implements DatabaseTable {
         } else {
             //if set group filter
             if (this.tableFilterGroup != null) {
-                return makeGroupFilters(this.tableFilterGroup);
+
+                String groupFilters = makeGroupFilters(this.tableFilterGroup);
+                if (groupFilters.trim().isEmpty())
+                    return "";
+                else
+                    return " WHERE " +groupFilters;
             } else {
                 return filter;
             }
@@ -672,7 +698,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
 
     public String makeFilter2() {
-        return makeFilter(this.tableFilter,this.tableFilterGroup);
+        return makeFilter(this.tableFilter, this.tableFilterGroup);
     }
 
     public String makeFilter(List<DatabaseTableFilter> tableFilter,DatabaseTableFilterGroup tableFilterGroup) {
@@ -703,18 +729,19 @@ public class AndroidDatabaseTable implements DatabaseTable {
     public String makeGroupFilters(DatabaseTableFilterGroup databaseTableFilterGroup) {
 
         StringBuilder strFilter = new StringBuilder();
-        String filter;
 
         if (databaseTableFilterGroup != null && (databaseTableFilterGroup.getFilters().size() > 0 || databaseTableFilterGroup.getSubGroups().size() > 0)) {
             strFilter.append("(");
-            strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
+
+            if (databaseTableFilterGroup.getFilters() != null && !databaseTableFilterGroup.getFilters().isEmpty())
+                strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
 
             int ix = 0;
 
             if (databaseTableFilterGroup.getSubGroups() != null){
 
                 for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
-                    if (subGroup.getFilters().size() > 0 || ix > 0) {
+                    if (subGroup.getFilters().size() > 0 && ix > 0) {
                         switch (databaseTableFilterGroup.getOperator()) {
                             case AND:
                                 strFilter.append(" AND ");
@@ -726,9 +753,13 @@ public class AndroidDatabaseTable implements DatabaseTable {
                                 strFilter.append(" ");
                         }
                     }
-                    strFilter.append("(");
+                    if (databaseTableFilterGroup.getFilters() != null)
+                        strFilter.append("(");
+
                     strFilter.append(makeGroupFilters(subGroup));
-                    strFilter.append(")");
+
+                    if (databaseTableFilterGroup.getFilters() != null)
+                        strFilter.append(")");
                     ix++;
                 }
 
@@ -737,10 +768,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
             strFilter.append(")");
         }
 
-        filter = strFilter.toString();
-        if (strFilter.length() > 0) filter = " WHERE " + filter;
-
-        return filter;
+        return strFilter.toString();
     }
 
     public String makeGroupFilters2(DatabaseTableFilterGroup databaseTableFilterGroup) {
@@ -800,14 +828,13 @@ public class AndroidDatabaseTable implements DatabaseTable {
     }
 
     @Override
-    public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException {
-        if(record==null) throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, new InvalidParameterException("Record null"), null, "Check the cause for this error");;
+    public void deleteRecord() throws CantDeleteRecordException {
         SQLiteDatabase database = null;
         try {
-             database = this.database.getWritableDatabase();
+            database = this.database.getWritableDatabase();
             String filter = makeFilter2();
             int rowDeleted =  database.delete(tableName, (!filter.isEmpty()) ? filter : null, null);
-            Log.i("AndroidDatabase", "Database name:" + tableName + " delete id: " +rowDeleted);
+            Log.i("AndroidDatabase", "Database name:" + tableName + " delete id: " + rowDeleted);
 
         } catch (Exception exception) {
             throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
@@ -1066,4 +1093,3 @@ public class AndroidDatabaseTable implements DatabaseTable {
     }
 
 }
-

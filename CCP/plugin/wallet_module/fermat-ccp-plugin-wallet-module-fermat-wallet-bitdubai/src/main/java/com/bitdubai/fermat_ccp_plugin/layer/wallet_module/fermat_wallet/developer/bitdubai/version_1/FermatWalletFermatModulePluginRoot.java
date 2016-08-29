@@ -139,6 +139,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
 
     private String appPublicKey;
 
+
    // @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.FERMAT_NETWORK       )
     private BlockchainManager<ECKey, Transaction> fermatNetworkManager;
 

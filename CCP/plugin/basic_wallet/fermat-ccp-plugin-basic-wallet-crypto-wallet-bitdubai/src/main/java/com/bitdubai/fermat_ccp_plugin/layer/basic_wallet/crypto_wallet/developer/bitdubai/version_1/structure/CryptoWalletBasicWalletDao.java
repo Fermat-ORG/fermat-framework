@@ -1,23 +1,12 @@
 package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.developer.bitdubai.version_1.structure;
 
 
-
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
-import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
-import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionSummary;
-
-
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
@@ -26,12 +15,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-
-
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -42,10 +30,12 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionSummary;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.developer.bitdubai.version_1.exceptions.CantExecuteBitconTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.developer.bitdubai.version_1.exceptions.CantGetBalanceRecordException;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.developer.bitdubai.version_1.util.CryptoWalletTransactionWrapper;
-
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -754,14 +744,8 @@ public class CryptoWalletBasicWalletDao {
              */
             bitcoinwalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
 
-            bitcoinwalletTable.loadToMemory();
+            bitcoinwalletTable.deleteRecord();
 
-            // Read record data and create transactions list
-            for(DatabaseTableRecord record : bitcoinwalletTable.getRecords()){
-                bitcoinwalletTable.deleteRecord(record);
-            }
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantFindTransactionException("Transaction Memo Update Error",cantLoadTableToMemory,"Error load Transaction table" + transactionID.toString(), "");
         } catch (CantDeleteRecordException e) {
             e.printStackTrace();
         }

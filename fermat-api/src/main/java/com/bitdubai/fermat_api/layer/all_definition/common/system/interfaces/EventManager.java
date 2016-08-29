@@ -29,7 +29,7 @@ public interface EventManager extends FermatManager {
      */
     FermatEvent getNewEvent(FermatEventEnum eventType);
 
-    <T extends FermatEvent> FermatEvent getNewEventMati(FermatEventEnum eventEnum, Class<T> tClass);
+    <T extends FermatEvent> T getNewEventMati(FermatEventEnum eventEnum, Class<T> tClass);
 
     void addListener(FermatEventListener listener);
 

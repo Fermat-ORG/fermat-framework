@@ -17,14 +17,6 @@ public class ChatMessage {
     private String status;
     private String type;
 
-    public ChatMessage(/*String idm, boolean isMem, String messagem, String userIdm, String dateTimem*/) {
-       /* id = idm;
-        isMe = isMem;
-        message = messagem;
-        userId = userIdm;
-        dateTime = dateTimem;*/
-    }
-
     public String getType() {
         return type;
     }

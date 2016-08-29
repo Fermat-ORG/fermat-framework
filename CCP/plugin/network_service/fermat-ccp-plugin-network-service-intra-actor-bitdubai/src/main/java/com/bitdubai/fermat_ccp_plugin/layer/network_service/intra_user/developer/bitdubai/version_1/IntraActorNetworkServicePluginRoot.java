@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -8,17 +10,18 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotificationException;
-import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -58,8 +61,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractActorNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantRegisterActorException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantUpdateRegisteredActorException;
@@ -83,6 +85,12 @@ import java.util.concurrent.Executors;
 
 public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkService implements IntraUserManager,
         DatabaseManagerForDevelopers {
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    protected PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
     /**
      * Represent the intraActorDataBase
@@ -276,16 +284,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
 
         }
 
-        try {
-            getNetworkServiceConnectionManager().getIncomingMessagesDao().markAsRead(newFermatMessageReceive);
-        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantUpdateRecordDataBaseException | RecordNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
-    public void onSentMessage(NetworkServiceMessage messageSent) {
-        try {
+    public void onSentMessage(UUID messageSent) {
+       /* try {
             ActorNetworkServiceRecord actorNetworkServiceRecord = ActorNetworkServiceRecord.fronJson(messageSent.getContent());
 
             //done message type receive
@@ -302,14 +305,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
             System.out.println("EXCEPCION DENTRO DEL PROCCESS EVENT");
             e.printStackTrace();
 
-        }
+        }*/
     }
 
-    @Override
-    public void onActorUnreachable(ActorProfile remoteParticipant) {
-        //I check my time trying to send the message
-        checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
-    }
 
     private void reprocessPendingMessage()
     {
@@ -555,7 +553,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     NetworkServiceType.INTRA_USER
             );    */              // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
-            final List<ActorProfile> list = getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+            final List<ActorProfile> list = new ArrayList<>();// getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
             for (ActorProfile actorProfile : list) {
 
@@ -998,10 +996,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
      */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        if(developerDatabase.getName().equals(IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME))
+
             return new IntraActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
-        else
-            return new IntraActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
     }
 
     /**
@@ -1043,7 +1039,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     sendNewMessage(
                             sender,
                             receiver,
-                            contentMessage
+                            contentMessage, true
                     );
                 } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
                     reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

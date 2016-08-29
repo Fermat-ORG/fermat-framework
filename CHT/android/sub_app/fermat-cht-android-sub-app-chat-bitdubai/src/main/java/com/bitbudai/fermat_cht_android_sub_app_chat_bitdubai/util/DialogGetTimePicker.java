@@ -18,7 +18,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
  * Developed by Lozadaa on 15/04/16.
  */
 public class DialogGetTimePicker extends FermatDialog {
-    String formatedDate;
+
     String time_select;
 
     public DialogGetTimePicker(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources) {

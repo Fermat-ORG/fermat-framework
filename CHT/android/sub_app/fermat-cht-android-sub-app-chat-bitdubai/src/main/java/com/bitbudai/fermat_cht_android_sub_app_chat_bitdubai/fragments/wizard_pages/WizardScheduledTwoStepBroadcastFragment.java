@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.DialogGetDatePicker;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.DialogGetTimePicker;
@@ -23,7 +22,6 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -42,10 +40,8 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
 
 
     // Fermat Managers
-    private ChatManager walletManager;
     private ErrorManager errorManager;
     String DateSelect, TimeSelect;
-    private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
     ArrayList<String> datelist = new ArrayList<String>();
     ArrayList<String> timelist = new ArrayList<String>();
@@ -62,20 +58,11 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
 
         chatSession = ((ChatSessionReferenceApp) appSession);
         chatManager = chatSession.getModuleManager();
-        ChatManager moduleManager = ((ChatSessionReferenceApp) appSession).getModuleManager();
-        //TODO:Revisar esto
-//        try {
-//            walletManager = moduleManager.getChatManager();
-//        } catch (CHTException e) {
-//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }
         errorManager = appSession.getErrorManager();
         //Obtain chatSettings  or create new chat settings if first time opening chat platform
         chatSettings = null;
         try {
             chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
-            //chatSettings = (ChatPreferenceSettings) moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-            //chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             chatSettings = null;
         }

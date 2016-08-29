@@ -173,32 +173,12 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         return contactName.get(position);
     }
 
-    public String getMessageItem(int position) {
-        return message.get(position);
-    }
-
-    public String getDateMessageItem(int position) {
-        return dateMessage.get(position);
-    }
-
     public UUID getChatIdItem(int position) {
         return chatId.get(position);
     }
 
     public String getContactIdItem(int position) {
         return contactId.get(position);
-    }
-
-    public String getStatusItem(int position) {
-        return status.get(position);
-    }
-
-    public String getTypeMessageItem(int position) {
-        return typeMessage.get(position);
-    }
-
-    public int getNoReadMsgsItem(int position) {
-        return noReadMsgs.get(position);
     }
 
     public Bitmap getImgIdItem(int position) {
@@ -239,7 +219,4 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         this.filterString = filterString;
     }
 
-    public String getFilterString() {
-        return filterString;
-    }
 }

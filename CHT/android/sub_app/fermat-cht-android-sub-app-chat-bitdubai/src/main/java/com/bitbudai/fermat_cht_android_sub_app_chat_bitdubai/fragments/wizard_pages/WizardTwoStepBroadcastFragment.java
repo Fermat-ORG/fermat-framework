@@ -15,7 +15,6 @@ import android.widget.ListView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.WizardListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -23,13 +22,10 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -40,8 +36,6 @@ import java.util.UUID;
  * Created by Lozadaa on 20/01/16.
  */
 public class WizardTwoStepBroadcastFragment extends AbstractFermatFragment {
-    private static final String TAG = "WizardTwoStepBroadcastFragment";
-
 
     // Fermat Managers
 
@@ -49,13 +43,10 @@ public class WizardTwoStepBroadcastFragment extends AbstractFermatFragment {
     ChatManager chatManager;
     ListView list;
     // Defines a tag for identifying log entries
-    ChatModuleManager moduleManager;
     ArrayList<String> contactname = new ArrayList<>();
     ArrayList<Bitmap> contacticon = new ArrayList<>();
     ArrayList<UUID> contactid = new ArrayList<>();
-    private SettingsManager<ChatSettings> settingsManager;
     private ChatSessionReferenceApp chatSession;
-    private ChatPreferenceSettings chatSettings;
     WizardListAdapter adapter;
 
     public static WizardTwoStepBroadcastFragment newInstance() {
@@ -70,23 +61,14 @@ public class WizardTwoStepBroadcastFragment extends AbstractFermatFragment {
         try {
             chatSession = ((ChatSessionReferenceApp) appSession);
             chatManager = chatSession.getModuleManager();
-            //chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
-            //toolbar = getToolbar();
-            //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
-            adapter = new WizardListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
-                    moduleManager, errorManager, chatSession, appSession, null);
-            chatSettings = null;
+            adapter = new WizardListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
 
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        try {
-            chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
-        } catch (Exception e) {
-            chatSettings = null;
-        }
+
         Toolbar toolbar = getToolbar();
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
 
@@ -118,15 +100,7 @@ public class WizardTwoStepBroadcastFragment extends AbstractFermatFragment {
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-//            }
-//        });
-
-        adapter = new WizardListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
-                moduleManager, errorManager, chatSession, appSession, null);
+        adapter = new WizardListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
         list = (ListView) layout.findViewById(R.id.list);
         list.setAdapter(adapter);
         registerForContextMenu(list);

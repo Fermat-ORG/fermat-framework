@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MetadataToSend;
 
 import java.io.Serializable;
@@ -13,17 +11,15 @@ import java.util.UUID;
  */
 public abstract class AbstractMetadata implements MetadataToSend , Serializable {
 
-    private transient UUID transactionId;
+    private UUID transactionId;
 
-    private PlatformComponentType localActorType;
+    private ChatMessageTransactionType chatMessageTransactionType;
 
     private String localActorPublicKey;
 
-    private PlatformComponentType remoteActorType;
-
     private String remoteActorPublicKey;
 
-    private transient String date;
+    private String date;
 
     public AbstractMetadata() {
     }
@@ -37,30 +33,12 @@ public abstract class AbstractMetadata implements MetadataToSend , Serializable 
     }
 
     @Override
-    public final PlatformComponentType getLocalActorType() {
-        return localActorType;
-    }
-
-    public void setLocalActorType(PlatformComponentType localActorType) {
-        this.localActorType = localActorType;
-    }
-
-    @Override
     public final String getLocalActorPublicKey() {
         return localActorPublicKey;
     }
 
     public void setLocalActorPublicKey(String localActorPublicKey) {
         this.localActorPublicKey = localActorPublicKey;
-    }
-
-    @Override
-    public final PlatformComponentType getRemoteActorType() {
-        return remoteActorType;
-    }
-
-    public void setRemoteActorType(PlatformComponentType remoteActorType) {
-        this.remoteActorType = remoteActorType;
     }
 
     @Override
@@ -81,4 +59,11 @@ public abstract class AbstractMetadata implements MetadataToSend , Serializable 
         this.date = date;
     }
 
+    public ChatMessageTransactionType getChatMessageTransactionType() {
+        return chatMessageTransactionType;
+    }
+
+    public void setChatMessageTransactionType(ChatMessageTransactionType chatMessageTransactionType) {
+        this.chatMessageTransactionType = chatMessageTransactionType;
+    }
 }
