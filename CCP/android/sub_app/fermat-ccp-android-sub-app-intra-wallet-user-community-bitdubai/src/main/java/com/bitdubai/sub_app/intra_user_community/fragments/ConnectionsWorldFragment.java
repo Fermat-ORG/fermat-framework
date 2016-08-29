@@ -848,7 +848,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
 
          try {
              offset = pos;
-             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(location, distance,alias,MAX, offset);
+             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact("",location, distance,alias,MAX, offset);
              if(userList != null)
                 dataSet.addAll(userList);
              else {

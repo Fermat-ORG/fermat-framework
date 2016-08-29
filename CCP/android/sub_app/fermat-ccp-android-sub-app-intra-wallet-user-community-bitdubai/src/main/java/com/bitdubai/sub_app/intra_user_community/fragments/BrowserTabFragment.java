@@ -75,6 +75,7 @@ import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFe
 import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
+import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -564,8 +565,15 @@ public class BrowserTabFragment
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
         try {
+            ActiveActorIdentityInformation intraUserLoginIdentity = null;
+            intraUserLoginIdentity = moduleManager.getSelectedActorIdentity();
+            String intraUserLoggedPublicKey = null;
+            if (intraUserLoginIdentity != null) {
+                intraUserLoggedPublicKey = intraUserLoginIdentity.getPublicKey();
+            }
+
             offset = pos;
-            List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(location, distance, null, MAX, offset);
+            List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(intraUserLoggedPublicKey,location, distance, null, MAX, offset);
             if(userList != null)
                 dataSet.addAll(userList);
             else {
