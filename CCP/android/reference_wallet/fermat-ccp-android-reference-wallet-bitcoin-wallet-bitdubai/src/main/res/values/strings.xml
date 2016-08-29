@@ -350,5 +350,9 @@
     <string name="error_connecting_to_fermat_network">Wait a minute please, trying to reconnect...</string>
 
 
+    <!--Delete Wallet Contact Dialog-->
+    <string name="delete_title">Delete Contact</string>
+    <string name="delete_sub_title">Do you want delete this contact from your wallet?</string>
+
 </resources>
 

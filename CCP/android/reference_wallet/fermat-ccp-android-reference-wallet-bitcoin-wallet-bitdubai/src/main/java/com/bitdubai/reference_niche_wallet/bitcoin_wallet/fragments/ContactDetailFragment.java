@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -38,6 +40,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.DeleteWalletContactDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ReceiveFragmentDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
 
@@ -47,6 +51,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
 /**
@@ -403,7 +408,28 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+            if (id == 1){
+                DeleteWalletContactDialog deleteWalletContactDialog = new DeleteWalletContactDialog(
+                        getActivity(),
+                        appSession,
+                        null,
+                        cryptoWalletWalletContact.getContactId(),
+                        cryptoWalletWalletContact.getActorName());
+                deleteWalletContactDialog.show();
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
