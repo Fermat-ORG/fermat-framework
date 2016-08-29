@@ -41,6 +41,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -314,10 +315,10 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         newMessageTransmitListener.setEventHandler(new FermatEventHandler<NetworkClientNewMessageTransmitEvent>() {
             @Override
             public void handleEvent(NetworkClientNewMessageTransmitEvent fermatEvent) throws FermatException {
-                PackageInformation packageInformation = messageSender.packageAck(fermatEvent.getPackageId());
-                AbstractNetworkService abstractNetworkService = networkServices.get(packageInformation.getNetworkServiceType());
+                NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.parseContent(fermatEvent.getContent());
+                AbstractNetworkService abstractNetworkService = networkServices.get(networkServiceMessage.getNetworkServiceType());
                 if (abstractNetworkService.isStarted())
-                    abstractNetworkService.onMessageReceived(fermatEvent.getContent());
+                    abstractNetworkService.onMessageReceived(networkServiceMessage);
                 else System.out.println("NetworkService message recive event problem: network service off , NS:"+ abstractNetworkService.getProfile().getNetworkServiceType());
 
             }
@@ -496,11 +497,11 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
     }
 
 
-    private void distributeMessage(NetworkServiceType networkType,NetworkClientNewMessageTransmitEvent fermatEvent){
-        if(networkServices.containsKey(networkType)){
-            networkServices.get(networkType).onMessageReceived(fermatEvent.getContent());
-        }
-    }
+//    private void distributeMessage(NetworkServiceType networkType,NetworkClientNewMessageTransmitEvent fermatEvent){
+//        if(networkServices.containsKey(networkType)){
+//            networkServices.get(networkType).onMessageReceived(fermatEvent.getContent());
+//        }
+//    }
 
     @Override
     public synchronized void register(AbstractNetworkService abstractNetworkService) {

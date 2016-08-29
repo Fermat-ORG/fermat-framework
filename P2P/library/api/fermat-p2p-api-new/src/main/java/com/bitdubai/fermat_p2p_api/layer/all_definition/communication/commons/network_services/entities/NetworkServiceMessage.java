@@ -27,7 +27,7 @@ public class NetworkServiceMessage extends PackageContent implements Serializabl
     //esto está así porque en la layer voy a mapear id de mensaje con package id
     private transient            UUID                     id                     ;
     private           String                   content                ;
-    private transient NetworkServiceType       networkServiceType     ;
+    private  NetworkServiceType       networkServiceType     ;
     private           String                   senderPublicKey        ;
     private           String                   receiverPublicKey      ;
 
