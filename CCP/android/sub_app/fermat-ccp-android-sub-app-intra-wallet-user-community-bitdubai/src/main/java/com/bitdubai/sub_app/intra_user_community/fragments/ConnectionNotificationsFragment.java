@@ -174,7 +174,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             notificationsProgressDialog.setMessage("Loading Notifications");
             notificationsProgressDialog.setCancelable(false);
             notificationsProgressDialog.show();*/
-             worker = new FermatWorker() {
+            worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
                     return getMoreData();
