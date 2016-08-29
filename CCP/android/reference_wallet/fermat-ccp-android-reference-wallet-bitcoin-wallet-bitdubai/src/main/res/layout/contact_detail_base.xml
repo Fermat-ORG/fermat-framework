@@ -185,6 +185,16 @@
                     android:layout_marginLeft="7dp"
                     android:textColor="#12aca1"/>
 
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/delete_contact"
+                    android:text="Delete contact"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="50dp"
+                    android:textColor="#12aca1"/>
+
+
             </LinearLayout>
 
             <LinearLayout
