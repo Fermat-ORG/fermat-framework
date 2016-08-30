@@ -643,10 +643,12 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             /**
              *Call Network Service Intra User to disconnect request connection
              */
-            IntraUserDeleteContactEvent eventToRaise = (IntraUserDeleteContactEvent) eventManager.getNewEvent(EventType.INTRA_USER_WALLET_DELETE_CONTACT);
-            eventToRaise.setContactId(intraUserToDisconnectPublicKey);
 
             this.intraUserNertwokServiceManager.disconnectIntraUSer(intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
+
+            IntraUserDeleteContactEvent eventToRaise = (IntraUserDeleteContactEvent) eventManager.getNewEvent(EventType.INTRA_USER_WALLET_DELETE_CONTACT);
+            eventToRaise.setContactId(intraUserToDisconnectPublicKey);
+            eventManager.raiseEvent(eventToRaise);
 
         } catch (CantDisconnectIntraWalletUserException e) {
             throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT INTRA USER CONNECTION- KEY:" + intraUserToDisconnectPublicKey, e, "", "");
@@ -674,6 +676,9 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                  */
 
                 this.intraUserNertwokServiceManager.disconnectIntraUSer(intraUserLoggedPublicKey, intraUserActor.getPublicKey());
+
+                IntraUserDeleteContactEvent eventToRaise = (IntraUserDeleteContactEvent) eventManager.getNewEvent(EventType.INTRA_USER_WALLET_DELETE_CONTACT);
+                eventToRaise.setContactId(intraUserActor.getPublicKey());
             }
 
 
