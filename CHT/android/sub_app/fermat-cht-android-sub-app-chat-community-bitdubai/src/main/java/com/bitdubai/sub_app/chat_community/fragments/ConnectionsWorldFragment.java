@@ -348,7 +348,7 @@ public class ConnectionsWorldFragment
             if (!isRefreshing) {
                 isRefreshing = true;
                 if (identity != null) {
-                    moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
+                    moduleManager.listWorldChatActor(null, identity.getActorType(),
                             location, distance, alias, MAX, offset, identity.getPublicKey());
                 }
             }
@@ -360,7 +360,7 @@ public class ConnectionsWorldFragment
     public void onActorReceived(final List<ChatActorCommunityInformation> result) {
         try {
             if (isAttached) {
-                if (result != null && result.size() > 0) {
+                if (result != null /*&& result.size() > 0*/) {
                     if (getActivity() != null && adapter != null) {
                         if (offset == 0) {
                             if (lstChatUserInformations != null) {
@@ -386,7 +386,7 @@ public class ConnectionsWorldFragment
                         isRefreshing = false;
                         offset = lstChatUserInformations.size();
                     }
-                } else{
+                } else {
                     showEmpty(true, emptyView);
                     isRefreshing = false;
                 }
@@ -414,8 +414,10 @@ public class ConnectionsWorldFragment
             noDatalabel.setAnimation(anim);
             noData.setVisibility(View.VISIBLE);
             noDatalabel.setVisibility(View.VISIBLE);
-            if (adapter != null)
+            if (adapter != null && offset == 0)
                 adapter.changeDataSet(null);
+//            else
+//                adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
         } else {
             emptyView.setVisibility(View.GONE);
             noData.setAnimation(anim);

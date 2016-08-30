@@ -713,8 +713,9 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION);
 
                         if (remotePK != null) {
-
-
+                            message.set(contactId.indexOf(remotePK), "Typing...");
+                            adapter.refreshEvents(contactName,message,dateMessage, chatId,contactId,
+                                    status, typeMessage, noReadMsgs, imgId);
                         }
 
                     }
