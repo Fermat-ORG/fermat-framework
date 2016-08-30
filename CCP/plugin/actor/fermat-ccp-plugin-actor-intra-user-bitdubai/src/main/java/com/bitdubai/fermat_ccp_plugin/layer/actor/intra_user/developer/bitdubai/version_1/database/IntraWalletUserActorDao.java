@@ -462,6 +462,9 @@ public class IntraWalletUserActorDao {
 
             if(table.getCount() == 0){
                 table.clearAllFilters();
+                table.setFilterOffSet(String.valueOf(offset));
+                table.setFilterTop(String.valueOf(max));
+
                 table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_COUNTRY_COLUMN_NAME, country, DatabaseFilterType.LIKE);
                 table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
                 table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, connectedState.getCode(), DatabaseFilterType.EQUAL);
