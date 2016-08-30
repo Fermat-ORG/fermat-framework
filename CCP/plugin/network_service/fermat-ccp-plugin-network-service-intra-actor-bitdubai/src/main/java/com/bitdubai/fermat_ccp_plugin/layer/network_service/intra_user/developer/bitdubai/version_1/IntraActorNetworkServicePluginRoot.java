@@ -33,6 +33,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkListReceiveEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
@@ -308,6 +309,42 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
         }*/
     }
 
+    //receive actors list
+    @Override
+    public void handleNetworkClientActorListReceivedEvent(final UUID               queryId      ,
+                                                          final List<ActorProfile> actorProfiles) {
+
+        final List<IntraUserInformation> lstIntraUser = new ArrayList<>();
+
+        for (ActorProfile actorProfile : actorProfiles) {
+
+            String actorPhrase = "";
+           /* if(actorProfile.getExtraData() != null)
+            {
+                if(!actorProfile.getExtraData().equals("")) {
+                    try {
+                        JsonParser jParser = new JsonParser();
+                        JsonObject jsonObject = jParser.parse(actorProfile.getExtraData()).getAsJsonObject();
+
+                        actorPhrase = jsonObject.get("PHRASE").getAsString();
+                    } catch(Exception e){
+
+                    }
+                }
+            }*/
+
+            lstIntraUser.add(new IntraUserNetworkService(actorProfile.getIdentityPublicKey(), actorProfile.getPhoto(), actorProfile.getAlias(), actorPhrase,actorProfile.getStatus(),actorProfile.getLocation()));
+        }
+
+        System.out.println("IntraActorNs: onNetworkServiceActorListReceived");
+        ActorNetworkListReceiveEvent eventToRaise = eventManager.getNewEventMati(EventType.ACTOR_NETWORK_SERVICE_ACTOR_LIST_RECEIVED, ActorNetworkListReceiveEvent.class);
+        eventToRaise.setSource(eventSource);
+        eventToRaise.setActorProfileList(lstIntraUser);
+
+        System.out.println("INSTRA USER ACTOR LIST FLOW -> RAISING EVENT -> -> init");
+        eventManager.raiseEvent(eventToRaise);
+    }
+
 
     private void reprocessPendingMessage()
     {
@@ -513,8 +550,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
         return intraUserList;
     }
 
-    @Override
-    public List<IntraUserInformation> getIntraUsersSuggestions(double distance, String alias,int max, int offset, Location location) throws ErrorSearchingSuggestionsException {
+
+    public List<IntraUserInformation> getIntraUsersSuggestionsOld(double distance, String alias,int max, int offset, Location location,String requesterPublicKey) throws ErrorSearchingSuggestionsException {
 
         final List<IntraUserInformation> lstIntraUser = new ArrayList<>();
 
@@ -553,7 +590,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     NetworkServiceType.INTRA_USER
             );    */              // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
-            final List<ActorProfile> list = new ArrayList<>();// getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+
+            final List<ActorProfile> list = new ArrayList<>();
+
+            //getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
             for (ActorProfile actorProfile : list) {
 
@@ -584,6 +624,47 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
 
         return lstIntraUser;
     }
+
+    @Override
+    public void getIntraUsersSuggestions(double distance, String alias,int max, int offset, Location location,String requesterPublicKey) throws ErrorSearchingSuggestionsException {
+
+        final List<IntraUserInformation> lstIntraUser = new ArrayList<>();
+
+        try {
+
+            /* This is for test and example of how to use
+                    * Construct the filter
+            */
+
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    Actors.INTRA_USER.getCode(),
+                    null,
+                    alias,
+                    null,
+                    location,
+                    distance,
+                    true,
+                    null,
+                    max,
+                    offset,
+                    false);
+
+
+            discoveryActorProfiles(discoveryQueryParameters,requesterPublicKey);
+
+
+
+
+
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+
+        }
+
+    }
+
 
     @Override
     public List<IntraUserInformation> getCacheIntraUsersSuggestions(int max, int offset) throws ErrorSearchingCacheSuggestionsException {

@@ -25,11 +25,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageView;
+
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
+
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
@@ -46,25 +45,30 @@ import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_ccp_api.all_definition.util.CommunityBroadcasterConstants;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AvailableActorsListAdapter;
@@ -75,7 +79,6 @@ import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFe
 import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
-import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -155,6 +158,9 @@ public class BrowserTabFragment
 
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+
+            FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
+            registerReceiver(fermatIntentFilter, new CCPListBroadcastReceiver());
 
             intraUserSubAppSession = appSession;
             fermatApplicationCaller = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
@@ -387,7 +393,7 @@ public class BrowserTabFragment
                 }
             });
         }else{
-            Log.e(TAG,"SearchView null, please check this");
+            Log.e(TAG, "SearchView null, please check this");
         }
     }
 
@@ -561,7 +567,21 @@ public class BrowserTabFragment
     }
 
     @Override
-    public List<IntraUserInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+    public void onRefresh() {
+        try {
+            if (!isRefreshing) {
+                isRefreshing = true;
+                if (identity != null) {
+                    moduleManager.getSuggestionsToContact(identity.getPublicKey(),location, distance, null, MAX, offset);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+   /* @Override
+   public List<IntraUserInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
         try {
@@ -601,12 +621,14 @@ public class BrowserTabFragment
             });
         }
         return dataSet;
-    }
+    }*/
+
+
 
     @Override
     @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
-        isRefreshing = false;
+      /*  isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             adapter.setLoadingData(false);
@@ -627,7 +649,7 @@ public class BrowserTabFragment
             }
         }
 
-        showOrHideEmptyView();
+        showOrHideEmptyView();*/
     }
 
     @Override
@@ -646,6 +668,65 @@ public class BrowserTabFragment
         super.onFragmentFocus();
 
         onRefresh();
+    }
+
+    public void onActorReceived(final List<IntraUserInformation> result) {
+        try {
+            if (isAttached) {
+                if (result != null && result.size() > 0) {
+                    if (getActivity() != null && adapter != null) {
+                        if (offset == 0) {
+                            if (lstIntraUserInformations != null) {
+                                lstIntraUserInformations.clear();
+                                lstIntraUserInformations.addAll(result);
+                            }
+                            adapter.changeDataSet(lstIntraUserInformations);
+                            ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
+                        } else {
+
+                            lstIntraUserInformations.addAll((ArrayList) result);
+                            adapter.notifyItemRangeInserted(offset, lstIntraUserInformations.size() - 1);
+                        }
+
+                        isRefreshing = false;
+                        offset = lstIntraUserInformations.size();
+                    }
+                } else{
+
+                    isRefreshing = false;
+                }
+            }
+            showOrHideEmptyView();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Receiver class implemented
+     */
+    private class CCPListBroadcastReceiver extends FermatBroadcastReceiver {
+
+        @Override
+        public void onReceive(FermatBundle fermatBundle) {
+            try {
+                if (isAttached) {
+                    String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+
+                    if (code.equals(CommunityBroadcasterConstants.USER_COMM_ACTOR_RECEIVED)) {
+                        List<IntraUserInformation> actorProfiles = (List<IntraUserInformation>) fermatBundle.get(CommunityBroadcasterConstants.USER_COMM_ACTOR_LIST);
+                        onActorReceived(actorProfiles);
+                    }
+                }
+            } catch (ClassCastException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_INTRA_USER_IDENTITY,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            } catch (IllegalAccessException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_INTRA_USER_IDENTITY,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+        }
     }
 
     private void loadSelectedActorIdentityInBackground(){

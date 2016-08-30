@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressesNewsEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressesUpdateEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestNewsEvent;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkListReceiveEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServiceCompleteRegistration;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 
@@ -47,6 +48,12 @@ public enum EventType implements FermatEventEnum {
             return new ActorNetworkServicePendingsNotificationEvent(this);
         }
     },
+    ACTOR_NETWORK_SERVICE_ACTOR_LIST_RECEIVED("ANSALR") {
+        @Override
+        public FermatEvent getNewEvent() {
+            return new ActorNetworkListReceiveEvent(this);
+        }
+    }
     ;
 
     private final String code;
@@ -69,6 +76,8 @@ public enum EventType implements FermatEventEnum {
             case "ACTORNSC": return ACTOR_NETWORK_SERVICE_COMPLETE;
             case "CRYADDN":  return CRYPTO_ADDRESSES_NEWS          ;
             case "CRYPRNW":  return CRYPTO_PAYMENT_REQUEST_NEWS    ;
+            case "ANSNN":   return ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS    ;
+            case "ANSALR":  return ACTOR_NETWORK_SERVICE_ACTOR_LIST_RECEIVED    ;
 
             default:
                 throw new InvalidParameterException(

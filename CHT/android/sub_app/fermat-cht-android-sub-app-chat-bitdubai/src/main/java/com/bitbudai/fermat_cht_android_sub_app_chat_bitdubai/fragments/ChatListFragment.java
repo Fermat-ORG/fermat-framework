@@ -783,7 +783,7 @@ public class ChatListFragment
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE)) {
 //                    cancelNotification();
-//                    fermatBundle.remove(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
+//                    fermatBundle.remove(CommunityBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
                     }
                 }
             } catch (ClassCastException e) {

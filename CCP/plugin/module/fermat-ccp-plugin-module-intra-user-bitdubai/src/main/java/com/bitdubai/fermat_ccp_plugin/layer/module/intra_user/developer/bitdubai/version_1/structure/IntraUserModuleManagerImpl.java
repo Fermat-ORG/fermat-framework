@@ -2,7 +2,10 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
@@ -10,6 +13,9 @@ import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -22,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_ccp_api.all_definition.util.CommunityBroadcasterConstants;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCancelIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException;
@@ -89,6 +96,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
+
 /**
  * Created by mati on 2016.04.21..
  */
@@ -105,12 +114,18 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
     private PluginTextFile intraUserLoginXml;
     private IntraUserSettings intraUserSettings = new IntraUserSettings();
     private LocationManager locationManager;
+    private Broadcaster broadcaster;
 
     private GeolocationManager geolocationManager;
 
     private ExecutorService _executor;
 
-    public IntraUserModuleManagerImpl(PluginFileSystem pluginFileSystem, UUID pluginId, PluginTextFile intraUserLoginXml, IntraWalletUserIdentity intraWalletUser, IntraWalletUserIdentityManager intraWalletUserIdentityManager, IntraWalletUserActorManager intraWalletUserManager, IntraUserManager intraUserNertwokServiceManager, ErrorManager errorManager, String intraUserLoggedPublicKey,LocationManager locationManager,GeolocationManager geolocationManager) {
+    public IntraUserModuleManagerImpl(PluginFileSystem pluginFileSystem, UUID pluginId, PluginTextFile intraUserLoginXml,
+                                      IntraWalletUserIdentity intraWalletUser, IntraWalletUserIdentityManager intraWalletUserIdentityManager, IntraWalletUserActorManager intraWalletUserManager,
+                                      IntraUserManager intraUserNertwokServiceManager,
+                                      ErrorManager errorManager, String intraUserLoggedPublicKey,
+                                      LocationManager locationManager,GeolocationManager geolocationManager,
+                                      Broadcaster broadcaster) {
         super(pluginFileSystem, pluginId);
         this.intraUserLoginXml = intraUserLoginXml;
         this.intraWalletUser = intraWalletUser;
@@ -121,6 +136,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
         // this.intraUserLoggedPublicKey = intraUserLoggedPublicKey;
         this.locationManager = locationManager;
         this.geolocationManager = geolocationManager;
+        this.broadcaster = broadcaster;
     }
 
     /**
@@ -262,30 +278,24 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
      * @return a list with information of intra users
      * @throws CantGetIntraUsersListException
      */
-    @Override
+
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 35,timeoutUnit = TimeUnit.SECONDS)
-    public List<IntraUserInformation> getSuggestionsToContact(final String intraUserLoggedPublicKey,Location location, double distance, String alias,int max, int offset) throws CantGetIntraUsersListException {
+    public List<IntraUserInformation> getSuggestionsToContactOld(final String intraUserLoggedPublicKey,Location location, double distance, String alias,int max, int offset) throws CantGetIntraUsersListException {
 
         try {
 
-            //verifico la cache para mostrar los que tenia antes y los nuevos
-              /*  List<IntraUserInformation> userCacheList = new ArrayList<>();
-                try {
-                    userCacheList = getCacheSuggestionsToContact(max, offset);
-                } catch (CantGetIntraUsersListException e) {
-                    e.printStackTrace();
-                }*/
 
             final List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
 
-            List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
-            intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(distance,alias,max, offset, location);
+          //  List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
+          //  intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(distance,alias,max, offset, location,intraUserLoggedPublicKey);
+
+            intraUserNertwokServiceManager.getIntraUsersSuggestions(distance, alias, max, offset, location, intraUserLoggedPublicKey);
 
 
 
 
-
-            for (IntraUserInformation intraUser : intraUserInformationList) {
+            /*for (IntraUserInformation intraUser : intraUserInformationList) {
                 String country = "----", place = "----";
                 //get connection state status
                 ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
@@ -321,52 +331,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                         e.printStackTrace();
                     }
                 }
-            });
-
-
-         /*   if(intraUserInformationModuleList!=null) {
-                if (userCacheList.size() == 0) {
-
-                    //save cache records
-                    try {
-                        saveCacheIntraUsersSuggestions(intraUserInformationModuleList);
-                    } catch (CantGetIntraUsersListException e) {
-                        e.printStackTrace();
-                    }
-
-                    return intraUserInformationModuleList;
-                }
-                else {
-                    if (intraUserInformationModuleList.size() == 0) {
-                        return userCacheList;
-                    }
-                    else {
-                        for (IntraUserInformation intraUserCache : userCacheList) {
-                            boolean exist = false;
-                            for (IntraUserInformation intraUser : intraUserInformationModuleList) {
-                                if (intraUserCache.getPublicKey().equals(intraUser.getPublicKey())) {
-                                    exist = true;
-                                    break;
-                                }
-                            }
-                            if (!exist)
-                                intraUserInformationModuleList.add(intraUserCache);
-                        }
-
-                        //save cache records
-                        try {
-                            saveCacheIntraUsersSuggestions(intraUserInformationModuleList);
-                        } catch (CantGetIntraUsersListException e) {
-                            e.printStackTrace();
-                        }
-
-                        return intraUserInformationModuleList;
-                    }
-                }
-            }
-            else {
-                return userCacheList;
-            }*/
+            });*/
 
 
             return intraUserInformationModuleList;
@@ -380,6 +345,26 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
         }
     }
+
+
+    public void getSuggestionsToContact(final String intraUserLoggedPublicKey,Location location, double distance, String alias,int max, int offset) throws CantGetIntraUsersListException {
+
+        try {
+
+            intraUserNertwokServiceManager.getIntraUsersSuggestions(distance,alias,max, offset, location,intraUserLoggedPublicKey);
+
+
+
+        }
+        catch (ErrorSearchingSuggestionsException e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
+        }
+    }
+
 
     private void updateIntraUsersConnections(String intraUserLoggedPublicKey,List<IntraUserInformation> intraUserInformationList){
 
@@ -858,8 +843,8 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getWaitingTheirAcceptanceIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),"",intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),ProfileStatus.OFFLINE,intraUserActor.getContactRegistrationDate(),
-                        intraUserActor.getCity(),intraUserActor.getCountry(),null));
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(), "", intraUserActor.getPublicKey(), intraUserActor.getProfileImage(), intraUserActor.getContactState(), ProfileStatus.OFFLINE, intraUserActor.getContactRegistrationDate(),
+                        intraUserActor.getCity(), intraUserActor.getCountry(), null));
             }
             return intraUserList;
         } catch (CantGetIntraWalletUsersException e) {
@@ -932,6 +917,64 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             e.printStackTrace();
         }
         return notifications;
+    }
+
+
+    public void handleActorListReceivedEvent(List<IntraUserInformation> actorProfileList) throws FermatException {
+
+        System.out.println("INTRA USER ACTOR LIST FLOW -> handleActorListReceivedEvent -> INIT");
+
+        final List<IntraUserInformation> worldActorList = new ArrayList<>();
+
+
+        for (IntraUserInformation intraUser : actorProfileList) {
+            String country = "----", place = "----";
+            //get connection state status
+            ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
+
+            //get actor location
+            Location actorLocation = intraUser.getLocation();
+            if(actorLocation != null){
+                try {
+                    final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
+                    country = address.getCountry().equals("null")? "----" : address.getCountry();
+                    place = address.getCity().equals("null") ? country : address.getCity();
+                } catch (CantCreateAddressException ignore) {
+
+                }
+            }
+            //return intra user information - if not connected - status return null
+            IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(),
+                    connectionState,intraUser.getState(),intraUser.getContactRegistrationDate(),
+                    country,place,actorLocation);
+            worldActorList.add(intraUserInformation);
+        }
+
+        _executor = Executors.newFixedThreadPool(2);
+
+        _executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    updateIntraUsersConnections(intraUserLoggedPublicKey, worldActorList);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        FermatBundle bundle = new FermatBundle();
+
+        bundle.put(SOURCE_PLUGIN, Plugins.CHAT_COMMUNITY_SUP_APP_MODULE.getCode());
+        bundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CCP_COMMUNITY.getCode());
+        bundle.put(Broadcaster.NOTIFICATION_TYPE, CommunityBroadcasterConstants.USER_COMM_ACTOR_RECEIVED);
+        bundle.put(CommunityBroadcasterConstants.USER_COMM_ACTOR_LIST, worldActorList);
+
+        System.out.println("INTRA ACTOR LIST FLOW -> handleActorListReceivedEvent -> END");
+
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CCP_COMMUNITY.getCode(), bundle);
     }
 
 
