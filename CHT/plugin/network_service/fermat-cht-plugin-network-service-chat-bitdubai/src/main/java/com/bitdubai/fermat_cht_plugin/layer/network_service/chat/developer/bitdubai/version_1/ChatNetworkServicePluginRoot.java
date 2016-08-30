@@ -33,7 +33,6 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageT
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingMessage;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.MessageFail;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MessageMetadata;
@@ -240,23 +239,12 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
             reportUnexpectedError(pluginStartException);
         }
-        if(messageMetadataRecord != null){
-            launchMessageFailNotification(messageMetadataRecord, messageMetadataRecord.getChatMessageTransactionType());
-        }else
-            System.out.println("MESSAGE WITH ID:"+messageId.toString()+" was not found");
+
     }
 
     private void launchIncomingMessageNotification(MessageMetadata messageMetadata) {
         IncomingMessage event = (IncomingMessage) eventManager.getNewEvent(EventType.INCOMING_MESSAGE);
         event.setMessageMetadata(messageMetadata);
-        event.setSource(eventSource);
-        eventManager.raiseEvent(event);
-    }
-
-    private void launchMessageFailNotification(MessageMetadata messageMetadata, ChatMessageTransactionType chatMessageTransactionType) {
-        MessageFail event = (MessageFail) eventManager.getNewEvent(EventType.MESSAGE_FAIL);
-        event.setMessageMetadata(messageMetadata);
-        event.setChatMessageTransactionType(chatMessageTransactionType);
         event.setSource(eventSource);
         eventManager.raiseEvent(event);
     }

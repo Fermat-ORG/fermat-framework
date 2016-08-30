@@ -9,13 +9,9 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatActorListReceivedEvent;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatConnectionRequestNewEvent;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatConnectionRequestUpdatesEvent;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingMessage;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewOnlineStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.MessageFail;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 
 /**
  * The enum <code>com.bitdubai.fermat_cht_api.fermat_chp_api.events.enums.EventType</code>
@@ -47,35 +43,12 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    /**
-     * NETWORK SERVICES
-     */
-    MESSAGE_FAIL("FAIL"){
-        public final FermatEvent getNewEvent(){
-            return new MessageFail(this);
-        }
-    },
-    OUTGOING_CHAT("OUTGCHAT") {
-        public final FermatEvent getNewEvent() {
-            return new OutgoingChat(this);
-        }
-    },
-    INCOMING_CHAT("INCHAT") {
-        public final FermatEvent getNewEvent() {
-            return new IncomingChat(this);
-        }
-    },
     INCOMING_MESSAGE("INMESSAGE"){
         public final FermatEvent getNewEvent() { return new IncomingMessage(this);}
     },
     INCOMING_STATUS("INSTS") {
         public final FermatEvent getNewEvent() {
             return new IncomingNewChatStatusUpdate(this);
-        }
-    },
-    INCOMING_ONLINE_STATUS("INOSTS") {
-        public final FermatEvent getNewEvent() {
-            return new IncomingNewOnlineStatusUpdate(this);
         }
     },
     INCOMING_WRITING_STATUS("INWSTS") {
