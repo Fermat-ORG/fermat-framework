@@ -109,16 +109,9 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                         public void onClick(View v)
                         {
                                 try {
-                                    lstChatUserInformations = mChatActorCommunityManager.getExtendedCitiesByFilter(searchInput.getText().toString());
-                                    adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
-                                    mListView.setAdapter(adapter);
-                                    adapter.refreshEvents(lstChatUserInformations);
+
                                     onRefresh();
-                                }catch (CantGetCitiesListException e){
-                                    if (getActivity() != null)
-                                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
-                                                UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-                                }
+                                 }
                                 catch (Exception e){
                                     System.out.println("Exception at Geolocation search " + e.getMessage());
                                 }
