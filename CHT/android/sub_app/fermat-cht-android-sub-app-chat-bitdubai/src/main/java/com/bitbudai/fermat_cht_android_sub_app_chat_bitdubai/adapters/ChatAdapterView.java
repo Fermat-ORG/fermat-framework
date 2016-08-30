@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -64,6 +65,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by miguel on 22/01/16.
@@ -92,8 +94,6 @@ public class ChatAdapterView extends LinearLayout {
     private boolean chatWasCreate = false;
     private boolean isScrollingUp = false;
     UUID newChatId;
-    int CounterText;
-    Boolean textNeverChange = false;
 
     public ChatAdapterView(Context context,
                            ArrayList<ChatMessage> chatHistory,
@@ -242,11 +242,8 @@ public class ChatAdapterView extends LinearLayout {
     public class BackgroundAsyncTaskWriting extends
             AsyncTask<Void, Integer, Void> {
 
-        int myProgress;
-
         @Override
         protected void onPostExecute(Void result) {
-            //this.cancel(true);
             return;
         }
 
@@ -377,11 +374,11 @@ public class ChatAdapterView extends LinearLayout {
         return fecha;
     }
 
-    public void changeStatusOnTheSubtitleBar(int state, Timestamp date) {
+    public void changeStatusOnTheSubtitleBar(int state, Timestamp date, Handler h) {
         switch (state) {
             case ConstantSubtitle.IS_OFFLINE:
                 if (date != null && !date.equals("no record")) {
-                    toolbar.setSubtitle(Html.fromHtml("<small><small>"+getContext().getResources().getString(R.string.cht_last_time) + " "  + setFormatLastTime(date) + "</small></small>"));
+                    toolbar.setSubtitle(Html.fromHtml("<small><small>"+getContext().getResources().getString(R.string.cht_last_message_received) + " "  + setFormatLastTime(date) + "</small></small>"));
                     appSession.setData("DATELASTCONNECTION", setFormatLastTime(date));
                 } else {
                     Log.i("159753**LastTimeOnChat", "No show");
@@ -392,6 +389,16 @@ public class ChatAdapterView extends LinearLayout {
                 break;
             case ConstantSubtitle.IS_WRITING:
                 toolbar.setSubtitle(getContext().getResources().getString(R.string.cht_typing));
+
+                h.postDelayed(
+                        new Runnable(){
+                            @Override
+                            public void run() {
+                                checkStatus(null, null);
+                            }
+                        },
+                        TimeUnit.SECONDS.toMillis(4)
+                );
                 break;
         }
     }
@@ -432,6 +439,10 @@ public class ChatAdapterView extends LinearLayout {
                 });
         toolbar.setSubtitle("");
         messageET.addTextChangedListener(new TextWatcher() {
+
+            private static final long INTERVAL_WRITING = 7000;
+
+            private long lastTimeSent = 0;
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -439,20 +450,13 @@ public class ChatAdapterView extends LinearLayout {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (chatWasCreate && s.length()>0) {
-                    CounterText++;
-                    if (CounterText == 5) {
-                        BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
-                        batw.execute();
-                        CounterText = 0;
-                    }
-                    if (messageET.length() > 0 && textNeverChange == false) {
-                        BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
-                        batw.execute();
-                        textNeverChange = true;
-                    } else if (messageET.length() == 0 && textNeverChange == true) {
-                        textNeverChange = false;
-                        BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
-                        batw.execute();
+                    if (s.length()>0) {
+                        long currentTimeToSend = System.currentTimeMillis();
+                        if (currentTimeToSend > lastTimeSent + INTERVAL_WRITING) {
+                            BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
+                            batw.execute();
+                            lastTimeSent = currentTimeToSend;
+                        }
                     }
                     if ((start > 0 || s.charAt(s.length() - 1) == '\n') && !isScrollingUp) {
                         scroll();
@@ -469,7 +473,7 @@ public class ChatAdapterView extends LinearLayout {
             whatToDo();
             findMessage();
             scroll();
-            checkStatus();
+            checkStatus(null, null);
 
             if (leftName != null) {
                 toolbar.setTitle(leftName);
@@ -630,9 +634,10 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
-    public void refreshEvents() {
-        findValues((Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));//chatSession.getSelectedContact());
+    public void refreshEvents(String remotePk, Handler h) {
+        findValues((Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));
         findMessage();
+        checkStatus(remotePk, h);
     }
 
     public void clean() {
@@ -640,12 +645,16 @@ public class ChatAdapterView extends LinearLayout {
         messagesContainer.setAdapter(adapter);
     }
 
-    public void checkStatus() {
+    public void checkStatus(String remotePkWriting, Handler h) {
 
         try {
 
-            Timestamp date = chatManager.getLastMessageReceivedDate(remotePk);
-            changeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
+            if (remotePkWriting != null && remotePkWriting.equals(remotePk)) {
+                changeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING, null, h);
+            } else {
+                Timestamp date = chatManager.getLastMessageReceivedDate(remotePk);
+                changeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date, null);
+            }
 
         } catch (CantGetChatException cantGetOnlineStatus) {
             cantGetOnlineStatus.printStackTrace();
@@ -699,7 +708,6 @@ public class ChatAdapterView extends LinearLayout {
         private ChatPreferenceSettings chatSettings;
         private FermatSession appSession;
         private Toolbar toolbar;
-        private boolean loadDummyData = false;
         String leftName;
 
         public Builder(Context context) {

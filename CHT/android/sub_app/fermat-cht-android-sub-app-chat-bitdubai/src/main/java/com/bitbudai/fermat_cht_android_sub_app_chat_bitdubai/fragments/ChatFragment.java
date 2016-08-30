@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -58,6 +59,7 @@ public class ChatFragment
     private ChatPreferenceSettings chatSettings;
     private Toolbar toolbar;
     ChatActorCommunitySelectableIdentity chatIdentity;
+    private Handler h = new Handler();
 
     private ChatAdapterView adapterView;
     private SearchView searchView;
@@ -70,6 +72,8 @@ public class ChatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+
+
             chatManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -142,14 +146,14 @@ public class ChatFragment
         }
     }
 
-    public void onUpdateViewUIThread() {
+    public void onUpdateViewUIThread(String remotePk) {
         if(isAttached) {
             if (searchView != null) {
                 if (searchView.getQuery().toString().equals("")) {
-                    adapterView.refreshEvents();
+                    adapterView.refreshEvents(remotePk, h);
                 }
             } else {
-                adapterView.refreshEvents();
+                adapterView.refreshEvents(remotePk, h);
             }
         }else adapterView.clean();
     }
@@ -263,7 +267,7 @@ public class ChatFragment
                             public void onDismiss(DialogInterface dialog) {
                                 try {
                                     adapterView.clean();
-                                    onUpdateViewUIThread();
+                                    onUpdateViewUIThread(null);
                                 }catch (Exception e) {
                                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                 }
@@ -292,7 +296,8 @@ public class ChatFragment
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
-                        onUpdateViewUIThread();
+                        String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION);
+                        onUpdateViewUIThread(remotePK);
                     }
                 }
             } catch (ClassCastException e) {

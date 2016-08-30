@@ -591,27 +591,6 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
-
-//        if (id == R.id.menu_open_chat) {
-//            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-//            return true;
-//        }
-//        if (id == R.id.menu_create_group) {
-//            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-//            return true;
-//        }
-//        if (id == R.id.menu_create_broadcasting) {
-//            changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL, appSession.getAppPublicKey());
-//            return true;
-//        }
-//        if (id == R.id.menu_delete_all_chats) {
-//
-//        }
-
-//        if (id == R.id.menu_error_report) {
-//            changeActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
-//            return true;
-//        }
     }
 
     @Override
@@ -713,14 +692,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
             }
             return true;
         }
-//        if (id == R.id.menu_delete_contact) {
-//            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-//            return true;
-//        }
-//        if (id == R.id.menu_block_contact) {
-//            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-//            return true;
-//        }
+
         return super.onContextItemSelected(item);
     }
 
@@ -737,13 +709,16 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW)) {
                         onUpdateViewUIThread();
-//                    cancelNotification();
+
+                        String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION);
+
+                        if (remotePK != null) {
+
+
+                        }
+
                     }
 
-                    if (code.equals(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE)) {
-//                    cancelNotification();
-//                    fermatBundle.remove(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
-                    }
                 }
             } catch (ClassCastException e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
