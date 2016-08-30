@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 
@@ -123,13 +122,10 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
                 try {
                     try {
                         // Get the info of chat selected from session
-                        Chat chat = (Chat) appSession.getData(ChatSessionReferenceApp.CHAT_DATA);//chatSession.getSelectedChat();
+                        Chat chat = (Chat) appSession.getData(ChatSessionReferenceApp.CHAT_DATA);
                         // Delete chat and refresh view
                         chatManager.deleteChat(chat.getChatId());
                     } catch (CantDeleteChatException e) {
-                        if (errorManager != null)
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    } catch (CantDeleteMessageException e) {
                         if (errorManager != null)
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     } catch (Exception e) {
@@ -149,9 +145,6 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
                         Chat chat = (Chat) appSession.getData(ChatSessionReferenceApp.CHAT_DATA);//chatSession.getSelectedChat();
                         // Delete chat and refresh view
                         chatManager.deleteChat(chat.getChatId());
-                    } catch (CantDeleteMessageException e) {
-                        if (errorManager != null)
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     } catch (Exception e) {
                         if (errorManager != null)
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
