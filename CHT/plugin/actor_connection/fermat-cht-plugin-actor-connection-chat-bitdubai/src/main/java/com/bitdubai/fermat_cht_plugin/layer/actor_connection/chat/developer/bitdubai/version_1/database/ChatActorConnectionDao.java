@@ -6,25 +6,17 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionAlreadyExistsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetProfileImageException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantInitializeActorConnectionDatabaseException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRegisterActorConnectionException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
@@ -37,33 +29,28 @@ import java.util.UUID;
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 06/04/16.
  * Edited by Miguel Rincon on 19/04/2016
  */
-public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorIdentity, ChatActorConnection> {
-
-    private ErrorManager errorManager;
-    private final UUID pluginId;
+public class ChatActorConnectionDao extends ActorConnectionDao<ChatActorConnection> {
 
     public ChatActorConnectionDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         super(pluginDatabaseSystem, pluginFileSystem, pluginId);
-        this.pluginId = pluginId;
     }
 
     public void updateChatActorConnection(final ChatActorConnection chatActorConnection){
-        final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
         try {
 
-            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, chatActorConnection.getPublicKey(), DatabaseFilterType.EQUAL);
-            actorConnectionsTable.loadToMemory();
+            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            final DatabaseTableRecord record = actorConnectionsTable.getRecords().get(0);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, chatActorConnection.getPublicKey(), DatabaseFilterType.EQUAL);
+
+            final DatabaseTableRecord record = actorConnectionsTable.getEmptyRecord();
+
             record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME, chatActorConnection.getAlias());
             record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATUS_COLUMN_NAME, chatActorConnection.getStatus());
             record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATUS_COLUMN_NAME, chatActorConnection.getStatus());
 
             actorConnectionsTable.updateRecord(record);
-        }
-        catch (CantLoadTableToMemoryException e) {
-            e.printStackTrace();
+
         } catch (CantUpdateRecordException e) {
             e.printStackTrace();
         }
@@ -145,20 +132,6 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-//            if (oldActorConnection != null) {
-//                DatabaseTableRecord entityRecordOld = actorConnectionsTable.getEmptyRecord();
-//                entityRecordOld = buildDatabaseRecord(
-//                        entityRecordOld,
-//                        oldActorConnection
-//                );
-//                deleteNewUserProfileImage(oldActorConnection.getPublicKey());
-//                actorConnectionsTable.deleteRecord(entityRecordOld);
-//
-//                if (actorConnection.getConnectionState().equals(oldActorConnection.getConnectionState())
-//                        && (!actorConnection.getConnectionState().equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE)))
-//                    isNew = false;
-//            }
-
             DatabaseTableRecord entityRecord = actorConnectionsTable.getEmptyRecord();
             entityRecord = buildDatabaseRecord(
                     entityRecord,
@@ -169,21 +142,11 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             actorConnectionsTable.insertRecord(entityRecord);
 
-//            return buildActorConnectionNewRecord(entityRecord);
             return isNew;
-
 
         } catch (final CantInsertRecordException e) {
 
             throw new CantRegisterActorConnectionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-//        } catch (final CantGetActorConnectionException e) {
-//
-//            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to find if the actor connection exists.");
-//        } catch (CantUpdateRecordException e) {
-//
-//            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to update the actor connection");
-//        } catch (CantDeleteRecordException e) {
-//            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to delete the actor.");
         } catch (CantPersistProfileImageException e) {
             throw new CantRegisterActorConnectionException(e, "", "There was an error trying to delete the actor image.");
         }
@@ -219,7 +182,6 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
         } catch (FileNotFoundException e) {
             profileImage = new byte[0];
         } catch (CantGetProfileImageException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new InvalidParameterException(
                     e,
                     "",
@@ -243,47 +205,8 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
         );
     }
 
-    @Override
-    public void initializeDatabase() throws CantInitializeActorConnectionDatabaseException {
 
-        try {
-
-            database = this.pluginDatabaseSystem.openDatabase(
-                    pluginId,
-                    ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME
-            );
-
-        } catch (final CantOpenDatabaseException cantOpenDatabaseException) {
-
-            throw new CantInitializeActorConnectionDatabaseException(
-                    cantOpenDatabaseException,
-                    "databaseName: " + ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
-                    "There was an error trying to open database."
-            );
-
-        } catch (final DatabaseNotFoundException databaseNotFoundException) {
-
-            ChatActorConnectionDatabaseFactory actorConnectionActorConnectionDatabaseFactory = this.getChatActorConnectionDatabaseFactory();
-
-            try {
-
-                database = actorConnectionActorConnectionDatabaseFactory.createDatabase(
-                        pluginId,
-                        ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME
-                );
-
-            } catch (final CantCreateDatabaseException cantCreateDatabaseException) {
-
-                throw new CantInitializeActorConnectionDatabaseException(
-                        cantCreateDatabaseException,
-                        "databaseName: " + ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
-                        "There was an error trying to create database."
-                );
-            }
-        }
-    }
-
-    protected ChatActorConnectionDatabaseFactory getChatActorConnectionDatabaseFactory() {
+    protected ChatActorConnectionDatabaseFactory getActorConnectionDatabaseFactory() {
 
         return new ChatActorConnectionDatabaseFactory(pluginDatabaseSystem);
     }

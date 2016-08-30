@@ -10,12 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -23,7 +21,6 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -36,12 +33,8 @@ public class WizardFirstStepBroadcastFragment extends AbstractFermatFragment {
     private static final String TAG = "WizardFirstStepBroadcastFragment";
 
 
-    // Fermat Managers
-    private ChatManager walletManager;
-    EditText NombreLista;
     Toolbar toolbar;
     private ErrorManager errorManager;
-    private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
     private ChatSessionReferenceApp chatSession;
     private ChatManager chatManager;
@@ -55,13 +48,7 @@ public class WizardFirstStepBroadcastFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         chatSession = ((ChatSessionReferenceApp) appSession);
         chatManager = chatSession.getModuleManager();
-        ChatManager moduleManager = ((ChatSessionReferenceApp) appSession).getModuleManager();
-        //TODO:Revisar esto
-//         try {
-//             walletManager = moduleManager;
-//         } catch (CHTException e) {
-//             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//         }
+
         errorManager = appSession.getErrorManager();
         toolbar = getToolbar();
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
@@ -69,8 +56,6 @@ public class WizardFirstStepBroadcastFragment extends AbstractFermatFragment {
         chatSettings = null;
         try {
             chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
-            //chatSettings = (ChatPreferenceSettings) moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-            //chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             chatSettings = null;
         }
@@ -96,33 +81,6 @@ public class WizardFirstStepBroadcastFragment extends AbstractFermatFragment {
         final RadioButton radioA = (RadioButton) layout.findViewById(R.id.radioButton);
         final RadioButton radioB = (RadioButton) layout.findViewById(R.id.radioButton2);
 
-         /*radioA.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 if(radioA.isChecked()){
-                     radioA.setChecked(false);
-                 }else{
-                     radioA.setChecked(true);
-                 }
-                 if(radioB.isChecked()){
-                     radioB.setChecked(false);
-                 }
-             }
-         });
-
-         radioB.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 if(radioB.isChecked()) {
-                     radioB.setChecked(false);
-                 }else{
-                     radioB.setChecked(true);
-                 }
-                 if(radioA.isChecked()) {
-                     radioA.setChecked(false);
-                 }
-             }
-         });*/
         ShowDialogWelcome();
         Button cbutton = (Button) layout.findViewById(R.id.btncreate);
         cbutton.setOnClickListener(new View.OnClickListener() {

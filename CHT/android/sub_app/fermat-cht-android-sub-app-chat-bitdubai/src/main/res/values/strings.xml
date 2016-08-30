@@ -50,6 +50,7 @@
     <string name="cht_yes">Yes</string>
     <string name="cht_no">No</string>
     <string name="cht_last_time">Last time </string>
+    <string name="cht_last_message_received">Last message received </string>
     <string name="cht_online">Online</string>
     <string name="cht_typing">Typing...</string>
     <string name="cht_today">today at </string>

@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEvent
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MessageMetadata;
 
 import java.util.UUID;
@@ -17,8 +16,6 @@ public class AbstractCHTFermatEvent implements FermatEvent {
     private EventType eventType;
 
     private EventSource eventSource;
-
-    private ChatMetadata chatMetadata;
 
     private MessageMetadata messageMetadata;
 
@@ -74,14 +71,6 @@ public class AbstractCHTFermatEvent implements FermatEvent {
         this.messageId = messageId;
     }
 
-    public ChatMetadata getChatMetadata() {
-        return chatMetadata;
-    }
-
-    public void setChatMetadata(ChatMetadata chatMetadata) {
-        this.chatMetadata = chatMetadata;
-    }
-
     public MessageMetadata getMessageMetadata() {
         return messageMetadata;
     }
@@ -95,7 +84,6 @@ public class AbstractCHTFermatEvent implements FermatEvent {
         return "AbstractCHTFermatEvent{" +
                 "eventType=" + eventType +
                 ", eventSource=" + eventSource +
-                ", chatMetadata=" + chatMetadata +
                 ", messageMetadata=" + messageMetadata +
                 ", chatId=" + chatId +
                 ", messageId=" + messageId +

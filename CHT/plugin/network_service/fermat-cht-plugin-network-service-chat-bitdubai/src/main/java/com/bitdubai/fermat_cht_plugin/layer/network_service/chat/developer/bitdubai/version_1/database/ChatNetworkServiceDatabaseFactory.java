@@ -58,9 +58,7 @@ public class ChatNetworkServiceDatabaseFactory {
 
             table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.TRUE);
             table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_LOCALACTORTYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_LOCALACTORPUBKEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_REMOTEACTORTYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_REMOTEACTORPUBKEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_IDMESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 4000, Boolean.FALSE);

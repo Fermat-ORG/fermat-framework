@@ -17,9 +17,7 @@ public final class ChatNetworkServiceDataBaseConstants {
 
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME = "message_metadata_transaction_id";
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_TRANSACTION_TYPE_COLUMN_NAME = "message_metadata_transaction_type";
-    public static final String MESSAGE_METADATA_TRANSACTION_RECORD_LOCALACTORTYPE_COLUMN_NAME = "message_metadata_localactortype";
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_LOCALACTORPUBKEY_COLUMN_NAME = "message_metadata_localactorpubkey";
-    public static final String MESSAGE_METADATA_TRANSACTION_RECORD_REMOTEACTORTYPE_COLUMN_NAME = "message_metadata_remoteactortype";
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_REMOTEACTORPUBKEY_COLUMN_NAME = "message_metadata_remoteactorpubkey";
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_IDMESSAGE_COLUMN_NAME = "message_metadata_idmessage";
     public static final String MESSAGE_METADATA_TRANSACTION_RECORD_MESSAGE_COLUMN_NAME = "message_metadata_message";

@@ -47,17 +47,11 @@ public class ProfileAdapter extends ArrayAdapter<String> {
         View item = inflater.inflate(R.layout.profile_detail_item, null, true);
         try {
             switch (action) {
-                //case "edit":
-                //    item = inflater.inflate(R.layout.profile_edit_item, null, true);
-                //FermatTextView name = (FermatTextView) item.findViewById(R.id.contact_edit_header);
-                //name.setText(contactName.get(0));
-                //    break;
                 case "detail":
                     item = inflater.inflate(R.layout.profile_detail_item, null, true);
 
                     TextView name2 = (TextView) item.findViewById(R.id.contact_detail_header);
                     name2.setText(" ");//name2.setText(contactName.get(0));
-                    //name2.setTypeface(tf, Typeface.NORMAL);
 
                     TextView alias2 = (TextView) item.findViewById(R.id.alias);
                     alias2.setText(" ");//(contactName.get(0));

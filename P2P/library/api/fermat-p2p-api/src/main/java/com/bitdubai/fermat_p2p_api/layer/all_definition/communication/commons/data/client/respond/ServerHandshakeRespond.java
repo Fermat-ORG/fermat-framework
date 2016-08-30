@@ -8,6 +8,8 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.d
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
+import java.util.UUID;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ServerHandshakeRespond</code>
  * <p/>
@@ -30,8 +32,8 @@ public class ServerHandshakeRespond extends MsgRespond{
      * @param details
      * @param identityPublicKey
      */
-    public ServerHandshakeRespond(STATUS status, String details, String identityPublicKey) {
-        super(status, details);
+    public ServerHandshakeRespond(UUID packageId, STATUS status, String details, String identityPublicKey) {
+        super(packageId,status, details);
         this.identityPublicKey = identityPublicKey;
     }
 

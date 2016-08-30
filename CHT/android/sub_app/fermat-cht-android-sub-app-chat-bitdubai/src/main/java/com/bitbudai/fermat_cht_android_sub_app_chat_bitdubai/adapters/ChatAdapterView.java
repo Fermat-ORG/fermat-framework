@@ -1,13 +1,12 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -36,7 +35,6 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -47,9 +45,6 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
@@ -59,7 +54,6 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 
 import java.io.ByteArrayInputStream;
@@ -67,11 +61,11 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by miguel on 22/01/16.
@@ -81,13 +75,10 @@ import java.util.UUID;
 public class ChatAdapterView extends LinearLayout {
 
     private RecyclerView messagesContainer;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private ChatAdapter adapter;
     private ArrayList<ChatMessage> chatHistory;
     private ChatManager chatManager;
-    private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ChatSessionReferenceApp chatSession;
     private ChatPreferenceSettings chatSettings;
     private FermatSession appSession;
     private Toolbar toolbar;
@@ -95,39 +86,31 @@ public class ChatAdapterView extends LinearLayout {
     private EditText messageET;
     private ViewGroup rootView;
     private String leftName;
-    private String rightName;
     private UUID chatId;
-    private String contactId;
-    private int background = -1;
     private String remotePk;
-    private PlatformComponentType remotePCT;
     private Bitmap contactIcon;
     private BitmapDrawable contactIconCircular;
     private LinearLayoutManager layoutManager;
-    private boolean loadDummyData = false;
     private boolean chatWasCreate = false;
     private boolean isScrollingUp = false;
-    private Calendar today;
     UUID newChatId;
-    int CounterText;
-    Boolean isOnline = false;
-    Boolean textNeverChange = false;
 
-    public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
-                           ChatManager chatManager, ChatModuleManager moduleManager,
-                           ErrorManager errorManager, ChatSessionReferenceApp chatSession, FermatSession appSession, int background, Toolbar toolbar, ChatPreferenceSettings chatSettings) {
+    public ChatAdapterView(Context context,
+                           ArrayList<ChatMessage> chatHistory,
+                           ChatManager chatManager,
+                           ErrorManager errorManager,
+                           FermatSession appSession,
+                           Toolbar toolbar,
+                           ChatPreferenceSettings chatSettings) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         addView(inflater.inflate(R.layout.chat, (rootView != null) ? rootView : null));
         this.chatHistory = chatHistory;
         this.chatManager = chatManager;
-        this.moduleManager = moduleManager;
         this.errorManager = errorManager;
-        this.chatSession = chatSession;
         this.appSession = appSession;
         this.toolbar = toolbar;
         this.chatSettings = chatSettings;
-        //this.background=background;
         initControls();
     }
 
@@ -139,30 +122,19 @@ public class ChatAdapterView extends LinearLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ChatAdapterView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
     void findValues(Contact contact) { //With contact Id find chatId,pkremote,actortype
         try {
             if (contact != null) {
                 remotePk = contact.getRemoteActorPublicKey();
-                remotePCT = PlatformComponentType.ACTOR_CHAT;
-                contactId = contact.getRemoteActorPublicKey();
                 ByteArrayInputStream bytes = new ByteArrayInputStream(contact.getProfileImage());
                 BitmapDrawable bmd = new BitmapDrawable(bytes);
                 contactIcon = bmd.getBitmap();
                 leftName = contact.getAlias();
                 Chat cht = chatManager.getChatByRemotePublicKey(remotePk);
-                try {
-                    chatManager.activeOnlineStatus(remotePk);
-                } catch (CantGetOnlineStatus cantGetOnlineStatus) {
-                    cantGetOnlineStatus.printStackTrace();
-                }
+
                 if (cht != null) {
                     chatId = cht.getChatId();
-                    appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chatManager.getChatByChatId(chatId));
+                    appSession.setData(ChatSessionReferenceApp.CHAT_DATA, cht);
                 } else chatId = null;
             }
         } catch (CantGetChatException e) {
@@ -210,50 +182,44 @@ public class ChatAdapterView extends LinearLayout {
 
             if (chatId != null) {
                 List<Message> messL = chatManager.getMessagesByChatId(chatId);
-                if (messL != null) {
-                    MessageImpl messagei;
-                    for (Message mess : messL) {
-                        msg = new ChatMessage();
-                        message = mess.getMessage();
-                        inorout = mess.getType().toString();
-                        estatus = mess.getStatus().toString();
-                        msg.setId(mess.getMessageId());
-                        if (inorout.equals(TypeMessage.OUTGOING.toString())) msg.setMe(true);
-                        else {
-                            msg.setMe(false);
-                            if (!estatus.equals(MessageStatus.READ.toString())) {
-                                messagei = (MessageImpl) chatManager.getMessageByMessageId(msg.getId());
-                                msg.setStatus(MessageStatus.READ.toString());
-                                messagei.setStatus(MessageStatus.READ);
-                                chatManager.saveMessage(messagei);
-                                chatManager.sendReadMessageNotification(messagei);
-                            }
+                for (Message mess : messL) {
+                    msg = new ChatMessage();
+                    message = mess.getMessage();
+                    inorout = mess.getType().toString();
+                    estatus = mess.getStatus().toString();
+                    msg.setId(mess.getMessageId());
+                    if (inorout.equals(TypeMessage.OUTGOING.toString())) msg.setMe(true);
+                    else {
+                        msg.setMe(false);
+                        if (!estatus.equals(MessageStatus.READ.toString())) {
+                            chatManager.sendReadMessageNotification(msg.getId(), chatId);
+                            chatManager.markAsRead(msg.getId());
                         }
-                        msg.setStatus(mess.getStatus().toString());
-                        long timemess = mess.getMessageDate().getTime();
-                        long nanos = (mess.getMessageDate().getNanos() / 1000000);
-                        long milliseconds = timemess + nanos;
-                        Date dated = new Date(milliseconds);
-                        DateFormat formatter = DateFormat.getDateTimeInstance();
-                        if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                            formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-                        } else {
-                            formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
-                        }
-                        if (Validate.isDateToday(dated)) {
-                            if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                                formatter = new SimpleDateFormat("HH:mm");
-                            } else {
-                                formatter = new SimpleDateFormat("hh:mm aa");
-                            }
-                        }
-                        formatter.setTimeZone(TimeZone.getDefault());
-                        msg.setDate(formatter.format(new Date(milliseconds)));
-                        msg.setUserId(mess.getContactId());
-                        msg.setMessage(message);
-                        msg.setType(mess.getType().toString());
-                        chatHistory.add(msg);
                     }
+                    msg.setStatus(mess.getStatus().toString());
+                    long timemess = mess.getMessageDate().getTime();
+                    long nanos = (mess.getMessageDate().getNanos() / 1000000);
+                    long milliseconds = timemess + nanos;
+                    Date dated = new Date(milliseconds);
+                    DateFormat formatter = DateFormat.getDateTimeInstance();
+                    if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                        formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+                    } else {
+                        formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
+                    }
+                    if (Validate.isDateToday(dated)) {
+                        if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                            formatter = new SimpleDateFormat("HH:mm");
+                        } else {
+                            formatter = new SimpleDateFormat("hh:mm aa");
+                        }
+                    }
+                    formatter.setTimeZone(TimeZone.getDefault());
+                    msg.setDate(formatter.format(new Date(milliseconds)));
+                    msg.setUserId(mess.getContactId());
+                    msg.setMessage(message);
+                    msg.setType(mess.getType().toString());
+                    chatHistory.add(msg);
                 }
             }
 
@@ -276,11 +242,8 @@ public class ChatAdapterView extends LinearLayout {
     public class BackgroundAsyncTaskWriting extends
             AsyncTask<Void, Integer, Void> {
 
-        int myProgress;
-
         @Override
         protected void onPostExecute(Void result) {
-            //this.cancel(true);
             return;
         }
 
@@ -374,11 +337,11 @@ public class ChatAdapterView extends LinearLayout {
         return isKeyboardShown;
     }
 
-    public String setFormatLastTime(String date) {
-        String fecha = date;
+    public String setFormatLastTime(Timestamp date) {
+        String fecha = "";
         SimpleDateFormat formatter;
         String formattedTime;
-        if (!date.isEmpty()) {
+        if (date != null) {
             if (android.text.format.DateFormat.is24HourFormat(getContext())) {
                 formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
             } else {
@@ -387,19 +350,19 @@ public class ChatAdapterView extends LinearLayout {
             try {
                 formatter.setTimeZone(TimeZone.getDefault());
 
-                formattedTime = formatter.format(new Date(date));
+                formattedTime = formatter.format(date);
                 //String formattedTime = formatter.format(dater);
-                if (date.length() > 16) {
+                if (formattedTime.length() > 16) {
                     formattedTime = formattedTime.substring(11, 19);
                 } else {
                     formattedTime = formattedTime.substring(11, 16);
                 }
 
-                if (Validate.isDateToday(new Date(date))) {
+                if (Validate.isDateToday(date)) {
                     fecha = getContext().getResources().getString(R.string.cht_today) + " " + formattedTime;
                 } else {
                     Date today = new Date();
-                    long dias = (today.getTime() - new Date(date).getTime()) / (1000 * 60 * 60 * 24);
+                    long dias = (today.getTime() - date.getTime()) / (1000 * 60 * 60 * 24);
                     if (dias == 1) {
                         fecha = getContext().getResources().getString(R.string.cht_yesterday) + " " + formattedTime;
                     }
@@ -411,11 +374,11 @@ public class ChatAdapterView extends LinearLayout {
         return fecha;
     }
 
-    public void ChangeStatusOnTheSubtitleBar(int state, String date) {
+    public void changeStatusOnTheSubtitleBar(int state, Timestamp date, Handler h) {
         switch (state) {
             case ConstantSubtitle.IS_OFFLINE:
                 if (date != null && !date.equals("no record")) {
-                    toolbar.setSubtitle(Html.fromHtml("<small><small>"+getContext().getResources().getString(R.string.cht_last_time) + " "  + setFormatLastTime(date) + "</small></small>"));
+                    toolbar.setSubtitle(Html.fromHtml("<small><small>"+getContext().getResources().getString(R.string.cht_last_message_received) + " "  + setFormatLastTime(date) + "</small></small>"));
                     appSession.setData("DATELASTCONNECTION", setFormatLastTime(date));
                 } else {
                     Log.i("159753**LastTimeOnChat", "No show");
@@ -426,6 +389,16 @@ public class ChatAdapterView extends LinearLayout {
                 break;
             case ConstantSubtitle.IS_WRITING:
                 toolbar.setSubtitle(getContext().getResources().getString(R.string.cht_typing));
+
+                h.postDelayed(
+                        new Runnable(){
+                            @Override
+                            public void run() {
+                                checkStatus(null, null);
+                            }
+                        },
+                        TimeUnit.SECONDS.toMillis(4)
+                );
                 break;
         }
     }
@@ -466,6 +439,10 @@ public class ChatAdapterView extends LinearLayout {
                 });
         toolbar.setSubtitle("");
         messageET.addTextChangedListener(new TextWatcher() {
+
+            private static final long INTERVAL_WRITING = 7000;
+
+            private long lastTimeSent = 0;
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -473,20 +450,13 @@ public class ChatAdapterView extends LinearLayout {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (chatWasCreate && s.length()>0) {
-                    CounterText++;
-                    if (CounterText == 5) {
-                        BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
-                        batw.execute();
-                        CounterText = 0;
-                    }
-                    if (messageET.length() > 0 && textNeverChange == false) {
-                        BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
-                        batw.execute();
-                        textNeverChange = true;
-                    } else if (messageET.length() == 0 && textNeverChange == true) {
-                        textNeverChange = false;
-                        BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
-                        batw.execute();
+                    if (s.length()>0) {
+                        long currentTimeToSend = System.currentTimeMillis();
+                        if (currentTimeToSend > lastTimeSent + INTERVAL_WRITING) {
+                            BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
+                            batw.execute();
+                            lastTimeSent = currentTimeToSend;
+                        }
                     }
                     if ((start > 0 || s.charAt(s.length() - 1) == '\n') && !isScrollingUp) {
                         scroll();
@@ -499,25 +469,11 @@ public class ChatAdapterView extends LinearLayout {
             }
         });
 
-        //mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        //adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
-        //messagesContainer.setAdapter(adapter);
-        //messageET.setText("Type message");
-        //TextView meLabel = (TextView) findViewById(R.id.meLbl);
-        //TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
-        //ScrollView container = (ScrollView) findViewById(R.id.container);
-
-        //if (chatSession != null) {
         if (appSession != null) {
             whatToDo();
             findMessage();
             scroll();
-            checkStatus();
-//        if (rightName != null) {
-//            meLabel.setText(rightName);
-//        } else {
-//            meLabel.setText("");
-//        }
+            checkStatus(null, null);
 
             if (leftName != null) {
                 toolbar.setTitle(leftName);
@@ -569,7 +525,7 @@ public class ChatAdapterView extends LinearLayout {
                             newChatId = chatId;
                         }
                         chat.setChatId(newChatId);
-                        chat.setStatus(ChatStatus.VISSIBLE);
+                        chat.setStatus(ChatStatus.VISIBLE);
                         chatManager.saveChat(chat);
 
                         message.setChatId(newChatId);
@@ -584,7 +540,6 @@ public class ChatAdapterView extends LinearLayout {
                     } else {
                         Contact newContact = (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA);//chatSession.getSelectedContact();
                         remotePublicKey = newContact.getRemoteActorPublicKey();
-                        chat.setRemoteActorType(PlatformComponentType.ACTOR_CHAT);//chat.setRemoteActorType(remoteActorType);
                         chat.setRemoteActorPublicKey(remotePublicKey);
                         Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
                         if (newChatId == null) {
@@ -596,7 +551,7 @@ public class ChatAdapterView extends LinearLayout {
                         }
                         chat.setChatId(newChatId);
                         chat.setObjectId(UUID.randomUUID());
-                        chat.setStatus(ChatStatus.VISSIBLE);
+                        chat.setStatus(ChatStatus.VISIBLE);
                         chat.setChatName("Chat_" + newContact.getAlias());
                         chat.setDate(new Timestamp(dv));
                         chat.setLastMessageDate(new Timestamp(dv));
@@ -605,8 +560,7 @@ public class ChatAdapterView extends LinearLayout {
                          * Now we got the identities registered in the device.
                          * To avoid nulls, I'll put default data in chat object
                          *///
-                        chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
-                        chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
+                        chat.setLocalActorPublicKey("defaultdata");
                         //if (chatSettings.getLocalPublicKey() != null /*&& chatSettings.getLocalPlatformComponentType() != null*/) {
                         //Asigno pk del usuario y no uso la del NS
                         List<ChatIdentity> chatIdentities = chatManager.getIdentityChatUsersFromCurrentDeviceUser();
@@ -617,10 +571,8 @@ public class ChatAdapterView extends LinearLayout {
                             } else {
                                 chat.setLocalActorPublicKey(chatIdentities.get(0).getPublicKey());
                             }
-                            chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
                         } catch (Exception e) {
                             chat.setLocalActorPublicKey(chatIdentities.get(0).getPublicKey());
-                            chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
                         }
                         chatManager.saveChat(chat);
 
@@ -662,31 +614,11 @@ public class ChatAdapterView extends LinearLayout {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (CantSaveChatException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                } catch (CantGetNetworkServicePublicKeyException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
             }
         });
-/*
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
-                        try {
-                            findMessage();
-                        } catch (Exception e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 2500);
-            }
-        });*/
     }
 
     public void getFilter(String s) {
@@ -702,12 +634,10 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
-    public void refreshEvents() {
-        //whatToDo();
-        findValues((Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));//chatSession.getSelectedContact());
+    public void refreshEvents(String remotePk, Handler h) {
+        findValues((Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));
         findMessage();
-        checkStatus();
-        //scroll();
+        checkStatus(remotePk, h);
     }
 
     public void clean() {
@@ -715,28 +645,18 @@ public class ChatAdapterView extends LinearLayout {
         messagesContainer.setAdapter(adapter);
     }
 
-    public void checkStatus() {
+    public void checkStatus(String remotePkWriting, Handler h) {
+
         try {
-            if (chatId != null) {
-                if (chatManager.checkWritingStatus(chatId)) {
-                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING, null);
-                } else if (chatManager.checkOnlineStatus(remotePk)) {
-                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE, null);
-                } else {
-                    String date = chatManager.checkLastConnection(remotePk);
-                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
-                }
+
+            if (remotePkWriting != null && remotePkWriting.equals(remotePk)) {
+                changeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING, null, h);
             } else {
-                if (chatManager.checkOnlineStatus(remotePk)) {
-                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE, null);
-                } else {
-                    String date = chatManager.checkLastConnection(remotePk);
-                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
-                }
+                Timestamp date = chatManager.getLastMessageReceivedDate(remotePk);
+                changeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date, null);
             }
-        } catch (CantGetWritingStatus cantGetWritingStatus) {
-            cantGetWritingStatus.printStackTrace();
-        } catch (CantGetOnlineStatus cantGetOnlineStatus) {
+
+        } catch (CantGetChatException cantGetOnlineStatus) {
             cantGetOnlineStatus.printStackTrace();
         }
     }
@@ -754,14 +674,6 @@ public class ChatAdapterView extends LinearLayout {
         this.leftName = leftName;
     }
 
-    public void addRightName(String rightName) {
-        this.rightName = rightName;
-    }
-
-    public void setBackground(int background) {
-        this.background = background;
-    }
-
     private void setChatHistory(ArrayList<ChatMessage> chatHistory) {
         this.chatHistory = chatHistory;
     }
@@ -770,16 +682,8 @@ public class ChatAdapterView extends LinearLayout {
         this.chatManager = chatManager;
     }
 
-    private void setModuleManager(ChatModuleManager moduleManager) {
-        this.moduleManager = moduleManager;
-    }
-
     private void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
-    }
-
-    private void setChatSession(ChatSessionReferenceApp chatSession) {
-        this.chatSession = chatSession;
     }
 
     private void setChatSettings(ChatPreferenceSettings chatSettings) {
@@ -794,32 +698,17 @@ public class ChatAdapterView extends LinearLayout {
         this.toolbar = toolbar;
     }
 
-    private void loadDummyHistory(boolean loadDummyData) {
-        this.loadDummyData = loadDummyData;
-    }
-
     public static class Builder {
 
         private Context context;
         private ViewGroup rootView;
         private ArrayList<ChatMessage> chatHistory;
         private ChatManager chatManager;
-        private ChatModuleManager moduleManager;
         private ErrorManager errorManager;
-        private ChatSessionReferenceApp chatSession;
         private ChatPreferenceSettings chatSettings;
         private FermatSession appSession;
         private Toolbar toolbar;
-        private boolean loadDummyData = false;
-        private int background = -1;
-        private float chatTextSize;
-        private int chatTextColor;
-        private float dateTextSize;
-        private int dateTextColor;
-        String rightName;
         String leftName;
-        Button customButtom;
-        EditText editText;
 
         public Builder(Context context) {
             this.context = context;
@@ -830,51 +719,13 @@ public class ChatAdapterView extends LinearLayout {
             return this;
         }
 
-        public Builder addRightName(String rightName) {
-            this.rightName = rightName;
-            return this;
-        }
-
-        public Builder addLeftName(String leftName) {
-            this.leftName = leftName;
-            return this;
-        }
-
-        public void addCustomSendButtom(Button customButtom) {
-            this.customButtom = customButtom;
-        }
-
-        public void addCustomEditText(EditText customEditText) {
-            this.editText = customEditText;
-        }
-
-        public Builder setBackground(int background) {
-            this.background = background;
-            return this;
-        }
-
-        public Builder addChatHistory(ArrayList<ChatMessage> chatHistory) {
-            this.chatHistory = chatHistory;
-            return this;
-        }
-
         public Builder addChatManager(ChatManager chatManager) {
             this.chatManager = chatManager;
             return this;
         }
 
-        public Builder addModuleManager(ChatModuleManager moduleManager) {
-            this.moduleManager = moduleManager;
-            return this;
-        }
-
         public Builder addErrorManager(ErrorManager errorManager) {
             this.errorManager = errorManager;
-            return this;
-        }
-
-        public Builder addChatSession(ChatSessionReferenceApp chatSession) {
-            this.chatSession = chatSession;
             return this;
         }
 
@@ -893,13 +744,17 @@ public class ChatAdapterView extends LinearLayout {
             return this;
         }
 
-        public void loadDummyData(boolean loadDummyData) {
-            this.loadDummyData = loadDummyData;
-        }
-
         public ChatAdapterView build() {
-            ChatAdapterView chatView = new ChatAdapterView(context, chatHistory,
-                    chatManager, moduleManager, errorManager, chatSession, appSession, background, toolbar, chatSettings);
+            ChatAdapterView chatView = new ChatAdapterView(
+                    context,
+                    chatHistory,
+                    chatManager,
+                    errorManager,
+                    appSession,
+                    toolbar,
+                    chatSettings
+            );
+
             if (rootView != null) {
                 chatView.setRootView(rootView);
             }
@@ -909,34 +764,23 @@ public class ChatAdapterView extends LinearLayout {
             if (chatManager != null) {
                 chatView.setChatManager(chatManager);
             }
-            if (moduleManager != null) {
-                chatView.setModuleManager(moduleManager);
-            }
             if (errorManager != null) {
                 chatView.setErrorManager(errorManager);
             }
             if (chatSettings != null) {
                 chatView.setChatSettings(chatSettings);
             }
-            if (chatSession != null) {
-                chatView.setChatSession(chatSession);
-            }
+
             if (appSession != null) {
                 chatView.setAppSession(appSession);
             }
             if (leftName != null) {
                 chatView.addLeftName(leftName);
             }
-            if (rightName != null) {
-                chatView.addRightName(rightName);
-            }
             if (toolbar != null) {
                 chatView.setToolbar(toolbar);
             }
-            if (background != -1) {
-                chatView.setBackground(background);
-            }
-            chatView.loadDummyHistory(loadDummyData);
+
             return chatView;
         }
     }

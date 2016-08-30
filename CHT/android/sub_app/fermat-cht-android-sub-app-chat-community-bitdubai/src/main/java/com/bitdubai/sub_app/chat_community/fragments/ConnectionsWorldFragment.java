@@ -40,7 +40,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatException;
@@ -58,19 +57,15 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
-import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure.ChatActorCommunitySubAppModuleInformationImpl;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
-import com.bitdubai.sub_app.chat_community.app_connection.ChatCommunityFermatAppConnection;
 import com.bitdubai.sub_app.chat_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.SearchAliasDialog;
@@ -82,7 +77,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.makeText;
 
 /**
  * ConnectionsWorldFragment
@@ -105,18 +99,15 @@ public class ConnectionsWorldFragment
     //Managers
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ChatCommunityFermatAppConnection appConnection;
     FermatApplicationCaller applicationsHelper;
     //Data
-    private ChatActorCommunitySettings appSettings;
+
     private ChatActorCommunitySelectableIdentity identity;
     private int offset = 0;
-    private List<ChatActorCommunityInformation> lstChatUserInformations = new ArrayList<>();
-    private List<ActorProfile> actorProfiles;
+    private List<ChatActorCommunityInformation> lstChatUserInformations;
     private DeviceLocation location = null;
     private double distance = 0;
     private String alias;
-    Location locationGPS;
 
     //Flags
     private boolean isRefreshing = false, launchActorCreationDialog = false, launchListIdentitiesDialog = false;
@@ -130,8 +121,6 @@ public class ConnectionsWorldFragment
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
     private CommunityListAdapter adapter;
-    private SwipeRefreshLayout swipeRefresh;
-    private ExecutorService executor;
     TextView noDatalabel;
     ImageView noData;
     private Button refreshButton;
@@ -201,12 +190,11 @@ public class ConnectionsWorldFragment
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
             applicationsHelper = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
 
-
             FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
             registerReceiver(fermatIntentFilter, new ChatListBroadcastReceiver());
 
             //Obtain Settings or create new Settings if first time opening subApp
-            appSettings = null;
+            ChatActorCommunitySettings appSettings;
             try {
                 appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
@@ -359,9 +347,8 @@ public class ConnectionsWorldFragment
         try {
             if (!isRefreshing) {
                 isRefreshing = true;
-                List<ChatActorCommunityInformation> result;
                 if (identity != null) {
-                    moduleManager.listWorldChatActor(null, identity.getActorType(),
+                    moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
                             location, distance, alias, MAX, offset, identity.getPublicKey());
                 }
             }
@@ -370,12 +357,10 @@ public class ConnectionsWorldFragment
         }
     }
 
-    public void onActorReceived(final ArrayList<ChatActorCommunityInformation> result) {
+    public void onActorReceived(final List<ChatActorCommunityInformation> result) {
         try {
             if (isAttached) {
-                //swipeRefresh.setRefreshing(false);
-                if (result != null &&
-                        result.size() > 0) {
+                if (result != null && result.size() > 0) {
                     if (getActivity() != null && adapter != null) {
                         if (offset == 0) {
                             if (lstChatUserInformations != null) {
@@ -386,8 +371,7 @@ public class ConnectionsWorldFragment
                             }
                             adapter.refreshEvents(lstChatUserInformations);
                         } else {
-                            ArrayList<ChatActorCommunityInformation> temp = result;
-                            for (ChatActorCommunityInformation info : temp) {
+                            for (ChatActorCommunityInformation info : result) {
                                 if (notInList(info)) {
                                     lstChatUserInformations.add(info);
                                 }
@@ -447,36 +431,12 @@ public class ConnectionsWorldFragment
         progressBar.setVisibility(View.GONE);
     }
 
-//    private List<ChatActorCommunityInformation> getMoreDataAsync(DeviceLocation location, double distance, String alias, int max, int offset) {
-////        List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
-////        try {
-////            List<ChatActorCommunityInformation> result;
-////            if (identity != null) {
-////                moduleManager.listWorldChatActor(null, identity.getActorType(),
-////                        location, distance, alias, max, offset, identity.getPublicKey() );
-////                dataSet.addAll(result);
-////                offset = dataSet.size();
-////            }
-////        } catch (Exception e) {
-////            e.printStackTrace();
-////        }
-////        return dataSet;
-//    }
-
-    @Override
-    public void onFragmentFocus() {
-    }
-
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
     }
 
     @Override
     public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {
-    }
-
-    @Override
-    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
     }
 
     public void onOptionMenuPrepared(Menu menu) {
@@ -706,19 +666,6 @@ public class ConnectionsWorldFragment
         }
     }
 
-    private boolean checkGPSCoarseLocation() {
-        String permission = "android.permission.ACCESS_COARSE_LOCATION";
-        int res = getActivity().checkCallingOrSelfPermission(permission);
-        return (res == PackageManager.PERMISSION_GRANTED);
-    }
-
-    private boolean checkGPSFineLocation() {
-        String permission = "android.permission.ACCESS_FINE_LOCATION";
-        int res = getActivity().checkCallingOrSelfPermission(permission);
-        return (res == PackageManager.PERMISSION_GRANTED);
-    }
-
-
     /**
      * Receiver class implemented
      */
@@ -731,21 +678,29 @@ public class ConnectionsWorldFragment
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_COMM_ACTOR_RECEIVED)) {
-                        ArrayList<ChatActorCommunityInformation> chatActorList = new ArrayList<>();
-                        List<ActorProfile> actorProfiles = (List<ActorProfile>) fermatBundle.get(ChatBroadcasterConstants.CHAT_COMM_ACTOR_LIST);
-                        for (final ActorProfile actorProfile : actorProfiles) {
-                            chatActorList.add(new ChatActorCommunitySubAppModuleInformationImpl(actorProfile));
-                        }
-                        onActorReceived(chatActorList);
+                        List<ChatActorCommunityInformation> actorProfiles = (List<ChatActorCommunityInformation>) fermatBundle.get(ChatBroadcasterConstants.CHAT_COMM_ACTOR_LIST);
+                        onActorReceived(actorProfiles);
                     }
                 }
             } catch (ClassCastException e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }catch (IllegalAccessException e) {
+            } catch (IllegalAccessException e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
         }
+    }
+
+    private boolean checkGPSCoarseLocation() {
+        String permission = "android.permission.ACCESS_COARSE_LOCATION";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private boolean checkGPSFineLocation() {
+        String permission = "android.permission.ACCESS_FINE_LOCATION";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 }

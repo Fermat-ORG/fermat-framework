@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -8,29 +7,21 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFo
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.interfaces.DAO;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.RecordsNotFoundException;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.MessageMetadataRecord;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -89,11 +80,8 @@ public class ChatMetadataRecordDAO implements DAO {
              */
 
             DatabaseTable databaseTable = getDatabaseTableMessage();
-            DatabaseTransaction transaction = getDatabase().newTransaction();
-            transaction.addRecordToInsert(databaseTable, entityRecord);
-            getDatabase().executeTransaction(transaction);
-
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+            databaseTable.insertRecord(entityRecord);
+        } catch (CantInsertRecordException databaseTransactionFailedException) {
 
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -174,9 +162,7 @@ public class ChatMetadataRecordDAO implements DAO {
 
             messageMetadataRecord.setTransactionId(UUID.fromString(record.getStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME)));
             messageMetadataRecord.setChatMessageTransactionType(ChatMessageTransactionType.getByCode(record.getStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_TRANSACTION_TYPE_COLUMN_NAME)));
-            messageMetadataRecord.setLocalActorType(PlatformComponentType.getByCode(record.getStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_LOCALACTORTYPE_COLUMN_NAME)));
             messageMetadataRecord.setLocalActorPublicKey(record.getStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_LOCALACTORPUBKEY_COLUMN_NAME));
-            messageMetadataRecord.setRemoteActorType(PlatformComponentType.getByCode(record.getStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_REMOTEACTORTYPE_COLUMN_NAME)));
             messageMetadataRecord.setRemoteActorPublicKey(record.getStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_REMOTEACTORPUBKEY_COLUMN_NAME));
             messageMetadataRecord.setMessageStatus(MessageStatus.getByCode(record.getStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_MESSAGE_STATUS_COLUMN_NAME)));
             messageMetadataRecord.setDate(record.getStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_DATE_COLUMN_NAME));
@@ -227,9 +213,7 @@ public class ChatMetadataRecordDAO implements DAO {
          */
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME, messageMetadataRecord.getTransactionId().toString());
         entityRecord.setFermatEnum(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_TRANSACTION_TYPE_COLUMN_NAME, messageMetadataRecord.getChatMessageTransactionType());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_LOCALACTORTYPE_COLUMN_NAME, messageMetadataRecord.getLocalActorType().getCode());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_LOCALACTORPUBKEY_COLUMN_NAME, messageMetadataRecord.getLocalActorPublicKey());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_REMOTEACTORTYPE_COLUMN_NAME, messageMetadataRecord.getRemoteActorType().getCode());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_REMOTEACTORPUBKEY_COLUMN_NAME, messageMetadataRecord.getRemoteActorPublicKey());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_MESSAGE_STATUS_COLUMN_NAME, messageMetadataRecord.getMessageStatus().getCode());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_DATE_COLUMN_NAME, messageMetadataRecord.getDate());

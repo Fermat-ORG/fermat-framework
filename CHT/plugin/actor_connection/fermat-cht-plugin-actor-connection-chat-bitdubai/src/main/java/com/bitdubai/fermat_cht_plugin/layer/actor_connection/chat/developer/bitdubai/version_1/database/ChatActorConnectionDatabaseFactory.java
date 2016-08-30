@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_classes.ActorConnectionDatabaseFactory;
 import com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -15,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 21/04/16.
  */
-public class ChatActorConnectionDatabaseFactory {
+public class ChatActorConnectionDatabaseFactory extends ActorConnectionDatabaseFactory {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
 
@@ -24,6 +25,7 @@ public class ChatActorConnectionDatabaseFactory {
      */
     public ChatActorConnectionDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem) {
 
+        super(pluginDatabaseSystem);
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 

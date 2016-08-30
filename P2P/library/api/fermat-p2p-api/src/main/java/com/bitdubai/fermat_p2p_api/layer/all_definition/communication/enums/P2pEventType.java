@@ -6,35 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventLi
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorFoundEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorListReceivedEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorUnreachableEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientCallConnectedEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectedToNodeEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionClosedEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionSuccessEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageDeliveredEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageFailedEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageTransmitEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientProfileRegisteredEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientRegisteredEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionLooseNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteClientComponentRegistrationNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteUpdateActorNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentRegistrationNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureRequestedListNotAvailableNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureUpdateActorNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.RegisterServerRequestNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VpnSuccessReconnectNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.*;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ACKRespond;
 
 /**
  * The enum <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType</code>
@@ -48,106 +21,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Vpn
  * @since   Java JDK 1.7
  */
 public enum P2pEventType implements FermatEventEnum {
-
-    /**
-     * Declaration of the Web Socket Communication Layer Events
-     */
-    COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION("CL_CRCN") {
-        public CompleteComponentRegistrationNotificationEvent getNewEvent() {
-            return new CompleteComponentRegistrationNotificationEvent(this);
-        }
-    },
-
-    FAILURE_COMPONENT_REGISTRATION_REQUEST_NOTIFICATION("FCRRN"){
-        public FailureComponentRegistrationNotificationEvent getNewEvent() {
-            return new FailureComponentRegistrationNotificationEvent(this);
-        }
-    },
-
-    FAILURE_UPDATE_ACTOR_REQUEST_NOTIFICATION("FUPDACTRN"){
-        public FailureUpdateActorNotificationEvent getNewEvent() {
-            return new FailureUpdateActorNotificationEvent(this);
-        }
-    },
-
-    COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION("CL_CCRCN") {
-        public CompleteClientComponentRegistrationNotificationEvent getNewEvent() {
-            return new CompleteClientComponentRegistrationNotificationEvent(this);
-        }
-    },
-
-    REGISTER_SERVER_REQUEST_NOTIFICATION("REG_SER_REN"){
-        public RegisterServerRequestNotificationEvent getNewEvent() {
-            return new RegisterServerRequestNotificationEvent(this);
-        }
-    },
-
-    COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_CRLCRN") {
-        public CompleteRequestListComponentRegisteredNotificationEvent getNewEvent() {
-            return new CompleteRequestListComponentRegisteredNotificationEvent(this);
-        }
-    },
-
-    FAILURE_REQUESTED_LIST_NOT_AVAILABLE_NOTIFICATION("FRLNAN"){
-        public FailureRequestedListNotAvailableNotificationEvent getNewEvent() {
-            return new FailureRequestedListNotAvailableNotificationEvent(this);
-        }
-    },
-
-    COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION("CL_CCCRN") {
-        public CompleteComponentConnectionRequestNotificationEvent getNewEvent() {
-            return new CompleteComponentConnectionRequestNotificationEvent(this);
-        }
-    },
-
-    COMPLETE_UPDATE_ACTOR_NOTIFICATION("CL_UPDACT") {
-        public CompleteUpdateActorNotificationEvent getNewEvent() {
-            return new CompleteUpdateActorNotificationEvent(this);
-        }
-    },
-
-    FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION("F_CCCRN") {
-        public FailureComponentConnectionRequestNotificationEvent getNewEvent() {
-            return new FailureComponentConnectionRequestNotificationEvent(this);
-        }
-    },
-
-    CLIENT_CONNECTION_CLOSE("CCC"){
-        public ClientConnectionCloseNotificationEvent getNewEvent() {
-            return new ClientConnectionCloseNotificationEvent(this);
-        }
-    },
-
-    CLIENT_CONNECTION_LOOSE("CCL"){
-        public ClientConnectionLooseNotificationEvent getNewEvent() {
-            return new ClientConnectionLooseNotificationEvent(this);
-        }
-    },
-
-    CLIENT_SUCCESS_RECONNECT("CSC"){
-        public ClientSuccessReconnectNotificationEvent getNewEvent() {
-            return new ClientSuccessReconnectNotificationEvent(this);
-        }
-    },
-
-    VPN_CONNECTION_CLOSE("VCC"){
-        public VPNConnectionCloseNotificationEvent getNewEvent() {
-            return new VPNConnectionCloseNotificationEvent(this);
-        }
-    },
-
-    VPN_CONNECTION_LOOSE("VCL"){
-        public VPNConnectionLooseNotificationEvent getNewEvent() {
-            return new VPNConnectionLooseNotificationEvent(this);
-        }
-    },
-
-    VPN_SUCCESS_RECONNECT("VSR"){
-        public VpnSuccessReconnectNotificationEvent getNewEvent() {
-            return new VpnSuccessReconnectNotificationEvent(this);
-        }
-    },
-
 
     /**
      * INIT NETWORK NODE-CLIENT TEMPLATE EVENTS
@@ -189,6 +62,9 @@ public enum P2pEventType implements FermatEventEnum {
     NETWORK_CLIENT_NEW_MESSAGE_TRANSMIT("NCNWT"){
         public NetworkClientNewMessageTransmitEvent getNewEvent() { return new NetworkClientNewMessageTransmitEvent(this); }
     },
+    NETWORK_CLIENT_ACK("NCA"){
+        public NetworkClientACKEvent getNewEvent() { return new NetworkClientACKEvent(this); }
+    },
     NETWORK_CLIENT_SENT_MESSAGE_DELIVERED("NCSENTMD"){
         public NetworkClientNewMessageDeliveredEvent getNewEvent() { return new NetworkClientNewMessageDeliveredEvent(this); }
     },
@@ -197,6 +73,12 @@ public enum P2pEventType implements FermatEventEnum {
     },
     NETWORK_CLIENT_CALL_CONNECTED("NCACC"){
         public NetworkClientCallConnectedEvent getNewEvent() { return new NetworkClientCallConnectedEvent(this); }
+    },
+    NETWORK_CLIENT_IS_ACTOR_ONLINE("NCIAO"){
+        public NetworkClientIsActorOnlineEvent getNewEvent() { return new NetworkClientIsActorOnlineEvent(this);}
+    },
+    NETWORK_CLIENT_EVENT_PUBLISH("NCEP"){
+        public NetworkClienteEventPublishEvent getNewEvent() { return new NetworkClienteEventPublishEvent(this); }
     },
 
     /**

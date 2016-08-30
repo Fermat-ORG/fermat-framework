@@ -15,29 +15,24 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_cht_api.all_definition.enums.BundleQuery;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeDatabaseException;
-import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.RequestType;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatActorListReceivedEvent;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantDisconnectException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatConnectionInformation;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.database.ChatActorNetworkServiceDao;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.database.ChatActorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
@@ -47,7 +42,6 @@ import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.structure.ChatActorNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractActorNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
-import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,9 +64,6 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
-    Broadcaster broadcaster;
 
     /**
      * Chat Actor Network Service member variables.
@@ -318,18 +309,26 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
     public void handleNetworkClientActorListReceivedEvent(final UUID               queryId      ,
                                                           final List<ActorProfile> actorProfiles) {
 
+        final List<ChatExposingData> chatExposingDataArrayList = new ArrayList<>();
 
-        FermatBundle fermatBundle3 = new FermatBundle();
-        fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_NETWORK_SERVICE.getCode());
-        fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-        fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_COMM_ACTOR_RECEIVED);
-        fermatBundle3.put(ChatBroadcasterConstants.CHAT_COMM_ACTOR_LIST, actorProfiles);
-        broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), fermatBundle3);
-//        FermatBundle bundle = new FermatBundle();
-//        bundle.put("actorProfiles", actorProfiles);
-//
-//        System.out.println("AbstractNs: onNetworkServiceActorListReceived");
-//        broadcaster.publish(BroadcasterType.UPDATE_VIEW, bundle, BundleQuery.LISTACTORS.getCode());
+        for (final ActorProfile actorProfile : actorProfiles) {
+
+            chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), null, null, null, null, actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
+        }
+
+        System.out.println("AbstractNs: onNetworkServiceActorListReceived");
+        ChatActorListReceivedEvent eventToRaise = eventManager.getNewEventMati(EventType.CHAT_ACTOR_LIST_RECEIVED, ChatActorListReceivedEvent.class);
+        eventToRaise.setSource(eventSource);
+        eventToRaise.setActorProfileList(chatExposingDataArrayList);
+
+        System.out.println("CHAT ACTOR LIST FLOW -> RAISING EVENT -> -> init");
+        eventManager.raiseEvent(eventToRaise);
+//        FermatBundle fermatBundle3 = new FermatBundle();
+//        fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_NETWORK_SERVICE.getCode());
+//        fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+//        fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_COMM_ACTOR_RECEIVED);
+//        fermatBundle3.put(ChatBroadcasterConstants.CHAT_COMM_ACTOR_LIST, actorProfiles);
+//        broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), fermatBundle3);
     }
 
     @Override

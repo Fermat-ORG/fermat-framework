@@ -8,7 +8,6 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitd
 
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.entities.NetworkServiceMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -51,7 +50,7 @@ public class EncodeMsjContent {
      * @param messageStatus
      * @return
      */
-    public static String encodeMSjContentTransactionNewStatusNotification(String messageId, MessageStatus messageStatus, UUID chatId) {
+    public static String encodeMSjContentTransactionNewStatusNotification(String messageId, MessageStatus messageStatus) {
 
 
         Gson gson = new Gson();
@@ -72,16 +71,6 @@ public class EncodeMsjContent {
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_PUBLIC_KEY, localPublicKey);
 
         return gson.toJson(jsonObjectContent);
-    }
-
-    /**
-     * Decode a FermatMessage
-     *
-     * @param content
-     * @return
-     */
-    public static JsonObject decodeMsjContent(String content) {
-        return parser.parse(content).getAsJsonObject();
     }
 
     public static JsonObject decodeMsjContent(NetworkServiceMessage fermatMessage) {

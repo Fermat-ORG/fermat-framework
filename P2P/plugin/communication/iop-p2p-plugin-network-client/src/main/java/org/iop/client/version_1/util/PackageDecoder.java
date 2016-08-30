@@ -1,7 +1,6 @@
 package org.iop.client.version_1.util;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 
@@ -46,7 +45,6 @@ public class PackageDecoder implements Decoder.Binary<Package>{
             return Package.rebuildInstance(
                     UUID.fromString(pack.id()),
                     pack.content(),
-                    (pack.networkServiceType() != null) ? NetworkServiceType.getByCode(pack.networkServiceType()) : null,
                     PackageType.buildWithInt(pack.packageType()),
                     pack.destinationPk()
             );

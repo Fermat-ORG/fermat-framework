@@ -180,18 +180,6 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
         }
     }
 
-    /**
-     * The method <code>publishIdentity</code> is used to publish a Chat identity.
-     *
-     * @param publicKey
-     * @throws CantPublishIdentityException
-     * @throws IdentityNotFoundException
-     */
-    @Override
-    public void publishIdentity(String publicKey, Location location) throws CantPublishIdentityException, IdentityNotFoundException {
-        registerIdentitiesANS(publicKey, true, location);
-    }
-
     private void registerIdentitiesANS(String publicKey, boolean isIdentityNew, Location location) throws CantPublishIdentityException, IdentityNotFoundException {
         try {
             ChatIdentity chatIdentity = chatIdentityDao().getChatIdentity();
@@ -232,41 +220,4 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
         }
     }
 
-    public void registerIdentitiesANSTest(ChatExposingData chatExposingDataSingle) throws CantPublishIdentityException, IdentityNotFoundException {
-//        try {
-        long refreshInterval = 0;
-//            refreshInterval = chatIdentity.getFrecuency().getRefreshInterval();
-
-        for (int f = 0; f < 100; f++) {
-
-            final ChatExposingData chatExposingData = new ChatExposingData(UUID.randomUUID().toString(), chatExposingDataSingle.getAlias() + " " + (f + 1), chatExposingDataSingle.getImage(), "", "", "",
-                    "", null, refreshInterval, 0,
-                    ProfileStatus.UNKNOWN);
-
-//            chatIdentityDao().changeExposureLevel(chatIdentity.getPublicKey(), ExposureLevel.PUBLISH);
-
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        chatManager.exposeIdentity(chatExposingData);
-                    } catch (CantExposeIdentityException e) {
-                        chatIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
-                    }
-                }
-            }.start();
-
-
-//        } catch (CantGetChatUserIdentityException e) {
-//            chatIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
-//        } catch (com.bitdubai.fermat_cht_api.all_definition.exceptions.CantUpdateChatIdentityException e) {
-//            chatIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
-//        }
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

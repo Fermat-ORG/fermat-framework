@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,7 +14,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.SearchView;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -30,10 +30,8 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
@@ -61,13 +59,10 @@ public class ChatFragment
     private ChatPreferenceSettings chatSettings;
     private Toolbar toolbar;
     ChatActorCommunitySelectableIdentity chatIdentity;
+    private Handler h = new Handler();
 
-    // Defines a tag for identifying log entries
-    String TAG = "CHT_ChatFragment";
     private ChatAdapterView adapterView;
-    private ChatAdapter adapter;
     private SearchView searchView;
-    private Contact contactData;
 
     public static ChatFragment newInstance() {
         return new ChatFragment();
@@ -77,6 +72,8 @@ public class ChatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+
+
             chatManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -135,18 +132,6 @@ public class ChatFragment
         }
 
         cancelChatMessagesNotifications();
-
-        //Improve this logic to update data of contact from node, doing it like this, data will be requested every time the user opens a chat
-//        try {
-//            contactData = (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA);
-//            chatManager.updateActorConnection(new ChatActorConnection(contactData.getContactId(), null,
-//                    contactData.getRemoteActorPublicKey(),
-//                    contactData.getAlias(), contactData.getProfileImage(),
-//                    ConnectionState.CONNECTED, 0, 0, ""));
-//        } catch (Exception e) {
-//            if (errorManager != null)
-//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }
     }
 
     public void cancelChatMessagesNotifications(){
@@ -161,54 +146,32 @@ public class ChatFragment
         }
     }
 
-//    @Override
-//    public void onUpdateViewOnUIThread(String code) {
-//        super.onUpdateViewOnUIThread(code);
-//        onUpdateViewUIThread();
-//    }
-
-    public void onUpdateViewUIThread() {
+    public void onUpdateViewUIThread(String remotePk) {
         if(isAttached) {
             if (searchView != null) {
                 if (searchView.getQuery().toString().equals("")) {
-                    adapterView.refreshEvents();
+                    adapterView.refreshEvents(remotePk, h);
                 }
             } else {
-                adapterView.refreshEvents();
+                adapterView.refreshEvents(remotePk, h);
             }
         }else adapterView.clean();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {//private void initControls() {}
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-//            }
-//        });
+
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         adapterView = new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
-                .addModuleManager(null)
                 .addErrorManager(errorManager)
-                .addChatSession(null)
                 .addAppSession(appSession)
                 .addChatManager(chatManager)
                 .addChatSettings(chatSettings)
                 .addToolbar(toolbar)
                 .build();
         return adapterView;
-    }
-
-    public void onStop() {
-        try {
-            chatManager.activeOnlineStatus(null);
-        } catch (CantGetOnlineStatus cantGetOnlineStatus) {
-            cantGetOnlineStatus.printStackTrace();
-        }
-        super.onStop();
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -294,7 +257,7 @@ public class ChatFragment
                     break;
                 case 2:
                     try {
-                        final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, null, null, null, chatManager, errorManager);
+                        final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
                         alert.setTextTitle("Clear Chat");
                         alert.setTextBody("Do you want to clear this chat? All messages in here will be erased");
                         alert.setType("clean-chat");
@@ -304,7 +267,7 @@ public class ChatFragment
                             public void onDismiss(DialogInterface dialog) {
                                 try {
                                     adapterView.clean();
-                                    onUpdateViewUIThread();
+                                    onUpdateViewUIThread(null);
                                 }catch (Exception e) {
                                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                 }
@@ -333,7 +296,8 @@ public class ChatFragment
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
-                        onUpdateViewUIThread();
+                        String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION);
+                        onUpdateViewUIThread(remotePK);
                     }
                 }
             } catch (ClassCastException e) {

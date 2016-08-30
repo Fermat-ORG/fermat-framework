@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_connection.common;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorIdentity;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
-import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.LinkedActorIdentity;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 import java.util.UUID;
@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/07/16.
  */
-public abstract class CBPActorConnection<T extends LinkedActorIdentity> extends ActorConnection<T> {
+public abstract class CBPActorConnection extends ActorConnection {
 
     /**
      * Represents the actor last known connection
@@ -32,7 +32,7 @@ public abstract class CBPActorConnection<T extends LinkedActorIdentity> extends 
      */
     protected CBPActorConnection(
             UUID connectionId,
-            T linkedIdentity,
+            ActorIdentity linkedIdentity,
             String publicKey,
             String alias,
             byte[] image,
