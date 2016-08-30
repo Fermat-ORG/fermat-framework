@@ -43,8 +43,6 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatNetworkServiceDataBaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatNetworkServiceDeveloperDatabaseFactory;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.EventRecordDAO;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.event_handler.EventRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
@@ -83,7 +81,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
     private ChatMetadataRecordDAO chatMetadataRecordDAO;
 
-    private EventRecordDAO eventRecordDAO;
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
@@ -110,10 +107,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
         return chatMetadataRecordDAO;
     }
 
-    public EventRecordDAO getEventRecordDAO() {
-        return eventRecordDAO;
-    }
-
     @Override
     protected void onNetworkServiceStart() {
 
@@ -134,7 +127,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             chatNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             chatMetadataRecordDAO = new ChatMetadataRecordDAO(dataBaseCommunication);
-            eventRecordDAO = new EventRecordDAO(dataBaseCommunication);
 
         } catch (Exception e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -365,7 +357,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
     private UUID sendMessage(final String jsonMessage,
                              final String identityPublicKey,
-                             final String actorPublicKey) {
+                             final String actorPublicKey,
+                             final boolean monitoring) {
 
         try {
             ActorProfile sender = new ActorProfile();
@@ -380,7 +373,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                     sender,
                     receiver,
                     jsonMessage,
-                    true
+                    monitoring
             );
         } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -407,7 +400,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             sendMessage(
                     msjContent,
                     localActorPubKey,
-                    remoteActorPubKey
+                    remoteActorPubKey,
+                    false
             );
 
         } catch (Exception e) {
@@ -463,7 +457,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             UUID transactionId = sendMessage(
                     EncodedMsg,
                     messageMetadataRecord.getLocalActorPublicKey(),
-                    messageMetadataRecord.getRemoteActorPublicKey()
+                    messageMetadataRecord.getRemoteActorPublicKey(),
+                    true
             );
             messageMetadataRecord.setTransactionId(transactionId);
             messageMetadataRecord.setChatMessageTransactionType(ChatMessageTransactionType.MESSAGE_METADATA_TRANSMIT);
@@ -525,7 +520,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             sendMessage(
                     msjContent,
                     localActorPubKey,
-                    remoteActorPubKey
+                    remoteActorPubKey,
+                    false
             );
 
         } catch (Exception e) {
@@ -550,29 +546,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
         }
     }
 
-
-
-    //todo: no creo que sea necesario implementar esto para este ns, retirar si no hace falta
-    @Override
-    public void onNodeEventArrive(UUID eventPackageId) {
-        try {
-            MessageMetadata messageMetadata = getChatMetadataRecordDAO().getMessageNotificationByTransactionId(eventPackageId);
-            if(messageMetadata != null){
-                EventRecord eventRecord = new EventRecord(eventPackageId,messageMetadata.getLocalActorPublicKey(),messageMetadata.getRemoteActorPublicKey());
-                getEventRecordDAO().persist(eventRecord);
-            }
-        } catch (CantGetNotificationException e) {
-            e.printStackTrace();
-        } catch (NotificationNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantReadRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (CantInsertRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     private void reportUnexpectedError(final Exception e) {
         reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
