@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -414,7 +415,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if (id == 1){
+            if (id == 2){
                 DeleteWalletContactDialog deleteWalletContactDialog = new DeleteWalletContactDialog(
                         getActivity(),
                         appSession,
@@ -422,6 +423,15 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                         cryptoWalletWalletContact.getContactId(),
                         cryptoWalletWalletContact.getActorName());
                 deleteWalletContactDialog.show();
+
+                deleteWalletContactDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+
+                        onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS.getCode());
+                    }
+                });
             }
 
         } catch (Exception e) {
