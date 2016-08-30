@@ -433,7 +433,8 @@ public class ChatMiddlewareDatabaseDao {
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
 
             table.addUUIDFilter      (ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, chatId               , DatabaseFilterType.EQUAL);
-            table.addFermatEnumFilter(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME , MessageStatus.CREATED, DatabaseFilterType.EQUAL);
+            table.addFermatEnumFilter(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME , MessageStatus.READ   , DatabaseFilterType.NOT_EQUALS);
+            table.addFermatEnumFilter(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME   , TypeMessage.OUTGOING , DatabaseFilterType.NOT_EQUALS);
 
             return table.getCount();
 
