@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -77,6 +78,8 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserActorManager intraWalletUserManager;
@@ -270,7 +273,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
     public ModuleManager<IntraUserWalletSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         if(intraUserModuleManager==null){
 
-            intraUserModuleManager = new IntraUserModuleManagerImpl(pluginFileSystem,pluginId,intraUserLoginXml,intraWalletUser,intraWalletUserIdentityManager,intraWalletUserManager,intraUserNertwokServiceManager,errorManager,intraUserLoggedPublicKey,locationManager,geolocationManager);
+            intraUserModuleManager = new IntraUserModuleManagerImpl(pluginFileSystem,pluginId,eventManager,intraUserLoginXml,intraWalletUser,intraWalletUserIdentityManager,intraWalletUserManager,intraUserNertwokServiceManager,errorManager,intraUserLoggedPublicKey,locationManager,geolocationManager);
         }
         return intraUserModuleManager;
     }

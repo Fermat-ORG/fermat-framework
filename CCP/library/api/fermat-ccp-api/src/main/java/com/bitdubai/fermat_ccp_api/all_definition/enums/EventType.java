@@ -12,6 +12,8 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestNewsEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServiceCompleteRegistration;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserDeleteContactEvent;
+
 
 /**
  * The enum <code>com.bitdubai.fermat_cry_api.layer.definition.enums.EventType</code>
@@ -47,6 +49,11 @@ public enum EventType implements FermatEventEnum {
             return new ActorNetworkServicePendingsNotificationEvent(this);
         }
     },
+    INTRA_USER_WALLET_DELETE_CONTACT("IUWDC"){
+      public FermatEvent getNewEvent(){
+          return new IntraUserDeleteContactEvent(this);
+      }
+    },
     ;
 
     private final String code;
@@ -69,8 +76,9 @@ public enum EventType implements FermatEventEnum {
             case "ACTORNSC": return ACTOR_NETWORK_SERVICE_COMPLETE;
             case "CRYADDN":  return CRYPTO_ADDRESSES_NEWS          ;
             case "CRYPRNW":  return CRYPTO_PAYMENT_REQUEST_NEWS    ;
+            case "IUWDC" :   return INTRA_USER_WALLET_DELETE_CONTACT;
 
-            default:
+                default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
                         "This code isn't valid for the CCP EventType Enum"
