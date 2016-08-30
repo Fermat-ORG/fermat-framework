@@ -17,8 +17,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotificationException;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -43,7 +41,6 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
@@ -85,11 +82,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
     private ChatNetworkServiceDeveloperDatabaseFactory chatNetworkServiceDeveloperDatabaseFactory;
 
     /**
-     * Executor
-     */
-    //ExecutorService executorService;
-
-    /**
      * Constructor with parameters
      */
     public ChatNetworkServicePluginRoot() {
@@ -98,7 +90,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                 EventSource.NETWORK_SERVICE_CHAT,
                 NetworkServiceType.CHAT
         );
-
     }
 
     public ChatMetadataRecordDAO getChatMetadataRecordDAO() {
@@ -109,20 +100,12 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
     protected void onNetworkServiceStart() {
 
         try {
-        /*
-         * Initialize the data base
-         */
+            /*
+             * Initialize the data base
+             */
             initializeDb();
-        /*
-         * Initialize cache data base
-         */
-            // initializeCacheDb();
 
-        /*
-         * Initialize Developer Database Factory
-         */
-            chatNetworkServiceDeveloperDatabaseFactory = new ChatNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId, getErrorManager());
-            chatNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
+            chatNetworkServiceDeveloperDatabaseFactory = new ChatNetworkServiceDeveloperDatabaseFactory(dataBaseCommunication);
 
             chatMetadataRecordDAO = new ChatMetadataRecordDAO(dataBaseCommunication);
 
@@ -192,56 +175,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
         }
     }
 
-    @Override
-    public void onSentMessage(UUID messageSent) {
-
-        System.out.println("message sent+ :" + messageSent);
-      /*  try {
-            JsonObject messageData = EncodeMsjContent.decodeMsjContent(messageSent);
-            Gson gson = new Gson();
-            UUID chatId = gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.ID_CHAT), UUID.class);
-            ChatMessageTransactionType chatMessageTransactionType = gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE), ChatMessageTransactionType.class);
-            if (chatMessageTransactionType == ChatMessageTransactionType.CHAT_METADATA_TRASMIT) {
-                launchOutgoingChatNotification(chatId);
-                System.out.println("ChatNetworkServicePluginRoot - SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
-            }
-
-        } catch (Exception e) {
-            //quiere decir que no estoy reciviendo metadata si no una respuesta
-            System.out.println("ChatNetworkServicePluginRoot - EXCEPCION DENTRO DEL PROCCESS EVENT");
-            reportUnexpectedError(e);
-        }*/
-    }
-
-    @Override
-    public synchronized void onMessageFail(UUID messageId) {
-        MessageMetadataRecord messageMetadataRecord = null;
-        try {
-             messageMetadataRecord = getChatMetadataRecordDAO().getMessageNotificationByTransactionId(messageId);
-        } catch (CantGetNotificationException e) {
-            e.printStackTrace();
-            CantGetNotificationException pluginStartException = new CantGetNotificationException(CantGetNotificationException.DEFAULT_MESSAGE, e, "", "CAN NOT GET NOTIFICATION");
-
-            reportUnexpectedError(pluginStartException);
-        } catch (NotificationNotFoundException e) {
-            e.printStackTrace();
-            NotificationNotFoundException pluginStartException = new NotificationNotFoundException(NotificationNotFoundException.DEFAULT_MESSAGE, e, "", "Notification not found");
-
-            reportUnexpectedError(pluginStartException);
-        } catch (CantReadRecordDataBaseException e) {
-            e.printStackTrace();
-            CantReadRecordDataBaseException pluginStartException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "", "");
-
-            reportUnexpectedError(pluginStartException);
-        } catch (Exception e){
-            e.printStackTrace();
-            CantReadRecordDataBaseException pluginStartException = new CantReadRecordDataBaseException("Something bad happened", e, "", "");
-
-            reportUnexpectedError(pluginStartException);
-        }
-
-    }
-
     private void launchIncomingMessageNotification(MessageMetadata messageMetadata) {
         IncomingMessage event = (IncomingMessage) eventManager.getNewEvent(EventType.INCOMING_MESSAGE);
         event.setMessageMetadata(messageMetadata);
@@ -271,45 +204,25 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
     private void initializeDb() throws CantInitializeChatNetworkServiceDatabaseException {
 
         try {
-            /*
-             * Open new database connection
-             */
+
             this.dataBaseCommunication = this.pluginDatabaseSystem.openDatabase(pluginId, ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
-            /*
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeChatNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
 
-            /*
-             * The database no exist may be the first time the plugin is running on this device,
-             * We need to create the new database
-             */
             ChatNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new ChatNetworkServiceDatabaseFactory(pluginDatabaseSystem, getErrorManager());
 
             try {
-
-                /*
-                 * We create the new database
-                 */
                 this.dataBaseCommunication = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
-
-                /*
-                 * The database cannot be created. I can not handle this situation.
-                 */
-                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeChatNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
         }
-
     }
 
     /**
