@@ -219,11 +219,11 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
-        mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
+        createButton  = (Button) layout.findViewById(R.id.create_crypto_broker_button);
+        mBrokerName   = (EditText) layout.findViewById(R.id.crypto_broker_name);
         mBrokerPhrase = (EditText) layout.findViewById(R.id.crypto_broker_phrase);
-        mBrokerImage = (ImageView) layout.findViewById(R.id.img_photo);
-        relativeLayout = (RelativeLayout) layout.findViewById(R.id.user_image);
+        mBrokerImage  = (ImageView) layout.findViewById(R.id.img_photo);
+        relativeLayout= (RelativeLayout) layout.findViewById(R.id.user_image);
         mphoto_header = (ImageView) layout.findViewById(R.id.img_photo_header);
 
 
@@ -853,7 +853,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
 
+
         Matrix matrix = new Matrix();
+
         switch (orientation) {
             case ExifInterface.ORIENTATION_NORMAL:
                 return bitmap;
