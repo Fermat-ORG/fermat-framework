@@ -440,6 +440,21 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
+    @Override
+    public Timestamp getLastMessageReceivedDate(String remotePk) throws CantGetChatException {
+
+        try {
+
+            return chatMiddlewareDatabaseDao.getLastMessageReceivedDateByRemotePK(remotePk);
+
+        } catch (Exception e) {
+            throw new CantGetChatException(
+                    e,
+                    "Something went wrong",
+                    "");
+        }
+    }
+
     /**
      * This method sends the message through the Chat Network Service
      *

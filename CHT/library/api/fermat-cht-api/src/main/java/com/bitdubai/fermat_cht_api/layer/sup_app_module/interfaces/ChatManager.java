@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
@@ -19,6 +21,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,6 +61,8 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
                                                                   final int max,
                                                                   final int offset) throws CantListChatActorException;
 
+    ChatActorCommunityInformation getConnectedChatActor(String localPublicKey, String remotePublicKey) throws CantGetActorConnectionException, ActorConnectionNotFoundException;
+
     /**
      * This method sends the message through the Chat Network Service
      *
@@ -74,19 +79,7 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
      */
     void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException;
 
-    boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus;
-
-    /**
-     * This method check through the Chat Network Service for view onlineStatus
-     *
-     * @param contactPublicKey,
-     * @throws CantSendChatMessageException
-     */
-    boolean checkOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus;
-
-    String checkLastConnection(String contactPublicKey) throws CantGetOnlineStatus;
-
-    void activeOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus;
+    Timestamp getLastMessageReceivedDate(String remotePk) throws CantGetChatException;
 
     ChatActorCommunitySelectableIdentity newInstanceChatActorCommunitySelectableIdentity(ChatIdentity chatIdentity);
 

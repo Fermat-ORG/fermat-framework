@@ -117,6 +117,34 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+    public Timestamp getLastMessageReceivedDateByRemotePK(String remotePK) throws CantGetChatException, DatabaseOperationException {
+
+        try {
+
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+
+            table.addStringFilter(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, remotePK, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
+
+            if (records.size() > 0)
+                return Timestamp.valueOf(records.get(0).getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME));
+            else
+                return null;
+
+        } catch (Exception e) {
+
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            throw new CantGetChatException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    "error trying to get Chat from the database with filter: " + remotePK,
+                    null);
+        }
+    }
+
     public Chat getChatByRemotePublicKey(String publicKey) throws CantGetChatException, DatabaseOperationException {
 
         try {
@@ -128,7 +156,6 @@ public class ChatMiddlewareDatabaseDao {
             table.loadToMemory();
 
             List<DatabaseTableRecord> records = table.getRecords();
-
 
             if (records.size() > 0)
                 return getChatTransaction(records.get(0));
@@ -204,7 +231,7 @@ public class ChatMiddlewareDatabaseDao {
 
             deleteMessagesByChatId(chatId);
 
-            updateChatStatus(chatId, ChatStatus.INVISSIBLE);
+            updateChatStatus(chatId, ChatStatus.INVISIBLE);
 
         } catch (Exception e) {
 
@@ -435,11 +462,8 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME, chat.getStatus().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME, chat.getDate().toString());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME, chat.getLastMessageDate().toString());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST, chat.getContactListString());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT, chat.getTypeChat().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY, String.valueOf(chat.getScheduledDelivery()));
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING, String.valueOf(chat.isWriting()));
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_IS_ONLINE, String.valueOf(chat.isOnline()));
 
         return record;
     }
@@ -486,8 +510,6 @@ public class ChatMiddlewareDatabaseDao {
         chat.setStatus(ChatStatus.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME)));
         chat.setTypeChat(TypeChat.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT)));
         chat.setScheduledDelivery(Boolean.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY)));
-        chat.setIsWriting(Boolean.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING)));
-        chat.setIsOnline(Boolean.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_IS_ONLINE)));
 
         return chat;
     }

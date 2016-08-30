@@ -1,7 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.wizard_pages;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -24,12 +23,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -78,27 +74,8 @@ public class WizardTwoStepBroadcastFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View layout = inflater.inflate(R.layout.cht_wizard_broadcast_two_step, container, false);
         ShowDialogWelcome();
-        layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
-
-        try {
-            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-            List<Contact> con = null;//chatManager.getContacts();
-            int size = con.size();
-            if (size > 0) {
-                for (int i = 0; i < size; i++) {
-                    contactname.add(con.get(i).getAlias());
-                    contactid.add(con.get(i).getContactId());
-                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
-                    BitmapDrawable bmd = new BitmapDrawable(bytes);
-                    contacticon.add(bmd.getBitmap());
-                }
-            }
-        } catch (Exception e) {
-            if (errorManager != null)
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
+        View layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
 
         adapter = new WizardListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
         list = (ListView) layout.findViewById(R.id.list);

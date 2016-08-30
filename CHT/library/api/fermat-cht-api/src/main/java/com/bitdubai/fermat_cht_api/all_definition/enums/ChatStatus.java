@@ -10,8 +10,8 @@ public enum ChatStatus implements FermatEnum {
     /**
      * Definition types
      */
-    INVISSIBLE("INVI"),
-    VISSIBLE("VISI");
+    INVISIBLE("I"),
+    VISIBLE("V");
 
     /**
      * Represent the code of the message status
@@ -47,10 +47,10 @@ public enum ChatStatus implements FermatEnum {
     public static ChatStatus getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "INVI":
-                return ChatStatus.INVISSIBLE;
-            case "VISI":
-                return ChatStatus.VISSIBLE;
+            case "I":
+                return ChatStatus.INVISIBLE;
+            case "V":
+                return ChatStatus.VISIBLE;
         }
 
         /**

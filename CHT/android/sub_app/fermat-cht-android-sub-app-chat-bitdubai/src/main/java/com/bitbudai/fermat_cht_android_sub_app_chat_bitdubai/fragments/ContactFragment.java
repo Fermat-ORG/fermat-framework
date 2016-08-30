@@ -25,7 +25,6 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Contact fragment
@@ -33,10 +32,8 @@ import java.util.List;
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 05/01/16
  * @version 1.0
  */
-public class ContactFragment
-        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
+public class ContactFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
-    public List<Contact> contacts;
     private ErrorManager errorManager;
     private Toolbar toolbar;
     ArrayList<Bitmap> contacticon = new ArrayList<>();
@@ -68,11 +65,10 @@ public class ContactFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         View layout = inflater.inflate(R.layout.contact_detail_fragment, container, false);
 
         try {
-            Contact con = (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA); //hatSession.getSelectedContact();
+            Contact con = (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA);
             contactStatus = (TextView) layout.findViewById(R.id.contact_status_input);
             if(con.getContactStatus() != null){
                 contactStatus.setText(con.getContactStatus());
@@ -83,7 +79,7 @@ public class ContactFragment
             BitmapDrawable bmd = new BitmapDrawable(bytes);
             contacticon.add(bmd.getBitmap());
 
-            String myDate = (String) appSession.getData("DATELASTCONNECTION");//chatSession.getSelectedContact();
+            String myDate = (String) appSession.getData("DATELASTCONNECTION");
             if(myDate==null)
                 myDate="No info available";
             else if(myDate.equals(""))
@@ -111,7 +107,7 @@ public class ContactFragment
         });
 
         // Inflate the list fragment layout
-        return layout;//return inflater.inflate(R.layout.contact_list_fragment, container, false);
+        return layout;
     }
 
     @Override

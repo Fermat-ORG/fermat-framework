@@ -181,7 +181,7 @@ public class ChatMiddlewareEventActions {
         }
         chat.setLastMessageDate(new Timestamp(System.currentTimeMillis()));//updating date of last message arrived in chat
 
-        chat.setStatus(ChatStatus.VISSIBLE);
+        chat.setStatus(ChatStatus.VISIBLE);
 
         chatMiddlewareDatabaseDao.saveChat(chat);
 

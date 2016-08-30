@@ -5,12 +5,14 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,6 +46,8 @@ public interface MiddlewareChatManager extends FermatManager {
     void sendReadMessageNotification(UUID messageId, UUID chatId) throws SendStatusUpdateMessageNotificationException;
 
     void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException;
+
+    Timestamp getLastMessageReceivedDate(String remotePk) throws CantGetChatException;
 
     /**
      * This method sends the message through the Chat Network Service

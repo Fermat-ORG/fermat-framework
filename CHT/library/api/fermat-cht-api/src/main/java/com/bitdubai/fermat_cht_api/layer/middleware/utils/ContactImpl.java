@@ -2,31 +2,17 @@ package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 
-import java.util.Arrays;
-import java.util.UUID;
-
 /**
  * Created by franklin on 08/01/16.
  */
 public class ContactImpl implements Contact {
-    //Documentar
-    private UUID contactId;
+
     private String alias;
     private String remoteActorPublicKey;
     private byte[] image;
     private String contactStatus;
 
     public ContactImpl() {
-    }
-
-    @Override
-    public UUID getContactId() {
-        return this.contactId;
-    }
-
-    @Override
-    public void setContactId(UUID contactId) {
-        this.contactId = contactId;
     }
 
     @Override
@@ -72,10 +58,9 @@ public class ContactImpl implements Contact {
     @Override
     public String toString() {
         return "ContactImpl{" +
-                "contactId=" + contactId +
-                ", alias='" + alias + '\'' +
+                "alias='" + alias + '\'' +
                 ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
-                ", image=" + Arrays.toString(image) +
+                ", image=" + (image != null) +
                 ", contactStatus='" + contactStatus + '\'' +
                 '}';
     }

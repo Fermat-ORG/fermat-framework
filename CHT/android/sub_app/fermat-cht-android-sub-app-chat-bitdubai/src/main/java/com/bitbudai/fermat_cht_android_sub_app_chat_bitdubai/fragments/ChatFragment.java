@@ -29,7 +29,6 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
@@ -169,15 +168,6 @@ public class ChatFragment
                 .addToolbar(toolbar)
                 .build();
         return adapterView;
-    }
-
-    public void onStop() {
-        try {
-            chatManager.activeOnlineStatus(null);
-        } catch (CantGetOnlineStatus cantGetOnlineStatus) {
-            cantGetOnlineStatus.printStackTrace();
-        }
-        super.onStop();
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

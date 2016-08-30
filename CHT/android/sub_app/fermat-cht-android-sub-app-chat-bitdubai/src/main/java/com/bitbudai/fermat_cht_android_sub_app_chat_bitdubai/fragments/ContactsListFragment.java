@@ -67,7 +67,6 @@ public class ContactsListFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
     private ContactListAdapter adapter; // The main query adapter
-    public List<Contact> contacts;
     private ChatManager chatManager;
     private ErrorManager errorManager;
     private ChatPreferenceSettings chatSettings;
@@ -149,52 +148,41 @@ public class ContactsListFragment
             contacticon.clear();
             contactStatus.clear();
             if (chatIdentity != null) {
-                List<ChatActorCommunityInformation> con = chatManager
-                        .listAllConnectedChatActor(chatIdentity, MAX, offset); //null;//chatManager.getContacts();
+                List<ChatActorCommunityInformation> con = chatManager.listAllConnectedChatActor(chatIdentity, MAX, offset);
                 Collections.sort(con, new Comparator<ChatActorCommunityInformation>() {
                     @Override
                     public int compare(ChatActorCommunityInformation actorA, ChatActorCommunityInformation actorB) {
                         return (actorA.getAlias().trim().toLowerCase().compareTo(actorB.getAlias().trim().toLowerCase()));
                     }
                 });
-                if (con != null) {
-                    int size = con.size();
-                    if (size > 0) {
-                        for (ChatActorCommunityInformation conta : con) {
-                            contactname.add(conta.getAlias());
-                            contactid.add(conta.getPublicKey());
-                            ByteArrayInputStream bytes;
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            if (conta.getImage() != null) {
-                                bytes = new ByteArrayInputStream(conta.getImage());
-                                BitmapDrawable bmd = new BitmapDrawable(bytes);
-                                contacticon.add(bmd.getBitmap());
-                            } else {
-                                Drawable d = getResources().getDrawable(R.drawable.cht_center_profile_icon_center); // the drawable (Captain Obvious, to the rescue!!!)
-                                Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                                contacticon.add(bitmap);
-                            }
-                            contactStatus.add(conta.getStatus());
+                int size = con.size();
+                if (size > 0) {
+                    for (ChatActorCommunityInformation conta : con) {
+                        contactname.add(conta.getAlias());
+                        contactid.add(conta.getPublicKey());
+                        ByteArrayInputStream bytes;
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        if (conta.getImage() != null) {
+                            bytes = new ByteArrayInputStream(conta.getImage());
+                            BitmapDrawable bmd = new BitmapDrawable(bytes);
+                            contacticon.add(bmd.getBitmap());
+                        } else {
+                            Drawable d = getResources().getDrawable(R.drawable.cht_center_profile_icon_center);
+                            Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                            contacticon.add(bitmap);
                         }
-                        emptyView.setVisibility(View.GONE);
-                        noData.setVisibility(View.GONE);
-                        noDatalabel.setVisibility(View.GONE);
-                        nochatssubtitle.setVisibility(View.GONE);
-                        nochatssubtitle1.setVisibility(View.GONE);
-                        nochatssubtitle2.setVisibility(View.GONE);
-                        layout.setBackgroundResource(0);
-                        ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
-                        layout.setBackground(bgcolor);
-                    } else {
-                        emptyView.setVisibility(View.VISIBLE);
-                        noData.setVisibility(View.VISIBLE);
-                        noDatalabel.setVisibility(View.VISIBLE);
-                        nochatssubtitle.setVisibility(View.VISIBLE);
-                        nochatssubtitle1.setVisibility(View.VISIBLE);
-                        nochatssubtitle2.setVisibility(View.VISIBLE);
-                        //layout.setBackgroundResource(R.drawable.cht_background_1);
+                        contactStatus.add(conta.getStatus());
                     }
+                    emptyView.setVisibility(View.GONE);
+                    noData.setVisibility(View.GONE);
+                    noDatalabel.setVisibility(View.GONE);
+                    nochatssubtitle.setVisibility(View.GONE);
+                    nochatssubtitle1.setVisibility(View.GONE);
+                    nochatssubtitle2.setVisibility(View.GONE);
+                    layout.setBackgroundResource(0);
+                    ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
+                    layout.setBackground(bgcolor);
                 } else {
                     emptyView.setVisibility(View.VISIBLE);
                     noData.setVisibility(View.VISIBLE);
@@ -202,7 +190,6 @@ public class ContactsListFragment
                     nochatssubtitle.setVisibility(View.VISIBLE);
                     nochatssubtitle1.setVisibility(View.VISIBLE);
                     nochatssubtitle2.setVisibility(View.VISIBLE);
-                    //layout.setBackgroundResource(R.drawable.cht_background_1);
                 }
             } else {
                 emptyView.setVisibility(View.VISIBLE);
@@ -211,7 +198,6 @@ public class ContactsListFragment
                 nochatssubtitle.setVisibility(View.VISIBLE);
                 nochatssubtitle1.setVisibility(View.VISIBLE);
                 nochatssubtitle2.setVisibility(View.VISIBLE);
-                //layout.setBackgroundResource(R.drawable.cht_background_1);
             }
         } catch (Exception e) {
             if (errorManager != null)
