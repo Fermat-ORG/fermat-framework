@@ -1,11 +1,10 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.factories;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 
 import java.sql.Timestamp;
 
@@ -31,13 +30,11 @@ public class NetworkServiceMessageFactory {
      * @param messageContentType
      *
      * @return a NetworkServiceMessage instance
-     *
-     * @throws FMPException
      */
     public static NetworkServiceMessage buildNetworkServiceMessage(final NetworkServiceProfile senderProfile     ,
                                                                    final NetworkServiceProfile receiverProfile   ,
                                                                    final String                content           ,
-                                                                   final MessageContentType    messageContentType) throws FMPException {
+                                                                   final MessageContentType    messageContentType) {
 
         NetworkServiceMessage message = new NetworkServiceMessage();
 
@@ -47,7 +44,7 @@ public class NetworkServiceMessageFactory {
         message.setReceiverPublicKey(receiverProfile.getIdentityPublicKey());
         message.setShippingTimestamp(new Timestamp(System.currentTimeMillis()));
         message.setIsBetweenActors(Boolean.FALSE);
-        message.setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+        message.setMessageStatus(MessageStatus.PENDING_TO_SEND);
         message.setMessageContentType(messageContentType);
 
         return message;
@@ -63,14 +60,12 @@ public class NetworkServiceMessageFactory {
      * @param messageContentType
      *
      * @return a NetworkServiceMessage instance
-     *
-     * @throws FMPException
      */
     public static NetworkServiceMessage buildNetworkServiceMessage(final ActorProfile          senderActorProfile   ,
                                                                    final ActorProfile          receiverActorProfile ,
                                                                    final NetworkServiceProfile networkServiceProfile,
                                                                    final String                content              ,
-                                                                   final MessageContentType    messageContentType   ) throws FMPException {
+                                                                   final MessageContentType    messageContentType   ) {
 
         NetworkServiceMessage message = new NetworkServiceMessage();
 
@@ -80,7 +75,7 @@ public class NetworkServiceMessageFactory {
         message.setReceiverPublicKey(receiverActorProfile.getIdentityPublicKey());
         message.setShippingTimestamp(new Timestamp(System.currentTimeMillis()));
         message.setIsBetweenActors(Boolean.TRUE);
-        message.setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+        message.setMessageStatus(MessageStatus.PENDING_TO_SEND);
         message.setMessageContentType(messageContentType);
 
         return message;

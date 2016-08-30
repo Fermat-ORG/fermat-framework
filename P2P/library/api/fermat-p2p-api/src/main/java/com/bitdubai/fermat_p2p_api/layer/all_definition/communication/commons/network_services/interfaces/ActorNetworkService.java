@@ -2,6 +2,8 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.n
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestActorFullPhotoException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorNotRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantRegisterActorException;
@@ -65,7 +67,7 @@ public interface ActorNetworkService {
                                String   alias    ,
                                Location location ,
                                String   extraData,
-                               byte[]   image    ) throws ActorNotRegisteredException, CantUpdateRegisteredActorException;
+                               byte[]   image    ) throws ActorNotRegisteredException, CantUpdateRegisteredActorException, CantUpdateRegisteredProfileException;
 
     /**
      * Through the method <code>unregisterActor</code> we can unregister
@@ -79,10 +81,12 @@ public interface ActorNetworkService {
     void unregisterActor(String publicKey) throws ActorNotRegisteredException, CantUnregisterActorException;
 
     /**
-     * Through the method <code>isActorOnline</code> we can check if an actor is online or not.
+     * Through the method <code>getActorFullPhoto</code> we can get Full Photo of an actor specific.
      *
-     * @param publicKey of the actor.
+     * @param publicKey of the actor
+     *
+     * @return a String encodeBase64String
      */
-    boolean isActorOnline(String publicKey);
+    String getActorFullPhoto(final String publicKey) throws CantRequestActorFullPhotoException;
 
 }

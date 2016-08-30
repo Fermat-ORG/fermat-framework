@@ -15,9 +15,9 @@ dependencies {
 
     compile project(':fermat-core-api')
 
-    compile project(':fermat-p2p-api-new')
+    compile project(':fermat-p2p-api')
 
-    compile project(':fermat-p2p-layer-new')
+    compile project(':fermat-p2p-layer')
 
     compile project(':iop-p2p-plugin-network-client')
 

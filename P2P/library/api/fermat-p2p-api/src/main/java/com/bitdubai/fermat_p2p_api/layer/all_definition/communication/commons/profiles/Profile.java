@@ -47,7 +47,6 @@ public abstract class Profile implements Serializable {
      * Constructor
      */
     public Profile(final ProfileTypes type){
-
         this.type   = type;
         this.status = ProfileStatus.UNKNOWN;
     }
@@ -70,10 +69,18 @@ public abstract class Profile implements Serializable {
         this.identityPublicKey = identityPublicKey;
     }
 
+    /**
+     * Get the Status
+     * @return ProfileStatus
+     */
     public ProfileStatus getStatus() {
         return status;
     }
 
+    /**
+     * Set the Status
+     * @param status
+     */
     public void setStatus(ProfileStatus status) {
         this.status = status;
     }
@@ -88,7 +95,7 @@ public abstract class Profile implements Serializable {
     }
 
     /**
-     * Sets the location
+     * Set the location
      *
      * @param location to set
      */
@@ -96,6 +103,11 @@ public abstract class Profile implements Serializable {
         this.location = location;
     }
 
+    /**
+     * Set the location
+     * @param latitude
+     * @param longitude
+     */
     public void setLocation(final Double latitude ,
                             final Double longitude) {
 
@@ -110,15 +122,28 @@ public abstract class Profile implements Serializable {
         );
     }
 
+    /**
+     * Get the type
+     * @return ProfileTypes
+     */
     public ProfileTypes getType() {
         return type;
     }
 
+    /**
+     * Deserialize the object
+     * @param jsonObject
+     * @return Profile
+     */
     public static Profile deserialize(final JsonObject jsonObject) {
 
         throw new NotImplementedException();
     }
 
+    /**
+     * Serialize the object in json
+     * @return JsonObject
+     */
     public JsonObject serialize() {
 
         JsonObject jsonObject = new JsonObject();
@@ -144,6 +169,10 @@ public abstract class Profile implements Serializable {
      */
     public abstract String toJson();
 
+    /**
+     * (non-javadoc)
+     * @see Object#equals(Object)
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -155,11 +184,19 @@ public abstract class Profile implements Serializable {
 
     }
 
+    /**
+     * (non-javadoc)
+     * @see Object#hashCode()
+     */
     @Override
     public int hashCode() {
         return identityPublicKey != null ? identityPublicKey.hashCode() : 0;
     }
 
+    /**
+     * (non-javadoc)
+     * @see Object#toString()
+     */
     @Override
     public String toString() {
         return "Profile{" +
