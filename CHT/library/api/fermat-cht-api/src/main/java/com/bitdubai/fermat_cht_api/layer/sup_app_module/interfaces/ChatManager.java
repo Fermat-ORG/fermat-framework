@@ -1,15 +1,10 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListChatActorException;
@@ -22,9 +17,6 @@ import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentit
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatConnectionAlreadyRequestesException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatTypeNotSupportedException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantRequestActorConnectionException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -44,19 +36,13 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
 
     void saveChat(Chat chat) throws CantSaveChatException;
 
-    void deleteChat(Chat chat) throws CantDeleteChatException;
-
-    void deleteChats() throws CantDeleteChatException;
-
-    void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException;
+    void deleteChat(UUID chatId) throws CantDeleteChatException;
 
     List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException;
 
-    Message getMessageByChatId(UUID chatId) throws CantGetMessageException;
+    Message getLastMessageByChatId(UUID chatId) throws CantGetMessageException;
 
     long getUnreadCountMessageByChatId(UUID chatId) throws CantGetMessageException;
-
-    Message getMessageByMessageId(UUID messageId) throws CantGetMessageException;
 
     void saveMessage(Message message) throws CantSaveMessageException;
 
@@ -65,8 +51,6 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
     Chat getChatByRemotePublicKey(String publicKey) throws CantGetChatException;
 
     void sendReadMessageNotification(UUID messageId, UUID chatId) throws SendStatusUpdateMessageNotificationException;
-
-    String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 
     List<ChatIdentity> getIdentityChatUsersFromCurrentDeviceUser() throws CantListChatIdentityException;
 
@@ -105,20 +89,5 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
     void activeOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus;
 
     ChatActorCommunitySelectableIdentity newInstanceChatActorCommunitySelectableIdentity(ChatIdentity chatIdentity);
-
-    /**
-     * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
-     * settings class parametrized.
-     *
-     * @return a new instance of the settings manager for the specified fermat settings object.
-     */
-
-    @Override
-    SettingsManager<ChatPreferenceSettings> getSettingsManager();
-
-    void requestConnectionToChatActor(final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity selectedIdentity,
-                                      final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation chatActorToContact) throws CantRequestActorConnectionException, ActorChatTypeNotSupportedException, ActorChatConnectionAlreadyRequestesException;
-
-    ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException;
 
 }

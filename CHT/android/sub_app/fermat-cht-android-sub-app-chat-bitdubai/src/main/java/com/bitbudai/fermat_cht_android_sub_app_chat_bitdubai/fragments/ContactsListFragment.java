@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,7 +29,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -89,7 +87,6 @@ public class ContactsListFragment
     TextView nochatssubtitle;
     TextView nochatssubtitle1;
     TextView nochatssubtitle2;
-    List<ChatActorCommunityInformation> con;
     private static final int MAX = 1000;
     private int offset = 0;
     private SearchView searchView;
@@ -141,61 +138,8 @@ public class ContactsListFragment
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
-        if (chatIdentity != null) {
-            BackgroundAsyncTaskList batl = new BackgroundAsyncTaskList(chatIdentity, MAX, offset);
-            //batl.execute();
-        }
-
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);
-    }
-
-    public class BackgroundAsyncTaskList extends
-            AsyncTask<Void, Integer, Void> {
-
-        ChatActorCommunitySelectableIdentity identity;
-        int MAX, offset;
-
-        public BackgroundAsyncTaskList(ChatActorCommunitySelectableIdentity identity, int MAX, int offset) {
-            this.identity = identity;
-            this.MAX = MAX;
-            this.offset = offset;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            //this.cancel(true);
-            return;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                if (identity != null) {
-                    con = null;//chatManager.listWorldChatActor(identity, MAX, offset);
-                    if (con != null) {
-                        int size = con.size();
-                        if (size > 0) {
-                            for (ChatActorCommunityInformation conta : con) {
-                                if (conta.getConnectionState() != null) {
-                                    if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
-                                        try {
-                                            chatManager.requestConnectionToChatActor(identity, conta);
-                                        } catch (Exception e) {
-                                            if (errorManager != null)
-                                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
     }
 
     void updateValues() {
@@ -275,18 +219,6 @@ public class ContactsListFragment
         }
     }
 
-    void updateValuesNS() {
-        try {
-            if (chatIdentity != null) {
-                BackgroundAsyncTaskList back = new BackgroundAsyncTaskList(chatIdentity, MAX, offset);
-                //back.execute();
-            }
-        } catch (Exception e) {
-            if (errorManager != null)
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -331,7 +263,6 @@ public class ContactsListFragment
                     public void run() {
                         try {
                             //Toast.makeText(getActivity(), "Contacts Updated", Toast.LENGTH_SHORT).show();
-                            updateValuesNS();
                             updateValues();
                             final ContactListAdapter adaptador =
                                     new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus,

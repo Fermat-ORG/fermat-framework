@@ -13,11 +13,6 @@ import java.util.UUID;
  */
 public interface NetworkServiceChatManager extends FermatManager {
 
-    /**
-     * @return
-     */
-    String getNetWorkServicePublicKey();
-
     void sendWritingStatus(final String localActorPubKey, final String remoteActorPubKey, UUID chatId) throws CantSendChatMessageNewStatusNotificationException;
 
     void sendMessageMetadata(String localActorPubKey, String remoteActorPubKey, MessageMetadata messageMetadata) throws CantSendChatMessageMetadataException, IllegalArgumentException;

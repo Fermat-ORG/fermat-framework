@@ -151,7 +151,7 @@ public class ChatListFragment
                                         contactName.add(cont.getAlias());
                                         Message mess = null;
                                         try {
-                                            mess = chatManager.getMessageByChatId(chatidtemp);
+                                            mess = chatManager.getLastMessageByChatId(chatidtemp);
                                         } catch (Exception e) {
                                             mess = null;
                                         }

@@ -363,11 +363,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
         return chatNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
-    @Override
-    public String getNetWorkServicePublicKey() {
-        return getIdentity().getPublicKey();
-    }
-
     private UUID sendMessage(final String jsonMessage,
                              final String identityPublicKey,
                              final String actorPublicKey) {

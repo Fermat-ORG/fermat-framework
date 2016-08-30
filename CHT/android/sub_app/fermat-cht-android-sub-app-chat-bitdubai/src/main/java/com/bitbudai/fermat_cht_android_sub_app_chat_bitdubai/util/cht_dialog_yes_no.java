@@ -116,22 +116,8 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
 
                 delete_contact = true;
             } else if (AlertType == 3) {
-                try {
-                    try {
-                        // Delete chats and refresh view
-                        chatManager.deleteChats();
-                    } catch (CantDeleteChatException e) {
-                        if (errorManager != null)
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    } catch (Exception e) {
-                        if (errorManager != null)
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    }
-                    dismiss();
-                } catch (Exception e) {
-                    if (errorManager != null)
-                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
+
+                // TODO WHAT THE FUCK?
                 delete_chats = true;
             } else if (AlertType == 4) {
                 try {
@@ -139,8 +125,7 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
                         // Get the info of chat selected from session
                         Chat chat = (Chat) appSession.getData(ChatSessionReferenceApp.CHAT_DATA);//chatSession.getSelectedChat();
                         // Delete chat and refresh view
-                        chatManager.deleteMessagesByChatId(chat.getChatId());
-                        chatManager.deleteChat(chat);
+                        chatManager.deleteChat(chat.getChatId());
                     } catch (CantDeleteChatException e) {
                         if (errorManager != null)
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -163,7 +148,7 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
                         // Get the info of chat selected from session
                         Chat chat = (Chat) appSession.getData(ChatSessionReferenceApp.CHAT_DATA);//chatSession.getSelectedChat();
                         // Delete chat and refresh view
-                        chatManager.deleteMessagesByChatId(chat.getChatId());
+                        chatManager.deleteChat(chat.getChatId());
                     } catch (CantDeleteMessageException e) {
                         if (errorManager != null)
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

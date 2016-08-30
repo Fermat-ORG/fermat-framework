@@ -8,10 +8,8 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
@@ -180,14 +178,14 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     /**
      * This method deletes a chat from database.
      *
-     * @param chat
+     * @param chatId
      * @throws CantDeleteChatException
      */
     @Override
-    public void deleteChat(Chat chat) throws CantDeleteChatException {
+    public void deleteChat(UUID chatId) throws CantDeleteChatException {
         try {
-            ObjectChecker.checkArgument(chat, "The chat argument is null");
-            this.chatMiddlewareDatabaseDao.deleteChat(chat);
+            ObjectChecker.checkArgument(chatId, "The chatId argument is null");
+            this.chatMiddlewareDatabaseDao.deleteChat(chatId);
         } catch (ObjectNotSetException e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
@@ -208,67 +206,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             throw new CantDeleteChatException(
                     FermatException.wrapException(exception),
                     "Deleting a chat from database",
-                    "Unexpected exception");
-        }
-    }
-
-    /**
-     * This method deletes all chats from database.
-     *
-     * @throws CantDeleteChatException
-     */
-    @Override
-    public void deleteChats() throws CantDeleteChatException {
-        try {
-            this.chatMiddlewareDatabaseDao.deleteChats();
-        } catch (DatabaseOperationException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantDeleteChatException(
-                    e,
-                    "Deleting all chats from database",
-                    "An unexpected error happened in a database operation");
-        } catch (Exception exception) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantDeleteChatException(
-                    FermatException.wrapException(exception),
-                    "Deleting all chats from database",
-                    "Unexpected exception");
-        }
-    }
-
-    /**
-     * This method deletes all messages of a chat from database.
-     *
-     * @param chatId
-     * @throws CantDeleteMessageException
-     */
-    @Override
-    public void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException {
-        try {
-            ObjectChecker.checkArgument(chatId, "The chat argument is null");
-            this.chatMiddlewareDatabaseDao.deleteMessagesByChatId(chatId);
-        } catch (ObjectNotSetException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantDeleteMessageException(
-                    e,
-                    "Deleting messages from database",
-                    "The chat id probably is null");
-        } catch (DatabaseOperationException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantDeleteMessageException(
-                    e,
-                    "Deleting messages from database",
-                    "An unexpected error happened in a database operation");
-        } catch (Exception exception) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantDeleteMessageException(
-                    FermatException.wrapException(exception),
-                    "Deleting messages from database",
                     "Unexpected exception");
         }
     }
@@ -310,10 +247,10 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     }
 
     @Override
-    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException {
+    public Message getLastMessageByChatId(UUID chatId) throws CantGetMessageException {
         try {
             ObjectChecker.checkArgument(chatId, "The chat id argument is null");
-            return this.chatMiddlewareDatabaseDao.getFirstMessageByChatId(chatId);
+            return this.chatMiddlewareDatabaseDao.getLastMessageByChatId(chatId);
         } catch (ObjectNotSetException e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
@@ -392,42 +329,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             throw new CantGetChatException(
                     FermatException.wrapException(exception),
                     "Getting a chat by UUID",
-                    "Unexpected exception");
-        }
-    }
-
-    /**
-     * This method return a message by message id.
-     *
-     * @param messageId
-     * @return
-     * @throws CantGetMessageException
-     */
-    @Override
-    public Message getMessageByMessageId(UUID messageId) throws CantGetMessageException {
-        try {
-            ObjectChecker.checkArgument(messageId, "The message Id is null");
-            return this.chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
-        } catch (ObjectNotSetException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantGetMessageException(
-                    e,
-                    "Getting a message from database",
-                    "The chat id is probably null");
-        } catch (DatabaseOperationException e) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantGetMessageException(
-                    e,
-                    "Getting a message from database",
-                    "An unexpected error happened in a database operation");
-        } catch (Exception exception) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantGetMessageException(
-                    FermatException.wrapException(exception),
-                    "Getting a message from database",
                     "Unexpected exception");
         }
     }
@@ -540,34 +441,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     "Something went wrong",
                     "");
         }
-    }
-
-    /**
-     * This method returns the Network Service public key
-     *
-     * @return
-     * @throws CantGetNetworkServicePublicKeyException
-     */
-    @Override
-    public String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException {
-        try {
-            if (this.networkServiceChatManager == null) {
-                throw new CantGetNetworkServicePublicKeyException("The Network Service is not starting");
-            }
-            String networkServicePublicKey = this.networkServiceChatManager.getNetWorkServicePublicKey();
-            if (networkServicePublicKey == null) {
-                throw new CantGetNetworkServicePublicKeyException("The Network Service public key is null");
-            }
-            return networkServicePublicKey;
-        } catch (Exception exception) {
-            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantGetNetworkServicePublicKeyException(
-                    FermatException.wrapException(exception),
-                    "Getting Network Service public key.",
-                    "Unexpected exception");
-        }
-
     }
 
     /**

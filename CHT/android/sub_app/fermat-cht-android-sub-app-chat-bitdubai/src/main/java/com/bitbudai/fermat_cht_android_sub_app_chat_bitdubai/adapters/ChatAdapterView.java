@@ -149,7 +149,7 @@ public class ChatAdapterView extends LinearLayout {
                 }
                 if (cht != null) {
                     chatId = cht.getChatId();
-                    appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chatManager.getChatByChatId(chatId));
+                    appSession.setData(ChatSessionReferenceApp.CHAT_DATA, cht);
                 } else chatId = null;
             }
         } catch (CantGetChatException e) {
@@ -588,7 +588,7 @@ public class ChatAdapterView extends LinearLayout {
                          * Now we got the identities registered in the device.
                          * To avoid nulls, I'll put default data in chat object
                          *///
-                        chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
+                        chat.setLocalActorPublicKey("defaultdata");
                         //if (chatSettings.getLocalPublicKey() != null /*&& chatSettings.getLocalPlatformComponentType() != null*/) {
                         //Asigno pk del usuario y no uso la del NS
                         List<ChatIdentity> chatIdentities = chatManager.getIdentityChatUsersFromCurrentDeviceUser();
