@@ -316,6 +316,13 @@
     <string name="notification_payment_error_3"> BTC was reverted.</string>
 
 
+    <string name="notification_receive_btc_1">Bitcoins Received</string>
+    <string name="notification_receive_btc_2">BTC received</string>
+    <string name="notification_reversed_1">Transaction sent Reversed. </string>
+    <string name="notification_reversed_2">Sent of </string>
+    <string name="notification_reversed_3">BTC could not be completed.</string>
+
+
 
     <!--Texto de Dialogs Movidos para RES de fermat-android-api para su uso general con traduccion incluida.-->
 

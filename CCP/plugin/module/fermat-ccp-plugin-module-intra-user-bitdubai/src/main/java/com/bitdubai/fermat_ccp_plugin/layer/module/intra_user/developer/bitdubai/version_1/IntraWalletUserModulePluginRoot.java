@@ -110,9 +110,15 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
     private IntraUserSettings intraUserSettings = new IntraUserSettings();
     private String appPublicKey;
 
+    private List<FermatEventListener> listenersAdded;
+
+
+    private IntraUserModuleManagerImpl intraUserModuleManager;
+
 
     public IntraWalletUserModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
+        listenersAdded = new ArrayList<>();
     }
 
 
@@ -167,10 +173,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
 
     }
 
-    private List<FermatEventListener> listenersAdded;
 
-
-    private IntraUserModuleManagerImpl intraUserModuleManager;
 
     /**
      * Service Interface implementation.

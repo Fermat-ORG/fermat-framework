@@ -287,8 +287,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
 
     }
 
-    @Override
-    public void onSentMessage(UUID messageSent) {
+          @Override
+        public final void onSentMessage(final UUID packageId) {
+            System.out.println("************ Mensaje supuestamente enviado intra actor network service: "+packageId);
+
        /* try {
             ActorNetworkServiceRecord actorNetworkServiceRecord = ActorNetworkServiceRecord.fronJson(messageSent.getContent());
 

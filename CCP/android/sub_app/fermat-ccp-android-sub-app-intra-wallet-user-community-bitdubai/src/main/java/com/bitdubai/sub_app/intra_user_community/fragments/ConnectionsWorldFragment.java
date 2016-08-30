@@ -846,7 +846,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     public List<IntraUserInformation> getMoreDataAsync(FermatRefreshTypes fermatRefreshTypes, int pos) {
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
-         try {
+        /* try {
              offset = pos;
              List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact("",location, distance,alias,MAX, offset);
              if(userList != null)
@@ -874,7 +874,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
                      Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
                  }
              });
-        }
+        }*/
         return dataSet;
     }
 

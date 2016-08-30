@@ -628,8 +628,9 @@ public class BrowserTabFragment
     @Override
     @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
-      /*  isRefreshing = false;
-        if (isAttached) {
+
+       isRefreshing = false;
+       /* if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             adapter.setLoadingData(false);
             if (result != null && result.length > 0) {
@@ -683,7 +684,7 @@ public class BrowserTabFragment
                             adapter.changeDataSet(lstIntraUserInformations);
                             ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                         } else {
-
+                            lstIntraUserInformations.clear();
                             lstIntraUserInformations.addAll((ArrayList) result);
                             adapter.notifyItemRangeInserted(offset, lstIntraUserInformations.size() - 1);
                         }
@@ -750,7 +751,7 @@ public class BrowserTabFragment
                         BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), getRoundedShape(image, 120));
                         toolbar.setLogo(bitmapDrawable);
                     } else {
-                        Log.e(TAG, "selectedActorIdentity null, Nelson fijate si esto queres que haga");
+                        Log.e(TAG, "selectedActorIdentity null");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
