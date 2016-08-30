@@ -130,7 +130,8 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             /**
              * Finally I write the content.
              */
-            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
+
+            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file,false));
             outputStream.write(this.content);
             outputStream.close();
 

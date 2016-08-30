@@ -239,4 +239,8 @@
     <string name="notification_payment_error_3"> BTC fue reversado.</string>
 
 
+    <!--Delete Wallet Contact Dialog-->
+    <string name="delete_title">Borrar Contacto</string>
+    <string name="delete_sub_title">Quieres eliminar este contacto de tu cartera?</string>
+
 </resources>

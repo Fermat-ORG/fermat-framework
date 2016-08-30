@@ -102,6 +102,15 @@ public interface IntraWalletUserActorManager extends FermatManager {
     List<IntraWalletUserActor> getAllIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
 
     /**
+     * The method <code>getAllIntraWalletUsersByLocation</code> shows the list of all intra users that are connections of the logged in one if de location match.
+     *
+     * @param intraUserLoggedInPublicKey the public key of the intra user logged in
+     * @return the list of intra users the logged in intra user has as connections.
+     * @throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException
+     */
+    List<IntraWalletUserActor> getAllIntraWalletUsersbyLocation(String intraUserLoggedInPublicKey, int max, int offset, String country, String city) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
+
+    /**
      * The method <code>getAcceptedIntraWalletUsers</code> shows the list of all intra users that are accepted for the logged in one.
      *
      * @param intraUserLoggedInPublicKey
