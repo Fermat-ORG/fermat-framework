@@ -20,11 +20,9 @@ public interface NetworkServiceChatManager extends FermatManager {
      * @param localActorPubKey
      * @param remoteActorPubKey
      * @param messageStatus
-     * @param chatId
      * @param messageID
      * @throws CantSendChatMessageNewStatusNotificationException
      */
-    void sendMessageStatusUpdate(String localActorPubKey, String remoteActorPubKey, DistributionStatus distributionStatus, MessageStatus messageStatus, UUID chatId, UUID messageID) throws CantSendChatMessageNewStatusNotificationException;
-
+    void sendMessageStatusUpdate(String localActorPubKey, String remoteActorPubKey, MessageStatus messageStatus, UUID messageID) throws CantSendChatMessageNewStatusNotificationException;
 
 }

@@ -30,7 +30,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingMessage;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
@@ -488,7 +487,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
     }
 
     @Override
-    public void sendMessageStatusUpdate(String localActorPubKey, String remoteActorPubKey, DistributionStatus distributionStatus, MessageStatus messageStatus, UUID chatId, UUID messageID) throws CantSendChatMessageNewStatusNotificationException {
+    public void sendMessageStatusUpdate(String localActorPubKey, String remoteActorPubKey, MessageStatus messageStatus, UUID messageID) throws CantSendChatMessageNewStatusNotificationException {
 
         try {
 
@@ -503,9 +502,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             if (messageStatus == null) {
                 throw new IllegalArgumentException("Argument messageStatus can not be null");
             }
-            if (chatId == null) {
-                throw new IllegalArgumentException("Argument chatId can not be null");
-            }
 
             if (messageID == null) {
                 throw new IllegalArgumentException("Argument messageID can not be null");
@@ -513,8 +509,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
             final String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(
                     messageID.toString(),
-                    messageStatus,
-                    chatId
+                    messageStatus
             );
 
             sendMessage(

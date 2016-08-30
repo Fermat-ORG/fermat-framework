@@ -22,7 +22,6 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorCo
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MessageMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
@@ -404,9 +403,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             networkServiceChatManager.sendMessageStatusUpdate(
                     localActorPublicKey,
                     remoteActorPublicKey,
-                    DistributionStatus.DELIVERED,
                     MessageStatus.READ,
-                    chatId,
                     messageId
             );
         } catch (Exception e) {
