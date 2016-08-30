@@ -207,7 +207,9 @@
     <string name="you_dont_have_transactions_sent_text">You don\'t have transactions send</string>
     <string name="you_need_an_identity_before_you_can_enter_text">You need an identity before you can enter</string>
     <string name="young_wallet">Young wallet</string>
-    <string name="system_error">Oooops! recovering from system error</string>
+    <string name="system_error">Whoops! recovering from system error</string>
+    <string name="no_users_for_location">No connections near the location you chose</string>
+    <string name="users_for_location">These are the connections near the location you chose</string>
 
 
     <!-- Browser Tab -->
@@ -225,5 +227,17 @@
     <string name="notification_time_3"> hours ago</string>
     <string name="notification_time_4"> days ago</string>
     <string name="notification_time_5"> year ago</string>
+
+    <!-- Community Notification-->
+    <string name="notification_connection_request">New Connection Request</string>
+    <string name="notification_connection_request2">A new connection request was received from</string>
+    <string name="notification_connection_accept">Connection Request</string>
+    <string name="notification_connection_accept2">Your connection request was accepted to</string>
+    <string name="notification_connection_disconnet">Connection Request</string>
+    <string name="notification_connection_disconnet2">is disconnected from you.</string>
+    <string name="notification_connection_denied">Connection Request</string>
+    <string name="notification_connection_denied2">Your connection request was denied to</string>
+
+
 
 </resources>

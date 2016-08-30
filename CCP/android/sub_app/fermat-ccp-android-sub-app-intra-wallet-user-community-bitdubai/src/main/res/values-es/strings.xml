@@ -217,4 +217,16 @@
     <string name="Request_user_list_time_out">Se agoto el tiempo de espera por la lista de usarios</string>
     <string name="loading_data_error_msg">Disculpe, ocurrio un problema al cargar los datos</string>
 
+    <!-- Community Notification-->
+    <string name="notification_connection_request">Nueva solicitud de conexión</string>
+    <string name="notification_connection_request2">Ud. Recibio una nueva solicitud de conexión de</string>
+    <string name="notification_connection_accept">Solicitud de conexión</string>
+    <string name="notification_connection_accept2">Tu solicitud de conexión fue aceptada</string>
+    <string name="notification_connection_disconnet">Solicitud de conexión</string>
+    <string name="notification_connection_disconnet2">esta desconectado de ti.</string>
+    <string name="notification_connection_denied">Solicitud de conexión</string>
+    <string name="notification_connection_denied2">Tu solicitud de conexión fue rechazada</string>
+
+    <string name="no_users_for_location">No se encontranron conexiones cerca de la ubicacion escogida</string>
+    <string name="users_for_location">Estas son las conexiones cerca de la ubi escogida</string>
 </resources>
