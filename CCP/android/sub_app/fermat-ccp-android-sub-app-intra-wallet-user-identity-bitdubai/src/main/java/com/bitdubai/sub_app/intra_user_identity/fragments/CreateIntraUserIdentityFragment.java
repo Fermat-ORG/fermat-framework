@@ -76,7 +76,7 @@ import static android.widget.Toast.makeText;
 
 /**
  * A simple {@link Fragment} subclass.
- * Updated by Andres Abreu aabreu1 27/06/16
+ * Updated by Andres Abreu aabreu1 24/08/16.
  */
 public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserIdentityModuleManager>,ResourceProviderManager> {
 

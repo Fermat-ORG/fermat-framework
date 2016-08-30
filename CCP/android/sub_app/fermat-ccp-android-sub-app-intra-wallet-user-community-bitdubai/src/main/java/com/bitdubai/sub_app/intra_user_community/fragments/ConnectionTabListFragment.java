@@ -62,7 +62,8 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
     private static final int MAX = 10;
     private static final int SPAN_COUNT = 2;
     protected static final String TAG = "ConnectionsTabFragment";
-
+    String country = null;
+    String city = null;
     //Managers
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -186,7 +187,7 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
                 break;
             case 2:
                 try {
-                    GeolocationDialog geolocationDialog = new GeolocationDialog(getActivity(),appSession, null, this);
+                    final GeolocationDialog geolocationDialog = new GeolocationDialog(getActivity(),appSession, null, this);
                     geolocationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
@@ -369,13 +370,35 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
     @Override
     public List<IntraUserInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<IntraUserInformation> dataSet = new ArrayList<>();
-
         try {
             offset = pos;
             if(moduleManager.getSelectedActorIdentity() != null) {
                 final String intraUserIdentity = moduleManager.getActiveIntraUserIdentity().getPublicKey();
-                List<IntraUserInformation> result = moduleManager.getAllIntraUsers(intraUserIdentity, MAX, offset);
-                dataSet.addAll(result);
+
+                if (country!=null && city!=null){
+                    List<IntraUserInformation> result = moduleManager.getAllIntraUsersByLocation(intraUserIdentity, MAX, offset, country , city);
+                    dataSet.addAll(result);
+                    country=null;
+                    city=null;
+                    if (result.size()==0){
+                        //Toast.makeText(getActivity(), getResources().getString(R.string.no_users_for_location), Toast.LENGTH_SHORT).show();
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getActivity(), getResources().getString(R.string.no_users_for_location), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }else{
+                        //Toast.makeText(getActivity(), getResources().getString(R.string.users_for_location), Toast.LENGTH_SHORT).show();
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getActivity(), getResources().getString(R.string.users_for_location), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }else{
+                    List<IntraUserInformation> result = moduleManager.getAllIntraUsers(intraUserIdentity, MAX, offset);
+                    dataSet.addAll(result);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -485,5 +508,8 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
 
     @Override
     public void onMethodCallback(ExtendedCity cityFromList) {
+        city = cityFromList.getName();
+        country = cityFromList.getCountryName();
+        onRefresh();
     }
 }
