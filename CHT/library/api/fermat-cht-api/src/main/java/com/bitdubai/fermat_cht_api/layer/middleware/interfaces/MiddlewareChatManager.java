@@ -23,7 +23,9 @@ import java.util.UUID;
 public interface MiddlewareChatManager extends FermatManager {
 
     //Documentar
-    List<Chat> getChats() throws CantGetChatException;
+    List<Chat> listVisibleChats() throws CantGetChatException;
+
+    Boolean existAnyVisibleChat() throws CantGetChatException;
 
     Chat getChatByChatId(UUID chatId) throws CantGetChatException;
 

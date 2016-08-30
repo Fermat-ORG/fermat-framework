@@ -81,9 +81,9 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      * @throws CantGetChatException
      */
     @Override
-    public List<Chat> getChats() throws CantGetChatException {
+    public List<Chat> listVisibleChats() throws CantGetChatException {
         try {
-            return this.chatMiddlewareDatabaseDao.getChatList();
+            return this.chatMiddlewareDatabaseDao.listVisibleChats();
         } catch (DatabaseOperationException exception) {
             chatMiddlewarePluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -102,6 +102,31 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     "Unexpected exception");
         }
     }
+
+    @Override
+    public Boolean existAnyVisibleChat() throws CantGetChatException {
+
+        try {
+            return this.chatMiddlewareDatabaseDao.existAnyVisibleChat();
+        } catch (DatabaseOperationException exception) {
+            chatMiddlewarePluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new CantGetChatException(
+                    exception,
+                    "Getting the chat list from database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception) {
+            chatMiddlewarePluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetChatException(
+                    FermatException.wrapException(exception),
+                    "Getting the chat list from database",
+                    "Unexpected exception");
+        }
+    }
+
 
     /**
      * This method returns a chat by UUID

@@ -85,8 +85,8 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
  * @version 1.0
  */
 
-public class ChatListFragment
-        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
+public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
+
     private ChatManager chatManager;
     private ErrorManager errorManager;
     private ChatPreferenceSettings chatSettings;
@@ -95,8 +95,7 @@ public class ChatListFragment
     ChatActorCommunitySelectableIdentity chatIdentity;
     ListView list;
     private SearchView searchView;
-    // Defines a tag for identifying log entries
-    String TAG = "CHT_ChatListFragment";
+
     SwipeRefreshLayout mSwipeRefreshLayout;
     ArrayList<String> contactName = new ArrayList<>();
     ArrayList<String> message = new ArrayList<>();
@@ -114,18 +113,16 @@ public class ChatListFragment
     TextView noDatalabel;
     TextView nochatssubtitle;
     TextView nochatssubtitle1;
-    private static final int MAX = 200;
-    private int offset = 0;
 
     public static ChatListFragment newInstance() {
         return new ChatListFragment();
     }
 
     public void chatlistview() {
-        UUID chatidtemp;
-        int chatscounter = 0;
+
         try {
-            List<Chat> chats = chatManager.getChats();
+            List<Chat> chats = chatManager.listVisibleChats();
+
             if (chats != null && chats.size() > 0) {
                 contactName.clear();
                 message.clear();
@@ -136,88 +133,80 @@ public class ChatListFragment
                 typeMessage.clear();
                 noReadMsgs.clear();
                 imgId.clear();
-                for (Chat chat : chats) {
-                    if (chat.getStatus() != ChatStatus.INVISIBLE) {
-                        chatidtemp = chat.getChatId();
-                        if (chatidtemp != null) {
-                            if (chatIdentity != null) {
-                                ChatActorCommunityInformation cont = chatManager.getConnectedChatActor(chatIdentity.getPublicKey(), chat.getRemoteActorPublicKey());
 
-                                noReadMsgs.add(chatManager.getUnreadCountMessageByChatId(chatidtemp));
-                                contactId.add(chat.getRemoteActorPublicKey());
-                                contactName.add(cont.getAlias());
-                                Message mess = null;
+                if (chatIdentity != null) {
+                    for (Chat chat : chats) {
+
+                        ChatActorCommunityInformation cont = chatManager.getConnectedChatActor(chatIdentity.getPublicKey(), chat.getRemoteActorPublicKey());
+
+                        noReadMsgs.add(chatManager.getUnreadCountMessageByChatId(chat.getChatId()));
+                        contactId.add(chat.getRemoteActorPublicKey());
+                        contactName.add(cont.getAlias());
+                        Message mess = null;
+                        try {
+                            mess = chatManager.getLastMessageByChatId(chat.getChatId());
+                        } catch (Exception e) {
+                            mess = null;
+                        }
+                        if (mess != null) {
+
+                            message.add(mess.getMessage());
+                            status.add(mess.getStatus().toString());
+                            typeMessage.add(mess.getType().toString());
+                        } else {
+
+                            message.add("");
+                            status.add("");
+                            typeMessage.add("");
+                        }
+                        long timemess = chat.getLastMessageDate().getTime();
+                        long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
+                        long milliseconds = timemess + nanos;
+                        Date dated = new java.util.Date(milliseconds);
+                        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+                        formatter.setTimeZone(TimeZone.getDefault());
+                        String datef = formatter.format(new java.util.Date(milliseconds));
+                        if (Validate.isDateToday(dated)) {
+                            if (Validate.isDateToday(dated)) {
+                                //if(android.text.format.DateFormat!=null)
                                 try {
-                                    mess = chatManager.getLastMessageByChatId(chatidtemp);
-                                } catch (Exception e) {
-                                    mess = null;
-                                }
-                                if (mess != null) {
-
-                                    message.add(mess.getMessage());
-                                    status.add(mess.getStatus().toString());
-                                    typeMessage.add(mess.getType().toString());
-                                } else {
-
-                                    message.add("");
-                                    status.add("");
-                                    typeMessage.add("");
-                                }
-                                long timemess = chat.getLastMessageDate().getTime();
-                                long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
-                                long milliseconds = timemess + nanos;
-                                Date dated = new java.util.Date(milliseconds);
-                                DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-                                formatter.setTimeZone(TimeZone.getDefault());
-                                String datef = formatter.format(new java.util.Date(milliseconds));
-                                if (Validate.isDateToday(dated)) {
-                                    if (Validate.isDateToday(dated)) {
-                                        //if(android.text.format.DateFormat!=null)
-                                        try {
-                                            //TODO is24HourFormat doesn't work
-                                            if (Build.VERSION.SDK_INT < 23) {
-                                                if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
-                                                    formatter = new SimpleDateFormat("HH:mm");
-                                                } else {
-                                                    formatter = new SimpleDateFormat("hh:mm aa");
-                                                }
-                                            } else {
-//                                                        try {
-                                                if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                                                    formatter = new SimpleDateFormat("HH:mm");
-                                                } else {
-                                                    formatter = new SimpleDateFormat("hh:mm aa");
-                                                }
-//                                                        }catch (Exception e){
-//                                                            e.printStackTrace();
-//                                                        }
-                                            }
-                                        } catch (Exception e) {
+                                    //TODO is24HourFormat doesn't work
+                                    if (Build.VERSION.SDK_INT < 23) {
+                                        if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
                                             formatter = new SimpleDateFormat("HH:mm");
+                                        } else {
+                                            formatter = new SimpleDateFormat("hh:mm aa");
+                                        }
+                                    } else {
+                                        if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                                            formatter = new SimpleDateFormat("HH:mm");
+                                        } else {
+                                            formatter = new SimpleDateFormat("hh:mm aa");
                                         }
                                     }
-                                    formatter.setTimeZone(TimeZone.getDefault());
-                                    datef = formatter.format(new java.util.Date(milliseconds));
-                                } else {
-                                    Date old = new Date(datef);
-                                    Date today = new Date();
-                                    long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                                    if (dias == 1) {
-                                        datef = "YESTERDAY";
-                                    }
+                                } catch (Exception e) {
+                                    formatter = new SimpleDateFormat("HH:mm");
                                 }
-                                dateMessage.add(datef);
-                                chatId.add(chatidtemp);
-                                ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
-                                BitmapDrawable bmd = new BitmapDrawable(bytes);
-                                imgId.add(bmd.getBitmap());
-                                chatscounter++;
-                                break;
-                            } else setUpHelpChat();
+                            }
+                            formatter.setTimeZone(TimeZone.getDefault());
+                            datef = formatter.format(new java.util.Date(milliseconds));
+                        } else {
+                            Date old = new Date(datef);
+                            Date today = new Date();
+                            long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
+                            if (dias == 1) {
+                                datef = "YESTERDAY";
+                            }
                         }
+                        dateMessage.add(datef);
+                        chatId.add(chat.getChatId());
+                        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
+                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+                        imgId.add(bmd.getBitmap());
                     }
-                }
-                if (chatscounter == 0) {
+                } else setUpHelpChat();
+
+                if (chats.size() == 0) {
                     emptyView.setVisibility(View.VISIBLE);
                     noData.setVisibility(View.VISIBLE);
                     noDatalabel.setVisibility(View.VISIBLE);
@@ -316,7 +305,7 @@ public class ChatListFragment
 
     void updatevalues() {
         try {
-            if (!chatManager.getChats().isEmpty()) {
+            if (chatManager.existAnyVisibleChat()) {
                 layout.setBackgroundResource(R.drawable.cht_background_white);
                 emptyView.setVisibility(View.GONE);
                 noData.setVisibility(View.GONE);
@@ -415,26 +404,7 @@ public class ChatListFragment
                 }
             }
         }
-//        Just if chat is going to allow multiple identities
-// try {
-//            toolbar = getToolbar();
-//            if (chatSettings.getLocalPublicKey() != null) {
-//                ChatIdentity localUser = chatManager.getIdentityChatUsersFromCurrentDeviceUser().get(0), MAX, offset);//ChatUserIdentity localUser = null;//chatManager.getChatUserIdentity(chatSettings.getLocalPublicKey());
-//                //toolbar = getToolbar();
-//                //getContext().getActionBar().setTitle("");
-//                ByteArrayInputStream bytes = new ByteArrayInputStream(localUser.getImage());
-//                BitmapDrawable bmd = new BitmapDrawable(bytes);
-//                contactIcon =bmd.getBitmap();
-//                //toolbar.setTitle(localUser.getAlias());
-//                contactIconCircular = new BitmapDrawable( getResources(), Utils.getRoundedShape( contactIcon, 100));//in the future, this image should come from chatmanager
-//                toolbar.setLogo(contactIconCircular);
-//                //getActivity().getActionBar().setLogo(contactIconCircular);
-//            }
-//        //}catch (CantGetChatUserIdentityException e){
-//         //   errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        } catch (Exception e) {
-//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }
+
         adapter = new ChatListAdapter(getActivity(), contactName, message, dateMessage, chatId, contactId, status,
                 typeMessage, noReadMsgs, imgId, errorManager);
         list = (ListView) layout.findViewById(R.id.list);

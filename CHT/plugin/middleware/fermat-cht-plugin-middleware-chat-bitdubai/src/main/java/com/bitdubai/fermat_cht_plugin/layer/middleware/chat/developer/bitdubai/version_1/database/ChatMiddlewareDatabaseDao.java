@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
@@ -58,21 +57,22 @@ public class ChatMiddlewareDatabaseDao {
      * @throws DatabaseOperationException
      * @throws CantGetChatException
      */
-    public List<Chat> getChatList() throws
-            DatabaseOperationException,
-            CantGetChatException {
-        /**
-         * I'll pass null as argument to the next method to get all the chat list.
-         */
-        return getChats(null);
-    }
-
-    public List<Chat> getChats(DatabaseTableFilter filter) throws CantGetChatException, DatabaseOperationException {
+    public List<Chat> listVisibleChats() throws DatabaseOperationException, CantGetChatException {
 
         try {
+
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+
+            table.addFermatEnumFilter(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME, ChatStatus.VISIBLE, DatabaseFilterType.EQUAL);
+
+            table.addFilterOrder(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
             List<Chat> chats = new ArrayList<>();
 
-            for (DatabaseTableRecord record : getChatData(filter))
+            for (DatabaseTableRecord record : records)
                 chats.add(getChatTransaction(record));
 
             return chats;
@@ -83,11 +83,31 @@ public class ChatMiddlewareDatabaseDao {
             throw new DatabaseOperationException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
-                    "error trying to get Contact from the database with filter: " + filter.toString(),
+                    null,
                     null);
         }
     }
 
+    public Boolean existAnyVisibleChat() throws DatabaseOperationException, CantGetChatException {
+
+        try {
+
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+
+            table.addFermatEnumFilter(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME, ChatStatus.VISIBLE, DatabaseFilterType.EQUAL);
+
+            return table.getCount() > 0;
+
+        } catch (Exception e) {
+
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    null,
+                    null);
+        }
+    }
 
     public Chat getChatByChatId(UUID chatId) throws CantGetChatException, DatabaseOperationException {
 
@@ -482,19 +502,6 @@ public class ChatMiddlewareDatabaseDao {
         record.setLongValue(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT, message.getCount());
 
         return record;
-    }
-
-    private List<DatabaseTableRecord> getChatData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
-
-        if (filter != null)
-            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-
-        table.addFilterOrder(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
-
-        table.loadToMemory();
-
-        return table.getRecords();
     }
 
     private Chat getChatTransaction(final DatabaseTableRecord chatTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {

@@ -33,7 +33,9 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
     //public interface ChatManager extends ModuleManager, Serializable, ModuleSettingsImpl<ChatPreferenceSettings> {
     //TODO: Implementar los metodos que necesiten manejar el module
     //Documentar
-    List<Chat> getChats() throws CantGetChatException;
+    List<Chat> listVisibleChats() throws CantGetChatException;
+
+    Boolean existAnyVisibleChat() throws CantGetChatException;
 
     Chat getChatByChatId(UUID chatId) throws CantGetChatException;
 

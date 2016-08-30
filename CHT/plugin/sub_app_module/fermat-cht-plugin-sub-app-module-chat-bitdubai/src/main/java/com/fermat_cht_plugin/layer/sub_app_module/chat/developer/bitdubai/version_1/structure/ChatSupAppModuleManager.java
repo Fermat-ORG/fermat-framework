@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
@@ -69,8 +68,13 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
-    public List<Chat> getChats() throws CantGetChatException {
-        return middlewareChatManager.getChats();
+    public List<Chat> listVisibleChats() throws CantGetChatException {
+        return middlewareChatManager.listVisibleChats();
+    }
+
+    @Override
+    public Boolean existAnyVisibleChat() throws CantGetChatException {
+        return middlewareChatManager.existAnyVisibleChat();
     }
 
     @Override
@@ -162,8 +166,6 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
         final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(localPublicKey, Actors.CHAT);
 
         final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActor);
-
-        search.findByPublicKey(remotePublicKey);
 
         return new ChatActorCommunitySubAppModuleInformationImpl(search.findByPublicKey(remotePublicKey));
     }
