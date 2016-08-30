@@ -31,17 +31,17 @@ public class DistanceCalculator {
     /**
      * Represent the unit on miles
      */
-    public static String MILES = "M";
+    public final static String MILES = "M";
 
     /**
      * Represent the unit on kilometers
      */
-    public static String KILOMETERS = "K";
+    public final static String KILOMETERS = "K";
 
     /**
      * Represent the unit on nautical miles
      */
-    public static String NAUTICAL_MILES = "N";
+    public final static String NAUTICAL_MILES = "N";
 
     /**
      * This method calculate the distance between two location points

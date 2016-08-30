@@ -1,4 +1,6 @@
 apply plugin: 'java'
+apply plugin:  'maven'
+
 apply plugin: 'jacoco'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
@@ -9,17 +11,24 @@ version = '1.0'
 
 repositories {
     mavenCentral()
+    maven {
+        url "file:/${System.properties['user.home']}/artifacts"
+    }
 }
 
 dependencies {
 
     compile project(':fermat-core-api')
 
-    compile project(':fermat-p2p-api-new')
+    compile project(':fermat-p2p-api')
 
-    compile project(':fermat-p2p-layer-new')
+    compile project(':fermat-p2p-layer')
+
+//    compile('org.fermat.p2p:fermat-p2p-layer:1')
 
     compile project(':iop-p2p-plugin-network-client')
+//    compile('org.fermat.p2p:IoPClient:1')
+
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

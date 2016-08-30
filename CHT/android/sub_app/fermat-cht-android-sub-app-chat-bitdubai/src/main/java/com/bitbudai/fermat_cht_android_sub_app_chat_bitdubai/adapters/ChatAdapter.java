@@ -102,7 +102,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 
     private void setAlignment(ChatHolder holder, boolean isMe, ChatMessage data) {
         holder.tickstatusimage.setImageResource(0);
-        holder.txtMessage.setText(Utils.avoidingScientificNot(data.getMessage().toString()));
+        holder.txtMessage.setText(Utils.avoidingScientificNot(data.getMessage()));
         holder.txtInfo.setText(data.getDate());
         if (isMe) {
             holder.contentWithBG.setBackgroundResource(R.drawable.cht_burble_green);

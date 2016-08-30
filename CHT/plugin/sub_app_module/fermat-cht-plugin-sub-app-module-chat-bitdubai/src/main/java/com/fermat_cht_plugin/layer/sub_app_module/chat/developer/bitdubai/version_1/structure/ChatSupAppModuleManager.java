@@ -2,10 +2,9 @@ package com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.versi
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
@@ -13,14 +12,9 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListChatActorException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
@@ -30,23 +24,16 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorCo
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
-import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
-import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
-import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatConnectionAlreadyRequestesException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatTypeNotSupportedException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantRequestActorConnectionException;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.ChatSupAppModulePluginRoot;
 
 import java.io.Serializable;
@@ -66,26 +53,28 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     private final ChatIdentityManager chatIdentityManager;
     private final ChatActorConnectionManager chatActorConnectionManager;
     private ChatSupAppModulePluginRoot chatSupAppModulePluginRoot;
-    private final com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager;
 
     public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager,
                                    ChatIdentityManager chatIdentityManager,
                                    PluginFileSystem pluginFileSystem,
                                    ChatActorConnectionManager chatActorConnectionManager,
                                    UUID pluginId,
-                                   ChatSupAppModulePluginRoot chatSupAppModulePluginRoot,
-                                   com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager) {
+                                   ChatSupAppModulePluginRoot chatSupAppModulePluginRoot) {
         super(pluginFileSystem, pluginId);
         this.middlewareChatManager = middlewareChatManager;
         this.chatIdentityManager = chatIdentityManager;
         this.chatActorConnectionManager = chatActorConnectionManager;
         this.chatSupAppModulePluginRoot = chatSupAppModulePluginRoot;
-        this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
     }
 
     @Override
-    public List<Chat> getChats() throws CantGetChatException {
-        return middlewareChatManager.getChats();
+    public List<Chat> listVisibleChats() throws CantGetChatException {
+        return middlewareChatManager.listVisibleChats();
+    }
+
+    @Override
+    public Boolean existAnyVisibleChat() throws CantGetChatException {
+        return middlewareChatManager.existAnyVisibleChat();
     }
 
     @Override
@@ -99,23 +88,8 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
-    public void deleteChat(Chat chat) throws CantDeleteChatException {
-        middlewareChatManager.deleteChat(chat);
-    }
-
-    @Override
-    public void deleteChats() throws CantDeleteChatException {
-        middlewareChatManager.deleteChats();
-    }
-
-    @Override
-    public void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException {
-        middlewareChatManager.deleteMessagesByChatId(chatId);
-    }
-
-    @Override
-    public List<Message> getMessages() throws CantGetMessageException {
-        return middlewareChatManager.getMessages();
+    public void deleteChat(UUID chatId) throws CantDeleteChatException {
+        middlewareChatManager.deleteChat(chatId);
     }
 
     @Override
@@ -124,18 +98,13 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
-    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException {
-        return middlewareChatManager.getMessageByChatId(chatId);
+    public Message getLastMessageByChatId(UUID chatId) throws CantGetMessageException {
+        return middlewareChatManager.getLastMessageByChatId(chatId);
     }
 
     @Override
-    public int getCountMessageByChatId(UUID chatId) throws CantGetMessageException {
-        return middlewareChatManager.getCountMessageByChatId(chatId);
-    }
-
-    @Override
-    public Message getMessageByMessageId(UUID messageId) throws CantGetMessageException {
-        return middlewareChatManager.getMessageByMessageId(messageId);
+    public long getUnreadCountMessageByChatId(UUID chatId) throws CantGetMessageException {
+        return middlewareChatManager.getUnreadCountMessageByChatId(chatId);
     }
 
     @Override
@@ -145,25 +114,19 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
+    public void markAsRead(UUID messageId) throws CantSaveMessageException {
+
+        middlewareChatManager.markAsRead(messageId);
+    }
+
+    @Override
     public Chat getChatByRemotePublicKey(String publicKey) throws CantGetChatException {
         return middlewareChatManager.getChatByRemotePublicKey(publicKey);
     }
 
     @Override
-    public void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException {
-        middlewareChatManager.sendReadMessageNotification(message);
-    }
-
-
-    /**
-     * This method returns the Network Service public key
-     *
-     * @return
-     * @throws CantGetNetworkServicePublicKeyException
-     */
-    @Override
-    public String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException {
-        return middlewareChatManager.getNetworkServicePublicKey();
+    public void sendReadMessageNotification(UUID messageId, UUID chatId) throws SendStatusUpdateMessageNotificationException {
+        middlewareChatManager.sendReadMessageNotification(messageId, chatId);
     }
 
     @Override
@@ -197,6 +160,16 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
         return chatActorCommunityInformationList;
     }
 
+    @Override
+    public ChatActorCommunityInformation getConnectedChatActor(String localPublicKey, String remotePublicKey) throws CantGetActorConnectionException, ActorConnectionNotFoundException {
+
+        final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(localPublicKey, Actors.CHAT);
+
+        final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActor);
+
+        return new ChatActorCommunitySubAppModuleInformationImpl(search.findByPublicKey(remotePublicKey));
+    }
+
     /**
      * This method sends the message through the Chat Network Service
      *
@@ -214,49 +187,14 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
-    public boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus {
-        return middlewareChatManager.checkWritingStatus(chatId);
-    }
-
-    @Override
-    public boolean checkOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
-        return middlewareChatManager.checkOnlineStatus(contactPublicKey);
-    }
-
-    @Override
-    public String checkLastConnection(String contactPublicKey) throws CantGetOnlineStatus {
-        return middlewareChatManager.checkLastConnection(contactPublicKey);
-    }
-
-    @Override
-    public void activeOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
-        middlewareChatManager.activeOnlineStatus(contactPublicKey);
-    }
-
-    @Override
-    public List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException {
-        return getGroupMembersByGroupId(groupId);
+    public Timestamp getLastMessageReceivedDate(String remotePk) throws CantGetChatException {
+        return middlewareChatManager.getLastMessageReceivedDate(remotePk);
     }
 
     @Override
     public ChatActorCommunitySelectableIdentity newInstanceChatActorCommunitySelectableIdentity(ChatIdentity chatIdentity) {
         return new ChatActorCommunitySelectableIdentityImpl(chatIdentity.getPublicKey(), chatIdentity.getActorType(), chatIdentity.getAlias(), chatIdentity.getImage());
     }
-
-    /**
-     * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
-     * settings class parametrized.
-     *
-     * @return a new instance of the settings manager for the specified fermat settings object.
-     */
-
-    /**
-     * Through the method <code>getSelectedActorIdentity</code> we can get the selected actor identity.
-     *
-     * @return an instance of the selected actor identity.
-     * @throws CantGetSelectedActorIdentityException if something goes wrong.
-     * @throws ActorIdentityNotSelectedException     if there's no actor identity selected.
-     */
 
     /**
      * Create identity
@@ -273,58 +211,6 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
-    }
-
-    public List<ChatActorCommunityInformation> getResult() {
-        try {
-            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
-
-            final List<ChatExposingData> chatActorConnections = chatActorSearch.getResult();
-
-            final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
-
-            for (ChatExposingData ced : chatActorConnections)
-                chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
-
-            return chatActorLocalCommunityInformationList;
-        } catch (CantListChatException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
-    public void requestConnectionToChatActor(final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity selectedIdentity,
-                                             final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation chatActorToContact) throws CantRequestActorConnectionException, ActorChatTypeNotSupportedException, ActorChatConnectionAlreadyRequestesException {
-        try {
-
-            final ActorIdentityInformation actorSending = new ActorIdentityInformation(
-                    selectedIdentity.getPublicKey(),
-                    selectedIdentity.getActorType(),
-                    selectedIdentity.getAlias(),
-                    selectedIdentity.getImage(),
-                    ""
-            );
-
-            final ActorIdentityInformation actorReceiving = new ActorIdentityInformation(
-                    chatActorToContact.getPublicKey(),
-                    Actors.CHAT,
-                    chatActorToContact.getAlias(),
-                    chatActorToContact.getImage(),
-                    chatActorToContact.getStatus()
-            );
-
-            chatActorConnectionManager.requestConnection(
-                    actorSending,
-                    actorReceiving
-            );
-        } catch (ConnectionAlreadyRequestedException e) {
-            e.printStackTrace();
-        } catch (com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException e) {
-            e.printStackTrace();
-        } catch (UnsupportedActorTypeException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

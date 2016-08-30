@@ -47,16 +47,16 @@ public class NetworkClientCommunicationSupervisorConnectionAgent implements Runn
 
                 try {
 
-
-
                     if (session.isOpen()) {
+
                         System.out.println("SENDING PING TO NODE");
-//                        getCommunicationsNetworkClientChannel().sendPing();
-                        getCommunicationsNetworkClientChannel().sendPong();
-                    }else System.out.println("SENDING PING TO NODE - ERROR - SESSION IS NOT OPEN");
+                        getCommunicationsNetworkClientChannel().sendPing();
+
+                    }else{
+                        System.out.println("SENDING PING TO NODE - ERROR - SESSION IS NOT OPEN");
+                    }
                 }catch (Exception ex) {
                     ex.printStackTrace();
-//                    System.out.println(ex.getCause());
                 }
             }
 

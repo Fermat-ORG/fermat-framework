@@ -9,8 +9,7 @@ repositories {
 
 dependencies {
 
-    compile project(':fermat-p2p-api-new')
-    compile project(':fermat-p2p-layer-new')
+    compile project(':fermat-p2p-api')
 
     compile ('org.glassfish.tyrus.bundles:tyrus-standalone-client:1.12'){
         exclude group:'javax.websocket', module:'javax.websocket-api'

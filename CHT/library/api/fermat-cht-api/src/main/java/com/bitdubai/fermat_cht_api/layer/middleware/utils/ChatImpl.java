@@ -1,17 +1,10 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,7 +12,7 @@ import java.util.UUID;
  * pdated by Manuel Perez on 08/02/2016
  */
 public class ChatImpl implements Chat {
-    //TODO: Documentar
+
     private UUID chatId;
     private UUID objectId;
     private String localActorPublicKey;
@@ -28,53 +21,13 @@ public class ChatImpl implements Chat {
     private ChatStatus status;
     private Timestamp date;
     private Timestamp lastMessageDate;
-    private List<Contact> contactAssociated;
     private TypeChat typeChat;
     private boolean scheduledDelivery;
-    private boolean isWriting;
-    private boolean isOnline;
 
     /**
      * Constructor without arguments
      */
     public ChatImpl() {
-    }
-
-    /**
-     * Construct with parameters. In this version we not included the List<Contact> contactAssociated
-     * as a constructor argument because we get the contact from a remote device, this parameter
-     * can be set later.
-     *
-     * @param chatId
-     * @param objectId
-     * @param localActorPublicKey
-     * @param remoteActorPublicKey
-     * @param chatName
-     * @param status
-     * @param date
-     * @param lastMessageDate
-     */
-    public ChatImpl(UUID chatId,
-                    UUID objectId,
-                    String localActorPublicKey,
-                    String remoteActorPublicKey,
-                    String chatName,
-                    ChatStatus status,
-                    Timestamp date,
-                    Timestamp lastMessageDate,
-                    TypeChat typeChat,
-                    boolean scheduledDelivery
-    ) {
-        this.chatId = chatId;
-        this.objectId = objectId;
-        this.localActorPublicKey = localActorPublicKey;
-        this.remoteActorPublicKey = remoteActorPublicKey;
-        this.chatName = chatName;
-        this.status = status;
-        this.date = date;
-        this.lastMessageDate = lastMessageDate;
-        this.typeChat = typeChat;
-        this.scheduledDelivery = scheduledDelivery;
     }
 
     @Override
@@ -157,86 +110,6 @@ public class ChatImpl implements Chat {
         this.lastMessageDate = lastMessageDate;
     }
 
-    /**
-     * This method returns a List<Contact> associated to this chat
-     *
-     * @return
-     */
-    @Override
-    public List<Contact> getContactAssociated() {
-        return this.contactAssociated;
-    }
-
-    /**
-     * This method set the contact associated list
-     *
-     * @param chatContacts
-     */
-    @Override
-    public void setContactAssociated(List<Contact> chatContacts) {
-        this.contactAssociated = chatContacts;
-    }
-
-    /**
-     * This method set one contact in contact associated list
-     *
-     * @param contact
-     */
-    @Override
-    public void setContactAssociated(Contact contact) {
-        if (this.contactAssociated == null) {
-            this.contactAssociated = new ArrayList<>();
-        }
-        this.contactAssociated.add(contact);
-    }
-
-    /**
-     * This method returns a XML String with the List<Contact> associated to this object
-     *
-     * @return
-     */
-    @Override
-    public String getContactListString() {
-        if (this.contactAssociated == null) {
-            this.contactAssociated = new ArrayList<>();
-        }
-        return XMLParser.parseObject(this.contactAssociated);
-    }
-
-    /**
-     * This method requires a valid List<Contact> XML String to set this list to this object
-     *
-     * @param chatContacts
-     * @throws CantGetContactListException
-     */
-    public void setContactAssociated(String chatContacts) throws CantGetContactListException {
-        if (chatContacts == null || chatContacts.isEmpty()) {
-            throw new CantGetContactListException("The XML with the contacts is null or empty");
-        }
-        try {
-            List<Contact> contactListFromXML = new ArrayList<>();
-            Object xmlObject = XMLParser.parseXML(chatContacts, contactListFromXML);
-            contactListFromXML = (List<Contact>) xmlObject;
-            this.contactAssociated = contactListFromXML;
-        } catch (Exception exception) {
-            throw new CantGetContactListException(
-                    exception,
-                    "Parsing the XML String to a List<Contact>",
-                    "Unexpected exception");
-        }
-
-    }
-
-    @Override
-    public List<Message> getMessagesAsociated() {
-        return null;
-    }
-
-    @Override
-    public void setMessagesAsociated(List<Message> messages) {
-
-    }
-
     @Override
     public TypeChat getTypeChat() {
         return typeChat;
@@ -247,38 +120,9 @@ public class ChatImpl implements Chat {
         this.typeChat = typeChat;
     }
 
-
-    @Override
-    public List<GroupMember> getGroupMembersAssociated() {
-        return null;
-    }
-
-    @Override
-    public void setGroupMembersAssociated(List<GroupMember> groupMembers) {
-
-    }
-
     @Override
     public boolean getScheduledDelivery() {
         return scheduledDelivery;
-    }
-
-    public boolean isWriting() {
-        return isWriting;
-    }
-
-    public void setIsWriting(boolean isWriting) {
-        this.isWriting = isWriting;
-    }
-
-    @Override
-    public boolean isOnline() {
-        return isOnline;
-    }
-
-    @Override
-    public void setIsOnline(boolean isOnline) {
-        this.isOnline = isOnline;
     }
 
     @Override
@@ -289,6 +133,17 @@ public class ChatImpl implements Chat {
 
     @Override
     public String toString() {
-        return "ChatImpl{" + "chatId=" + chatId + ", objectId=" + objectId + ", localActorPublicKey='" + localActorPublicKey + '\'' + ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' + ", chatName='" + chatName + '\'' + ", status=" + status + ", date=" + date + ", lastMessageDate=" + lastMessageDate + ", contactAssociated=" + contactAssociated + '}';
+        return "ChatImpl{" +
+                "chatId=" + chatId +
+                ", objectId=" + objectId +
+                ", localActorPublicKey='" + localActorPublicKey + '\'' +
+                ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
+                ", chatName='" + chatName + '\'' +
+                ", status=" + status +
+                ", date=" + date +
+                ", lastMessageDate=" + lastMessageDate +
+                ", typeChat=" + typeChat +
+                ", scheduledDelivery=" + scheduledDelivery +
+                '}';
     }
 }

@@ -42,7 +42,7 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
     ArrayList<String> contactId = new ArrayList<>();
     ArrayList<String> status = new ArrayList<>();
     ArrayList<String> typeMessage = new ArrayList<>();
-    ArrayList<Integer> noReadMsgs = new ArrayList<>();
+    ArrayList<Long> noReadMsgs = new ArrayList<>();
     ArrayList<Bitmap> imgId = new ArrayList<>();
     private ErrorManager errorManager;
 

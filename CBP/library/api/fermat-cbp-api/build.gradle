@@ -25,7 +25,7 @@ dependencies {
     compile project(':fermat-ccp-api')
     compile project(':fermat-cer-api')
     compile project(':fermat-csh-api')
-    compile project(':fermat-p2p-api-new')
+    compile project(':fermat-p2p-api')
     compile project(':fermat-wpd-api')
 
     testCompile 'junit:junit:4.11'

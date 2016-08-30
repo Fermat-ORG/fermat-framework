@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +18,6 @@ import java.util.UUID;
  */
 public class ActorListMsgRespond extends MsgRespond {
 
-    private UUID queryId;
     /**
      * Represent the profile list
      */
@@ -27,7 +26,7 @@ public class ActorListMsgRespond extends MsgRespond {
     /**
      * Represent the networkServicePublicKey
      */
-    private String networkServicePublicKey;
+    private String networkServiceType;
 
     /**
      * Constructor with parameters
@@ -35,22 +34,21 @@ public class ActorListMsgRespond extends MsgRespond {
      * @param status
      * @param details
      * @param profileList
-     * @param networkServicePublicKey
+     * @param networkServiceType
      */
-    public ActorListMsgRespond(final STATUS                  status                 ,
-                               final String                  details                ,
-                               final List<ActorProfile> profileList            ,
-                               final String                  networkServicePublicKey,
-                               final UUID                    queryId                ) {
+    public ActorListMsgRespond(
+            UUID packageId,final STATUS                  status                 ,
+            final String                  details                ,
+            final List<ActorProfile> profileList            ,
+            final String                  networkServiceType) {
 
-        super(
+        super(packageId,
                 status ,
                 details
         );
 
         this.profileList             = profileList            ;
-        this.networkServicePublicKey = networkServicePublicKey;
-        this.queryId                 = queryId                ;
+        this.networkServiceType = networkServiceType;
     }
 
     /**
@@ -66,13 +64,10 @@ public class ActorListMsgRespond extends MsgRespond {
      * Gets the value of networkServiceType and returns
      * @return networkServiceType
      */
-    public String getNetworkServicePublicKey() {
-        return networkServicePublicKey;
+    public String getNetworkServiceType() {
+        return networkServiceType;
     }
 
-    public UUID getQueryId() {
-        return queryId;
-    }
 
     /**
      * Generate the json representation
@@ -96,9 +91,8 @@ public class ActorListMsgRespond extends MsgRespond {
     @Override
     public String toString() {
         return "ActorListMsgRespond{" +
-                "queryId=" + queryId +
                 ", profileList=" + profileList +
-                ", networkServicePublicKey='" + networkServicePublicKey + '\'' +
+                ", NetworkServiceType='" + networkServiceType + '\'' +
                 '}';
     }
 }

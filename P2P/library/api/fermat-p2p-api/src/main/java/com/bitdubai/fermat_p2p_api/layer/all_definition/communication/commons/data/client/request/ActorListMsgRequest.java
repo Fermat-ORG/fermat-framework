@@ -19,38 +19,32 @@ import java.util.UUID;
  */
 public class ActorListMsgRequest extends PackageContent {
 
-    private UUID                     queryId                ;
-    private String                   networkServicePublicKey;
-    private DiscoveryQueryParameters parameters             ;
-    private String                   clientPublicKey        ;
+    private String                   networkServiceType;
+    private DiscoveryQueryParameters parameters        ;
+    private String                   requesterPublicKey;
 
-    public ActorListMsgRequest(final UUID                     queryId                ,
-                               final String                   networkServicePublicKey,
-                               final DiscoveryQueryParameters parameters             ,
-                               final String                   clientPublicKey        ) {
+    public ActorListMsgRequest(final String                   networkServiceType,
+                               final DiscoveryQueryParameters parameters        ,
+                               final String                   requesterPublicKey) {
 
         super(MessageContentType.JSON);
 
-        this.queryId                 = queryId                ;
-        this.networkServicePublicKey = networkServicePublicKey;
-        this.parameters              = parameters             ;
-        this.clientPublicKey         = clientPublicKey        ;
+        this.networkServiceType = networkServiceType;
+        this.parameters         = parameters        ;
+        this.requesterPublicKey = requesterPublicKey;
     }
 
-    public UUID getQueryId() {
-        return queryId;
-    }
 
-    public String getNetworkServicePublicKey() {
-        return networkServicePublicKey;
+    public String getNetworkServiceType() {
+        return networkServiceType;
     }
 
     public DiscoveryQueryParameters getParameters() {
         return parameters;
     }
 
-    public String getClientPublicKey() {
-        return clientPublicKey;
+    public String getRequesterPublicKey() {
+        return requesterPublicKey;
     }
 
     /**
@@ -76,10 +70,9 @@ public class ActorListMsgRequest extends PackageContent {
     @Override
     public String toString() {
         return "ActorListMsgRequest{" +
-                "queryId=" + queryId +
-                ", networkServicePublicKey='" + networkServicePublicKey + '\'' +
+                ", networkServiceType='" + networkServiceType + '\'' +
                 ", parameters=" + parameters +
-                ", clientPublicKey='" + clientPublicKey + '\'' +
+                ", requesterPublicKey='" + requesterPublicKey + '\'' +
                 '}';
     }
 }
