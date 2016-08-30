@@ -52,21 +52,18 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     private final ChatIdentityManager chatIdentityManager;
     private final ChatActorConnectionManager chatActorConnectionManager;
     private ChatSupAppModulePluginRoot chatSupAppModulePluginRoot;
-    private final com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager;
 
     public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager,
                                    ChatIdentityManager chatIdentityManager,
                                    PluginFileSystem pluginFileSystem,
                                    ChatActorConnectionManager chatActorConnectionManager,
                                    UUID pluginId,
-                                   ChatSupAppModulePluginRoot chatSupAppModulePluginRoot,
-                                   com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager) {
+                                   ChatSupAppModulePluginRoot chatSupAppModulePluginRoot) {
         super(pluginFileSystem, pluginId);
         this.middlewareChatManager = middlewareChatManager;
         this.chatIdentityManager = chatIdentityManager;
         this.chatActorConnectionManager = chatActorConnectionManager;
         this.chatSupAppModulePluginRoot = chatSupAppModulePluginRoot;
-        this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
     }
 
     @Override
