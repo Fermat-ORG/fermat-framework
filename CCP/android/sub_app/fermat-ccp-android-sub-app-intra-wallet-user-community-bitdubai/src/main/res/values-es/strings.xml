@@ -179,7 +179,7 @@
     <string name="no_data">No existen datos disponibles</string>
     <string name="country">pais</string>
     <string name="state">Estado</string>
-    <string name="connected">Ahora estas conectado</string>
+    <string name="connected">Ahora estas conectado con</string>
     <string name="delete_all_contacts_title">Borrar todos los contactos</string>
     <string name="delete_all_contacts_info">Estas seguro que quieres borrar todas tus conecciones?</string>
     <string name="delete_connection_text">Borrar la conexion</string>
