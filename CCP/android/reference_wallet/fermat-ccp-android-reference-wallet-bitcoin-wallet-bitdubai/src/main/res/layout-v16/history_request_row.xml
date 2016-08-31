@@ -94,7 +94,7 @@
                 android:fontFamily="roboto"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:gravity="right"
+                android:gravity="left"
                 android:textIsSelectable="true" />
         </LinearLayout>
     </LinearLayout>
