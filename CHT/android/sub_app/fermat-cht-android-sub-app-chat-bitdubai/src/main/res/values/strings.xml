@@ -83,7 +83,6 @@
     <string name="cht_notif_new_msg_title">Chat - New Message</string>
     <string name="cht_notif_new_msg_content">You have a new message in Chat.</string>
 
-
     <!-- Used for the AlphabetIndexer in ContactsListFragment to provide quick navigation by
          alphabet using ListView fast scroll. -->
     <string name="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
