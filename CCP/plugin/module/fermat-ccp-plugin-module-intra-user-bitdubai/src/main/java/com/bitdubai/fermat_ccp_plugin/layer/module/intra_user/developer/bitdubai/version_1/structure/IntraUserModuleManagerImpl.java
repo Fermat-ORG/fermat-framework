@@ -338,13 +338,17 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
         }
 
         _executor = Executors.newFixedThreadPool(2);
-
         _executor.submit(new Runnable() {
             @Override
             public void run() {
                 try {
 
-                    updateIntraUsersConnections(intraUserLoggedPublicKey, intraUserInformationModuleList);
+                    updateIntraUsersConnections(
+                            intraWalletUserIdentityManager.
+                            getAllIntraWalletUsersFromCurrentDeviceUser().
+                            get(0).
+                            getPublicKey(),
+                            intraUserInformationModuleList);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1043,7 +1047,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             public void run() {
                 try {
 
-                    updateIntraUsersConnections(intraUserLoggedPublicKey, worldActorList);
+                    updateIntraUsersConnections(String.valueOf(intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0)), worldActorList);
 
                 } catch (Exception e) {
                     e.printStackTrace();
