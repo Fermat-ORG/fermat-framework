@@ -76,13 +76,16 @@
                         android:textSize="12dp"
                         android:textColor="#aaaaab"
                         android:layout_weight="0.70"
-                        android:paddingTop="2dp" />
+                        android:paddingTop="4dp"
+                        android:maxLength="20"
+                        />
 
                 </LinearLayout>
 
             </LinearLayout>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/reception_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableRight="@drawable/ic_profile_connect"
@@ -96,8 +99,9 @@
                 android:textColor="#aaeae5"
                 android:layout_gravity="center"
                 android:editable="false"
-                android:id="@+id/reception_time"
-                android:paddingTop="14dp" />
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="10dp"
+                />
 
         </LinearLayout>
 

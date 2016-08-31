@@ -41,8 +41,9 @@ public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, 
     @Override
     protected void bindHolder(AppNotificationsHolder holder, IntraUserInformation data, int position) {
 
-        if (data.getCity()!=null||data.getCountry()!=null)
-            holder.notification_location.setText(data.getCountry()+", "+data.getCity());
+        if (data.getCity()!=null||data.getCountry()!=null || !data.getCity().equals("----, ----") || !data.getCountry().equals("----, ----"))
+            //holder.notification_location.setText(data.getCountry()+", "+data.getCity());
+            holder.notification_location.setText(data.getCity());
         else holder.notification_location.setText("No Location");
 
         if (data.getPublicKey() != null) {
