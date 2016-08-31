@@ -180,9 +180,9 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
     }
 
     @Override
-    public void updateWalletContactFromEvent(UUID contactId, String actorAlias) throws CantUpdateWalletContactException, WalletContactNotFoundException {
+    public void updateWalletContactByActorPublicKey(String actorPublicKey, String actorAlias) throws CantUpdateWalletContactException, WalletContactNotFoundException {
         try {
-            walletContactsMiddlewareDao.updateWalletContactFromEvent(contactId,actorAlias);
+            walletContactsMiddlewareDao.updateWalletContactByActorPublicKey(actorPublicKey, actorAlias);
         } catch (CantUpdateWalletContactException |
                 WalletContactNotFoundException   e ){
 
@@ -192,6 +192,22 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
+    @Override
+    public void deleteWalletContactByActorPublicKey(String actorPublicKey) throws CantDeleteWalletContactException, WalletContactNotFoundException {
+        try {
+            walletContactsMiddlewareDao.deleteWalletContactByActorPublicKey(actorPublicKey);
+
+        } catch (CantDeleteWalletContactException e){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 

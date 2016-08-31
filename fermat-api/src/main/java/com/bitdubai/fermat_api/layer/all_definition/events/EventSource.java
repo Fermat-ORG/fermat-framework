@@ -83,6 +83,8 @@ public enum EventSource implements FermatEnum {
     TIMEOUT_NOTIFIER("TON"),
     CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
 
+    INTRA_WALLET_USER_ACTOR_PLUGIN_ROOT("IWUAPR"),
+
     NETWORK_CLIENT("NETWORK_CLIENT"),;
 
 
@@ -228,6 +230,9 @@ public enum EventSource implements FermatEnum {
 
             case "NETWORK_CLIENT":
                 return NETWORK_CLIENT;
+
+            case "IWUAPR":
+                return INTRA_WALLET_USER_ACTOR_PLUGIN_ROOT;
 
             default:
                 throw new InvalidParameterException(

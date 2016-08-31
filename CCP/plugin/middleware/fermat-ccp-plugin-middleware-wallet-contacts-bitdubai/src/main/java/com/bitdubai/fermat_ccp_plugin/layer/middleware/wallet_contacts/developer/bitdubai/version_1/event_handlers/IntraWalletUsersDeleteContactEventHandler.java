@@ -3,7 +3,6 @@ package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.develope
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.exceptions.UnexpectedEventException;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserDeleteContactEvent;
@@ -16,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by Gian Barboza on 29/08/16.
  */
-public class IntraWalletUsersDeleteContactEventHandler implements FermatEventHandler<IntraUserDeleteContactEvent>  {
+public class IntraWalletUsersDeleteContactEventHandler implements FermatEventHandler<IntraUserDeleteContactEvent> {
 
     private final WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry;
 
@@ -32,7 +31,7 @@ public class IntraWalletUsersDeleteContactEventHandler implements FermatEventHan
 
             if (fermatEvent instanceof IntraUserDeleteContactEvent) {
 
-                walletContactsMiddlewareRegistry.deleteWalletContact(UUID.fromString(((IntraUserDeleteContactEvent) fermatEvent).getContactId()));
+                walletContactsMiddlewareRegistry.deleteWalletContactByActorPublicKey(fermatEvent.getActorPublicKey());
 
             } else {
                 EventType eventExpected = EventType.INTRA_USER_WALLET_DELETE_CONTACT;

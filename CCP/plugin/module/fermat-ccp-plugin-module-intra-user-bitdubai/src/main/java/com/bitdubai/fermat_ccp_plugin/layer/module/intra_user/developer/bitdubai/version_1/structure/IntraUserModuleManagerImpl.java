@@ -453,16 +453,6 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                                     intraUserSuggestionsLst.getCity(),
                                     intraUserSuggestionsLst.getCountry());
 
-
-                            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_WALLET_UPDATE_CONTACT);
-                            IntraUserUpdateContactEvent eventToRaise = (IntraUserUpdateContactEvent) fermatEvent;
-                            eventToRaise.setIdentityPublicKey(intraUserConnectedLst.getPublicKey());
-                            eventToRaise.setIdentityAlias(intraUserConnectedLst.getName());
-                            eventToRaise.setIdentityPhrase(intraUserConnectedLst.getPhrase());
-                            eventToRaise.setProfileImage(intraUserConnectedLst.getProfileImage());
-                            eventToRaise.setSource(EventSource.INTRA_USER_MODULE_MANAGER_LMPL);
-                            eventManager.raiseEvent(eventToRaise);
-
                         }
 
                     }

@@ -152,13 +152,14 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin implement
         eventManager.addListener(cryptoAddressNewsEventListener);
         listenersAdded.add(cryptoAddressNewsEventListener);
 
-
+        System.out.println("Actived: intraUserWalletDeleteContactEventListener");
         FermatEventListener intraUserWalletDeleteContactEventListener = eventManager.getNewListener(EventType.INTRA_USER_WALLET_DELETE_CONTACT);
         intraUserWalletDeleteContactEventListener.setEventHandler(new IntraWalletUsersDeleteContactEventHandler(walletContactsRegistry, this));
         eventManager.addListener(intraUserWalletDeleteContactEventListener);
         listenersAdded.add(intraUserWalletDeleteContactEventListener);
 
-        FermatEventListener intraUserWalletUpdateContactEventListener = eventManager.getNewListener(EventType.INTRA_USER_WALLET_DELETE_CONTACT);
+        System.out.println("Actived: intraUserWalletUpdateContactEventListener");
+        FermatEventListener intraUserWalletUpdateContactEventListener = eventManager.getNewListener(EventType.INTRA_USER_WALLET_UPDATE_CONTACT);
         intraUserWalletUpdateContactEventListener.setEventHandler(new IntraWalletUsersUpdateContactEventHandler(walletContactsRegistry, this));
         eventManager.addListener(intraUserWalletUpdateContactEventListener);
         listenersAdded.add(intraUserWalletUpdateContactEventListener);

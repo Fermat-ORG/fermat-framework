@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by Gian Barboza on 30/08/16.
  */
-public class IntraWalletUsersUpdateContactEventHandler implements FermatEventHandler{
+public class IntraWalletUsersUpdateContactEventHandler implements FermatEventHandler<IntraUserUpdateContactEvent>{
 
     private final WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry;
 
@@ -28,14 +28,14 @@ public class IntraWalletUsersUpdateContactEventHandler implements FermatEventHan
     }
 
     @Override
-    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+    public void handleEvent(IntraUserUpdateContactEvent fermatEvent) throws FermatException {
         if (this.walletContactsMiddlewarePluginRoot.getStatus() == ServiceStatus.STARTED) {
 
             if (fermatEvent instanceof IntraUserUpdateContactEvent) {
 
-               walletContactsMiddlewareRegistry.updateWalletContactFromEvent(
-                       UUID.fromString(((IntraUserUpdateContactEvent) fermatEvent).getIdentityPublicKey()),
-                       ((IntraUserUpdateContactEvent) fermatEvent).getIdentityAlias());
+                walletContactsMiddlewareRegistry.updateWalletContactByActorPublicKey(
+                        fermatEvent.getIdentityPublicKey(),
+                        fermatEvent.getIdentityAlias());
 
             } else {
                 EventType eventExpected = EventType.INTRA_USER_WALLET_UPDATE_CONTACT;

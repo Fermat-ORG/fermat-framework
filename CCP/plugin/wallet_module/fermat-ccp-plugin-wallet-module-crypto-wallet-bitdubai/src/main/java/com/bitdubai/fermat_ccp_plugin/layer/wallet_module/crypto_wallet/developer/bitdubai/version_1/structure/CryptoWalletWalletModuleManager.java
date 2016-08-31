@@ -1110,20 +1110,27 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     public List<PaymentRequest> listSentPaymentRequest(String walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListSentPaymentRequestException {
         try {
             List<PaymentRequest> lst =  new ArrayList<>();
-            CryptoWalletWalletModuleWalletContact cryptoWalletWalletContact = null;
-            byte[] profilePicture = null;
+
+
 
             //find received payment request
             for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.SENT,blockchainNetworkType, max, offset)) {
+                WalletContactRecord walletContactRecord = null;
 
-                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
+                try {
+                    walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(), walletPublicKey);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
-                if (getImageByActorType(paymentRecord.getActorType(),paymentRecord.getActorPublicKey(),paymentRecord.getIdentityPublicKey()) != null)
-                    profilePicture = getImageByActorType(paymentRecord.getActorType(),paymentRecord.getActorPublicKey(),paymentRecord.getIdentityPublicKey());
+                byte[] profilePicture = null;
+                CryptoWalletWalletModuleWalletContact cryptoWalletWalletContact = null;
 
-                if (walletContactRecord != null)
-                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord, profilePicture);
+                   if (getImageByActorType(paymentRecord.getActorType(), paymentRecord.getActorPublicKey(), paymentRecord.getIdentityPublicKey()) != null)
+                       profilePicture = getImageByActorType(paymentRecord.getActorType(), paymentRecord.getActorPublicKey(), paymentRecord.getIdentityPublicKey());
 
+                   if (walletContactRecord != null)
+                       cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord, profilePicture);
 
 
                 CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(

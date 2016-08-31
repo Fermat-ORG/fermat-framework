@@ -118,13 +118,22 @@ public interface WalletContactsRegistry {
     /**
      * Through the method <code>updateWalletContactFromEvent</code> you can update the modifiable fields of a wallet contact
      *
-     * @param contactId         contact id of the actor that you want to update
+     * @param actorPublicKey         contact id of the actor that you want to update
      * @param actorAlias        alias for the actor
      *
      * @throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantUpdateWalletContactException if something goes wrong
      */
-    void updateWalletContactFromEvent(UUID   contactId,
+    void updateWalletContactByActorPublicKey(String actorPublicKey,
                                       String actorAlias)throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantUpdateWalletContactException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
+    /**
+     * Through the method <code>deleteWalletContactByActorPublicKey</code> you can delete a wallet contact by actor public Key
+     *
+     * @param actorPublicKey Actor Public Key that you want to delete
+     *
+     * @throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantDeleteWalletContactException if something goes wrong
+     * @throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException if i can't find the wallet contact
+     */
+    void deleteWalletContactByActorPublicKey(String actorPublicKey) throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantDeleteWalletContactException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
 
 
     /**
