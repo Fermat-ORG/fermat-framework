@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_ccp_core.layer.desktop_module;
+package com.bitdubai.fermat_wpd_core.layer.desktop_module;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_ccp_core.layer.desktop_module.wallet_manager.WalletManagerPluginSubsystem;
+import com.bitdubai.fermat_wpd_core.layer.desktop_module.wallet_manager.WalletManagerPluginSubsystem;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/11/2015.

@@ -157,7 +157,7 @@ public class FermatSystemUtils {
         try {
             return (WalletManager) FermatApplication.getInstance().getFermatSystem().getPlugin(
                     new PluginVersionReference(
-                            Platforms.CRYPTO_CURRENCY_PLATFORM,
+                            Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
                             Layers.DESKTOP_MODULE,
                             Plugins.WALLET_MANAGER,
                             Developers.BITDUBAI,
