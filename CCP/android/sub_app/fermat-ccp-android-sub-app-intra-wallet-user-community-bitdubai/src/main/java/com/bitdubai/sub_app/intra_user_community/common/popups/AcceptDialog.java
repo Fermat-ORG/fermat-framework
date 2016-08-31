@@ -138,7 +138,7 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
 
 
                     TextView txtMsg = (TextView)layout.findViewById(R.id.text_connection_success);
-                    txtMsg.setText("\n"+getContext().getResources().getString(R.string.connected)+"\n");
+                    txtMsg.setText("\n"+getContext().getResources().getString(R.string.connected)+" "+intraUserInformation.getName()+"\n");
                     int offsetX = 0;
                     int offsetY = 0;
                     CustomToast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, offsetX, offsetY);
