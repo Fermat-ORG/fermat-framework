@@ -48,7 +48,6 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     private final TransactionTransmissionContractHashDao transactionTransmissionContractHashDao;
     private final Gson gson;
 
-    private final ExecutorService executorService;
 
     public TransactionTransmissionNetworkServiceManager(final TransactionTransmissionNetworkServicePluginRoot pluginRoot,
                                                         final TransactionTransmissionContractHashDao transactionTransmissionContractHashDao) {
@@ -57,7 +56,6 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         this.transactionTransmissionContractHashDao = transactionTransmissionContractHashDao;
         this.gson = new Gson();
 
-        this.executorService = Executors.newFixedThreadPool(3);
     }
 
     @Override
@@ -402,20 +400,15 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         receiver.setActorType(getActorByPlatformComponentType(metadata.getReceiverType()).getCode());
         receiver.setIdentityPublicKey(metadata.getReceiverId());
 
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    pluginRoot.sendNewMessage(
-                            sender,
-                            receiver,
-                            gson.toJson(metadata)
-                    );
-                } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
-                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-            }
-        });
+        try {
+            pluginRoot.sendNewMessage(
+                    sender,
+                    receiver,
+                    gson.toJson(metadata)
+            );
+        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
 
     Actors getActorByPlatformComponentType(PlatformComponentType type) {

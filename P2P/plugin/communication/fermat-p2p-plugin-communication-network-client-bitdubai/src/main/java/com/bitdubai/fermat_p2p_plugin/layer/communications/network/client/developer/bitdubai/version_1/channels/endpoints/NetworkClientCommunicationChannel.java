@@ -23,6 +23,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.CheckOutNetworkServiceRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.MessageTransmitProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.MessageTransmitRespondProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.MessageTransmitSyncACKProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.NearNodeListRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.ServerHandshakeRespondProcessor;
@@ -126,6 +127,9 @@ public class NetworkClientCommunicationChannel {
         registerMessageProcessor(new NearNodeListRespondProcessor(this));
         registerMessageProcessor(new ServerHandshakeRespondProcessor(this));
         registerMessageProcessor(new UpdateActorProfileRespondProcessor(this));
+
+        //Este lo uso para las llamadas sincronas
+        registerMessageProcessor(new MessageTransmitSyncACKProcessor(this,connection));
 
     }
 

@@ -13,8 +13,8 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantInit
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRegisterActorConnectionException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorIdentity;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
-import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.LinkedActorIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -55,7 +55,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extends ActorConnection<Z>> {
+public abstract class ActorConnectionDao<T extends ActorConnection> {
 
     private static final String PROFILE_IMAGE_DIRECTORY_NAME = DeviceDirectory.LOCAL_USERS.getName() + "/actor_connections";
     private static final String PROFILE_IMAGE_FILE_NAME_PREFIX = "profileImage";
@@ -169,8 +169,7 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
 
     // TODO ADD UPDATETIME
     public void changeConnectionState(final UUID connectionId,
-                                      final ConnectionState connectionState) throws CantChangeActorConnectionStateException,
-            ActorConnectionNotFoundException {
+                                      final ConnectionState connectionState) throws CantChangeActorConnectionStateException {
 
         if (connectionId == null)
             throw new CantChangeActorConnectionStateException("", "The connectionId is required, can not be null");
@@ -185,23 +184,11 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
 
             actorConnectionsTable.addUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
 
-            actorConnectionsTable.loadToMemory();
+            final DatabaseTableRecord record = actorConnectionsTable.getEmptyRecord();
 
-            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+            record.setFermatEnum(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME, connectionState);
 
-            if (!records.isEmpty()) {
-
-                final DatabaseTableRecord record = records.get(0);
-
-                record.setFermatEnum(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME, connectionState);
-
-                actorConnectionsTable.updateRecord(record);
-
-            } else
-                throw new ActorConnectionNotFoundException(
-                        "connectionId: " + connectionId,
-                        "Cannot find an actor connection request with that requestId."
-                );
+            actorConnectionsTable.updateRecord(record);
 
         } catch (final CantUpdateRecordException e) {
 
@@ -210,17 +197,10 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
                     "connectionId: " + connectionId,
                     "Exception not handled by the plugin, there is a problem in database and i cannot update the record."
             );
-        } catch (final CantLoadTableToMemoryException e) {
-
-            throw new CantChangeActorConnectionStateException(
-                    e,
-                    "connectionId: " + connectionId,
-                    "Exception not handled by the plugin, there is a problem in database and i cannot load the table."
-            );
         }
     }
 
-    public boolean actorConnectionExists(final Z linkedIdentity,
+    public boolean actorConnectionExists(final ActorIdentity linkedIdentity,
                                          final String publicKey) throws CantGetActorConnectionException {
 
         if (linkedIdentity == null)
@@ -238,11 +218,8 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
             actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
             //TODO: Solucion temporal para el estado de connection del Actor CONNECTED, ya que los datos no se borran de la tabla si existio alguna ves una conexion anterior
-            actorConnectionsTable.loadToMemory();
 
-            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
-
-            return !records.isEmpty();
+            return actorConnectionsTable.getCount() > 0;
 
         } catch (final CantLoadTableToMemoryException e) {
 
@@ -333,6 +310,82 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
         }
     }
 
+    public ConnectionState getConnectionState(final ActorIdentity linkedIdentity,
+                                              final String        publicKey     ) throws CantGetActorConnectionException, ActorConnectionNotFoundException {
+
+        if (linkedIdentity == null)
+            throw new CantGetActorConnectionException(null, "", "The linkedIdentity is required, can not be null");
+
+        if (publicKey == null)
+            throw new CantGetActorConnectionException(null, "", "The publicKey is required, can not be null");
+
+        try {
+
+            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
+
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, linkedIdentity.getActorType(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+
+            actorConnectionsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+
+
+            if (records != null && !records.isEmpty())
+                return ConnectionState.getByCode(records.get(0).getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME));
+            else
+                throw new ActorConnectionNotFoundException("publicKey:"+publicKey, "Actor connection not found with the given public key");
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantGetActorConnectionException(
+                    e,
+                    "linkedIdentity: - publicKey: " + publicKey,
+                    "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException e) {
+            throw new CantGetActorConnectionException(
+                    e,
+                    "linkedIdentity: - publicKey: " + publicKey,
+                    "Problem trying to parse connectionstate string.");
+        }
+    }
+
+    public UUID getConnectionId(final ActorIdentity linkedIdentity,
+                                final String        publicKey     ) throws CantGetActorConnectionException, ActorConnectionNotFoundException {
+
+        if (linkedIdentity == null)
+            throw new CantGetActorConnectionException(null, "", "The linkedIdentity is required, can not be null");
+
+        if (publicKey == null)
+            throw new CantGetActorConnectionException(null, "", "The publicKey is required, can not be null");
+
+        try {
+
+            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
+
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+
+            actorConnectionsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+
+
+            if (records != null && !records.isEmpty())
+                return records.get(0).getUUIDValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME);
+            else
+                throw new ActorConnectionNotFoundException("publicKey:"+publicKey, "Actor connection not found with the given public key");
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantGetActorConnectionException(
+                    e,
+                    "linkedIdentity: - publicKey: " + publicKey,
+                    "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
     public List<T> listActorConnections(final DatabaseTable actorConnectionsTable) throws CantListActorConnectionsException {
 
         try {
@@ -358,6 +411,41 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
         } catch (Exception exception) {
 
             throw new CantListActorConnectionsException(exception, " ", "Unhandled Error");
+        }
+    }
+
+    public T getActorConnection(ActorIdentity linkedIdentity, String publicKey) throws CantGetActorConnectionException, ActorConnectionNotFoundException {
+
+        try {
+
+            DatabaseTable actorConnectionsTable = getActorConnectionsTable();
+
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, linkedIdentity.getActorType(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+
+            actorConnectionsTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+
+
+            if (records.size() > 0)
+                return buildActorConnectionNewRecord(records.get(0));
+            else
+                throw new ActorConnectionNotFoundException("publicKey:"+publicKey, "Actor connection not found with the given public key.");
+
+        } catch (ActorConnectionNotFoundException e) {
+
+            throw e;
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantGetActorConnectionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException exception) {
+
+            throw new CantGetActorConnectionException(exception, " ", "Invalid data, we can't get the information for an element of any of the enums used.");
+        } catch (Exception exception) {
+
+            throw new CantGetActorConnectionException(exception, " ", "Unhandled Error");
         }
     }
 

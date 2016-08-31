@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_classes.ActorConnectionDao;
+import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorIdentity;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
@@ -11,10 +12,10 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.Cr
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
  */
-public abstract class CryptoBrokerActorConnectionSearch extends ActorConnectionSearch<CryptoBrokerLinkedActorIdentity, CryptoBrokerActorConnection> {
+public abstract class CryptoBrokerActorConnectionSearch extends ActorConnectionSearch<CryptoBrokerActorConnection> {
 
-    public CryptoBrokerActorConnectionSearch(final CryptoBrokerLinkedActorIdentity actorIdentity,
-                                             final ActorConnectionDao<CryptoBrokerLinkedActorIdentity, CryptoBrokerActorConnection> dao) {
+    public CryptoBrokerActorConnectionSearch(final ActorIdentity actorIdentity,
+                                             final ActorConnectionDao<CryptoBrokerActorConnection> dao) {
 
         super(actorIdentity, dao);
     }

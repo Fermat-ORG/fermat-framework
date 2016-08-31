@@ -1,16 +1,17 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -18,12 +19,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.ProtocolState;
@@ -74,10 +74,11 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
         CryptoAddressesManager,
         DatabaseManagerForDevelopers {
 
-    /**
-     * Represent the dataBase
-     */
-    private Database dataBase;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    protected PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
     /**
      * Executor
@@ -167,7 +168,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
     }
 
     @Override
-    public void onNewMessageReceived(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage newFermatMessageReceive) {
+    public void onNewMessageReceived(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.entities.NetworkServiceMessage newFermatMessageReceive) {
 
         try {
 
@@ -447,8 +448,8 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
     }
 
     @Override
-    public void onSentMessage(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage messageSent) {
-
+    public void onSentMessage(UUID messageSent) {
+/*
         try {
 
             Gson gson = new Gson();
@@ -486,7 +487,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 
@@ -504,37 +505,6 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 //
 //    }
 
-    @Override
-    public void onActorUnreachable(ActorProfile remoteParticipant) {
-        //I check my time trying to send the message
-        System.out.println("************ Crypto Addresses -> FAILURE CONNECTION.");
-        checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
-    }
-
-    private PlatformComponentType platformComponentTypeSelectorByActorType(final Actors type) throws InvalidParameterException {
-
-        switch (type) {
-
-            case INTRA_USER:
-                return PlatformComponentType.ACTOR_INTRA_USER;
-            case CCM_INTRA_WALLET_USER:
-                return PlatformComponentType.ACTOR_INTRA_USER;
-            case CCP_INTRA_WALLET_USER:
-                return PlatformComponentType.ACTOR_INTRA_USER;
-            case DAP_ASSET_ISSUER:
-                return PlatformComponentType.ACTOR_ASSET_ISSUER;
-            case DAP_ASSET_USER:
-                return PlatformComponentType.ACTOR_ASSET_USER;
-            case DAP_ASSET_REDEEM_POINT:
-                return PlatformComponentType.ACTOR_ASSET_REDEEM_POINT;
-
-            default:
-                throw new InvalidParameterException(
-                        " actor type: " + type.name() + "  type-code: " + type.getCode(),
-                        " type of actor not expected."
-                );
-        }
-    }
 
 
     private void reprocessPendingMessage() {
@@ -1084,11 +1054,8 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        if (developerDatabase.getName().equals("Crypto Addresses"))
-            return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
-        else
-            return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
 
+            return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
@@ -1134,7 +1101,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
                     sendNewMessage(
                             sender,
                             receiver,
-                            jsonMessage
+                            jsonMessage,true
                     );
                 } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
 //                    this.reportUnexpectedError(e);

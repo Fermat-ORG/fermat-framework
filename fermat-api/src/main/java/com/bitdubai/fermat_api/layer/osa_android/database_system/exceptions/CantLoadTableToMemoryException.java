@@ -16,6 +16,10 @@ public class CantLoadTableToMemoryException extends DatabaseSystemException {
         super(message, cause, context, possibleReason);
     }
 
+    public CantLoadTableToMemoryException(final Exception cause, final String context, final String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
     public CantLoadTableToMemoryException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }

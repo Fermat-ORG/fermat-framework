@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantRegisterProfileException extends FermatException {
 
-    private static final String DEFAULT_MESSAGE = "CAN'T REGISTER PROFILE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T REGISTER PROFILE EXCEPTION";
 
     public CantRegisterProfileException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);

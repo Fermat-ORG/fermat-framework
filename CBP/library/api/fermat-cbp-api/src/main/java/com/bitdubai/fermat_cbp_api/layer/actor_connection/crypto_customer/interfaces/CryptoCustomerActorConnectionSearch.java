@@ -11,10 +11,10 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
  */
-public abstract class CryptoCustomerActorConnectionSearch extends ActorConnectionSearch<CryptoCustomerLinkedActorIdentity, CryptoCustomerActorConnection> {
+public abstract class CryptoCustomerActorConnectionSearch extends ActorConnectionSearch<CryptoCustomerActorConnection> {
 
     public CryptoCustomerActorConnectionSearch(final CryptoCustomerLinkedActorIdentity actorIdentity,
-                                               final ActorConnectionDao<CryptoCustomerLinkedActorIdentity, CryptoCustomerActorConnection> dao) {
+                                               final ActorConnectionDao<CryptoCustomerActorConnection> dao) {
 
         super(actorIdentity, dao);
     }

@@ -4963,7 +4963,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
-
         runtimeActivity.setOptionsMenu(optionsMenu);
         //Navigation
 
@@ -5006,6 +5005,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#05DDD2");
+
+        leftToolbarIcon = new MenuItem(400);
+        leftToolbarIcon.setAppLinkPublicKey("nav_menu");
+        runtimeTitleBar.setNavItem(leftToolbarIcon);
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
@@ -5101,6 +5107,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
+
+
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#05CFC2");
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 

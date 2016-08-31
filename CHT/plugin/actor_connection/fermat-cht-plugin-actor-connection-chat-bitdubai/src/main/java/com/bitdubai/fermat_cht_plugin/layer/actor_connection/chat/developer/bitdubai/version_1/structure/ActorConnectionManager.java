@@ -14,9 +14,9 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequ
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorIdentity;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
@@ -43,21 +43,18 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
     private final ChatManager chatNetworkService;
     private final ChatActorConnectionDao dao;
     private ChatActorConnectionPluginRoot chatActorConnectionPluginRoot;
-    private final PluginVersionReference pluginVersionReference;
 
     public ActorConnectionManager(final ChatManager chatNetworkService,
                                   final ChatActorConnectionDao dao,
-                                  final ChatActorConnectionPluginRoot chatActorConnectionPluginRoot,
-                                  final PluginVersionReference pluginVersionReference) {
+                                  final ChatActorConnectionPluginRoot chatActorConnectionPluginRoot) {
 
         this.chatNetworkService = chatNetworkService;
         this.dao = dao;
         this.chatActorConnectionPluginRoot = chatActorConnectionPluginRoot;
-        this.pluginVersionReference = pluginVersionReference;
     }
 
     @Override
-    public ChatActorConnectionSearch getSearch(ChatLinkedActorIdentity actorIdentitySearching) {
+    public ChatActorConnectionSearch getSearch(ActorIdentity actorIdentitySearching) {
         return new ActorConnectionSearch(actorIdentitySearching, dao);
     }
 

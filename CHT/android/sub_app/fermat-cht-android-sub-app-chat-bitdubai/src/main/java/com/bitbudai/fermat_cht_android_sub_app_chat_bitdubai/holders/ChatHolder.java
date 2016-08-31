@@ -8,8 +8,6 @@ import android.widget.TextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
-//import android.widget.ImageView;
-
 /**
  * ChatHolder ViewHolder
  *
@@ -23,8 +21,6 @@ public class ChatHolder extends FermatViewHolder {
     public ImageView tickstatusimage;
     public LinearLayout content;
     public LinearLayout contentWithBG;
-
-    //private static ChatsList chats;
 
     /**
      * Constructor

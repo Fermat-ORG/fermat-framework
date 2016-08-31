@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -20,11 +19,9 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.io.BufferedReader;
@@ -41,13 +38,7 @@ import java.io.InputStreamReader;
 public class ChatErrorReportFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
-    // Fermat Managers
-    private ChatManager chatManager;
-    //private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
-    private SettingsManager<ChatSettings> settingsManager;
-    private ChatPreferenceSettings chatSettings;
-    private ReferenceAppFermatSession<ChatManager> chatSession;
 
     private Button okBtn;
     private EditText messageEdit;
@@ -64,9 +55,6 @@ public class ChatErrorReportFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            //chatSession = ((ChatSessionReferenceApp) appSession);
-            chatManager = appSession.getModuleManager();
-            //chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));

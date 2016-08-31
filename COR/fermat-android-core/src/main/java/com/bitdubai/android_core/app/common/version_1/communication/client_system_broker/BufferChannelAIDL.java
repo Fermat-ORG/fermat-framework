@@ -36,7 +36,7 @@ public class BufferChannelAIDL {
                 synchronized (lock) {
                     buffer.put(id, (data != null) ? data : new EmptyObject());
                     //locks.get(id).release();
-                    lock.unblock();
+                    lock.unlock();
                     lock.notify();
                 }
             } else {
@@ -53,13 +53,13 @@ public class BufferChannelAIDL {
             requestQuantity++;
             Lock lock = new Lock();
             synchronized (lock) {
-                lock.block();
+                lock.lock();
                 locks1.put(id, lock);
                 Log.i(TAG, "wainting queue quantity: " + locks1.size() + ", total: " + requestQuantity + ",id:" + id);
-                while (lock.getIsBlock()) {
+                while (lock.isLocked()) {
                     lock.wait();
                     Log.i(TAG, "thread wake up");
-                    Log.i(TAG, "Lock is: " + lock.getIsBlock());
+                    Log.i(TAG, "Lock is: " + lock.isLocked());
                 }
             }
             locks1.remove(id);

@@ -49,4 +49,7 @@ public final class EventManagerPlatformServiceAddonRoot extends AbstractAddon {
         return eventManager;
     }
 
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
 }

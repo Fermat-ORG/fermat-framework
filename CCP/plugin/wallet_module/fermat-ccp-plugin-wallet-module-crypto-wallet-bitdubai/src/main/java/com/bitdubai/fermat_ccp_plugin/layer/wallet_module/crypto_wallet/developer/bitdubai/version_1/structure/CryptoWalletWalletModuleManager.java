@@ -1009,12 +1009,6 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                 }
 
 
-
-
-
-
-
-
                /* for (CryptoWalletTransaction bwt : cryptoWalletTransactionList1) {
                     cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                 }*/

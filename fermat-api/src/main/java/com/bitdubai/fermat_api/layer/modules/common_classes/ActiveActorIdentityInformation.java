@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.modules.common_classes;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import java.io.Serializable;
@@ -17,17 +18,7 @@ import java.io.Serializable;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface ActiveActorIdentityInformation extends Serializable {
-
-    /**
-     * @return a string representing the public key.
-     */
-    String getPublicKey();
-
-    /**
-     * @return an element of Actors enum representing the type of the actor identity.
-     */
-    Actors getActorType();
+public interface ActiveActorIdentityInformation extends Serializable, ActorIdentity {
 
     /**
      * @return a string with the actor identity alias.

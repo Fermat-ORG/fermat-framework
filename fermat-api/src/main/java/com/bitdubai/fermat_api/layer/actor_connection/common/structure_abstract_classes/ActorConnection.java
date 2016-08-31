@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorIdentity;
 
 import org.apache.commons.lang.Validate;
 
@@ -18,10 +19,10 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class ActorConnection<T extends LinkedActorIdentity> {
+public abstract class ActorConnection {
 
     private final UUID connectionId;
-    private final T linkedIdentity;
+    private final ActorIdentity linkedIdentity;
     private final String publicKey;
     private final String alias;
     private final byte[] image;
@@ -30,7 +31,7 @@ public abstract class ActorConnection<T extends LinkedActorIdentity> {
     private final long updateTime;
 
     protected ActorConnection(final UUID connectionId,
-                              final T linkedIdentity,
+                              final ActorIdentity linkedIdentity,
                               final String publicKey,
                               final String alias,
                               final byte[] image,
@@ -68,7 +69,7 @@ public abstract class ActorConnection<T extends LinkedActorIdentity> {
     /**
      * @return an LinkedActorIdentity instance representing the identity which is connected with the other actor.
      */
-    public final T getLinkedIdentity() {
+    public final ActorIdentity getLinkedIdentity() {
         return linkedIdentity;
     }
 

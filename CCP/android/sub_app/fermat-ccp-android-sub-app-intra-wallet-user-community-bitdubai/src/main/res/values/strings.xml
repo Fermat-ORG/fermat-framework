@@ -16,6 +16,7 @@
     <string name="description_text">You are not connected to</string>
     <string name="second_description_text">the fermat network.</string>
 
+
     <!--Connection tab-->
     <string name="delete_all_contacts_title">DELETE ALL CONTACTS</string>
     <string name="delete_all_contacts_info">Are you sure you want to delete all your connections?</string>
@@ -207,10 +208,9 @@
     <string name="you_dont_have_transactions_sent_text">You don\'t have transactions send</string>
     <string name="you_need_an_identity_before_you_can_enter_text">You need an identity before you can enter</string>
     <string name="young_wallet">Young wallet</string>
-    <string name="system_error">Whoops! recovering from system error</string>
+    <string name="system_error">Recovering from system error</string>
     <string name="no_users_for_location">No connections near the location you chose</string>
     <string name="users_for_location">These are the connections near the location you chose</string>
-
 
     <!-- Browser Tab -->
     <string name="turn_on_gps">Please, turn ON your GPS</string>
@@ -237,7 +237,4 @@
     <string name="notification_connection_disconnet2">is disconnected from you.</string>
     <string name="notification_connection_denied">Connection Request</string>
     <string name="notification_connection_denied2">Your connection request was denied to</string>
-
-
-
 </resources>

@@ -25,12 +25,12 @@ public class MiddlewareLayer extends AbstractLayer {
 
         try {
 
-            registerPlugin(new WalletFactoryPluginSubsystem());
-            registerPlugin(new WalletPublisherPluginSubsystem());
-            registerPlugin(new WalletSettingsPluginSubsystem());
-            registerPlugin(new WalletStorePluginSubsystem());
+//            registerPlugin(new WalletFactoryPluginSubsystem());
+//            registerPlugin(new WalletPublisherPluginSubsystem());
+//            registerPlugin(new WalletSettingsPluginSubsystem());
+//            registerPlugin(new WalletStorePluginSubsystem());
 
-        } catch (CantRegisterPluginException e) {
+        } catch (Exception e) {
 
             throw new CantStartLayerException(
                     e,

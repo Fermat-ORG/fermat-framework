@@ -117,6 +117,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                                 }
                         }
                     }
+
             );
             showEmpty(true, emptyView);
         }catch (Exception e){
@@ -190,7 +191,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     }
 
     private synchronized List<ExtendedCity> getMoreData(String filter) {
-        System.out.println("****************** GETMORE DATA SYNCHRONIZED ENTERING");
+
         List<ExtendedCity> dataSet = new ArrayList<>();
 
         try {
@@ -199,7 +200,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("****************** GETMORE DATA SYNCRHONIZED SALIO BIEN: ");
+
         return dataSet;
     }
 

@@ -1,6 +1,5 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.notifications;
 
-
 import android.widget.RemoteViews;
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
@@ -10,7 +9,6 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
  */
 public class ChatNotificationPainter extends NotificationPainter {
 
-    private RemoteViews remoteViews;
     private String title;
     private String image;
     private String textBody;
@@ -24,13 +22,9 @@ public class ChatNotificationPainter extends NotificationPainter {
         this.icon = icon;
     }
 
-    public ChatNotificationPainter(String title, String textBody, String image) {
-        this(title, textBody, image, 0);
-    }
-
     @Override
     public RemoteViews getNotificationView(String code) {
-        return remoteViews;
+        return null;
     }
 
     @Override

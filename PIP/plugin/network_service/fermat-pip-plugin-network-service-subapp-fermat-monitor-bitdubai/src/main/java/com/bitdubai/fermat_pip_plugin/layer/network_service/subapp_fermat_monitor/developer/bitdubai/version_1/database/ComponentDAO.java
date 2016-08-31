@@ -199,26 +199,13 @@ public class ComponentDAO {
         try {
 
             DatabaseTable databaseTable = getDatabaseTable();
-            databaseTable.loadToMemory();
 
-            List<DatabaseTableRecord> records = databaseTable.getRecords();
-
-
-            for (DatabaseTableRecord record : records) {
-
-
-                databaseTable.deleteRecord(record);
-            }
-
+            databaseTable.deleteRecord();
 
         } catch (CantDeleteRecordException e) {
 
             throw new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
-        } catch (CantLoadTableToMemoryException exception) {
-
-            throw new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Exception invalidParameterException.", "");
         }
-
     }
 
     /**

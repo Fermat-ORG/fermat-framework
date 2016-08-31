@@ -3,8 +3,13 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantUpdateIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -309,10 +314,10 @@ public class IntraWalletUserActorDao {
 
 
     public void updateConnectionStateAndData(final String          intraUserLoggedInPublicKey,
-                                            final String          intraUserToAddPublicKey   ,
+                                             final String          intraUserToAddPublicKey   ,
                                              String intraUserToAddName,
                                              byte[] profileImage,
-                                            final ConnectionState contactState,
+                                             final ConnectionState contactState,
                                              String phrase,
                                              String city,
                                              String country) throws CantUpdateConnectionException {

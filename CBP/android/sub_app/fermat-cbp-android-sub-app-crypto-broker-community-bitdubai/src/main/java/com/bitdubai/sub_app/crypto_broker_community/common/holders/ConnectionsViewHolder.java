@@ -68,10 +68,10 @@ public class ConnectionsViewHolder extends FermatViewHolder {
         final CryptoBrokerIdentityExtraData brokerExtraData = data.getCryptoBrokerIdentityExtraData();
         if (brokerExtraData != null) {
             String extraText = brokerExtraData.getExtraText();
-            extraText = (extraText != null && !extraText.isEmpty()) ? extraText : "Not Available Merchandises.";
+            extraText = (extraText != null && !extraText.isEmpty()) ? extraText : res.getString(R.string.not_available_merchandises);
             merchandises.setText(extraText);
         } else
-            merchandises.setText("Not Available Merchandises.");
+            merchandises.setText(R.string.not_available_merchandises);
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {

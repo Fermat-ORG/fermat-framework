@@ -218,8 +218,8 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         jsonObject.addProperty("notificationDescriptor",    notificationDescriptor.toString());
         jsonObject.addProperty("sentDate",                  sentDate);
         jsonObject.addProperty("actorProtocolState",        actorProtocolState.toString());
-        jsonObject.addProperty("city",                      (city == null) ? "--" : city.toString());
-        jsonObject.addProperty("country",                   (country == null) ? "--" :  country.toString());
+        jsonObject.addProperty("city",                      (city == null) ? "----" : city.toString());
+        jsonObject.addProperty("country",                   (country == null) ? "----" :  country.toString());
         jsonObject.addProperty("flagReadead",               flagReadead);
         jsonObject.addProperty("sentCount",                 sentCount);
         if(responseToNotificationId!=null)jsonObject.addProperty("responseToNotificationId", responseToNotificationId.toString());

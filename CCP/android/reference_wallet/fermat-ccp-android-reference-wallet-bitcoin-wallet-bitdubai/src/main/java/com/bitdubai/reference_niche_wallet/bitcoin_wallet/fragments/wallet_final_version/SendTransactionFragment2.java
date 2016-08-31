@@ -1029,6 +1029,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode()))
                                 ? balanceAvailable : bookBalance, typeAmountSelected.getCode()));
 
+
+
     }
 
 
@@ -1236,8 +1238,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
                 appSession.setData(SessionConstant.RUNNIBLE_BALANCE,new HashMap<>());
                 appSession.setData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED,true);
-
-
                     appSession.setData(SessionConstant.SETTINGS_LOADED, true);
 
             } else {
@@ -1269,4 +1269,3 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     }
 }
-

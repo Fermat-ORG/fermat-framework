@@ -31,6 +31,7 @@ public class RedeemPointCommunityNavigationViewPainter extends NavigationViewPai
     public RedeemPointCommunityNavigationViewPainter(Context activity,
                                                      ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager> assetRedeemPointCommunitySubAppSession,
                                                      FermatApplicationCaller applicationsHelper) {
+        super(activity);
 
         this.activity = new WeakReference<>(activity);
         this.assetRedeemPointCommunitySubAppSession = assetRedeemPointCommunitySubAppSession;

@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Connecti
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorConnectionManager;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnectionSearch;
-import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.LinkedActorIdentity;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -14,8 +13,8 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/07/16.
  */
 public interface CBPActorConnectionManager
-        <T extends LinkedActorIdentity, Z extends CBPActorConnection<T>, M extends ActorConnectionSearch<T, Z>>
-        extends ActorConnectionManager<T, Z, M> {
+        <Z extends CBPActorConnection, M extends ActorConnectionSearch<Z>>
+        extends ActorConnectionManager<Z, M> {
 
     /**
      * This method creates a request connection with location in the argument

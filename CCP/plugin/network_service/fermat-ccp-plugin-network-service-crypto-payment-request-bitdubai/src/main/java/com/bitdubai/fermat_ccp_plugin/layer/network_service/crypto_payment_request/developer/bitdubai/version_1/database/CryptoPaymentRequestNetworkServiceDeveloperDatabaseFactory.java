@@ -11,10 +11,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,43 +74,11 @@ public class CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory {
         }
     }
 
-
-    public void initializeDatabaseCommunication() throws CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException {
-
-        try {
-
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-            throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(cantOpenDatabaseException);
-
-        } catch (DatabaseNotFoundException e) {
-
-            CryptoPaymentRequestNetworkServiceDatabaseFactory cryptoPaymentRequestNetworkServiceDatabaseFactory = new CryptoPaymentRequestNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-
-            try {
-
-                database = cryptoPaymentRequestNetworkServiceDatabaseFactory.createDatabase(
-                        pluginId,
-                        CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME
-                );
-
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-
-                throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(cantCreateDatabaseException);
-
-            }
-        }
-    }
-
     public List<DeveloperDatabase> getDatabaseList(final DeveloperObjectFactory developerObjectFactory) {
 
         List<DeveloperDatabase> databases = new ArrayList<>();
 
         databases.add(developerObjectFactory.getNewDeveloperDatabase("Crypto Payment Request", this.pluginId.toString()));
-
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME,this.pluginId.toString()));
 
         return databases;
     }
@@ -154,50 +121,6 @@ public class CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory {
         return tables;
     }
 
-
-    public List<DeveloperDatabaseTable> getDatabaseTableListCommunication(final DeveloperObjectFactory developerObjectFactory) {
-
-
-        List<DeveloperDatabaseTable> tables = new ArrayList<>();
-
-        /**
-         * Table Crypto Address Request columns.
-         */
-        List<String> cryptoIncomingColumns = new ArrayList<>();
-
-        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME         );
-        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME);
-        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME      );
-        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME   );
-        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME         );
-        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME        );
-        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME     );
-        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME    );
-        /**
-         * Table Crypto Address Request addition.
-         */
-        DeveloperDatabaseTable cryptoIncomingTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME, cryptoIncomingColumns);
-        tables.add(cryptoIncomingTable);
-
-        List<String> cryptoOutgoingColumns = new ArrayList<>();
-        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME         );
-        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME);
-        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME      );
-        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME   );
-        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME         );
-        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME        );
-        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME     );
-        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME    );
-        /**
-         * Table Crypto Address Request addition.
-         */
-        DeveloperDatabaseTable cryptoOutgoingTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, cryptoOutgoingColumns);
-        tables.add(cryptoOutgoingTable);
-
-
-        return tables;
-    }
-
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
                                                                       final DeveloperDatabase developerDatabase,
                                                                       final DeveloperDatabaseTable developerDatabaseTable) {
@@ -205,10 +128,7 @@ public class CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory {
 
         try {
 
-            if(!developerDatabase.getName().equals(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME))
-                initializeDatabaseCommunication();
-            else
-                initializeDatabase();
+            initializeDatabase();
 
             DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
 
