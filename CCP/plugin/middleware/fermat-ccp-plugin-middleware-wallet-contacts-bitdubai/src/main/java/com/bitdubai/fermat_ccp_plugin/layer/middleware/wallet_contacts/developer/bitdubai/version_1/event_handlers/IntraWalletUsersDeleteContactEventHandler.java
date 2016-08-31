@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by Gian Barboza on 29/08/16.
  */
-public class IntraWalletUsersDeleteContactEventHandler implements FermatEventHandler {
+public class IntraWalletUsersDeleteContactEventHandler implements FermatEventHandler<IntraUserDeleteContactEvent>  {
 
     private final WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry;
 
@@ -27,7 +27,7 @@ public class IntraWalletUsersDeleteContactEventHandler implements FermatEventHan
         this.walletContactsMiddlewarePluginRoot = walletContactsMiddlewarePluginRoot;
     }
     @Override
-    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+    public void handleEvent(IntraUserDeleteContactEvent fermatEvent) throws FermatException {
         if (this.walletContactsMiddlewarePluginRoot.getStatus() == ServiceStatus.STARTED) {
 
             if (fermatEvent instanceof IntraUserDeleteContactEvent) {

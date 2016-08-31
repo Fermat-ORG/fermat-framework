@@ -489,6 +489,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
     private ActorNetworkServiceRecord buildActorNetworkServiceRecord(DatabaseTableRecord record) throws InvalidParameterException {
         try
         {
+
             UUID   notificationId            = record.getUUIDValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME);
             String senderAlias    = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
             String senderPhase   = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME      );
@@ -500,6 +501,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             long timestamp           = record.getLongValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
             String protocolState         = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
             String flagReaded  = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME);
+
             String city   = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_CITY_COLUMN_NAME      );
             String country   = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_COUNTRY_COLUMN_NAME      );
 
@@ -606,29 +608,16 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             DatabaseTable table = getDatabaseTable();
             table.addUUIDFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
 
-            table.loadToMemory();
-
-            List<DatabaseTableRecord> records = table.getRecords();
-
-
-            for (DatabaseTableRecord record : records) {
-                table.deleteRecord(record);
-            }
-
+            table.deleteRecord();
 
         } catch (CantDeleteRecordException e) {
 
             throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-        } catch(CantLoadTableToMemoryException exception){
-
-            throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Exception invalidParameterException.","");
         }
-
     }
 
 
     public boolean existNotification(final UUID notificationId) throws CantGetNotificationException {
-
 
         try {
 

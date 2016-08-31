@@ -621,24 +621,11 @@ public class CryptoTransmissionNetworkServiceMetadataDao {
 
             cryptoTransmissiontTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, transmission_id, DatabaseFilterType.EQUAL);
 
-            cryptoTransmissiontTable.loadToMemory();
+            cryptoTransmissiontTable.deleteRecord();
 
-            List<DatabaseTableRecord> records = cryptoTransmissiontTable.getRecords();
-
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
-
-                cryptoTransmissiontTable.deleteRecord(record);
-            }
-
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-
-        } catch (CantDeleteRecordException e) {
+        }catch (CantDeleteRecordException e) {
             throw new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Cant delete record exception.");
         }
-
     }
 
 

@@ -6,18 +6,22 @@
 
     <RelativeLayout
         android:id="@+id/issuer_image_background"
-        android:layout_width="112dp"
-        android:layout_height="112dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginEnd="90dp"
+        android:layout_marginLeft="90dp"
+        android:layout_marginRight="90dp"
+        android:layout_marginStart="90dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/circle_blue"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/dap_v2_issuer_point_image"
-            android:layout_width="93dp"
-            android:layout_height="93dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="#00000000"
@@ -30,14 +34,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/issuer_image_background"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="87dp"
+        android:layout_marginStart="87dp"
+        android:layout_marginTop="24dp"
         android:background="@android:color/transparent">
 
         <EditText
             android:id="@+id/dap_v2_issuer_point_name"
-            android:layout_width="248dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="13dp"
@@ -47,22 +51,24 @@
             android:maxLength="25"
             android:singleLine="true"
             android:textColor="#536DFE"
-            android:textColorHint="#B4B4B4"
+            android:textColorHint="#808080"
             android:textSize="15sp" />
-
     </RelativeLayout>
 
-        <Button
-            android:id="@+id/dap_issuer_button"
-            android:layout_width="169dp"
-            android:layout_height="34dp"
-            android:gravity="center"
-            android:background="@drawable/bg_v2_create_button"
-            android:text="@string/create"
-            android:textColor="#CCCCCC"
-            android:textSize="16sp"
-            android:layout_marginBottom="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
-
+    <Button
+        android:id="@+id/dap_issuer_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="126dp"
+        android:layout_marginLeft="126dp"
+        android:layout_marginRight="126dp"
+        android:layout_marginStart="126dp"
+        android:background="@drawable/bg_v2_create_button"
+        android:gravity="center"
+        android:text="@string/create"
+        android:textColor="#CCCCCC"
+        android:textSize="16sp" />
 </RelativeLayout>

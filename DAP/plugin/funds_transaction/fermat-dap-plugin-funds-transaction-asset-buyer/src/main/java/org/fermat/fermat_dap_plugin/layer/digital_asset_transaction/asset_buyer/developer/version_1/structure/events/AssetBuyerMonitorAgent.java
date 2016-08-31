@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
@@ -36,6 +36,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 
+import org.bitcoinj.core.ECKey;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
@@ -83,7 +84,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
     private final ActorAssetUserManager actorAssetUserManager;
     private final AssetTransmissionNetworkServiceManager assetTransmission;
     private final CryptoVaultManager cryptoVaultManager;
-    private final BitcoinNetworkManager bitcoinNetworkManager;
+    private final BlockchainManager<ECKey, org.bitcoinj.core.Transaction> bitcoinNetworkManager;
     private final OutgoingDraftManager outgoingDraftManager;
     private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
     private final ExtraUserManager extraUserManager;
@@ -98,7 +99,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                                   ActorAssetUserManager actorAssetUserManager,
                                   AssetTransmissionNetworkServiceManager assetTransmission,
                                   CryptoVaultManager cryptoVaultManager,
-                                  BitcoinNetworkManager bitcoinNetworkManager,
+                                  BlockchainManager<ECKey, org.bitcoinj.core.Transaction> bitcoinNetworkManager,
                                   OutgoingDraftManager outgoingDraftManager,
                                   IntraWalletUserIdentityManager intraWalletUserIdentityManager,
                                   ExtraUserManager extraUserManager,
@@ -330,8 +331,10 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             DigitalAssetMetadata metadata = record.getMetadata();
             AssetUserWallet userWallet = userWalletManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY, metadata.getNetworkType());
             CryptoTransaction cryptoTransaction = null;
+            List<CryptoTransaction> cryptoTransactions = bitcoinNetworkManager.getCryptoTransactions(record.getMetadata().getNetworkType(), record.getBuyerCryptoAddress(), CryptoTransactionType.INCOMING);
+
             dance:
-            for (CryptoTransaction cryptoTx : bitcoinNetworkManager.getCryptoTransactions(record.getMetadata().getNetworkType(), record.getBuyerCryptoAddress(), CryptoTransactionType.INCOMING)) {
+            for (CryptoTransaction cryptoTx : cryptoTransactions) {
                 switch (balance) {
                     case BOOK: {
                         switch (cryptoTx.getCryptoStatus()) {

@@ -45,6 +45,7 @@
     <string name="cht_identity_enter_name">Please enter a name or alias</string>
     <string name="cht_identity_available">Available</string>
     <string name="cht_identity_no_camera">There is no cameras available</string>
+    <string name="cht_identity_picture_canbesave">Your device do not allow to save the capture image in storage. Nevertheless, the identity can be created with the picture.</string>
     <string name="cht_identity_turn_gps">Please, turn on your GPS</string>
     <string name="profile_picture">Profile Picture</string>
 

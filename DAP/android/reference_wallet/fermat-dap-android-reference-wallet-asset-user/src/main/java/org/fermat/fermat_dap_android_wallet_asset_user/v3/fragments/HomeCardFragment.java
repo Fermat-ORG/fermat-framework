@@ -240,7 +240,6 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setImageLeft(R.drawable.profile_actor)
                     .setVIewColor(R.color.card_toolbar)
-                    .setTitleTextColor(R.color.card_toolbar)
                     .setTextNameLeft(R.string.dap_user_wallet_welcome_name_left)
                     .setSubTitle(R.string.dap_user_wallet_welcome_subTitle)
                     .setBody(R.string.dap_user_wallet_welcome_body)

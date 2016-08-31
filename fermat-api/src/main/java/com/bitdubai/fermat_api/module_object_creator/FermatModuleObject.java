@@ -37,11 +37,6 @@ public class FermatModuleObject<O> implements FermatModuleObjectInterface, Seria
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("FermatModuleObject{")
-                .append("id=").append(id)
-                .append(", name='").append(name)
-                .append('\'')
-                .append('}').toString();
+        return "FermatModuleObject{" + "id=" + id + ", name='" + name + '\'' + '}';
     }
 }

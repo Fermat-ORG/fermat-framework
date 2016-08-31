@@ -150,15 +150,11 @@ public class ChatIdentityDatabaseDao {
 
             // 2) Find the Intra users.
             table.addStringFilter(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
-            table.loadToMemory();
 
-
-            // 3) Get Intra users.
-            for (DatabaseTableRecord record : table.getRecords()) {
-                //set new values
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_EXPOSURE_LEVEL_COLUMN_NAME, exposureLevel.getCode());
-                table.updateRecord(record);
-            }
+            DatabaseTableRecord record = table.getEmptyRecord();
+            //set new values
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_EXPOSURE_LEVEL_COLUMN_NAME, exposureLevel.getCode());
+            table.updateRecord(record);
 
         } catch (CantUpdateRecordException e) {
 
@@ -186,22 +182,18 @@ public class ChatIdentityDatabaseDao {
 
             // 2) Find the Intra users.
             table.addStringFilter(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
-            table.loadToMemory();
 
+            DatabaseTableRecord record = table.getEmptyRecord();
+            //set new values
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME, alias);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME, state);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME, country);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME, city);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME, connectionState);
+            record.setLongValue(ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME, accuracy);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME, frecuency.getCode());
 
-            // 3) Get Intra users.
-            for (DatabaseTableRecord record : table.getRecords()) {
-                //set new values
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME, alias);
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME, state);
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME, country);
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME, city);
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME, connectionState);
-                record.setLongValue(ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME, accuracy);
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME, frecuency.getCode());
-
-                table.updateRecord(record);
-            }
+            table.updateRecord(record);
 
             if (profileImage != null)
                 persistNewUserProfileImage(publicKey, profileImage);
@@ -351,10 +343,8 @@ public class ChatIdentityDatabaseDao {
             }
 
             table.addStringFilter(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
-            table.loadToMemory();
 
-            return table.getRecords().size() > 0;
-
+            return table.getCount() > 0;
 
         } catch (CantLoadTableToMemoryException e) {
 

@@ -6,7 +6,10 @@
  */
 package com.bitdubai.fermat_cht_api.layer.network_service.chat.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
+import java.io.Serializable;
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType</code>
@@ -16,7 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum ChatMessageTransactionType {
+public enum ChatMessageTransactionType implements FermatEnum,Serializable {
 
     /**
      * Definition types
@@ -24,8 +27,9 @@ public enum ChatMessageTransactionType {
     CHAT_METADATA_TRASMIT("CMDT"),
     MESSAGE_METADATA_TRANSMIT("MMDT"),
     TRANSACTION_STATUS_UPDATE("TSU"),
-    TRANSACTION_WRITING_STATUS("TWS");
-//    TRANSACTION_ONLINE_STATUS ("TOS");
+    TRANSACTION_WRITING_STATUS("TWS"),
+
+    ;
 
     /**
      * Represent the code of the message status

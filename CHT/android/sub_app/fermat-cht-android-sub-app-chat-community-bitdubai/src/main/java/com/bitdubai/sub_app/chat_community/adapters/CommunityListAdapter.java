@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -232,18 +233,22 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         holder.name.setText(data.getAlias().substring(0, max));
         byte[] profileImage = data.getImage();
         if (profileImage != null && profileImage.length > 0) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
-            bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
-            holder.thumbnail.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+            try {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
+                holder.thumbnail.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+            }catch (Exception e){
+                Log.e(getClass().getName(),"Exception: "+e.getCause().toString()+", please check this..");
+            }
         } else
             holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
 
 //            if (data.getState().equals("null") || data.getState().equals(""))
         stateAddress = "";
 //            else stateAddress = data.getState() + " ";
-        if (data.getCity().equals("null") || data.getCity().equals("")) cityAddress = "";
+        if (data.getCity() == null || data.getCity().equals("null") || data.getCity().equals("")) cityAddress = "";
         else cityAddress = data.getCity() + ", ";
-        if (data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
+        if (data.getCountry() == null || data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
         else countryAddress = data.getCountry();
         if (/*stateAddress.equalsIgnoreCase("") &&*/ cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
             holder.location_text.setText(context.getResources().getString(R.string.cht_comm_not_found));
@@ -403,7 +408,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         return 0;
     }
 
-    public void refreshEvents(ArrayList<ChatActorCommunityInformation> chatHistory) {
+    public void refreshEvents(List<ChatActorCommunityInformation> chatHistory) {
         for (int i = 0; i < chatHistory.size(); i++) {
             ChatActorCommunityInformation message = chatHistory.get(i);
             add(message);

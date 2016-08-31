@@ -94,7 +94,9 @@
     <string name="Today_text">Today: </string>
     <string name="Earned_text">earned</string>
     <string name="Lost_text">lost</string>
+
     <string name="No_data">No Data</string>
+
     <!-- home_request_fragment_main.xml -->
     <string name="reason_text">Reason</string>
     <string name="you_dont_have_requests_text">You don\'t have\n requests</string>
@@ -112,8 +114,9 @@
     <string name="this_is_a_loss_protected_wallet_text">This is a wallet that will allow you to protect against loss of money. It\s main features are:</string>
     <string name="close_text">Close</string>
     <!-- loss_toast -->
-    <string name="Whooops_text">Whooops! recovering from system error.</string>
-    <string name="Whooops_text2">Whooops, we have a problem here.</string>
+
+    <string name="Whooops_text">Recovering from system error.</string>
+    <string name="Whooops_text2">We have a problem here.</string>
     <string name="Whooops_text3">Whooops! recovering from system error In Graphic"</string>
 
     <string name="Recovering">Recovering from system error.</string>
@@ -130,6 +133,7 @@
     <string name="Invalid_Amount_small">Invalid Amount, must be greater than</string>
     <string name="Invalid_Amount">Invalid Amount</string>
     <string name="Unexpected_error">Unexpected Error</string>
+
     <string name="Request_accepted">Request accepted</string>
     <string name="Request_denied">Request denied</string>
     <string name="Action_not_allowed2">Action not allowed.Could not retrieve the dollar exchange rate.\nCheck your internet connection.. </string>
@@ -159,7 +163,6 @@
     <string name="TestNet_download">"TestNet download Init"</string>
     <string name="TestNet_bitcoin_arrived">TestNet bitcoin arrived</string>
     <string name="TestNet_Request_Error">TestNet Request Error</string>
-
 
     <!-- loss_presentation_wallet.xml -->
     <string name="to_begin_choose_an_avatar_below_text">To begin, choose an avatar below. You might change it later with any picture and your own alias.</string>

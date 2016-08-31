@@ -4,12 +4,9 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MessageMetadata;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -29,30 +26,18 @@ public class MessageImpl implements Message {
     public MessageImpl() {
     }
 
-    public MessageImpl(
-            UUID chatId,
-            ChatMetadata chatMetadata,
-            MessageStatus messageStatus,
-            TypeMessage typeMessage,
-            UUID contactId
-    ) {
-        messageId = chatMetadata.getMessageId();
-//        messageId=UUID.randomUUID();
+    public MessageImpl(UUID chatId,
+                       MessageMetadata messageMetadata,
+                       MessageStatus messageStatus,
+                       TypeMessage typeMessage,
+                       UUID contactId) {
+
+        messageId = messageMetadata.getMessageId();
         this.chatId = chatId;
-        message = chatMetadata.getMessage();
+        message = messageMetadata.getMessage();
         status = messageStatus;
         type = typeMessage;
-//        messageDate=new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        Date parsedDate = null;
-        try {
-            parsedDate = dateFormat.parse(chatMetadata.getDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        messageDate = new Timestamp(
-                timestamp.getTime());
+        messageDate = new Timestamp(System.currentTimeMillis());
         this.contactId = contactId;
     }
 

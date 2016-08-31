@@ -179,7 +179,6 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setImageLeft(R.drawable.profile_actor)
                     .setVIewColor(R.color.dap_user_view_color)
-                    .setTitleTextColor(R.color.dap_user_view_color)
                     .setTextNameLeft(R.string.dap_user_wallet_welcome_name_left)
                     .setSubTitle(R.string.dap_user_wallet_welcome_subTitle)
                     .setBody(R.string.dap_user_wallet_welcome_body)

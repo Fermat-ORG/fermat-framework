@@ -109,21 +109,15 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                         public void onClick(View v)
                         {
                                 try {
-                                    lstChatUserInformations = mChatActorCommunityManager.getExtendedCitiesByFilter(searchInput.getText().toString());
-                                    adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
-                                    mListView.setAdapter(adapter);
-                                    adapter.refreshEvents(lstChatUserInformations);
+
                                     onRefresh();
-                                }catch (CantGetCitiesListException e){
-                                    if (getActivity() != null)
-                                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
-                                                UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-                                }
+                                 }
                                 catch (Exception e){
                                     System.out.println("Exception at Geolocation search " + e.getMessage());
                                 }
                         }
                     }
+
             );
             showEmpty(true, emptyView);
         }catch (Exception e){
@@ -197,7 +191,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     }
 
     private synchronized List<ExtendedCity> getMoreData(String filter) {
-        System.out.println("****************** GETMORE DATA SYNCHRONIZED ENTERING");
+
         List<ExtendedCity> dataSet = new ArrayList<>();
 
         try {
@@ -206,7 +200,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("****************** GETMORE DATA SYNCRHONIZED SALIO BIEN: ");
+
         return dataSet;
     }
 

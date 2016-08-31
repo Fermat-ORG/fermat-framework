@@ -180,11 +180,11 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         frameLayout.addView(view);
         frameLayout.setOnClickListener(onClickListener);
         view.setOnClickListener(onClickListener);
-       actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
+        actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout).setBackgroundDrawable(R.drawable.btn_request_selector)
                 .build();
 
-         actionMenu = new FloatingActionMenu.Builder(getActivity())
+        actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .attachTo(actionButton)
                 .build();
 
@@ -220,14 +220,14 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
     @Override
     public void onDrawerOpen() {
-       // actionButton.setVisibility(View.GONE);
+        // actionButton.setVisibility(View.GONE);
 
     }
 
     @Override
     public void onDrawerClose() {
-      //  FermatAnimationsUtils.showEmpty(getActivity(), true, actionMenu.getActivityContentView());
-      //  actionButton.setVisibility(View.VISIBLE);
+        //  FermatAnimationsUtils.showEmpty(getActivity(), true, actionMenu.getActivityContentView());
+        //  actionButton.setVisibility(View.VISIBLE);
 
     }
 
@@ -338,7 +338,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
         try {
 
-       //when refresh offset set 0
+            //when refresh offset set 0
             if(refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
             lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, this.blockchainNetworkType ,10,offset);
@@ -346,11 +346,11 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-           e.printStackTrace();
-       }
+            e.printStackTrace();
+        }
 
 
-            return lstPaymentRequest;
+        return lstPaymentRequest;
 
     }
 

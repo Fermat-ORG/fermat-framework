@@ -1158,7 +1158,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#03A9F4");
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Asset Issuer Identity");
+        runtimeTitleBar.setLabel("Asset Issuer Profile");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setColor("#1B1B1B");
         runtimeTitleBar.setTitleColor("#ffffff");
@@ -1282,15 +1282,16 @@ public class SubAppAppsGenerator {
         //runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Asset User Identity");
-        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setLabel("Asset User Profile");
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setColor("#2C4B97");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#1189a4");
+        statusBar.setColor("#2C4B97");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -1325,13 +1326,13 @@ public class SubAppAppsGenerator {
         //        runtimeActivity.setBackgroundColor("#F9F9F9");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#1189a4");
+        statusBar.setColor("#2C4B97");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Geolocation");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setColor("#2C4B97");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setLabelSize(18);
@@ -1403,7 +1404,7 @@ public class SubAppAppsGenerator {
 //        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Redeem Point Identity");
+        runtimeTitleBar.setLabel("Redeem Point Profile");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setColor("#009688");
         runtimeTitleBar.setTitleColor("#ffffff");
@@ -4864,6 +4865,7 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuConn = new OptionsMenu();
 
+
         /*OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
         optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(1, "search_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Search");
@@ -4917,7 +4919,7 @@ public class SubAppAppsGenerator {
         optionMenuItemNot.setLabel("Search");
         optionMenuItemNot.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenuNot.addMenuItem(optionMenuItemNot);*/
+        optionsMenuNot.addMenuItem(optionMenuItemNot);
 
         /*OptionMenuItem optionMenuItemNot = new OptionMenuItem(2);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(2, "geolocalitation_icon", owner, SourceLocation.DEVELOPER_RESOURCES));

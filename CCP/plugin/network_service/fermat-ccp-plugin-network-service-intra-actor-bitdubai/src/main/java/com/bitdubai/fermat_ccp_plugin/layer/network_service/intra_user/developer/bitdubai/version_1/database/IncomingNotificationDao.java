@@ -195,17 +195,13 @@ public class IncomingNotificationDao implements DAO {
 
             incomingNotificationTable.addUUIDFilter(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
 
-
-
             DatabaseTableRecord record = incomingNotificationTable.getEmptyRecord();
 
             record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME, "true");
 
             incomingNotificationTable.updateRecord(record);
 
-
             // actorNetworkServiceRecord.setFlagReadead(true);
-
 
 
         } catch (CantUpdateRecordException e) {
@@ -303,6 +299,7 @@ public class IncomingNotificationDao implements DAO {
                 return false;
             else
                 return true;
+
 
         } catch (Exception exception) {
 

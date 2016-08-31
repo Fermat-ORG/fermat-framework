@@ -3,6 +3,8 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.c
 import com.bitdubai.fermat_api.layer.all_definition.events.common.AbstractEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
+import java.util.UUID;
+
 /**
  * The class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientProfileRegisteredEvent</code>
  * is the representation of a network client registered profile event.
@@ -15,6 +17,10 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
  * @since   Java JDK 1.7
  */
 public class NetworkClientProfileRegisteredEvent extends AbstractEvent<P2pEventType> {
+
+    private UUID packageId;
+
+
 
     public enum STATUS{
         SUCCESS,
@@ -55,10 +61,18 @@ public class NetworkClientProfileRegisteredEvent extends AbstractEvent<P2pEventT
         this.publicKey = publicKey;
     }
 
+    public UUID getPackageId() {
+        return packageId;
+    }
+
+    public void setPackageId(UUID packageId) {
+        this.packageId = packageId;
+    }
+
     @Override
     public String toString() {
         return "NetworkClientProfileRegisteredEvent{" +
-                "publicKey='" + publicKey + '\'' +
+                "pk='" + publicKey + '\'' +
                 ", status=" + status +
                 '}';
     }

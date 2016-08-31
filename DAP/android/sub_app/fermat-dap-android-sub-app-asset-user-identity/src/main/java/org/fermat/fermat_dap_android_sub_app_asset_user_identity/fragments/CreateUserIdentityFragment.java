@@ -52,6 +52,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.R;
 
+import org.fermat.fermat_dap_android_sub_app_asset_user_identity.dialogs.DialogSelectCamPic;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.util.CommonLogger;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.util.IdentityUserDialogCropImage;
@@ -191,7 +192,6 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                     .setBannerRes(R.drawable.banner_asset_user_identity)
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_identity_user_view_color)
-                    .setTitleTextColor(R.color.dap_identity_user_view_color)
                     .setSubTitle(R.string.dap_user_identity_welcome_subTitle)
                     .setBody(R.string.dap_user_identity_welcome_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
@@ -216,7 +216,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
 
         createButton.setText((!isUpdate) ? "Create" : "Update");
         createButton.setEnabled(false);
-        createButton.setBackgroundColor(Color.parseColor("#B3B3B3"));
+//        createButton.setBackgroundColor(Color.parseColor("#B3B3B3"));
 
         mIdentityName.requestFocus();
         registerForContextMenu(mIdentityImage);
@@ -313,6 +313,25 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
                 createNewIdentity();
                 appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
+            }
+        });
+
+        mIdentityImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CommonLogger.debug(TAG, "Entrando en mIdentityImage.setOnClickListener");
+                final DialogSelectCamPic Dcamgallery = new DialogSelectCamPic(getActivity(), appSession, null);
+                Dcamgallery.show();
+                Dcamgallery.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_CAM) {
+                            dispatchTakePictureIntent();
+                        } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_GALLERY) {
+                            loadImageFromGallery();
+                        }
+                    }
+                });
             }
         });
     }
@@ -700,14 +719,6 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.dap_user_identity_menu_main, menu);
-//        menu.add(0, SessionConstants.IC_ACTION_USER_IDENTITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_identity_user_help_icon)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
@@ -956,12 +967,14 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
 
     private void activateButton() {
         createButton.setEnabled(true);
-        createButton.setBackgroundColor(Color.parseColor("#0072BC"));
+        createButton.setBackgroundResource(R.drawable.bg_v2_create_button_active);
+        createButton.setTextColor(Color.WHITE);
     }
 
     private void deactivatedButton() {
         createButton.setEnabled(false);
-        createButton.setBackgroundColor(Color.GRAY);
+        createButton.setBackgroundResource(R.drawable.bg_v2_create_button);
+        createButton.setTextColor(Color.parseColor("#CCCCCC"));
     }
 
     private void verifyFieldGeo() {

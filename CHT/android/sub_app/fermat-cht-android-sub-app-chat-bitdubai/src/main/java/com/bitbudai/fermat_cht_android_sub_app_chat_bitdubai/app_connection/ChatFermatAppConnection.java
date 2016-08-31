@@ -86,23 +86,6 @@ public class ChatFermatAppConnection
             default:
                 return null;
         }
-//
-//        NotificationPainter notification = null;
-//        try
-//        {
-//
-//            String usersend = code.split("@#@#")[0];
-//            String message = code.split("@#@#")[1];
-//            //find last transaction
-//            notification = new ChatNotificationPainter("New Message Receive", usersend+" : "+message ,"","", android.R.drawable.ic_notification_overlay);
-//
-//        }
-//        catch(Exception e)
-//        {
-//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }
-//
-//        return notification;
     }
 
     @Override

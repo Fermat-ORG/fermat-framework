@@ -16,12 +16,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -33,12 +35,14 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
+import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserActorListReceivedEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.exceptions.CantLoadLoginsFileException;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleManagerImpl;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.utils.IntraUserSettings;
@@ -78,8 +82,6 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
-    private EventManager eventManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserActorManager intraWalletUserManager;
@@ -89,6 +91,12 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
 
     @NeededPluginReference (platform = Platforms.PLUG_INS_PLATFORM  , layer = Layers.EXTERNAL_API  , plugin  = Plugins .GEOLOCATION)
     private GeolocationManager geolocationManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
     private IntraWalletUserIdentity intraWalletUser;
 
@@ -102,9 +110,15 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
     private IntraUserSettings intraUserSettings = new IntraUserSettings();
     private String appPublicKey;
 
+    private List<FermatEventListener> listenersAdded;
+
+
+    private IntraUserModuleManagerImpl intraUserModuleManager;
+
 
     public IntraWalletUserModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
+        listenersAdded = new ArrayList<>();
     }
 
 
@@ -160,12 +174,22 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
     }
 
 
+
     /**
      * Service Interface implementation.
      */
     @Override
     public void start() throws CantStartPluginException {
         try {
+
+            intraUserModuleManager = new IntraUserModuleManagerImpl(pluginFileSystem,pluginId,eventManager,intraUserLoginXml,intraWalletUser,intraWalletUserIdentityManager,intraWalletUserManager,intraUserNertwokServiceManager,errorManager,intraUserLoggedPublicKey,locationManager,geolocationManager, broadcaster);
+
+
+            FermatEventListener listReceived = eventManager.getNewListener(EventType.ACTOR_NETWORK_SERVICE_ACTOR_LIST_RECEIVED);
+            listReceived.setEventHandler(new IntraUserActorListReceivedEventHandler(this, intraUserModuleManager));
+            eventManager.addListener(listReceived);
+            listenersAdded.add(listReceived);
+
             this.serviceStatus = ServiceStatus.STARTED;
 
             /**
@@ -267,13 +291,12 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
     }
 
 
-    private IntraUserModuleManagerImpl intraUserModuleManager;
 
     @Override
     public ModuleManager<IntraUserWalletSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         if(intraUserModuleManager==null){
+            intraUserModuleManager = new IntraUserModuleManagerImpl(pluginFileSystem,pluginId,eventManager,intraUserLoginXml,intraWalletUser,intraWalletUserIdentityManager,intraWalletUserManager,intraUserNertwokServiceManager,errorManager,intraUserLoggedPublicKey,locationManager,geolocationManager,broadcaster);
 
-            intraUserModuleManager = new IntraUserModuleManagerImpl(pluginFileSystem,pluginId,eventManager,intraUserLoginXml,intraWalletUser,intraWalletUserIdentityManager,intraWalletUserManager,intraUserNertwokServiceManager,errorManager,intraUserLoggedPublicKey,locationManager,geolocationManager);
         }
         return intraUserModuleManager;
     }
