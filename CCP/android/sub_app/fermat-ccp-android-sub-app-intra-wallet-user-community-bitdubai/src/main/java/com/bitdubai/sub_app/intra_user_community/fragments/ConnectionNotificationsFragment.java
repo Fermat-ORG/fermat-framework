@@ -7,15 +7,12 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -29,19 +26,16 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
-
-import com.bitdubai.sub_app.intra_user_community.common.popups.DeleteAllContactsDialog;
-import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
@@ -267,10 +261,12 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
                             if ((Boolean) o) {
                                 onRefresh();
                                 appSession.removeData(SessionConstants.NOTIFICATION_ACCEPTED);
+
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                             onRefresh();
+
                         }
                     }
 
@@ -359,6 +355,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
                             if (isBackPressed != null) {
                                 if (isBackPressed) {
                                     getActivity().finish();
+
                                 }
                             } else {
                                 onRefresh();
