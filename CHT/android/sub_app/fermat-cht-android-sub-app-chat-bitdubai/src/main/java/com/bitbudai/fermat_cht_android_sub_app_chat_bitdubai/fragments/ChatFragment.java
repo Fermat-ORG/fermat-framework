@@ -240,6 +240,7 @@ public class ChatFragment
         adapterView.destroyDrawingCache();
         adapterView.removeView(getView());
         adapterView.removeAllViews();
+        adapterView.removeAllViewsInLayout();
         adapterView = null;
         chatIdentity = null;
         chatSettings = null;

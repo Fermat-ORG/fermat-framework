@@ -480,6 +480,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 unbindDrawables(((ViewGroup) view).getChildAt(i));
             }
             ((ViewGroup) view).removeAllViews();
+            ((ViewGroup) view).removeAllViewsInLayout();
         }
     }
 
@@ -493,6 +494,25 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         chatIdentity = null;
         chatManager = null;
         applicationsHelper = null;
+        contactName.clear();
+        message.clear();
+        chatId.clear();
+        dateMessage.clear();
+        contactId.clear();
+        status.clear();
+        typeMessage.clear();
+        noReadMsgs.clear();
+        imgId.clear();
+        emptyView.removeAllViewsInLayout();
+        contactName.clear();
+        message.clear();
+        chatId.clear();
+        dateMessage.clear();
+        contactId.clear();
+        status.clear();
+        typeMessage.clear();
+        noReadMsgs.clear();
+        imgId.clear();
         destroy();
     }
 
@@ -713,13 +733,14 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION);
 
                         if (remotePK != null) {
-                            message.set(contactId.indexOf(remotePK), "Typing...");
+                            if (Build.VERSION.SDK_INT < 23)
+                                message.set(contactId.indexOf(remotePK), getActivity().getResources().getString(R.string.cht_typing));
+                            else
+                                message.set(contactId.indexOf(remotePK), getContext().getResources().getString(R.string.cht_typing));
                             adapter.refreshEvents(contactName,message,dateMessage, chatId,contactId,
                                     status, typeMessage, noReadMsgs, imgId);
                         }
-
                     }
-
                 }
             } catch (ClassCastException e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
