@@ -91,7 +91,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     public static final String INTRA_USER_SELECTED = "intra_user";
 
     private static final int MAX = 10;
-   private static final int SPAN_COUNT = 2;
+    private static final int SPAN_COUNT = 2;
     /**
      * MANAGERS
      */

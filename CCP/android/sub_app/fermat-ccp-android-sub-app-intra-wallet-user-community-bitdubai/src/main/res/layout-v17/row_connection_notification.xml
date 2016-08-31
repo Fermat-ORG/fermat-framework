@@ -38,7 +38,7 @@
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/username"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="2"
@@ -77,6 +77,7 @@
                         android:textColor="#aaaaab"
                         android:layout_weight="0.70"
                         android:paddingTop="4dp"
+                        android:maxLength="22"
                         />
 
                 </LinearLayout>

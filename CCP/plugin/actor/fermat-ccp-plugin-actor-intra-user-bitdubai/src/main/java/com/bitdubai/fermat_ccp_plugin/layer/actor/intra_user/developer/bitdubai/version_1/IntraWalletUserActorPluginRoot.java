@@ -225,7 +225,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     public void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) throws CantDenyConnectionException {
 
         try {
-            FermatBundle fermatBundle = new FermatBundle();
+          /*  FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(SOURCE_PLUGIN, Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR.getCode());
             fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CCP_COMMUNITY.getCode()));
             fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CCP_COMMUNITY.getCode());
@@ -233,7 +233,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
             fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
             fermatBundle.put("InvolvedActor", "");
 
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);*/
 
             this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToRejectPublicKey, ConnectionState.DENIED_LOCALLY);
         } catch (CantUpdateConnectionException e) {

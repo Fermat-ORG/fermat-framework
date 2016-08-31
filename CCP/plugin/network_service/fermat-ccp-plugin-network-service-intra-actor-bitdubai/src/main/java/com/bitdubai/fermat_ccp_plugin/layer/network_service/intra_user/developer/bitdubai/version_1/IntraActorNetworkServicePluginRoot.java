@@ -344,7 +344,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
         eventToRaise.setSource(eventSource);
         eventToRaise.setActorProfileList(lstIntraUser);
 
-        System.out.println("INSTRA USER ACTOR LIST FLOW -> RAISING EVENT -> -> init");
+        System.out.println("INTRA USER ACTOR LIST FLOW -> RAISING EVENT -> -> init");
         eventManager.raiseEvent(eventToRaise);
     }
 
