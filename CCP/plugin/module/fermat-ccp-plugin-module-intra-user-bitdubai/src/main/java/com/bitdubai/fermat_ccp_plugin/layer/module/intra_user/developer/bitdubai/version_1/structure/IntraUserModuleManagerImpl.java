@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
@@ -679,9 +680,6 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
             this.intraUserNertwokServiceManager.disconnectIntraUSer(intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
 
-            IntraUserDeleteContactEvent eventToRaise = (IntraUserDeleteContactEvent) eventManager.getNewEvent(EventType.INTRA_USER_WALLET_DELETE_CONTACT);
-            eventToRaise.setContactId(intraUserToDisconnectPublicKey);
-            eventManager.raiseEvent(eventToRaise);
 
         } catch (CantDisconnectIntraWalletUserException e) {
             throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT INTRA USER CONNECTION- KEY:" + intraUserToDisconnectPublicKey, e, "", "");
@@ -710,8 +708,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
                 this.intraUserNertwokServiceManager.disconnectIntraUSer(intraUserLoggedPublicKey, intraUserActor.getPublicKey());
 
-                IntraUserDeleteContactEvent eventToRaise = (IntraUserDeleteContactEvent) eventManager.getNewEvent(EventType.INTRA_USER_WALLET_DELETE_CONTACT);
-                eventToRaise.setContactId(intraUserActor.getPublicKey());
+
             }
 
 

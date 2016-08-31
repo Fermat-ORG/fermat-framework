@@ -673,6 +673,8 @@ public class BrowserTabFragment
     public void onActorReceived(final List<IntraUserInformation> result) {
         try {
             if (isAttached) {
+                swipeRefreshLayout.setRefreshing(false);
+                adapter.setLoadingData(false);
                 if (result != null && result.size() > 0) {
                     if (getActivity() != null && adapter != null) {
                         if (offset == 0) {
@@ -683,7 +685,7 @@ public class BrowserTabFragment
                             adapter.changeDataSet(lstIntraUserInformations);
                             ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                         } else {
-                            lstIntraUserInformations.clear();
+
                             lstIntraUserInformations.addAll((ArrayList) result);
                             adapter.notifyItemRangeInserted(offset, lstIntraUserInformations.size() - 1);
                         }

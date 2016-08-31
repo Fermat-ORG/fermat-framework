@@ -4950,10 +4950,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         //action bar menu
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 9f2b2084666eb9e90a85324b1f26b15c9f0f1bed
         optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(6, "send_request", owner, SourceLocation.DEVELOPER_RESOURCES));

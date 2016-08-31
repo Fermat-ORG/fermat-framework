@@ -47,6 +47,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingSuggestionsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserDeleteContactEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IncomingNotificationDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDataBaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDatabaseFactory;
@@ -289,7 +290,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
 
           @Override
         public final void onSentMessage(final UUID packageId) {
-            System.out.println("************ Mensaje supuestamente enviado intra actor network service: "+packageId);
+            System.out.println("************ Mensaje supuestamente enviado intra actor network service: " + packageId);
 
        /* try {
             ActorNetworkServiceRecord actorNetworkServiceRecord = ActorNetworkServiceRecord.fronJson(messageSent.getContent());
@@ -476,65 +477,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                 throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
-        }
-
-    }
-
-    private void checkFailedDeliveryTime(String destinationPublicKey)
-    {
-        try{
-
-            List<ActorNetworkServiceRecord> actorNetworkServiceRecordList = outgoingNotificationDao.getNotificationByDestinationPublicKey(destinationPublicKey);
-
-            //if I try to send more than 5 times I put it on hold
-            for (ActorNetworkServiceRecord record : actorNetworkServiceRecordList) {
-
-                if(!record.getActorProtocolState().getCode().equals(ActorProtocolState.WAITING_RESPONSE.getCode()))
-                {
-                    if(record.getSentCount() > 10 )
-                    {
-
-                        record.setActorProtocolState(ActorProtocolState.WAITING_RESPONSE);
-                        record.setSentCount(1);
-                        //update state and process again later
-
-                        outgoingNotificationDao.update(record);
-                    }
-                    else
-                    {
-                        record.setSentCount(record.getSentCount() + 1);
-                        outgoingNotificationDao.update(record);
-                    }
-                }
-                else
-                {
-                    //I verify the number of days I'm around trying to send if it exceeds three days I delete record
-
-                    long sentDate = record.getSentDate();
-                    long currentTime = System.currentTimeMillis();
-                    long dif = currentTime - sentDate;
-
-                    double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
-
-                    if((int) dias > 3)
-                    {
-                        //notify the user does not exist to intra user actor plugin
-                        record.changeDescriptor(NotificationDescriptor.INTRA_USER_NOT_FOUND);
-                        incomingNotificationsDao.createNotification(record);
-
-                        outgoingNotificationDao.delete(record.getId());
-                    }
-
-                }
-
-            }
-
-
-        }
-        catch(Exception e)
-        {
-            System.out.println("INTRA USER NS EXCEPCION VERIFICANDO WAIT MESSAGE");
-            e.printStackTrace();
         }
 
     }
@@ -858,6 +800,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     actorNetworkServiceRecord.getActorDestinationPublicKey(),
                     actorNetworkServiceRecord.toJson()
             );
+
+
+            IntraUserDeleteContactEvent eventToRaise = eventManager.getNewEventMati(EventType.INTRA_USER_WALLET_DELETE_CONTACT,IntraUserDeleteContactEvent.class);
+            eventToRaise.setContactId(intraUserToDisconnectPublicKey);
+            eventToRaise.setSource(eventSource);
+            eventManager.raiseEvent(eventToRaise);
 
         } catch (Exception e) {
             throw new ErrorDisconnectingIntraUserException("ERROR DISCONNECTING INTRAUSER ", e, "", "Generic Exception");
