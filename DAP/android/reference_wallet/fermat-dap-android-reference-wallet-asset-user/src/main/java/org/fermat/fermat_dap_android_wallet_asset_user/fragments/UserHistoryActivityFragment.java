@@ -106,7 +106,6 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
                     .setBannerRes(R.drawable.banner_asset_user_wallet)
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
-                    .setTitleTextColor(R.color.dap_user_view_color)
 //                    .setSubTitle("Asset User History.")
 //                    .setBody("*GIVE ME A TEXT")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)

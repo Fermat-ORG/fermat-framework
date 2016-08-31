@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:gravity="center"
     >
-    
+
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -34,6 +34,7 @@ public class AssetFactoryNavigationViewPainter extends NavigationViewPainter {
     public AssetFactoryNavigationViewPainter(Context activity,
                                              ReferenceAppFermatSession<AssetFactoryModuleManager> factorySession,
                                              FermatApplicationCaller applicationsHelper) {
+        super(activity);
 
         this.activity = new WeakReference<>(activity);
         this.factorySession = factorySession;

@@ -55,7 +55,7 @@
                 android:textColor="#80ffffff"
                 android:textSize="10dp"
                 app:typeface="ROBOTO_REGULAR"
-                tools:text="Conference ticket jghjghjghj hgjghjghjghj hjhgjghjghj"
+                tools:text="Conference ticket"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:layout_alignParentTop="false" />

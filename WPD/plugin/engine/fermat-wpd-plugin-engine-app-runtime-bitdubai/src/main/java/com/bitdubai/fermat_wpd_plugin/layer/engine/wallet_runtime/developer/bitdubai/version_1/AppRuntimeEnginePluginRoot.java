@@ -4950,7 +4950,10 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         //action bar menu
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9f2b2084666eb9e90a85324b1f26b15c9f0f1bed
         optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(6, "send_request", owner, SourceLocation.DEVELOPER_RESOURCES));
@@ -4963,7 +4966,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
-
         runtimeActivity.setOptionsMenu(optionsMenu);
         //Navigation
 
@@ -5006,6 +5008,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#05DDD2");
+
+        leftToolbarIcon = new MenuItem(400);
+        leftToolbarIcon.setAppLinkPublicKey("nav_menu");
+        runtimeTitleBar.setNavItem(leftToolbarIcon);
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
@@ -5101,6 +5110,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
+
+
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#05CFC2");
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 

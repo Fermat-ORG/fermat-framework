@@ -24,4 +24,10 @@ public class CantSendMessageException extends FermatException {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
+    public CantSendMessageException(String message) {
+        super(message, null, null, null);
+    }
+    public CantSendMessageException(Exception e) {
+        super(null,e,null,null);
+    }
 }

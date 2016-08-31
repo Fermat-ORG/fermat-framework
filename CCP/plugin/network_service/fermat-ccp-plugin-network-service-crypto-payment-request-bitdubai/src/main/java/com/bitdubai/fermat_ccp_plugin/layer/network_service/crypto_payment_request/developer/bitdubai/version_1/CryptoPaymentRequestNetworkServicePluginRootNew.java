@@ -1,9 +1,10 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -11,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -19,12 +21,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
@@ -51,7 +53,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantChangeRequestProtocolStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantCreateCryptoPaymentRequestException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantTakeActionException;
@@ -81,6 +82,11 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
         CryptoPaymentRequestManager,
         DatabaseManagerForDevelopers {
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    protected PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
     /**
      * Represent the dataBase
@@ -218,7 +224,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
     }
 
     @Override
-    public void onNewMessageReceived(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage newFermatMessageReceive) {
+    public void onNewMessageReceived(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.entities.NetworkServiceMessage newFermatMessageReceive) {
         try {
 
             final Gson gson = new Gson();
@@ -379,9 +385,9 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
     }
 
     @Override
-    public void onSentMessage(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage messageSent) {
+    public void onSentMessage(UUID messageSentId) {
 
-        Gson gson = new Gson();
+       /* Gson gson = new Gson();
 
         String jsonMessage = messageSent.getContent();
 
@@ -411,7 +417,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                 } catch (CantHandleNewMessagesException e1) {
                     e1.printStackTrace();
                 }
-        }
+        }*/
     }
 
 
@@ -759,11 +765,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        if (developerDatabase.getName().equals("Crypto Payment Request"))
             return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
-        else
-            return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
-
     }
 
     @Override
@@ -773,38 +775,6 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
         } catch (Exception e) {
             System.out.println(e);
             return new ArrayList<>();
-        }
-    }
-
-    @Override
-    public void onActorUnreachable(ActorProfile remoteParticipant) {
-        //I check my time trying to send the message
-        System.out.println("************ Crypto Payment Request -> FAILURE CONNECTION.");
-        checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
-    }
-
-    private PlatformComponentType platformComponentTypeSelectorByActorType(final Actors type) throws InvalidParameterException {
-
-        switch (type) {
-
-            case INTRA_USER:
-                return PlatformComponentType.ACTOR_INTRA_USER;
-            case CCM_INTRA_WALLET_USER:
-                return PlatformComponentType.ACTOR_INTRA_USER;
-            case CCP_INTRA_WALLET_USER:
-                return PlatformComponentType.ACTOR_INTRA_USER;
-            case DAP_ASSET_ISSUER:
-                return PlatformComponentType.ACTOR_ASSET_ISSUER;
-            case DAP_ASSET_USER:
-                return PlatformComponentType.ACTOR_ASSET_USER;
-            case DAP_ASSET_REDEEM_POINT:
-                return PlatformComponentType.ACTOR_ASSET_REDEEM_POINT;
-
-            default:
-                throw new InvalidParameterException(
-                        " actor type: " + type.name() + "  type-code: " + type.getCode(),
-                        " type of actor not expected."
-                );
         }
     }
 
@@ -854,9 +824,9 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
             // if there are pending actions I will raise a crypto address news event.
             if (cryptoPaymentRequestNetworkServiceDao.isPendingRequestByProtocolState(RequestProtocolState.PENDING_ACTION)) {
                 System.out.println("************* Crypto Payment Request -> Pending Action detected!");
-                FermatEvent eventToRaise = getEventManager().getNewEvent(EventType.CRYPTO_PAYMENT_REQUEST_NEWS);
+                FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_PAYMENT_REQUEST_NEWS);
                 eventToRaise.setSource(this.eventSource);
-                getEventManager().raiseEvent(eventToRaise);
+                eventManager.raiseEvent(eventToRaise);
             }
 
         } catch (CantListRequestsException e) {
@@ -900,7 +870,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     sendNewMessage(
                             sender,
                             receiver,
-                            contentMessage
+                            contentMessage,true
                     );
                 } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
                     reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

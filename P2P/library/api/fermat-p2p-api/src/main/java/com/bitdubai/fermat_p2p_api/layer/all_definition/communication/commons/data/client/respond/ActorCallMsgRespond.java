@@ -3,6 +3,8 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.d
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
+import java.util.UUID;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorCallMsgRespond</code>
  * represent the message to respond a network call between actors<p/>
@@ -18,12 +20,12 @@ public class ActorCallMsgRespond extends MsgRespond {
     private NetworkServiceType        networkServiceType;
     private ResultDiscoveryTraceActor traceActor        ;
 
-    public ActorCallMsgRespond(final NetworkServiceType        networkServiceType,
+    public ActorCallMsgRespond(UUID packageId, final NetworkServiceType        networkServiceType,
                                final ResultDiscoveryTraceActor traceActor        ,
                                final STATUS                    status            ,
                                final String                    details           ) {
 
-        super(status, details);
+        super(packageId,status, details);
 
         this.networkServiceType = networkServiceType;
         this.traceActor         = traceActor        ;

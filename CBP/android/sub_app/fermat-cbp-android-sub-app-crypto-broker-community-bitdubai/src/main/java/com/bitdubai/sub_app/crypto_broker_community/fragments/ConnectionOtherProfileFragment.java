@@ -111,7 +111,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
         //Show user image if it has one, otherwise show default user image
         try {
             userName.setText(cryptoBrokerCommunityInformation.getAlias());
-            currenciesExchangeRates.setText("Unknown, for now.");
+            currenciesExchangeRates.setText(R.string.unknow);
             Bitmap bitmap;
 
             if (cryptoBrokerCommunityInformation.getImage() != null && cryptoBrokerCommunityInformation.getImage().length > 0)
@@ -123,7 +123,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
             userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
 
         } catch (Exception ex) {
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.error_opps, Toast.LENGTH_SHORT).show();
         }
         return rootView;
     }
@@ -137,27 +137,27 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
             try {
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, null,
                         cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
-                connectDialog.setTitle("Connection Request");
-                connectDialog.setSubtitle("New Request");
-                connectDialog.setDescription(String.format("Do you want to send a connection request to %1$s?", cryptoBrokerCommunityInformation.getAlias()));
+                connectDialog.setTitle(R.string.connection_request);
+                connectDialog.setSubtitle(getResources().getString(R.string.connection_request_new));
+                connectDialog.setDescription(String.format(getResources().getString(R.string.send_connection_request), cryptoBrokerCommunityInformation.getAlias()));
                 connectDialog.setOnDismissListener(this);
                 connectDialog.show();
             } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.error_try, Toast.LENGTH_SHORT).show();
             }
         } else if (i == R.id.btn_disconect) {
             try {
                 DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(), appSession, null,
                         cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
-                disconnectDialog.setTitle("Disconnect");
-                disconnectDialog.setDescription("Want to disconnect from");
+                disconnectDialog.setTitle(R.string.cbc_disconnect);
+                disconnectDialog.setDescription(getResources().getString(R.string.want_disconnect));
                 disconnectDialog.setSubtitle(cryptoBrokerCommunityInformation.getAlias());
                 disconnectDialog.setOnDismissListener(this);
                 disconnectDialog.show();
             } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.error_try, Toast.LENGTH_SHORT).show();
             }
         } else if (i == R.id.btn_cancel) {
 

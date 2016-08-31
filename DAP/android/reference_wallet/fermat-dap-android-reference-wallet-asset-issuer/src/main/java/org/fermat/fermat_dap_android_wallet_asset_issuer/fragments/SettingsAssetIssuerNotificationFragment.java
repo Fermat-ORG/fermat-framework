@@ -256,7 +256,6 @@ public class SettingsAssetIssuerNotificationFragment extends FermatPreferenceFra
                     .setBannerRes(R.drawable.banner_asset_issuer_wallet)
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)
-                    .setTitleTextColor(R.color.dap_issuer_view_color)
                     .setSubTitle(R.string.dap_issuer_wallet_detail_subTitle)
                     .setBody(R.string.dap_issuer_wallet_detail_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)

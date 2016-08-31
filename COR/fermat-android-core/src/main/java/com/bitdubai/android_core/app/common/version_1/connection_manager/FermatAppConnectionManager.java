@@ -139,7 +139,7 @@ public class FermatAppConnectionManager {
                 break;
             //CASH WALLET
             case "cash_wallet":
-                fermatAppConnection = new CashMoneyWalletFermatAppConnection(activity, null);
+                fermatAppConnection = new CashMoneyWalletFermatAppConnection(activity);
                 break;
             //BANKING WALLET
             case "banking_wallet":

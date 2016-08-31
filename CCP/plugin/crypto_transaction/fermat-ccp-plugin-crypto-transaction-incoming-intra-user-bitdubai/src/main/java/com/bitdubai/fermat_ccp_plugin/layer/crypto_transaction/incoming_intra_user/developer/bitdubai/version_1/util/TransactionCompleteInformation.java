@@ -43,11 +43,11 @@ public class TransactionCompleteInformation {
 
             long timestamp = System.currentTimeMillis();
             String memo = this.transactionMetadata.getInformation().getPaymentDescription();
-
             String actorFromPublicKey = "";
             String actorToPublicKey = "";
             Actors actorFromType;
             Actors actorToType;
+
 
             if (this.transactionMetadata.getInformation().getRequestId() != null)
             {

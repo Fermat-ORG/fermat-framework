@@ -114,8 +114,7 @@ public class CryptoBrokerActorConnectionPluginRoot extends AbstractPlugin implem
             fermatManager = new ActorConnectionManager(
                     cryptoBrokerManagerNetworkService,
                     dao,
-                    this,
-                    this.getPluginVersionReference()
+                    this
             );
 
             super.start();

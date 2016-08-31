@@ -1,26 +1,23 @@
-/*
- * @#MessagesStatus.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus</code>
- * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 03/12/15.
+ * The enum <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus</code>
+ * represent the status various for the messages<p/>
+ *
+ * Created by Roberto Requena - (rart3001@gmail.com) on 03/09/15.
  *
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
-public enum MessageStatus {
+public enum MessageStatus implements FermatEnum {
 
     /**
      * The enum values
      */
+    FAILED          ("F"),
     PENDING_TO_SEND ("PTS"),
     SENT            ("S"),
     DELIVERED       ("D"),
@@ -46,34 +43,27 @@ public enum MessageStatus {
      *
      * @return String that represent of the message status
      */
+    @Override
     public String getCode()   { return this.code ; }
 
     /**
      * Return the enum by the code
      *
      * @param code the valid code
-     * @return MessageStatus enum
+     * @return MessagesStatus enum
      * @throws InvalidParameterException error with is no a valid code
      */
-    public static MessageStatus getByCode(String code) throws InvalidParameterException {
+    public static MessageStatus getByCode(String code) {
 
         switch (code) {
-            case "PTS":
-                return MessageStatus.PENDING_TO_SEND;
-            case "S":
-                return MessageStatus.SENT;
-            case "D":
-                return MessageStatus.DELIVERED;
-            case "NR":
-                return MessageStatus.NEW_RECEIVED;
-            case "R":
-                return MessageStatus.READ;
+            case "PTS": return PENDING_TO_SEND;
+            case "S":   return SENT;
+            case "D":   return DELIVERED;
+            case "NR":  return NEW_RECEIVED;
+            case "R":   return READ;
+            case "F":   return FAILED;
+            default:    return FAILED;
         }
-
-        /**
-         * If we try to convert am invalid string.
-         */
-        throw new InvalidParameterException(code);
     };
 
     /**

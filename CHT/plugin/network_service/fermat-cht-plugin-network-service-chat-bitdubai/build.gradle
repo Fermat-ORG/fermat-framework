@@ -10,5 +10,5 @@ dependencies {
     //compile project(':fermat-api')
     //compile project(':fermat-p2p-api')
     //compile project(':fermat-pip-api')
-    compile project(':fermat-ccp-api')
+//    compile project(':fermat-ccp-api')
 }

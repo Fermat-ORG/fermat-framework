@@ -79,6 +79,7 @@
                 tools:text="0.000065"
                 android:textSize="14sp"
                 android:textColor="#FFF"
+
                 android:fontFamily="roboto"
                 android:textIsSelectable="false"
                 android:gravity="end"

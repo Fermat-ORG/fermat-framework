@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequ
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorIdentity;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -48,21 +49,18 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
     private final CryptoBrokerManager cryptoBrokerNetworkService;
     private final CryptoBrokerActorConnectionDao dao;
     private final CryptoBrokerActorConnectionPluginRoot pluginRoot;
-    private final PluginVersionReference pluginVersionReference;
 
     public ActorConnectionManager(final CryptoBrokerManager cryptoBrokerNetworkService,
                                   final CryptoBrokerActorConnectionDao dao,
-                                  final CryptoBrokerActorConnectionPluginRoot pluginRoot,
-                                  final PluginVersionReference pluginVersionReference) {
+                                  final CryptoBrokerActorConnectionPluginRoot pluginRoot) {
 
         this.cryptoBrokerNetworkService = cryptoBrokerNetworkService;
         this.dao = dao;
         this.pluginRoot = pluginRoot;
-        this.pluginVersionReference = pluginVersionReference;
     }
 
     @Override
-    public CryptoBrokerActorConnectionSearch getSearch(CryptoBrokerLinkedActorIdentity actorIdentitySearching) {
+    public CryptoBrokerActorConnectionSearch getSearch(ActorIdentity actorIdentitySearching) {
 
         return new ActorConnectionSearch(actorIdentitySearching, dao);
     }

@@ -933,10 +933,8 @@ public final class CryptoAddressesNetworkServiceDao {
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
-            DatabaseTableRecord record = addressExchangeRequestTable.getEmptyRecord();
 
-            addressExchangeRequestTable.deleteRecord(record);
-
+            addressExchangeRequestTable.deleteRecord();
 
         } catch (CantDeleteRecordException e) {
 

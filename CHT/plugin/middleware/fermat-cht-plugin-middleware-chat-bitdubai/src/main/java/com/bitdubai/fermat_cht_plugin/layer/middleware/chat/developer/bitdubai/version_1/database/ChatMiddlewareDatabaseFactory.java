@@ -1,14 +1,9 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
@@ -27,9 +22,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSystem {
-
-    private ErrorManager errorManager;
+public class ChatMiddlewareDatabaseFactory {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -62,7 +55,6 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
         try {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
             /**
              * I can not handle this situation.
              */
@@ -101,7 +93,6 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantCreateTableException));
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
             /**
@@ -124,7 +115,6 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantCreateTableException));
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
@@ -142,7 +132,6 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantCreateTableException));
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
@@ -164,53 +153,6 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantCreateTableException));
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
-
-            /**
-             * Create Contacts table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
-
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_ID_CONTACT_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 50, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_CONTACT_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-
-            table.addIndex(ChatMiddlewareDatabaseConstants.CONTACTS_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantCreateTableException));
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
-
-            /**
-             * Create Contacts Connections table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_TABLE_NAME);
-
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_ID_CONTACT_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_CREATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 50, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_CONTACT_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-
-            table.addIndex(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantCreateTableException));
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
@@ -232,28 +174,6 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantCreateTableException));
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
-
-            /**
-             * Create Identity table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME);
-
-            table.addColumn(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.IDENTITY_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.IDENTITY_PLATFORM_COMPONENT_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
-
-            table.addIndex(ChatMiddlewareDatabaseConstants.IDENTITY_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantCreateTableException));
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
@@ -273,12 +193,10 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantCreateTableException));
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
         } catch (InvalidOwnerIdException invalidOwnerId) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, invalidOwnerId);
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.
@@ -286,13 +204,5 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
         }
         return database;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 }
