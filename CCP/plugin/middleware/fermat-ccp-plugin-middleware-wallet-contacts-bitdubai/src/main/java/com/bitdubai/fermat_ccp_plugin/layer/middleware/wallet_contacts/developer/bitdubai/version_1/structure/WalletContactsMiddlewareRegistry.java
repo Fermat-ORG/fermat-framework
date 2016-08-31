@@ -156,6 +156,8 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                                                                                 WalletContactNotFoundException  {
 
         try {
+
+
             walletContactsMiddlewareDao.updateWalletContact(
                     new WalletContactsMiddlewareRecord(
                             contactId,
@@ -167,6 +169,22 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
             );
         } catch (CantUpdateWalletContactException |
                  WalletContactNotFoundException   e ){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
+    @Override
+    public void updateWalletContactFromEvent(UUID contactId, String actorAlias) throws CantUpdateWalletContactException, WalletContactNotFoundException {
+        try {
+            walletContactsMiddlewareDao.updateWalletContactFromEvent(contactId,actorAlias);
+        } catch (CantUpdateWalletContactException |
+                WalletContactNotFoundException   e ){
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;

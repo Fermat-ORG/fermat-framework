@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
@@ -66,6 +68,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingSuggestionsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserDeleteContactEvent;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserUpdateContactEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.exceptions.CantLoadLoginsFileException;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.utils.IntraUserSettings;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
@@ -113,6 +116,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
     private LocationManager locationManager;
 
     private EventManager eventManager;
+    private EventSource eventSource;
 
     private GeolocationManager geolocationManager;
 
@@ -400,12 +404,6 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 for (IntraWalletUserActor intraUserConnectedLst : intraWalletUserConnectedlst){
                     //Connected
                     if (intraUserSuggestionsLst.getPublicKey().equals(intraUserConnectedLst.getPublicKey())){
-                        byte[] img1 = intraUserSuggestionsLst.getProfileImage();
-                        byte[] img2 = intraUserConnectedLst.getProfileImage();
-                        boolean a = false;
-                        if (img1==img2)
-                             a = true;
-
                         if (!intraUserSuggestionsLst.getCity().equals(intraUserConnectedLst.getCity()) ||
                             !intraUserSuggestionsLst.getCountry().equals(intraUserConnectedLst.getCountry()) ||
                             !intraUserSuggestionsLst.getPhrase().equals(intraUserConnectedLst.getPhrase()) ||
@@ -419,6 +417,16 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                                                 intraUserSuggestionsLst.getProfileImage(),
                                                 intraUserSuggestionsLst.getCity(),
                                                 intraUserSuggestionsLst.getCountry());
+
+
+                            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_WALLET_UPDATE_CONTACT);
+                            IntraUserUpdateContactEvent eventToRaise = (IntraUserUpdateContactEvent) fermatEvent;
+                            eventToRaise.setIdentityPublicKey(intraUserConnectedLst.getPublicKey());
+                            eventToRaise.setIdentityAlias(intraUserConnectedLst.getName());
+                            eventToRaise.setIdentityPhrase(intraUserConnectedLst.getPhrase());
+                            eventToRaise.setProfileImage(intraUserConnectedLst.getProfileImage());
+                            eventToRaise.setSource(EventSource.INTRA_USER_MODULE_MANAGER_LMPL);
+                            eventManager.raiseEvent(eventToRaise);
 
                         }
 
@@ -646,8 +654,10 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
             this.intraUserNertwokServiceManager.disconnectIntraUSer(intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
 
-            IntraUserDeleteContactEvent eventToRaise = (IntraUserDeleteContactEvent) eventManager.getNewEvent(EventType.INTRA_USER_WALLET_DELETE_CONTACT);
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_WALLET_DELETE_CONTACT);
+            IntraUserDeleteContactEvent eventToRaise = (IntraUserDeleteContactEvent) fermatEvent;
             eventToRaise.setContactId(intraUserToDisconnectPublicKey);
+            eventToRaise.setSource(EventSource.INTRA_USER_MODULE_MANAGER_LMPL);
             eventManager.raiseEvent(eventToRaise);
 
         } catch (CantDisconnectIntraWalletUserException e) {
@@ -861,6 +871,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
     public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase, byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantUpdateIdentityException {
         try {
             this.intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias, identityPhrase, profileImage, accuracy, frequency,location);
+
         } catch (CantUpdateIdentityException e) {
             throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY", e, "", "Error on IntraUserIdentity Manager");
         } catch (Exception e) {

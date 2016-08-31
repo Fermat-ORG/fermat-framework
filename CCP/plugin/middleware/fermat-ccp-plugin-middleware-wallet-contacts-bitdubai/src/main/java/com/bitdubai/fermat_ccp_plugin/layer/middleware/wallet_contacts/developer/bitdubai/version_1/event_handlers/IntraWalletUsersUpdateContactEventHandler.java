@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.exceptions.Unexpected
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
-import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserDeleteContactEvent;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserUpdateContactEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.WalletContactsMiddlewarePluginNotStartedException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
@@ -14,28 +14,31 @@ import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer
 import java.util.UUID;
 
 /**
- * Created by Gian Barboza on 29/08/16.
+ * Created by Gian Barboza on 30/08/16.
  */
-public class IntraWalletUsersDeleteContactHandler implements FermatEventHandler {
+public class IntraWalletUsersUpdateContactEventHandler implements FermatEventHandler{
 
     private final WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry;
 
     private final WalletContactsMiddlewarePluginRoot walletContactsMiddlewarePluginRoot;
 
-    public IntraWalletUsersDeleteContactHandler(WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry, final WalletContactsMiddlewarePluginRoot walletContactsMiddlewarePluginRoot) {
+    public IntraWalletUsersUpdateContactEventHandler(WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry, final WalletContactsMiddlewarePluginRoot walletContactsMiddlewarePluginRoot) {
         this.walletContactsMiddlewareRegistry = walletContactsMiddlewareRegistry;
         this.walletContactsMiddlewarePluginRoot = walletContactsMiddlewarePluginRoot;
     }
+
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if (this.walletContactsMiddlewarePluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            if (fermatEvent instanceof IntraUserDeleteContactEvent) {
+            if (fermatEvent instanceof IntraUserUpdateContactEvent) {
 
-                walletContactsMiddlewareRegistry.deleteWalletContact(UUID.fromString(((IntraUserDeleteContactEvent) fermatEvent).getContactId()));
+               walletContactsMiddlewareRegistry.updateWalletContactFromEvent(
+                       UUID.fromString(((IntraUserUpdateContactEvent) fermatEvent).getIdentityPublicKey()),
+                       ((IntraUserUpdateContactEvent) fermatEvent).getIdentityAlias());
 
             } else {
-                EventType eventExpected = EventType.INTRA_USER_WALLET_DELETE_CONTACT;
+                EventType eventExpected = EventType.INTRA_USER_WALLET_UPDATE_CONTACT;
                 String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
                         "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);

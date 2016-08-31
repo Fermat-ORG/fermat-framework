@@ -13,6 +13,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServiceCompleteRegistration;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserDeleteContactEvent;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserUpdateContactEvent;
 
 
 /**
@@ -54,6 +55,11 @@ public enum EventType implements FermatEventEnum {
           return new IntraUserDeleteContactEvent(this);
       }
     },
+    INTRA_USER_WALLET_UPDATE_CONTACT("IUWUC"){
+        public FermatEvent getNewEvent(){
+            return new IntraUserUpdateContactEvent(this);
+        }
+    },
     ;
 
     private final String code;
@@ -77,6 +83,7 @@ public enum EventType implements FermatEventEnum {
             case "CRYADDN":  return CRYPTO_ADDRESSES_NEWS          ;
             case "CRYPRNW":  return CRYPTO_PAYMENT_REQUEST_NEWS    ;
             case "IUWDC" :   return INTRA_USER_WALLET_DELETE_CONTACT;
+            case "IUWUC" :   return INTRA_USER_WALLET_UPDATE_CONTACT;
 
                 default:
                 throw new InvalidParameterException(

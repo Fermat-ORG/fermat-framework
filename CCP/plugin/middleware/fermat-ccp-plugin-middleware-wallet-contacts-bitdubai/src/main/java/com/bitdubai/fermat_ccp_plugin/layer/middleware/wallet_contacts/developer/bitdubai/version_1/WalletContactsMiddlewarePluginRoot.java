@@ -35,7 +35,8 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interf
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.CryptoAddressesNewsEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.IntraWalletUsersDeleteContactHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.IntraWalletUsersDeleteContactEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.IntraWalletUsersUpdateContactEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressDeniedActionException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedActionException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeWalletContactsMiddlewareDatabaseException;
@@ -153,9 +154,14 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin implement
 
 
         FermatEventListener intraUserWalletDeleteContactEventListener = eventManager.getNewListener(EventType.INTRA_USER_WALLET_DELETE_CONTACT);
-        intraUserWalletDeleteContactEventListener.setEventHandler(new IntraWalletUsersDeleteContactHandler(walletContactsRegistry, this));
+        intraUserWalletDeleteContactEventListener.setEventHandler(new IntraWalletUsersDeleteContactEventHandler(walletContactsRegistry, this));
         eventManager.addListener(intraUserWalletDeleteContactEventListener);
         listenersAdded.add(intraUserWalletDeleteContactEventListener);
+
+        FermatEventListener intraUserWalletUpdateContactEventListener = eventManager.getNewListener(EventType.INTRA_USER_WALLET_DELETE_CONTACT);
+        intraUserWalletUpdateContactEventListener.setEventHandler(new IntraWalletUsersUpdateContactEventHandler(walletContactsRegistry, this));
+        eventManager.addListener(intraUserWalletUpdateContactEventListener);
+        listenersAdded.add(intraUserWalletUpdateContactEventListener);
 
 
 
