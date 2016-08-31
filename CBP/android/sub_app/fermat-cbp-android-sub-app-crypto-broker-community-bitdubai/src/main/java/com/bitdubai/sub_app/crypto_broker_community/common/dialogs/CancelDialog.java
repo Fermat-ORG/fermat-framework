@@ -108,21 +108,21 @@ public class CancelDialog extends FermatDialog<ReferenceAppFermatSession<CryptoB
                 if (cryptoBrokerCommunityInformation != null && identity != null) {
 
                     getSession().getModuleManager().cancelCryptoBroker(cryptoBrokerCommunityInformation.getConnectionId());
-                    Toast.makeText(getContext(), "Cancelled successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.cancelled_successfully, Toast.LENGTH_SHORT).show();
 
                     //set flag so that the preceding fragment reads it on dismiss()
                     getSession().setData("connectionresult", 1);
 
                 } else {
-                    Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.error_try, Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             } catch (CryptoBrokerCancellingFailedException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "Could not cancel, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.error_try2, Toast.LENGTH_SHORT).show();
             } catch (ConnectionRequestNotFoundException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error. Could not cancel.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.error_cancel, Toast.LENGTH_SHORT).show();
             }
 
             dismiss();

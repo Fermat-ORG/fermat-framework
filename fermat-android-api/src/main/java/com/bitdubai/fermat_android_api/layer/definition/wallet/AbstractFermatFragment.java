@@ -340,8 +340,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
      * Change activity
      */
     protected final void changeActivity(Activities activity, String appPublicKey) {
-        destroy();
-        getFermatScreenSwapper().changeActivity(activity.getCode(), appPublicKey);
+        if(isAttached) {
+            destroy();
+            getFermatScreenSwapper().changeActivity(activity.getCode(), appPublicKey);
+        }else Log.i(TAG,"Actividad no attacheada");
     }
 
     /**

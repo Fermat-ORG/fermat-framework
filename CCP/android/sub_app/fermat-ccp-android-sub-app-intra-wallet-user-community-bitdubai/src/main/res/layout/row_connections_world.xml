@@ -81,9 +81,6 @@
             android:layout_marginTop="0dp" />
 
 
-
-
-
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/connection_state_user"
             android:layout_width="match_parent"

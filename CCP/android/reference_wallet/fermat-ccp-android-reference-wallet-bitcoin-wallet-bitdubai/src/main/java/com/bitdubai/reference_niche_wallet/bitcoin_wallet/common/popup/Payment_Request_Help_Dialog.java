@@ -101,10 +101,10 @@ public class Payment_Request_Help_Dialog extends FermatDialog<ReferenceAppFermat
     @Override
     public void onClick(View v) {
         int id = v.getId();
-      if (id == R.id.btn_dismiss) {
-                saveSettings();
-                dismiss();
-            }
+        if (id == R.id.btn_dismiss) {
+            saveSettings();
+            dismiss();
+        }
     }
 
     private void saveSettings() {
@@ -133,12 +133,7 @@ public class Payment_Request_Help_Dialog extends FermatDialog<ReferenceAppFermat
 //        }
     }
 
-    private byte[] convertImage(int resImage) {
-        Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
-        return stream.toByteArray();
-    }
+
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

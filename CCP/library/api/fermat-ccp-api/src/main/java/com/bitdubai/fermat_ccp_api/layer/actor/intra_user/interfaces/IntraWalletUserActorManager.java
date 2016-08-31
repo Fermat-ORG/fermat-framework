@@ -8,6 +8,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantAcceptI
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantUpdateIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
 
 import java.util.List;
@@ -60,7 +61,7 @@ public interface IntraWalletUserActorManager extends FermatManager {
      */
     void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantDenyConnectionException;
 
-    /**     
+    /**
      * The method <code>disconnectIntraWalletUser</code> disconnect an intra user from the connections registry
      * @param intraUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
      * @param intraUserToDisconnectPublicKey The public key of the intra user to disconnect as connection
@@ -81,6 +82,7 @@ public interface IntraWalletUserActorManager extends FermatManager {
      * @param country  The country of intra user to update
      * @throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCancelIntraWalletUserException
      */
+
     void updateIntraWalletUserdata(String intraUserToUpdatePublicKey,String intraUserName,String intraUserPhrase, byte[] profileImage,String city, String country) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantUpdateIntraWalletUserException;
 
 

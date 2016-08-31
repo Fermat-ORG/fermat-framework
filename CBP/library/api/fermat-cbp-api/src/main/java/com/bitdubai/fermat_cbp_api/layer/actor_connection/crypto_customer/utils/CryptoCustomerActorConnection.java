@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorIdentity;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.common.CBPActorConnection;
 
@@ -12,8 +13,7 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
  */
-public final class CryptoCustomerActorConnection
-        extends CBPActorConnection<CryptoCustomerLinkedActorIdentity> {
+public final class CryptoCustomerActorConnection extends CBPActorConnection {
 
     /**
      * Default constructor with parameters
@@ -30,7 +30,7 @@ public final class CryptoCustomerActorConnection
      */
     public CryptoCustomerActorConnection(
             UUID connectionId,
-            CryptoCustomerLinkedActorIdentity linkedIdentity,
+            ActorIdentity linkedIdentity,
             String publicKey,
             String alias,
             byte[] image,

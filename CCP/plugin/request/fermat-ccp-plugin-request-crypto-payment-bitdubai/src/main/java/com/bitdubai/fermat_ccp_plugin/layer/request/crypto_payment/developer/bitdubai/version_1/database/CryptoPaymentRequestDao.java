@@ -139,8 +139,7 @@ public class CryptoPaymentRequestDao {
         }
     }
 
-    public void deleteCryptoPayment(UUID requestId) throws CantDeleteCryptoPaymentRequestException,
-                                                           CryptoPaymentRequestNotFoundException  {
+    public void deleteCryptoPayment(UUID requestId) throws CantDeleteCryptoPaymentRequestException {
 
         if (requestId == null)
             throw new CantDeleteCryptoPaymentRequestException("", "requestId, can not be null");
@@ -151,20 +150,8 @@ public class CryptoPaymentRequestDao {
 
             cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            cryptoPaymentRequestTable.loadToMemory();
+            cryptoPaymentRequestTable.deleteRecord();
 
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
-
-
-            if (!records.isEmpty())
-                cryptoPaymentRequestTable.deleteRecord(records.get(0));
-            else
-                throw new CryptoPaymentRequestNotFoundException(null, "RequestID: "+requestId, "Can not find an crypto payment request with the given request id.");
-
-
-        } catch (CantLoadTableToMemoryException exception) {
-
-            throw new CantDeleteCryptoPaymentRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (CantDeleteRecordException exception) {
 
             throw new CantDeleteCryptoPaymentRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record."                                                                                );

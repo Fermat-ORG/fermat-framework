@@ -123,10 +123,11 @@
                 android:id="@+id/linear_notes">
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/text_view_address"
+
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="normal"
                     android:textColor="#4f4f4f"
                     android:textColorHint="#4f4f4f"
@@ -137,9 +138,9 @@
                     android:layout_gravity="end"
                     android:state_selected = "false"
                     android:text="@string/waiting_text"
+                    android:maxLines="1"
                     app:typeface="ROBOTO_REGULAR"
-                    android:layout_weight="1"
-                    android:background="@null"/>
+                    android:layout_weight="1"/>
 
                 <ImageView
                     android:layout_width="30dp"
@@ -185,14 +186,7 @@
                     android:layout_marginLeft="7dp"
                     android:textColor="#12aca1"/>
 
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/delete_contact"
-                    android:text="Delete contact"
-                    android:gravity="center_vertical"
-                    android:layout_marginLeft="50dp"
-                    android:textColor="#12aca1"/>
+
 
 
             </LinearLayout>

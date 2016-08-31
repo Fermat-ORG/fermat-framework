@@ -33,6 +33,7 @@ public class IssuerWalletNavigationViewPainter extends NavigationViewPainter {
     public IssuerWalletNavigationViewPainter(Context activity,
                                              ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager> assetIssuerSession,
                                              FermatApplicationCaller applicationsHelper) {
+        super(activity);
 
         this.activity = new WeakReference<>(activity);
         this.assetIssuerSession = assetIssuerSession;

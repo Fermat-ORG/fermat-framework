@@ -436,7 +436,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         }catch (Exception e){
             throw  new CantUpdateIntraWalletUserException("Can't update intra wallet user",e,"","Database error");
         }
-        
+
     }
 
 

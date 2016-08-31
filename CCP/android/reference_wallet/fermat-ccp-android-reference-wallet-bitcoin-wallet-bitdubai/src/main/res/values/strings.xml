@@ -66,10 +66,7 @@
     <string name="accepted_text">Accepted</string>
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
-
-
     <!-- home_receive_main11.xml -->
-
 
     <string name="no_transactions_text">No transactions yet</string>
     <!-- home_request_fragment_main.xml -->
@@ -325,7 +322,6 @@
     <string name="notification_payment_error_3"> BTC was reverted.</string>
 
 
-
     <!--Texto de Dialogs Movidos para RES de fermat-android-api para su uso general con traduccion incluida.-->
 
     <!-- Dialogs Text -->
@@ -348,7 +344,6 @@
     <!--Fragments-->
     <!--Request Form Fragment-->
     <string name="error_connecting_to_fermat_network">Wait a minute please, trying to reconnect...</string>
-
 
     <!--Delete Wallet Contact Dialog-->
     <string name="delete_title">Delete Contact</string>

@@ -12,6 +12,7 @@ public enum ChatProtocolState implements FermatEnum {
     PENDING_ACTION("PEA"), // pending local action, is given after raise a crypto payment request event.
     PROCESSING_RECEIVE("PCR"), // when an action from the network service is needed receiving.
     PROCESSING_SEND("PCS"), // when an action from the network service is needed sending.
+    PROCESSING_INITIAL_SEND("PCIS"),//when the message metadata is sent along chat metadatata
     WAITING_RESPONSE("WRE"),  // waiting response from the counterpart.
     SENT("SENT"),
     DELIVERY("DELIVERY");
@@ -40,6 +41,8 @@ public enum ChatProtocolState implements FermatEnum {
                 return SENT;
             case "DELIVERY":
                 return DELIVERY;
+            case "PROCESSING_INITIAL_SEND":
+                return PROCESSING_INITIAL_SEND;
 
             default:
                 throw new InvalidParameterException(

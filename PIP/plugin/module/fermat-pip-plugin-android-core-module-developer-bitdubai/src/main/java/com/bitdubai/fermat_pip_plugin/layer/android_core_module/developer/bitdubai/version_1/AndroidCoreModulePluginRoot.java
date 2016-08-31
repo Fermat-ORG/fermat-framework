@@ -26,15 +26,10 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettingsManager;
-
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.Transaction;
 
 
 /**
@@ -53,8 +48,8 @@ public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSetti
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.NETWORK_CLIENT)
     private NetworkClientManager wsCommunicationsCloudClientManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
-    private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
+//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
+//    private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
@@ -89,14 +84,15 @@ public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSetti
 
     @Override
     public NetworkStatus getBitcoinNetworkStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBitcoinNetworkStatusException {
-        try {
-            if (bitcoinNetworkManager.getBlockchainConnectionStatus(blockchainNetworkType).isConnected())
-                return NetworkStatus.CONNECTED;
-            else
-                return NetworkStatus.DISCONNECTED;
-        } catch (CantGetBlockchainConnectionStatusException e) {
-            throw new CantGetBitcoinNetworkStatusException(CantGetBitcoinNetworkStatusException.DEFAULT_MESSAGE, e, "", "Cant Get Bitcoin Network Connection Status");
-        }
+//        try {
+//            if (bitcoinNetworkManager.getBlockchainConnectionStatus(blockchainNetworkType).isConnected())
+//                return NetworkStatus.CONNECTED;
+//            else
+//                return NetworkStatus.DISCONNECTED;
+//        } catch (CantGetBlockchainConnectionStatusException e) {
+//            throw new CantGetBitcoinNetworkStatusException(CantGetBitcoinNetworkStatusException.DEFAULT_MESSAGE, e, "", "Cant Get Bitcoin Network Connection Status");
+//        }
+        return NetworkStatus.DISCONNECTED;
     }
 
     @Override

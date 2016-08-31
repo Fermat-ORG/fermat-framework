@@ -9,13 +9,6 @@ import java.io.Serializable;
  * Created by franklin on 29/03/16.
  */
 public interface ChatIdentity extends ActiveActorIdentityInformation, Serializable {
-    /**
-     * The method <code>setNewProfileImage</code> let the user set a new profile image
-     *
-     * @param newProfileImage the new profile image to set
-     * @throws
-     */
-    void setNewProfileImage(byte[] newProfileImage);
 
     /**
      * This method let an intra user sign a message with his unique private key
@@ -24,14 +17,6 @@ public interface ChatIdentity extends ActiveActorIdentityInformation, Serializab
      * @return the signature
      */
     String createMessageSignature(String message);
-
-    /**
-     * This method return boolean
-     *
-     * @return the boolena
-     */
-    boolean getIsPaymetForChat();
-
 
     /**
      * This method return String with Country

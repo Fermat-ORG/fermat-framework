@@ -25,6 +25,7 @@ public class CryptoWalletUserCommunityBuildNotification {
                 case CCPBroadcasterConstants.CONNECTION_ACCEPT:
                         notification = new UserCommunityNotificationPainter(context.getResources().getString(R.string.notification_connection_accept), context.getResources().getString(R.string.notification_connection_accept2)+" " + involvedActor, "", "",appPublicKey);
 
+
                     break;
 
                 case CCPBroadcasterConstants.CONNECTION_DISCONNECT:
@@ -33,7 +34,7 @@ public class CryptoWalletUserCommunityBuildNotification {
                     break;
 
                 case CCPBroadcasterConstants.CONNECTION_DENIED:
-                    notification = new UserCommunityNotificationPainter(context.getResources().getString(R.string.notification_connection_denied), context.getResources().getString(R.string.notification_connection_denied2)+" " + involvedActor, "", "",appPublicKey);
+                        notification = new UserCommunityNotificationPainter(context.getResources().getString(R.string.notification_connection_denied), context.getResources().getString(R.string.notification_connection_denied2)+" " + involvedActor, "", "",appPublicKey);
 
                     break;
 

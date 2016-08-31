@@ -72,10 +72,6 @@ public class PluginDeveloperReference implements PluginDeveloperReferenceInterfa
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("PluginDeveloperReference{")
-                .append("pluginReference=").append(pluginReference)
-                .append(", developer=").append(developer)
-                .append('}').toString();
+        return "PluginDeveloperReference{" + "pluginReference=" + pluginReference + ", developer=" + developer + '}';
     }
 }

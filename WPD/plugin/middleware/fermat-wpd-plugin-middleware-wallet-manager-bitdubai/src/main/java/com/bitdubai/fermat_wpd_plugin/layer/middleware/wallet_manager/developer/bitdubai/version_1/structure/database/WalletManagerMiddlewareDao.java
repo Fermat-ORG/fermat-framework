@@ -163,15 +163,15 @@ public class WalletManagerMiddlewareDao {
             e1.printStackTrace();
         }
 
-        database.closeDatabase();
-
-
         return installedWallet;
     }
 
     private Database openDatabase() throws CantExecuteDatabaseOperationException {
         try {
-            return pluginDatabaseSystem.openDatabase(pluginId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE);
+            if (database == null)
+                database = pluginDatabaseSystem.openDatabase(pluginId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE);
+
+            return database;
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
             throw new CantExecuteDatabaseOperationException(exception, null, "Error in database plugin.");
         }
@@ -375,44 +375,23 @@ public class WalletManagerMiddlewareDao {
             databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
             databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_ID_COLUMN_NAME, languageId.toString(), DatabaseFilterType.EQUAL);
 
-            databaseTable.loadToMemory();
+            databaseTable.deleteRecord();
 
-            List<DatabaseTableRecord> records = databaseTable.getRecords();
-            for (DatabaseTableRecord record : records) {
-                databaseTable.deleteRecord(record);
-            }
-
-            database.closeDatabase();
-
-        } catch (CantLoadTableToMemoryException | CantDeleteRecordException e) {
-            database.closeDatabase();
-            throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE", e, null, null);
         } catch (Exception exception) {
-            database.closeDatabase();
             throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE", FermatException.wrapException(exception), null, null);
         }
     }
 
     public void deleteWalletSkin(UUID walletCatalogueId, UUID skinId) throws CantDeleteWalletSkinException {
         try {
-            database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME);
+
             databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
             databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_ID_COLUMN_NAME, skinId.toString(), DatabaseFilterType.EQUAL);
 
-            databaseTable.loadToMemory();
+            databaseTable.deleteRecord();
 
-            List<DatabaseTableRecord> records = databaseTable.getRecords();
-            for (DatabaseTableRecord record : records) {
-                databaseTable.deleteRecord(record);
-            }
-            database.closeDatabase();
-
-        } catch (CantLoadTableToMemoryException | CantDeleteRecordException e) {
-            database.closeDatabase();
-            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE", e, null, null);
         } catch (Exception exception) {
-            database.closeDatabase();
             throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE", FermatException.wrapException(exception), null, null);
         }
     }
@@ -425,9 +404,11 @@ public class WalletManagerMiddlewareDao {
 
             databaseTable.loadToMemory();
 
+            databaseTable.deleteRecord();
+
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             for (DatabaseTableRecord record : records) {
-                databaseTable.deleteRecord(record);
+
                 /**
                  * Delete wallet Skins and Languages
                  */
@@ -436,12 +417,9 @@ public class WalletManagerMiddlewareDao {
 
             }
 
-            database.closeDatabase();
         } catch (CantLoadTableToMemoryException | CantDeleteWalletSkinException | CantDeleteWalletLanguageException | CantDeleteRecordException e) {
-            database.closeDatabase();
             throw new CantDeleteWalletSkinException("ERROR DELETING WALLET OFF TABLE", e, null, null);
         } catch (Exception exception) {
-            database.closeDatabase();
             throw new CantDeleteWalletSkinException("ERROR DELETING WALLET OFF TABLE", FermatException.wrapException(exception), null, null);
         }
     }
@@ -615,19 +593,11 @@ public class WalletManagerMiddlewareDao {
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME);
             databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
 
-            databaseTable.loadToMemory();
+            databaseTable.deleteRecord();
 
-            List<DatabaseTableRecord> records = databaseTable.getRecords();
-            for (DatabaseTableRecord record : records) {
-                databaseTable.deleteRecord(record);
-            }
-
-            database.closeDatabase();
-        } catch (CantLoadTableToMemoryException | CantDeleteRecordException e) {
-            database.closeDatabase();
+        } catch (CantDeleteRecordException e) {
             throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE", e, null, null);
         } catch (Exception exception) {
-            database.closeDatabase();
             throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE", FermatException.wrapException(exception), null, null);
         }
     }
@@ -638,19 +608,11 @@ public class WalletManagerMiddlewareDao {
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME);
             databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
 
-            databaseTable.loadToMemory();
+            databaseTable.deleteRecord();
 
-            List<DatabaseTableRecord> records = databaseTable.getRecords();
-            for (DatabaseTableRecord record : records) {
-                databaseTable.deleteRecord(record);
-            }
-
-            database.closeDatabase();
-        } catch (CantLoadTableToMemoryException | CantDeleteRecordException e) {
-            database.closeDatabase();
+        } catch (CantDeleteRecordException e) {
             throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE", e, null, null);
         } catch (Exception exception) {
-            database.closeDatabase();
             throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE", FermatException.wrapException(exception), null, null);
         }
     }

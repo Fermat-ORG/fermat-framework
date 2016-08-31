@@ -18,10 +18,12 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
-
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
@@ -36,6 +38,8 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
@@ -92,7 +96,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
     private final UUID pluginId;
     private final AssetVaultManager assetVaultManager;
     private final AssetUserWalletManager assetUserWalletManager;
-    private final BlockchainManager bitcoinNetworkManager;
+    private final BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
     private final CryptoAddressBookManager cryptoAddressBookManager;
     private final CryptoVaultManager cryptoVaultManager;
     private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
@@ -100,6 +104,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
     private final AssetIssuerWalletManager assetIssuerWalletManager;
     private final ActorAssetUserManager actorAssetUserManager;
     private final ExtraUserManager extraUserManager;
+    private final LocationManager locationManager;
 
     private AppropriationAgent appropriationAgent;
     //VARIABLES ACCESSED BY AGENT INNER CLASS.
@@ -117,14 +122,15 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                           UUID pluginId,
                                           AssetVaultManager assetVaultManager,
                                           AssetUserWalletManager assetUserWalletManager,
-                                          BlockchainManager bitcoinNetworkManager,
+                                          BlockchainManager<ECKey, Transaction> bitcoinNetworkManager,
                                           CryptoAddressBookManager cryptoAddressBookManager,
                                           CryptoVaultManager cryptoVaultManager,
                                           IntraWalletUserIdentityManager intraWalletUserIdentityManager,
                                           AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager,
                                           AssetIssuerWalletManager assetIssuerWalletManager,
                                           ActorAssetUserManager actorAssetUserManager,
-                                          ExtraUserManager extraUserManager) throws CantSetObjectException {
+                                          ExtraUserManager extraUserManager,
+                                          LocationManager locationManager) throws CantSetObjectException {
 
         this.assetVault = assetVault;
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
@@ -141,6 +147,8 @@ public class AssetAppropriationMonitorAgent implements Agent {
         this.assetIssuerWalletManager = Validate.verifySetter(assetIssuerWalletManager, "assetIssuerWalletManager is null");
         this.actorAssetUserManager = Validate.verifySetter(actorAssetUserManager, "actorAssetUserManager is null");
         this.extraUserManager = Validate.verifySetter(extraUserManager, "extraUserManager is null");
+        this.locationManager = Validate.verifySetter(locationManager, "locationManager is null");
+
     }
 
     //PUBLIC METHODS
@@ -348,8 +356,13 @@ public class AssetAppropriationMonitorAgent implements Agent {
             for (IntraWalletUserIdentity identity : allIdentities) {
                 if (identity.getAlias().equals(alias)) assetIdentity = identity;
             }
-            if (assetIdentity == null)
-                assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser(alias, null, Long.parseLong("0"), Frequency.NONE);
+
+            try {
+                if (assetIdentity == null)
+                    assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser(alias, null, Long.parseLong("0"), Frequency.NONE, getLocationManager());
+            } catch (CantGetDeviceLocationException e) {
+                e.printStackTrace();
+            }
             return assetIdentity;
         }
 
@@ -375,5 +388,8 @@ public class AssetAppropriationMonitorAgent implements Agent {
             agentRunning = true;
         }
 
+        private Location getLocationManager() throws CantGetDeviceLocationException {
+            return locationManager.getLocation();
+        }
     }
 }

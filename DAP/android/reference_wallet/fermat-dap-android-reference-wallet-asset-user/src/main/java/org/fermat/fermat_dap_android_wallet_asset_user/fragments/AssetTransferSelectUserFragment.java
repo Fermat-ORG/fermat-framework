@@ -97,7 +97,6 @@ public class AssetTransferSelectUserFragment extends FermatWalletListFragment<Us
                     .setBannerRes(R.drawable.banner_asset_user_wallet)
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
-                    .setTitleTextColor(R.color.dap_user_view_color)
                     .setSubTitle(R.string.dap_user_wallet_user_select_subTitle)
                     .setBody(R.string.dap_user_wallet_user_select_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)

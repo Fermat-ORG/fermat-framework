@@ -131,25 +131,16 @@ public class SubAppResourcesInstallationNetworkServiceDAO {
         }
 
         try {
-            database.openDatabase();
+
             DatabaseTable repositoryTable = getRepositoriesTable();
-            repositoryTable.deleteRecord(getRepositoryDatabaseTableRecord(repositoryTable, skinId, repositoryName));
-            database.closeDatabase();
+            repositoryTable.addUUIDFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
+            repositoryTable.addStringFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, repositoryName, DatabaseFilterType.EQUAL);
+
+            repositoryTable.deleteRecord();
+
         } catch (CantDeleteRecordException e) {
             // Register the failure.
-            database.closeDatabase();
             throw new CantDeleteRepositoryException(CantDeleteRepositoryException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
-        } catch (RepositoryNotFoundException e) {
-            // Register the failure.
-            database.closeDatabase();
-            throw new CantDeleteRepositoryException(CantDeleteRepositoryException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, repository not found.");
-
-        } catch (CantLoadTableToMemoryException e) {
-            // Register the failure.
-            database.closeDatabase();
-            throw new CantDeleteRepositoryException(CantDeleteRepositoryException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
-            throw new CantDeleteRepositoryException(CantDeleteRepositoryException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
     }
 

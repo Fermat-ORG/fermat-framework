@@ -6,15 +6,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantAddCryptoAddressException;
-import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantCreateWalletContactException;
-import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantDeleteCryptoAddressException;
-import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantDeleteWalletContactException;
-import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException;
-import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException;
-import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantUpdateWalletContactException;
-import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -27,6 +18,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantAddCryptoAddressException;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantCreateWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantDeleteCryptoAddressException;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantDeleteWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantUpdateWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantDeleteCryptoAddressesException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeWalletContactsMiddlewareDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInsertCryptoAddressesException;
@@ -34,11 +34,11 @@ import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.Iterator;
-import java.util.Map;
 
 
 /**
@@ -239,7 +239,7 @@ public class WalletContactsMiddlewareDao {
         }
     }
 
-    public void deleteWalletContact(UUID contactId) throws CantDeleteWalletContactException, WalletContactNotFoundException {
+    public void deleteWalletContact(UUID contactId) throws CantDeleteWalletContactException {
 
         if (contactId == null) {
             throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, null, "", "The id is required, can not be null");
@@ -248,26 +248,15 @@ public class WalletContactsMiddlewareDao {
         try {
             DatabaseTable walletContactsTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_TABLE_NAME);
             walletContactsTable.addUUIDFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_CONTACT_ID_COLUMN_NAME, contactId, DatabaseFilterType.EQUAL);
-            walletContactsTable.loadToMemory();
-            List<DatabaseTableRecord> walletContactsTableRecordList = walletContactsTable.getRecords();
 
-            if (!walletContactsTableRecordList.isEmpty()) {
+            deleteCryptoAddresses(contactId);
 
-                deleteCryptoAddresses(contactId);
+            walletContactsTable.deleteRecord();
 
-                DatabaseTableRecord record = walletContactsTableRecordList.get(0);
-                walletContactsTable.deleteRecord(record);
-
-            } else {
-                throw new WalletContactNotFoundException(WalletContactNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a wallet contact with that id");
-            }
         } catch (CantDeleteCryptoAddressesException e) {
             throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Cant delete crypto addresses linked to this wallet contact.");
         }  catch (CantDeleteRecordException e) {
             throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-
         }
     }
 
@@ -401,19 +390,11 @@ public class WalletContactsMiddlewareDao {
             cryptoAddressesTable.addStringFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode(), DatabaseFilterType.EQUAL);
             cryptoAddressesTable.addStringFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
 
-            cryptoAddressesTable.loadToMemory();
-
-            List<DatabaseTableRecord> cryptoAddressesTableRecordList = cryptoAddressesTable.getRecords();
-
-            for(DatabaseTableRecord cryptoAddressRecord : cryptoAddressesTableRecordList)
-                cryptoAddressesTable.deleteRecord(cryptoAddressRecord);
+            cryptoAddressesTable.deleteRecord();
 
         } catch (CantDeleteRecordException e) {
 
             throw new CantDeleteCryptoAddressException(CantDeleteCryptoAddressException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantDeleteCryptoAddressException(CantDeleteCryptoAddressException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (Exception e) {
 
             throw new CantDeleteCryptoAddressException(CantDeleteCryptoAddressException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
@@ -458,16 +439,11 @@ public class WalletContactsMiddlewareDao {
         try {
             DatabaseTable cryptoAddressesTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_TABLE_NAME);
             cryptoAddressesTable.addUUIDFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME, contactId, DatabaseFilterType.EQUAL);
-            cryptoAddressesTable.loadToMemory();
-            List<DatabaseTableRecord> cryptoAddressesTableRecordList = cryptoAddressesTable.getRecords();
 
-            for(DatabaseTableRecord cryptoAddressRecord : cryptoAddressesTableRecordList)
-                cryptoAddressesTable.deleteRecord(cryptoAddressRecord);
+            cryptoAddressesTable.deleteRecord();
 
         } catch (CantDeleteRecordException e) {
             throw new CantDeleteCryptoAddressesException(CantDeleteCryptoAddressesException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantDeleteCryptoAddressesException(CantDeleteCryptoAddressesException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (Exception e) {
             throw new CantDeleteCryptoAddressesException(CantDeleteCryptoAddressesException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
