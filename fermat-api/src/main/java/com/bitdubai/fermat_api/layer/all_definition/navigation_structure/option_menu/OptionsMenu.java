@@ -22,6 +22,8 @@ public class OptionsMenu implements FermatMainMenu<OptionMenuItem>, Serializable
      */
     List<OptionMenuItem> menuItems = new ArrayList<>();
 
+
+
     /**
      * OptionsMenu class constructors
      */
@@ -61,5 +63,13 @@ public class OptionsMenu implements FermatMainMenu<OptionMenuItem>, Serializable
 
     public void addMenuItems(List<? extends OptionMenuItem> menuItems) {
         this.menuItems.addAll(menuItems);
+    }
+
+    public void clear() {
+        menuItems.clear();
+    }
+
+    public boolean isEmpty() {
+        return menuItems.isEmpty();
     }
 }
