@@ -451,7 +451,8 @@ public class BrowserTabFragment
             ConnectionState connectionState = data.getConnectionState();
 
 
-            if ((data.getState().equals(ProfileStatus.ONLINE) || data.getState().equals(ProfileStatus.UNKNOWN))) {
+            if ((data.getState().equals(ProfileStatus.ONLINE) || data.getState().equals(ProfileStatus.UNKNOWN)) &&
+                connectionState.equals(ConnectionState.NO_CONNECTED)) {
 
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
@@ -572,6 +573,7 @@ public class BrowserTabFragment
                 isRefreshing = true;
                 if (identity != null) {
                     moduleManager.getSuggestionsToContact(identity.getPublicKey(),location, distance, null, MAX, offset);
+
                 }
             }
         } catch (Exception e) {

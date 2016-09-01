@@ -342,7 +342,6 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             @Override
             public void run() {
                 try {
-
                     updateIntraUsersConnections(
                             intraWalletUserIdentityManager.
                             getAllIntraWalletUsersFromCurrentDeviceUser().
