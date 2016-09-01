@@ -93,6 +93,13 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     protected ViewInflater viewInflater;
     private WizardConfiguration context;
 
+    View view;
+    MenuItem item;
+    FermatDrawable icon;
+    MenuItem oldMenu;
+    int id, groupId, order, showAsAction, iconRes;
+    List<OptionMenuItem> optionsMenuItems;
+    OptionMenuItem menuItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,6 +152,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     @Override
     public void onDestroy() {
         unregisterAllReceivers();
+        view = null;
+        item = null;
+        icon = null;
+        oldMenu = null;
+        optionsMenuItems = null;
+        menuItem = null;
         super.onDestroy();
     }
 
@@ -154,27 +167,26 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
             if (fermatFragmentType != null) {
                 if (isVisible) {
                     if (fermatFragmentType.getOptionsMenu() != null) {
-                        List<OptionMenuItem> optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
+                        optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
                         for (int i = 0; i < optionsMenuItems.size(); i++) {
-                            OptionMenuItem menuItem = optionsMenuItems.get(i);
-                            int id = menuItem.getId();
-                            int groupId = menuItem.getGroupId();
-                            int order = menuItem.getOrder();
-                            int showAsAction = menuItem.getShowAsAction();
-                            MenuItem oldMenu = menu.findItem(id);
+                            menuItem = optionsMenuItems.get(i);
+                            id = menuItem.getId();
+                            groupId = menuItem.getGroupId();
+                            order = menuItem.getOrder();
+                            showAsAction = menuItem.getShowAsAction();
+                            oldMenu = menu.findItem(id);
                             if (oldMenu == null) {
-                                MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
-                                FermatDrawable icon = menuItem.getFermatDrawable();
+                                item = menu.add(groupId, id, order, menuItem.getLabel());
+                                icon = menuItem.getFermatDrawable();
                                 if (icon != null) {
-                                    int iconRes = obtainRes(ResourceSearcher.DRAWABLE_TYPE, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
+                                    iconRes = obtainRes(ResourceSearcher.DRAWABLE_TYPE, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
                                     item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
                                 }
                                 if (showAsAction != -1)
                                     item.setShowAsAction(menuItem.getShowAsAction());
                                 int actionViewClass = menuItem.getActionViewClass();
                                 if (actionViewClass != -1) {
-                                    View view = obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK);
+                                    view = obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK);
                                     item.setActionView(view);
                                 }
                             }
