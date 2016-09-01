@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.MsgRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.STATUS;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
@@ -22,7 +24,7 @@ public class NetworkServiceCallRespond extends MsgRespond {
 
     public NetworkServiceCallRespond(UUID packageId, final NetworkServiceProfile networkServiceFrom,
                                      final NetworkServiceProfile networkServiceTo  ,
-                                     final STATUS                status            ,
+                                     final STATUS status            ,
                                      final String                details           ) {
 
         super(packageId,status, details);

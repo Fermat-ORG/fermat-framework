@@ -6,6 +6,8 @@
 */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.MsgRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.STATUS;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 import java.util.UUID;
@@ -18,7 +20,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ServerHandshakeRespond extends MsgRespond{
+public class ServerHandshakeRespond extends MsgRespond {
 
     /**
      * Represent the identityPublicKey of the profile

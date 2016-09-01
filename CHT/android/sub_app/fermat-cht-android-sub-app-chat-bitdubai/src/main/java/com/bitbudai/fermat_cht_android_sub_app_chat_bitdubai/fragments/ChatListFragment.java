@@ -742,7 +742,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE)) {
 //                    cancelNotification();
-//                    fermatBundle.remove(CommunityBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
+//                    fermatBundle.remove(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
                     }
                 }
             } catch (ClassCastException e) {

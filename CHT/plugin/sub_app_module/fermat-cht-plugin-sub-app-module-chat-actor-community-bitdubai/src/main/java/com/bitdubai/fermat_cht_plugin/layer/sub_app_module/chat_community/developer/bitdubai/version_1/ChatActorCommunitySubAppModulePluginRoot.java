@@ -129,15 +129,4 @@ public class ChatActorCommunitySubAppModulePluginRoot extends AbstractModule<Cha
         return fermatManager;
     }
 
-    public ChatActorCommunityManager getChatActorCommunityManager() {
-        return fermatManager;
-    }
-
-    public ChatActorCommunitySettings getChatActorCommunitySettings() {
-        return chatActorCommunitySettings;
-    }
-
-    public void setChatActorCommunitySettings(ChatActorCommunitySettings chatActorCommunitySettings) {
-        this.chatActorCommunitySettings = chatActorCommunitySettings;
-    }
 }

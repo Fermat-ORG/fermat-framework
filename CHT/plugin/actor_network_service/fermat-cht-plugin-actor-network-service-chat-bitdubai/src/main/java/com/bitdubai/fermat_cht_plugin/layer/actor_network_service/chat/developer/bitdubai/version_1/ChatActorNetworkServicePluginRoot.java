@@ -323,6 +323,12 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
 
         System.out.println("CHAT ACTOR LIST FLOW -> RAISING EVENT -> -> init");
         eventManager.raiseEvent(eventToRaise);
+//        FermatBundle fermatBundle3 = new FermatBundle();
+//        fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_NETWORK_SERVICE.getCode());
+//        fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+//        fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_COMM_ACTOR_RECEIVED);
+//        fermatBundle3.put(ChatBroadcasterConstants.CHAT_COMM_ACTOR_LIST, actorProfiles);
+//        broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), fermatBundle3);
     }
 
     @Override
