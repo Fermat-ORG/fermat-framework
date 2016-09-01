@@ -48,26 +48,20 @@ public class ChatNetworkServiceDeveloperDatabaseFactory {
          */
 
         List<String> messageMetadata = new ArrayList<>();
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_TRANSACTION_TYPE_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_LOCALACTORPUBKEY_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_REMOTEACTORPUBKEY_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_IDMESSAGE_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_MESSAGE_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_MESSAGE_STATUS_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_DATE_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_SENTDATE_COLUMN_NAME);
+        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_ID_COLUMN_NAME);
+        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_PACKAGE_ID_COLUMN_NAME);
+        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TYPE_COLUMN_NAME);
+        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_LOCAL_PUBLIC_KEY_COLUMN_NAME);
+        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_REMOTE_PUBLIC_KEY_COLUMN_NAME);
+        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_ID_COLUMN_NAME);
+        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_CONTENT_COLUMN_NAME);
+        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_STATUS_COLUMN_NAME);
+        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_DATE_COLUMN_NAME);
+        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_SENT_DATE_COLUMN_NAME);
 
-        DeveloperDatabaseTable messageMetadataTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_TABLE, messageMetadata);
+        DeveloperDatabaseTable messageMetadataTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TABLE, messageMetadata);
         tables.add(messageMetadataTable);
 
-        List<String> event = new ArrayList<>();
-        event.add(ChatNetworkServiceDataBaseConstants.PACKAGE_ID_RECORD_COLUMN_NAME);
-        event.add(ChatNetworkServiceDataBaseConstants.SENDER_PUBLIC_KEY_COLUMN_NAME);
-        event.add(ChatNetworkServiceDataBaseConstants.DESTINATION_PUBLICK_KEY_COLUMN_NAME);
-
-        DeveloperDatabaseTable eventTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatNetworkServiceDataBaseConstants.P2P_CLIENT_EVENT_RECORD_TABLE, event);
-        tables.add(eventTable);
         return tables;
     }
 
