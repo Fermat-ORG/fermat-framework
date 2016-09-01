@@ -11,18 +11,18 @@ import java.util.UUID;
  */
 public class IntraUserDeleteContactEvent extends AbstractCCPEvent {
 
-    private String contactId;
+    private String actorPublicKey;
 
     public IntraUserDeleteContactEvent(FermatEventEnum eventType) {
         super(eventType);
     }
 
 
-    public String getContactId(){
-        return contactId;
+    public String getActorPublicKey(){
+        return actorPublicKey;
     }
 
-    public void setContactId(String contactId){
-        this.contactId = contactId;
+    public void setActorPublicKey(String actorPublicKey){
+        this.actorPublicKey = actorPublicKey;
     }
 }

@@ -75,12 +75,15 @@ public enum EventSource implements FermatEnum {
     NETWORK_SERVICE_WALLET_COMMUNITY_PLUGIN("NWC"),
     USER_DEVICE_USER_PLUGIN("UDU"),
     USER_INTRA_USER_PLUGIN("UIU"),
+    INTRA_USER_MODULE_MANAGER_LMPL("IUMML"),
     WORLD_BLOCKCHAIN_INFO_PLUGIN("WBI"),
     WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN("WSCCLCL"),
     USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER("ULCBPM"),
     USER_LEVEL_CUSTOMER_BROKER_SALE_MANAGER("ULCBSM"),
     TIMEOUT_NOTIFIER("TON"),
     CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
+
+    INTRA_WALLET_USER_ACTOR_PLUGIN_ROOT("IWUAPR"),
 
     NETWORK_CLIENT("NETWORK_CLIENT"),;
 
@@ -210,6 +213,8 @@ public enum EventSource implements FermatEnum {
                 return USER_DEVICE_USER_PLUGIN;
             case "UIU":
                 return USER_INTRA_USER_PLUGIN;
+            case "IUMML" :
+                return INTRA_USER_MODULE_MANAGER_LMPL;
             case "WBI":
                 return WORLD_BLOCKCHAIN_INFO_PLUGIN;
             case "WSCCC":
@@ -225,6 +230,9 @@ public enum EventSource implements FermatEnum {
 
             case "NETWORK_CLIENT":
                 return NETWORK_CLIENT;
+
+            case "IWUAPR":
+                return INTRA_WALLET_USER_ACTOR_PLUGIN_ROOT;
 
             default:
                 throw new InvalidParameterException(

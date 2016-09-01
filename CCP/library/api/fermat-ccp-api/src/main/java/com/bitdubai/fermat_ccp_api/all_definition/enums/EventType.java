@@ -14,6 +14,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.Acto
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServiceCompleteRegistration;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserDeleteContactEvent;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserUpdateContactEvent;
 
 
 /**
@@ -55,14 +56,17 @@ public enum EventType implements FermatEventEnum {
           return new IntraUserDeleteContactEvent(this);
       }
     },
+    INTRA_USER_WALLET_UPDATE_CONTACT("IUWUC"){
+        public FermatEvent getNewEvent(){
+            return new IntraUserUpdateContactEvent(this);
+        }
+    },
     ACTOR_NETWORK_SERVICE_ACTOR_LIST_RECEIVED("ANSALR") {
         @Override
         public FermatEvent getNewEvent() {
             return new ActorNetworkListReceiveEvent(this);
         }
-    }
-
-    ;
+    };
 
     private final String code;
 
@@ -85,8 +89,9 @@ public enum EventType implements FermatEventEnum {
             case "CRYADDN":  return CRYPTO_ADDRESSES_NEWS          ;
             case "CRYPRNW":  return CRYPTO_PAYMENT_REQUEST_NEWS    ;
             case "IUWDC" :   return INTRA_USER_WALLET_DELETE_CONTACT;
-            case "ANSNN":   return ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS    ;
-            case "ANSALR":  return ACTOR_NETWORK_SERVICE_ACTOR_LIST_RECEIVED    ;
+            case "IUWUC" :   return INTRA_USER_WALLET_UPDATE_CONTACT;
+            case "ANSNN":   return ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS ;
+            case "ANSALR":  return ACTOR_NETWORK_SERVICE_ACTOR_LIST_RECEIVED;
                 default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

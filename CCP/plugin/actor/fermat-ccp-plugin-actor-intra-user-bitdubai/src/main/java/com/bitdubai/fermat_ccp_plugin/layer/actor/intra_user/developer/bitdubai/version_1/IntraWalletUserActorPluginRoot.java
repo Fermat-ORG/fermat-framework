@@ -22,6 +22,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
@@ -61,6 +63,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWallet
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserUpdateContactEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraWalletUserActorDao;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraWalletUserActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserNewNotificationsEventHandlers;
@@ -432,6 +435,17 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                     profileImage,
                     city,
                     country);
+
+
+            System.out.println("IntraActorPluginRoot: onWalletUpdateContact");
+            IntraUserUpdateContactEvent eventToRaise = eventManager.getNewEventMati(EventType.INTRA_USER_WALLET_UPDATE_CONTACT,IntraUserUpdateContactEvent.class);
+            eventToRaise.setIdentityPublicKey(intraUserToUpdatePublicKey);
+            eventToRaise.setIdentityAlias(intraUserName);
+            eventToRaise.setIdentityPhrase(intraUserPhrase);
+            eventToRaise.setSource(EventSource.INTRA_WALLET_USER_ACTOR_PLUGIN_ROOT);
+
+            System.out.println("INSTRA USER ACTOR uPDATE CONTACT -> RAISING EVENT -> -> init");
+            eventManager.raiseEvent(eventToRaise);
 
         }catch (Exception e){
             throw  new CantUpdateIntraWalletUserException("Can't update intra wallet user",e,"","Database error");

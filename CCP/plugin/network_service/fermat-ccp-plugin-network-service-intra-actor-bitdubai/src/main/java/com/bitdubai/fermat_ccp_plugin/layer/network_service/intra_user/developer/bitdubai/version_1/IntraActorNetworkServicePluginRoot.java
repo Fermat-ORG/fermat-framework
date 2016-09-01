@@ -801,10 +801,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     actorNetworkServiceRecord.toJson()
             );
 
-
+            System.out.println("IntraActorNs: onIntraUserWalletDeleteContact");
             IntraUserDeleteContactEvent eventToRaise = eventManager.getNewEventMati(EventType.INTRA_USER_WALLET_DELETE_CONTACT,IntraUserDeleteContactEvent.class);
-            eventToRaise.setContactId(intraUserToDisconnectPublicKey);
+            eventToRaise.setActorPublicKey(intraUserToDisconnectPublicKey);
             eventToRaise.setSource(eventSource);
+            System.out.println("INSTRA USER ACTOR DELETE CONTACT -> RAISING EVENT -> -> init");
             eventManager.raiseEvent(eventToRaise);
 
         } catch (Exception e) {
