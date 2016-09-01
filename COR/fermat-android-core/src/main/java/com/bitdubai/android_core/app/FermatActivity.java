@@ -367,7 +367,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             if (showAsAction != -1) item.setShowAsAction(menuItem.getShowAsAction());
             int actionViewClass = menuItem.getActionViewClass();
             if (actionViewClass != -1) {
-                //item.setActionView(OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this, actionViewClass));
+                item.setActionView(OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this, actionViewClass));
             }
             if (menuItem.hasSubMenu()) {
                 SubMenu subMenu = item.getSubMenu();
