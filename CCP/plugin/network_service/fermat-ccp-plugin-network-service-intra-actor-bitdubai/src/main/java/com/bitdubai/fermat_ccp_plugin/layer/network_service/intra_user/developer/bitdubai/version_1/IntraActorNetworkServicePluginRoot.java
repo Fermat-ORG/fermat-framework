@@ -1055,29 +1055,38 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     public void sendMessage(final String senderPublicKey,
                             final String receiverPublicKey,
                             final String contentMessage) {
+        try {
+            if (getConnection() != null )
+            {
+                final ActorProfile sender = new ActorProfile();
+                sender.setActorType(Actors.INTRA_USER.getCode());
+                sender.setIdentityPublicKey(senderPublicKey);
 
-        final ActorProfile sender = new ActorProfile();
-        sender.setActorType(Actors.INTRA_USER.getCode());
-        sender.setIdentityPublicKey(senderPublicKey);
+                final ActorProfile receiver = new ActorProfile();
+                receiver.setActorType(Actors.INTRA_USER.getCode());
+                receiver.setIdentityPublicKey(receiverPublicKey);
 
-        final ActorProfile receiver = new ActorProfile();
-        receiver.setActorType(Actors.INTRA_USER.getCode());
-        receiver.setIdentityPublicKey(receiverPublicKey);
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    sender,
+                                    receiver,
+                                    contentMessage, true
+                            );
+                        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
+                            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                        }
 
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    sendNewMessage(
-                            sender,
-                            receiver,
-                            contentMessage, true
-                    );
-                } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
-                    reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-            }
-        });
+                    }
+                });
+             }
+        }
+        catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+
     }
 
 }
