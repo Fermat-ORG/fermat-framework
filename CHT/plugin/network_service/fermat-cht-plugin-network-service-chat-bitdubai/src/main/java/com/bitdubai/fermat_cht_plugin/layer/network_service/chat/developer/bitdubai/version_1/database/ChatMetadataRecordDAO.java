@@ -226,7 +226,7 @@ public class ChatMetadataRecordDAO {
         return messageMetadataRecord;
     }
 
-    public UUID getMessageIdByPackageId(UUID packageId) throws CantGetNotificationException, NotificationNotFoundException, CantReadRecordDataBaseException {
+    public UUID getMessageIdByPackageId(UUID packageId) throws CantGetNotificationException, CantReadRecordDataBaseException {
 
         if (packageId == null)
             throw new IllegalArgumentException("The packageId is required, can not be null");

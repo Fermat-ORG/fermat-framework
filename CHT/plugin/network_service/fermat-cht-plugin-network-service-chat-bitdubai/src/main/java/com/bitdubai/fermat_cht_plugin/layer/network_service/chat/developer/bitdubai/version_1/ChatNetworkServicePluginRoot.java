@@ -185,11 +185,10 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
             UUID messageId = getChatMetadataRecordDAO().getMessageIdByPackageId(packageId);
 
-            launchMessageFailNotification(messageId);
-
-        } catch (NotificationNotFoundException e) {
-
-            System.out.println("PACKAGE WITH ID:"+packageId.toString()+" was not found");
+            if (messageId != null)
+                launchMessageFailNotification(messageId);
+            else
+                System.out.println("PACKAGE WITH ID:"+packageId.toString()+" was not found");
 
         } catch (CantGetNotificationException e) {
             e.printStackTrace();
