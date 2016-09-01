@@ -506,6 +506,11 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         emptyView.removeAllViewsInLayout();
         contactName.clear();
         message.clear();
+        searchView.destroyDrawingCache();
+        searchView.removeAllViews();
+        searchView.removeAllViewsInLayout();
+        searchView = null;
+        applicationsHelper =null;
         chatId.clear();
         dateMessage.clear();
         contactId.clear();

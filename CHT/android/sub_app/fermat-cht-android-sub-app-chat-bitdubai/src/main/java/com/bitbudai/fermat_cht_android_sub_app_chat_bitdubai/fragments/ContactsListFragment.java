@@ -160,16 +160,12 @@ public class ContactsListFragment
                     for (ChatActorCommunityInformation conta : con) {
                         contactname.add(conta.getAlias());
                         contactid.add(conta.getPublicKey());
-                        ByteArrayInputStream bytes;
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         if (conta.getImage() != null) {
-                            bytes = new ByteArrayInputStream(conta.getImage());
-                            BitmapDrawable bmd = new BitmapDrawable(bytes);
-                            contacticon.add(bmd.getBitmap());
+                            contacticon.add((new BitmapDrawable(new ByteArrayInputStream(conta.getImage()))).getBitmap());
                         } else {
                             Drawable d = getResources().getDrawable(R.drawable.cht_center_profile_icon_center);
                             Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, (new ByteArrayOutputStream()));
                             contacticon.add(bitmap);
                         }
                         contactStatus.add(conta.getStatus());
@@ -181,8 +177,7 @@ public class ContactsListFragment
                     nochatssubtitle1.setVisibility(View.GONE);
                     nochatssubtitle2.setVisibility(View.GONE);
                     layout.setBackgroundResource(0);
-                    ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
-                    layout.setBackground(bgcolor);
+                    layout.setBackground(new ColorDrawable(Color.parseColor("#F9F9F9")));
                 } else {
                     emptyView.setVisibility(View.VISIBLE);
                     noData.setVisibility(View.VISIBLE);
@@ -354,6 +349,7 @@ public class ContactsListFragment
         }
         return super.onOptionsItemSelected(item);
     }
+
     public void appSessionSetDataContact(int position) {
         Contact contact = new ContactImpl();
         contact.setRemoteActorPublicKey(adapter.getContactId(position));
@@ -376,5 +372,59 @@ public class ContactsListFragment
         appSession.setData("whocallme", "contact");
         appSessionSetDataContact(position);
         changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbindDrawables(layout.findViewById(R.id.list));
+        unbindDrawables(layout.findViewById(R.id.empty_view));
+        adapter.clear();
+        chatSettings = null;
+        errorManager = null;
+        chatIdentity = null;
+        chatManager = null;
+        applicationsHelper = null;
+        layout.destroyDrawingCache();
+        layout = null;
+        contactname.clear();
+        contacticon.clear();
+        contactid.clear();
+        contactStatus.clear();
+        emptyView.destroyDrawingCache();
+        emptyView.removeAllViewsInLayout();
+        chatIdentity = null;
+        emptyView.removeAllViews();
+        noData.destroyDrawingCache();
+        noDatalabel.destroyDrawingCache();
+        nochatssubtitle.destroyDrawingCache();
+        nochatssubtitle1.destroyDrawingCache();
+        nochatssubtitle2.destroyDrawingCache();
+        list.removeAllViewsInLayout();
+        list = null;
+        mSwipeRefreshLayout.removeAllViews();
+        mSwipeRefreshLayout.removeAllViewsInLayout();
+        mSwipeRefreshLayout.destroyDrawingCache();
+        mSwipeRefreshLayout = null;
+        searchView = null;
+        applicationsHelper = null;
+        destroy();
+    }
+
+    private void unbindDrawables(View view)
+    {
+        if (view.getBackground() != null)
+        {
+            view.getBackground().setCallback(null);
+        }
+        if (view instanceof ViewGroup && !(view instanceof AdapterView))
+        {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+            {
+                unbindDrawables(((ViewGroup) view).getChildAt(i));
+            }
+            ((ViewGroup) view).removeAllViews();
+            ((ViewGroup) view).removeAllViewsInLayout();
+        }
     }
 }
