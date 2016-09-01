@@ -28,6 +28,7 @@ import org.iop.client.version_1.context.ClientContext;
 import org.iop.client.version_1.context.ClientContextItem;
 import org.iop.client.version_1.structure.NetworkClientCommunicationConnection;
 import org.iop.client.version_1.util.PackageDecoder;
+import org.iop.client.version_1.util.PackageEncoder;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -217,7 +218,6 @@ public class NetworkClientCommunicationChannel {
     @OnError
     public void onError(Session session,Throwable t){
 
-        t.printStackTrace();
     }
 
     public void sendPing() throws IOException {

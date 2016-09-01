@@ -49,7 +49,6 @@ public class ChatNetworkServiceDeveloperDatabaseFactory {
 
         List<String> messageMetadata = new ArrayList<>();
         messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_ID_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_PACKAGE_ID_COLUMN_NAME);
         messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TYPE_COLUMN_NAME);
         messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_LOCAL_PUBLIC_KEY_COLUMN_NAME);
         messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_REMOTE_PUBLIC_KEY_COLUMN_NAME);

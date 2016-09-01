@@ -57,7 +57,6 @@ public class ChatNetworkServiceDatabaseFactory {
             table = databaseFactory.newTableFactory(ownerId, ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TABLE);
 
             table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.TRUE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_PACKAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.TRUE);
             table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_LOCAL_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_REMOTE_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);

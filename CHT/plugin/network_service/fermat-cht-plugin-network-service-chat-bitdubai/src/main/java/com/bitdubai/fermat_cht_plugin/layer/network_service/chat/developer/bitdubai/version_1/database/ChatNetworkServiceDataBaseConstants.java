@@ -16,7 +16,6 @@ public final class ChatNetworkServiceDataBaseConstants {
     public static final String MESSAGE_METADATA_TABLE                         = "message_metadata_table";
 
     public static final String MESSAGE_METADATA_ID_COLUMN_NAME                = "id";
-    public static final String MESSAGE_METADATA_PACKAGE_ID_COLUMN_NAME        = "package_id";
     public static final String MESSAGE_METADATA_TYPE_COLUMN_NAME              = "type";
     public static final String MESSAGE_METADATA_LOCAL_PUBLIC_KEY_COLUMN_NAME  = "local_public_key";
     public static final String MESSAGE_METADATA_REMOTE_PUBLIC_KEY_COLUMN_NAME = "remote_public_key";
