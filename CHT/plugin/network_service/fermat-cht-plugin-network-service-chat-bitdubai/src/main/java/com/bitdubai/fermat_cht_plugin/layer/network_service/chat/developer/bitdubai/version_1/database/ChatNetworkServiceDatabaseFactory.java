@@ -25,6 +25,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 public class ChatNetworkServiceDatabaseFactory {
+
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private ErrorManager errorManager;
 
@@ -53,25 +54,21 @@ public class ChatNetworkServiceDatabaseFactory {
             /**
              * Create Chat table.
              */
-//
-            table = databaseFactory.newTableFactory(ownerId, ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_TABLE);
+            table = databaseFactory.newTableFactory(ownerId, ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TABLE);
 
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.TRUE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_LOCALACTORPUBKEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_REMOTEACTORPUBKEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_IDMESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 4000, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_MESSAGE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_SENTDATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-
-            table.addIndex(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TRANSACTION_RECORD_FIRST_KEY_COLUMN);
+            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.TRUE);
+            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_LOCAL_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_REMOTE_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 4000, Boolean.FALSE);
+            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_SENT_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
-                //  System.out.println("ChatNetworkServicePluginRoot - table:" + table);
             } catch (CantCreateTableException cantCreateTableException) {
                 CantCreateDatabaseException cantCreateDatabaseException = new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
                 reportUnexpectedError(cantCreateDatabaseException);
@@ -81,30 +78,6 @@ public class ChatNetworkServiceDatabaseFactory {
                 reportUnexpectedError(cantCreateDatabaseException);
                 throw cantCreateDatabaseException;
             }
-
-            table = databaseFactory.newTableFactory(ownerId, ChatNetworkServiceDataBaseConstants.P2P_CLIENT_EVENT_RECORD_TABLE);
-
-            table.addColumn(ChatNetworkServiceDataBaseConstants.PACKAGE_ID_RECORD_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.TRUE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.SENDER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.DESTINATION_PUBLICK_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
-
-
-            table.addIndex(ChatNetworkServiceDataBaseConstants.P2P_CLIENT_EVENT_RECORD_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-                //  System.out.println("ChatNetworkServicePluginRoot - table:" + table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                CantCreateDatabaseException cantCreateDatabaseException = new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-                reportUnexpectedError(cantCreateDatabaseException);
-                throw cantCreateDatabaseException;
-            } catch (Exception e) {
-                CantCreateDatabaseException cantCreateDatabaseException = new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", e.getMessage());
-                reportUnexpectedError(cantCreateDatabaseException);
-                throw cantCreateDatabaseException;
-            }
-
 
             return database;
         } catch (InvalidOwnerIdException invalidOwnerId) {

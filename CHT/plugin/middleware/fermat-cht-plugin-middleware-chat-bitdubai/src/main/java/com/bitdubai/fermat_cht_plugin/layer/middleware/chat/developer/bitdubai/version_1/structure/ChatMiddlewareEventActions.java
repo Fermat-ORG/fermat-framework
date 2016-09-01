@@ -364,5 +364,17 @@ public class ChatMiddlewareEventActions {
         }
     }
 
+    public void incomingMessageFailEventHandler(UUID messageId) throws DatabaseOperationException, CantSaveMessageException {
+
+        chatMiddlewareDatabaseDao.updateMessageStatus(messageId, MessageStatus.CANNOT_SEND);
+
+        FermatBundle fermatBundle2 = new FermatBundle();
+        fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+        fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+        fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
+
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
+    }
+
 }
 

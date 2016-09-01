@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientIsActorOnlineEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.IsActorOnlineMsgRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.STATUS;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 
@@ -44,7 +45,7 @@ public class IsActorOnlineRespondProcessor extends PackageProcessor {
 
         networkClientIsActorOnlineEvent.setNetworkServiceType(NetworkServiceType.getByCode(isActorOnlineMsgRespond.getNetworkServiceType()));
 
-        if(isActorOnlineMsgRespond.getStatus() == IsActorOnlineMsgRespond.STATUS.SUCCESS){
+        if(isActorOnlineMsgRespond.getStatus() == STATUS.SUCCESS){
             networkClientIsActorOnlineEvent.setStatus(NetworkClientIsActorOnlineEvent.STATUS.SUCCESS);
         }else{
             networkClientIsActorOnlineEvent.setStatus(NetworkClientIsActorOnlineEvent.STATUS.FAILED);

@@ -41,6 +41,7 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler.IncomingMessageEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler.IncomingNewChatStatusUpdateEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler.IncomingNewWritingStatusUpdateEventHandler;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler.MessageFailEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareEventActions;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareManager;
 
@@ -119,6 +120,12 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements Database
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     private void initializeListeners(ChatMiddlewareEventActions eventActions) {
+
+        FermatEventListener MESSAGE_FAILListener = eventManager.getNewListener(EventType.MESSAGE_FAIL);
+        FermatEventHandler MESSAGE_FAILHandler = new MessageFailEventHandler(this, eventActions);
+        MESSAGE_FAILListener.setEventHandler(MESSAGE_FAILHandler);
+        eventManager.addListener(MESSAGE_FAILListener);
+        listenersAdded.add(MESSAGE_FAILListener);
 
         FermatEventListener INCOMING_MESSAGEListener = eventManager.getNewListener(EventType.INCOMING_MESSAGE);
         FermatEventHandler INCOMING_MESSAGEHandler = new IncomingMessageEventHandler(this, eventActions);
