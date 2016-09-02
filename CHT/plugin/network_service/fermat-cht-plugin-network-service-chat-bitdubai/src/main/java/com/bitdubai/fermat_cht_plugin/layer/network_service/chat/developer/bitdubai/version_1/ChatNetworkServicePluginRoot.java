@@ -18,7 +18,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -30,7 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChatStatusUpdateEvent;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.ChangedChatStatusUpdateEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingMessageEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingWritingStatusUpdateEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.MessageFailEvent;
@@ -156,7 +155,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                         messageMetadataRecord.setMessageStatus(messageStatus);
 
                         System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + messageMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
-                        launchIncomingChatStatusNotification(messageMetadataRecord);
+                        launchChangedChatStatusNotification(messageMetadataRecord);
                     }
                     break;
                 case TRANSACTION_WRITING_STATUS:
@@ -209,6 +208,42 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
     }
 
+    @Override
+    public void onSentMessage(UUID packageId) {
+
+        System.out.println("message sent+ :" + packageId);
+
+        try {
+
+            UUID messageId = getChatMetadataRecordDAO().getMessageIdByPackageId(packageId);
+
+            MessageMetadataRecord messageMetadata = new MessageMetadataRecord();
+            messageMetadata.setMessageId(messageId);
+            messageMetadata.setMessageStatus(MessageStatus.SENT);
+
+            if (messageId != null)
+                launchChangedChatStatusNotification(messageMetadata);
+            else
+                System.out.println("PACKAGE WITH ID:"+packageId.toString()+" was not found");
+
+        } catch (CantGetNotificationException e) {
+            e.printStackTrace();
+            CantGetNotificationException pluginStartException = new CantGetNotificationException(CantGetNotificationException.DEFAULT_MESSAGE, e, "", "CAN NOT GET NOTIFICATION");
+
+            reportUnexpectedError(pluginStartException);
+        } catch (CantReadRecordDataBaseException e) {
+            e.printStackTrace();
+            CantReadRecordDataBaseException pluginStartException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "", "");
+
+            reportUnexpectedError(pluginStartException);
+        } catch (Exception e){
+            e.printStackTrace();
+            CantReadRecordDataBaseException pluginStartException = new CantReadRecordDataBaseException("Something bad happened", e, "", "");
+
+            reportUnexpectedError(pluginStartException);
+        }
+    }
+
     private void launchIncomingMessageNotification(MessageMetadata messageMetadata) {
         IncomingMessageEvent event = (IncomingMessageEvent) eventManager.getNewEvent(EventType.INCOMING_MESSAGE);
         event.setMessageMetadata(messageMetadata);
@@ -223,8 +258,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
         eventManager.raiseEvent(event);
     }
 
-    private void launchIncomingChatStatusNotification(MessageMetadata messageMetadata) {
-        IncomingChatStatusUpdateEvent event = (IncomingChatStatusUpdateEvent) eventManager.getNewEvent(EventType.INCOMING_STATUS);
+    private void launchChangedChatStatusNotification(MessageMetadata messageMetadata) {
+        ChangedChatStatusUpdateEvent event = (ChangedChatStatusUpdateEvent) eventManager.getNewEvent(EventType.CHANGED_CHAT_STATUS);
         event.setMessageMetadata(messageMetadata);
         event.setSource(eventSource);
         eventManager.raiseEvent(event);

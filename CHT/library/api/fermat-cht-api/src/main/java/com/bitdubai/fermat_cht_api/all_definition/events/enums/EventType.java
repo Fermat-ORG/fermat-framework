@@ -10,7 +10,7 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatActorL
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatConnectionRequestNewEvent;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatConnectionRequestUpdatesEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingMessageEvent;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChatStatusUpdateEvent;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.ChangedChatStatusUpdateEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingWritingStatusUpdateEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.MessageFailEvent;
 
@@ -50,9 +50,9 @@ public enum EventType implements FermatEventEnum {
     INCOMING_MESSAGE("INMESSAGE"){
         public final FermatEvent getNewEvent() { return new IncomingMessageEvent(this);}
     },
-    INCOMING_STATUS("INSTS") {
+    CHANGED_CHAT_STATUS("INSTS") {
         public final FermatEvent getNewEvent() {
-            return new IncomingChatStatusUpdateEvent(this);
+            return new ChangedChatStatusUpdateEvent(this);
         }
     },
     INCOMING_WRITING_STATUS("INWSTS") {

@@ -510,7 +510,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                 chatNetworkServiceManager.sendMessageMetadata(localActorPublicKey,
                         remoteActorPublicKey,
                         messageMetadata);
-                createdMessage.setStatus(MessageStatus.SEND);
+                createdMessage.setStatus(MessageStatus.SENT);
             } catch (IllegalArgumentException e) {
                 /**
                  * In this case, any argument in chat or message was null or not properly set.

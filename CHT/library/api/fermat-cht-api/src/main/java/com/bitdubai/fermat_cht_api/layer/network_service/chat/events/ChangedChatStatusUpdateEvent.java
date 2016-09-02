@@ -6,9 +6,9 @@ import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 /**
  * Created by Gabriel Araujo on 05/01/16.
  */
-public final class IncomingChatStatusUpdateEvent extends AbstractCHTFermatEvent {
+public final class ChangedChatStatusUpdateEvent extends AbstractCHTFermatEvent {
 
-    public IncomingChatStatusUpdateEvent(EventType eventType) {
+    public ChangedChatStatusUpdateEvent(EventType eventType) {
         super(eventType);
     }
 

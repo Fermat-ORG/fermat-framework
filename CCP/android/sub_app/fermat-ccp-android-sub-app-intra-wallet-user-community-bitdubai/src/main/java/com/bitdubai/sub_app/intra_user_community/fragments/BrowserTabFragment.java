@@ -474,7 +474,7 @@ public class BrowserTabFragment
                         break;
 
                     case PENDING_REMOTELY_ACCEPTANCE:
-                        Toast.makeText(getActivity(),"REQUEST HAS BEEN SEND",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"REQUEST HAS BEEN SENT",Toast.LENGTH_SHORT).show();
                         break;
 
                     default:

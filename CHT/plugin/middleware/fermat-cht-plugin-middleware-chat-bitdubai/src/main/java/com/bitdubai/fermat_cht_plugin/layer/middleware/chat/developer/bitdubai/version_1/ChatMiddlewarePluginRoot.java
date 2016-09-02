@@ -39,7 +39,7 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler.IncomingMessageEventHandler;
-import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler.IncomingNewChatStatusUpdateEventHandler;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler.ChangedChatStatusUpdateEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler.IncomingNewWritingStatusUpdateEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler.MessageFailEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareEventActions;
@@ -133,11 +133,11 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements Database
         eventManager.addListener(INCOMING_MESSAGEListener);
         listenersAdded.add(INCOMING_MESSAGEListener);
 
-        FermatEventListener INCOMING_STATUSListener = eventManager.getNewListener(EventType.INCOMING_STATUS);
-        FermatEventHandler INCOMING_STATUSHandler = new IncomingNewChatStatusUpdateEventHandler(this, eventActions);
-        INCOMING_STATUSListener.setEventHandler(INCOMING_STATUSHandler);
-        eventManager.addListener(INCOMING_STATUSListener);
-        listenersAdded.add(INCOMING_STATUSListener);
+        FermatEventListener CHANGED_CHAT_STATUSListener = eventManager.getNewListener(EventType.CHANGED_CHAT_STATUS);
+        FermatEventHandler CHANGED_CHAT_STATUSHandler = new ChangedChatStatusUpdateEventHandler(this, eventActions);
+        CHANGED_CHAT_STATUSListener.setEventHandler(CHANGED_CHAT_STATUSHandler);
+        eventManager.addListener(CHANGED_CHAT_STATUSListener);
+        listenersAdded.add(CHANGED_CHAT_STATUSListener);
 
         FermatEventListener INCOMING_WRITING_STATUSListener = eventManager.getNewListener(EventType.INCOMING_WRITING_STATUS);
         FermatEventHandler INCOMING_WRITING_STATUSHandler = new IncomingNewWritingStatusUpdateEventHandler(this, eventActions);
