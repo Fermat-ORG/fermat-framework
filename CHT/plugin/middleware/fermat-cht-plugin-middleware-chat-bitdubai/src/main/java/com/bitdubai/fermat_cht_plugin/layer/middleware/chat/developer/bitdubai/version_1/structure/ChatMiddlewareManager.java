@@ -466,11 +466,11 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     }
 
     @Override
-    public Timestamp getLastMessageReceivedDate(String remotePk) throws CantGetChatException {
+    public Timestamp getLastMessageReceivedDate(UUID chatId) throws CantGetChatException {
 
         try {
 
-            return chatMiddlewareDatabaseDao.getLastMessageReceivedDateByRemotePK(remotePk);
+            return chatMiddlewareDatabaseDao.getLastMessageReceivedDateByChatId(chatId);
 
         } catch (Exception e) {
             throw new CantGetChatException(

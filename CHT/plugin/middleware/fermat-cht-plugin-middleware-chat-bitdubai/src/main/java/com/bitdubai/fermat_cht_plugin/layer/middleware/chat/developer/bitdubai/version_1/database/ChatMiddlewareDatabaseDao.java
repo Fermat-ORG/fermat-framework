@@ -137,20 +137,21 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public Timestamp getLastMessageReceivedDateByRemotePK(String remotePK) throws CantGetChatException, DatabaseOperationException {
+    public Timestamp getLastMessageReceivedDateByChatId(UUID chatId) throws CantGetChatException, DatabaseOperationException {
 
         try {
 
-            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
 
-            table.addStringFilter(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, remotePK, DatabaseFilterType.EQUAL);
+            table.addUUIDFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, chatId, DatabaseFilterType.EQUAL);
+            table.addFermatEnumFilter(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME, TypeMessage.INCOMING, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
             List<DatabaseTableRecord> records = table.getRecords();
 
             if (records.size() > 0)
-                return Timestamp.valueOf(records.get(0).getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME));
+                return Timestamp.valueOf(records.get(0).getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME));
             else
                 return null;
 
@@ -160,7 +161,7 @@ public class ChatMiddlewareDatabaseDao {
             throw new CantGetChatException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     e,
-                    "error trying to get Chat from the database with filter: " + remotePK,
+                    "error trying to get Chat from the database with filter: chatId=" + chatId,
                     null);
         }
     }

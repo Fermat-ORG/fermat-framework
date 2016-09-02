@@ -81,7 +81,7 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
      */
     void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException;
 
-    Timestamp getLastMessageReceivedDate(String remotePk) throws CantGetChatException;
+    Timestamp getLastMessageReceivedDate(UUID chatId) throws CantGetChatException;
 
     ChatActorCommunitySelectableIdentity newInstanceChatActorCommunitySelectableIdentity(ChatIdentity chatIdentity);
 

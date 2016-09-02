@@ -49,7 +49,7 @@ public interface MiddlewareChatManager extends FermatManager {
 
     void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException;
 
-    Timestamp getLastMessageReceivedDate(String remotePk) throws CantGetChatException;
+    Timestamp getLastMessageReceivedDate(UUID chatId) throws CantGetChatException;
 
     /**
      * This method sends the message through the Chat Network Service

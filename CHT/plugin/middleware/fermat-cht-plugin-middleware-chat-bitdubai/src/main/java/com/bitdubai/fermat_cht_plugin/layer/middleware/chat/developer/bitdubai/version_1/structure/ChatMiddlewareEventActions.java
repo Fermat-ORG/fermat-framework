@@ -236,7 +236,7 @@ public class ChatMiddlewareEventActions {
                     chatFromDatabase.getChatId(),
                     messageMetadata,
                     MessageStatus.CREATED,
-                    TypeMessage.INCOMMING,
+                    TypeMessage.INCOMING,
                     connectionId
             );
 

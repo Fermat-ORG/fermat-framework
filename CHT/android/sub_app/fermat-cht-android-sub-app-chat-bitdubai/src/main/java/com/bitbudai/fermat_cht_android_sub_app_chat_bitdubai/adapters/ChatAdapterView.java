@@ -667,7 +667,7 @@ public class ChatAdapterView extends LinearLayout {
             if (remotePkWriting != null && remotePkWriting.equals(remotePk)) {
                 changeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING, null, h);
             } else {
-                Timestamp date = chatManager.getLastMessageReceivedDate(remotePk);
+                Timestamp date = chatManager.getLastMessageReceivedDate(chatId);
                 changeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date, null);
             }
         } catch (CantGetChatException cantGetOnlineStatus) {
