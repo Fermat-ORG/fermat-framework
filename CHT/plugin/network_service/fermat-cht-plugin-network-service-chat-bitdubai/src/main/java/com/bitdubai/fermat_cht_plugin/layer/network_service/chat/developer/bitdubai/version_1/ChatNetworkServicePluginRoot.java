@@ -29,7 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.ChangedChatStatusUpdateEvent;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.ChangedMessageStatusUpdateEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingMessageEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingWritingStatusUpdateEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.MessageFailEvent;
@@ -155,7 +155,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                         messageMetadataRecord.setMessageStatus(messageStatus);
 
                         System.out.println("----------------------------\n" + "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + messageMetadataRecord.getLocalActorPublicKey() + "\n-------------------------------------------------");
-                        launchChangedChatStatusNotification(messageMetadataRecord);
+                        launchChangedMessageStatusNotification(messageMetadataRecord);
                     }
                     break;
                 case TRANSACTION_WRITING_STATUS:
@@ -222,7 +222,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             messageMetadata.setMessageStatus(MessageStatus.SENT);
 
             if (messageId != null)
-                launchChangedChatStatusNotification(messageMetadata);
+                launchChangedMessageStatusNotification(messageMetadata);
             else
                 System.out.println("PACKAGE WITH ID:"+packageId.toString()+" was not found");
 
@@ -258,8 +258,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
         eventManager.raiseEvent(event);
     }
 
-    private void launchChangedChatStatusNotification(MessageMetadata messageMetadata) {
-        ChangedChatStatusUpdateEvent event = (ChangedChatStatusUpdateEvent) eventManager.getNewEvent(EventType.CHANGED_CHAT_STATUS);
+    private void launchChangedMessageStatusNotification(MessageMetadata messageMetadata) {
+        ChangedMessageStatusUpdateEvent event = (ChangedMessageStatusUpdateEvent) eventManager.getNewEvent(EventType.CHANGED_MESSAGE_STATUS);
         event.setMessageMetadata(messageMetadata);
         event.setSource(eventSource);
         eventManager.raiseEvent(event);
