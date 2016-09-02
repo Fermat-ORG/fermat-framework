@@ -268,40 +268,40 @@ public class ContactsListFragment
     }
 
     public void onOptionMenuPrepared(Menu menu) {
-        MenuItem searchItem = menu.findItem(1);
-        if (searchItem != null) {
-            searchView = (SearchView) searchItem.getActionView();
-            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String s) {
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String s) {
-
-                    if (s.equals(searchView.getQuery().toString())) {
-                        updateValues();
-                        adapter.refreshEvents(contactname, contacticon, contactid);
-                        adapter.getFilter().filter(s);
-                    }
-                    return false;
-                }
-            });
-            if (appSession.getData("filterString") != null) {
-                String filterString = (String) appSession.getData("filterString");
-                if (filterString.length() > 0) {
-                    searchView.setQuery(filterString, true);
-                    searchView.setIconified(false);
-                    //getToolbar().setTitle("");
-                } else {
-                    //getToolbar().setTitle("P2P Chat");
-                    updateValues();
-                    adapter.refreshEvents(contactname, contacticon, contactid);
-                }
-            }
-        }
+//        MenuItem searchItem = menu.findItem(1);
+//        if (searchItem != null) {
+//            searchView = (SearchView) searchItem.getActionView();
+//            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+//            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                @Override
+//                public boolean onQueryTextSubmit(String s) {
+//                    return false;
+//                }
+//
+//                @Override
+//                public boolean onQueryTextChange(String s) {
+//
+//                    if (s.equals(searchView.getQuery().toString())) {
+//                        updateValues();
+//                        adapter.refreshEvents(contactname, contacticon, contactid);
+//                        adapter.getFilter().filter(s);
+//                    }
+//                    return false;
+//                }
+//            });
+//            if (appSession.getData("filterString") != null) {
+//                String filterString = (String) appSession.getData("filterString");
+//                if (filterString.length() > 0) {
+//                    searchView.setQuery(filterString, true);
+//                    searchView.setIconified(false);
+//                    //getToolbar().setTitle("");
+//                } else {
+//                    //getToolbar().setTitle("P2P Chat");
+//                    updateValues();
+//                    adapter.refreshEvents(contactname, contacticon, contactid);
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -406,7 +406,7 @@ public class ContactsListFragment
         mSwipeRefreshLayout.removeAllViewsInLayout();
         mSwipeRefreshLayout.destroyDrawingCache();
         mSwipeRefreshLayout = null;
-        searchView = null;
+//        searchView = null;
         applicationsHelper = null;
         destroy();
     }

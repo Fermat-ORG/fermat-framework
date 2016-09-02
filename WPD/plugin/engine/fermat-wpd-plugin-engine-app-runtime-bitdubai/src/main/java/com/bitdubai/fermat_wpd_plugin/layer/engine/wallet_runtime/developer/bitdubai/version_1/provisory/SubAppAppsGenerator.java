@@ -4235,31 +4235,32 @@ public class SubAppAppsGenerator {
 //        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
 //        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
 
-        OptionsMenu optionsMenu = new OptionsMenu();
-        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Search");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionMenuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
-        optionsMenu.addMenuItem(optionMenuItem);
+//        OptionsMenu optionsMenu = new OptionsMenu();
+//        OptionMenuItem optionMenuItem;
+//        = new OptionMenuItem(1);
+//       // optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        optionMenuItem.setLabel("Search");
+//        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        //optionMenuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
+//        optionsMenu.addMenuItem(optionMenuItem);
 
-        optionMenuItem = new OptionMenuItem(3);
-        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Go to Profile");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        optionsMenu.addMenuItem(optionMenuItem);
-
-        optionMenuItem = new OptionMenuItem(4);
-        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Go to Community");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        optionsMenu.addMenuItem(optionMenuItem);
-
-        optionMenuItem = new OptionMenuItem(5);
-        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        optionsMenu.addMenuItem(optionMenuItem);
+//        optionMenuItem = new OptionMenuItem(3);
+//        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        optionMenuItem.setLabel("Go to Profile");
+//        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        optionsMenu.addMenuItem(optionMenuItem);
+//
+//        optionMenuItem = new OptionMenuItem(4);
+//        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        optionMenuItem.setLabel("Go to Community");
+//        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        optionsMenu.addMenuItem(optionMenuItem);
+//
+//        optionMenuItem = new OptionMenuItem(5);
+//        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        optionMenuItem.setLabel("Help");
+//        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        optionsMenu.addMenuItem(optionMenuItem);
 
 //        SearchMenuItem searchOptionMenuItem = new SearchMenuItem(1);
 //        searchOptionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
@@ -4273,7 +4274,7 @@ public class SubAppAppsGenerator {
 //        searchOptionMenuItem.setOptionMenuPressEvent(esearchEvent);
 //        optionsMenu.addMenuItem(searchOptionMenuItem);
 
-        runtimeActivity.setOptionsMenu(optionsMenu);
+//        runtimeActivity.setOptionsMenu(optionsMenu);
 
         //Menu Tabs
         runtimeTabStrip = new TabStrip();
@@ -4309,7 +4310,7 @@ public class SubAppAppsGenerator {
         runtimeFragment.setOwner(owner);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
 
-        OptionsMenu  optionsMenuF = new OptionsMenu();
+//        OptionsMenu  optionsMenuF = new OptionsMenu();
 //        SearchMenuItem searchOptionMenuItem = new SearchMenuItem(1);
 //        searchOptionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
 //        searchOptionMenuItem.setLabel("Search");
@@ -4322,13 +4323,13 @@ public class SubAppAppsGenerator {
 //        searchOptionMenuItem.setOptionMenuPressEvent(esearchEvent);
 //        optionsMenu.addMenuItem(searchOptionMenuItem);
 
-        OptionMenuItem optionMenuItemF = new OptionMenuItem(2);
-        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemF.setLabel("Delete All Chats");
-        optionMenuItemF.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        optionsMenuF.addMenuItem(optionMenuItemF);
-
-        runtimeFragment.setOptionsMenu(optionsMenuF);
+//        OptionMenuItem optionMenuItemF = new OptionMenuItem(2);
+//        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        optionMenuItemF.setLabel("Delete All Chats");
+//        optionMenuItemF.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        optionsMenuF.addMenuItem(optionMenuItemF);
+//
+//        runtimeFragment.setOptionsMenu(optionsMenuF);
 
         runtimeTab.setFragment(runtimeFragment);
         runtimeTabStrip.addTab(runtimeTab);
@@ -4632,20 +4633,20 @@ public class SubAppAppsGenerator {
         owner = new Owner();
         owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
 
-        optionsMenu = new OptionsMenu();
-        optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Search");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionMenuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
-        optionsMenu.addMenuItem(optionMenuItem);
-
-        optionMenuItem = new OptionMenuItem(2);
-        optionMenuItem.setLabel("Clear Chat");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        optionsMenu.addMenuItem(optionMenuItem);
-
-        runtimeActivity.setOptionsMenu(optionsMenu);
+//        optionsMenu = new OptionsMenu();
+////        optionMenuItem = new OptionMenuItem(1);
+////        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+////        optionMenuItem.setLabel("Search");
+////        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+////        optionMenuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
+////        optionsMenu.addMenuItem(optionMenuItem);
+//
+//        optionMenuItem = new OptionMenuItem(2);
+//        optionMenuItem.setLabel("Clear Chat");
+//        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        optionsMenu.addMenuItem(optionMenuItem);
+//
+//        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey());

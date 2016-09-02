@@ -506,10 +506,10 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         emptyView.removeAllViewsInLayout();
         contactName.clear();
         message.clear();
-        searchView.destroyDrawingCache();
-        searchView.removeAllViews();
-        searchView.removeAllViewsInLayout();
-        searchView = null;
+//        searchView.destroyDrawingCache();
+//        searchView.removeAllViews();
+//        searchView.removeAllViewsInLayout();
+//        searchView = null;
         applicationsHelper =null;
         chatId.clear();
         dateMessage.clear();
@@ -523,10 +523,22 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
     }
 
     public void onOptionMenuPrepared(Menu menu) {
-        MenuItem searchItem = menu.findItem(1);
+        menu.clear();
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.chat_list_menu, menu);
+        menu.add(0, 2, 2, "Delete All Chats")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, 3, 3, "Go to Profile")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, 4, 4, "Go to Community")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, 5, 5, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
