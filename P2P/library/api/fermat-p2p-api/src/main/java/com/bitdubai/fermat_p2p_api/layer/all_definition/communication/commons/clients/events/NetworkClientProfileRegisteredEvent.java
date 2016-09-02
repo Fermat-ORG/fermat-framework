@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.common.AbstractEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.STATUS;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 import java.util.UUID;
@@ -19,13 +21,6 @@ import java.util.UUID;
 public class NetworkClientProfileRegisteredEvent extends AbstractEvent<P2pEventType> {
 
     private UUID packageId;
-
-
-
-    public enum STATUS{
-        SUCCESS,
-        FAILED
-    }
 
     /**
      * Represent the registered profile.

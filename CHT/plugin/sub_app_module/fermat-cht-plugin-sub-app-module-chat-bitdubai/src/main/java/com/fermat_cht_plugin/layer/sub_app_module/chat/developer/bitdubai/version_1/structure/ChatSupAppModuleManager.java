@@ -187,8 +187,8 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
-    public Timestamp getLastMessageReceivedDate(String remotePk) throws CantGetChatException {
-        return middlewareChatManager.getLastMessageReceivedDate(remotePk);
+    public Timestamp getLastMessageReceivedDate(UUID chatId) throws CantGetChatException {
+        return middlewareChatManager.getLastMessageReceivedDate(chatId);
     }
 
     @Override

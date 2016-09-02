@@ -102,7 +102,7 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
             imagetick.setImageResource(0);
             if (typeMessage.get(position).equals(TypeMessage.OUTGOING.toString())) {
                 imagetick.setVisibility(View.VISIBLE);
-                if (status.get(position).equals(MessageStatus.SEND.toString()) /*|| status.get(position).equals(MessageStatus.CREATED.toString())*/) {
+                if (status.get(position).equals(MessageStatus.SENT.toString()) /*|| status.get(position).equals(MessageStatus.CREATED.toString())*/) {
                     imagetick.setImageResource(R.drawable.cht_ticksent);
                 }//R.drawable.cht_ticksent
                 else if (status.get(position).equals(MessageStatus.DELIVERED.toString()) || status.get(position).equals(MessageStatus.RECEIVE.toString())) {

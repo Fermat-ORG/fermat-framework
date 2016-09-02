@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Fermat
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FrameworkHelpers;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
-import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
 import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatIntentFilter;
@@ -51,8 +49,11 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Matias Furszyfer on 2015.11.21..
@@ -83,16 +84,24 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     private List<BroadcastReceiver> androidReceivers;
 
     /**
-     * OptionMenuListeners
+     * OptionMenu
      */
+    private Map<Integer,WeakReference<View>> references;
 //    private Map<Integer,?> optionMenuListeners;
 
     /**
      * ViewInflater
      */
-    protected ViewInflater viewInflater;
+//    protected ViewInflater viewInflater;
     private WizardConfiguration context;
 
+    View view;
+    MenuItem item;
+    FermatDrawable icon;
+    MenuItem oldMenu;
+    int id, groupId, order, showAsAction, iconRes;
+    List<OptionMenuItem> optionsMenuItems;
+    OptionMenuItem menuItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +110,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
         setHasOptionsMenu(true);
         try {
             context = (WizardConfiguration) getActivity();
-            viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
+            references = new HashMap<>();
         } catch (Exception ex) {
             throw new ClassCastException("cannot convert the current context to WizardConfiguration");
         }
@@ -145,37 +154,46 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     @Override
     public void onDestroy() {
         unregisterAllReceivers();
+        view = null;
+        item = null;
+        icon = null;
+        oldMenu = null;
+        optionsMenuItems = null;
+        menuItem = null;
         super.onDestroy();
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         try {
+
             if (fermatFragmentType != null) {
                 if (isVisible) {
                     if (fermatFragmentType.getOptionsMenu() != null) {
-                        List<OptionMenuItem> optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
+                        optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
                         for (int i = 0; i < optionsMenuItems.size(); i++) {
-                            OptionMenuItem menuItem = optionsMenuItems.get(i);
-                            int id = menuItem.getId();
-                            int groupId = menuItem.getGroupId();
-                            int order = menuItem.getOrder();
-                            int showAsAction = menuItem.getShowAsAction();
-                            MenuItem oldMenu = menu.findItem(id);
+                            menuItem = optionsMenuItems.get(i);
+                            id = menuItem.getId();
+                            groupId = menuItem.getGroupId();
+                            order = menuItem.getOrder();
+                            showAsAction = menuItem.getShowAsAction();
+                            oldMenu = menu.findItem(id);
                             if (oldMenu == null) {
-                                MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
-                                FermatDrawable icon = menuItem.getFermatDrawable();
+                                item = menu.add(groupId, id, order, menuItem.getLabel());
+                                icon = menuItem.getFermatDrawable();
                                 if (icon != null) {
-                                    int iconRes = obtainRes(ResourceSearcher.DRAWABLE_TYPE, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
-                                    item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
+                                    iconRes = obtainRes(ResourceSearcher.DRAWABLE_TYPE, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
+                                    if (iconRes!=0)
+                                        item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                                    else Log.e(TAG,"OptionMenu icon not found, icon: "+icon);
                                 }
                                 if (showAsAction != -1)
                                     item.setShowAsAction(menuItem.getShowAsAction());
                                 int actionViewClass = menuItem.getActionViewClass();
                                 if (actionViewClass != -1) {
-                                    View view = obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK);
-                                    item.setActionView(view);
+                                    view = obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK);
+                                    if (view!=null) item.setActionView(view);
+                                    else Log.e(TAG,"ActionViewClass null exception, optionMenu: "+menuItem);
                                 }
                             }
                         }
@@ -236,6 +254,11 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
 //            e.printStackTrace();
 //        }
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onDestroyOptionsMenu(){
+
     }
 
     /**
@@ -423,7 +446,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
 
     protected void destroy() {
         unregisterAllReceivers();
-        System.gc();
     }
 
     protected void sendErrorReport(String userTo) throws Exception {

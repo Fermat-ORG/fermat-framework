@@ -1,13 +1,12 @@
-package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.STATUS;
 import com.google.gson.annotations.Expose;
 
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.MsgRespond</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 26/12/15.
  *

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorListReceivedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorListMsgRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.STATUS;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 
@@ -56,10 +57,10 @@ public class ActorListRespondProcessor extends PackageProcessor {
 //        actorListReceived.setNetworkServiceType(NetworkServiceType.getByCode(actorListMsgRespond.getNetworkServiceType()));
 
 
-        if(actorListMsgRespond.getStatus() == ActorListMsgRespond.STATUS.SUCCESS){
-            actorListReceived.setStatus(NetworkClientActorListReceivedEvent.STATUS.SUCCESS);
+        if(actorListMsgRespond.getStatus() == STATUS.SUCCESS){
+            actorListReceived.setStatus(STATUS.SUCCESS);
         }else{
-            actorListReceived.setStatus(NetworkClientActorListReceivedEvent.STATUS.FAILED);
+            actorListReceived.setStatus(STATUS.FAIL);
         }
 
         actorListReceived.setPackageId(packageReceived.getPackageId());

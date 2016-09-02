@@ -50,7 +50,7 @@
     <string name="cht_yes">Yes</string>
     <string name="cht_no">No</string>
     <string name="cht_last_time">Last time </string>
-    <string name="cht_last_message_received">Last message received </string>
+    <string name="cht_last_message_received">Last seen </string>
     <string name="cht_online">Online</string>
     <string name="cht_typing">Typing...</string>
     <string name="cht_today">today at </string>
@@ -82,7 +82,6 @@
     <string name="copy_message_toast">Copied: </string>
     <string name="cht_notif_new_msg_title">Chat - New Message</string>
     <string name="cht_notif_new_msg_content">You have a new message in Chat.</string>
-
 
     <!-- Used for the AlphabetIndexer in ContactsListFragment to provide quick navigation by
          alphabet using ListView fast scroll. -->

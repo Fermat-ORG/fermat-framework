@@ -17,10 +17,6 @@ public interface Chat extends Serializable {
 
     void setChatId(UUID chatId);
 
-    UUID getObjectId();
-
-    void setObjectId(UUID objectId);
-
     String getLocalActorPublicKey();
 
     void setLocalActorPublicKey(String localActorPublicKey);

@@ -466,11 +466,11 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     }
 
     @Override
-    public Timestamp getLastMessageReceivedDate(String remotePk) throws CantGetChatException {
+    public Timestamp getLastMessageReceivedDate(UUID chatId) throws CantGetChatException {
 
         try {
 
-            return chatMiddlewareDatabaseDao.getLastMessageReceivedDateByRemotePK(remotePk);
+            return chatMiddlewareDatabaseDao.getLastMessageReceivedDateByChatId(chatId);
 
         } catch (Exception e) {
             throw new CantGetChatException(
@@ -510,7 +510,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                 chatNetworkServiceManager.sendMessageMetadata(localActorPublicKey,
                         remoteActorPublicKey,
                         messageMetadata);
-                createdMessage.setStatus(MessageStatus.SEND);
+                createdMessage.setStatus(MessageStatus.SENT);
             } catch (IllegalArgumentException e) {
                 /**
                  * In this case, any argument in chat or message was null or not properly set.

@@ -174,11 +174,19 @@ public class ChatFragment
         return adapterView;
     }
 
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
     }
 
     public void onOptionMenuPrepared(Menu menu) {
-        MenuItem searchItem = menu.findItem(1);
+        menu.clear();
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.chat_menu, menu);
+        menu.add(0, 2, 2, "Clear Chat")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_search);// menu.findItem(1);
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
@@ -236,7 +244,7 @@ public class ChatFragment
         super.onDestroy();
         unbindDrawables(adapterView.getRootView().findViewById(R.id.messagesContainer));
         unbindDrawables(adapterView.getRootView().findViewById(R.id.chatSendButton));
-        adapterView.clean();
+        adapterView.destroy();
         adapterView.destroyDrawingCache();
         adapterView.removeView(getView());
         adapterView.removeAllViews();
@@ -245,8 +253,8 @@ public class ChatFragment
         chatIdentity = null;
         chatSettings = null;
         chatManager = null;
+        appSession = null;
         destroy();
-
     }
 
     @Override

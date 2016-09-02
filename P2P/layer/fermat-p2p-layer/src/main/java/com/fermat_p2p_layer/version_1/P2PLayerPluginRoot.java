@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -37,7 +36,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.P2PLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorListMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.IsActorOnlineMsgRequest;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.STATUS;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
@@ -54,7 +53,6 @@ import com.fermat_p2p_layer.version_1.structure.database.P2PLayerDatabaseConstan
 import com.fermat_p2p_layer.version_1.structure.database.P2PLayerDatabaseFactory;
 import com.fermat_p2p_layer.version_1.structure.database.P2PLayerEventsDao;
 import com.fermat_p2p_layer.version_1.structure.exceptions.CantInitializeP2PLayerDatabaseException;
-import com.fermat_p2p_layer.version_1.structure.exceptions.CantPersistsMessageException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -354,7 +352,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
                 AbstractNetworkService abstractNetworkService = networkServices.get(packageInformation.getNetworkServiceType());
                 if (abstractNetworkService.isStarted()) {
                     System.out.println("P2PLayer discoveryList: "+ fermatEvent.getPackageId());
-                    if (fermatEvent.getStatus() == NetworkClientActorListReceivedEvent.STATUS.SUCCESS)
+                    if (fermatEvent.getStatus() == STATUS.SUCCESS)
                         abstractNetworkService.handleNetworkClientActorListReceivedEvent(fermatEvent.getPackageId(), fermatEvent.getActorList());
                     else
                         System.out.println("ERROR IN THE QUERY WITH ID: "+ fermatEvent.getPackageId());
@@ -372,15 +370,6 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
             @Override
             public void handleEvent(NetworkClientNewMessageFailedEvent fermatEvent) throws FermatException {
                 System.out.println("P2P Layer: FAILED MESSAGE EVENT");
-                AbstractNetworkService abstractNetworkService = networkServices.get(fermatEvent.getNetworkServiceTypeSource());
-                if (abstractNetworkService.isStarted()) {
-                    //todo: ver esto: tengo que ver si voy a buscarlo a la db de la layer o si lo mando directo al ns con el id del mensaje que falló
-//                    abstractNetworkService.onNetworkServiceFailedMessage(fermatEvent.getId());
-
-//                    if(networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().exists(fermatEvent.getId()))
-//                        networkService.onNetworkServiceFailedMessage(networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findById(fermatEvent.getId()));
-
-                }
 
             }
         });
@@ -397,7 +386,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
                 PackageInformation packageInformation = messageSender.packageAck(fermatEvent.getContent().getPackageId());
                 AbstractNetworkService abstractNetworkService = networkServices.get( packageInformation.getNetworkServiceType());
                 if (abstractNetworkService.isStarted()) {
-                    if (fermatEvent.getContent().getStatus() == MsgRespond.STATUS.SUCCESS) {
+                    if (fermatEvent.getContent().getStatus() == STATUS.SUCCESS) {
                         System.out.println("##### ACK MENSAJE LLEGÓ BIEN A LA LAYER!!!##### ID:" + fermatEvent.getContent().getPackageId());
                         //Mensaje llega exitoso, falta
                         abstractNetworkService.handleOnMessageSent(fermatEvent.getContent().getPackageId());
@@ -523,8 +512,8 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
     }
 
     @Override
-    public void register(ActorProfile profile, NetworkServiceProfile networkServiceProfileRequester) throws CantRegisterProfileException, CantSendMessageException {
-        messageSender.registerProfile(profile, networkServiceProfileRequester.getNetworkServiceType());
+    public UUID register(ActorProfile profile, NetworkServiceProfile networkServiceProfileRequester) throws CantRegisterProfileException, CantSendMessageException {
+        return messageSender.registerProfile(profile, networkServiceProfileRequester.getNetworkServiceType());
     }
 
 
@@ -556,13 +545,13 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         if (packageContent.getSenderPublicKey().equals(packageContent.getReceiverPublicKey())) throw new CantSendMessageException("Sender and Receiver are the same");
         //If the NS wants that the layer monitoring the resend process I'll persist this message in p2p layer database
         if(layerMonitoring){
-            try {
-                p2PLayerDao.persistMessage(packageContent);
-            } catch (CantPersistsMessageException e) {
-                //I will report this error, but, the message process will continue.
-                e.printStackTrace();
-                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-            }
+//            try {
+//                p2PLayerDao.persistMessage(packageContent);
+//            } catch (CantPersistsMessageException e) {
+//                //I will report this error, but, the message process will continue.
+//                e.printStackTrace();
+//                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+//            }
         }
         return messageSender.sendMessage(packageContent,networkServiceType,nodeDestinationPublicKey);
     }

@@ -14,7 +14,6 @@ import java.util.UUID;
 public class ChatImpl implements Chat {
 
     private UUID chatId;
-    private UUID objectId;
     private String localActorPublicKey;
     private String remoteActorPublicKey;
     private String chatName;
@@ -38,16 +37,6 @@ public class ChatImpl implements Chat {
     @Override
     public void setChatId(UUID chatId) {
         this.chatId = chatId;
-    }
-
-    @Override
-    public UUID getObjectId() {
-        return objectId;
-    }
-
-    @Override
-    public void setObjectId(UUID objectId) {
-        this.objectId = objectId;
     }
 
     @Override
@@ -135,7 +124,6 @@ public class ChatImpl implements Chat {
     public String toString() {
         return "ChatImpl{" +
                 "chatId=" + chatId +
-                ", objectId=" + objectId +
                 ", localActorPublicKey='" + localActorPublicKey + '\'' +
                 ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
                 ", chatName='" + chatName + '\'' +

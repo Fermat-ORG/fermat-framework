@@ -18,7 +18,6 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 
 import java.util.ArrayList;
 
@@ -125,13 +124,23 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
             layoutParams.gravity = Gravity.RIGHT;
             holder.txtInfo.setLayoutParams(layoutParams);
             holder.tickstatusimage.setVisibility(View.VISIBLE);
-            if (data.getStatus() != null) {
-                if (data.getStatus().equals(MessageStatus.SEND.toString()) /*|| data.getStatus().equals(MessageStatus.CREATED.toString())*/)
+
+            switch (data.getStatus()) {
+                case SENT:
                     holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
-                else if (data.getStatus().equals(MessageStatus.DELIVERED.toString()) || data.getStatus().equals(MessageStatus.RECEIVE.toString()))
+                    break;
+                case DELIVERED:
                     holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
-                else if (data.getStatus().equals(MessageStatus.READ.toString()))
+                    break;
+                case RECEIVE:
+                    holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
+                    break;
+                case READ:
                     holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
+                    break;
+                case CANNOT_SEND:
+                    holder.tickstatusimage.setImageResource(R.drawable.cht_close);
+                    break;
             }
         } else {
             holder.contentWithBG.setBackgroundResource(R.drawable.cht_burble_white);

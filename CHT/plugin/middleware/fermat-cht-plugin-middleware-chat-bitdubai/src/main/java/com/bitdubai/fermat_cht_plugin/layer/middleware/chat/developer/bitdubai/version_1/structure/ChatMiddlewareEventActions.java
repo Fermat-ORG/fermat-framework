@@ -172,7 +172,6 @@ public class ChatMiddlewareEventActions {
         if (chat == null) {
             chat = new ChatImpl();
             chat.setChatId(UUID.randomUUID());
-            chat.setObjectId(UUID.randomUUID());
             chat.setLocalActorPublicKey(messageMetadata.getRemoteActorPublicKey());
             chat.setRemoteActorPublicKey(messageMetadata.getLocalActorPublicKey());
             Long dv = System.currentTimeMillis();
@@ -236,7 +235,7 @@ public class ChatMiddlewareEventActions {
                     chatFromDatabase.getChatId(),
                     messageMetadata,
                     MessageStatus.CREATED,
-                    TypeMessage.INCOMMING,
+                    TypeMessage.INCOMING,
                     connectionId
             );
 
@@ -362,6 +361,18 @@ public class ChatMiddlewareEventActions {
                     "Cannot update message from database"
             );
         }
+    }
+
+    public void incomingMessageFailEventHandler(UUID messageId) throws DatabaseOperationException, CantSaveMessageException {
+
+        chatMiddlewareDatabaseDao.updateMessageStatus(messageId, MessageStatus.CANNOT_SEND);
+
+        FermatBundle fermatBundle2 = new FermatBundle();
+        fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+        fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+        fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
+
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
     }
 
 }
