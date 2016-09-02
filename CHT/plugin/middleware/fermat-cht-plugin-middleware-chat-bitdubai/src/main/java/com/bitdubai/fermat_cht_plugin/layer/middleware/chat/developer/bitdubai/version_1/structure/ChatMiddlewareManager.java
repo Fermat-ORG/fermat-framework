@@ -525,7 +525,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
 
-//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
         } catch (DatabaseOperationException e) {
             throw new CantSendChatMessageException(
                     e,

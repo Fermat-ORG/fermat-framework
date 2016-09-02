@@ -56,13 +56,10 @@ public class ChatMiddlewareDeveloperDatabaseFactory {
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CHAT_NAME_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY);
         /**
          * Table Chats addition.
          */
@@ -80,8 +77,6 @@ public class ChatMiddlewareDeveloperDatabaseFactory {
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_DATE_COLUMN_NAME);
-        messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID);
-        messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT);
         /**
          * Table Message addition.
          */

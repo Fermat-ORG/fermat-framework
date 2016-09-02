@@ -22,7 +22,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMes
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
-import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
@@ -186,10 +185,8 @@ public class ChatMiddlewareEventActions {
 
         Message messageRecorded = getMessageFromChatMetadata(messageMetadata, chat);
 
-        if (messageRecorded == null) return;
-
         messageRecorded.setChatId(chat.getChatId());
-        messageRecorded.setStatus(MessageStatus.RECEIVE);
+        messageRecorded.setStatus(MessageStatus.RECEIVED);
 
         chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
 
@@ -221,29 +218,12 @@ public class ChatMiddlewareEventActions {
         if (messageMetadata == null)
             throw new CantGetMessageException("The chat metadata from network service is null");
 
-        try {
-
-            ChatLinkedActorIdentity chatLinkedActorIdentity = new ChatLinkedActorIdentity(chatFromDatabase.getLocalActorPublicKey(), Actors.CHAT);
-
-            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(chatLinkedActorIdentity);
-            UUID connectionId = search.getConnectionId(chatFromDatabase.getRemoteActorPublicKey());
-
-            if (connectionId == null)
-                return null;
-
-            return new MessageImpl(
-                    chatFromDatabase.getChatId(),
-                    messageMetadata,
-                    MessageStatus.CREATED,
-                    TypeMessage.INCOMING,
-                    connectionId
-            );
-
-        } catch (CantGetActorConnectionException e) {
-            throw new CantGetMessageException(e,
-                    "Getting message from ChatMetadata",
-                    "Cannot get the ActorConnection");
-        }
+        return new MessageImpl(
+                chatFromDatabase.getChatId(),
+                messageMetadata,
+                MessageStatus.CREATED,
+                TypeMessage.INCOMING
+        );
     }
 
     /**

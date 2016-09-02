@@ -179,10 +179,10 @@ public class ChatAdapterView extends LinearLayout {
                 for (Message mess : messL) {
                     ChatMessage msg = new ChatMessage();
                     msg.setId(mess.getMessageId());
-                    if (mess.getType().toString().equals(TypeMessage.OUTGOING.toString())) msg.setMe(true);
+                    if (mess.getType().equals(TypeMessage.OUTGOING)) msg.setMe(true);
                     else {
                         msg.setMe(false);
-                        if (!mess.getStatus().toString().equals(MessageStatus.READ.toString())) {
+                        if (!mess.getStatus().equals(MessageStatus.READ)) {
                             chatManager.sendReadMessageNotification(msg.getId(), chatId);
                             chatManager.markAsRead(msg.getId());
                         }
@@ -207,7 +207,6 @@ public class ChatAdapterView extends LinearLayout {
                     }
                     formatter.setTimeZone(TimeZone.getDefault());
                     msg.setDate(formatter.format(new Date(milliseconds)));
-                    msg.setUserId(mess.getContactId());
                     msg.setMessage(mess.getMessage());
                     msg.setType(mess.getType().toString());
                     chatHistory.add(msg);
@@ -522,7 +521,6 @@ public class ChatAdapterView extends LinearLayout {
                         message.setMessageDate(new Timestamp(dv));
                         message.setStatus(MessageStatus.CREATED);
                         message.setType(TypeMessage.OUTGOING);
-                        message.setContactId(UUID.randomUUID());
                         chatManager.saveMessage(message);
                         sendMessageAsync.execute(message);
                     } else {
@@ -539,7 +537,6 @@ public class ChatAdapterView extends LinearLayout {
                         }
                         chat.setChatId(newChatId);
                         chat.setStatus(ChatStatus.VISIBLE);
-                        chat.setChatName("Chat_" + newContact.getAlias());
                         chat.setDate(new Timestamp(dv));
                         chat.setLastMessageDate(new Timestamp(dv));
                         chat.setTypeChat(TypeChat.INDIVIDUAL);
@@ -569,7 +566,6 @@ public class ChatAdapterView extends LinearLayout {
                         message.setMessageDate(new Timestamp(dv));
                         message.setStatus(MessageStatus.CREATED);
                         message.setType(TypeMessage.OUTGOING);
-                        message.setContactId(UUID.randomUUID());//message.setContactId(contactId);
                         chatManager.saveMessage(message);
                         sendMessageAsync.execute(message);//
                         //If everything goes OK, we save the chat in the fragment session.

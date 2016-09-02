@@ -14,7 +14,6 @@ public class ChatMessage {
     private UUID id;
     private boolean isMe;
     private String message;
-    private UUID userId;
     private String dateTime;
     private MessageStatus status;
     private String type;
@@ -57,14 +56,6 @@ public class ChatMessage {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
     }
 
     public String getDate() {

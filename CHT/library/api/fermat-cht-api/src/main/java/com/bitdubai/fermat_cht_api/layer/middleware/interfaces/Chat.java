@@ -25,10 +25,6 @@ public interface Chat extends Serializable {
 
     void setRemoteActorPublicKey(String remoteActorPublicKey);
 
-    String getChatName();
-
-    void setChatName(String chatName);
-
     ChatStatus getStatus();
 
     void setStatus(ChatStatus status);
@@ -45,7 +41,4 @@ public interface Chat extends Serializable {
 
     void setTypeChat(TypeChat typeChat);
 
-    boolean getScheduledDelivery();
-
-    void setScheduledDelivery(boolean scheduledDelivery);
 }

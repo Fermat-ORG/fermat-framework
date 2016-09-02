@@ -16,12 +16,10 @@ public class ChatImpl implements Chat {
     private UUID chatId;
     private String localActorPublicKey;
     private String remoteActorPublicKey;
-    private String chatName;
     private ChatStatus status;
     private Timestamp date;
     private Timestamp lastMessageDate;
     private TypeChat typeChat;
-    private boolean scheduledDelivery;
 
     /**
      * Constructor without arguments
@@ -57,16 +55,6 @@ public class ChatImpl implements Chat {
     @Override
     public void setRemoteActorPublicKey(String remoteActorPublicKey) {
         this.remoteActorPublicKey = remoteActorPublicKey;
-    }
-
-    @Override
-    public String getChatName() {
-        return this.chatName;
-    }
-
-    @Override
-    public void setChatName(String chatName) {
-        this.chatName = chatName;
     }
 
     @Override
@@ -110,28 +98,15 @@ public class ChatImpl implements Chat {
     }
 
     @Override
-    public boolean getScheduledDelivery() {
-        return scheduledDelivery;
-    }
-
-    @Override
-    public void setScheduledDelivery(boolean scheduledDelivery) {
-
-        this.scheduledDelivery = scheduledDelivery;
-    }
-
-    @Override
     public String toString() {
         return "ChatImpl{" +
                 "chatId=" + chatId +
                 ", localActorPublicKey='" + localActorPublicKey + '\'' +
                 ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
-                ", chatName='" + chatName + '\'' +
                 ", status=" + status +
                 ", date=" + date +
                 ", lastMessageDate=" + lastMessageDate +
                 ", typeChat=" + typeChat +
-                ", scheduledDelivery=" + scheduledDelivery +
                 '}';
     }
 }
