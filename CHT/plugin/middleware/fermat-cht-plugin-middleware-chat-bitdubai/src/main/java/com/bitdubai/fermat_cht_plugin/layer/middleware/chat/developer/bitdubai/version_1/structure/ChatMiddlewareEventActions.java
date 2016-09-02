@@ -172,7 +172,6 @@ public class ChatMiddlewareEventActions {
         if (chat == null) {
             chat = new ChatImpl();
             chat.setChatId(UUID.randomUUID());
-            chat.setObjectId(UUID.randomUUID());
             chat.setLocalActorPublicKey(messageMetadata.getRemoteActorPublicKey());
             chat.setRemoteActorPublicKey(messageMetadata.getLocalActorPublicKey());
             Long dv = System.currentTimeMillis();

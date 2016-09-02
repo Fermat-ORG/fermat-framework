@@ -538,7 +538,6 @@ public class ChatAdapterView extends LinearLayout {
                             }
                         }
                         chat.setChatId(newChatId);
-                        chat.setObjectId(UUID.randomUUID());
                         chat.setStatus(ChatStatus.VISIBLE);
                         chat.setChatName("Chat_" + newContact.getAlias());
                         chat.setDate(new Timestamp(dv));

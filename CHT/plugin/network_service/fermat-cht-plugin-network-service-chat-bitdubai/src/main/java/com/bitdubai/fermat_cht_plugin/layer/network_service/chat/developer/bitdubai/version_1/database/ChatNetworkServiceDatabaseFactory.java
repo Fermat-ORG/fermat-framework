@@ -57,14 +57,7 @@ public class ChatNetworkServiceDatabaseFactory {
             table = databaseFactory.newTableFactory(ownerId, ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TABLE);
 
             table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.TRUE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_LOCAL_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_REMOTE_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 4000, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_SENT_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             try {
                 //Create the table

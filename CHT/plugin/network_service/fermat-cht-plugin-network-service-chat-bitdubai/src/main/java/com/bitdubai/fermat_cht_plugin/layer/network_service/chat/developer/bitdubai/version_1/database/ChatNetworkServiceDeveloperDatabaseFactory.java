@@ -48,15 +48,9 @@ public class ChatNetworkServiceDeveloperDatabaseFactory {
          */
 
         List<String> messageMetadata = new ArrayList<>();
+
         messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_ID_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TYPE_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_LOCAL_PUBLIC_KEY_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_REMOTE_PUBLIC_KEY_COLUMN_NAME);
         messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_ID_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_CONTENT_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_STATUS_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_DATE_COLUMN_NAME);
-        messageMetadata.add(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_SENT_DATE_COLUMN_NAME);
 
         DeveloperDatabaseTable messageMetadataTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_TABLE, messageMetadata);
         tables.add(messageMetadataTable);
