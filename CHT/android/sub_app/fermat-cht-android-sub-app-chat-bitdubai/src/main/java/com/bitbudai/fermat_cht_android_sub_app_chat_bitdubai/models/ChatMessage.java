@@ -1,5 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models;
 
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+
 import java.util.UUID;
 
 /**
@@ -14,7 +16,7 @@ public class ChatMessage {
     private String message;
     private UUID userId;
     private String dateTime;
-    private String status;
+    private MessageStatus status;
     private String type;
 
     public String getType() {
@@ -25,11 +27,11 @@ public class ChatMessage {
         this.type = type;
     }
 
-    public String getStatus() {
+    public MessageStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(MessageStatus status) {
         this.status = status;
     }
 

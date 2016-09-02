@@ -187,7 +187,7 @@ public class ChatAdapterView extends LinearLayout {
                             chatManager.markAsRead(msg.getId());
                         }
                     }
-                    msg.setStatus(mess.getStatus().toString());
+                    msg.setStatus(mess.getStatus());
                     timemess = mess.getMessageDate().getTime();
                     nanos = (mess.getMessageDate().getNanos() / 1000000);
                     milliseconds = timemess + nanos;
