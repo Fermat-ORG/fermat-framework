@@ -58,9 +58,9 @@ public class ActorListRespondProcessor extends PackageProcessor {
 
 
         if(actorListMsgRespond.getStatus() == STATUS.SUCCESS){
-            actorListReceived.setStatus(NetworkClientActorListReceivedEvent.STATUS.SUCCESS);
+            actorListReceived.setStatus(STATUS.SUCCESS);
         }else{
-            actorListReceived.setStatus(NetworkClientActorListReceivedEvent.STATUS.FAILED);
+            actorListReceived.setStatus(STATUS.FAIL);
         }
 
         actorListReceived.setPackageId(packageReceived.getPackageId());

@@ -46,9 +46,9 @@ public class IsActorOnlineRespondProcessor extends PackageProcessor {
         networkClientIsActorOnlineEvent.setNetworkServiceType(NetworkServiceType.getByCode(isActorOnlineMsgRespond.getNetworkServiceType()));
 
         if(isActorOnlineMsgRespond.getStatus() == STATUS.SUCCESS){
-            networkClientIsActorOnlineEvent.setStatus(NetworkClientIsActorOnlineEvent.STATUS.SUCCESS);
+            networkClientIsActorOnlineEvent.setStatus(STATUS.SUCCESS);
         }else{
-            networkClientIsActorOnlineEvent.setStatus(NetworkClientIsActorOnlineEvent.STATUS.FAILED);
+            networkClientIsActorOnlineEvent.setStatus(STATUS.FAIL);
         }
         networkClientIsActorOnlineEvent.setPackageId(packageReceived.getPackageId());
         //Raise the event
