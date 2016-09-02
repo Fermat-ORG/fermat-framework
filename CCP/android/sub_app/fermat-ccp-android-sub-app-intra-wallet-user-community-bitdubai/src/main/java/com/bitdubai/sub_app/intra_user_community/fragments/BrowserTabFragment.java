@@ -676,33 +676,35 @@ public class BrowserTabFragment
     public void onActorReceived(final List<IntraUserInformation> result) {
         try {
             if (isAttached) {
+
                 if (result != null /*&& result.size() > 0*/) {
-                    if (getActivity() != null && adapter != null) {
-                        if (offset == 0) {
-                            if (lstIntraUserInformations != null) {
-                                lstIntraUserInformations.clear();
-                                lstIntraUserInformations.addAll(result);
-                            } else {
-                                lstIntraUserInformations = (ArrayList)result;
-                            }
-                            adapter.refreshEvents(lstIntraUserInformations);
-                        } else {
-                            for (IntraUserInformation info : result) {
-                                if (notInList(info)) {
-                                    lstIntraUserInformations.add(info);
+                    if (result.size() > 0) {
+                        swipeRefreshLayout.setRefreshing(false);
+                        adapter.setLoadingData(false);
+                        if (getActivity() != null && adapter != null) {
+                            if (offset == 0) {
+                                if (lstIntraUserInformations != null) {
+                                    lstIntraUserInformations.clear();
+                                    lstIntraUserInformations.addAll(result);
+                                } else {
+                                    lstIntraUserInformations = (ArrayList)result;
                                 }
+                                adapter.refreshEvents(lstIntraUserInformations);
+                            } else {
+                                for (IntraUserInformation info : result) {
+                                    if (notInList(info)) {
+                                        lstIntraUserInformations.add(info);
+                                    }
+                                }
+                                adapter.notifyItemRangeInserted(offset, lstIntraUserInformations.size() - 1);
                             }
-                            adapter.notifyItemRangeInserted(offset, lstIntraUserInformations.size() - 1);
+                            //offset = lstIntraUserInformations.size();
                         }
-
-                        isRefreshing = false;
-                        //offset = lstIntraUserInformations.size();
                     }
-                } else {
 
-                    isRefreshing = false;
                 }
 
+                isRefreshing = false;
                 offset = 0;
                 showOrHideEmptyView();
             }
