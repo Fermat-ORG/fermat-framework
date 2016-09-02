@@ -5,6 +5,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_wpd_core.layer.middleware.wallet_manager.WalletManagerPluginSubsystem;
 
+
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 12/11/2015.
  *
@@ -25,7 +26,7 @@ public class MiddlewareLayer extends AbstractLayer {
 //            registerPlugin(new WalletPublisherPluginSubsystem());
 //            registerPlugin(new WalletSettingsPluginSubsystem());
 //            registerPlugin(new WalletStorePluginSubsystem());
-            registerPlugin(new WalletManagerPluginSubsystem());
+           registerPlugin(new WalletManagerPluginSubsystem());
         } catch (Exception e) {
 
             throw new CantStartLayerException(
