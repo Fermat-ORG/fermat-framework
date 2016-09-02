@@ -139,6 +139,10 @@ public class ChatMiddlewareDatabaseDao {
 
     public Timestamp getLastMessageReceivedDateByChatId(UUID chatId) throws CantGetChatException, DatabaseOperationException {
 
+        // if there is no chat there's no last message received
+        if (chatId == null)
+            return null;
+
         try {
 
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
