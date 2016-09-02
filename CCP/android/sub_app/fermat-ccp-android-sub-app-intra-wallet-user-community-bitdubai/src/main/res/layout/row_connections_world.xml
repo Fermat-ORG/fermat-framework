@@ -57,17 +57,17 @@
         />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:gravity="center">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-            android:src="@drawable/geolocalitationblue_icon"
-            android:layout_gravity="center_horizontal" />
+            android:src="@drawable/geolocalitationblue_icon" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/location"
@@ -79,7 +79,6 @@
             android:textColor="#7DD5CA"
             android:textSize="12sp"
             android:layout_marginTop="0dp" />
-
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/connection_state_user"
@@ -95,7 +94,6 @@
             tools:ignore="HardcodedText,RtlSymmetry,SmallSp"
             android:visibility="gone"
             />
-
 
     </LinearLayout>
 
@@ -113,7 +111,7 @@
         android:id="@+id/response"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="REQUEST SEND"
+        android:text="Connectio State"
         android:textSize="12dp"
         android:gravity="center"
         android:layout_marginTop="12dp"
