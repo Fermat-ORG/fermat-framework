@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.common.AbstractEvent;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.STATUS;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 /**
@@ -14,21 +14,11 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
  */
 public class NetworkClientNewMessageDeliveredEvent extends AbstractEvent<P2pEventType> {
 
-    public enum STATUS{
-        SUCCESS,
-        FAILED
-    }
-
     /**
      * Represent the content value
      */
     private String id;
     private STATUS status;
-
-    /**
-     * Represent the networkServiceTypeSource value
-     */
-    private NetworkServiceType networkServiceTypeSource;
 
     /**
      * Constructor with parameters
@@ -47,14 +37,6 @@ public class NetworkClientNewMessageDeliveredEvent extends AbstractEvent<P2pEven
         this.id = id;
     }
 
-    public NetworkServiceType getNetworkServiceTypeSource() {
-        return networkServiceTypeSource;
-    }
-
-    public void setNetworkServiceTypeSource(NetworkServiceType networkServiceTypeSource) {
-        this.networkServiceTypeSource = networkServiceTypeSource;
-    }
-
     public STATUS getStatus() {
         return status;
     }
@@ -68,7 +50,6 @@ public class NetworkClientNewMessageDeliveredEvent extends AbstractEvent<P2pEven
         return "NetworkClientNewMessageDeliveredEvent{" +
                 "id='" + id + '\'' +
                 ", status=" + status +
-                ", networkServiceTypeSource=" + networkServiceTypeSource +
                 '}';
     }
 }

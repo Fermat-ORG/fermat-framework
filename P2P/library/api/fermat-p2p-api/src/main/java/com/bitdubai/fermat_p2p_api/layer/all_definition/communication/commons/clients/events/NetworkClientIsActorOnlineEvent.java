@@ -2,8 +2,8 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.c
 
 import com.bitdubai.fermat_api.layer.all_definition.events.common.AbstractEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.STATUS;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 import java.util.UUID;
@@ -12,11 +12,6 @@ import java.util.UUID;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 17/08/16.
  */
 public class NetworkClientIsActorOnlineEvent extends AbstractEvent<P2pEventType> {
-
-    public enum STATUS{
-        SUCCESS,
-        FAILED
-    }
 
     /**
      * Represent the network client call.

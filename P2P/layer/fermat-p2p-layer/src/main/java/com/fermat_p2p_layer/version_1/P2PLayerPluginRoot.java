@@ -352,7 +352,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
                 AbstractNetworkService abstractNetworkService = networkServices.get(packageInformation.getNetworkServiceType());
                 if (abstractNetworkService.isStarted()) {
                     System.out.println("P2PLayer discoveryList: "+ fermatEvent.getPackageId());
-                    if (fermatEvent.getStatus() == NetworkClientActorListReceivedEvent.STATUS.SUCCESS)
+                    if (fermatEvent.getStatus() == STATUS.SUCCESS)
                         abstractNetworkService.handleNetworkClientActorListReceivedEvent(fermatEvent.getPackageId(), fermatEvent.getActorList());
                     else
                         System.out.println("ERROR IN THE QUERY WITH ID: "+ fermatEvent.getPackageId());
@@ -370,15 +370,6 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
             @Override
             public void handleEvent(NetworkClientNewMessageFailedEvent fermatEvent) throws FermatException {
                 System.out.println("P2P Layer: FAILED MESSAGE EVENT");
-                AbstractNetworkService abstractNetworkService = networkServices.get(fermatEvent.getNetworkServiceTypeSource());
-                if (abstractNetworkService.isStarted()) {
-                    //todo: ver esto: tengo que ver si voy a buscarlo a la db de la layer o si lo mando directo al ns con el id del mensaje que falló
-//                    abstractNetworkService.onNetworkServiceFailedMessage(fermatEvent.getId());
-
-//                    if(networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().exists(fermatEvent.getId()))
-//                        networkService.onNetworkServiceFailedMessage(networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findById(fermatEvent.getId()));
-
-                }
 
             }
         });
