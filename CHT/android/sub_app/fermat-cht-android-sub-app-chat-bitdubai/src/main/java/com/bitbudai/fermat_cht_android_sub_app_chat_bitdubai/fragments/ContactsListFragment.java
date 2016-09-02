@@ -265,43 +265,51 @@ public class ContactsListFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
     }
 
     public void onOptionMenuPrepared(Menu menu) {
-//        MenuItem searchItem = menu.findItem(1);
-//        if (searchItem != null) {
-//            searchView = (SearchView) searchItem.getActionView();
-//            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
-//            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//                @Override
-//                public boolean onQueryTextSubmit(String s) {
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onQueryTextChange(String s) {
-//
-//                    if (s.equals(searchView.getQuery().toString())) {
-//                        updateValues();
-//                        adapter.refreshEvents(contactname, contacticon, contactid);
-//                        adapter.getFilter().filter(s);
-//                    }
-//                    return false;
-//                }
-//            });
-//            if (appSession.getData("filterString") != null) {
-//                String filterString = (String) appSession.getData("filterString");
-//                if (filterString.length() > 0) {
-//                    searchView.setQuery(filterString, true);
-//                    searchView.setIconified(false);
-//                    //getToolbar().setTitle("");
-//                } else {
-//                    //getToolbar().setTitle("P2P Chat");
-//                    updateValues();
-//                    adapter.refreshEvents(contactname, contacticon, contactid);
-//                }
-//            }
-//        }
+        menu.clear();
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.contact_list_menu, menu);
+        menu.add(0, 2, 2, "Go to Profile")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, 3, 3, "Go to Community")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, 4, 4, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        MenuItem searchItem = menu.findItem(R.id.menu_search);// menu.findItem(1);
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+
+                    if (s.equals(searchView.getQuery().toString())) {
+                        updateValues();
+                        adapter.refreshEvents(contactname, contacticon, contactid);
+                        adapter.getFilter().filter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                } else {
+                    updateValues();
+                    adapter.refreshEvents(contactname, contacticon, contactid);
+                }
+            }
+        }
     }
 
     @Override

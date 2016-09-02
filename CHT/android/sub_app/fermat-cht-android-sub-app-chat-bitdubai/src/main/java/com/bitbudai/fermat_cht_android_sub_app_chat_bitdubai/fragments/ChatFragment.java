@@ -174,36 +174,44 @@ public class ChatFragment
         return adapterView;
     }
 
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
     }
 
     public void onOptionMenuPrepared(Menu menu) {
-//        MenuItem searchItem = menu.findItem(1);
-//        if (searchItem != null) {
-//            searchView = (SearchView) searchItem.getActionView();
-//            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
-//            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//                @Override
-//                public boolean onQueryTextSubmit(String s) {
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onQueryTextChange(String s) {
-//                    if (s.equals(searchView.getQuery().toString())) {
-//                        adapterView.getFilter(s);
-//                    }
-//                    return false;
-//                }
-//            });
-//            if (appSession.getData("filterString") != null) {
-//                String filterString = (String) appSession.getData("filterString");
-//                if (filterString.length() > 0) {
-//                    searchView.setQuery(filterString, true);
-//                    searchView.setIconified(false);
-//                }
-//            }
-//        }
+        menu.clear();
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.chat_menu, menu);
+        menu.add(0, 2, 2, "Clear Chat")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_search);// menu.findItem(1);
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapterView.getFilter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
+            }
+        }
     }
 
     @Override

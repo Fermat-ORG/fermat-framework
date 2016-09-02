@@ -538,7 +538,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, 5, 5, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        MenuItem searchItem = menu.findItem(R.id.menu_search);// menu.findItem(1);
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
