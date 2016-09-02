@@ -921,9 +921,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
         try {
 
 
-            Gson gson = new Gson();
+            /*Gson gson = new Gson();
 
-            /*JsonObject jsonObject = new JsonObject();
+            JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("PHRASE", gson.toJson(actor.getPhrase()));
 
             String extraData = gson.toJson(jsonObject);*/
