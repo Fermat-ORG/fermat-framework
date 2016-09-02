@@ -923,15 +923,15 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
 
             Gson gson = new Gson();
 
-            JsonObject jsonObject = new JsonObject();
+            /*JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("PHRASE", gson.toJson(actor.getPhrase()));
 
-            String extraData = gson.toJson(jsonObject);
+            String extraData = gson.toJson(jsonObject);*/
 
             registerActor(actor.getActorPublicKey(),
                     actor.getName(),
                     actor.getName(),
-                    extraData,
+                    "",
                     location,
                     actor.getType(),
                     actor.getPhoto(),
@@ -984,18 +984,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     public void updateActor(Actor actor, Location location) {
 
         try {
-            Gson gson = new Gson();
+           /* Gson gson = new Gson();
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("PHRASE", gson.toJson(actor.getPhrase()));
 
-            String extraData = gson.toJson(jsonObject);
+            String extraData = gson.toJson(jsonObject);*/
 
             updateRegisteredActor(actor.getActorPublicKey(),
                     actor.getName()    ,
                     actor.getName()    ,
                     location ,
-                    extraData,
-                    actor.getPhoto()   );
+                    "",
+                    actor.getPhoto());
 
         } catch (final CantUpdateRegisteredActorException e) {
             e.printStackTrace();
