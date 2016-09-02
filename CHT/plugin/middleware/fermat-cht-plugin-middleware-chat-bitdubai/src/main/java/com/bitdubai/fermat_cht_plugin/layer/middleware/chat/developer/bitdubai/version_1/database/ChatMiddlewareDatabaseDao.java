@@ -146,6 +146,10 @@ public class ChatMiddlewareDatabaseDao {
             table.addUUIDFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, chatId, DatabaseFilterType.EQUAL);
             table.addFermatEnumFilter(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME, TypeMessage.INCOMING, DatabaseFilterType.EQUAL);
 
+            table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            table.setFilterTop(String.valueOf(1));
+
             table.loadToMemory();
 
             List<DatabaseTableRecord> records = table.getRecords();
@@ -325,6 +329,8 @@ public class ChatMiddlewareDatabaseDao {
             table.addUUIDFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, chatId, DatabaseFilterType.EQUAL);
 
             table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            table.setFilterTop(String.valueOf(1));
 
             table.loadToMemory();
 
