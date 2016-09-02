@@ -454,7 +454,9 @@ public class BrowserTabFragment
                     data.getState().equals(ProfileStatus.UNKNOWN)) &&
                     connectionState.equals(ConnectionState.NO_CONNECTED) ||
                     connectionState.equals(ConnectionState.DENIED_LOCALLY) ||
-                    connectionState.equals(ConnectionState.DENIED_REMOTELY)) {
+                    connectionState.equals(ConnectionState.DENIED_REMOTELY) ||
+                    connectionState.equals(ConnectionState.DISCONNECTED_LOCALLY) ||
+                    connectionState.equals(ConnectionState.DISCONNECTED_REMOTELY)) {
 
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
@@ -587,7 +589,7 @@ public class BrowserTabFragment
             if (!isRefreshing) {
                 isRefreshing = true;
                 if (identity != null) {
-                    moduleManager.getSuggestionsToContact(identity.getPublicKey(),location, distance, null, MAX, offset);
+                    moduleManager.getSuggestionsToContact(identity.getPublicKey(), location, distance, null, MAX, offset);
 
                 }
             }
