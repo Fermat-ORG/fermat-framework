@@ -200,6 +200,7 @@
     <string name="start">Empezar</string>
     <string name="community_desc">* Buscar usuarios cercanos. \n* Buscar usuarios en cualquier lugar. \n* Ver el perfil de otros usuarios. \n* Enviar solicitudes de conexion.</string>
 
+    <!--Notification Tab-->
     <string name="notification_time_1"> hace unos momentos</string>
     <string name="notification_time_2"> minutos</string>
     <string name="notification_time_3"> horas</string>
@@ -208,14 +209,27 @@
 
     <string name="system_error">Error del sistema</string>
     <!-- Browser Tab -->
+    <string name="connectionState_connected">Es un Contacto</string>
+    <string name="connectionState_request_sent">Solicitud enviada</string>
+    <string name="connectionState_request_received">Solicitud recibida</string>
+    <string name="connectionState_request_canceled">Solicitud cancelada</string>
+    <string name="connectionState_denied_remotely">Negada por el contacto</string>
+    <string name="connectionState_online">En linea</string>
+    <string name="connectionState_offline">Desconectado</string>
+
     <string name="turn_on_gps">Por favor, Enciende tu GPS</string>
     <string name="connectionState_connected_msg">Es un Contacto</string>
     <string name="connectionState_request_sent_msg">Solicitud ha sido enviada</string>
+    <string name="connectionState_request_received_msg">El contacto le ha enviado una solicitud de conexion</string>
+    <string name="connectionState_request_canceled_msg">El contacto a cancelado su solictud de conexion</string>
+    <string name="connectionState_denied_remotely_msg">Negada por el contacto</string>
+    <string name="connectionState_user_online_msg">Usuario en linea</string>
     <string name="connectionState_user_offline_msg">Usuario desconectado</string>
     <string name="btn_error_fermat_network_cancel">CANCELAR</string>
     <string name="btn_error_fermat_network_connect">CONECTAR</string>
     <string name="Request_user_list_time_out">Se agoto el tiempo de espera por la lista de usarios</string>
     <string name="loading_data_error_msg">Disculpe, ocurrio un problema al cargar los datos</string>
+
 
     <!-- Community Notification-->
     <string name="notification_connection_request">Nueva solicitud de conexión</string>

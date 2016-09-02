@@ -450,8 +450,11 @@ public class BrowserTabFragment
             ConnectionState connectionState = data.getConnectionState();
 
 
-            if ((data.getState().equals(ProfileStatus.ONLINE) || data.getState().equals(ProfileStatus.UNKNOWN)) &&
-                !connectionState.equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE)) {
+            if ((data.getState().equals(ProfileStatus.ONLINE) ||
+                    data.getState().equals(ProfileStatus.UNKNOWN)) &&
+                    connectionState.equals(ConnectionState.NO_CONNECTED) ||
+                    connectionState.equals(ConnectionState.DENIED_LOCALLY) ||
+                    connectionState.equals(ConnectionState.DENIED_REMOTELY)) {
 
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
@@ -477,9 +480,20 @@ public class BrowserTabFragment
                     case CONNECTED:
                         Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_connected_msg),Toast.LENGTH_SHORT).show();
                         break;
-
+                    case NO_CONNECTED:
+                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
+                        break;
                     case PENDING_REMOTELY_ACCEPTANCE:
                         Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_request_sent_msg),Toast.LENGTH_SHORT).show();
+                        break;
+                    case PENDING_LOCALLY_ACCEPTANCE:
+                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_request_received_msg),Toast.LENGTH_SHORT).show();
+                        break;
+                    case DENIED_REMOTELY:
+                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_denied_remotely_msg),Toast.LENGTH_SHORT).show();
+                        break;
+                    case DISCONNECTED_REMOTELY:
+                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
                         break;
 
                     default:
