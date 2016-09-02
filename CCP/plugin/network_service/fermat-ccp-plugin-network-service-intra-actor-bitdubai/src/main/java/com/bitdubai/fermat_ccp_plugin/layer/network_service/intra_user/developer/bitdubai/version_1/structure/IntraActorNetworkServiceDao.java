@@ -124,7 +124,6 @@ public class IntraActorNetworkServiceDao {
                     record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_CITY_COLUMN_NAME, "");
                     record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_COUNTRY_COLUMN_NAME, "");
 
-
                     /**
                      * Persist profile image on a file
                      */

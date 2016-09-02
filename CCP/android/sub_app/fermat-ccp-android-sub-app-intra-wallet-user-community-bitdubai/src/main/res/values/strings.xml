@@ -213,20 +213,36 @@
     <string name="users_for_location">These are the connections near the location you chose</string>
 
     <!-- Browser Tab -->
+    <string name="connectionState_connected">IS A CONTACT</string>
+    <string name="connectionState_request_sent">REQUEST SENT</string>
+    <string name="connectionState_request_received">REQUEST RECEIVED</string>
+    <string name="connectionState_request_canceled">REQUEST CANCELED</string>
+    <string name="connectionState_denied_remotely">DENIED BY CONTACT</string>
+    <string name="connectionState_offline">OFFLINE</string>
+    <string name="connectionState_online">ONLINE</string>
+
+
     <string name="turn_on_gps">Please, turn ON your GPS</string>
     <string name="connectionState_connected_msg">IS A CONTACT</string>
     <string name="connectionState_request_sent_msg">REQUEST HAS BEEN SEND</string>
+    <string name="connectionState_request_received_msg">REQUEST RECEIVED</string>
+    <string name="connectionState_request_canceled_msg">REQUEST CANCELED</string>
+    <string name="connectionState_denied_remotely_msg">DENIED BY CONTACT</string>
     <string name="connectionState_user_offline_msg">USER OFFLINE</string>
+    <string name="connectionState_user_online_msg">USER ONLINE</string>
     <string name="btn_error_fermat_network_cancel">CANCEL</string>
     <string name="btn_error_fermat_network_connect">CONNECT</string>
     <string name="Request_user_list_time_out">Request User List Time Out</string>
     <string name="loading_data_error_msg">Sorry there was a problem loading the data</string>
 
+    <!--Notification tab-->
     <string name="notification_time_1"> a few moments ago</string>
     <string name="notification_time_2"> minutes ago</string>
     <string name="notification_time_3"> hours ago</string>
     <string name="notification_time_4"> days ago</string>
     <string name="notification_time_5"> year ago</string>
+
+
 
     <!-- Community Notification-->
     <string name="notification_connection_request">New Connection Request</string>
