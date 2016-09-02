@@ -180,14 +180,17 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
                                 icon = menuItem.getFermatDrawable();
                                 if (icon != null) {
                                     iconRes = obtainRes(ResourceSearcher.DRAWABLE_TYPE, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
-                                    item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                                    if (iconRes!=0)
+                                        item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                                    else Log.e(TAG,"OptionMenu icon not found, icon: "+icon);
                                 }
                                 if (showAsAction != -1)
                                     item.setShowAsAction(menuItem.getShowAsAction());
                                 int actionViewClass = menuItem.getActionViewClass();
                                 if (actionViewClass != -1) {
                                     view = obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK);
-                                    item.setActionView(view);
+                                    if (view!=null) item.setActionView(view);
+                                    else Log.e(TAG,"ActionViewClass null exception, optionMenu: "+menuItem);
                                 }
                             }
                         }
@@ -435,7 +438,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
 
     protected void destroy() {
         unregisterAllReceivers();
-        System.gc();
     }
 
     protected void sendErrorReport(String userTo) throws Exception {

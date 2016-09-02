@@ -132,6 +132,8 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
                     holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
                 else if (data.getStatus().equals(MessageStatus.READ.toString()))
                     holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
+                else if (data.getStatus().equals(MessageStatus.CANNOT_SEND.toString()))
+                    holder.tickstatusimage.setImageResource(R.drawable.cht_close);
             }
         } else {
             holder.contentWithBG.setBackgroundResource(R.drawable.cht_burble_white);
