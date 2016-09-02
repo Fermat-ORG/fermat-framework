@@ -6,15 +6,16 @@
     android:gravity="bottom|end"
     android:foregroundGravity="bottom"
     android:nestedScrollingEnabled="true"
-    android:visibility="visible">
+    android:visibility="visible"
+    android:id="@+id/layout_connection_success">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:id="@+id/text_connection_success"
         android:visibility="visible"
         android:gravity="center"
         android:text="@string/connected"
         android:textColor="#ffffff"
-        android:textSize="18dp" />
+        android:textSize="16dp" />
 </LinearLayout>

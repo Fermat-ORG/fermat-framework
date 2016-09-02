@@ -339,12 +339,14 @@ public class ChatMiddlewareEventActions {
             fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
             fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
             fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
+            fermatBundle2.put(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION, senderPk);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
 
             FermatBundle fermatBundle3 = new FermatBundle();
             fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
             fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
             fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
+            fermatBundle3.put(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION, senderPk);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
 
         } catch (DatabaseOperationException e) {
@@ -360,6 +362,18 @@ public class ChatMiddlewareEventActions {
                     "Cannot update message from database"
             );
         }
+    }
+
+    public void incomingMessageFailEventHandler(UUID messageId) throws DatabaseOperationException, CantSaveMessageException {
+
+        chatMiddlewareDatabaseDao.updateMessageStatus(messageId, MessageStatus.CANNOT_SEND);
+
+        FermatBundle fermatBundle2 = new FermatBundle();
+        fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+        fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+        fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
+
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
     }
 
 }

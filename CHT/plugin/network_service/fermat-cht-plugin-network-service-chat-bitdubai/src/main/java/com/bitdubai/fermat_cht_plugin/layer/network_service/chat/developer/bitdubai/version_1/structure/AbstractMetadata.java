@@ -11,7 +11,7 @@ import java.util.UUID;
  */
 public abstract class AbstractMetadata implements MetadataToSend , Serializable {
 
-    private UUID transactionId;
+    private UUID packageId;
 
     private ChatMessageTransactionType chatMessageTransactionType;
 
@@ -24,12 +24,12 @@ public abstract class AbstractMetadata implements MetadataToSend , Serializable 
     public AbstractMetadata() {
     }
 
-    public UUID getTransactionId() {
-        return transactionId;
+    public UUID getPackageId() {
+        return packageId;
     }
 
-    public void setTransactionId(UUID transactionId) {
-        this.transactionId = transactionId;
+    public void setPackageId(UUID transactionId) {
+        this.packageId = transactionId;
     }
 
     @Override
@@ -59,7 +59,7 @@ public abstract class AbstractMetadata implements MetadataToSend , Serializable 
         this.date = date;
     }
 
-    public ChatMessageTransactionType getChatMessageTransactionType() {
+    public ChatMessageTransactionType getType() {
         return chatMessageTransactionType;
     }
 

@@ -347,7 +347,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
                 Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(mphoto_header);
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            //bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             brokerImageByteArray = toByteArray(bitmap);
             mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
 

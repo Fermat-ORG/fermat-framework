@@ -90,4 +90,15 @@ public class AvailableActorsListAdapter extends FermatAdapter<IntraUserInformati
     public void setLoadingData(boolean loadingData) {
         this.loadingData = loadingData;
     }
+
+    public void refreshEvents(List<IntraUserInformation> actorList) {
+        for (int i = 0; i < actorList.size(); i++) {
+            IntraUserInformation actor = actorList.get(i);
+            //add(actor);
+            changeDataSet(actorList);
+            notifyDataSetChanged();
+        }
+    }
+
+
 }

@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
+import com.bitdubai.fermat_wpd_core.layer.desktop_module.DesktopModuleLayer;
 import com.bitdubai.fermat_wpd_core.layer.engine.EngineLayer;
 import com.bitdubai.fermat_wpd_core.layer.identity.IdentityLayer;
 import com.bitdubai.fermat_wpd_core.layer.middleware.MiddlewareLayer;
@@ -33,6 +34,7 @@ public class WPDPlatform extends AbstractPlatform {
             registerLayer(new MiddlewareLayer());
             registerLayer(new NetworkServiceLayer());
             registerLayer(new SubAppModuleLayer());
+            registerLayer(new DesktopModuleLayer());
 
         } catch (CantRegisterLayerException e) {
 

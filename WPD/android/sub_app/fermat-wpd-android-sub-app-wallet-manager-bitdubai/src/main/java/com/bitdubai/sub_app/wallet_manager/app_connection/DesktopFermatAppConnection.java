@@ -37,7 +37,7 @@ public class DesktopFermatAppConnection extends AppConnections<ReferenceAppFerma
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
         return new PluginVersionReference[]{new PluginVersionReference(
-                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
                 Layers.DESKTOP_MODULE,
                 Plugins.WALLET_MANAGER,
                 Developers.BITDUBAI,

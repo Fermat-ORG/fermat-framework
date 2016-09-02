@@ -31,7 +31,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
         try {
 
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
-                    null, //TODO: Se coloco null ya que leon necesita que esta valor null porque esto solo se usa solo para buscar por publicKey del Actor
+                    publicKey, //TODO: Se coloco null ya que leon necesita que esta valor null porque esto solo se usa solo para buscar por publicKey del Actor
                     NetworkServiceType.UNDEFINED,
                     Actors.CHAT.getCode(),
                     null,

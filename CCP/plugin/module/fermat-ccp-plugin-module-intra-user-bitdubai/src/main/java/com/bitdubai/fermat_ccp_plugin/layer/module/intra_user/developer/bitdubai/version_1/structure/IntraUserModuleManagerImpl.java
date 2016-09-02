@@ -1046,7 +1046,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             public void run() {
                 try {
 
-                    updateIntraUsersConnections(String.valueOf(intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0)), worldActorList);
+                    updateIntraUsersConnections(intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0).getPublicKey(), worldActorList);
 
                 } catch (Exception e) {
                     e.printStackTrace();

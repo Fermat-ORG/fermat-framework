@@ -116,7 +116,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         WalletManager {
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
-    private CryptoWalletManager cryptoWalletManager;
+   private CryptoWalletManager cryptoWalletManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -130,27 +130,27 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 //    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
 //    private LogManager logManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
+    @NeededPluginReference(platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
     private WalletManagerManager walletMiddlewareManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
-    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+   private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.LOSS_PROTECTED_WALLET)
     private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
+   @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
     private CryptoAddressBookManager cryptoAddressBookManager;
 
-//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
-//    private BlockchainManager blockchainManager;
+   // @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
+   // private BlockchainManager blockchainManager;
 
 
-//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK   , plugin = Plugins.BITCOIN_NETWORK)
-//    private BitcoinNetworkManager bitcoinNetworkManager;
+   // @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK   , plugin = Plugins.BITCOIN_NETWORK)
+   // private BitcoinNetworkManager bitcoinNetworkManager;
 
 
     /**
@@ -192,6 +192,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         boolean existWalletLoss = false;
         boolean existFermatWallet = false;
         try {
+
 
             //load user's wallets ids
             this.loadUserWallets(deviceUserPublicKey);
@@ -280,6 +281,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
                 }
             }
+
 
 
             this.serviceStatus = ServiceStatus.STARTED;
@@ -559,27 +561,28 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
     @Override
     public void createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException {
-        try {
-            intraWalletUserIdentityManager.createNewIntraWalletUser(alias, phrase, profileImage, Long.parseLong("100"), Frequency.NORMAL, null);
-
-        } catch (CantCreateNewIntraWalletUserException e) {
-            throw new WalletCreateNewIntraUserIdentityException("CAN'T CREATE NEW INTRA USER IDENTITY", e, "", "");
-
-        } catch (Exception e) {
-            throw new WalletCreateNewIntraUserIdentityException("CAN'T CREATE NEW INTRA USER IDENTITY", FermatException.wrapException(e), "", "");
-        }
+//        try {
+//            intraWalletUserIdentityManager.createNewIntraWalletUser(alias, phrase, profileImage, Long.parseLong("100"), Frequency.NORMAL, null);
+//
+//        } catch (CantCreateNewIntraWalletUserException e) {
+//            throw new WalletCreateNewIntraUserIdentityException("CAN'T CREATE NEW INTRA USER IDENTITY", e, "", "");
+//
+//        } catch (Exception e) {
+//            throw new WalletCreateNewIntraUserIdentityException("CAN'T CREATE NEW INTRA USER IDENTITY", FermatException.wrapException(e), "", "");
+//        }
     }
 
 
     @Override
     public boolean hasIntraUserIdentity() throws CantGetIfIntraWalletUsersExistsException {
-        try {
-            return intraWalletUserIdentityManager.hasIntraUserIdentity();
-        } catch (CantListIntraWalletUsersException e) {
-            throw new CantGetIfIntraWalletUsersExistsException("CAN'T GET IF INTRA USERs IDENTITY EXISTS", e, "", "");
-        } catch (Exception e) {
-            throw new CantGetIfIntraWalletUsersExistsException("CAN'T GET IF INTRA USERS IDENTITY EXISTS", FermatException.wrapException(e), "", "");
-        }
+//        try {
+//            return intraWalletUserIdentityManager.hasIntraUserIdentity();
+//        } catch (CantListIntraWalletUsersException e) {
+//            throw new CantGetIfIntraWalletUsersExistsException("CAN'T GET IF INTRA USERs IDENTITY EXISTS", e, "", "");
+//        } catch (Exception e) {
+//            throw new CantGetIfIntraWalletUsersExistsException("CAN'T GET IF INTRA USERS IDENTITY EXISTS", FermatException.wrapException(e), "", "");
+//        }
+        return false;
     }
 
 

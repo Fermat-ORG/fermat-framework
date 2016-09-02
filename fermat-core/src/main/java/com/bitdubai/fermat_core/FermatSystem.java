@@ -109,7 +109,7 @@ public final class FermatSystem {
                 fermatSystemContext.registerPlatform(new BCHPlatform(fermatContext));
 //                fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
 //                fermatSystemContext.registerPlatform(new CBPPlatform());
-                fermatSystemContext.registerPlatform(new CCPPlatform());
+               fermatSystemContext.registerPlatform(new CCPPlatform());
                 fermatSystemContext.registerPlatform(new CERPlatform());
                 fermatSystemContext.registerPlatform(new CHTPlatform());
 //                fermatSystemContext.registerPlatform(new CSHPlatform());

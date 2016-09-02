@@ -25,7 +25,7 @@
     <string name="no_data" >No data avalaible</string>
     <string name="country" >country</string>
     <string name="state">State</string>
-    <string name="connected" >You are now connected</string>
+    <string name="connected" >You\'re now connected with</string>
     <string name="tittle" >Tittle</string>
     <string name="description" >Description</string>
     <string name="username" >Username</string>

@@ -17,6 +17,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotificationException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -28,9 +30,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingMessage;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChatStatusUpdateEvent;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingMessageEvent;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingWritingStatusUpdateEvent;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.MessageFailEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MessageMetadata;
@@ -41,6 +44,7 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
@@ -60,8 +64,7 @@ import java.util.UUID;
  * Created by Gabriel Araujo 15/02/16.
  */
 @PluginInfo(createdBy = "Gabirel Araujo", maintainerMail = "franklinmarcano1970@gmail.com", platform = Platforms.CHAT_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CHAT_NETWORK_SERVICE)
-public class ChatNetworkServicePluginRoot extends AbstractNetworkService implements NetworkServiceChatManager,
-        DatabaseManagerForDevelopers {
+public class ChatNetworkServicePluginRoot extends AbstractNetworkService implements NetworkServiceChatManager, DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLUGIN_DATABASE_SYSTEM)
     protected PluginDatabaseSystem pluginDatabaseSystem;
@@ -135,7 +138,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                 case MESSAGE_METADATA_TRANSMIT:
                     String messageMetadataJson = messageData.get(ChatTransmissionJsonAttNames.MESSAGE_METADATA).getAsString();
                     messageMetadataRecord = MessageMetadataRecord.fromJson(messageMetadataJson);
-                    messageMetadataRecord.setTransactionId(UUID.randomUUID());
+                    messageMetadataRecord.setPackageId(UUID.randomUUID());
                     messageMetadataRecord.setMessageStatus(MessageStatus.CREATED);
                     messageMetadataRecord.setDate(new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Timestamp(System.currentTimeMillis())));
                     messageMetadataRecord.setChatMessageTransactionType(chatMessageTransactionType);
@@ -175,22 +178,60 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
         }
     }
 
+    @Override
+    public synchronized void onMessageFail(UUID packageId) {
+
+        try {
+
+            UUID messageId = getChatMetadataRecordDAO().getMessageIdByPackageId(packageId);
+
+            if (messageId != null)
+                launchMessageFailNotification(messageId);
+            else
+                System.out.println("PACKAGE WITH ID:"+packageId.toString()+" was not found");
+
+        } catch (CantGetNotificationException e) {
+            e.printStackTrace();
+            CantGetNotificationException pluginStartException = new CantGetNotificationException(CantGetNotificationException.DEFAULT_MESSAGE, e, "", "CAN NOT GET NOTIFICATION");
+
+            reportUnexpectedError(pluginStartException);
+        } catch (CantReadRecordDataBaseException e) {
+            e.printStackTrace();
+            CantReadRecordDataBaseException pluginStartException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "", "");
+
+            reportUnexpectedError(pluginStartException);
+        } catch (Exception e){
+            e.printStackTrace();
+            CantReadRecordDataBaseException pluginStartException = new CantReadRecordDataBaseException("Something bad happened", e, "", "");
+
+            reportUnexpectedError(pluginStartException);
+        }
+
+    }
+
     private void launchIncomingMessageNotification(MessageMetadata messageMetadata) {
-        IncomingMessage event = (IncomingMessage) eventManager.getNewEvent(EventType.INCOMING_MESSAGE);
+        IncomingMessageEvent event = (IncomingMessageEvent) eventManager.getNewEvent(EventType.INCOMING_MESSAGE);
         event.setMessageMetadata(messageMetadata);
         event.setSource(eventSource);
         eventManager.raiseEvent(event);
     }
 
+    private void launchMessageFailNotification(UUID messageId) {
+        MessageFailEvent event = (MessageFailEvent) eventManager.getNewEvent(EventType.MESSAGE_FAIL);
+        event.setMessageId(messageId);
+        event.setSource(eventSource);
+        eventManager.raiseEvent(event);
+    }
+
     private void launchIncomingChatStatusNotification(MessageMetadata messageMetadata) {
-        IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) eventManager.getNewEvent(EventType.INCOMING_STATUS);
+        IncomingChatStatusUpdateEvent event = (IncomingChatStatusUpdateEvent) eventManager.getNewEvent(EventType.INCOMING_STATUS);
         event.setMessageMetadata(messageMetadata);
         event.setSource(eventSource);
         eventManager.raiseEvent(event);
     }
 
     private void launchIncomingWritingStatusNotification(String remotePk) {
-        IncomingNewWritingStatusUpdate event = (IncomingNewWritingStatusUpdate) eventManager.getNewEvent(EventType.INCOMING_WRITING_STATUS);
+        IncomingWritingStatusUpdateEvent event = (IncomingWritingStatusUpdateEvent) eventManager.getNewEvent(EventType.INCOMING_WRITING_STATUS);
         event.setSenderPk(remotePk);
         event.setSource(eventSource);
         eventManager.raiseEvent(event);
@@ -348,8 +389,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             messageMetadataRecord.setMessage(messageMetadata.getMessage());
             messageMetadataRecord.setMessageId(messageMetadata.getMessageId());
 
-            final String EncodedMsg = EncodeMsjContent.encodeMSjContentMessageMetadataTransmit(
-                    messageMetadataRecord);
+            final String EncodedMsg = EncodeMsjContent.encodeMSjContentMessageMetadataTransmit(messageMetadataRecord);
 
             //Only to individual chat type
             System.out.println("##### IMPRIMO ESTO PORQUE QUIERO VER QUE ESTOY ENVIANDO");
@@ -360,10 +400,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                     messageMetadataRecord.getRemoteActorPublicKey(),
                     true
             );
-            messageMetadataRecord.setTransactionId(transactionId);
+            messageMetadataRecord.setPackageId(transactionId);
             messageMetadataRecord.setChatMessageTransactionType(ChatMessageTransactionType.MESSAGE_METADATA_TRANSMIT);
             getChatMetadataRecordDAO().createNotification(messageMetadataRecord);
-
 
         } catch (Exception e) {
 
@@ -445,6 +484,5 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
     private void reportUnexpectedError(final Exception e) {
         reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
-
 
 }

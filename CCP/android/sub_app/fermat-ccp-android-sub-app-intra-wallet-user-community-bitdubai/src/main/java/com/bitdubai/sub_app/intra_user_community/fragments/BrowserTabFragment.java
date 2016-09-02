@@ -27,7 +27,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
@@ -67,6 +66,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetAct
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
@@ -76,7 +76,6 @@ import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFe
 import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
-import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -452,7 +451,7 @@ public class BrowserTabFragment
 
 
             if ((data.getState().equals(ProfileStatus.ONLINE) || data.getState().equals(ProfileStatus.UNKNOWN)) &&
-                connectionState.equals(ConnectionState.NO_CONNECTED)) {
+                !connectionState.equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE)) {
 
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
@@ -556,14 +555,16 @@ public class BrowserTabFragment
     @Override
     public void onLoadMoreData(int page, final int totalItemsCount) {
         adapter.setLoadingData(true);
-        fermatWorker = new FermatWorker(getActivity(), this) {
-            @Override
-            protected Object doInBackground() throws Exception {
-                return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
-            }
-        };
+       // fermatWorker = new FermatWorker(getActivity(), this) {
+         //   @Override
+          //  protected Object doInBackground() throws Exception {
+                offset = totalItemsCount;
+                onRefresh();
+                //return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
+           // }
+        //};
 
-        fermatWorker.execute();
+       // fermatWorker.execute();
     }
 
     @Override
@@ -675,37 +676,40 @@ public class BrowserTabFragment
     public void onActorReceived(final List<IntraUserInformation> result) {
         try {
             if (isAttached) {
-                swipeRefreshLayout.setRefreshing(false);
-                adapter.setLoadingData(false);
-                if (result != null && result.size() > 0) {
+                if (result != null /*&& result.size() > 0*/) {
                     if (getActivity() != null && adapter != null) {
                         if (offset == 0) {
                             if (lstIntraUserInformations != null) {
                                 lstIntraUserInformations.clear();
                                 lstIntraUserInformations.addAll(result);
+                            } else {
+                                lstIntraUserInformations = (ArrayList)result;
                             }
-                            adapter.changeDataSet(lstIntraUserInformations);
-                            ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
+                            adapter.refreshEvents(lstIntraUserInformations);
                         } else {
-
-                            lstIntraUserInformations.addAll((ArrayList) result);
+                            for (IntraUserInformation info : result) {
+                                if (notInList(info)) {
+                                    lstIntraUserInformations.add(info);
+                                }
+                            }
                             adapter.notifyItemRangeInserted(offset, lstIntraUserInformations.size() - 1);
                         }
 
                         isRefreshing = false;
-                        offset = lstIntraUserInformations.size();
+                        //offset = lstIntraUserInformations.size();
                     }
-                } else{
+                } else {
 
                     isRefreshing = false;
                 }
+
+                offset = 0;
+                showOrHideEmptyView();
             }
-            showOrHideEmptyView();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Receiver class implemented
@@ -721,6 +725,7 @@ public class BrowserTabFragment
                     if (code.equals(CommunityBroadcasterConstants.USER_COMM_ACTOR_RECEIVED)) {
                         List<IntraUserInformation> actorProfiles = (List<IntraUserInformation>) fermatBundle.get(CommunityBroadcasterConstants.USER_COMM_ACTOR_LIST);
                         onActorReceived(actorProfiles);
+
                     }
                 }
             } catch (ClassCastException e) {
@@ -921,6 +926,16 @@ public class BrowserTabFragment
             _executor.shutdownNow();
         super.onStop();
     }
+
+
+    private boolean notInList(IntraUserInformation info) {
+        for (IntraUserInformation contact : lstIntraUserInformations) {
+            if (contact.getPublicKey().equals(info.getPublicKey()))
+                return false;
+        }
+        return true;
+    }
+
 
 }
 
