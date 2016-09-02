@@ -400,7 +400,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                             @Override
                                             public void onDismiss(DialogInterface dialog) {
                                                 if (dialogCropImage.getCroppedImage() != null) {
-                                                    imageBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                                    imageBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_ROTATE_270), dpToPx(), dpToPx());
                                                     mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
                                                     brokerImageByteArray = toByteArray(imageBitmap);
                                                     updateProfileImage = true;

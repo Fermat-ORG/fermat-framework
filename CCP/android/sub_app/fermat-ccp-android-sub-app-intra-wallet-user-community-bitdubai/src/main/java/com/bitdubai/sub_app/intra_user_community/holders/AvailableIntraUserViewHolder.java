@@ -39,7 +39,7 @@ public class AvailableIntraUserViewHolder extends FermatViewHolder {
 
             username.setText(data.getName());
 
-            if (data.getCity()!=null||data.getCountry()!=null)
+            if ((data.getCity()!=null && data.getCountry()!=null) || (!data.getCountry().equals("----") && !data.getCity().equals("----")) )
                 location.setText(data.getCountry()+", "+data.getCity());
             else location.setText("No Location");
 

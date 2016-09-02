@@ -589,7 +589,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     null,
                     location,
                     distance,
-                    true,
+                    false,
                     null,
                     max,
                     offset,
