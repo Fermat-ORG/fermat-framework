@@ -16,5 +16,5 @@ dependencies {
 //    compile project(':fermat-pip-plugin-module-notification-bitdubai')
     compile 'com.ibm.icu:icu4j:53.1'
  //   compile project(':fermat-cht-plugin-sub-app-module-chat-actor-community-bitdubai')
-    compile project(':fermat-cht-plugin-network-service-chat-bitdubai')
+    //compile project(':fermat-cht-plugin-network-service-chat-bitdubai')
 }
