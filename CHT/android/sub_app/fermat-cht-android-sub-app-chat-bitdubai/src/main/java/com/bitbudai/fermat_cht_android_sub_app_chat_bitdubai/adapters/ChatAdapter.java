@@ -123,23 +123,31 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
             layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
             layoutParams.gravity = Gravity.RIGHT;
             holder.txtInfo.setLayoutParams(layoutParams);
-            holder.tickstatusimage.setVisibility(View.VISIBLE);
 
             switch (data.getStatus()) {
                 case SENT:
+                    holder.tickstatusimage.setVisibility(View.VISIBLE);
                     holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
                     break;
                 case DELIVERED:
+                    holder.tickstatusimage.setVisibility(View.VISIBLE);
                     holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
                     break;
                 case RECEIVE:
+                    holder.tickstatusimage.setVisibility(View.VISIBLE);
                     holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
                     break;
                 case READ:
+                    holder.tickstatusimage.setVisibility(View.VISIBLE);
                     holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
                     break;
                 case CANNOT_SEND:
+                    holder.tickstatusimage.setVisibility(View.VISIBLE);
                     holder.tickstatusimage.setImageResource(R.drawable.cht_close);
+                    break;
+                default:
+                    holder.tickstatusimage.setImageResource(0);
+                    holder.tickstatusimage.setVisibility(View.GONE);
                     break;
             }
         } else {

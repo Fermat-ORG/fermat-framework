@@ -421,9 +421,13 @@ public class ChatAdapterView extends LinearLayout {
                     @Override
                     public void onGlobalLayout() {
                         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-                            if (!isKeyboardShown(messageET.getRootView())) {
-                                onBackPressed();
-                            } else onAdjustKeyboard();
+                            if (messageET != null) {
+                                if (messageET.getRootView() != null) {
+                                    if (!isKeyboardShown(messageET.getRootView())) {
+                                        onBackPressed();
+                                    } else onAdjustKeyboard();
+                                }
+                            }
                         }
                     }
                 });
@@ -633,10 +637,10 @@ public class ChatAdapterView extends LinearLayout {
 
     public void destroy() {
         layoutManager.removeAllViews();
-        adapter.getView().getRootView().destroyDrawingCache();
-        adapter.getView().destroyDrawingCache();
-        messagesContainer.destroyDrawingCache();
-        messagesContainer.removeAllViewsInLayout();
+//        adapter.getView().getRootView().destroyDrawingCache();
+  //      adapter.getView().destroyDrawingCache();
+    //    messagesContainer.destroyDrawingCache();
+      //  messagesContainer.removeAllViewsInLayout();
         messagesContainer = null;
         chatSettings = null;
         chatHistory = null;
@@ -649,12 +653,12 @@ public class ChatAdapterView extends LinearLayout {
         appSession = null;
         adapter = null;
         errorManager = null;
-        messageET.destroyDrawingCache();
+//        messageET.destroyDrawingCache();
         messageET = null;
         newChatId = null;
         rootView.removeAllViewsInLayout();
         rootView.removeAllViews();
-        sendBtn.destroyDrawingCache();
+//        sendBtn.destroyDrawingCache();
         sendBtn = null;
         removeAllViewsInLayout();
         removeAllViews();
