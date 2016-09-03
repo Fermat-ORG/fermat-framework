@@ -5190,6 +5190,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
 
         //Help optionMenu
+        optionMenuItem = new OptionMenuItem(2);
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_delete_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Delete");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -5373,6 +5374,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
 
         //Help optionMenu
+        optionMenuItem = new OptionMenuItem(2);
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_delete_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Delete");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
