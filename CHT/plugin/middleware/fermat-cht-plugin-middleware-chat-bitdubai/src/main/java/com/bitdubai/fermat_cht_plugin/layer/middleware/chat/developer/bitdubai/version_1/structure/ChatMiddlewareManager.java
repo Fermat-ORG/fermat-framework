@@ -469,7 +469,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     public Timestamp getLastMessageReceivedDate(UUID chatId) throws CantGetChatException {
 
         try {
-            if(chatId!=null || chatId.equals(""))
+            if(chatId != null)
                 return chatMiddlewareDatabaseDao.getLastMessageReceivedDateByChatId(chatId);
             else
                 return null;
