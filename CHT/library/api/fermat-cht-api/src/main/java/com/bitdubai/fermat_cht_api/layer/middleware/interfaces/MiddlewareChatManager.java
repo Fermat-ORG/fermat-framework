@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
@@ -28,6 +29,8 @@ public interface MiddlewareChatManager extends FermatManager {
     Chat getChatByChatId(UUID chatId) throws CantGetChatException;
 
     void saveChat(Chat chat) throws CantSaveChatException;
+
+    void markChatAs(UUID chatId, ChatStatus chatStatus) throws CantSaveChatException;
 
     void deleteChat(UUID chatId) throws CantDeleteChatException;
 

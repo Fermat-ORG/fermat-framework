@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
@@ -175,6 +176,38 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         try {
             ObjectChecker.checkArgument(chat, "The chat argument is null");
             this.chatMiddlewareDatabaseDao.saveChat(chat);
+        } catch (ObjectNotSetException e) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantSaveChatException(
+                    e,
+                    "Saving a chat in database",
+                    "The chat probably is null");
+        } catch (DatabaseOperationException e) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantSaveChatException(
+                    e,
+                    "Saving a chat in database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantSaveChatException(
+                    FermatException.wrapException(exception),
+                    "Saving a chat in database",
+                    "Unexpected exception");
+        }
+    }
+
+    @Override
+    public void markChatAs(UUID chatId, ChatStatus chatStatus) throws CantSaveChatException {
+
+        try {
+
+            ObjectChecker.checkArgument(chatId, "The chatId argument is null");
+            ObjectChecker.checkArgument(chatStatus, "The chatStatus argument is null");
+            this.chatMiddlewareDatabaseDao.updateChatStatus(chatId, chatStatus);
         } catch (ObjectNotSetException e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);

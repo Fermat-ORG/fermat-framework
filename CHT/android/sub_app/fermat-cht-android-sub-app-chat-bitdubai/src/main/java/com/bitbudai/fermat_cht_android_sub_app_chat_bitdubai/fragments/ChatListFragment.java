@@ -33,6 +33,7 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.FermatIntentFilter;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -137,72 +138,78 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 if (chatIdentity != null) {
                     for (Chat chat : chats) {
 
-                        ChatActorCommunityInformation cont = chatManager.getConnectedChatActor(chatIdentity.getPublicKey(), chat.getRemoteActorPublicKey());
+                        ChatActorCommunityInformation cont = chatManager.getChatActorConnection(chatIdentity.getPublicKey(), chat.getRemoteActorPublicKey());
 
-                        noReadMsgs.add(chatManager.getUnreadCountMessageByChatId(chat.getChatId()));
-                        contactId.add(chat.getRemoteActorPublicKey());
-                        contactName.add(cont.getAlias());
-                        Message mess = null;
-                        try {
-                            mess = chatManager.getLastMessageByChatId(chat.getChatId());
-                        } catch (Exception e) {
-                            mess = null;
-                        }
-                        if (mess != null) {
+                        if (cont != null && cont.getConnectionState() == ConnectionState.CONNECTED) {
 
-                            message.add(mess.getMessage());
-                            status.add(mess.getStatus().toString());
-                            typeMessage.add(mess.getType().toString());
-                        } else {
+                            noReadMsgs.add(chatManager.getUnreadCountMessageByChatId(chat.getChatId()));
+                            contactId.add(chat.getRemoteActorPublicKey());
+                            contactName.add(cont.getAlias());
+                            Message mess = null;
+                            try {
+                                mess = chatManager.getLastMessageByChatId(chat.getChatId());
+                            } catch (Exception e) {
+                                mess = null;
+                            }
+                            if (mess != null) {
 
-                            message.add("");
-                            status.add("");
-                            typeMessage.add("");
-                        }
-                        long timemess = chat.getLastMessageDate().getTime();
-                        long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
-                        long milliseconds = timemess + nanos;
-                        Date dated = new java.util.Date(milliseconds);
-                        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-                        formatter.setTimeZone(TimeZone.getDefault());
-                        String datef = formatter.format(new java.util.Date(milliseconds));
-                        if (Validate.isDateToday(dated)) {
+                                message.add(mess.getMessage());
+                                status.add(mess.getStatus().toString());
+                                typeMessage.add(mess.getType().toString());
+                            } else {
+
+                                message.add("");
+                                status.add("");
+                                typeMessage.add("");
+                            }
+                            long timemess = chat.getLastMessageDate().getTime();
+                            long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
+                            long milliseconds = timemess + nanos;
+                            Date dated = new java.util.Date(milliseconds);
+                            DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+                            formatter.setTimeZone(TimeZone.getDefault());
+                            String datef = formatter.format(new java.util.Date(milliseconds));
                             if (Validate.isDateToday(dated)) {
-                                //if(android.text.format.DateFormat!=null)
-                                try {
-                                    //TODO is24HourFormat doesn't work
-                                    if (Build.VERSION.SDK_INT < 23) {
-                                        if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
-                                            formatter = new SimpleDateFormat("HH:mm");
+                                if (Validate.isDateToday(dated)) {
+                                    //if(android.text.format.DateFormat!=null)
+                                    try {
+                                        //TODO is24HourFormat doesn't work
+                                        if (Build.VERSION.SDK_INT < 23) {
+                                            if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
+                                                formatter = new SimpleDateFormat("HH:mm");
+                                            } else {
+                                                formatter = new SimpleDateFormat("hh:mm aa");
+                                            }
                                         } else {
-                                            formatter = new SimpleDateFormat("hh:mm aa");
+                                            if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                                                formatter = new SimpleDateFormat("HH:mm");
+                                            } else {
+                                                formatter = new SimpleDateFormat("hh:mm aa");
+                                            }
                                         }
-                                    } else {
-                                        if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                                            formatter = new SimpleDateFormat("HH:mm");
-                                        } else {
-                                            formatter = new SimpleDateFormat("hh:mm aa");
-                                        }
+                                    } catch (Exception e) {
+                                        formatter = new SimpleDateFormat("HH:mm");
                                     }
-                                } catch (Exception e) {
-                                    formatter = new SimpleDateFormat("HH:mm");
+                                }
+                                formatter.setTimeZone(TimeZone.getDefault());
+                                datef = formatter.format(new java.util.Date(milliseconds));
+                            } else {
+                                Date old = new Date(datef);
+                                Date today = new Date();
+                                long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
+                                if (dias == 1) {
+                                    datef = "YESTERDAY";
                                 }
                             }
-                            formatter.setTimeZone(TimeZone.getDefault());
-                            datef = formatter.format(new java.util.Date(milliseconds));
+                            dateMessage.add(datef);
+                            chatId.add(chat.getChatId());
+                            ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
+                            BitmapDrawable bmd = new BitmapDrawable(bytes);
+                            imgId.add(bmd.getBitmap());
                         } else {
-                            Date old = new Date(datef);
-                            Date today = new Date();
-                            long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                            if (dias == 1) {
-                                datef = "YESTERDAY";
-                            }
+                            // if not connected then mark the chat as invisible
+                            chatManager.markChatAs(chat.getChatId(), ChatStatus.INVISIBLE                                                                                                                                                                                                                                                                                                                                                                                                                                  );
                         }
-                        dateMessage.add(datef);
-                        chatId.add(chat.getChatId());
-                        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
-                        BitmapDrawable bmd = new BitmapDrawable(bytes);
-                        imgId.add(bmd.getBitmap());
                     }
                 } else setUpHelpChat();
 
@@ -447,12 +454,10 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
             if (searchView != null) {
                 if (searchView.getQuery().toString().equals("")) {
                     updatevalues();
-                    chatlistview();
                     adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
                 }
             } else {
                 updatevalues();
-                chatlistview();
                 adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
             }
         }else adapter.clear();

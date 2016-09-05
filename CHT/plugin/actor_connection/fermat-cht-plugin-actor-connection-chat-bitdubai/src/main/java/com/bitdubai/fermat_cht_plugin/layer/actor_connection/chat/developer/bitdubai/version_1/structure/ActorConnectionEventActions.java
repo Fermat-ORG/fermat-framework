@@ -163,6 +163,10 @@ public class ActorConnectionEventActions {
                     dao.changeIdAndConnectionState(oldActorConnection.getConnectionId(), request.getRequestId(), ConnectionState.CONNECTED);
                     chatNetworkService.confirm(request.getRequestId());
                     chatNetworkService.acceptConnection(request.getRequestId());
+                } else {
+                    // if i have a previous connection, with other state i set to pending local acceptance
+                    dao.changeIdAndConnectionState(oldActorConnection.getConnectionId(), request.getRequestId(), ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+                    chatNetworkService.confirm(request.getRequestId());
                 }
 
             } catch (ActorConnectionNotFoundException actorNotFoundException) {
