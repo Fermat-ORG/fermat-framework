@@ -240,6 +240,7 @@
     <string name="notification_connection_disconnet2">esta desconectado de ti. Se Eliminara el Contacto asociado.</string>
     <string name="notification_connection_denied">Solicitud de conexión</string>
     <string name="notification_connection_denied2">Tu solicitud de conexión fue rechazada</string>
+    <string name="notification_connection_Unknown">Desonocido</string>
 
     <string name="no_users_for_location">No se encontranron conexiones cerca de la ubicacion escogida</string>
     <string name="users_for_location">Estas son las conexiones cerca de la ubi escogida</string>
