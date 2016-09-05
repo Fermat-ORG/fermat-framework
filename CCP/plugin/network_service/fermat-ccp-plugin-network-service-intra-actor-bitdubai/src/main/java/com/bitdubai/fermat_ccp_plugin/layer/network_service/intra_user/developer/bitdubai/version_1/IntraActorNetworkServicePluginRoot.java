@@ -341,15 +341,15 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                 lstIntraUser.add(new IntraUserNetworkService(actorProfile.getIdentityPublicKey(), actorProfile.getPhoto(), actorProfile.getAlias(), actorPhrase,actorProfile.getStatus(),actorProfile.getLocation()));
             }
 
-            System.out.println("IntraActorNs: onNetworkServiceActorListReceived");
-            ActorNetworkListReceiveEvent eventToRaise = eventManager.getNewEventMati(EventType.ACTOR_NETWORK_SERVICE_ACTOR_LIST_RECEIVED, ActorNetworkListReceiveEvent.class);
-            eventToRaise.setSource(eventSource);
-            eventToRaise.setActorProfileList(lstIntraUser);
-
-            System.out.println("INTRA USER ACTOR LIST FLOW -> RAISING EVENT -> -> init");
-            eventManager.raiseEvent(eventToRaise);
-
         }
+
+        System.out.println("IntraActorNs: onNetworkServiceActorListReceived");
+        ActorNetworkListReceiveEvent eventToRaise = eventManager.getNewEventMati(EventType.ACTOR_NETWORK_SERVICE_ACTOR_LIST_RECEIVED, ActorNetworkListReceiveEvent.class);
+        eventToRaise.setSource(eventSource);
+        eventToRaise.setActorProfileList(lstIntraUser);
+
+        System.out.println("INTRA USER ACTOR LIST FLOW -> RAISING EVENT -> -> init");
+        eventManager.raiseEvent(eventToRaise);
 }
 
 
