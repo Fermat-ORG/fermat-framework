@@ -589,7 +589,7 @@ public class BrowserTabFragment
                 isRefreshing = true;
                 if (identity != null) {
                     moduleManager.getSuggestionsToContact(identity.getPublicKey(), location, distance, null, MAX, offset);
-
+                    swipeRefreshLayout.setRefreshing(false);
                 }
             }
         } catch (Exception e) {
@@ -694,7 +694,7 @@ public class BrowserTabFragment
 
                 if (result != null /*&& result.size() > 0*/) {
                     if (result.size() > 0) {
-                       // swipeRefreshLayout.setRefreshing(false);
+                       swipeRefreshLayout.setRefreshing(false);
                         adapter.setLoadingData(false);
                         if (getActivity() != null && adapter != null) {
                             if (offset == 0) {
@@ -904,12 +904,17 @@ public class BrowserTabFragment
             noContacts.setAnimation(anim);
             noContacts.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.INVISIBLE);
+            //swipeRefreshLayout.setRefreshing(false);
 
         } else if (!show && noContacts.getVisibility() == View.VISIBLE) {
             noContacts.setAnimation(anim);
             noContacts.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
+            //swipeRefreshLayout.setRefreshing(false);
+        }else {
+           // swipeRefreshLayout.setRefreshing(false);
         }
+
     }
 
 
