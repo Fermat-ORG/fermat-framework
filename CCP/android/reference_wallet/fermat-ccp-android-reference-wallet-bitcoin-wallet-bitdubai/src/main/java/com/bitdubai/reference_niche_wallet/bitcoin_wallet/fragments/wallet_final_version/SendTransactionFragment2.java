@@ -52,8 +52,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
@@ -79,15 +77,12 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.Presentat
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static android.widget.Toast.makeText;
 
 
 /**
@@ -291,12 +286,16 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     //noinspection TryWithIdenticalCatches
                     ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = null;
                     try {
-                        cryptoWalletIntraUserIdentity = appSession.getModuleManager().getSelectedActorIdentity();
-                    } catch (CantGetSelectedActorIdentityException e) {
+                      //  cryptoWalletIntraUserIdentity = appSession.getModuleManager().getSelectedActorIdentity();
+                        cryptoWalletIntraUserIdentity = intraUserLoginIdentity;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    /*catch (CantGetSelectedActorIdentityException e) {
                         e.printStackTrace();
                     } catch (ActorIdentityNotSelectedException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     if (cryptoWalletIntraUserIdentity == null) {
                         getActivity().onBackPressed();
                     } else {
