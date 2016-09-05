@@ -20,7 +20,7 @@
     <!--Connection tab-->
     <string name="delete_all_contacts_title">DELETE ALL CONTACTS</string>
     <string name="delete_all_contacts_info">Are you sure you want to delete all your connections?</string>
-    <string name="delete_contacts_info">Are you sure you want to delete this connection?</string>
+    <string name="delete_contacts_info">Are you sure you want to delete this connection? (It removes the associated contact)</string>
     <string name="delete_connection_text">DELETE CONNECTION</string>
     <string name="no_data" >No data avalaible</string>
     <string name="country" >country</string>
@@ -249,7 +249,7 @@
     <string name="notification_connection_request2">A new connection request was received from</string>
     <string name="notification_connection_accept">Connection Request</string>
     <string name="notification_connection_accept2">Your connection request was accepted to</string>
-    <string name="notification_connection_disconnet">Connection Request</string>
+    <string name="notification_connection_disconnet">Connection Removed</string>
     <string name="notification_connection_disconnet2">is disconnected from you.</string>
     <string name="notification_connection_denied">Connection Request</string>
     <string name="notification_connection_denied2">Your connection request was denied to</string>
