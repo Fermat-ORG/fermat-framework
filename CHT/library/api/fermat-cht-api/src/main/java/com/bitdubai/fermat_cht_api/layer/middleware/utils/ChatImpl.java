@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
-import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 
 import java.sql.Timestamp;
@@ -19,7 +18,6 @@ public class ChatImpl implements Chat {
     private ChatStatus status;
     private Timestamp date;
     private Timestamp lastMessageDate;
-    private TypeChat typeChat;
 
     /**
      * Constructor without arguments
@@ -68,12 +66,12 @@ public class ChatImpl implements Chat {
     }
 
     @Override
-    public Timestamp getDate() {
+    public Timestamp getCreationDate() {
         return this.date;
     }
 
     @Override
-    public void setDate(Timestamp date) {
+    public void setCreationDate(Timestamp date) {
         this.date = date;
     }
 
@@ -88,16 +86,6 @@ public class ChatImpl implements Chat {
     }
 
     @Override
-    public TypeChat getTypeChat() {
-        return typeChat;
-    }
-
-    @Override
-    public void setTypeChat(TypeChat typeChat) {
-        this.typeChat = typeChat;
-    }
-
-    @Override
     public String toString() {
         return "ChatImpl{" +
                 "chatId=" + chatId +
@@ -106,7 +94,6 @@ public class ChatImpl implements Chat {
                 ", status=" + status +
                 ", date=" + date +
                 ", lastMessageDate=" + lastMessageDate +
-                ", typeChat=" + typeChat +
                 '}';
     }
 }

@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -42,9 +41,7 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.MessageMetadataRecord;
@@ -141,7 +138,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                     messageMetadataRecord.setMessageStatus(MessageStatus.CREATED);
                     messageMetadataRecord.setDate(new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Timestamp(System.currentTimeMillis())));
                     messageMetadataRecord.setChatMessageTransactionType(chatMessageTransactionType);
-                    getChatMetadataRecordDAO().createNotification(messageMetadataRecord);
 
                     launchIncomingMessageNotification(messageMetadataRecord);
                     break;
@@ -167,9 +163,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
             }
 
-        } catch (CantUpdateRecordDataBaseException | CantCreateNotificationException | CantInsertRecordDataBaseException e) {
-            e.printStackTrace();
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (Exception e) {
             e.printStackTrace();
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -184,9 +177,10 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
             UUID messageId = getChatMetadataRecordDAO().getMessageIdByPackageId(packageId);
 
-            if (messageId != null)
+            if (messageId != null) {
                 launchMessageFailNotification(messageId);
-            else
+                getChatMetadataRecordDAO().deleteMessageByPackageId(packageId);
+            } else
                 System.out.println("PACKAGE WITH ID:"+packageId.toString()+" was not found");
 
         } catch (CantGetNotificationException e) {
@@ -217,13 +211,15 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
             UUID messageId = getChatMetadataRecordDAO().getMessageIdByPackageId(packageId);
 
-            MessageMetadataRecord messageMetadata = new MessageMetadataRecord();
-            messageMetadata.setMessageId(messageId);
-            messageMetadata.setMessageStatus(MessageStatus.SENT);
+            if (messageId != null) {
 
-            if (messageId != null)
+                MessageMetadataRecord messageMetadata = new MessageMetadataRecord();
+                messageMetadata.setMessageId(messageId);
+                messageMetadata.setMessageStatus(MessageStatus.SENT);
+
+                getChatMetadataRecordDAO().deleteMessageByPackageId(packageId);
                 launchChangedMessageStatusNotification(messageMetadata);
-            else
+            } else
                 System.out.println("PACKAGE WITH ID:"+packageId.toString()+" was not found");
 
         } catch (CantGetNotificationException e) {
@@ -437,7 +433,11 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             );
             messageMetadataRecord.setPackageId(transactionId);
             messageMetadataRecord.setChatMessageTransactionType(ChatMessageTransactionType.MESSAGE_METADATA_TRANSMIT);
-            getChatMetadataRecordDAO().createNotification(messageMetadataRecord);
+
+            if (transactionId != null)
+                getChatMetadataRecordDAO().createNotification(messageMetadataRecord);
+            else
+                launchMessageFailNotification(messageMetadata.getMessageId());
 
         } catch (Exception e) {
 

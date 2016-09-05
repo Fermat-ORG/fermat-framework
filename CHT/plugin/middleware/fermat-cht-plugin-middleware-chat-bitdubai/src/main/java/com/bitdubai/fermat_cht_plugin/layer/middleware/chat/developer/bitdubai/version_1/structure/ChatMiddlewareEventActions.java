@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
-import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
@@ -174,8 +173,7 @@ public class ChatMiddlewareEventActions {
             chat.setLocalActorPublicKey(messageMetadata.getRemoteActorPublicKey());
             chat.setRemoteActorPublicKey(messageMetadata.getLocalActorPublicKey());
             Long dv = System.currentTimeMillis();
-            chat.setDate(new Timestamp(dv));
-            chat.setTypeChat(TypeChat.INDIVIDUAL);
+            chat.setCreationDate(new Timestamp(dv));
         }
         chat.setLastMessageDate(new Timestamp(System.currentTimeMillis()));//updating date of last message arrived in chat
 

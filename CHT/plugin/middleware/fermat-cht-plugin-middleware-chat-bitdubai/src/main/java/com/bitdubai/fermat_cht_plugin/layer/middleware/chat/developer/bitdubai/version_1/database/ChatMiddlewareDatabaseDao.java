@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
-import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
@@ -487,9 +486,8 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME, chat.getLocalActorPublicKey());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, chat.getRemoteActorPublicKey());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME, chat.getStatus().getCode());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME, chat.getDate().toString());
+        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME, chat.getCreationDate().toString());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME, chat.getLastMessageDate().toString());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT, chat.getTypeChat().getCode());
 
         return record;
     }
@@ -512,12 +510,11 @@ public class ChatMiddlewareDatabaseDao {
         ChatImpl chat = new ChatImpl();
 
         chat.setChatId(chatTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
-        chat.setDate(Timestamp.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME)));
+        chat.setCreationDate(Timestamp.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME)));
         chat.setLastMessageDate(Timestamp.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME)));
         chat.setRemoteActorPublicKey(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME));
         chat.setLocalActorPublicKey(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME));
         chat.setStatus(ChatStatus.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME)));
-        chat.setTypeChat(TypeChat.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT)));
 
         return chat;
     }

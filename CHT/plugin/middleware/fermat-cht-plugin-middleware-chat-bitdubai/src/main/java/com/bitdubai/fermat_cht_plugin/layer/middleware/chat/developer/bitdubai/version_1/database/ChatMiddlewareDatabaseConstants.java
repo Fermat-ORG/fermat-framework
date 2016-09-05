@@ -25,7 +25,6 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String CHATS_STATUS_COLUMN_NAME = "status";
     public static final String CHATS_CREATION_DATE_COLUMN_NAME = "creation_date";
     public static final String CHATS_LAST_MESSAGE_DATE_COLUMN_NAME = "last_message_date";
-    public static final String CHATS_TYPE_CHAT = "type_chat";
 
     /**
      * Message database table definition.

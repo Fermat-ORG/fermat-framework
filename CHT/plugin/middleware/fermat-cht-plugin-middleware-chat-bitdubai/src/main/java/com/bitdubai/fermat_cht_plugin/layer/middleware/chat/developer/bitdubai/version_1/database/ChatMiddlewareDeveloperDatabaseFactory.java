@@ -59,7 +59,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory {
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT);
+
         /**
          * Table Chats addition.
          */

@@ -77,7 +77,6 @@ public class ChatMiddlewareDatabaseFactory {
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             try {
                 //Create the table
