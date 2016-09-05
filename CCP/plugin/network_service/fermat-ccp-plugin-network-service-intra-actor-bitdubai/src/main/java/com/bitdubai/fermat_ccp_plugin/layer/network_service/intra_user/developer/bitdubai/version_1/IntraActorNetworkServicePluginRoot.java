@@ -319,9 +319,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
 
         final List<IntraUserInformation> lstIntraUser = new ArrayList<>();
 
-        for (ActorProfile actorProfile : actorProfiles) {
+        if( actorProfiles != null)
+        {
+            for (ActorProfile actorProfile : actorProfiles) {
 
-            String actorPhrase = "";
+                String actorPhrase = "";
            /* if(actorProfile.getExtraData() != null)
             {
                 if(!actorProfile.getExtraData().equals("")) {
@@ -336,7 +338,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                 }
             }*/
 
-            lstIntraUser.add(new IntraUserNetworkService(actorProfile.getIdentityPublicKey(), actorProfile.getPhoto(), actorProfile.getAlias(), actorPhrase,actorProfile.getStatus(),actorProfile.getLocation()));
+                lstIntraUser.add(new IntraUserNetworkService(actorProfile.getIdentityPublicKey(), actorProfile.getPhoto(), actorProfile.getAlias(), actorPhrase,actorProfile.getStatus(),actorProfile.getLocation()));
+            }
+
         }
 
         System.out.println("IntraActorNs: onNetworkServiceActorListReceived");
@@ -346,7 +350,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
 
         System.out.println("INTRA USER ACTOR LIST FLOW -> RAISING EVENT -> -> init");
         eventManager.raiseEvent(eventToRaise);
-    }
+}
 
 
     private void reprocessPendingMessage()

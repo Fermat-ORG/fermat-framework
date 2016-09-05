@@ -119,14 +119,14 @@ public class ConnectDialog extends FermatDialog<ReferenceAppFermatSession<IntraU
                 //image null
                 if (intraUserInformation != null && identity != null) {
                     getSession().getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPhrase(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(), intraUserInformation.getLocation(),identity.getProfileImage(), identity.getPublicKey(), identity.getAlias(),  identity.getLocation());
-                    Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
+                   /* Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
-                    sendLocalBroadcast(broadcast);
+                    sendLocalBroadcast(broadcast);*/
                     Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Can't Send Request Connection - Manager not initialised ", Toast.LENGTH_SHORT).show();
                 }
-                dismiss();
+
             } catch (CantStartRequestException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 Toast.makeText(getContext(), "Can't Send Request Connection ", Toast.LENGTH_SHORT).show();

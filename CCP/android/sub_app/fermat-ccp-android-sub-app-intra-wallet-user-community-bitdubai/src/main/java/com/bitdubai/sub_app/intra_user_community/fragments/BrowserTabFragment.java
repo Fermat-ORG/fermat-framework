@@ -35,7 +35,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
+
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -66,7 +66,6 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetAct
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
@@ -450,8 +449,13 @@ public class BrowserTabFragment
             ConnectionState connectionState = data.getConnectionState();
 
 
-            if ((data.getState().equals(ProfileStatus.ONLINE) || data.getState().equals(ProfileStatus.UNKNOWN)) &&
-                !connectionState.equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE)) {
+            if ((data.getState().equals(ProfileStatus.ONLINE) ||
+                    data.getState().equals(ProfileStatus.UNKNOWN)) &&
+                    connectionState.equals(ConnectionState.NO_CONNECTED) ||
+                    connectionState.equals(ConnectionState.DENIED_LOCALLY) ||
+                    connectionState.equals(ConnectionState.DENIED_REMOTELY) ||
+                    connectionState.equals(ConnectionState.DISCONNECTED_LOCALLY) ||
+                    connectionState.equals(ConnectionState.DISCONNECTED_REMOTELY)) {
 
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
@@ -477,9 +481,20 @@ public class BrowserTabFragment
                     case CONNECTED:
                         Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_connected_msg),Toast.LENGTH_SHORT).show();
                         break;
-
+                    case NO_CONNECTED:
+                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
+                        break;
                     case PENDING_REMOTELY_ACCEPTANCE:
                         Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_request_sent_msg),Toast.LENGTH_SHORT).show();
+                        break;
+                    case PENDING_LOCALLY_ACCEPTANCE:
+                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_request_received_msg),Toast.LENGTH_SHORT).show();
+                        break;
+                    case DENIED_REMOTELY:
+                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_denied_remotely_msg),Toast.LENGTH_SHORT).show();
+                        break;
+                    case DISCONNECTED_REMOTELY:
+                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
                         break;
 
                     default:
@@ -573,7 +588,7 @@ public class BrowserTabFragment
             if (!isRefreshing) {
                 isRefreshing = true;
                 if (identity != null) {
-                    moduleManager.getSuggestionsToContact(identity.getPublicKey(),location, distance, null, MAX, offset);
+                    moduleManager.getSuggestionsToContact(identity.getPublicKey(), location, distance, null, MAX, offset);
 
                 }
             }
@@ -679,7 +694,7 @@ public class BrowserTabFragment
 
                 if (result != null /*&& result.size() > 0*/) {
                     if (result.size() > 0) {
-                        swipeRefreshLayout.setRefreshing(false);
+                       // swipeRefreshLayout.setRefreshing(false);
                         adapter.setLoadingData(false);
                         if (getActivity() != null && adapter != null) {
                             if (offset == 0) {

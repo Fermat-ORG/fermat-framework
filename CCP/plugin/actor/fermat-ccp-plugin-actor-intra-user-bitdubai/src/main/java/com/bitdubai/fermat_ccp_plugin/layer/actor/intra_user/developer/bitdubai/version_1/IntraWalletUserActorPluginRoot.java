@@ -63,6 +63,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWallet
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserDeleteContactEvent;
 import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserUpdateContactEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraWalletUserActorDao;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraWalletUserActorDeveloperDatabaseFactory;
@@ -255,15 +256,6 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         try {
             this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, ConnectionState.DISCONNECTED_REMOTELY);
 
-           /* FermatBundle fermatBundle = new FermatBundle();
-            fermatBundle.put(SOURCE_PLUGIN, Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR.getCode());
-            fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CCP_COMMUNITY.getCode()));
-            fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CCP_COMMUNITY.getCode());
-            fermatBundle.put(NOTIFICATION_ID, CCPBroadcasterConstants.CONNECTION_DISCONNECT);
-            fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
-            fermatBundle.put("InvolvedActor", "");
-
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);*/
         } catch (CantUpdateConnectionException e) {
             throw new CantDisconnectIntraWalletUserException("CAN'T CANCEL INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -812,6 +804,25 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                         break;
                     case DISCONNECTED:
                         this.disconnectIntraWalletUser(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+
+                        //notify disconection
+                         fermatBundle = new FermatBundle();
+                        fermatBundle.put(SOURCE_PLUGIN, Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR.getCode());
+                        fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CCP_COMMUNITY.getCode()));
+                        fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CCP_COMMUNITY.getCode());
+                        fermatBundle.put(NOTIFICATION_ID, CCPBroadcasterConstants.CONNECTION_DISCONNECT);
+                        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
+                        fermatBundle.put("InvolvedActor", getActorByPublicKey(intraUserToConnectPublicKey,intraUserSendingPublicKey).getName());
+
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
+                        //Delete asociate wallet contact
+                        System.out.println("IntraActorNs: onIntraUserWalletDeleteContact");
+                        IntraUserDeleteContactEvent eventToRaise = eventManager.getNewEventMati(EventType.INTRA_USER_WALLET_DELETE_CONTACT,IntraUserDeleteContactEvent.class);
+                        eventToRaise.setActorPublicKey(intraUserSendingPublicKey);
+                        eventToRaise.setSource(EventSource.INTRA_WALLET_USER_ACTOR_PLUGIN_ROOT);
+                        System.out.println("INSTRA USER ACTOR DELETE CONTACT -> RAISING EVENT -> -> init");
+                        eventManager.raiseEvent(eventToRaise);
 
                         break;
                     case RECEIVED:
