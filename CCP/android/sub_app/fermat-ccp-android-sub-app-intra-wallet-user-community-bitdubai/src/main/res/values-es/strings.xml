@@ -183,7 +183,7 @@
     <string name="delete_all_contacts_title">Borrar todos los contactos</string>
     <string name="delete_all_contacts_info">Estas seguro que quieres borrar todas tus conecciones?</string>
     <string name="delete_connection_text">Borrar la conexion</string>
-    <string name="delete_contacts_info">Estas seguro que quieres borrar esta conexion?</string>
+    <string name="delete_contacts_info">Estas seguro que quieres borrar esta conexion?(Eliminar el contacto asociado)</string>
     <string name="description_search">Buscar</string>
     <string name="tittle">Titulo</string>
     <string name="description">descripcion</string>
@@ -236,8 +236,8 @@
     <string name="notification_connection_request2">Ud. Recibio una nueva solicitud de conexión de</string>
     <string name="notification_connection_accept">Solicitud de conexión</string>
     <string name="notification_connection_accept2">Tu solicitud de conexión fue aceptada</string>
-    <string name="notification_connection_disconnet">Solicitud de conexión</string>
-    <string name="notification_connection_disconnet2">esta desconectado de ti.</string>
+    <string name="notification_connection_disconnet">Conexión Eliminada</string>
+    <string name="notification_connection_disconnet2">esta desconectado de ti. Se Eliminara el Contacto asociado.</string>
     <string name="notification_connection_denied">Solicitud de conexión</string>
     <string name="notification_connection_denied2">Tu solicitud de conexión fue rechazada</string>
 
