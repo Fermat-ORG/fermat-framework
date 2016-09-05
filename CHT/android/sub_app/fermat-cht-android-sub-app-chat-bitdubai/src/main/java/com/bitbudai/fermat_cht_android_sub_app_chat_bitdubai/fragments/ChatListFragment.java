@@ -140,6 +140,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                         ChatActorCommunityInformation cont = chatManager.getChatActorConnection(chatIdentity.getPublicKey(), chat.getRemoteActorPublicKey());
 
+                        // if not connected i mark the chat as invisible todo maybe we should just not allow the user to send messages but see the chat
                         if (cont != null && cont.getConnectionState() == ConnectionState.CONNECTED) {
 
                             noReadMsgs.add(chatManager.getUnreadCountMessageByChatId(chat.getChatId()));
