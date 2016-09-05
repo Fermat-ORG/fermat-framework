@@ -18,6 +18,9 @@ public class ChatMessage {
     private MessageStatus status;
     private String type;
 
+    public ChatMessage() {
+    }
+
     public String getType() {
         return type;
     }
@@ -64,5 +67,17 @@ public class ChatMessage {
 
     public void setDate(String dateTime) {
         this.dateTime = dateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatMessage{" +
+                "id=" + id +
+                ", isMe=" + isMe +
+                ", message='" + message + '\'' +
+                ", dateTime='" + dateTime + '\'' +
+                ", status=" + status +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

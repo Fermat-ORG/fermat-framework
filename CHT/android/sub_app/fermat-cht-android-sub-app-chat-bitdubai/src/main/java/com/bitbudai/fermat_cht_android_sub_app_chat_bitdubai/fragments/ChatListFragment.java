@@ -753,18 +753,32 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     if (code.equals(ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW)) {
                         onUpdateViewUIThread();
 
-                        String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION);
+                        int chatBroadcasterType = fermatBundle.getInt(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE);
 
-                        if (remotePK != null) {
-                            if(contactId != null) {
-                                if (Build.VERSION.SDK_INT < 23)
-                                    message.set(contactId.indexOf(remotePK), getActivity().getResources().getString(R.string.cht_typing));
-                                else
-                                    message.set(contactId.indexOf(remotePK), getContext().getResources().getString(R.string.cht_typing));
-                                adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId,
-                                        status, typeMessage, noReadMsgs, imgId);
+                        if (chatBroadcasterType != 0) {
+                            switch (chatBroadcasterType) {
+                                case ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE:
+
+                                    String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_REMOTE_PK);
+
+                                    if (remotePK != null) {
+                                        if(contactId != null) {
+                                            if (Build.VERSION.SDK_INT < 23)
+                                                message.set(contactId.indexOf(remotePK), getActivity().getResources().getString(R.string.cht_typing));
+                                            else
+                                                message.set(contactId.indexOf(remotePK), getContext().getResources().getString(R.string.cht_typing));
+                                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId,
+                                                    status, typeMessage, noReadMsgs, imgId);
+                                        }
+                                    }
+                                    break;
+                                case ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE:
+
+                                    break;
                             }
                         }
+
+
                     }
                 }
             } catch (ClassCastException e) {

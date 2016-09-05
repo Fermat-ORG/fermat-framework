@@ -30,14 +30,17 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
@@ -50,8 +53,7 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
  * Update by Miguel Payarez on 15/01/2016
  */
 
-public class ChatFragment
-        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
+public class ChatFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
     // Fermat Managers
     private ChatManager chatManager;
@@ -306,8 +308,42 @@ public class ChatFragment
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
-                        String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION);
-                        onUpdateViewUIThread(remotePK);
+
+                        int chatBroadcasterType = fermatBundle.getInt(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE);
+
+                        switch (chatBroadcasterType) {
+                            case ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE:
+
+                                String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_REMOTE_PK);
+
+                                if (adapterView != null)
+                                    adapterView.checkStatus(remotePK, h);
+
+                                break;
+                            case ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE:
+
+                                UUID messageId = (UUID) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_ID);
+
+                                MessageStatus messageStatus = (MessageStatus) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_STATUS);
+
+                                if (adapterView != null)
+                                    adapterView.updateMessageStatus(messageId, messageStatus);
+                                break;
+                            case ChatBroadcasterConstants.NEW_MESSAGE_TYPE:
+
+                                Message message = (Message) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE);
+
+                                if (adapterView != null) {
+                                    adapterView.addMessage(message);
+                                    adapterView.scroll();
+                                }
+                                break;
+                            default:
+
+                                onUpdateViewUIThread(null);
+                                break;
+                        }
+
                     }
                 }
             } catch (ClassCastException e) {

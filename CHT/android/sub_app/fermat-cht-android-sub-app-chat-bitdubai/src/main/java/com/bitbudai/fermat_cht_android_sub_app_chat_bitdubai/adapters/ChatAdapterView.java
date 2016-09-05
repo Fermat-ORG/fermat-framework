@@ -41,7 +41,6 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
@@ -143,16 +142,9 @@ public class ChatAdapterView extends LinearLayout {
 
     public void whatToDo() {
         try {
-            //System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
             findValues((Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));
             if(appSession.getData("whocallme") != null) {
                 if (appSession.getData("whocallme").equals("chatlist")) {
-                    //if I choose a chat, this will retrieve the chatId
-//                Chat chatData = (Chat) appSession.getData(ChatSessionReferenceApp.CHAT_DATA);
-//                if (chatData != null) {
-//                    if (chatData.getChatId() != chatId)
-//                        chatId = chatData.getChatId();
-//                }
                     chatWasCreate = true;
                 } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
                     //if I choose a contact, this will search the chat previously created with this contact
@@ -169,7 +161,7 @@ public class ChatAdapterView extends LinearLayout {
     public void findMessage() {
         try {
             if (chatHistory == null)
-                chatHistory = new ArrayList<ChatMessage>();
+                chatHistory = new ArrayList<>();
             else {
                 oldChatMessagesCount = chatHistory.size();
                 chatHistory.clear();
@@ -178,45 +170,15 @@ public class ChatAdapterView extends LinearLayout {
             if (chatId != null) {
                 List<Message> messL = chatManager.getMessagesByChatId(chatId);
                 for (Message mess : messL) {
-                    ChatMessage msg = new ChatMessage();
-                    msg.setId(mess.getMessageId());
-                    if (mess.getType().equals(TypeMessage.OUTGOING)) msg.setMe(true);
-                    else {
-                        msg.setMe(false);
-                        if (!mess.getStatus().equals(MessageStatus.READ)) {
-                            chatManager.sendReadMessageNotification(msg.getId(), chatId);
-                            chatManager.markAsRead(msg.getId());
-                        }
-                    }
-                    msg.setStatus(mess.getStatus());
-                    timemess = mess.getMessageDate().getTime();
-                    nanos = (mess.getMessageDate().getNanos() / 1000000);
-                    milliseconds = timemess + nanos;
-                    Date dated = new Date(milliseconds);
-                    DateFormat formatter = DateFormat.getDateTimeInstance();
-                    if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                        formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-                    } else {
-                        formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
-                    }
-                    if (Validate.isDateToday(dated)) {
-                        if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                            formatter = new SimpleDateFormat("HH:mm");
-                        } else {
-                            formatter = new SimpleDateFormat("hh:mm aa");
-                        }
-                    }
-                    formatter.setTimeZone(TimeZone.getDefault());
-                    msg.setDate(formatter.format(new Date(milliseconds)));
-                    msg.setMessage(mess.getMessage());
-                    msg.setType(mess.getType().toString());
-                    chatHistory.add(msg);
+                    ChatMessage msg = buildChatMessage(mess);
+
+                    if(msg != null)
+                        chatHistory.add(msg);
                 }
             }
 
-
-            if (adapter == null || adapter.chatMessages == null) {
-                adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+            if (adapter == null || adapter.getItemCount() > 0) {
+                adapter = new ChatAdapter(this.getContext(), chatHistory);
                 messagesContainer.setAdapter(adapter);
             } else {
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount());
@@ -230,22 +192,46 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
-    public class BackgroundAsyncTaskWriting extends
-            AsyncTask<Void, Integer, Void> {
+    private ChatMessage buildChatMessage(Message mess) {
+
+        ChatMessage msg = null;
+        try {
+            msg = new ChatMessage();
+            msg.setId(mess.getMessageId());
+            if (mess.getType().equals(TypeMessage.OUTGOING)) msg.setMe(true);
+            else {
+                msg.setMe(false);
+                if (!mess.getStatus().equals(MessageStatus.READ)) {
+                    chatManager.sendReadMessageNotification(msg.getId(), chatId);
+                    chatManager.markAsRead(msg.getId());
+                }
+            }
+            msg.setStatus(mess.getStatus());
+
+            msg.setDate(getFormatedDate(mess.getMessageDate()));
+            msg.setMessage(mess.getMessage());
+            msg.setType(mess.getType().toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return msg;
+    }
+
+    public class BackgroundAsyncTaskWriting extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected void onPostExecute(Void result) {
-            return;
+
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                try {
-                    chatManager.sendWritingStatus(chatId);
-                } catch (CHTException e) {
-                    e.printStackTrace();
-                }
+
+                chatManager.sendWritingStatus(chatId);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -253,15 +239,11 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
-    public class BackgroundAsyncTask extends
-            AsyncTask<Message, Integer, Message> {
-
-        int myProgress;
+    public class BackgroundAsyncTask extends AsyncTask<Message, Integer, Message> {
 
         @Override
         protected void onPostExecute(Message result) {
-            //this.cancel(true);
-            return;
+
         }
 
         @Override
@@ -501,13 +483,16 @@ public class ChatAdapterView extends LinearLayout {
                 messageText = messageText.trim();
 
                 try {
+                    UUID messageId = UUID.randomUUID();
+
                     ChatImpl chat = new ChatImpl();
                     final MessageImpl message = new MessageImpl();
                     Long dv = System.currentTimeMillis();
+                    Timestamp timestamp = new Timestamp(dv);
                     String remotePublicKey;
                     if (chatWasCreate) {
                         chat = (ChatImpl) chatManager.getChatByChatId(chatId);
-                        chat.setLastMessageDate(new Timestamp(dv));
+                        chat.setLastMessageDate(timestamp);
                         remotePublicKey = chat.getRemoteActorPublicKey();
                         Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
 
@@ -521,9 +506,9 @@ public class ChatAdapterView extends LinearLayout {
                         chatManager.saveChat(chat);
 
                         message.setChatId(newChatId);
-                        message.setMessageId(UUID.randomUUID());
+                        message.setMessageId(messageId);
                         message.setMessage(messageText);
-                        message.setMessageDate(new Timestamp(dv));
+                        message.setMessageDate(timestamp);
                         message.setStatus(MessageStatus.CREATED);
                         message.setType(TypeMessage.OUTGOING);
                         chatManager.saveMessage(message);
@@ -542,8 +527,8 @@ public class ChatAdapterView extends LinearLayout {
                         }
                         chat.setChatId(newChatId);
                         chat.setStatus(ChatStatus.VISIBLE);
-                        chat.setCreationDate(new Timestamp(dv));
-                        chat.setLastMessageDate(new Timestamp(dv));
+                        chat.setCreationDate(timestamp);
+                        chat.setLastMessageDate(timestamp);
                         /**
                          * Now we got the identities registered in the device.
                          * To avoid nulls, I'll put default data in chat object
@@ -565,16 +550,13 @@ public class ChatAdapterView extends LinearLayout {
                         chatManager.saveChat(chat);
 
                         message.setChatId(newChatId);
-                        message.setMessageId(UUID.randomUUID());
+                        message.setMessageId(messageId);
                         message.setMessage(messageText);
-                        message.setMessageDate(new Timestamp(dv));
+                        message.setMessageDate(timestamp);
                         message.setStatus(MessageStatus.CREATED);
                         message.setType(TypeMessage.OUTGOING);
                         chatManager.saveMessage(message);
-                        sendMessageAsync.execute(message);//
-                        //If everything goes OK, we save the chat in the fragment session.
-//                        appSession.setData("whocallme", "chatlist");
-//                        appSession.setData("contactid", newContact);
+                        sendMessageAsync.execute(message);
                         /**
                          * This chat was created, so, I will put chatWasCreate as true to avoid
                          * the multiple chats from this contact. Also I will put the chatId as
@@ -585,17 +567,16 @@ public class ChatAdapterView extends LinearLayout {
                     }
 
                     ChatMessage chatMessage = new ChatMessage();
-                    chatMessage.setId(UUID.randomUUID());//dummy
+                    chatMessage.setId(messageId);//dummy
                     chatMessage.setMessage(messageText);
-                    chatMessage.setDate(new SimpleDateFormat("HH:mm").format(new Date()));
+                    chatMessage.setDate(getFormatedDate(timestamp));
                     chatMessage.setMe(true);
                     messageET.setText("");
-                    if (adapter == null || adapter.chatMessages==null) {
+                    if (adapter == null || adapter.getItemCount() > 0) {
                         adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                         messagesContainer.setAdapter(adapter);
                     }
                     displayMessage(chatMessage);
-                    System.out.println("*** 12345 case 1:send msg in android layer" + new Timestamp(System.currentTimeMillis()));
                 } catch (CantSaveMessageException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (CantSaveChatException e) {
@@ -607,16 +588,40 @@ public class ChatAdapterView extends LinearLayout {
         });
     }
 
+    String getFormatedDate(Timestamp timestamp) {
+        timemess = timestamp.getTime();
+        nanos = (timestamp.getNanos() / 1000000);
+        milliseconds = timemess + nanos;
+        Date dated = new Date(milliseconds);
+        DateFormat formatter = DateFormat.getDateTimeInstance();
+        if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+            formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        } else {
+            formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
+        }
+        if (Validate.isDateToday(dated)) {
+            if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                formatter = new SimpleDateFormat("HH:mm");
+            } else {
+                formatter = new SimpleDateFormat("hh:mm aa");
+            }
+        }
+        formatter.setTimeZone(TimeZone.getDefault());
+        return formatter.format(new Date(milliseconds));
+    }
+
     public void getFilter(String s) {
         if(adapter != null)
             adapter.getFilter().filter(s);
     }
 
     public void displayMessage(ChatMessage message) {
-        if(adapter != null && message != null) {
-            adapter.addItem(message);
-            adapter.notifyItemRangeChanged(0, adapter.getItemCount());
-            scroll();
+
+        if (message != null && chatHistory != null && adapter != null) {
+
+            chatHistory.add(message);
+            adapter.changeDataSet(chatHistory);
+            this.scroll();
         }
     }
 
@@ -633,10 +638,6 @@ public class ChatAdapterView extends LinearLayout {
 
     public void destroy() {
         layoutManager.removeAllViews();
-//        adapter.getView().getRootView().destroyDrawingCache();
-  //      adapter.getView().destroyDrawingCache();
-    //    messagesContainer.destroyDrawingCache();
-      //  messagesContainer.removeAllViewsInLayout();
         messagesContainer = null;
         chatSettings = null;
         chatHistory = null;
@@ -649,12 +650,10 @@ public class ChatAdapterView extends LinearLayout {
         appSession = null;
         adapter = null;
         errorManager = null;
-//        messageET.destroyDrawingCache();
         messageET = null;
         newChatId = null;
         rootView.removeAllViewsInLayout();
         rootView.removeAllViews();
-//        sendBtn.destroyDrawingCache();
         sendBtn = null;
         removeAllViewsInLayout();
         removeAllViews();
@@ -676,7 +675,39 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
-    private void scroll() {
+    public void updateMessageStatus(UUID messageId, MessageStatus messageStatus) {
+
+        if (messageId != null && messageStatus != null && chatHistory != null && adapter != null) {
+
+            for (ChatMessage chatMessage : chatHistory) {
+
+                if (chatMessage.getId().equals(messageId)) {
+
+                    chatMessage.setStatus(messageStatus);
+                    adapter.changeDataSet(chatHistory);
+                    break;
+                }
+            }
+
+        }
+    }
+
+    public void addMessage(Message message) {
+
+        if (message != null && chatHistory != null && adapter != null) {
+
+            ChatMessage mes = buildChatMessage(message);
+
+            if (mes != null) {
+                chatHistory.add(mes);
+
+                adapter.changeDataSet(chatHistory);
+            }
+
+        }
+    }
+
+    public void scroll() {
         if (adapter != null && adapter.getItemCount() != 0 && adapter.getItemCount() > 0)
             messagesContainer.scrollToPosition(adapter.getItemCount() - 1);
     }
@@ -687,10 +718,6 @@ public class ChatAdapterView extends LinearLayout {
 
     public void addLeftName(String leftName) {
         this.leftName = leftName;
-    }
-
-    private void setChatHistory(ArrayList<ChatMessage> chatHistory) {
-        this.chatHistory = chatHistory;
     }
 
     private void setChatManager(ChatManager chatManager) {

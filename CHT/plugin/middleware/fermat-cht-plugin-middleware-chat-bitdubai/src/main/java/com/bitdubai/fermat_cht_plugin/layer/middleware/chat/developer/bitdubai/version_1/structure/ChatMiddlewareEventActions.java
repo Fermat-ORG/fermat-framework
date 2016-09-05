@@ -83,7 +83,7 @@ public class ChatMiddlewareEventActions {
 
             if(connectionState.equals(ConnectionState.CONNECTED)) {
 
-                saveMessage(messageMetadata);
+                Message message = saveMessage(messageMetadata);
 
                 FermatBundle fermatBundle = new FermatBundle();
                 fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
@@ -98,6 +98,10 @@ public class ChatMiddlewareEventActions {
                 fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
                 fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
                 fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
+
+                fermatBundle2.put(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE, ChatBroadcasterConstants.NEW_MESSAGE_TYPE);
+                fermatBundle2.put(ChatBroadcasterConstants.CHAT_MESSAGE, message);
+
                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
 
                 FermatBundle fermatBundle3 = new FermatBundle();
@@ -157,7 +161,7 @@ public class ChatMiddlewareEventActions {
      * @param messageMetadata
      * @throws DatabaseOperationException
      */
-    private void saveMessage(MessageMetadata messageMetadata) throws
+    private Message saveMessage(MessageMetadata messageMetadata) throws
             DatabaseOperationException,
             CantGetChatException,
             CantSaveChatException,
@@ -189,6 +193,8 @@ public class ChatMiddlewareEventActions {
         chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
 
         sendDeliveredMessageNotification(messageRecorded, chat);
+
+        return messageRecorded;
     }
 
     public void sendDeliveredMessageNotification(Message message, Chat chat) throws SendStatusUpdateMessageNotificationException {
@@ -235,7 +241,7 @@ public class ChatMiddlewareEventActions {
 
         try {
 
-            System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == " + messageMetadata.getMessage() + " MESSAGE STATUS == " + messageMetadata.getMessageStatus());
+            System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == " + messageMetadata.getMessageId() + " MESSAGE STATUS == " + messageMetadata.getMessageStatus());
 
             updateMessageStatus(messageMetadata);
 
@@ -244,6 +250,11 @@ public class ChatMiddlewareEventActions {
                 fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
                 fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
                 fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
+
+                fermatBundle3.put(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE, ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE);
+                fermatBundle3.put(ChatBroadcasterConstants.CHAT_MESSAGE_STATUS, messageMetadata.getMessageStatus());
+                fermatBundle3.put(ChatBroadcasterConstants.CHAT_MESSAGE_ID, messageMetadata.getMessageId());
+
                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
             }
 
@@ -251,6 +262,11 @@ public class ChatMiddlewareEventActions {
             fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
             fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
             fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
+
+            fermatBundle2.put(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE, ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE);
+            fermatBundle2.put(ChatBroadcasterConstants.CHAT_MESSAGE_STATUS, messageMetadata.getMessageStatus());
+            fermatBundle2.put(ChatBroadcasterConstants.CHAT_MESSAGE_ID, messageMetadata.getMessageId());
+
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
 
         } catch (DatabaseOperationException e) {
@@ -316,14 +332,20 @@ public class ChatMiddlewareEventActions {
             fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
             fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
             fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
-            fermatBundle2.put(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION, senderPk);
+
+            fermatBundle2.put(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE, ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE);
+            fermatBundle2.put(ChatBroadcasterConstants.CHAT_REMOTE_PK, senderPk);
+
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
 
             FermatBundle fermatBundle3 = new FermatBundle();
             fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
             fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
             fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
-            fermatBundle3.put(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION, senderPk);
+
+            fermatBundle2.put(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE, ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE);
+            fermatBundle2.put(ChatBroadcasterConstants.CHAT_REMOTE_PK, senderPk);
+
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
 
         } catch (DatabaseOperationException e) {
@@ -339,18 +361,6 @@ public class ChatMiddlewareEventActions {
                     "Cannot update message from database"
             );
         }
-    }
-
-    public void incomingMessageFailEventHandler(UUID messageId) throws DatabaseOperationException, CantSaveMessageException {
-
-        chatMiddlewareDatabaseDao.updateMessageStatus(messageId, MessageStatus.CANNOT_SEND);
-
-        FermatBundle fermatBundle2 = new FermatBundle();
-        fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
-        fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-        fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
-
-        broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
     }
 
 }

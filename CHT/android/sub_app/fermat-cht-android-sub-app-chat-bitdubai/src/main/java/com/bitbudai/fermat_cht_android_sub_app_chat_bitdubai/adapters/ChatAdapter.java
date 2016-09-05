@@ -15,11 +15,15 @@ import android.widget.Toast;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatFilter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChatMessageComparator;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * ChatAdapter
@@ -28,17 +32,13 @@ import java.util.ArrayList;
  * @version 1.0
  */
 
-public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
-        implements Filterable {
-
-    ArrayList<ChatMessage> chatMessages = new ArrayList<>();
+public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> implements Filterable {
 
     ArrayList<ChatMessage> filteredData;
     private String filterString;
 
     public ChatAdapter(Context context, ArrayList<ChatMessage> chatMessages) {//ChatFactory
         super(context, chatMessages);
-        this.chatMessages = chatMessages;
     }
 
     @Override
@@ -51,6 +51,13 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
         return R.layout.chat_list_item;
     }
 
+    @Override
+    public void changeDataSet(List<ChatMessage> dataSet) {
+
+        Collections.sort(dataSet, new ChatMessageComparator());
+
+        super.changeDataSet(dataSet);
+    }
 
     @Override
     protected void bindHolder(ChatHolder holder, ChatMessage data, int position) {
@@ -86,17 +93,8 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
         return convertView;
     }
 
-    public void refreshEvents(ArrayList<ChatMessage> chatHistory) {
-        for (int i = 0; i < chatHistory.size(); i++) {
-            ChatMessage message = chatHistory.get(i);
-            add(message);
-            changeDataSet(chatHistory);
-            notifyDataSetChanged();
-        }
-    }
-
     public void add(ChatMessage message) {
-        chatMessages.add(message);
+        dataSet.add(message);
     }
 
     private void setAlignment(ChatHolder holder, boolean isMe, ChatMessage data) {
@@ -185,7 +183,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
         if (filterString != null)
             return filteredData == null ? 0 : filteredData.size();
         else
-            return chatMessages == null ? 0 : chatMessages.size();
+            return dataSet == null ? 0 : dataSet.size();
     }
 
     @Override
@@ -194,8 +192,8 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
             return filteredData != null ? (!filteredData.isEmpty()
                     && position < filteredData.size()) ? filteredData.get(position) : null : null;
         else
-            return chatMessages != null ? (!chatMessages.isEmpty()
-                    && position < chatMessages.size()) ? chatMessages.get(position) : null : null;
+            return dataSet != null ? (!dataSet.isEmpty()
+                    && position < dataSet.size()) ? dataSet.get(position) : null : null;
     }
 
     @Override
@@ -203,12 +201,8 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
         return position;
     }
 
-    public void changeDataSet(ArrayList<ChatMessage> data) {
-        this.filteredData = data;
-    }
-
     public Filter getFilter() {
-        return new ChatFilter(chatMessages, this);
+        return new ChatFilter(dataSet, this);
     }
 
     public void setFilterString(String filterString) {
