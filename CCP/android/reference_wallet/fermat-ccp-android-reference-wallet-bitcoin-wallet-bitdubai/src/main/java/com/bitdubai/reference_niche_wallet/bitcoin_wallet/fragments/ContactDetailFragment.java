@@ -428,8 +428,8 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
 
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-
-                        onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS.getCode());
+                        if (appSession.getData(SessionConstant.CONTACT_DELETED) == true)
+                            changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS, appSession.getAppPublicKey());
                     }
                 });
             }
