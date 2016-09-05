@@ -146,20 +146,22 @@ public class ChatAdapterView extends LinearLayout {
         try {
             //System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
             findValues((Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));
-            if (appSession.getData("whocallme").equals("chatlist")) {
-                //if I choose a chat, this will retrieve the chatId
+            if(appSession.getData("whocallme") != null) {
+                if (appSession.getData("whocallme").equals("chatlist")) {
+                    //if I choose a chat, this will retrieve the chatId
 //                Chat chatData = (Chat) appSession.getData(ChatSessionReferenceApp.CHAT_DATA);
 //                if (chatData != null) {
 //                    if (chatData.getChatId() != chatId)
 //                        chatId = chatData.getChatId();
 //                }
-                chatWasCreate = true;
-            } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
-                //if I choose a contact, this will search the chat previously created with this contact
-                //Here it is define if we need to create a new chat or just add the message to chat created previously
-                chatWasCreate = chatId != null;
+                    chatWasCreate = true;
+                } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
+                    //if I choose a contact, this will search the chat previously created with this contact
+                    //Here it is define if we need to create a new chat or just add the message to chat created previously
+                    chatWasCreate = chatId != null;
+                }
             }
-            appSession.setData("whocallme", null);
+            //appSession.setData("whocallme", null);
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -420,9 +422,13 @@ public class ChatAdapterView extends LinearLayout {
                     @Override
                     public void onGlobalLayout() {
                         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-                            if (!isKeyboardShown(messageET.getRootView())) {
-                                onBackPressed();
-                            } else onAdjustKeyboard();
+                            if (messageET != null) {
+                                if (messageET.getRootView() != null) {
+                                    if (!isKeyboardShown(messageET.getRootView())) {
+                                        onBackPressed();
+                                    } else onAdjustKeyboard();
+                                }
+                            }
                         }
                     }
                 });
@@ -629,10 +635,10 @@ public class ChatAdapterView extends LinearLayout {
 
     public void destroy() {
         layoutManager.removeAllViews();
-        adapter.getView().getRootView().destroyDrawingCache();
-        adapter.getView().destroyDrawingCache();
-        messagesContainer.destroyDrawingCache();
-        messagesContainer.removeAllViewsInLayout();
+//        adapter.getView().getRootView().destroyDrawingCache();
+  //      adapter.getView().destroyDrawingCache();
+    //    messagesContainer.destroyDrawingCache();
+      //  messagesContainer.removeAllViewsInLayout();
         messagesContainer = null;
         chatSettings = null;
         chatHistory = null;
@@ -645,12 +651,12 @@ public class ChatAdapterView extends LinearLayout {
         appSession = null;
         adapter = null;
         errorManager = null;
-        messageET.destroyDrawingCache();
+//        messageET.destroyDrawingCache();
         messageET = null;
         newChatId = null;
         rootView.removeAllViewsInLayout();
         rootView.removeAllViews();
-        sendBtn.destroyDrawingCache();
+//        sendBtn.destroyDrawingCache();
         sendBtn = null;
         removeAllViewsInLayout();
         removeAllViews();
@@ -662,8 +668,10 @@ public class ChatAdapterView extends LinearLayout {
             if (remotePkWriting != null && remotePkWriting.equals(remotePk)) {
                 changeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING, null, h);
             } else {
-                Timestamp date = chatManager.getLastMessageReceivedDate(chatId);
-                changeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date, null);
+                if(chatId != null){
+                    Timestamp date = chatManager.getLastMessageReceivedDate(chatId);
+                    changeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date, null);
+                }
             }
         } catch (CantGetChatException cantGetOnlineStatus) {
             cantGetOnlineStatus.printStackTrace();
