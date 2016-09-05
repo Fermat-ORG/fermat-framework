@@ -750,12 +750,14 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION);
 
                         if (remotePK != null) {
-                            if (Build.VERSION.SDK_INT < 23)
-                                message.set(contactId.indexOf(remotePK), getActivity().getResources().getString(R.string.cht_typing));
-                            else
-                                message.set(contactId.indexOf(remotePK), getContext().getResources().getString(R.string.cht_typing));
-                            adapter.refreshEvents(contactName,message,dateMessage, chatId,contactId,
-                                    status, typeMessage, noReadMsgs, imgId);
+                            if(contactId != null) {
+                                if (Build.VERSION.SDK_INT < 23)
+                                    message.set(contactId.indexOf(remotePK), getActivity().getResources().getString(R.string.cht_typing));
+                                else
+                                    message.set(contactId.indexOf(remotePK), getContext().getResources().getString(R.string.cht_typing));
+                                adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId,
+                                        status, typeMessage, noReadMsgs, imgId);
+                            }
                         }
                     }
                 }

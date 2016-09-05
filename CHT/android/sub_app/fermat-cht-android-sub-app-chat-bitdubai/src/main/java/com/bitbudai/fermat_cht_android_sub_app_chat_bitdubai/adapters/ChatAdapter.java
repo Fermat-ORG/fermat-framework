@@ -123,32 +123,36 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
             layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
             layoutParams.gravity = Gravity.RIGHT;
             holder.txtInfo.setLayoutParams(layoutParams);
-
-            switch (data.getStatus()) {
-                case SENT:
-                    holder.tickstatusimage.setVisibility(View.VISIBLE);
-                    holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
-                    break;
-                case DELIVERED:
-                    holder.tickstatusimage.setVisibility(View.VISIBLE);
-                    holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
-                    break;
-                case RECEIVE:
-                    holder.tickstatusimage.setVisibility(View.VISIBLE);
-                    holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
-                    break;
-                case READ:
-                    holder.tickstatusimage.setVisibility(View.VISIBLE);
-                    holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
-                    break;
-                case CANNOT_SEND:
-                    holder.tickstatusimage.setVisibility(View.VISIBLE);
-                    holder.tickstatusimage.setImageResource(R.drawable.cht_close);
-                    break;
-                default:
-                    holder.tickstatusimage.setImageResource(0);
-                    holder.tickstatusimage.setVisibility(View.GONE);
-                    break;
+            if(data.getStatus() != null) {
+                switch (data.getStatus()) {
+                    case SENT:
+                        holder.tickstatusimage.setVisibility(View.VISIBLE);
+                        holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
+                        break;
+                    case DELIVERED:
+                        holder.tickstatusimage.setVisibility(View.VISIBLE);
+                        holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
+                        break;
+                    case RECEIVE:
+                        holder.tickstatusimage.setVisibility(View.VISIBLE);
+                        holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
+                        break;
+                    case READ:
+                        holder.tickstatusimage.setVisibility(View.VISIBLE);
+                        holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
+                        break;
+                    case CANNOT_SEND:
+                        holder.tickstatusimage.setVisibility(View.VISIBLE);
+                        holder.tickstatusimage.setImageResource(R.drawable.cht_close);
+                        break;
+                    default:
+                        holder.tickstatusimage.setImageResource(0);
+                        holder.tickstatusimage.setVisibility(View.GONE);
+                        break;
+                }
+            }else {
+                holder.tickstatusimage.setImageResource(0);
+                holder.tickstatusimage.setVisibility(View.GONE);
             }
         } else {
             holder.contentWithBG.setBackgroundResource(R.drawable.cht_burble_white);

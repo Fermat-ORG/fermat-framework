@@ -146,20 +146,22 @@ public class ChatAdapterView extends LinearLayout {
         try {
             //System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
             findValues((Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));
-            if (appSession.getData("whocallme").equals("chatlist")) {
-                //if I choose a chat, this will retrieve the chatId
+            if(appSession.getData("whocallme") != null) {
+                if (appSession.getData("whocallme").equals("chatlist")) {
+                    //if I choose a chat, this will retrieve the chatId
 //                Chat chatData = (Chat) appSession.getData(ChatSessionReferenceApp.CHAT_DATA);
 //                if (chatData != null) {
 //                    if (chatData.getChatId() != chatId)
 //                        chatId = chatData.getChatId();
 //                }
-                chatWasCreate = true;
-            } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
-                //if I choose a contact, this will search the chat previously created with this contact
-                //Here it is define if we need to create a new chat or just add the message to chat created previously
-                chatWasCreate = chatId != null;
+                    chatWasCreate = true;
+                } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
+                    //if I choose a contact, this will search the chat previously created with this contact
+                    //Here it is define if we need to create a new chat or just add the message to chat created previously
+                    chatWasCreate = chatId != null;
+                }
             }
-            appSession.setData("whocallme", null);
+            //appSession.setData("whocallme", null);
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }

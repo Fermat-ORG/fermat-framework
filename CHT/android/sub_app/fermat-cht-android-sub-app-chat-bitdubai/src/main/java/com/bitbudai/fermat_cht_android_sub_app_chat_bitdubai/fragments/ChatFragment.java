@@ -121,7 +121,8 @@ public class ChatFragment
             toolbar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    adapterView.clean();
+                    if(adapterView != null)
+                        adapterView.clean();
                     changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
                 }
             });
