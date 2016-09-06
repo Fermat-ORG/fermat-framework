@@ -235,14 +235,21 @@
     <string name="notification_connection_request">Nueva solicitud de conexión</string>
     <string name="notification_connection_request2">Ud. Recibio una nueva solicitud de conexión de</string>
     <string name="notification_connection_accept">Solicitud de conexión</string>
-    <string name="notification_connection_accept2">Tu solicitud de conexión fue aceptada</string>
+
+    <string name="notification_connection_accept2">Tu solicitud de conexión fue aceptada de</string>
     <string name="notification_connection_disconnet">Conexión Eliminada</string>
     <string name="notification_connection_disconnet2">esta desconectado de ti. Se Eliminara el Contacto asociado.</string>
+
     <string name="notification_connection_denied">Solicitud de conexión</string>
     <string name="notification_connection_denied2">Tu solicitud de conexión fue rechazada</string>
     <string name="notification_connection_Unknown">Desonocido</string>
 
     <string name="no_users_for_location">No se encontranron conexiones cerca de la ubicacion escogida</string>
     <string name="users_for_location">Estas son las conexiones cerca de la ubi escogida</string>
+
+    <!-- Community NotificationTAB confirmation dialog-->
+    <string name="confirmation_notification_dialog_title">SOLICITUD DE CONExIÓN</string>
+    <string name="confirmation_notification_dialog_description">Nueva Conexión</string>
+    <string name="confirmation_notification_dialog_message">quiere conectarse contigo</string>
 
 </resources>

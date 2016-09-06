@@ -254,4 +254,11 @@
     <string name="notification_connection_denied">Connection Request</string>
     <string name="notification_connection_denied2">Your connection request was denied to</string>
     <string name="notification_connection_Unknown">Unknown</string>
+
+    <!-- Community NotificationTAB confirmation dialog-->
+    <string name="confirmation_notification_dialog_title">CONNECTION REQUEST</string>
+    <string name="confirmation_notification_dialog_description">New Connection</string>
+    <string name="confirmation_notification_dialog_message">wants to connect with you</string>
+
+
 </resources>

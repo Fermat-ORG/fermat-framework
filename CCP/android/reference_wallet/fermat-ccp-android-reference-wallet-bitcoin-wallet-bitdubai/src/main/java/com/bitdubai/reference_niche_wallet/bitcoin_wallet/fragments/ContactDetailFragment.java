@@ -35,17 +35,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.DeleteWalletContactDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ReceiveFragmentDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
-
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -84,6 +79,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
      * Platform
      */
     private CryptoWallet cryptoWallet;
+    private String PublicKey;
     private ErrorManager errorManager;
 
     /**
@@ -130,7 +126,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
             //typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
             errorManager = appSession.getErrorManager();
             cryptoWallet = appSession.getModuleManager();
-
+            PublicKey = cryptoWallet.getSelectedActorIdentity().getPublicKey();
             if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
                 blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
             else
@@ -199,7 +195,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                         cryptoWallet,
                         appSession.getErrorManager(),
                         cryptoWalletWalletContact,
-                        cryptoWallet.getSelectedActorIdentity().getPublicKey(),
+                        PublicKey,
                         appSession.getAppPublicKey(),
                         blockchainNetworkType);
                 receiveFragmentDialog.show();
@@ -249,7 +245,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                                     cryptoWalletWalletContact.getActorPublicKey(),
                                     cryptoWalletWalletContact.getProfilePicture(),
                                     Actors.INTRA_USER,
-                                    cryptoWallet.getSelectedActorIdentity().getPublicKey()
+                                    PublicKey
                                     , appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
                                     blockchainNetworkType
@@ -332,7 +328,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                                    cryptoWalletWalletContact.getActorPublicKey(),
                                    cryptoWalletWalletContact.getProfilePicture(),
                                    Actors.INTRA_USER,
-                                   cryptoWallet.getSelectedActorIdentity().getPublicKey(),
+                                   PublicKey,
                                    appSession.getAppPublicKey(),
                                    CryptoCurrency.BITCOIN,
                                    blockchainNetworkType
@@ -450,7 +446,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
             if(!code.equals("BlockchainDownloadComplete"))
             {
                 //update contact address
-                cryptoWalletWalletContact = cryptoWallet.findWalletContactById(UUID.fromString(code), cryptoWallet.getSelectedActorIdentity().getPublicKey());
+                cryptoWalletWalletContact = cryptoWallet.findWalletContactById(UUID.fromString(code), PublicKey);
 
 
                 if(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)

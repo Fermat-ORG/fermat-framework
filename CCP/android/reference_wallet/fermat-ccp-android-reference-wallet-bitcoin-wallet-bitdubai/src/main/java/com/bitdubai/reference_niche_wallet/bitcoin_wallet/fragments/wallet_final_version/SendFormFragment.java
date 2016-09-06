@@ -58,8 +58,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
@@ -77,7 +75,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
-
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.SendConfirmDialog;
@@ -104,6 +101,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
      * Plaform reference
      */
     private CryptoWallet cryptoWallet;
+    private String PublicKey;
     /**
      * UI
      */
@@ -163,7 +161,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         try {
 
             cryptoWallet = appSession.getModuleManager();
-
+            PublicKey = cryptoWallet.getSelectedActorIdentity().getPublicKey();
             if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
                 blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
             else
@@ -601,7 +599,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                             walletContact.actorPublicKey,
                                             walletContact.profileImage,
                                             Actors.INTRA_USER,
-                                            cryptoWallet.getSelectedActorIdentity().getPublicKey(),
+                                            PublicKey,
                                             appSession.getAppPublicKey(),
                                             CryptoCurrency.BITCOIN,
                                             blockchainNetworkType);
@@ -620,7 +618,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                     walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
                                     if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
                                         cryptoWallet.requestAddressToKnownUser(
-                                                cryptoWallet.getSelectedActorIdentity().getPublicKey(),
+                                                PublicKey,
                                                 Actors.INTRA_USER,
                                                 cryptoWalletWalletContact.getActorPublicKey(),
                                                 cryptoWalletWalletContact.getActorType(),
@@ -660,11 +658,12 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 e.printStackTrace();
                             } catch (ContactNameAlreadyExistsException e) {
                                 e.printStackTrace();
-                            } catch (CantGetSelectedActorIdentityException e) {
+                            }
+                           /* catch (CantGetSelectedActorIdentityException e) {
                                 e.printStackTrace();
                             } catch (ActorIdentityNotSelectedException e) {
                                 e.printStackTrace();
-                            }
+                            }*/
                         }
                     });
 
@@ -873,7 +872,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private List<WalletContact> getWalletContactList() {
         List<WalletContact> contacts = new ArrayList<>();
         try {
-            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listAllActorContactsAndConnections(appSession.getAppPublicKey(), cryptoWallet.getSelectedActorIdentity().getPublicKey());
+            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listAllActorContactsAndConnections(appSession.getAppPublicKey(), PublicKey);
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
 
                 String contactAddress = "";

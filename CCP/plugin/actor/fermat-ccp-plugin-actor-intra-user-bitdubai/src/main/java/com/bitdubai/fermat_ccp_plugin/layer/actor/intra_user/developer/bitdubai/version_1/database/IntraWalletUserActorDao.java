@@ -3,13 +3,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
-import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetUserDeveloperIdentitiesException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantUpdateIntraWalletUserException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -42,6 +37,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateConnectionException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorRecord;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -456,15 +452,35 @@ public class IntraWalletUserActorDao {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get intra user identity list, table not found.", "Plugin Identity", "Cant get Intra User identity list, table not found.");
 
             // 2) Find all Intra Users.
+
+            /* this case compare city selected agains city of actors,
+             */
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CITY_COLUMN_NAME, city, DatabaseFilterType.LIKE);
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, connectedState.getCode(), DatabaseFilterType.EQUAL);
-            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CITY_COLUMN_NAME, city, DatabaseFilterType.LIKE);
 
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
 
             table.loadToMemory();
 
+            /* this case compare city selected agains contry of actors,
+             *  because the error in which gps invert city and contry...
+             */
+            if(table.getCount() == 0){
+            table.clearAllFilters();
+            table.setFilterOffSet(String.valueOf(offset));
+            table.setFilterTop(String.valueOf(max));
+
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_COUNTRY_COLUMN_NAME, city, DatabaseFilterType.LIKE);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, connectedState.getCode(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            }
+
+            /* this case compare country selected agains contry of actors,
+             */
             if(table.getCount() == 0){
                 table.clearAllFilters();
                 table.setFilterOffSet(String.valueOf(offset));
@@ -474,11 +490,21 @@ public class IntraWalletUserActorDao {
                 table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
                 table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, connectedState.getCode(), DatabaseFilterType.EQUAL);
                 table.loadToMemory();
-
             }
 
+            /* this case compare contry selected agains city of actors,
+             *  because the error in which gps invert city and contry...
+             */
+            if(table.getCount() == 0){
+                table.clearAllFilters();
+                table.setFilterOffSet(String.valueOf(offset));
+                table.setFilterTop(String.valueOf(max));
 
-
+                table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CITY_COLUMN_NAME, country, DatabaseFilterType.LIKE);
+                table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+                table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, connectedState.getCode(), DatabaseFilterType.EQUAL);
+                table.loadToMemory();
+            }
 
             List<IntraWalletUserActor> list = new ArrayList<>(); // Intra User Actor list.
 

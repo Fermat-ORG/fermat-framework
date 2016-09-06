@@ -85,11 +85,11 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
             positiveBtn.setOnClickListener(this);
             negativeBtn.setOnClickListener(this);
 
-            title.setText("CONNECTION REQUEST");
+            title.setText(R.string.confirmation_notification_dialog_title);
             title.setTextColor(Color.BLACK);
-            description.setText("New Connection");
+            description.setText(R.string.confirmation_notification_dialog_description);
             description.setTextColor(Color.parseColor("#5ddad1"));
-            userName.setText(intraUserInformation.getName() + " wants to connect with you");
+            userName.setText(intraUserInformation.getName() + " "+R.string.confirmation_notification_dialog_message);
             userName.setTextColor(Color.parseColor("#3f3f3f"));
             userName.setVisibility(View.VISIBLE);
             userName.setTextSize(14);
