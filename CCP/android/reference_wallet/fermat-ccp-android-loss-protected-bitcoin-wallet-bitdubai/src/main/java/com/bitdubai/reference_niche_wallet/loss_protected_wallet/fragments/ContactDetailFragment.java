@@ -1,7 +1,5 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -24,7 +22,6 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -292,10 +289,10 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
      *
      * @param
      */
-    private void copyFromClipboard() {
+   /* private void copyFromClipboard() {
         try {
             ClipboardManager clipboard = null;
-                clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 
             if (text_view_address.getText() != null){
                 ClipData clip = ClipData.newPlainText("copy",text_view_address.getText());
@@ -309,7 +306,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
         }
 
     }
-
+*/
 
     /**
      * Setting up wallet contact value
