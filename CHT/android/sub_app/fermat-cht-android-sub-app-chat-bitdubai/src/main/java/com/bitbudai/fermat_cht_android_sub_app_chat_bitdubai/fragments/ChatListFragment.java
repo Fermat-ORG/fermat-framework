@@ -480,6 +480,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 unbindDrawables(((ViewGroup) view).getChildAt(i));
             }
             ((ViewGroup) view).removeAllViews();
+            ((ViewGroup) view).removeAllViewsInLayout();
         }
     }
 
@@ -493,6 +494,30 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         chatIdentity = null;
         chatManager = null;
         applicationsHelper = null;
+        contactName.clear();
+        message.clear();
+        chatId.clear();
+        dateMessage.clear();
+        contactId.clear();
+        status.clear();
+        typeMessage.clear();
+        noReadMsgs.clear();
+        imgId.clear();
+        emptyView.removeAllViewsInLayout();
+        contactName.clear();
+        message.clear();
+        searchView.destroyDrawingCache();
+        searchView.removeAllViews();
+        searchView.removeAllViewsInLayout();
+        searchView = null;
+        applicationsHelper =null;
+        chatId.clear();
+        dateMessage.clear();
+        contactId.clear();
+        status.clear();
+        typeMessage.clear();
+        noReadMsgs.clear();
+        imgId.clear();
         destroy();
     }
 
@@ -724,9 +749,6 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         return super.onContextItemSelected(item);
     }
 
-    /**
-     * Receiver class implemented
-     */
     private class ChatListBroadcastReceiver extends FermatBroadcastReceiver {
 
         @Override

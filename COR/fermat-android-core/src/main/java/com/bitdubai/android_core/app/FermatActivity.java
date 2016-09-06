@@ -402,10 +402,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
             menu.clear();
-            if (optionsMenu != null) {
-                List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
-                loadMenu(menu, optionsMenuItems);
-            }
+//            if (optionsMenu != null) {
+//                List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
+//                loadMenu(menu, optionsMenuItems);
+//            }
             return true;
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -416,6 +416,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         return true;
     }
+
+
 
     /**
      * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
@@ -497,7 +499,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             // Log.i("FERMAT ACTIVITY loadUI", " setWizards " + System.currentTimeMillis());
 
-            invalidateOptionsMenu();
+//            invalidateOptionsMenu();
 
             // Log.i("FERMAT ACTIVITY loadUI", "FIN " + System.currentTimeMillis());
         } catch (Exception e) {
@@ -1446,7 +1448,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     Log.e(TAG,"Removing views");
                 }
             }
-            System.gc();
             if (tabLayout != null) {
                 tabLayout.removeAllTabs();
 //                tabLayout.removeAllViewsInLayout();
@@ -1474,8 +1475,14 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 mRevealView.removeAllViews();
                 mRevealView.setVisibility(View.GONE);
             }
+
+            if (optionsMenu!=null && !optionsMenu.isEmpty()) {
+                optionsMenu.clear();
+            }
+
+
             removecallbacks();
-            onRestart();
+            System.gc();
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Recovering from system error",
@@ -1507,14 +1514,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 bottomNavigation = null;
             }
 
-            System.gc();
-
-            // Check if no view has focus:
-            View view = getCurrentFocus();
-            if (view != null) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
+//            // Check if no view has focus:
+//            View view = getCurrentFocus();
+//            if (view != null) {
+//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//            }
 
 
         } catch (Exception e) {

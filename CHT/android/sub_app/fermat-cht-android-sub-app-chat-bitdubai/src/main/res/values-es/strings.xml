@@ -89,7 +89,7 @@
          ContactsListFragment when a search query match occurs that is not the display name.
          -->
     <string name="search_match_other">Coincidir otros campos</string>
-
+    <string name="cht_last_message_received">Ult. vez</string>
     <string name="no_address">No se encontraron direcciones</string>
     <string name="no_intent_found">No hay aplicación para manejar esta acción</string>
     <string name="action_search">Buscar</string>
