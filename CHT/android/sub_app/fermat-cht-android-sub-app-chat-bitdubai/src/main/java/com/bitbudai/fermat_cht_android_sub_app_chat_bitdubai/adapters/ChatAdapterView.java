@@ -303,10 +303,15 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void onAdjustKeyboard() {
-        RelativeLayout.LayoutParams layoutParams =
-                (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
-        layoutParams.height = 440;
-        messagesContainer.setLayoutParams(layoutParams);
+        try {
+            RelativeLayout.LayoutParams layoutParams =
+                    (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
+            layoutParams.height = 440;
+            messagesContainer.setLayoutParams(layoutParams);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -643,25 +648,25 @@ public class ChatAdapterView extends LinearLayout {
   //      adapter.getView().destroyDrawingCache();
     //    messagesContainer.destroyDrawingCache();
       //  messagesContainer.removeAllViewsInLayout();
-        messagesContainer = null;
-        chatSettings = null;
-        chatHistory = null;
-        chatManager = null;
-        chatId = null;
-        contactIcon = null;
-        contactIconCircular = null;
-        remotePk = null;
-        leftName = null;
-        appSession = null;
-        adapter = null;
-        errorManager = null;
+//        messagesContainer = null;
+//        chatSettings = null;
+//        chatHistory = null;
+//        chatManager = null;
+//        chatId = null;
+//        contactIcon = null;
+//        contactIconCircular = null;
+//        remotePk = null;
+//        leftName = null;
+//        appSession = null;
+//        adapter = null;
+//        errorManager = null;
 //        messageET.destroyDrawingCache();
-        messageET = null;
-        newChatId = null;
+//        messageET = null;
+//        newChatId = null;
         rootView.removeAllViewsInLayout();
         rootView.removeAllViews();
 //        sendBtn.destroyDrawingCache();
-        sendBtn = null;
+//        sendBtn = null;
         removeAllViewsInLayout();
         removeAllViews();
     }

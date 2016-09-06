@@ -388,20 +388,20 @@ public class ContactsListFragment
         unbindDrawables(layout.findViewById(R.id.list));
         unbindDrawables(layout.findViewById(R.id.empty_view));
         adapter.clear();
-        chatSettings = null;
-        errorManager = null;
-        chatIdentity = null;
-        chatManager = null;
-        applicationsHelper = null;
+//        chatSettings = null;
+//        errorManager = null;
+//        chatIdentity = null;
+//        chatManager = null;
+//        applicationsHelper = null;
 //        layout.destroyDrawingCache();
-        layout = null;
+//        layout = null;
         contactname.clear();
         contacticon.clear();
         contactid.clear();
         contactStatus.clear();
 //        emptyView.destroyDrawingCache();
         emptyView.removeAllViewsInLayout();
-        chatIdentity = null;
+//        chatIdentity = null;
         emptyView.removeAllViews();
 //        noData.destroyDrawingCache();
 //        noDatalabel.destroyDrawingCache();
@@ -409,13 +409,13 @@ public class ContactsListFragment
 //        nochatssubtitle1.destroyDrawingCache();
 //        nochatssubtitle2.destroyDrawingCache();
         list.removeAllViewsInLayout();
-        list = null;
-        mSwipeRefreshLayout.removeAllViews();
-        mSwipeRefreshLayout.removeAllViewsInLayout();
-//        mSwipeRefreshLayout.destroyDrawingCache();
-        mSwipeRefreshLayout = null;
+//        list = null;
+//        mSwipeRefreshLayout.removeAllViews();
+//        mSwipeRefreshLayout.removeAllViewsInLayout();
+////        mSwipeRefreshLayout.destroyDrawingCache();
+//        mSwipeRefreshLayout = null;
 //        searchView = null;
-        applicationsHelper = null;
+//        applicationsHelper = null;
         destroy();
     }
 
