@@ -5,11 +5,10 @@
     android:layout_width="180dp"
     android:layout_height="180dp"
     android:layout_margin="1dp"
-    android:background="#FFF"
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
     >
 
     <RelativeLayout
