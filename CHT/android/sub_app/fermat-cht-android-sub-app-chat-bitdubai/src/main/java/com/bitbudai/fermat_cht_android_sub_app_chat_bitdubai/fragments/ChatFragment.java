@@ -149,14 +149,14 @@ public class ChatFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
         }
     }
 
-    public void onUpdateViewUIThread(String remotePk) {
+    public void onUpdateViewUIThread() {
         if(isAttached) {
             if (searchView != null) {
                 if (searchView.getQuery().toString().equals("")) {
-                    adapterView.refreshEvents(remotePk, h);
+                    adapterView.refreshEvents();
                 }
             } else {
-                adapterView.refreshEvents(remotePk, h);
+                adapterView.refreshEvents();
             }
         }else adapterView.clean();
     }
@@ -274,7 +274,7 @@ public class ChatFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                             public void onDismiss(DialogInterface dialog) {
                                 try {
                                     adapterView.clean();
-                                    onUpdateViewUIThread(null);
+                                    onUpdateViewUIThread();
                                 }catch (Exception e) {
                                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                 }
@@ -335,7 +335,7 @@ public class ChatFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                                 break;
                             default:
 
-                                onUpdateViewUIThread(null);
+                                onUpdateViewUIThread();
                                 break;
                         }
 

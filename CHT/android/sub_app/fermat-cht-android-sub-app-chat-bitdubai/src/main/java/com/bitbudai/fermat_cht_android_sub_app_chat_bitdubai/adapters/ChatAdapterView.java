@@ -364,7 +364,7 @@ public class ChatAdapterView extends LinearLayout {
                         new Runnable(){
                             @Override
                             public void run() {
-                                checkStatus(null, null);
+                                checkStatus();
                             }
                         },
                         TimeUnit.SECONDS.toMillis(4)
@@ -445,7 +445,7 @@ public class ChatAdapterView extends LinearLayout {
             whatToDo();
             findMessage();
             scroll();
-            checkStatus(null, null);
+            checkStatus();
 
             if (leftName != null) {
                 toolbar.setTitle(leftName);
@@ -534,17 +534,15 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setLocalActorPublicKey("defaultdata");
                         //if (chatSettings.getLocalPublicKey() != null /*&& chatSettings.getLocalPlatformComponentType() != null*/) {
                         //Asigno pk del usuario y no uso la del NS
-                        List<ChatIdentity> chatIdentities = chatManager.getIdentityChatUsersFromCurrentDeviceUser();
-                        try {
-                            String pKey = chatSettings.getLocalPublicKey();
-                            if (pKey != null) {
-                                chat.setLocalActorPublicKey(pKey);
-                            } else {
-                                chat.setLocalActorPublicKey(chatIdentities.get(0).getPublicKey());
-                            }
-                        } catch (Exception e) {
+
+                        String pKey = chatSettings.getLocalPublicKey();
+                        if (pKey != null) {
+                            chat.setLocalActorPublicKey(pKey);
+                        } else {
+                            List<ChatIdentity> chatIdentities = chatManager.getIdentityChatUsersFromCurrentDeviceUser();
                             chat.setLocalActorPublicKey(chatIdentities.get(0).getPublicKey());
                         }
+
                         chatManager.saveChat(chat);
 
                         message.setChatId(newChatId);
@@ -601,10 +599,10 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
-    public void refreshEvents(String remotePk, Handler h) {
+    public void refreshEvents() {
         findValues((Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));
         findMessage();
-        checkStatus(remotePk, h);
+        checkStatus();
     }
 
     public void clean() {
@@ -645,6 +643,19 @@ public class ChatAdapterView extends LinearLayout {
                     Timestamp date = chatManager.getLastMessageReceivedDate(chatId);
                     changeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date, null);
                 }
+            }
+        } catch (CantGetChatException cantGetOnlineStatus) {
+            cantGetOnlineStatus.printStackTrace();
+        }
+    }
+
+    public void checkStatus() {
+
+        try {
+
+            if(chatId != null){
+                Timestamp date = chatManager.getLastMessageReceivedDate(chatId);
+                changeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date, null);
             }
         } catch (CantGetChatException cantGetOnlineStatus) {
             cantGetOnlineStatus.printStackTrace();
