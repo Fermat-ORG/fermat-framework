@@ -1476,9 +1476,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 mRevealView.setVisibility(View.GONE);
             }
 
-            if (optionsMenu!=null && !optionsMenu.isEmpty()) {
-                optionsMenu.clear();
-            }
+        //    if (optionsMenu!=null && !optionsMenu.isEmpty()) {
+         //       optionsMenu.clear();
+         //   }
 
 
             removecallbacks();
