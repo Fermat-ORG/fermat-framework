@@ -141,7 +141,7 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
             /**
             * I register the actor connection.
                     */
-            if (!dao.registerChatActorConnection(actorConnection, oldActorConnection)) return;
+            dao.registerChatActorConnection(actorConnection, oldActorConnection);
 
             final ChatConnectionInformation connectionInformation = new ChatConnectionInformation(
                     newConnectionId,
