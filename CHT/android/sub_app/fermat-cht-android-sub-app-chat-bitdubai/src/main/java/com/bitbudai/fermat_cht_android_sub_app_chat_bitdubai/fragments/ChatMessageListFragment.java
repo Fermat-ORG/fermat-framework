@@ -335,6 +335,8 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
                                 break;
                             default:
 
+                                System.out.println("ChatMessageListFragment -> No deberia pasar por aca.");
+
                                 onUpdateViewUIThread();
                                 break;
                         }

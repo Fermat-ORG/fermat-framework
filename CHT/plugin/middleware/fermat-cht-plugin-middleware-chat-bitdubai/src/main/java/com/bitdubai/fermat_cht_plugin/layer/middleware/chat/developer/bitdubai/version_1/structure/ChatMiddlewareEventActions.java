@@ -108,6 +108,10 @@ public class ChatMiddlewareEventActions {
                 fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
                 fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
                 fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
+
+                fermatBundle2.put(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE, ChatBroadcasterConstants.NEW_MESSAGE_TYPE);
+                fermatBundle2.put(ChatBroadcasterConstants.CHAT_MESSAGE, message);
+
                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
 
             }else

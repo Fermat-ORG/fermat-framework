@@ -49,6 +49,7 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
@@ -105,6 +106,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
     ArrayList<String> contactId = new ArrayList<>();
     ArrayList<String> status = new ArrayList<>();
     ArrayList<String> typeMessage = new ArrayList<>();
+    ArrayList<UUID> idMessage = new ArrayList<>();
     ArrayList<Long> noReadMsgs = new ArrayList<>();
     ArrayList<Bitmap> imgId = new ArrayList<>();
     View layout;
@@ -127,6 +129,8 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
             if (chats != null && chats.size() > 0) {
                 contactName.clear();
                 message.clear();
+
+                idMessage.clear();
                 chatId.clear();
                 dateMessage.clear();
                 contactId.clear();
@@ -157,11 +161,13 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 message.add(mess.getMessage());
                                 status.add(mess.getStatus().toString());
                                 typeMessage.add(mess.getType().toString());
+                                idMessage.add(mess.getMessageId());
                             } else {
 
                                 message.add("");
                                 status.add("");
                                 typeMessage.add("");
+                                idMessage.add(null);
                             }
                             long timemess = chat.getLastMessageDate().getTime();
                             long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
@@ -224,6 +230,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     contactName.clear();
                     message.clear();
                     chatId.clear();
+                    idMessage.clear();
                     dateMessage.clear();
                     contactId.clear();
                     status.clear();
@@ -342,6 +349,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 chatId.clear();
                 dateMessage.clear();
                 contactId.clear();
+                idMessage.clear();
                 status.clear();
                 typeMessage.clear();
                 noReadMsgs.clear();
@@ -504,6 +512,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         message.clear();
         chatId.clear();
         dateMessage.clear();
+        idMessage.clear();
         contactId.clear();
         status.clear();
         typeMessage.clear();
@@ -751,34 +760,62 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW)) {
-                        onUpdateViewUIThread();
 
                         int chatBroadcasterType = fermatBundle.getInt(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE);
 
-                        if (chatBroadcasterType != 0) {
-                            switch (chatBroadcasterType) {
-                                case ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE:
+                        switch (chatBroadcasterType) {
+                            case ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE:
 
-                                    String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_REMOTE_PK);
+                                String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_REMOTE_PK);
 
-                                    if (remotePK != null) {
-                                        if(contactId != null) {
-                                            if (Build.VERSION.SDK_INT < 23)
-                                                message.set(contactId.indexOf(remotePK), getActivity().getResources().getString(R.string.cht_typing));
-                                            else
-                                                message.set(contactId.indexOf(remotePK), getContext().getResources().getString(R.string.cht_typing));
-                                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId,
-                                                    status, typeMessage, noReadMsgs, imgId);
-                                        }
-                                    }
-                                    break;
-                                case ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE:
+                                if(contactId != null) {
+                                    if (Build.VERSION.SDK_INT < 23)
+                                        message.set(contactId.indexOf(remotePK), getActivity().getResources().getString(R.string.cht_typing));
+                                    else
+                                        message.set(contactId.indexOf(remotePK), getContext().getResources().getString(R.string.cht_typing));
+                                    adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId,
+                                            status, typeMessage, noReadMsgs, imgId);
+                                }
+                                break;
+                            case ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE:
 
-                                    break;
-                            }
+                                UUID messageId = (UUID) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_ID);
+
+                                MessageStatus messageStatus = (MessageStatus) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_STATUS);
+
+                                if (messageId != null && messageStatus != null && message != null && chatId != null) {
+
+                                    int index = idMessage.indexOf(messageId);
+
+                                    status.set(index, messageStatus.toString());
+
+                                    adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                                }
+
+                                break;
+
+                            case ChatBroadcasterConstants.NEW_MESSAGE_TYPE:
+
+                                Message chatMessage = (Message) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE);
+
+                                if (chatMessage != null && message != null && chatId != null) {
+
+                                    int index = chatId.indexOf(chatMessage.getChatId());
+
+                                    message.set(index, chatMessage.getMessage());
+                                    status.set(index, chatMessage.getStatus().toString());
+                                    typeMessage.set(index, chatMessage.getType().toString());
+                                    // TODO CHANGE DATE TOO AND ORDER AND UNREAD COUNT
+
+                                    adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                                }
+
+                                break;
+
+                            default:
+                                onUpdateViewUIThread();
+                                break;
                         }
-
-
                     }
                 }
             } catch (ClassCastException e) {
