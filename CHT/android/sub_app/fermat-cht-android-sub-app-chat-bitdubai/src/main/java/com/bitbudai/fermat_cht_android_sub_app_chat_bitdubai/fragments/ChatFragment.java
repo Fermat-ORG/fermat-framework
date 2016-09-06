@@ -218,24 +218,19 @@ public class ChatFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
         unbindDrawables(adapterView.getRootView().findViewById(R.id.messagesContainer));
         unbindDrawables(adapterView.getRootView().findViewById(R.id.chatSendButton));
         System.gc();
     }
 
-    private void unbindDrawables(View view)
-    {
-        if (view.getBackground() != null)
-        {
+    private void unbindDrawables(View view) {
+        if (view.getBackground() != null) {
             view.getBackground().setCallback(null);
         }
-        if (view instanceof ViewGroup && !(view instanceof AdapterView))
-        {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
-            {
+        if (view instanceof ViewGroup && !(view instanceof AdapterView)) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
                 unbindDrawables(((ViewGroup) view).getChildAt(i));
             }
             ((ViewGroup) view).removeAllViews();

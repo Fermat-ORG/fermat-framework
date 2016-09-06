@@ -18,12 +18,17 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChatMessageComparator;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * ChatAdapter
@@ -34,10 +39,11 @@ import java.util.List;
 
 public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> implements Filterable {
 
-    ArrayList<ChatMessage> filteredData;
     private String filterString;
 
-    public ChatAdapter(Context context, ArrayList<ChatMessage> chatMessages) {//ChatFactory
+    long time, nanos, milliseconds;
+
+    public ChatAdapter(Context context, ArrayList<ChatMessage> chatMessages) {
         super(context, chatMessages);
     }
 
@@ -100,7 +106,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> implemen
     private void setAlignment(ChatHolder holder, boolean isMe, ChatMessage data) {
         holder.tickstatusimage.setImageResource(0);
         holder.txtMessage.setText(Utils.avoidingScientificNot(data.getMessage()));
-        holder.txtInfo.setText(data.getDate());
+        holder.txtInfo.setText(getFormattedDate(data.getDate()));
         if (isMe) {
             holder.contentWithBG.setBackgroundResource(R.drawable.cht_burble_green);
 
@@ -178,22 +184,48 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> implemen
         }
     }
 
+    private DateFormat commonFormatter;
+    private DateFormat todayFormatter;
+
+    private String getFormattedDate(Timestamp timestamp) {
+
+        if (commonFormatter == null || todayFormatter == null) {
+
+            if (android.text.format.DateFormat.is24HourFormat(context)) {
+                commonFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+            } else {
+                commonFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
+            }
+            if (android.text.format.DateFormat.is24HourFormat(context)) {
+                todayFormatter = new SimpleDateFormat("HH:mm");
+            } else {
+                todayFormatter = new SimpleDateFormat("hh:mm aa");
+            }
+            commonFormatter.setTimeZone(TimeZone.getDefault());
+            todayFormatter.setTimeZone(TimeZone.getDefault());
+        }
+
+        time = timestamp.getTime();
+        nanos = (timestamp.getNanos() / 1000000);
+        milliseconds = time + nanos;
+        Date dated = new Date(milliseconds);
+
+        if (Validate.isDateToday(dated))
+            return todayFormatter.format(dated);
+        else
+            return commonFormatter.format(dated);
+    }
+
     @Override
     public int getItemCount() {
-        if (filterString != null)
-            return filteredData == null ? 0 : filteredData.size();
-        else
-            return dataSet == null ? 0 : dataSet.size();
+        return dataSet == null ? 0 : dataSet.size();
     }
 
     @Override
     public ChatMessage getItem(int position) {
-        if (filterString != null)
-            return filteredData != null ? (!filteredData.isEmpty()
-                    && position < filteredData.size()) ? filteredData.get(position) : null : null;
-        else
-            return dataSet != null ? (!dataSet.isEmpty()
-                    && position < dataSet.size()) ? dataSet.get(position) : null : null;
+
+        return dataSet != null ? (!dataSet.isEmpty()
+                && position < dataSet.size()) ? dataSet.get(position) : null : null;
     }
 
     @Override
@@ -207,10 +239,6 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> implemen
 
     public void setFilterString(String filterString) {
         this.filterString = filterString;
-    }
-
-    public String getFilterString() {
-        return filterString;
     }
 
 }

@@ -56,7 +56,6 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenc
 
 import java.io.ByteArrayInputStream;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -93,7 +92,6 @@ public class ChatAdapterView extends LinearLayout {
     private boolean isScrollingUp = false;
     UUID newChatId;
     int oldChatMessagesCount = 0;
-    long timemess , nanos , milliseconds;
 
     public ChatAdapterView(Context context,
                            ChatManager chatManager,
@@ -208,7 +206,7 @@ public class ChatAdapterView extends LinearLayout {
             }
             msg.setStatus(mess.getStatus());
 
-            msg.setDate(getFormatedDate(mess.getMessageDate()));
+            msg.setDate(mess.getMessageDate());
             msg.setMessage(mess.getMessage());
             msg.setType(mess.getType().toString());
 
@@ -567,9 +565,9 @@ public class ChatAdapterView extends LinearLayout {
                     }
 
                     ChatMessage chatMessage = new ChatMessage();
-                    chatMessage.setId(messageId);//dummy
+                    chatMessage.setId(messageId);
                     chatMessage.setMessage(messageText);
-                    chatMessage.setDate(getFormatedDate(timestamp));
+                    chatMessage.setDate(timestamp);
                     chatMessage.setMe(true);
                     messageET.setText("");
                     if (adapter == null || adapter.getItemCount() > 0) {
@@ -586,28 +584,6 @@ public class ChatAdapterView extends LinearLayout {
                 }
             }
         });
-    }
-
-    String getFormatedDate(Timestamp timestamp) {
-        timemess = timestamp.getTime();
-        nanos = (timestamp.getNanos() / 1000000);
-        milliseconds = timemess + nanos;
-        Date dated = new Date(milliseconds);
-        DateFormat formatter = DateFormat.getDateTimeInstance();
-        if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-            formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        } else {
-            formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
-        }
-        if (Validate.isDateToday(dated)) {
-            if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                formatter = new SimpleDateFormat("HH:mm");
-            } else {
-                formatter = new SimpleDateFormat("hh:mm aa");
-            }
-        }
-        formatter.setTimeZone(TimeZone.getDefault());
-        return formatter.format(new Date(milliseconds));
     }
 
     public void getFilter(String s) {
