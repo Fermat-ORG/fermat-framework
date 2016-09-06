@@ -20,21 +20,21 @@ public class CryptoWalletUserCommunityBuildNotification {
             switch (code){
                 case CCPBroadcasterConstants.CONNECTION_REQUEST:
 
-                    notification = new UserCommunityNotificationPainter(context.getResources().getString(R.string.notification_connection_request), context.getResources().getString(R.string.notification_connection_request2)+"  " + (!involvedActor.equals("null") ? involvedActor : context.getResources().getString(R.string.notification_connection_Unknown) ), "", "",appPublicKey);
+                    notification = new UserCommunityNotificationPainter(context.getResources().getString(R.string.notification_connection_request), context.getResources().getString(R.string.notification_connection_request2)+"  " + (involvedActor != null ? involvedActor : context.getResources().getString(R.string.notification_connection_Unknown) ), "", "",appPublicKey);
                    break;
                 case CCPBroadcasterConstants.CONNECTION_ACCEPT:
-                        notification = new UserCommunityNotificationPainter(context.getResources().getString(R.string.notification_connection_accept), context.getResources().getString(R.string.notification_connection_accept2)+" " + (!involvedActor.equals("null") ? involvedActor : context.getResources().getString(R.string.notification_connection_Unknown)), "", "",appPublicKey);
+                        notification = new UserCommunityNotificationPainter(context.getResources().getString(R.string.notification_connection_accept), context.getResources().getString(R.string.notification_connection_accept2)+" " + (involvedActor != null ? involvedActor : context.getResources().getString(R.string.notification_connection_Unknown)), "", "",appPublicKey);
 
 
                     break;
 
                 case CCPBroadcasterConstants.CONNECTION_DISCONNECT:
-                    notification = new UserCommunityNotificationPainter(context.getResources().getString(R.string.notification_connection_disconnet),  (!involvedActor.equals("null") ? involvedActor : context.getResources().getString(R.string.notification_connection_Unknown) ) + " "+ context.getResources().getString(R.string.notification_connection_disconnet2), "", "",appPublicKey);
+                    notification = new UserCommunityNotificationPainter(context.getResources().getString(R.string.notification_connection_disconnet),  (involvedActor != null ? involvedActor : context.getResources().getString(R.string.notification_connection_Unknown) ) + " "+ context.getResources().getString(R.string.notification_connection_disconnet2), "", "",appPublicKey);
 
                     break;
 
                 case CCPBroadcasterConstants.CONNECTION_DENIED:
-                        notification = new UserCommunityNotificationPainter(context.getResources().getString(R.string.notification_connection_denied), context.getResources().getString(R.string.notification_connection_denied2)+" " + (!involvedActor.equals("null") ? involvedActor : context.getResources().getString(R.string.notification_connection_Unknown) ), "", "",appPublicKey);
+                        notification = new UserCommunityNotificationPainter(context.getResources().getString(R.string.notification_connection_denied), context.getResources().getString(R.string.notification_connection_denied2)+" " + (involvedActor != null ? involvedActor : context.getResources().getString(R.string.notification_connection_Unknown) ), "", "",appPublicKey);
 
                     break;
 
