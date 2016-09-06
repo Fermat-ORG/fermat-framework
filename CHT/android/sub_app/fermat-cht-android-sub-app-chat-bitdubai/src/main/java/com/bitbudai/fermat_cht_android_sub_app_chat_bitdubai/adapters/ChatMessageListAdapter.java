@@ -12,8 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatFilter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatMessageListFilter;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatMessageHolder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChatMessageComparator;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
@@ -31,25 +31,25 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- * ChatAdapter
+ * ChatMessageListAdapter
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 05/01/15.
  * @version 1.0
  */
 
-public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> implements Filterable {
+public class ChatMessageListAdapter extends FermatAdapter<ChatMessage, ChatMessageHolder> implements Filterable {
 
     private String filterString;
 
     long time, nanos, milliseconds;
 
-    public ChatAdapter(Context context, ArrayList<ChatMessage> chatMessages) {
+    public ChatMessageListAdapter(Context context, ArrayList<ChatMessage> chatMessages) {
         super(context, chatMessages);
     }
 
     @Override
-    protected ChatHolder createHolder(View itemView, int type) {
-        return new ChatHolder(itemView);
+    protected ChatMessageHolder createHolder(View itemView, int type) {
+        return new ChatMessageHolder(itemView);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> implemen
     }
 
     @Override
-    protected void bindHolder(ChatHolder holder, ChatMessage data, int position) {
+    protected void bindHolder(ChatMessageHolder holder, ChatMessage data, int position) {
         if (data != null) {
             boolean myMsg = data.getIsme();
             setAlignment(holder, myMsg, data);
@@ -103,7 +103,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> implemen
         dataSet.add(message);
     }
 
-    private void setAlignment(ChatHolder holder, boolean isMe, ChatMessage data) {
+    private void setAlignment(ChatMessageHolder holder, boolean isMe, ChatMessage data) {
         holder.tickstatusimage.setImageResource(0);
         holder.txtMessage.setText(Utils.avoidingScientificNot(data.getMessage()));
         holder.txtInfo.setText(getFormattedDate(data.getDate()));
@@ -234,7 +234,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> implemen
     }
 
     public Filter getFilter() {
-        return new ChatFilter(dataSet, this);
+        return new ChatMessageListFilter(dataSet, this);
     }
 
     public void setFilterString(String filterString) {

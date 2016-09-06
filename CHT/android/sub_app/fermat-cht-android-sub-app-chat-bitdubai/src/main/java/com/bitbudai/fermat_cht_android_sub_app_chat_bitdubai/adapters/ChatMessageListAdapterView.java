@@ -69,10 +69,10 @@ import java.util.concurrent.TimeUnit;
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 09/01/16.
  */
 
-public class ChatAdapterView extends LinearLayout {
+public class ChatMessageListAdapterView extends LinearLayout {
 
     private RecyclerView messagesContainer;
-    private ChatAdapter adapter;
+    private ChatMessageListAdapter adapter;
     private ArrayList<ChatMessage> chatHistory;
     private ChatManager chatManager;
     private ErrorManager errorManager;
@@ -93,12 +93,12 @@ public class ChatAdapterView extends LinearLayout {
     UUID newChatId;
     int oldChatMessagesCount = 0;
 
-    public ChatAdapterView(Context context,
-                           ChatManager chatManager,
-                           ErrorManager errorManager,
-                           FermatSession appSession,
-                           Toolbar toolbar,
-                           ChatPreferenceSettings chatSettings) {
+    public ChatMessageListAdapterView(Context context,
+                                      ChatManager chatManager,
+                                      ErrorManager errorManager,
+                                      FermatSession appSession,
+                                      Toolbar toolbar,
+                                      ChatPreferenceSettings chatSettings) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         addView(inflater.inflate(R.layout.chat, (rootView != null) ? rootView : null));
@@ -110,11 +110,11 @@ public class ChatAdapterView extends LinearLayout {
         initControls();
     }
 
-    public ChatAdapterView(Context context, AttributeSet attrs) {
+    public ChatMessageListAdapterView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ChatAdapterView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ChatMessageListAdapterView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -176,7 +176,7 @@ public class ChatAdapterView extends LinearLayout {
             }
 
             if (adapter == null || adapter.getItemCount() > 0) {
-                adapter = new ChatAdapter(this.getContext(), chatHistory);
+                adapter = new ChatMessageListAdapter(this.getContext(), chatHistory);
                 messagesContainer.setAdapter(adapter);
             } else {
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount());
@@ -569,7 +569,7 @@ public class ChatAdapterView extends LinearLayout {
                     chatMessage.setMe(true);
                     messageET.setText("");
                     if (adapter == null || adapter.getItemCount() > 0) {
-                        adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+                        adapter = new ChatMessageListAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                         messagesContainer.setAdapter(adapter);
                     }
                     displayMessage(chatMessage);
@@ -606,7 +606,7 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void clean() {
-        adapter = new ChatAdapter(this.getContext(), null);
+        adapter = new ChatMessageListAdapter(this.getContext(), null);
         messagesContainer.setAdapter(adapter);
     }
 
@@ -772,8 +772,8 @@ public class ChatAdapterView extends LinearLayout {
             return this;
         }
 
-        public ChatAdapterView build() {
-            ChatAdapterView chatView = new ChatAdapterView(
+        public ChatMessageListAdapterView build() {
+            ChatMessageListAdapterView chatView = new ChatMessageListAdapterView(
                     context,
                     chatManager,
                     errorManager,

@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.SearchView;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatMessageListAdapterView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -53,7 +53,7 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
  * Update by Miguel Payarez on 15/01/2016
  */
 
-public class ChatFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
+public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
     // Fermat Managers
     private ChatManager chatManager;
@@ -63,11 +63,11 @@ public class ChatFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
     ChatActorCommunitySelectableIdentity chatIdentity;
     private Handler h = new Handler();
 
-    private ChatAdapterView adapterView;
+    private ChatMessageListAdapterView adapterView;
     private SearchView searchView;
 
-    public static ChatFragment newInstance() {
-        return new ChatFragment();
+    public static ChatMessageListFragment newInstance() {
+        return new ChatMessageListFragment();
     }
 
     @Override
@@ -166,7 +166,7 @@ public class ChatFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        adapterView = new ChatAdapterView.Builder(inflater.getContext())
+        adapterView = new ChatMessageListAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
                 .addErrorManager(errorManager)
                 .addAppSession(appSession)
