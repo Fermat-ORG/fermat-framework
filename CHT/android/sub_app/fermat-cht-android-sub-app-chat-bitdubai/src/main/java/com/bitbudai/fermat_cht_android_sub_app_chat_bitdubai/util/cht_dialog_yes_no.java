@@ -19,6 +19,9 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatExcep
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 
+import java.util.List;
+import java.util.UUID;
+
 /**
  * Created by richardalexander on 09/03/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 17/03/16.
@@ -115,8 +118,19 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
 
                 delete_contact = true;
             } else if (AlertType == 3) {
-
-                // TODO WHAT THE FUCK?
+                List<UUID> chatsIds = (List<UUID>) appSession.getData(ChatSessionReferenceApp.CHATS_ID);//chatSession.getSelectedChat();
+                for (UUID chatId :
+                        chatsIds) {
+                    try {
+                        chatManager.deleteChat(chatId, true);
+                    } catch (CantDeleteChatException e) {
+                        if (errorManager != null)
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    } catch (Exception e) {
+                        if (errorManager != null)
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }
+                }
                 delete_chats = true;
             } else if (AlertType == 4) {
                 try {
@@ -124,7 +138,7 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
                         // Get the info of chat selected from session
                         Chat chat = (Chat) appSession.getData(ChatSessionReferenceApp.CHAT_DATA);
                         // Delete chat and refresh view
-                        chatManager.deleteChat(chat.getChatId());
+                        chatManager.deleteChat(chat.getChatId(), true);
                     } catch (CantDeleteChatException e) {
                         if (errorManager != null)
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -144,7 +158,7 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
                         // Get the info of chat selected from session
                         Chat chat = (Chat) appSession.getData(ChatSessionReferenceApp.CHAT_DATA);//chatSession.getSelectedChat();
                         // Delete chat and refresh view
-                        chatManager.deleteChat(chat.getChatId());
+                        chatManager.deleteChat(chat.getChatId(), false);
                     } catch (Exception e) {
                         if (errorManager != null)
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

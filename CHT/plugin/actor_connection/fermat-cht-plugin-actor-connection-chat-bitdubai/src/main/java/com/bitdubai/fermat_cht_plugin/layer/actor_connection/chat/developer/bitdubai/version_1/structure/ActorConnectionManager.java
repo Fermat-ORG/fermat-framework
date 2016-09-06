@@ -110,6 +110,8 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
 
             final long currentTime = System.currentTimeMillis();
 
+            ChatActorConnection actorConnection;
+
             if (oldActorConnection != null && oldActorConnection.getConnectionState().getCode().equals(ConnectionState.PENDING_LOCALLY_ACCEPTANCE.getCode())){
                 final ChatActorConnection actorConnectionAccepted = new ChatActorConnection(
                         oldActorConnection.getConnectionId(),
@@ -126,22 +128,38 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
                 return;
             }
 
-            final ChatActorConnection actorConnection = new ChatActorConnection(
-                    newConnectionId,
-                    linkedIdentity,
-                    actorReceiving.getPublicKey(),
-                    actorReceiving.getAlias(),
-                    actorReceiving.getImage(),
-                    connectionState,
-                    currentTime,
-                    currentTime,
-                    actorReceiving.getStatus()
-            );
+            if (oldActorConnection != null){
+                actorConnection = new ChatActorConnection(
+                        oldActorConnection.getConnectionId(),
+                        oldActorConnection.getLinkedIdentity(),
+                        oldActorConnection.getPublicKey(),
+                        oldActorConnection.getAlias(),
+                        oldActorConnection.getImage(),
+                        connectionState,
+                        oldActorConnection.getCreationTime(),
+                        currentTime,
+                        oldActorConnection.getStatus()
+                );
+            } else{
+                actorConnection = new ChatActorConnection(
+                        newConnectionId,
+                        linkedIdentity,
+                        actorReceiving.getPublicKey(),
+                        actorReceiving.getAlias(),
+                        actorReceiving.getImage(),
+                        connectionState,
+                        currentTime,
+                        currentTime,
+                        actorReceiving.getStatus()
+                );
+            }
+
+
 
             /**
             * I register the actor connection.
                     */
-            if (!dao.registerChatActorConnection(actorConnection, oldActorConnection)) return;
+            dao.registerChatActorConnection(actorConnection, oldActorConnection);
 
             final ChatConnectionInformation connectionInformation = new ChatConnectionInformation(
                     newConnectionId,
