@@ -402,10 +402,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
             menu.clear();
-//            if (optionsMenu != null) {
-//                List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
-//                loadMenu(menu, optionsMenuItems);
-//            }
+           if (optionsMenu != null) {
+                List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
+                loadMenu(menu, optionsMenuItems);
+            }
             return true;
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -499,7 +499,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             // Log.i("FERMAT ACTIVITY loadUI", " setWizards " + System.currentTimeMillis());
 
-//            invalidateOptionsMenu();
+           invalidateOptionsMenu();
 
             // Log.i("FERMAT ACTIVITY loadUI", "FIN " + System.currentTimeMillis());
         } catch (Exception e) {

@@ -796,7 +796,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                         fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CCP_COMMUNITY.getCode());
                         fermatBundle.put(NOTIFICATION_ID, CCPBroadcasterConstants.CONNECTION_ACCEPT);
                         fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
-                        fermatBundle.put("InvolvedActor", notification.getActorSenderAlias());
+                        fermatBundle.put("InvolvedActor", getActorByPublicKey(intraUserToConnectPublicKey,intraUserSendingPublicKey).getName());
 
                         broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
