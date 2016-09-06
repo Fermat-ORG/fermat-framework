@@ -385,9 +385,9 @@ public class ContactsListFragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unbindDrawables(layout.findViewById(R.id.list));
-        unbindDrawables(layout.findViewById(R.id.empty_view));
-        adapter.clear();
+//        unbindDrawables(layout.findViewById(R.id.list));
+//        unbindDrawables(layout.findViewById(R.id.empty_view));
+//        adapter.clear();
 //        chatSettings = null;
 //        errorManager = null;
 //        chatIdentity = null;
@@ -395,20 +395,20 @@ public class ContactsListFragment
 //        applicationsHelper = null;
 //        layout.destroyDrawingCache();
 //        layout = null;
-        contactname.clear();
-        contacticon.clear();
-        contactid.clear();
-        contactStatus.clear();
+//        contactname.clear();
+//        contacticon.clear();
+//        contactid.clear();
+//        contactStatus.clear();
 //        emptyView.destroyDrawingCache();
-        emptyView.removeAllViewsInLayout();
+//        emptyView.removeAllViewsInLayout();
 //        chatIdentity = null;
-        emptyView.removeAllViews();
+//        emptyView.removeAllViews();
 //        noData.destroyDrawingCache();
 //        noDatalabel.destroyDrawingCache();
 //        nochatssubtitle.destroyDrawingCache();
 //        nochatssubtitle1.destroyDrawingCache();
 //        nochatssubtitle2.destroyDrawingCache();
-        list.removeAllViewsInLayout();
+//        list.removeAllViewsInLayout();
 //        list = null;
 //        mSwipeRefreshLayout.removeAllViews();
 //        mSwipeRefreshLayout.removeAllViewsInLayout();

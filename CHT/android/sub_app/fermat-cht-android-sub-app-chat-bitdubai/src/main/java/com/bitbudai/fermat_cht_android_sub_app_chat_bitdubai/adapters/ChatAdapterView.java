@@ -643,7 +643,7 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void destroy() {
-        layoutManager.removeAllViews();
+//        layoutManager.removeAllViews();
 //        adapter.getView().getRootView().destroyDrawingCache();
   //      adapter.getView().destroyDrawingCache();
     //    messagesContainer.destroyDrawingCache();
@@ -663,12 +663,12 @@ public class ChatAdapterView extends LinearLayout {
 //        messageET.destroyDrawingCache();
 //        messageET = null;
 //        newChatId = null;
-        rootView.removeAllViewsInLayout();
-        rootView.removeAllViews();
-//        sendBtn.destroyDrawingCache();
+//        rootView.removeAllViewsInLayout();
+//        rootView.removeAllViews();
+////        sendBtn.destroyDrawingCache();
 //        sendBtn = null;
-        removeAllViewsInLayout();
-        removeAllViews();
+//        removeAllViewsInLayout();
+//        removeAllViews();
     }
 
     public void checkStatus(String remotePkWriting, Handler h) {

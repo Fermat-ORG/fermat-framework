@@ -248,19 +248,19 @@ public class ChatFragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unbindDrawables(adapterView.getRootView().findViewById(R.id.messagesContainer));
-        unbindDrawables(adapterView.getRootView().findViewById(R.id.chatSendButton));
-        adapterView.destroy();
+//        unbindDrawables(adapterView.getRootView().findViewById(R.id.messagesContainer));
+//        unbindDrawables(adapterView.getRootView().findViewById(R.id.chatSendButton));
+//        adapterView.destroy();
 //        adapterView.destroyDrawingCache();
-        adapterView.removeView(getView());
-        adapterView.removeAllViews();
-        adapterView.removeAllViewsInLayout();
+//        adapterView.removeView(getView());
+//        adapterView.removeAllViews();
+//        adapterView.removeAllViewsInLayout();
 //        adapterView = null;
 //        chatIdentity = null;
 //        chatSettings = null;
 //        chatManager = null;
 //        appSession = null;
-        destroy();
+//        destroy();
     }
 
     @Override

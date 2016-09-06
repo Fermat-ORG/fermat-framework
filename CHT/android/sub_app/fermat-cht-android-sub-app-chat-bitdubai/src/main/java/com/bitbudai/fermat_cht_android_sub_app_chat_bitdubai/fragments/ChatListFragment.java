@@ -487,9 +487,9 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unbindDrawables(layout.findViewById(R.id.list));
-        unbindDrawables(layout.findViewById(R.id.empty_view));
-        adapter.clear();
+//        unbindDrawables(layout.findViewById(R.id.list));
+//        unbindDrawables(layout.findViewById(R.id.empty_view));
+//        adapter.clear();
 //        chatSettings = null;
 //        chatIdentity = null;
 //        chatManager = null;
@@ -503,7 +503,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
 //        typeMessage.clear();
 //        noReadMsgs.clear();
 //        imgId.clear();
-        emptyView.removeAllViewsInLayout();
+//        emptyView.removeAllViewsInLayout();
 //        contactName.clear();
 //        message.clear();
 //        searchView.destroyDrawingCache();
