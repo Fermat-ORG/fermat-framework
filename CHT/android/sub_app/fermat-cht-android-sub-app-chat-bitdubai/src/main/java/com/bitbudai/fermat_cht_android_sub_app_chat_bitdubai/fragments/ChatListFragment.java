@@ -468,6 +468,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         chatList.clear();
         emptyView.removeAllViewsInLayout();
         applicationsHelper =null;
+
         destroy();
     }
 
@@ -546,6 +547,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 case 2:
                     try {
                         if (chatList != null && chatList.size() > 0) {
+
                             final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
                             alert.setTextTitle("Delete All Chats");
                             alert.setTextBody("Do you want to delete all chats? All chats will be erased");
@@ -755,6 +757,9 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
             } catch (ClassCastException e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            } catch (Exception e){
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
         }
     }
@@ -797,6 +802,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         Message mess = chatManager.getLastMessageByChatId(chat.getChatId());
                         if (mess != null) {
 
+                            chat.setMessageId(mess.getMessageId());
                             chat.setMessage(mess.getMessage());
                             chat.setStatus(mess.getStatus());
                             chat.setTypeMessage(mess.getType());
@@ -819,7 +825,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         try {
 
             for (com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat chat : chatList) {
-                if (chat.getMessageId().equals(messageId)) {
+                if (chat.getMessageId() != null && chat.getMessageId().equals(messageId)) {
 
                     Chat chatPersisted = chatManager.getChatByChatId(chat.getChatId());
 
@@ -830,6 +836,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         Message mess = chatManager.getLastMessageByChatId(chat.getChatId());
                         if (mess != null) {
 
+                            chat.setMessageId(mess.getMessageId());
                             chat.setMessage(mess.getMessage());
                             chat.setStatus(mess.getStatus());
                             chat.setTypeMessage(mess.getType());
@@ -863,6 +870,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         Message mess = chatManager.getLastMessageByChatId(chat.getChatId());
                         if (mess != null) {
 
+                            chat.setMessageId(mess.getMessageId());
                             chat.setMessage(mess.getMessage());
                             chat.setStatus(mess.getStatus());
                             chat.setTypeMessage(mess.getType());

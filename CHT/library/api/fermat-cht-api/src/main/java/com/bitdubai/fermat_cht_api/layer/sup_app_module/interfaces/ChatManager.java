@@ -44,7 +44,7 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
 
     void markChatAs(UUID chatId, ChatStatus chatStatus) throws CantSaveChatException;
 
-    void deleteChat(UUID chatId) throws CantDeleteChatException;
+    void deleteChat(UUID chatId, boolean isDeleteChat) throws CantDeleteChatException;
 
     void deleteAllChats() throws CantDeleteChatException;
 

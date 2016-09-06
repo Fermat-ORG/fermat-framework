@@ -71,14 +71,14 @@ public interface MiddlewareChatManager extends FermatManager {
     void markChatAs(UUID chatId, ChatStatus chatStatus) throws CantSaveChatException;
 
     /**
-     * Delete all messages and change the chat status to INVISIBLE
+     * Delete all messages and change the chat status to INVISIBLE if isDeleteChat value is false if not delete the record
      * see ChatStatus enum
      *
      * @param chatId id of the chat
      *
      * @throws CantDeleteChatException if something goes wrong.
      */
-    void deleteChat(UUID chatId) throws CantDeleteChatException;
+    void deleteChat(UUID chatId, boolean isDeleteChat) throws CantDeleteChatException;
 
     /**
      * Delete all messages of the chats and set all the chat status to INVISIBLE

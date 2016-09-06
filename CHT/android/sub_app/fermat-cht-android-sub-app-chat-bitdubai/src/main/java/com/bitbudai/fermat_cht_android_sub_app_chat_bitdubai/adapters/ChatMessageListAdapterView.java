@@ -281,10 +281,15 @@ public class ChatMessageListAdapterView extends LinearLayout {
     }
 
     public void onAdjustKeyboard() {
-        RelativeLayout.LayoutParams layoutParams =
-                (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
-        layoutParams.height = 440;
-        messagesContainer.setLayoutParams(layoutParams);
+        try {
+            RelativeLayout.LayoutParams layoutParams =
+                    (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
+            layoutParams.height = 440;
+            messagesContainer.setLayoutParams(layoutParams);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -608,29 +613,6 @@ public class ChatMessageListAdapterView extends LinearLayout {
     public void clean() {
         adapter = new ChatMessageListAdapter(this.getContext(), new ArrayList<ChatMessage>());
         messagesContainer.setAdapter(adapter);
-    }
-
-    public void destroy() {
-        layoutManager.removeAllViews();
-        messagesContainer = null;
-        chatSettings = null;
-        chatHistory = null;
-        chatManager = null;
-        chatId = null;
-        contactIcon = null;
-        contactIconCircular = null;
-        remotePk = null;
-        leftName = null;
-        appSession = null;
-        adapter = null;
-        errorManager = null;
-        messageET = null;
-        newChatId = null;
-        rootView.removeAllViewsInLayout();
-        rootView.removeAllViews();
-        sendBtn = null;
-        removeAllViewsInLayout();
-        removeAllViews();
     }
 
     public void checkStatus(String remotePkWriting, Handler h) {

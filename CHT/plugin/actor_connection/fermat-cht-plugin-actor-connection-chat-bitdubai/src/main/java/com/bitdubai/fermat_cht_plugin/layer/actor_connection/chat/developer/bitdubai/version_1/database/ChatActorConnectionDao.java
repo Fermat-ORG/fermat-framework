@@ -3,19 +3,17 @@ package com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bit
 import com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_classes.ActorConnectionDao;
 import com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionAlreadyExistsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantChangeActorConnectionStateException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetProfileImageException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantPersistProfileImageException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRegisterActorConnectionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -32,8 +30,12 @@ import java.util.UUID;
  */
 public class ChatActorConnectionDao extends ActorConnectionDao<ChatActorConnection> {
 
+    private ErrorManager errorManager;
+    private final UUID pluginId;
+
     public ChatActorConnectionDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         super(pluginDatabaseSystem, pluginFileSystem, pluginId);
+        this.pluginId = pluginId;
     }
 
     public void changeIdAndConnectionState(final UUID oldConnectionId,
@@ -105,21 +107,22 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatActorConnecti
     }
 
     public void updateChatActorConnection(final ChatActorConnection chatActorConnection){
+        final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
         try {
 
-            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
-
             actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, chatActorConnection.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.loadToMemory();
 
-            final DatabaseTableRecord record = actorConnectionsTable.getEmptyRecord();
-
+            final DatabaseTableRecord record = actorConnectionsTable.getRecords().get(0);
             record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME, chatActorConnection.getAlias());
             record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATUS_COLUMN_NAME, chatActorConnection.getStatus());
             record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATUS_COLUMN_NAME, chatActorConnection.getStatus());
 
             actorConnectionsTable.updateRecord(record);
-
+        }
+        catch (CantLoadTableToMemoryException e) {
+            e.printStackTrace();
         } catch (CantUpdateRecordException e) {
             e.printStackTrace();
         }
@@ -148,35 +151,6 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatActorConnecti
             e.printStackTrace();
         }
 
-    }
-
-    public final boolean registerChatActorConnection(final ChatActorConnection actorConnection, ChatActorConnection oldActorConnection) throws CantRegisterActorConnectionException,
-            ActorConnectionAlreadyExistsException {
-
-        boolean isNew = true;
-
-        try {
-
-            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
-
-            DatabaseTableRecord entityRecord = actorConnectionsTable.getEmptyRecord();
-            entityRecord = buildDatabaseRecord(
-                    entityRecord,
-                    actorConnection
-            );
-            if (actorConnection.getImage() != null && actorConnection.getImage().length > 0)
-                persistNewUserProfileImage(actorConnection.getPublicKey(), actorConnection.getImage());
-
-            actorConnectionsTable.insertRecord(entityRecord);
-
-            return isNew;
-
-        } catch (final CantInsertRecordException e) {
-
-            throw new CantRegisterActorConnectionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-        } catch (CantPersistProfileImageException e) {
-            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to delete the actor image.");
-        }
     }
 
     protected ChatActorConnection buildActorConnectionNewRecord(DatabaseTableRecord record) throws InvalidParameterException {
@@ -209,6 +183,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatActorConnecti
         } catch (FileNotFoundException e) {
             profileImage = new byte[0];
         } catch (CantGetProfileImageException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new InvalidParameterException(
                     e,
                     "",

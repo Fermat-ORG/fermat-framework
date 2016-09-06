@@ -7,7 +7,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
@@ -253,14 +255,14 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public void deleteChat(UUID chatId) throws CantDeleteChatException, DatabaseOperationException {
+    public void deleteChat(UUID chatId, boolean isDeleteChat) throws CantDeleteChatException, DatabaseOperationException {
 
         try {
 
             deleteMessagesByChatId(chatId);
 
-            updateChatStatus(chatId, ChatStatus.INVISIBLE);
-
+            if(isDeleteChat)
+                deleteChat(chatId);
         } catch (Exception e) {
 
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
@@ -300,14 +302,32 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+    private void deleteChat(UUID chatId) throws CantDeleteRecordException {
+        DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+        DatabaseTableFilter filter = table.getEmptyTableFilter();
+        filter.setType(DatabaseFilterType.EQUAL);
+        filter.setValue(chatId.toString());
+        filter.setColumn(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME);
+        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        table.deleteRecord();
+
+    }
+
     public void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException, DatabaseOperationException {
         try {
 
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
-
-            table.addUUIDFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, chatId, DatabaseFilterType.EQUAL);
-
-            table.deleteRecord();
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(chatId.toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
+            List<DatabaseTableRecord> records = getMessageData(filter,table);
+            if (records != null && !records.isEmpty()) {
+                for (DatabaseTableRecord record : records) {
+                    if (record.getUUIDValue(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME).equals(chatId))
+                        table.deleteRecord(record);
+                }
+            }
 
         } catch (Exception e) {
 
@@ -319,6 +339,19 @@ public class ChatMiddlewareDatabaseDao {
                     "Error trying to delete the Chat Transaction in the database.",
                     null);
         }
+    }
+
+    private List<DatabaseTableRecord> getMessageData(DatabaseTableFilter filter, DatabaseTable table) throws CantLoadTableToMemoryException {
+
+        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+
+        table.loadToMemory();
+
+        List<DatabaseTableRecord> records = table.getRecords();
+
+        if (records == null || records.isEmpty())
+            return null;
+        return records;
     }
 
     public List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException {

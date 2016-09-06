@@ -232,13 +232,14 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      * This method deletes a chat from database.
      *
      * @param chatId
+     * @param isDeleteChat
      * @throws CantDeleteChatException
      */
     @Override
-    public void deleteChat(UUID chatId) throws CantDeleteChatException {
+    public void deleteChat(UUID chatId, boolean isDeleteChat) throws CantDeleteChatException {
         try {
             ObjectChecker.checkArgument(chatId, "The chatId argument is null");
-            this.chatMiddlewareDatabaseDao.deleteChat(chatId);
+            this.chatMiddlewareDatabaseDao.deleteChat(chatId, isDeleteChat);
         } catch (ObjectNotSetException e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);

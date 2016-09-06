@@ -123,9 +123,14 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
             toolbar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(adapterView != null)
-                        adapterView.clean();
-                    changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                    try {
+                        if (adapterView != null)
+                            adapterView.clean();
+                        changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                    }catch (Exception e){
+                        if (errorManager != null)
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }
                 }
             });
 
@@ -240,19 +245,19 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unbindDrawables(adapterView.getRootView().findViewById(R.id.messagesContainer));
-        unbindDrawables(adapterView.getRootView().findViewById(R.id.chatSendButton));
-        adapterView.destroy();
-        adapterView.destroyDrawingCache();
-        adapterView.removeView(getView());
-        adapterView.removeAllViews();
-        adapterView.removeAllViewsInLayout();
-        adapterView = null;
-        chatIdentity = null;
-        chatSettings = null;
-        chatManager = null;
-        appSession = null;
-        destroy();
+//        unbindDrawables(adapterView.getRootView().findViewById(R.id.messagesContainer));
+//        unbindDrawables(adapterView.getRootView().findViewById(R.id.chatSendButton));
+//        adapterView.destroy();
+//        adapterView.destroyDrawingCache();
+//        adapterView.removeView(getView());
+//        adapterView.removeAllViews();
+//        adapterView.removeAllViewsInLayout();
+//        adapterView = null;
+//        chatIdentity = null;
+//        chatSettings = null;
+//        chatManager = null;
+//        appSession = null;
+//        destroy();
     }
 
     @Override

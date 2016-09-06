@@ -94,9 +94,8 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
         middlewareChatManager.markChatAs(chatId, chatStatus);
     }
 
-    @Override
-    public void deleteChat(UUID chatId) throws CantDeleteChatException {
-        middlewareChatManager.deleteChat(chatId);
+    public void deleteChat(UUID chatId, boolean isDeleteChat) throws CantDeleteChatException {
+        middlewareChatManager.deleteChat(chatId,isDeleteChat);
     }
 
     @Override

@@ -120,6 +120,7 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
                     try {
                         // Delete chats and refresh view
                         chatManager.deleteAllChats();
+
                     } catch (CantDeleteChatException e) {
                         if (errorManager != null)
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -139,7 +140,7 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
                         // Get the info of chat selected from session
                         Chat chat = (Chat) appSession.getData(ChatSessionReferenceApp.CHAT_DATA);
                         // Delete chat and refresh view
-                        chatManager.deleteChat(chat.getChatId());
+                        chatManager.deleteChat(chat.getChatId(), true);
                     } catch (CantDeleteChatException e) {
                         if (errorManager != null)
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -159,7 +160,7 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
                         // Get the info of chat selected from session
                         Chat chat = (Chat) appSession.getData(ChatSessionReferenceApp.CHAT_DATA);//chatSession.getSelectedChat();
                         // Delete chat and refresh view
-                        chatManager.deleteChat(chat.getChatId());
+                        chatManager.deleteChat(chat.getChatId(), false);
                     } catch (Exception e) {
                         if (errorManager != null)
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
