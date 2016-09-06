@@ -164,14 +164,15 @@ public class CryptoTransmissionNetworkServiceMetadataDao {
 
             metadataTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
 
-            metadataTable.loadToMemory();
+              metadataTable.numRecords();
 
-            List<DatabaseTableRecord> records = metadataTable.getRecords();
+              if (metadataTable.numRecords() > 0)
+                  return true;
+              else
+                  return false;
 
 
-              return !records.isEmpty();
-
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (Exception exception) {
 
             throw new CantGetCryptoTransmissionMetadataException("",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
         }

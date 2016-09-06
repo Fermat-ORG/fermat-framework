@@ -546,8 +546,6 @@ public final class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.numRecords();
 
-            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
-
 
             if (addressExchangeRequestTable.numRecords() > 0)
                 return true;
