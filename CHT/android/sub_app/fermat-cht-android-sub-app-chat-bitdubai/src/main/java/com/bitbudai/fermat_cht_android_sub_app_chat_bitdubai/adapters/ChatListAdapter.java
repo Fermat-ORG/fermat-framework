@@ -58,7 +58,8 @@ public class ChatListAdapter extends FermatAdapter<Chat, ChatHolder> implements 
     @Override
     public void changeDataSet(List<Chat> dataSet) {
 
-        Collections.sort(dataSet, new ChatComparator());
+        if (dataSet != null)
+            Collections.sort(dataSet, new ChatComparator());
 
         super.changeDataSet(dataSet);
     }

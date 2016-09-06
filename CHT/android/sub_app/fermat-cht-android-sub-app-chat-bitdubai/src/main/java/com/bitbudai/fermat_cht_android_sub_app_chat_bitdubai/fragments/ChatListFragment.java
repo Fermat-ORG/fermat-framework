@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -70,6 +71,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -94,6 +97,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
     ChatActorCommunitySelectableIdentity chatIdentity;
     RecyclerView list;
     private SearchView searchView;
+    private Handler h = new Handler();
 
     ArrayList<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat> chatList = new ArrayList<>();
     View layout;
@@ -108,12 +112,18 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         return new ChatListFragment();
     }
 
-    public void chatlistview() {
+    public void chatListView() {
 
         try {
             List<Chat> chats = chatManager.listVisibleChats();
 
             if (chats != null && chats.size() > 0) {
+
+                if (chatList == null)
+                    chatList = new ArrayList<>();
+
+                if (chatList.size() > 0)
+                    chatList.clear();
 
                 if (chatIdentity != null) {
                     for (Chat chat : chats) {
@@ -156,6 +166,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         String message = "";
         MessageStatus messageStatus = null;
         TypeMessage typeMessage = null;
+        UUID messageId = null;
 
         try {
             Message mess = chatManager.getLastMessageByChatId(chat.getChatId());
@@ -164,6 +175,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 message = mess.getMessage();
                 messageStatus = mess.getStatus();
                 typeMessage = mess.getType();
+                messageId = mess.getMessageId();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,6 +187,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         return new com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat(
                 cont.getAlias(),
                 message,
+                messageId,
                 chat.getLastMessageDate(),
                 chat.getChatId(),
                 chat.getRemoteActorPublicKey(),
@@ -269,7 +282,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                chatlistview();
+                chatListView();
             } else {
                 emptyView.setVisibility(View.VISIBLE);
                 noData.setVisibility(View.VISIBLE);
@@ -446,7 +459,8 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         super.onDestroy();
         unbindDrawables(layout.findViewById(R.id.list));
         unbindDrawables(layout.findViewById(R.id.empty_view));
-        //adapter.clear();
+        adapter.changeDataSet(null);
+        adapter = null;
         chatSettings = null;
         chatIdentity = null;
         chatManager = null;
@@ -681,43 +695,188 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW)) {
-                        onUpdateViewUIThread();
+
+                        System.out.println("paso por aca");
 
                         int chatBroadcasterType = fermatBundle.getInt(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE);
 
-                        if (chatBroadcasterType != 0) {
-                            switch (chatBroadcasterType) {
-                                case ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE:
+                        System.out.println("paso por aca chatBroadcasterType "+chatBroadcasterType);
 
-                                    String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_REMOTE_PK);
+                        switch (chatBroadcasterType) {
+                            case ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE:
 
-                                    if (remotePK != null) {
-                                        /*todo complete
+                                final String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_REMOTE_PK);
+                                System.out.println("paso por aca remotePK "+remotePK);
 
-                                        if(contactId != null) {
-                                            if (Build.VERSION.SDK_INT < 23)
-                                                message.set(contactId.indexOf(remotePK), getActivity().getResources().getString(R.string.cht_typing));
-                                            else
-                                                message.set(contactId.indexOf(remotePK), getContext().getResources().getString(R.string.cht_typing));
-                                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId,
-                                                    status, typeMessage, noReadMsgs, imgId);
-                                        }
-                                        */
+                                if (remotePK != null) {
+
+                                    if(chatList != null) {
+
+                                        setIsWriting(remotePK);
+
+                                        h.postDelayed(
+                                                new Runnable(){
+                                                    @Override
+                                                    public void run() {
+                                                        updateChatByRemotePK(remotePK);
+                                                    }
+                                                },
+                                                TimeUnit.SECONDS.toMillis(4)
+                                        );
+                                        break;
                                     }
-                                    break;
-                                case ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE:
+                                }
+                                break;
+                            case ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE:
 
-                                    break;
-                            }
+                                UUID messageId = (UUID) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_ID);
+                                System.out.println("paso por aca messageId "+messageId);
+                                updateChatByMessageId(messageId);
+
+                                break;
+                            case ChatBroadcasterConstants.NEW_MESSAGE_TYPE:
+
+                                Message message = (Message) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE);
+
+                                System.out.println("paso por aca messageId "+message);
+
+                                updateChatByChatId(message.getChatId());
+                                break;
+                            default:
+
+                                System.out.println("ChatMessageListFragment -> No deberia pasar por aca.");
+
+                                onUpdateViewUIThread();
+                                break;
                         }
-
-
                     }
+
                 }
             } catch (ClassCastException e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
+        }
+    }
+
+    private void setIsWriting(String remotePK) {
+
+        try {
+
+            for (com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat chat : chatList) {
+                if (chat.getContactId().equals(remotePK)) {
+
+                    if (Build.VERSION.SDK_INT < 23)
+                        chat.setMessage(getActivity().getResources().getString(R.string.cht_typing));
+                    else
+                        chat.setMessage(getContext().getResources().getString(R.string.cht_typing));
+
+                    adapter.changeDataSet(chatList);
+
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void updateChatByChatId(UUID chatId) {
+
+        try {
+
+            for (com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat chat : chatList) {
+                if (chat.getChatId().equals(chatId)) {
+
+                    Chat chatPersisted = chatManager.getChatByChatId(chat.getChatId());
+
+                    chat.setNoReadMsgs(chatManager.getUnreadCountMessageByChatId(chat.getChatId()));
+                    chat.setDateMessage(chatPersisted.getLastMessageDate());
+
+                    try {
+                        Message mess = chatManager.getLastMessageByChatId(chat.getChatId());
+                        if (mess != null) {
+
+                            chat.setMessage(mess.getMessage());
+                            chat.setStatus(mess.getStatus());
+                            chat.setTypeMessage(mess.getType());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    adapter.changeDataSet(chatList);
+
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void updateChatByMessageId(UUID messageId) {
+
+        try {
+
+            for (com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat chat : chatList) {
+                if (chat.getMessageId().equals(messageId)) {
+
+                    Chat chatPersisted = chatManager.getChatByChatId(chat.getChatId());
+
+                    chat.setNoReadMsgs(chatManager.getUnreadCountMessageByChatId(chat.getChatId()));
+                    chat.setDateMessage(chatPersisted.getLastMessageDate());
+
+                    try {
+                        Message mess = chatManager.getLastMessageByChatId(chat.getChatId());
+                        if (mess != null) {
+
+                            chat.setMessage(mess.getMessage());
+                            chat.setStatus(mess.getStatus());
+                            chat.setTypeMessage(mess.getType());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    adapter.changeDataSet(chatList);
+
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void updateChatByRemotePK(String remotePK) {
+
+        try {
+
+            for (com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat chat : chatList) {
+                if (chat.getContactId().equals(remotePK)) {
+
+                    Chat chatPersisted = chatManager.getChatByChatId(chat.getChatId());
+
+                    chat.setNoReadMsgs(chatManager.getUnreadCountMessageByChatId(chat.getChatId()));
+                    chat.setDateMessage(chatPersisted.getLastMessageDate());
+
+                    try {
+                        Message mess = chatManager.getLastMessageByChatId(chat.getChatId());
+                        if (mess != null) {
+
+                            chat.setMessage(mess.getMessage());
+                            chat.setStatus(mess.getStatus());
+                            chat.setTypeMessage(mess.getType());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    adapter.changeDataSet(chatList);
+
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }

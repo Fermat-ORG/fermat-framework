@@ -20,6 +20,7 @@ public class Chat {
 
     private String        contactName;
     private String        message;
+    private UUID          messageId;
     private Timestamp     dateMessage;
     private UUID          chatId;
     private String        contactId;
@@ -30,6 +31,7 @@ public class Chat {
 
     public Chat(final String        contactName,
                 final String        message,
+                final UUID          messageId,
                 final Timestamp     dateMessage,
                 final UUID          chatId,
                 final String        contactId,
@@ -83,6 +85,50 @@ public class Chat {
 
     public Bitmap getImgId() {
         return imgId;
+    }
+
+    public UUID getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(UUID messageId) {
+        this.messageId = messageId;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setDateMessage(Timestamp dateMessage) {
+        this.dateMessage = dateMessage;
+    }
+
+    public void setChatId(UUID chatId) {
+        this.chatId = chatId;
+    }
+
+    public void setContactId(String contactId) {
+        this.contactId = contactId;
+    }
+
+    public void setStatus(MessageStatus status) {
+        this.status = status;
+    }
+
+    public void setTypeMessage(TypeMessage typeMessage) {
+        this.typeMessage = typeMessage;
+    }
+
+    public void setNoReadMsgs(Long noReadMsgs) {
+        this.noReadMsgs = noReadMsgs;
+    }
+
+    public void setImgId(Bitmap imgId) {
+        this.imgId = imgId;
     }
 
     @Override
