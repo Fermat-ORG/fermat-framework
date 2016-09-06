@@ -606,7 +606,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
     }
 
     public void clean() {
-        adapter = new ChatMessageListAdapter(this.getContext(), null);
+        adapter = new ChatMessageListAdapter(this.getContext(), new ArrayList<ChatMessage>());
         messagesContainer.setAdapter(adapter);
     }
 

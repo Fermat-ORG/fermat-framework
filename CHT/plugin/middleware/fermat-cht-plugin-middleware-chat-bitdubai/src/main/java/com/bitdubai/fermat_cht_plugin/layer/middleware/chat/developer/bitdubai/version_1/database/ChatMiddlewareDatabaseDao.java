@@ -272,6 +272,34 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+    public void deleteAllChats() throws CantDeleteChatException, DatabaseOperationException {
+
+        try {
+
+            // delete all messages
+            DatabaseTable messageTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+
+            messageTable.deleteRecord();
+
+            // change the status of the chat to invisible
+            DatabaseTable chatTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+
+            DatabaseTableRecord record = chatTable.getEmptyRecord();
+
+            record.setFermatEnum(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME, ChatStatus.INVISIBLE);
+
+            chatTable.updateRecord(record);
+        } catch (Exception e) {
+
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            throw new CantDeleteChatException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to delete the Chat Transaction in the database.",
+                    null);
+        }
+    }
+
     public void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException, DatabaseOperationException {
         try {
 

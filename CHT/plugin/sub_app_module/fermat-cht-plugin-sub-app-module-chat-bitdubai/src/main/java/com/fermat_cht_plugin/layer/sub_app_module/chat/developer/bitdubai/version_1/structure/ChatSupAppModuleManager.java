@@ -100,6 +100,11 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
+    public void deleteAllChats() throws CantDeleteChatException {
+        middlewareChatManager.deleteAllChats();
+    }
+
+    @Override
     public List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException {
         return middlewareChatManager.getMessagesByChatId(chatId);
     }

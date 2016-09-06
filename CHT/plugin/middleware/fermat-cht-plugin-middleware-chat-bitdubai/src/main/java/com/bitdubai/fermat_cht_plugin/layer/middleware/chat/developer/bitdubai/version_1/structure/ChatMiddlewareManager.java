@@ -264,6 +264,32 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     }
 
     /**
+     * This method deletes a chat from database.
+     *
+     * @throws CantDeleteChatException
+     */
+    @Override
+    public void deleteAllChats() throws CantDeleteChatException {
+        try {
+            this.chatMiddlewareDatabaseDao.deleteAllChats();
+        } catch (DatabaseOperationException e) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantDeleteChatException(
+                    e,
+                    "Deleting a chat from database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantDeleteChatException(
+                    FermatException.wrapException(exception),
+                    "Deleting a chat from database",
+                    "Unexpected exception");
+        }
+    }
+
+    /**
      * This method returns a message by chat Id.
      *
      * @param chatId
