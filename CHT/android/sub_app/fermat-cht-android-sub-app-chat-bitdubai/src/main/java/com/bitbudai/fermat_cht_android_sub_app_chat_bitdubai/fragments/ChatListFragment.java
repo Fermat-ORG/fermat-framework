@@ -6,7 +6,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +30,7 @@ import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.FermatIntentFilter;
@@ -42,7 +43,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
@@ -50,6 +50,7 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
@@ -67,13 +68,8 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
-import java.util.UUID;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -87,28 +83,19 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
  * @version 1.0
  */
 
-public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
+public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> implements FermatListItemListeners<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat> {
 
     private ChatManager chatManager;
     private ErrorManager errorManager;
     private ChatPreferenceSettings chatSettings;
+    private LinearLayoutManager layoutManager;
     ChatListAdapter adapter;
     FermatApplicationCaller applicationsHelper;
     ChatActorCommunitySelectableIdentity chatIdentity;
-    ListView list;
+    RecyclerView list;
     private SearchView searchView;
 
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    ArrayList<String> contactName = new ArrayList<>();
-    ArrayList<String> message = new ArrayList<>();
-    ArrayList<String> dateMessage = new ArrayList<>();
-    ArrayList<UUID> chatId = new ArrayList<>();
-    ArrayList<String> contactId = new ArrayList<>();
-    ArrayList<String> status = new ArrayList<>();
-    ArrayList<String> typeMessage = new ArrayList<>();
-    ArrayList<UUID> idMessage = new ArrayList<>();
-    ArrayList<Long> noReadMsgs = new ArrayList<>();
-    ArrayList<Bitmap> imgId = new ArrayList<>();
+    ArrayList<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat> chatList = new ArrayList<>();
     View layout;
     PresentationDialog presentationDialog;
     ImageView noData;
@@ -127,17 +114,6 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
             List<Chat> chats = chatManager.listVisibleChats();
 
             if (chats != null && chats.size() > 0) {
-                contactName.clear();
-                message.clear();
-
-                idMessage.clear();
-                chatId.clear();
-                dateMessage.clear();
-                contactId.clear();
-                status.clear();
-                typeMessage.clear();
-                noReadMsgs.clear();
-                imgId.clear();
 
                 if (chatIdentity != null) {
                     for (Chat chat : chats) {
@@ -147,72 +123,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         // if not connected i mark the chat as invisible todo maybe we should just not allow the user to send messages but see the chat
                         if (cont != null && cont.getConnectionState() == ConnectionState.CONNECTED) {
 
-                            noReadMsgs.add(chatManager.getUnreadCountMessageByChatId(chat.getChatId()));
-                            contactId.add(chat.getRemoteActorPublicKey());
-                            contactName.add(cont.getAlias());
-                            Message mess = null;
-                            try {
-                                mess = chatManager.getLastMessageByChatId(chat.getChatId());
-                            } catch (Exception e) {
-                                mess = null;
-                            }
-                            if (mess != null) {
-
-                                message.add(mess.getMessage());
-                                status.add(mess.getStatus().toString());
-                                typeMessage.add(mess.getType().toString());
-                                idMessage.add(mess.getMessageId());
-                            } else {
-
-                                message.add("");
-                                status.add("");
-                                typeMessage.add("");
-                                idMessage.add(null);
-                            }
-                            long timemess = chat.getLastMessageDate().getTime();
-                            long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
-                            long milliseconds = timemess + nanos;
-                            Date dated = new java.util.Date(milliseconds);
-                            DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-                            formatter.setTimeZone(TimeZone.getDefault());
-                            String datef = formatter.format(new java.util.Date(milliseconds));
-                            if (Validate.isDateToday(dated)) {
-                                if (Validate.isDateToday(dated)) {
-                                    //if(android.text.format.DateFormat!=null)
-                                    try {
-                                        //TODO is24HourFormat doesn't work
-                                        if (Build.VERSION.SDK_INT < 23) {
-                                            if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
-                                                formatter = new SimpleDateFormat("HH:mm");
-                                            } else {
-                                                formatter = new SimpleDateFormat("hh:mm aa");
-                                            }
-                                        } else {
-                                            if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                                                formatter = new SimpleDateFormat("HH:mm");
-                                            } else {
-                                                formatter = new SimpleDateFormat("hh:mm aa");
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                        formatter = new SimpleDateFormat("HH:mm");
-                                    }
-                                }
-                                formatter.setTimeZone(TimeZone.getDefault());
-                                datef = formatter.format(new java.util.Date(milliseconds));
-                            } else {
-                                Date old = new Date(datef);
-                                Date today = new Date();
-                                long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                                if (dias == 1) {
-                                    datef = "YESTERDAY";
-                                }
-                            }
-                            dateMessage.add(datef);
-                            chatId.add(chat.getChatId());
-                            ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
-                            BitmapDrawable bmd = new BitmapDrawable(bytes);
-                            imgId.add(bmd.getBitmap());
+                            chatList.add(getChatFromChat(chat, cont));
                         } else {
                             // if not connected then mark the chat as invisible
                             chatManager.markChatAs(chat.getChatId(), ChatStatus.INVISIBLE                                                                                                                                                                                                                                                                                                                                                                                                                                  );
@@ -227,16 +138,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     nochatssubtitle.setVisibility(View.VISIBLE);
                     nochatssubtitle1.setVisibility(View.VISIBLE);
                     getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager_nodata);
-                    contactName.clear();
-                    message.clear();
-                    chatId.clear();
-                    idMessage.clear();
-                    dateMessage.clear();
-                    contactId.clear();
-                    status.clear();
-                    typeMessage.clear();
-                    noReadMsgs.clear();
-                    imgId.clear();
+                    chatList.clear();
                 }
             }
         } catch (CantGetChatException e) {
@@ -246,6 +148,41 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
+    }
+
+    private com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat getChatFromChat(Chat chat, ChatActorCommunityInformation cont) throws Exception {
+
+        long unreadMessagesCount = chatManager.getUnreadCountMessageByChatId(chat.getChatId());
+        String message = "";
+        MessageStatus messageStatus = null;
+        TypeMessage typeMessage = null;
+
+        try {
+            Message mess = chatManager.getLastMessageByChatId(chat.getChatId());
+            if (mess != null) {
+
+                message = mess.getMessage();
+                messageStatus = mess.getStatus();
+                typeMessage = mess.getType();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
+        BitmapDrawable bmd = new BitmapDrawable(bytes);
+
+        return new com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat(
+                cont.getAlias(),
+                message,
+                chat.getLastMessageDate(),
+                chat.getChatId(),
+                chat.getRemoteActorPublicKey(),
+                messageStatus,
+                typeMessage,
+                unreadMessagesCount,
+                bmd.getBitmap()
+        );
     }
 
     @Override
@@ -318,7 +255,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         }
     }
 
-    void updatevalues() {
+    void updateValues() {
         try {
             if (chatManager.existAnyVisibleChat()) {
                 layout.setBackgroundResource(R.drawable.cht_background_white);
@@ -344,16 +281,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                contactName.clear();
-                message.clear();
-                chatId.clear();
-                dateMessage.clear();
-                contactId.clear();
-                idMessage.clear();
-                status.clear();
-                typeMessage.clear();
-                noReadMsgs.clear();
-                imgId.clear();
+                chatList.clear();
             }
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -401,14 +329,13 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         emptyView = (LinearLayout) layout.findViewById(R.id.empty_view);
         noData = (ImageView) layout.findViewById(R.id.nodata);
         noDatalabel = (TextView) layout.findViewById(R.id.nodatalabel);
         nochatssubtitle = (TextView) layout.findViewById(R.id.nochatssubtitle);
         nochatssubtitle1 = (TextView) layout.findViewById(R.id.nochatssubtitle1);
-        updatevalues();
-        if (chatSettings.isHomeTutorialDialogEnabled() == true) {
+        updateValues();
+        if (chatSettings.isHomeTutorialDialogEnabled()) {
             setUpHelpChat();
         } else {
             final ChatActorCommunitySelectableIdentity identity = chatIdentity;
@@ -421,55 +348,71 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
             }
         }
 
-        adapter = new ChatListAdapter(getActivity(), contactName, message, dateMessage, chatId, contactId, status,
-                typeMessage, noReadMsgs, imgId, errorManager);
-        list = (ListView) layout.findViewById(R.id.list);
+        adapter = new ChatListAdapter(getActivity(), chatList);
+        adapter.setFermatListEventListener(this);
+
+        list = (RecyclerView) layout.findViewById(R.id.list);
+        layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.VERTICAL, false);
+        list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
         registerForContextMenu(list);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    appSession.setData("whocallme", "chatlist");
-                    Contact contact = new ContactImpl();
-                    contact.setRemoteActorPublicKey(adapter.getContactIdItem(position));
-                    contact.setAlias(adapter.getItem(position));
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    if (adapter.getImgIdItem(position) != null) {
-                        adapter.getImgIdItem(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    } else {
-                        Drawable d = getResources().getDrawable(R.drawable.cht_center_profile_icon_center);
-                        Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    }
-                    byte[] byteArray = stream.toByteArray();
-                    contact.setProfileImage(byteArray);
-                    Chat chat = new ChatImpl();
-                    chat.setChatId(adapter.getChatIdItem(position));
-                    appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
-                    appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chat);
-                    adapter.clear();
-                    changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-            }
-        });
         return layout;
+    }
+
+    public void clean() {
+        adapter = new ChatListAdapter(this.getActivity(), null);
+        adapter.setFermatListEventListener(this);
+        list.setAdapter(adapter);
+    }
+
+    @Override
+    public void onItemClickListener(com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat chatCurrent, int position) {
+
+        try {
+
+            System.out.println("entré acá positon "+position);
+
+            appSession.setData("whocallme", "chatlist");
+            Contact contact = new ContactImpl();
+            contact.setRemoteActorPublicKey(chatCurrent.getContactId());
+            contact.setAlias(chatCurrent.getContactName());
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            if (chatCurrent.getImgId() != null) {
+                chatCurrent.getImgId().compress(Bitmap.CompressFormat.PNG, 100, stream);
+            } else {
+                Drawable d = getResources().getDrawable(R.drawable.cht_center_profile_icon_center);
+                Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            }
+            byte[] byteArray = stream.toByteArray();
+            contact.setProfileImage(byteArray);
+            Chat chat = new ChatImpl();
+            chat.setChatId(chatCurrent.getChatId());
+            appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
+            appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chat);
+            changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+    }
+
+    @Override
+    public void onLongItemClickListener(com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat data, int position) {
+
     }
 
     public void onUpdateViewUIThread() {
         if(isAttached) {
             if (searchView != null) {
                 if (searchView.getQuery().toString().equals("")) {
-                    updatevalues();
-                    adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                    updateValues();
+                    adapter.changeDataSet(chatList);
                 }
             } else {
-                updatevalues();
-                adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                updateValues();
+                adapter.changeDataSet(chatList);
             }
-        }else adapter.clear();
+        } else clean();
     }
 
     @Override
@@ -503,36 +446,14 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         super.onDestroy();
         unbindDrawables(layout.findViewById(R.id.list));
         unbindDrawables(layout.findViewById(R.id.empty_view));
-        adapter.clear();
+        //adapter.clear();
         chatSettings = null;
         chatIdentity = null;
         chatManager = null;
         applicationsHelper = null;
-        contactName.clear();
-        message.clear();
-        chatId.clear();
-        dateMessage.clear();
-        idMessage.clear();
-        contactId.clear();
-        status.clear();
-        typeMessage.clear();
-        noReadMsgs.clear();
-        imgId.clear();
+        chatList.clear();
         emptyView.removeAllViewsInLayout();
-        contactName.clear();
-        message.clear();
-//        searchView.destroyDrawingCache();
-//        searchView.removeAllViews();
-//        searchView.removeAllViewsInLayout();
-//        searchView = null;
         applicationsHelper =null;
-        chatId.clear();
-        dateMessage.clear();
-        contactId.clear();
-        status.clear();
-        typeMessage.clear();
-        noReadMsgs.clear();
-        imgId.clear();
         destroy();
     }
 
@@ -566,8 +487,8 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 @Override
                 public boolean onQueryTextChange(String s) {
                     if (s.equals(searchView.getQuery().toString())) {
-                        updatevalues();
-                        adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                        updateValues();
+                        adapter.changeDataSet(chatList);
                         adapter.getFilter().filter(s);
                     }
                     return false;
@@ -579,8 +500,8 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     searchView.setQuery(filterString, true);
                     searchView.setIconified(false);
                 } else {
-                    updatevalues();
-                    adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                    updateValues();
+                    adapter.changeDataSet(chatList);
                 }
             }
         }
@@ -610,7 +531,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     break;
                 case 2:
                     try {
-                        if (chatId != null && chatId.size() > 0) {
+                        if (chatList != null && chatList.size() > 0) {
                             final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
                             alert.setTextTitle("Delete All Chats");
                             alert.setTextBody("Do you want to delete all chats? All chats will be erased");
@@ -620,8 +541,8 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
                                     try {
-                                        updatevalues();
-                                        adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                                        updateValues();
+                                        adapter.changeDataSet(chatList);
                                     } catch (Exception e) {
                                         errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                     }
@@ -661,7 +582,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         try {
             // Set the info of chat selected in session
-            appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chatManager.getChatByChatId(chatId.get(info.position)));
+            appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chatManager.getChatByChatId(chatList.get(info.position).getChatId()));
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         } catch (Exception e) {
@@ -684,8 +605,8 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         try {
-                            updatevalues();
-                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                            updateValues();
+                            adapter.changeDataSet(chatList);
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
@@ -709,8 +630,8 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         try {
-                            updatevalues();
-                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                            updateValues();
+                            adapter.changeDataSet(chatList);
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
@@ -732,8 +653,8 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         try {
-                            updatevalues();
-                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                            updateValues();
+                            adapter.changeDataSet(chatList);
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
@@ -760,62 +681,37 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW)) {
+                        onUpdateViewUIThread();
 
                         int chatBroadcasterType = fermatBundle.getInt(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE);
 
-                        switch (chatBroadcasterType) {
-                            case ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE:
+                        if (chatBroadcasterType != 0) {
+                            switch (chatBroadcasterType) {
+                                case ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE:
 
-                                String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_REMOTE_PK);
+                                    String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_REMOTE_PK);
 
-                                if(contactId != null) {
-                                    if (Build.VERSION.SDK_INT < 23)
-                                        message.set(contactId.indexOf(remotePK), getActivity().getResources().getString(R.string.cht_typing));
-                                    else
-                                        message.set(contactId.indexOf(remotePK), getContext().getResources().getString(R.string.cht_typing));
-                                    adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId,
-                                            status, typeMessage, noReadMsgs, imgId);
-                                }
-                                break;
-                            case ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE:
+                                    if (remotePK != null) {
+                                        /*todo complete
 
-                                UUID messageId = (UUID) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_ID);
+                                        if(contactId != null) {
+                                            if (Build.VERSION.SDK_INT < 23)
+                                                message.set(contactId.indexOf(remotePK), getActivity().getResources().getString(R.string.cht_typing));
+                                            else
+                                                message.set(contactId.indexOf(remotePK), getContext().getResources().getString(R.string.cht_typing));
+                                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId,
+                                                    status, typeMessage, noReadMsgs, imgId);
+                                        }
+                                        */
+                                    }
+                                    break;
+                                case ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE:
 
-                                MessageStatus messageStatus = (MessageStatus) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_STATUS);
-
-                                if (messageId != null && messageStatus != null && message != null && chatId != null) {
-
-                                    int index = idMessage.indexOf(messageId);
-
-                                    status.set(index, messageStatus.toString());
-
-                                    adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-                                }
-
-                                break;
-
-                            case ChatBroadcasterConstants.NEW_MESSAGE_TYPE:
-
-                                Message chatMessage = (Message) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE);
-
-                                if (chatMessage != null && message != null && chatId != null) {
-
-                                    int index = chatId.indexOf(chatMessage.getChatId());
-
-                                    message.set(index, chatMessage.getMessage());
-                                    status.set(index, chatMessage.getStatus().toString());
-                                    typeMessage.set(index, chatMessage.getType().toString());
-                                    // TODO CHANGE DATE TOO AND ORDER AND UNREAD COUNT
-
-                                    adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-                                }
-
-                                break;
-
-                            default:
-                                onUpdateViewUIThread();
-                                break;
+                                    break;
+                            }
                         }
+
+
                     }
                 }
             } catch (ClassCastException e) {
