@@ -31,7 +31,7 @@ public interface MiddlewareChatManager extends FermatManager {
 
     void saveChat(Chat chat) throws CantSaveChatException;
 
-    void deleteChat(UUID chatId) throws CantDeleteChatException;
+    void deleteChat(UUID chatId, boolean isDeleteChat) throws CantDeleteChatException;
 
     List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException;
 

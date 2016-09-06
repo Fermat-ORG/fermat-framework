@@ -596,6 +596,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 case 2:
                     try {
                         if (chatId != null && chatId.size() > 0) {
+                            appSession.setData(ChatSessionReferenceApp.CHATS_ID, chatId);
                             final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
                             alert.setTextTitle("Delete All Chats");
                             alert.setTextBody("Do you want to delete all chats? All chats will be erased");
@@ -708,6 +709,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         }
         if (id == R.id.menu_delete_all_chats) {
             try {
+                appSession.setData(ChatSessionReferenceApp.CHATS_ID, chatId);
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
                 alert.setTextTitle("Delete All Chats");
                 alert.setTextBody("Do you want to delete all chats? All chats will be erased");
@@ -762,6 +764,9 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     }
                 }
             } catch (ClassCastException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            } catch (Exception e){
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }

@@ -88,8 +88,8 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
-    public void deleteChat(UUID chatId) throws CantDeleteChatException {
-        middlewareChatManager.deleteChat(chatId);
+    public void deleteChat(UUID chatId, boolean isDeleteChat) throws CantDeleteChatException {
+        middlewareChatManager.deleteChat(chatId,isDeleteChat);
     }
 
     @Override
