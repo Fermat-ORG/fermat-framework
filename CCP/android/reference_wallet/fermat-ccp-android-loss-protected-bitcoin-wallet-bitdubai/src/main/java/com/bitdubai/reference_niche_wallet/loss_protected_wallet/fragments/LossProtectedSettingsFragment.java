@@ -24,20 +24,17 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
+import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantCreateLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantFindLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
-import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
@@ -61,6 +58,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
     private ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession;
     private LossProtectedWallet lossProtectedWalletManager;
+    private String PublicKey;
     LossProtectedWalletSettings lossProtectedWalletSettings;
     private String previousSelectedItem = "MainNet";
     private String previousSelectedItemExchange = null;
@@ -79,6 +77,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
         lossProtectedWalletSession = appSession;
         try {
             lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
+            PublicKey = lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
             if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
@@ -390,7 +389,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
                     CryptoAddress cryptoAddress = new CryptoAddress("mtMFTiGfBpjL1GBki8zrk5UW8otD6Gt541", CryptoCurrency.BITCOIN);
 
                     try {
-                        walletContact = lossProtectedWalletManager.findWalletContactByName("Testnet_bitcoins", appSession.getAppPublicKey(), lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey());
+                        walletContact = lossProtectedWalletManager.findWalletContactByName("Testnet_bitcoins", appSession.getAppPublicKey(), PublicKey);
 
                         if(walletContact == null)
                         {
@@ -461,7 +460,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
             CryptoAddress cryptoAddress = lossProtectedWalletManager.requestAddressToKnownUser(
-                    lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey(),
+                    PublicKey,
                     Actors.INTRA_USER,
                     actorPublicKey,
                     Actors.EXTRA_USER,
@@ -478,7 +477,12 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
             Toast.makeText(getActivity().getApplicationContext(), "CantRequestLossProtectedAddressException", Toast.LENGTH_SHORT).show();
 
 
-        } catch (CantGetSelectedActorIdentityException e) {
+        }
+        catch (Exception e) {
+         //   Toast.makeText(getActivity().getApplicationContext(), "ActorIdentityNotSelectedException", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+       /* catch (CantGetSelectedActorIdentityException e) {
             Toast.makeText(getActivity().getApplicationContext(), "CantGetSelectedActorIdentityException", Toast.LENGTH_SHORT).show();
 
             e.printStackTrace();
@@ -486,7 +490,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
             Toast.makeText(getActivity().getApplicationContext(), "ActorIdentityNotSelectedException", Toast.LENGTH_SHORT).show();
 
             e.printStackTrace();
-        }
+        }*/
         return walletAddres;
     }
 }
