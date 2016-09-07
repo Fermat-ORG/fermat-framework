@@ -455,18 +455,6 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unbindDrawables(layout.findViewById(R.id.list));
-        unbindDrawables(layout.findViewById(R.id.empty_view));
-        adapter.changeDataSet(null);
-        adapter = null;
-        chatSettings = null;
-        chatIdentity = null;
-        chatManager = null;
-        applicationsHelper = null;
-        chatList.clear();
-        emptyView.removeAllViewsInLayout();
-        applicationsHelper =null;
-
         destroy();
     }
 
@@ -788,31 +776,33 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         boolean found = false;
         try {
 
-            for (com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat chat : chatList) {
-                if (chat.getChatId().equals(chatId)) {
+            if (chatList != null && !chatList.isEmpty()) {
+                for (com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat chat : chatList) {
+                    if (chat.getChatId().equals(chatId)) {
 
-                    Chat chatPersisted = chatManager.getChatByChatId(chat.getChatId());
+                        Chat chatPersisted = chatManager.getChatByChatId(chat.getChatId());
 
-                    chat.setNoReadMsgs(chatManager.getUnreadCountMessageByChatId(chat.getChatId()));
-                    chat.setDateMessage(chatPersisted.getLastMessageDate());
+                        chat.setNoReadMsgs(chatManager.getUnreadCountMessageByChatId(chat.getChatId()));
+                        chat.setDateMessage(chatPersisted.getLastMessageDate());
 
-                    try {
-                        Message mess = chatManager.getLastMessageByChatId(chat.getChatId());
-                        if (mess != null) {
+                        try {
+                            Message mess = chatManager.getLastMessageByChatId(chat.getChatId());
+                            if (mess != null) {
 
-                            chat.setMessageId(mess.getMessageId());
-                            chat.setMessage(mess.getMessage());
-                            chat.setStatus(mess.getStatus());
-                            chat.setTypeMessage(mess.getType());
+                                chat.setMessageId(mess.getMessageId());
+                                chat.setMessage(mess.getMessage());
+                                chat.setStatus(mess.getStatus());
+                                chat.setTypeMessage(mess.getType());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+
+                        found = true;
+                        adapter.changeDataSet(chatList);
+
+                        break;
                     }
-
-                    found = true;
-                    adapter.changeDataSet(chatList);
-
-                    break;
                 }
             }
         } catch (Exception ex) {
@@ -826,7 +816,24 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                 ChatActorCommunityInformation cont = chatManager.getChatActorConnection(chatIdentity.getPublicKey(), chatPersisted.getRemoteActorPublicKey());
 
+                if (chatList == null)
+                    chatList = new ArrayList<>();
+
                 chatList.add(getChatFromChat(chatPersisted, cont));
+
+                layout.setBackgroundResource(R.drawable.cht_background_white);
+                emptyView.setVisibility(View.GONE);
+                noData.setVisibility(View.GONE);
+                noDatalabel.setVisibility(View.GONE);
+                nochatssubtitle.setVisibility(View.GONE);
+                nochatssubtitle1.setVisibility(View.GONE);
+                try {
+                    getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                adapter.changeDataSet(chatList);
 
             }
         } catch (Exception e) {
