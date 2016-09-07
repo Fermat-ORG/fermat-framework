@@ -342,7 +342,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                             cryptoWallet.sendToWallet(
                                     operator.longValueExact(),
                                     appSession.getAppPublicKey(),
-                                    wallet.getWalletPublicKey(),//RECEIVE WALLET KEY
+                                    wallet.getWalletPublicKey(),//RECEIVED WALLET KEY
                                     notes,
                                     Actors.BITCOIN_BASIC_USER,
                                     actor,

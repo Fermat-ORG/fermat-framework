@@ -67,6 +67,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Geo
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -464,8 +465,6 @@ public class ChatActorCommunityManager
 
     public void handleActorListReceivedEvent(List<ChatExposingData> actorProfileList) throws FermatException {
 
-        System.out.println("CHAT ACTOR LIST FLOW -> handleActorListReceivedEvent -> INIT");
-
         List<ChatActorCommunityInformation> worldActorList = new ArrayList<>();
 
         final ChatActorCommunitySelectableIdentity selectableIdentity = getSelectedActorIdentity();
@@ -478,6 +477,8 @@ public class ChatActorCommunityManager
         String country, city, state;
 
         for (ChatExposingData worldActor : actorProfileList) {
+
+            System.out.println(" chat actor community manager processiong -> "+worldActor.getAlias());
 
             country = "--";
             city = "--";
@@ -500,7 +501,20 @@ public class ChatActorCommunityManager
 
                 connectionState = connectedActor.getConnectionState();
                 connectionID = connectedActor.getConnectionId();
+
+                if (!worldActor.getAlias().equals(connectedActor.getAlias())) {
+                    chatActorConnectionManager.updateAlias(connectionID, worldActor.getAlias());
+                    //todo see if necessary change more fields
+                }
+
+                if (!Arrays.equals(worldActor.getImage(), connectedActor.getImage()))
+                    chatActorConnectionManager.updateImage(connectionID, worldActor.getImage() != null ? worldActor.getImage() : new byte[0]);
+
             } catch (ActorConnectionNotFoundException ex) {
+                connectionState = null;
+                connectionID = null;
+            } catch (Exception ex) {
+                ex.printStackTrace();
                 connectionState = null;
                 connectionID = null;
             }
@@ -521,8 +535,6 @@ public class ChatActorCommunityManager
                     )
             );
 
-            System.out.println("************** Actor Chat Register: " + worldActor.getAlias() + " - " + worldActor.getStatus() + " - " + worldActor.getStatusConnected());
-
         }
 
         FermatBundle bundle = new FermatBundle();
@@ -531,8 +543,6 @@ public class ChatActorCommunityManager
         bundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
         bundle.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_COMM_ACTOR_RECEIVED);
         bundle.put(ChatBroadcasterConstants.CHAT_COMM_ACTOR_LIST, worldActorList);
-
-        System.out.println("CHAT ACTOR LIST FLOW -> handleActorListReceivedEvent -> END");
 
         broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), bundle);
     }

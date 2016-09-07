@@ -11,6 +11,7 @@ import java.util.UUID;
  * Created by franklin on 08/01/16.
  */
 public interface Message extends Serializable {
+
     UUID getMessageId();
 
     void setMessageId(UUID messageId);
@@ -35,11 +36,4 @@ public interface Message extends Serializable {
 
     void setMessageDate(Timestamp messageDate);
 
-    UUID getContactId();
-
-    void setContactId(UUID contactId);
-
-    long getCount();
-
-    void setCount(long count);
 }

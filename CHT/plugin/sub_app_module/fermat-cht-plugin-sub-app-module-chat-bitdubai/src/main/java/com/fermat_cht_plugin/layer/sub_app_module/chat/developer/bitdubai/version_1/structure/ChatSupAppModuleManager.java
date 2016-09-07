@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
@@ -88,8 +89,18 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
+    public void markChatAs(UUID chatId, ChatStatus chatStatus) throws CantSaveChatException {
+
+        middlewareChatManager.markChatAs(chatId, chatStatus);
+    }
+
     public void deleteChat(UUID chatId, boolean isDeleteChat) throws CantDeleteChatException {
         middlewareChatManager.deleteChat(chatId,isDeleteChat);
+    }
+
+    @Override
+    public void deleteAllChats() throws CantDeleteChatException {
+        middlewareChatManager.deleteAllChats();
     }
 
     @Override
@@ -161,7 +172,7 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
-    public ChatActorCommunityInformation getConnectedChatActor(String localPublicKey, String remotePublicKey) throws CantGetActorConnectionException, ActorConnectionNotFoundException {
+    public ChatActorCommunityInformation getChatActorConnection(String localPublicKey, String remotePublicKey) throws CantGetActorConnectionException, ActorConnectionNotFoundException {
 
         final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(localPublicKey, Actors.CHAT);
 

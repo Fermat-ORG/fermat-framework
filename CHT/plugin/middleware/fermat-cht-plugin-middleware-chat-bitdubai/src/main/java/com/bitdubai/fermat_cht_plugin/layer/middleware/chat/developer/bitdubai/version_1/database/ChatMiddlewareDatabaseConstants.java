@@ -22,13 +22,9 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String CHATS_ID_CHAT_COLUMN_NAME = "id_chat";
     public static final String CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME = "local_actor_pub_key";
     public static final String CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME = "remote_actor_pub_key";
-    public static final String CHATS_CHAT_NAME_COLUMN_NAME = "chat_name";
     public static final String CHATS_STATUS_COLUMN_NAME = "status";
     public static final String CHATS_CREATION_DATE_COLUMN_NAME = "creation_date";
     public static final String CHATS_LAST_MESSAGE_DATE_COLUMN_NAME = "last_message_date";
-    public static final String CHATS_CONTACT_ASSOCIATED_LIST = "contact_associated_list";
-    public static final String CHATS_TYPE_CHAT = "type_chat";
-    public static final String CHATS_SCHEDULED_DELIVERY = "scheduled_delivery";
 
     /**
      * Message database table definition.
@@ -41,7 +37,5 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String MESSAGE_STATUS_COLUMN_NAME = "status";
     public static final String MESSAGE_TYPE_COLUMN_NAME = "type";
     public static final String MESSAGE_DATE_COLUMN_NAME = "date";
-    public static final String MESSAGE_CONTACT_ID = "contact_id";
-    public static final String MESSAGE_COUNT = "message_count";
 
 }

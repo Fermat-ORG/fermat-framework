@@ -315,21 +315,13 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
 
                 chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), null, null, null, null, actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
-
-            System.out.println("AbstractNs: onNetworkServiceActorListReceived");
-            ChatActorListReceivedEvent eventToRaise = eventManager.getNewEventMati(EventType.CHAT_ACTOR_LIST_RECEIVED, ChatActorListReceivedEvent.class);
-            eventToRaise.setSource(eventSource);
-            eventToRaise.setActorProfileList(chatExposingDataArrayList);
-
-            System.out.println("CHAT ACTOR LIST FLOW -> RAISING EVENT -> -> init");
-            eventManager.raiseEvent(eventToRaise);
-//        FermatBundle fermatBundle3 = new FermatBundle();
-//        fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_NETWORK_SERVICE.getCode());
-//        fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-//        fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_COMM_ACTOR_RECEIVED);
-//        fermatBundle3.put(ChatBroadcasterConstants.CHAT_COMM_ACTOR_LIST, actorProfiles);
-//        broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), fermatBundle3);
         }
+
+        ChatActorListReceivedEvent eventToRaise = eventManager.getNewEventMati(EventType.CHAT_ACTOR_LIST_RECEIVED, ChatActorListReceivedEvent.class);
+        eventToRaise.setSource(eventSource);
+        eventToRaise.setActorProfileList(chatExposingDataArrayList);
+
+        eventManager.raiseEvent(eventToRaise);
     }
 
     @Override

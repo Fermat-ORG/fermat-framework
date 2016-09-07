@@ -20,8 +20,6 @@ public class MessageImpl implements Message {
     private MessageStatus status;
     private TypeMessage type;
     private Timestamp messageDate;
-    private UUID contactId;
-    private long count;
 
     public MessageImpl() {
     }
@@ -29,8 +27,7 @@ public class MessageImpl implements Message {
     public MessageImpl(UUID chatId,
                        MessageMetadata messageMetadata,
                        MessageStatus messageStatus,
-                       TypeMessage typeMessage,
-                       UUID contactId) {
+                       TypeMessage typeMessage) {
 
         messageId = messageMetadata.getMessageId();
         this.chatId = chatId;
@@ -38,7 +35,6 @@ public class MessageImpl implements Message {
         status = messageStatus;
         type = typeMessage;
         messageDate = new Timestamp(System.currentTimeMillis());
-        this.contactId = contactId;
     }
 
     @Override
@@ -99,26 +95,6 @@ public class MessageImpl implements Message {
     @Override
     public void setMessageDate(Timestamp messageDate) {
         this.messageDate = messageDate;
-    }
-
-    @Override
-    public UUID getContactId() {
-        return this.contactId;
-    }
-
-    @Override
-    public void setContactId(UUID contactId) {
-        this.contactId = contactId;
-    }
-
-    @Override
-    public long getCount() {
-        return count;
-    }
-
-    @Override
-    public void setCount(long count) {
-        this.count = count;
     }
 
     /**

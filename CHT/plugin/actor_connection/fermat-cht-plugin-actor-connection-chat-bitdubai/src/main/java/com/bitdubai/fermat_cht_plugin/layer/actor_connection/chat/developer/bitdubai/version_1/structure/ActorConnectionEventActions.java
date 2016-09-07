@@ -13,9 +13,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequ
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
@@ -55,23 +53,17 @@ public class ActorConnectionEventActions {
     private final ChatManager chatNetworkService;
     private final ChatActorConnectionDao dao;
     private ChatActorConnectionPluginRoot chatActorConnectionPluginRoot;
-    private final EventManager eventManager;
     private final Broadcaster broadcaster;
-    private final PluginVersionReference pluginVersionReference;
 
     public ActorConnectionEventActions(final ChatManager cryptoBrokerNetworkService,
                                        final ChatActorConnectionDao dao,
                                        final ChatActorConnectionPluginRoot chatActorConnectionPluginRoot,
-                                       final EventManager eventManager,
-                                       final Broadcaster broadcaster,
-                                       final PluginVersionReference pluginVersionReference) {
+                                       final Broadcaster broadcaster) {
 
         this.chatNetworkService = cryptoBrokerNetworkService;
         this.dao = dao;
         this.chatActorConnectionPluginRoot = chatActorConnectionPluginRoot;
-        this.eventManager = eventManager;
         this.broadcaster = broadcaster;
-        this.pluginVersionReference = pluginVersionReference;
     }
 
     public void handleNewsEvent() throws CantHandleNewsEventException {
@@ -104,38 +96,43 @@ public class ActorConnectionEventActions {
 
             for (final ChatConnectionRequest request : list) {
 
-                switch (request.getRequestAction()) {
+                try {
 
-                    case ACCEPT:
-                        this.handleAcceptConnection(request.getRequestId());//TODO check this, exception when connectionID is not found
+                    switch (request.getRequestAction()) {
 
-                        FermatBundle fermatBundle = new FermatBundle();
-                        fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_CONNECTION.getCode());
-                        fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_COMMUNITY.getCode()));
-                        fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-                        fermatBundle.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_COMMUNITY_CONNECTION_ACCEPTED_NOTIFICATION);
-                        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
+                        case ACCEPT:
+                            this.handleAcceptConnection(request.getRequestId());//TODO check this, exception when connectionID is not found
 
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
-                        break;
-                    case DENY:
-                        this.handleDenyConnection(request.getRequestId());
-                        break;
-                    case DISCONNECT:
-                        this.handleDisconnect(request.getRequestId());
-                        break;
+                            FermatBundle fermatBundle = new FermatBundle();
+                            fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_CONNECTION.getCode());
+                            fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_COMMUNITY.getCode()));
+                            fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+                            fermatBundle.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_COMMUNITY_CONNECTION_ACCEPTED_NOTIFICATION);
+                            fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
 
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+                            break;
+                        case DENY:
+                            this.handleDenyConnection(request.getRequestId());
+                            break;
+                        case DISCONNECT:
+                            this.handleDisconnect(request.getRequestId());
+                            break;
+
+                    }
+                } catch (CantDenyActorConnectionRequestException | ActorConnectionNotFoundException | UnexpectedConnectionStateException | CantAcceptActorConnectionRequestException | CantDisconnectFromActorException exception) {
+                    chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+
+                    try {
+                        chatNetworkService.confirm(request.getRequestId());
+                    } catch (ConnectionRequestNotFoundException | CantConfirmException e) {
+                        chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    }
                 }
 
             }
 
-        } catch (CantListPendingConnectionRequestsException |
-                ActorConnectionNotFoundException |
-                UnexpectedConnectionStateException |
-                CantAcceptActorConnectionRequestException /* |
-                CantCancelActorConnectionRequestException */ |
-                CantDenyActorConnectionRequestException |
-                CantDisconnectFromActorException e) {
+        } catch (CantListPendingConnectionRequestsException e) {
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
             throw new CantHandleUpdateEventException(e, "", "Error handling Crypto Addresses News Event.");
@@ -153,60 +150,62 @@ public class ActorConnectionEventActions {
                     Actors.CHAT
             );
 
-            ChatActorConnection oldActorConnection = dao.chatActorConnectionExists(linkedIdentity, request.getSenderPublicKey());
-            ConnectionState connectionState = null;
-            if (oldActorConnection != null)
-                connectionState = oldActorConnection.getConnectionState();
+            try {
 
-            if (connectionState != null && connectionState.getCode().equals(ConnectionState.CONNECTED.getCode()))
-                return;
+                ChatActorConnection oldActorConnection = dao.getActorConnection(linkedIdentity, request.getSenderPublicKey());
 
-            if (connectionState != null && connectionState.getCode().equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE.getCode())){
-                final ChatActorConnection actorConnectionAccepted = new ChatActorConnection(
-                        oldActorConnection.getConnectionId(),
-                        oldActorConnection.getLinkedIdentity(),
-                        oldActorConnection.getPublicKey(),
-                        oldActorConnection.getAlias(),
-                        oldActorConnection.getImage(),
-                        ConnectionState.CONNECTED,
-                        oldActorConnection.getCreationTime(),
-                        oldActorConnection.getUpdateTime(),
-                        oldActorConnection.getStatus()
-                );
-                dao.updateChatActorConnectionRequest(actorConnectionAccepted);
-                return;
-            }
-            else connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
+                ConnectionState connectionState = oldActorConnection.getConnectionState();
 
-            final ChatActorConnection actorConnection = new ChatActorConnection(
-                    request.getRequestId(),
-                    linkedIdentity,
-                    request.getSenderPublicKey(),
-                    request.getSenderAlias(),
-                    request.getSenderImage(),
-                    connectionState,
-                    request.getSentTime(),
-                    request.getSentTime(),
-                    ""
-            );
-
-            switch (request.getSenderActorType()) {
-                case CHAT:
-                    dao.registerChatActorConnection(actorConnection, oldActorConnection);
-
-                    FermatBundle fermatBundle = new FermatBundle();
-                    fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_CONNECTION.getCode());
-                    fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_COMMUNITY.getCode()));
-                    fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-                    fermatBundle.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_COMMUNITY_REQUEST_CONNECTION_NOTIFICATION);
-                    fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
-
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
-
+                if (connectionState == ConnectionState.CONNECTED) {
+                    // if i have a previous connection connected i change the connection id to the new and i accept the connection
+                    // todo raise an event if i cannot accept the connection
+                    dao.changeId(oldActorConnection.getConnectionId(), request.getRequestId());
                     chatNetworkService.confirm(request.getRequestId());
-                    break;
-                default:
-                    throw new UnsupportedActorTypeException("request: " + request, "Unsupported actor type exception.");
+                    chatNetworkService.acceptConnection(request.getRequestId());
+                } else if (connectionState == ConnectionState.PENDING_REMOTELY_ACCEPTANCE) {
+                    // if i have a previous connection pending remotely acceptance i change the connection id to the new and i accept the connection
+                    // todo raise an event if i cannot accept the connection
+                    dao.changeIdAndConnectionState(oldActorConnection.getConnectionId(), request.getRequestId(), ConnectionState.CONNECTED);
+                    chatNetworkService.confirm(request.getRequestId());
+                    chatNetworkService.acceptConnection(request.getRequestId());
+                } else {
+                    // if i have a previous connection, with other state i set to pending local acceptance
+                    dao.changeIdAndConnectionState(oldActorConnection.getConnectionId(), request.getRequestId(), ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+                    chatNetworkService.confirm(request.getRequestId());
+                }
+
+            } catch (ActorConnectionNotFoundException actorNotFoundException) {
+
+                // if i cannot find a previous connection, i will create it pending local acceptance
+                switch (request.getSenderActorType()) {
+                    case CHAT:
+                        final ChatActorConnection actorConnection = new ChatActorConnection(
+                                request.getRequestId(),
+                                linkedIdentity,
+                                request.getSenderPublicKey(),
+                                request.getSenderAlias(),
+                                request.getSenderImage(),
+                                ConnectionState.PENDING_LOCALLY_ACCEPTANCE,
+                                request.getSentTime(),
+                                request.getSentTime(),
+                                ""
+                        );
+                        dao.registerActorConnection(actorConnection);
+
+                        FermatBundle fermatBundle = new FermatBundle();
+                        fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_CONNECTION.getCode());
+                        fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_COMMUNITY.getCode()));
+                        fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+                        fermatBundle.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_COMMUNITY_REQUEST_CONNECTION_NOTIFICATION);
+                        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
+
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
+                        chatNetworkService.confirm(request.getRequestId());
+                        break;
+                    default:
+                        throw new UnsupportedActorTypeException("request: " + request, "Unsupported actor type exception.");
+                }
             }
 
         } catch (final UnsupportedActorTypeException unsupportedActorTypeException) {

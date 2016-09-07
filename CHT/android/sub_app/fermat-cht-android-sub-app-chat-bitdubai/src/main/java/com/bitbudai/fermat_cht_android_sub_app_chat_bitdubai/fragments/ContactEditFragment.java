@@ -83,7 +83,7 @@ public class ContactEditFragment extends AbstractFermatFragment<ReferenceAppFerm
 
             ChatIdentity chatIdentity = chatManager.getIdentityChatUsersFromCurrentDeviceUser().get(0);
 
-            ChatActorCommunityInformation cont = chatManager.getConnectedChatActor(chatIdentity.getPublicKey(), (String) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));
+            ChatActorCommunityInformation cont = chatManager.getChatActorConnection(chatIdentity.getPublicKey(), (String) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));
 
             if (cont != null) {
                 contactname.add(cont.getAlias());

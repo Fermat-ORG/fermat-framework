@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 03/03/16.
  * @version 1.0
  */
-public class ProfileListAdapter extends ArrayAdapter<String> {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
+public class ProfileListAdapter extends ArrayAdapter<String> {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatMessageHolder> {//ChatFactory
 
     //List<ContactList> contactsList = new ArrayList<>();
     ArrayList<String> profileinfo = new ArrayList<>();

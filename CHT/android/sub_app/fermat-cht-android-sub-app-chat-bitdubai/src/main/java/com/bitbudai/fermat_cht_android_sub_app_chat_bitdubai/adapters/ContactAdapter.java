@@ -23,7 +23,7 @@ import java.util.UUID;
  * @version 1.0
  */
 
-//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
+//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatMessageHolder> {//ChatFactory
 public class ContactAdapter extends ArrayAdapter<String> {
 
     ArrayList<String> contactAlias;

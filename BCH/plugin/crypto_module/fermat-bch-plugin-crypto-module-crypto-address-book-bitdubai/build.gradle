@@ -14,8 +14,8 @@ repositories {
 }
 
 dependencies {
-    compile project(':fermat-api')
-    compile project(':fermat-pip-api')
+    //compile project(':fermat-api')
+    //compile project(':fermat-pip-api')
     testCompile 'junit:junit:4.11'
     testCompile 'org.powermock:powermock-module-junit4:1.5.2'
     testCompile 'org.powermock:powermock-api-mockito:1.5.2'

@@ -19,9 +19,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatExcep
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 
-import java.util.List;
-import java.util.UUID;
-
 /**
  * Created by richardalexander on 09/03/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 17/03/16.
@@ -118,11 +115,12 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
 
                 delete_contact = true;
             } else if (AlertType == 3) {
-                List<UUID> chatsIds = (List<UUID>) appSession.getData(ChatSessionReferenceApp.CHATS_ID);//chatSession.getSelectedChat();
-                for (UUID chatId :
-                        chatsIds) {
+
+                try {
                     try {
-                        chatManager.deleteChat(chatId, true);
+                        // Delete chats and refresh view
+                        chatManager.deleteAllChats();
+
                     } catch (CantDeleteChatException e) {
                         if (errorManager != null)
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -130,6 +128,10 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
                         if (errorManager != null)
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     }
+                    dismiss();
+                } catch (Exception e) {
+                    if (errorManager != null)
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
                 delete_chats = true;
             } else if (AlertType == 4) {

@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -96,6 +97,31 @@ public class ChatMetadataRecordDAO {
         create(messageMetadataRecord);
     }
 
+    public void deleteMessageByPackageId(UUID packageId) throws CantGetNotificationException, CantReadRecordDataBaseException {
+
+        if (packageId == null)
+            throw new IllegalArgumentException("The packageId is required, can not be null");
+
+        try {
+
+            DatabaseTable OUTGOINGMessageTable = getDatabaseTableMessage();
+
+            OUTGOINGMessageTable.addUUIDFilter(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_ID_COLUMN_NAME, packageId, DatabaseFilterType.EQUAL);
+
+            OUTGOINGMessageTable.deleteRecord();
+
+        } catch (CantDeleteRecordException cantLoadTableToMemory) {
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: ").append(ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The data no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+        }
+    }
+
     /**
      * @param messageMetadataRecord
      * @param entityRecord
@@ -107,8 +133,8 @@ public class ChatMetadataRecordDAO {
         /*
          * Set the entity values
          */
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_ID_COLUMN_NAME, messageMetadataRecord.getPackageId().toString());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_ID_COLUMN_NAME, messageMetadataRecord.getMessageId().toString());
+        entityRecord.setUUIDValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_ID_COLUMN_NAME, messageMetadataRecord.getPackageId());
+        entityRecord.setUUIDValue(ChatNetworkServiceDataBaseConstants.MESSAGE_METADATA_MESSAGE_ID_COLUMN_NAME, messageMetadataRecord.getMessageId());
     }
 
     public UUID getMessageIdByPackageId(UUID packageId) throws CantGetNotificationException, CantReadRecordDataBaseException {

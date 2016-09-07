@@ -28,7 +28,7 @@ import java.util.UUID;
  * @version 1.0
  */
 
-public class DialogConnectionListAdapter extends ArrayAdapter<String> {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
+public class DialogConnectionListAdapter extends ArrayAdapter<String> {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatMessageHolder> {//ChatFactory
 
 
     ArrayList<String> contactinfo = new ArrayList<String>();

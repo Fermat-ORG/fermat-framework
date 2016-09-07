@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
-import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 
 import java.sql.Timestamp;
@@ -16,12 +15,9 @@ public class ChatImpl implements Chat {
     private UUID chatId;
     private String localActorPublicKey;
     private String remoteActorPublicKey;
-    private String chatName;
     private ChatStatus status;
     private Timestamp date;
     private Timestamp lastMessageDate;
-    private TypeChat typeChat;
-    private boolean scheduledDelivery;
 
     /**
      * Constructor without arguments
@@ -60,16 +56,6 @@ public class ChatImpl implements Chat {
     }
 
     @Override
-    public String getChatName() {
-        return this.chatName;
-    }
-
-    @Override
-    public void setChatName(String chatName) {
-        this.chatName = chatName;
-    }
-
-    @Override
     public ChatStatus getStatus() {
         return this.status;
     }
@@ -80,12 +66,12 @@ public class ChatImpl implements Chat {
     }
 
     @Override
-    public Timestamp getDate() {
+    public Timestamp getCreationDate() {
         return this.date;
     }
 
     @Override
-    public void setDate(Timestamp date) {
+    public void setCreationDate(Timestamp date) {
         this.date = date;
     }
 
@@ -100,38 +86,14 @@ public class ChatImpl implements Chat {
     }
 
     @Override
-    public TypeChat getTypeChat() {
-        return typeChat;
-    }
-
-    @Override
-    public void setTypeChat(TypeChat typeChat) {
-        this.typeChat = typeChat;
-    }
-
-    @Override
-    public boolean getScheduledDelivery() {
-        return scheduledDelivery;
-    }
-
-    @Override
-    public void setScheduledDelivery(boolean scheduledDelivery) {
-
-        this.scheduledDelivery = scheduledDelivery;
-    }
-
-    @Override
     public String toString() {
         return "ChatImpl{" +
                 "chatId=" + chatId +
                 ", localActorPublicKey='" + localActorPublicKey + '\'' +
                 ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
-                ", chatName='" + chatName + '\'' +
                 ", status=" + status +
                 ", date=" + date +
                 ", lastMessageDate=" + lastMessageDate +
-                ", typeChat=" + typeChat +
-                ", scheduledDelivery=" + scheduledDelivery +
                 '}';
     }
 }

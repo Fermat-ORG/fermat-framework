@@ -538,7 +538,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<ReferenceAppF
                                     lossProtectedWalletManager.sendToWallet(
                                             operator.longValueExact(),
                                             appSession.getAppPublicKey(),
-                                            wallet.getWalletPublicKey(),//RECEIVE WALLET KEY
+                                            wallet.getWalletPublicKey(),//RECEIVED WALLET KEY
                                             notes,
                                             Actors.LOSS_PROTECTED_USER,
                                             actor,
