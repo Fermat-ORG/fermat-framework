@@ -518,7 +518,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
 //        typeMessage.clear();
 //        noReadMsgs.clear();
 //        imgId.clear();
-        destroy();
+//        destroy();
     }
 
     @Override

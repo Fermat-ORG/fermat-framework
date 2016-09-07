@@ -170,7 +170,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         actualizable = true;
         mChatName = (EditText) layout.findViewById(R.id.editTextName);
         mChatConnectionState = (EditText) layout.findViewById(R.id.editTextStatus);
-        final Button botonG = (Button) layout.findViewById(R.id.cht_button);
+        final ImageView botonG = (ImageView) layout.findViewById(R.id.cht_button);//Button
         statusView = (TextView) layout.findViewById(R.id.statusView);
         mChatImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
@@ -214,7 +214,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 mChatName.setText(identity.getAlias().toString());
                 String state = identity.getConnectionState();
                 mChatConnectionState.setText(state);
-                botonG.setText("Save Changes");
+                //botonG.setText("Save Changes");
                 botonG.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

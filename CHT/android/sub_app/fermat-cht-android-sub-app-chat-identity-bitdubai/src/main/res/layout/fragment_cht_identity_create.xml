@@ -86,13 +86,12 @@
                 android:gravity="center"
                 />
                 <!--android:textAlignment="center"/>-->
-            <Button
+            <ImageView
                 android:id="@+id/cht_button"
                 android:layout_width="188dp"
                 android:layout_height="38dp"
                 android:background="#f7f7f7"
-                android:drawableStart="@drawable/chort_buttom_accept"
-                android:drawableLeft="@drawable/chort_buttom_accept"
+                android:src="@drawable/chort_buttom_accept"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:layout_marginLeft="16dp"
@@ -105,6 +104,7 @@
                 android:layout_alignStart="@+id/editTextStatus"
                 android:layout_alignLeft="@+id/editTextStatus"
                 style="?android:attr/borderlessButtonStyle"/>
+            <!--android:drawableLeft="@drawable/chort_buttom_accept" -->
             <Button
                 android:id="@+id/btnRotate"
                 android:layout_width="match_parent"
