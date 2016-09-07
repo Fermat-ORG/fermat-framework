@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -149,6 +150,12 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatActorConnecti
                         entityRecord,
                         actorConnection
                 );
+                DatabaseTableFilter filter = actorConnectionsTable.getEmptyTableFilter();
+                //todo: added a filter to table here because the update was not working correctly
+                filter.setColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME);
+                filter.setType(DatabaseFilterType.EQUAL);
+                filter.setValue(actorConnection.getConnectionId().toString());
+                actorConnectionsTable.addStringFilter(filter.getColumn(),filter.getValue(),filter.getType());
                 actorConnectionsTable.updateRecord(entityRecord);
 
                 return;
