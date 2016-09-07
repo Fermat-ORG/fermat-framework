@@ -663,16 +663,19 @@ public class ChatMessageListAdapterView extends LinearLayout {
 
     public void addMessage(Message message) {
 
-        if (message != null && chatHistory != null && adapter != null) {
+        if (chatId != null && message != null && chatId.equals(message.getChatId())) {
 
-            ChatMessage mes = buildChatMessage(message);
+            if (chatHistory != null && adapter != null) {
 
-            if (mes != null) {
-                chatHistory.add(mes);
+                ChatMessage mes = buildChatMessage(message);
 
-                adapter.changeDataSet(chatHistory);
+                if (mes != null) {
+                    chatHistory.add(mes);
+
+                    adapter.changeDataSet(chatHistory);
+                }
+
             }
-
         }
     }
 

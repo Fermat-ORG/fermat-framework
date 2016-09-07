@@ -236,7 +236,7 @@ public class ChatMiddlewareEventActions {
      *
      * @throws CantGetPendingTransactionException
      */
-    public void incomingMessageStatusUpdateEventHandler(MessageMetadata messageMetadata) throws
+    public synchronized void incomingMessageStatusUpdateEventHandler(MessageMetadata messageMetadata) throws
             CantGetPendingTransactionException,
             UnexpectedResultReturnedFromDatabaseException {
 
@@ -301,15 +301,6 @@ public class ChatMiddlewareEventActions {
             CantGetMessageException {
 
         UUID messageId = messageMetadata.getMessageId();
-        MessageStatus messageStatus = chatMiddlewareDatabaseDao.getMessageStatus(messageId);
-        if (messageStatus == null) {
-
-            System.out.println("************* MESSAGE DOES NOT EXIST");
-            return;
-        }
-        if (messageStatus.equals(MessageStatus.READ))
-            return;
-
         chatMiddlewareDatabaseDao.updateMessageStatus(messageId, messageMetadata.getMessageStatus());
     }
 

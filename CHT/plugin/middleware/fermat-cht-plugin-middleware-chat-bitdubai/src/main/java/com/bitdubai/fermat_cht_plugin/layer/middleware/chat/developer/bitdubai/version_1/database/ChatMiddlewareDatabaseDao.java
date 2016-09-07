@@ -471,6 +471,7 @@ public class ChatMiddlewareDatabaseDao {
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
 
             table.addUUIDFilter(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME, messageId, DatabaseFilterType.EQUAL);
+            table.addFermatEnumFilter(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME, MessageStatus.READ, DatabaseFilterType.NOT_EQUALS);
 
             DatabaseTableRecord record = table.getEmptyRecord();
 
