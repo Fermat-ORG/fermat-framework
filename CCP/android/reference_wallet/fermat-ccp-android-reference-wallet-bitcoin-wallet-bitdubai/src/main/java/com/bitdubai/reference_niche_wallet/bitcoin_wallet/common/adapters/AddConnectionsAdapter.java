@@ -71,22 +71,31 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
         holder.container_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean selected = !data.isSelected();
-                data.setSelected(selected);
-                addConnectionCallback.setSelected(data, selected);
-                if (selected) {
-                    holder.checkbox_connection.setChecked(true);
-                    //FermatAnimationsUtils.showEmpty(context, true, holder.checkbox_connection);
-                    //addConnectionCallback.addMenuEnabled();
-                    holder.container_data.setBackgroundColor(Color.parseColor("#666666"));
-                    holder.container_data.getBackground().setAlpha(50);
+                try
+                {
+                    boolean selected = !data.isSelected();
+                    data.setSelected(selected);
+                    addConnectionCallback.setSelected(data, selected);
+                    if (selected) {
+                        holder.checkbox_connection.setChecked(true);
+                        //FermatAnimationsUtils.showEmpty(context, true, holder.checkbox_connection);
+                        //addConnectionCallback.addMenuEnabled();
+                        holder.container_data.setBackgroundColor(Color.parseColor("#666666"));
+                        holder.container_data.getBackground().setAlpha(50);
 
-                } else {
-                    holder.checkbox_connection.setChecked(false);
-                    //FermatAnimationsUtils.showEmpty(context, false, holder.checkbox_connection);
-                    addConnectionCallback.addMenuDisabled();
-                    holder.container_data.getBackground().setAlpha(0);
+                    } else {
+                        holder.checkbox_connection.setChecked(false);
+                        //FermatAnimationsUtils.showEmpty(context, false, holder.checkbox_connection);
+                        addConnectionCallback.addMenuDisabled();
+                        holder.container_data.getBackground().setAlpha(0);
+                    }
                 }
+                catch(Exception e)
+                {
+
+                }
+
+
             }
         });
         if(data.isSelected()){
@@ -101,22 +110,29 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
         holder.checkbox_connection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean selected = !data.isSelected();
-                data.setSelected(selected);
-                addConnectionCallback.setSelected(data, selected);
-                if (selected) {
-                    holder.checkbox_connection.setChecked(true);
-                   // FermatAnimationsUtils.showEmpty(context, true, holder.checkbox_connection);
-                  //  addConnectionCallback.addMenuEnabled();
-                    holder.container_data.setBackgroundColor(Color.parseColor("#666666"));
-                    holder.container_data.getBackground().setAlpha(50);
+                try{
+                    boolean selected = !data.isSelected();
+                    data.setSelected(selected);
+                    addConnectionCallback.setSelected(data, selected);
+                    if (selected) {
+                        holder.checkbox_connection.setChecked(true);
+                        // FermatAnimationsUtils.showEmpty(context, true, holder.checkbox_connection);
+                        //  addConnectionCallback.addMenuEnabled();
+                        holder.container_data.setBackgroundColor(Color.parseColor("#666666"));
+                        holder.container_data.getBackground().setAlpha(50);
 
-                } else {
-                    holder.checkbox_connection.setChecked(false);
-                   // FermatAnimationsUtils.showEmpty(context, false, holder.checkbox_connection);
-                   // addConnectionCallback.addMenuDisabled();
-                    holder.container_data.getBackground().setAlpha(0);
-                }
+                    } else {
+                        holder.checkbox_connection.setChecked(false);
+                        // FermatAnimationsUtils.showEmpty(context, false, holder.checkbox_connection);
+                        // addConnectionCallback.addMenuDisabled();
+                        holder.container_data.getBackground().setAlpha(0);
+                    }
+            }
+            catch(Exception e)
+            {
+
+            }
+
             }
         });
       //  holder.checkbox_connection.setEnabled(false);

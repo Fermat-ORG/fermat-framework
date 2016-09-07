@@ -277,7 +277,11 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
                         intraUserlist.addAll((ArrayList) result[0]);
                         adapter.changeDataSet(intraUserlist);
                     } else {
-                        intraUserlist.addAll((ArrayList) result[0]);
+                        for (IntraUserInformation info : (List<IntraUserInformation>) result[0]) {
+
+                            intraUserlist.add(info);
+                        }
+
                         adapter.notifyItemRangeInserted(offset, intraUserlist.size() - 1);
                     }
 
@@ -302,7 +306,7 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
     @Override
     public void onFragmentFocus() {
         super.onFragmentFocus();
-        onRefresh();
+        //onRefresh();
     }
 
     private void showOrHideEmptyView() {

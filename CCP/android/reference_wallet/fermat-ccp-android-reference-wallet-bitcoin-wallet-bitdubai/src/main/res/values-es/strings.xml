@@ -232,7 +232,7 @@
     <string name="notification_payment_denied">Requerimiento de Pago Denegado</string>
     <string name="notification_payment_denied_2">Su Requerimiento de Pago por </string>
     <string name="notification_payment_denied_3"> BTC fue denegado.</string>
-    <string name="notification_payment_error">Requerimeinto de Pago Reversado</string>
+    <string name="notification_payment_error">Requerimiento de Pago Reversado</string>
     <string name="notification_payment_error_2">Su Requerimiento de Pago por </string>
     <string name="notification_payment_error_3"> BTC fue reversado.</string>
 

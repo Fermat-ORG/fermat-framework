@@ -73,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:text="Venezuela , Venezuela"
+            android:text="@string/no_location"
             android:maxLines="1"
             android:textColor="#7DD5CA"
             android:textSize="12sp"

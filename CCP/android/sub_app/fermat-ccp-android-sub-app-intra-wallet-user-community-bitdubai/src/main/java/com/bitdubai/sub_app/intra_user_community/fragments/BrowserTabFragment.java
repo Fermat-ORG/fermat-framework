@@ -470,6 +470,7 @@ public class BrowserTabFragment
                     connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
+                            isRefreshing = false;
                             onRefresh();
                         }
                     });
