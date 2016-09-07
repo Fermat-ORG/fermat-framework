@@ -185,7 +185,6 @@
                 android:textSize="14sp"
                 android:background="#12aca1"
                 android:textColor="#FFF"/>
-
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

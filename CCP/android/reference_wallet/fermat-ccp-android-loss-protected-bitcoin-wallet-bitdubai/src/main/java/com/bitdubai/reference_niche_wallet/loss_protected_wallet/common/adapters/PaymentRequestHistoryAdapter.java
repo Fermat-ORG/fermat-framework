@@ -11,9 +11,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
@@ -27,7 +24,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.Wa
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
-
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -36,6 +32,7 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 
 /**
  * Created by Matias Furszyfer on 2015.09.30..
+ *
  */
 public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPaymentRequest, PaymentHistoryItemViewHolder>  {
 
@@ -168,37 +165,49 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
         String state = "";
         switch (data.getState()){
             case WAITING_RECEPTION_CONFIRMATION:
-                state = "Waiting for response";
+                //state = "Waiting for response";
+                state = context.getResources().getString(R.string.waiting_receive_text);
+
                 break;
             case APPROVED:
-                state = "Accepted";
+                //state = "Accepted";
+                state = context.getResources().getString(R.string.accepted_text);
                 break;
             case PAID:
-                state = "Paid";
+                //state = "Paid";
+                state = context.getResources().getString(R.string.Paid_text);
                 break;
             case PENDING_RESPONSE:
-                state = "Pending response";
+                //state = "Pending response";
+                state = context.getResources().getString(R.string.Pending_response);
                 break;
             case ERROR:
-                state = "Error";
+               // state = "Error";
+                state = context.getResources().getString(R.string.Error);
                 break;
             case NOT_SENT_YET:
-                state = "Not sent yet";
+                //state = "Not sent yet";
+                state = context.getResources().getString(R.string.Not_sent_yet);
                 break;
             case PAYMENT_PROCESS_STARTED:
-                state = "Payment process started";
+                //state = "Payment process started";
+                state = context.getResources().getString(R.string.Payment_process_started);
                 break;
             case DENIED_BY_INCOMPATIBILITY:
-                state = "Denied by incompatibility";
+                //state = "Denied by incompatibility";
+                state = context.getResources().getString(R.string.Denied_by_incompatibility);
                 break;
             case IN_APPROVING_PROCESS:
-                state = "In approving process";
+                //state = "In approving process";
+                state = context.getResources().getString(R.string.In_approving_process);
                 break;
             case REFUSED:
-                state = "Denied";
+                //state = "Denied";
+                state = context.getResources().getString(R.string.denied);
                 break;
             default:
-                state = "Error, contact with support";
+               // state = "Error, contact with support";
+                state = context.getResources().getString(R.string.Error_contact_with_support);
                 break;
 
         }
@@ -271,7 +280,8 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                                 }
                                 else
                                 {
-                                    Toast.makeText(context, "Action not allowed, You do not have enough funds", Toast.LENGTH_LONG).show();
+                                    // Toast.makeText(context, "Action not allowed, You do not have enough funds", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, context.getResources().getString(R.string.Insufficient_funds), Toast.LENGTH_LONG).show();
                                 }
                             }
                             else
@@ -279,21 +289,24 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                                 //aprove payment request
                                 lossProtectedWallet.approveRequest(data.getRequestId()
                                         , lossProtectedWallet.getSelectedActorIdentity().getPublicKey());
-                                Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, context.getResources().getString(R.string.Request_accepted), Toast.LENGTH_SHORT).show();
                                 notifyDataSetChanged();
                                 onRefreshList.onRefresh();
                             }
                         }
                         else
                         {
-                            Toast.makeText(context, "Action not allowed.Could not retrieve the dollar exchange rate.\nCheck your internet connection.. ", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(context, "Action not allowed.Could not retrieve the dollar exchange rate.\nCheck your internet connection.. ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, context.getResources().getString(R.string.Action_not_allowed2), Toast.LENGTH_LONG).show();
 
                         }
 
 
 
                     } catch (Exception e) {
-                        showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
+                        //showMessage(context, "Can't Accept or Denied Receive Payment Exception - " + e.getMessage());
+                        showMessage(context, context.getResources().getString(R.string.Cant_accept)+" " + e.getMessage());
                     }
 
                 }
@@ -304,11 +317,11 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
             public void onClick(View view) {
                 try {
                     lossProtectedWallet.refuseRequest(data.getRequestId());
-                    Toast.makeText(context, "Request denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getResources().getString(R.string.Request_denied), Toast.LENGTH_SHORT).show();
                     notifyDataSetChanged();
                     onRefreshList.onRefresh();
                 } catch (Exception e) {
-                    showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
+                    showMessage(context, context.getResources().getString(R.string.Cant_accept)+" " + e.getMessage());
                 }
             }
         });

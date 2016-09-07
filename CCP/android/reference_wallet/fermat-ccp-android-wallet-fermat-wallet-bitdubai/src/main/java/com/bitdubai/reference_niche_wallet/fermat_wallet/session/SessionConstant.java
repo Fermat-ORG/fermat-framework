@@ -10,6 +10,7 @@ public class SessionConstant {
     public static final String PRESENTATION_IDENTITY_CREATED = "identity_created";
     public static final String CREATE_EXTRA_USER = "create_extra_user";
     public static final String PRESENTATION_SCREEN_ENABLED = "presentation_screen_enabled";
+    public static final String PAYMENT_REQUEST_HELP_ENABLED = "PaymentRequestHelpEnabled";
     public static final String BACK_WITHOUT_IDENTITY = "back_without_identity";
     public static final String TYPE_BALANCE_SELECTED = "selectedBalanceType";
     public static final String TYPE_AMOUNT_SELECTED = "selectedAmountType";

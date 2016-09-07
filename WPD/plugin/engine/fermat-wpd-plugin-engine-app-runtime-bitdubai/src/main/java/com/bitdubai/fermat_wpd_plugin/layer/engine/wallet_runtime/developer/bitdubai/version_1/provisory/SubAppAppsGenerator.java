@@ -4944,7 +4944,7 @@ public class SubAppAppsGenerator {
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenuNot.addMenuItem(optionMenuItemNot);
 
-        OptionMenuItem optionMenuItemNot = new OptionMenuItem(2);
+        /*OptionMenuItem optionMenuItemNot = new OptionMenuItem(2);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(2, "geolocalitation_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Geolocalitation");
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);

@@ -84,7 +84,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     private String chunckAmount = "";
     private double chunckExchangeRate = 0;
     private double chunckAmountSpent = 0;
-    private int chunckPercentageSpent =0;
+    private int    chunckPercentageSpent =0;
 
     private ErrorManager errorManager;
 
@@ -233,7 +233,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             //set data in header
             txt_chunck_detail_balance.setText(chunckAmount);
             txt_chunck_detail_exchangeRate.setText("(1 BTC = USD " + chunckExchangeRate + ")");
-            txt_chunck_detail_amountSpent.setText("BTC Spent: " + chunckAmountSpent + " BTC");
+            txt_chunck_detail_amountSpent.setText(getResources().getString(R.string.chunck_values_btc_spent) + ": " + chunckAmountSpent + " BTC");
             txt_percent_spent.setText("(" + chunckPercentageSpent + "%)");
 
 

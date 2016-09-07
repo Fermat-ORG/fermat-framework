@@ -138,7 +138,6 @@ public class
 
         accept_btn = (Button) findViewById(R.id.accept_btn);
         cancel_btn = (Button) findViewById(R.id.cancel_btn);
-
         accept_btn.setOnClickListener(this);
         cancel_btn.setOnClickListener(this);
 

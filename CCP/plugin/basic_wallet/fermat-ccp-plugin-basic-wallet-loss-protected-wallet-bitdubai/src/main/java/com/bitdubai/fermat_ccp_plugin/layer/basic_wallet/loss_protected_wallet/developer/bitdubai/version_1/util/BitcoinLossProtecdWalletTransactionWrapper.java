@@ -27,6 +27,7 @@ public class BitcoinLossProtecdWalletTransactionWrapper implements BitcoinLossPr
     private final Actors actorToType;
     private final BalanceType balanceType;
     private final long amount;
+    private final long total;
     private final long runningBookBalance;
     private final long runningAvailableBalance;
     private final long timeStamp;
@@ -46,6 +47,7 @@ public class BitcoinLossProtecdWalletTransactionWrapper implements BitcoinLossPr
                                            final Actors actorToType,
                                            final BalanceType balanceType,
                                            final long amount,
+                                           final long total,
                                            final long runningBookBalance,
                                            final long runningAvailableBalance,
                                            final long timeStamp,
@@ -63,6 +65,7 @@ public class BitcoinLossProtecdWalletTransactionWrapper implements BitcoinLossPr
         this.actorToType = actorToType;
         this.balanceType = balanceType;
         this.amount = amount;
+        this.total = total;
         this.runningBookBalance = runningBookBalance;
         this.runningAvailableBalance = runningAvailableBalance;
         this.timeStamp = timeStamp;
@@ -129,6 +132,9 @@ public class BitcoinLossProtecdWalletTransactionWrapper implements BitcoinLossPr
 
     @Override
     public long getAmount() { return amount; }
+
+    @Override
+    public long getTotal() { return total; }
 
     @Override
     public long getRunningBookBalance() {

@@ -178,6 +178,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceApp
 
         return dataSet;
     }
+
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);

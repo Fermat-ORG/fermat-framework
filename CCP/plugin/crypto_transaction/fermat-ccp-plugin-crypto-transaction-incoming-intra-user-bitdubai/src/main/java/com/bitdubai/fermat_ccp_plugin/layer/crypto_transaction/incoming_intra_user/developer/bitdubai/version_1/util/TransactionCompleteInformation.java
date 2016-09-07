@@ -43,11 +43,11 @@ public class TransactionCompleteInformation {
 
             long timestamp = System.currentTimeMillis();
             String memo = this.transactionMetadata.getInformation().getPaymentDescription();
+            String actorFromPublicKey = "";
+            String actorToPublicKey = "";
+            Actors actorFromType;
+            Actors actorToType;
 
-             String actorFromPublicKey = "";
-             String actorToPublicKey = "";
-             Actors actorFromType;
-             Actors actorToType;
 
             if (this.transactionMetadata.getInformation().getRequestId() != null)
             {
@@ -97,7 +97,7 @@ public class TransactionCompleteInformation {
             CryptoTransaction       cryptoTransaction       = this.cryptoTransactionContainer.getInformation();
             CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTransaction.getAddressTo());
 
-           // long  timestamp = this.cryptoTransactionContainer.getTimestamp()                          ;
+            // long  timestamp = this.cryptoTransactionContainer.getTimestamp()                          ;
             String memo     = this.transactionMetadata       .getInformation().getPaymentDescription();
 
             long timestamp = System.currentTimeMillis();

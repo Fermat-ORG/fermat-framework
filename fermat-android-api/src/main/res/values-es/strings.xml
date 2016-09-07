@@ -21,7 +21,8 @@
     <!--Help Dialog for Payment Request-->
     <string name="payment_title">Solicitud de Pagos</string>
     <string name="payment_subtitle">Esta es la pantalla de solicitudes de pagos. Podras enviar una Solicitud de Pago a tus contactos.</string>
-    <string name="payment_body">* Busca en el historial tus Solicitudes de pagos Recividas o Enviadas.\n* Envia Nuevas Solicitud de Pago.</string>
+    <string name="payment_body">* Busca en el historial tus Solicitudes de pagos Recibidas o Enviadas.\n* Envia Nuevas Solicitud de Pago.</string>
+
 
 
 </resources>

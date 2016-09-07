@@ -402,10 +402,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
             menu.clear();
-//            if (optionsMenu != null) {
-//                List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
-//                loadMenu(menu, optionsMenuItems);
-//            }
+           if (optionsMenu != null) {
+                List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
+                loadMenu(menu, optionsMenuItems);
+            }
             return true;
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -499,7 +499,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             // Log.i("FERMAT ACTIVITY loadUI", " setWizards " + System.currentTimeMillis());
 
-//            invalidateOptionsMenu();
+           invalidateOptionsMenu();
 
             // Log.i("FERMAT ACTIVITY loadUI", "FIN " + System.currentTimeMillis());
         } catch (Exception e) {
@@ -705,6 +705,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         }
                     });
                 }
+                navigationView.setVisibility(View.VISIBLE);
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+
             } else {
 //                mDrawerLayout.setEnabled(false);
                 navigationView.setVisibility(View.GONE);
@@ -1473,9 +1476,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 mRevealView.setVisibility(View.GONE);
             }
 
-            if (optionsMenu!=null && !optionsMenu.isEmpty()) {
-                optionsMenu.clear();
-            }
+        //    if (optionsMenu!=null && !optionsMenu.isEmpty()) {
+         //       optionsMenu.clear();
+         //   }
 
 
             removecallbacks();

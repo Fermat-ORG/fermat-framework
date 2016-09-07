@@ -93,12 +93,12 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraUserM
          }
         catch (CantListIntraUsersIdentityException e)
         {
-            Toast.makeText(getActivity().getApplicationContext(), "Can't Get Intra User List", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(),getResources().getString(R.string.cant_get_intra_user_list) , Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         catch (Exception e)
         {
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.system_error), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
@@ -176,13 +176,13 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraUserM
 
         try {
             if (moduleManager == null) {
-                Toast.makeText(getActivity(),"Nodule manager null",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),getResources().getString(R.string.module_manager_error),Toast.LENGTH_SHORT).show();
             } else {
                 data = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser();
             }
         }
         catch(Exception e){
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.system_error), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 

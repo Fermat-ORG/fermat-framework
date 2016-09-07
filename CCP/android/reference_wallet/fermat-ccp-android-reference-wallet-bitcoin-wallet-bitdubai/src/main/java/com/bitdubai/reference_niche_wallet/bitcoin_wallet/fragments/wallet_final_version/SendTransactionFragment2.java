@@ -52,8 +52,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
@@ -79,15 +77,12 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.Presentat
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static android.widget.Toast.makeText;
 
 
 /**
@@ -291,12 +286,16 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     //noinspection TryWithIdenticalCatches
                     ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = null;
                     try {
-                        cryptoWalletIntraUserIdentity = appSession.getModuleManager().getSelectedActorIdentity();
-                    } catch (CantGetSelectedActorIdentityException e) {
+                      //  cryptoWalletIntraUserIdentity = appSession.getModuleManager().getSelectedActorIdentity();
+                        cryptoWalletIntraUserIdentity = intraUserLoginIdentity;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    /*catch (CantGetSelectedActorIdentityException e) {
                         e.printStackTrace();
                     } catch (ActorIdentityNotSelectedException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     if (cryptoWalletIntraUserIdentity == null) {
                         getActivity().onBackPressed();
                     } else {
@@ -600,10 +599,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                                 txt_balance_amount.setTextSize(18);
                                             else
                                                 txt_balance_amount.setTextSize(26);
+
+                                            txt_amount_type.setText("btc");
                                             break;
+
+
                                         case BITS:
 
                                             txt_balance_amount.setTextSize(16);
+                                            txt_amount_type.setText("bits");
                                             break;
                                     }
                                 }
@@ -618,7 +622,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
 
             txt_balance_amount_type = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
-
 
         }
         catch (Exception e){
@@ -1234,9 +1237,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
                 appSession.setData(SessionConstant.RUNNIBLE_BALANCE,new HashMap<>());
                 appSession.setData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED,true);
-
-
-                appSession.setData(SessionConstant.SETTINGS_LOADED, true);
+                    appSession.setData(SessionConstant.SETTINGS_LOADED, true);
 
             } else {
 

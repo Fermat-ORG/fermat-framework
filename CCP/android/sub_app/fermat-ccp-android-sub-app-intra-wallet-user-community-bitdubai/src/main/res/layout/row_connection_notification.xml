@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingLeft="16dp"
@@ -10,8 +10,8 @@
     tools:showIn="@layout/fragment_connections_notifications">
 
     <RelativeLayout
-        android:layout_width="330dp"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,6 +24,7 @@
             android:layout_alignParentTop="true"
             android:layout_below="@+id/img_layout"
             android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="false"
             android:layout_alignBottom="@+id/img_layout"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true">
@@ -31,16 +32,16 @@
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="165dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:paddingLeft="5dp">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/username"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:paddingLeft="4dp"
                     android:singleLine="true"
                     android:text="@string/username"
@@ -51,7 +52,7 @@
 
                 <LinearLayout
                     android:orientation="horizontal"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:weightSum="1"
                     android:layout_marginBottom="5dp">
@@ -75,28 +76,31 @@
                         android:textSize="12dp"
                         android:textColor="#aaaaab"
                         android:layout_weight="0.70"
-                        android:paddingTop="2dp" />
+                        android:paddingTop="4dp"
+                        />
 
                 </LinearLayout>
 
             </LinearLayout>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/reception_time"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:drawableRight="@drawable/ic_profile_connect"
                 android:ellipsize="end"
                 android:gravity="center_vertical|right"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:text="@string/few_moments"
-                android:textSize="11sp"
+                android:textSize="12sp"
                 tools:ignore="HardcodedText,RtlHardcoded"
                 android:textColor="#aaeae5"
                 android:layout_gravity="center"
                 android:editable="false"
-                android:id="@+id/reception_time"
-                android:paddingTop="14dp" />
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="10dp"
+                />
 
         </LinearLayout>
 
@@ -104,7 +108,9 @@
             android:layout_width="49dp"
             android:layout_height="49dp"
             android:background="@drawable/circleuser_icon"
-            android:id="@+id/img_layout">
+            android:id="@+id/img_layout"
+            android:backgroundTint="@color/color_black_light"
+            >
 
             <ImageView
                 android:id="@+id/imageView_avatar"

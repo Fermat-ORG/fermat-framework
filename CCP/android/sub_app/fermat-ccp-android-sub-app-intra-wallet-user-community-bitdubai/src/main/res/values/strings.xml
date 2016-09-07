@@ -13,18 +13,19 @@
     <string name="wallet_status_open">UPGRADE</string>
     <string name="wallet_more_details_button">READ MORE</string>
     <string name="no_preview_images" translatable="false">No Preview Images</string>
-    <string name="description_text">You are not connected to the fermat network.</string>
-    <string name="second_description_text">to the fermat network.</string>
+    <string name="description_text">You are not connected to</string>
+    <string name="second_description_text">the fermat network.</string>
+
 
     <!--Connection tab-->
     <string name="delete_all_contacts_title">DELETE ALL CONTACTS</string>
     <string name="delete_all_contacts_info">Are you sure you want to delete all your connections?</string>
-    <string name="delete_contacts_info">Are you sure you want to delete this connection?</string>
+    <string name="delete_contacts_info">Are you sure you want to delete this connection? (It removes the associated contact)</string>
     <string name="delete_connection_text">DELETE CONNECTION</string>
     <string name="no_data" >No data avalaible</string>
     <string name="country" >country</string>
     <string name="state">State</string>
-    <string name="connected" >You are now connected</string>
+    <string name="connected" >You\'re now connected with</string>
     <string name="tittle" >Tittle</string>
     <string name="description" >Description</string>
     <string name="username" >Username</string>
@@ -130,7 +131,7 @@
     <string name="fragment_send_notes_hint">Notes (Optional)</string>
     <string name="give_me_an_address_address_text">Give me an address</string>
     <string name="header_text">Header</string>
-    <string name="income_expense">This wallet allow you to see your income and expense history</string>
+    <string name="income_expense">On this screen you can see your income and expenses of all transactions sent and received</string>
     <string name="insert_notes">Insert notes</string>
     <string name="institutional_wallets">Institutional wallets</string>
     <string name="kid_wallet">Kid wallet</string>
@@ -207,23 +208,57 @@
     <string name="you_dont_have_transactions_sent_text">You don\'t have transactions send</string>
     <string name="you_need_an_identity_before_you_can_enter_text">You need an identity before you can enter</string>
     <string name="young_wallet">Young wallet</string>
-    <string name="system_error">Oooops! recovering from system error</string>
-
+    <string name="system_error">Recovering from system error</string>
+    <string name="no_users_for_location">No connections near the location you chose</string>
+    <string name="users_for_location">These are the connections near the location you chose</string>
 
     <!-- Browser Tab -->
+    <string name="connectionState_connected">IS A CONTACT</string>
+    <string name="connectionState_request_sent">REQUEST SENT</string>
+    <string name="connectionState_request_received">REQUEST RECEIVED</string>
+    <string name="connectionState_request_canceled">REQUEST CANCELED</string>
+    <string name="connectionState_denied_remotely">DENIED BY CONTACT</string>
+    <string name="connectionState_offline">OFFLINE</string>
+    <string name="connectionState_online">ONLINE</string>
+
+
     <string name="turn_on_gps">Please, turn ON your GPS</string>
     <string name="connectionState_connected_msg">IS A CONTACT</string>
     <string name="connectionState_request_sent_msg">REQUEST HAS BEEN SEND</string>
+    <string name="connectionState_request_received_msg">REQUEST RECEIVED</string>
+    <string name="connectionState_request_canceled_msg">REQUEST CANCELED</string>
+    <string name="connectionState_denied_remotely_msg">DENIED BY CONTACT</string>
     <string name="connectionState_user_offline_msg">USER OFFLINE</string>
+    <string name="connectionState_user_online_msg">USER ONLINE</string>
     <string name="btn_error_fermat_network_cancel">CANCEL</string>
     <string name="btn_error_fermat_network_connect">CONNECT</string>
     <string name="Request_user_list_time_out">Request User List Time Out</string>
     <string name="loading_data_error_msg">Sorry there was a problem loading the data</string>
 
+    <!--Notification tab-->
     <string name="notification_time_1"> a few moments ago</string>
     <string name="notification_time_2"> minutes ago</string>
     <string name="notification_time_3"> hours ago</string>
     <string name="notification_time_4"> days ago</string>
     <string name="notification_time_5"> year ago</string>
+
+
+
+    <!-- Community Notification-->
+    <string name="notification_connection_request">New Connection Request</string>
+    <string name="notification_connection_request2">A new connection request was received from</string>
+    <string name="notification_connection_accept">Connection Request</string>
+    <string name="notification_connection_accept2">Your connection request was accepted to</string>
+    <string name="notification_connection_disconnet">Connection Removed</string>
+    <string name="notification_connection_disconnet2">is disconnected from you.</string>
+    <string name="notification_connection_denied">Connection Request</string>
+    <string name="notification_connection_denied2">Your connection request was denied to</string>
+    <string name="notification_connection_Unknown">Unknown</string>
+
+    <!-- Community NotificationTAB confirmation dialog-->
+    <string name="confirmation_notification_dialog_title">CONNECTION REQUEST</string>
+    <string name="confirmation_notification_dialog_description">New Connection</string>
+    <string name="confirmation_notification_dialog_message">wants to connect with you</string>
+
 
 </resources>

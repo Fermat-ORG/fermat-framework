@@ -152,7 +152,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="Date"
+                        android:text="@string/chunck_values_btc_date"
                         android:textSize="13sp"
                         android:textColor="#666666"
                         android:fontFamily="roboto" />
@@ -160,7 +160,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="BTC Spent"
+                        android:text="@string/chunck_values_btc_spent"
                         android:textSize="13sp"
                         android:textColor="#666666"
                         android:fontFamily="roboto" />
@@ -168,7 +168,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="Exchange Rate"
+                        android:text="@string/chunck_values_btc_rate"
                         android:textSize="13sp"
                         android:textColor="#666666"
                         android:fontFamily="roboto" />

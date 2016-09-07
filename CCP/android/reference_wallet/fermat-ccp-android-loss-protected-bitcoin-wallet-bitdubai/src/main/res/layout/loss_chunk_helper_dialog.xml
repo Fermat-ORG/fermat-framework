@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/txt_title"
-                    android:text="@string/welcome_text"
+                    android:text=""
                     android:paddingLeft="5dp"
                     android:layout_weight="1"
                     android:textSize="20sp"
@@ -116,15 +116,17 @@
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:id="@+id/checkbox_not_show"
-                    android:buttonTint="#073487" />
+                    android:buttonTint="#073487"
+
+                    />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/no_id_dont_show_this_again_text"
-                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:textColor="#7c7c7c"
                     android:textSize="12sp"
                     android:layout_marginRight="32dp"
@@ -137,13 +139,14 @@
             android:layout_height="wrap_content">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="85dp"
+                android:layout_height="35dp"
                 android:id="@+id/btn_dismiss"
                 android:text="@string/close_text"
                 android:textColor="#FFF"
+                android:textSize="12sp"
                 android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:background="#DC5A0F"/>
 
         </RelativeLayout>

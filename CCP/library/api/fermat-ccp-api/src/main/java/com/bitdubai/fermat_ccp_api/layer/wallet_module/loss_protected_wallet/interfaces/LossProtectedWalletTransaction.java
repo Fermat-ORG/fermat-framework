@@ -52,6 +52,8 @@ public interface LossProtectedWalletTransaction extends Serializable {
 
     long getAmount();
 
+    long getTotal();
+
     long getRunningBookBalance();
 
     long getRunningAvailableBalance();

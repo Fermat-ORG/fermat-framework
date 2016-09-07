@@ -91,7 +91,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     public static final String INTRA_USER_SELECTED = "intra_user";
 
     private static final int MAX = 10;
-   private static final int SPAN_COUNT = 2;
+    private static final int SPAN_COUNT = 2;
     /**
      * MANAGERS
      */
@@ -846,9 +846,15 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     public List<IntraUserInformation> getMoreDataAsync(FermatRefreshTypes fermatRefreshTypes, int pos) {
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
-         try {
+        /* try {
              offset = pos;
-             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(location, distance,alias,MAX, offset);
+<<<<<<< HEAD
+             IntraUserLoginIdentity intraUserLoginIdentity = null;
+             String intraUserLoggedPublicKey = intraUserLoginIdentity.getPublicKey();
+             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(intraUserLoggedPublicKey,location, distance,alias,MAX, offset);
+=======
+             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact("",location, distance,alias,MAX, offset);
+>>>>>>> 9f2b2084666eb9e90a85324b1f26b15c9f0f1bed
              if(userList != null)
                 dataSet.addAll(userList);
              else {
@@ -874,7 +880,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
                      Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
                  }
              });
-        }
+        }*/
         return dataSet;
     }
 

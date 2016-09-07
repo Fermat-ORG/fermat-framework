@@ -71,8 +71,8 @@ import java.util.Map;
 
 public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         implements DatabaseManagerForDevelopers,
-                    IntraWalletUserIdentityManager,
-                   LogManagerForDevelopers {
+        IntraWalletUserIdentityManager,
+        LogManagerForDevelopers {
 
 
 
@@ -125,7 +125,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             return intraWalletUserList1;
 
         } catch (CantGetLoggedInDeviceUserException e) {
-          throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "Error get logged user device", "");
+            throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "Error get logged user device", "");
         } catch (CantListIntraWalletUserIdentitiesException e) {
             throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "", "");
         } catch (Exception e) {
@@ -158,7 +158,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
             ECCKeyPair keyPair = new ECCKeyPair();
-           String publicKey = keyPair.getPublicKey();
+            String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
             intraWalletUserIdentityDao.createNewUser(alias, phrase, publicKey, privateKey, loggedUser, profileImage, accuracy, frequency, location);
@@ -203,7 +203,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     @Override
-   public boolean  hasIntraUserIdentity() throws CantListIntraWalletUsersException{
+    public boolean  hasIntraUserIdentity() throws CantListIntraWalletUsersException{
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
@@ -222,19 +222,21 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
     @Override
     public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantUpdateIdentityException {
-            try {
-                intraWalletUserIdentityDao.updateIdentity(identityPublicKey, identityAlias, phrase, profileImage, accuracy, frequency, location);
-                updateIdentity(identityPublicKey, identityAlias, phrase, profileImage, location);
 
-            }
-            catch(CantUpdateIntraUserIdentityException e)
-            {
-                throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY", e, "", "Error persisting data");
-            }
-            catch(Exception e)
-            {
-                throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY", FermatException.wrapException(e), "", "");
-            }
+        try {
+            intraWalletUserIdentityDao.updateIdentity(identityPublicKey, identityAlias, phrase, profileImage, accuracy, frequency, location);
+            updateIdentity(identityPublicKey, identityAlias, phrase, profileImage, location);
+
+
+        }
+        catch(CantUpdateIntraUserIdentityException e)
+        {
+            throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY", e, "", "Error persisting data");
+        }
+        catch(Exception e)
+        {
+            throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY", FermatException.wrapException(e), "", "");
+        }
     }
 
    /* private void updateIdentity(String publicKey,String alias,String phrase,byte[] img){
@@ -335,9 +337,9 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
 
         intraActorManager.registerActor(intraActorManager.buildIdentity(intraWalletUserIdentity.getPublicKey(), intraWalletUserIdentity.getAlias(), intraWalletUserIdentity.getPhrase(), Actors.INTRA_USER, intraWalletUserIdentity.getImage())
-                                        ,intraWalletUserIdentity.getLocation(),
-                                        getFrequency(intraWalletUserIdentity.getFrequency()),
-                                        intraWalletUserIdentity.getAccuracy());
+                ,intraWalletUserIdentity.getLocation(),
+                getFrequency(intraWalletUserIdentity.getFrequency()),
+                intraWalletUserIdentity.getAccuracy());
 
     }
 

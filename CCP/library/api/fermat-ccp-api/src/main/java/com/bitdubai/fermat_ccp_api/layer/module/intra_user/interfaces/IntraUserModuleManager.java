@@ -3,7 +3,6 @@ package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Country;
-import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -19,7 +18,9 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
@@ -53,7 +54,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @return the login identity generated for the said intra user.
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException
      */
-     IntraUserLoginIdentity createIntraUser(String intraUserName, String phrase, byte[] profileImage,Location location) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
+    IntraUserLoginIdentity createIntraUser(String intraUserName, String phrase, byte[] profileImage,Location location) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
 
     /**
      *
@@ -67,7 +68,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @param image the profile picture to set
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantSaveProfileImageException
      */
-     void setNewProfileImage(byte[] image, String intraUserPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantSaveProfileImageException;
+    void setNewProfileImage(byte[] image, String intraUserPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantSaveProfileImageException;
 
     /**
      * The method <code>showAvailableLoginIdentities</code> lists the login identities that can be used
@@ -76,14 +77,14 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @return the list of identities the current Device User can use to log in
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantShowLoginIdentitiesException
      */
-     List<IntraUserLoginIdentity> showAvailableLoginIdentities() throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantShowLoginIdentitiesException;
+    List<IntraUserLoginIdentity> showAvailableLoginIdentities() throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantShowLoginIdentitiesException;
 
     /**
      * The method <code>login</code> let an intra user log in
      *
      * @param intraUserPublicKey the public key of the intra user to log in
      */
-     void login(String intraUserPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantLoginIntraUserException;
+    void login(String intraUserPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantLoginIntraUserException;
 
     /**
      * The method <code>getSuggestionsToContact</code> searches for intra users that the logged in
@@ -92,8 +93,10 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @return a list with information of intra users
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
-    List<IntraUserInformation> getSuggestionsToContact(Location location, double distance, String alias,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+
+
+   void getSuggestionsToContact(String intraUserLoggedPublicKey, Location location, double distance, String alias,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+
 
 
     /**
@@ -114,7 +117,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      *
      * @return a searching interface
      */
-     IntraUserSearch searchIntraUser();
+    IntraUserSearch searchIntraUser();
 
     /**
      * The method <code>askIntraUserForAcceptance</code> initialize the request of contact between
@@ -126,7 +129,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @param MyProfileImage          The profile image of the logged intra user
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException
      */
-     void askIntraUserForAcceptance(String intraUserToAddName, String intraUserPhrase,String intraUserToAddPublicKey, byte[] OthersProfileImage,byte[] MyProfileImage,String identityPublicKey,String identityAlias,Location location) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
+    void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPhrase, String intraUserToAddPublicKey, byte[] OthersProfileImage,Location intraUserToLocation,byte[] MyProfileImage, String identityPublicKey, String identityAlias,Location identityLocation ) throws CantStartRequestException ;
 
     /**
      * The method <code>acceptIntraUser</code> takes the information of a connection request, accepts
@@ -137,7 +140,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @param profileImage            The profile image that the intra user has
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException
      */
-     void acceptIntraUser(String identityPublicKey,String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
+    void acceptIntraUser(String identityPublicKey,String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
 
 
     /**
@@ -146,7 +149,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @param intraUserToRejectPublicKey the public key of the user to deny its connection request
      * @throws IntraUserConnectionDenialFailedException
      */
-     void denyConnection(String intraUserLoggedPublicKey,String intraUserToRejectPublicKey) throws IntraUserConnectionDenialFailedException;
+    void denyConnection(String intraUserLoggedPublicKey,String intraUserToRejectPublicKey) throws IntraUserConnectionDenialFailedException;
 
     /**
      * The method <code>disconnectIntraUSer</code> disconnect an intra user from the list managed by this
@@ -155,8 +158,9 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @param intraUserToDisconnectPublicKey the public key of the intra user to disconnect
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException
      */
-     void disconnectIntraUSer(String intraUserLoggedPublicKey, String intraUserToDisconnectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
+    void disconnectIntraUSer(String intraUserLoggedPublicKey, String intraUserToDisconnectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
 
+    void disconnectAllIntraUSer(String intraUserLoggedPublicKey) throws IntraUserDisconnectingFailedException;
     /**
      * The method <code>cancelIntraUser</code> cancels an intra user from the list managed by this
      * @param intraUserToCancelPublicKey
@@ -172,7 +176,19 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
-     List<IntraUserInformation> getAllIntraUsers(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+    List<IntraUserInformation> getAllIntraUsers(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+
+
+    /**
+     * The method <code>getAllIntraUsers</code> returns the list of all intra users registered by the
+     * logged in intra user if location match
+     *
+     * @return the list of intra users connected to the logged in intra user
+     * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
+     */
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
+    List<IntraUserInformation> getAllIntraUsersByLocation(String identityPublicKey,int max,int offset, String country, String city) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+
 
     /**
      * The method <code>getIntraUsersWaitingYourAcceptance</code> returns the list of intra users waiting to be accepted
@@ -182,7 +198,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
-     List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+    List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
     /**
      * The method <code>getIntraUsersWaitingTheirAcceptance</code> list the intra users that haven't
@@ -192,20 +208,20 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * logged in intra user.
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
-     List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+    List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
     /**
      *
      * @return active IntraUserLoginIdentity
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantShowLoginIdentitiesException
      */
-     IntraUserLoginIdentity getActiveIntraUserIdentity() throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+    IntraUserLoginIdentity getActiveIntraUserIdentity() throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 
     /**
      * Count intra user waiting
      * @return
      */
-     int getIntraUsersWaitingYourAcceptanceCount();
+    int getIntraUsersWaitingYourAcceptanceCount();
 
 
     /**
@@ -276,4 +292,4 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
     List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException;
 
 
-    }
+}

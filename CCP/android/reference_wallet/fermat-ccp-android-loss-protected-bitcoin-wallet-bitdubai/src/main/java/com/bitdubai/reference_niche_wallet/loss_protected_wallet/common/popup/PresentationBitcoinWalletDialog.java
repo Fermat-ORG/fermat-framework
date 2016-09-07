@@ -112,6 +112,11 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
                 btn_dismiss = (FermatButton) findViewById(R.id.btn_dismiss);
                 btn_dismiss.setOnClickListener(this);
                 break;
+
+            case TYPE_CHUNCK_HELP:
+                btn_dismiss = (FermatButton) findViewById(R.id.btn_dismiss);
+                btn_dismiss.setOnClickListener(this);
+                break;
         }
 
 
@@ -134,7 +139,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
                 return R.layout.loss_presentation_bitcoin_wallet_without_identities;
             case TYPE_CHUNCK_HELP:
-                return R.layout.loss_chunk_help_dialog;
+                return R.layout.loss_chunk_helper_dialog;
         }
         return 0;
     }

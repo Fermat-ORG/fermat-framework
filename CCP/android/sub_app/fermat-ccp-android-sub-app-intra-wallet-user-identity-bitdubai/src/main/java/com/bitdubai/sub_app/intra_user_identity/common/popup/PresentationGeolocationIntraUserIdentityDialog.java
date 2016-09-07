@@ -70,9 +70,7 @@ public class PresentationGeolocationIntraUserIdentityDialog extends FermatDialog
         int id = v.getId();
 
         if (id == R.id.start_community) {
-
-            dismiss();
-
+                dismiss();
         }
     }
 
