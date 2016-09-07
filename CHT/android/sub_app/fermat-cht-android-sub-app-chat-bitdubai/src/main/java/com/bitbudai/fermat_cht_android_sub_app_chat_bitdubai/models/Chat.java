@@ -42,6 +42,7 @@ public class Chat {
 
         this.contactName = contactName;
         this.message     = message;
+        this.messageId   = messageId;
         this.dateMessage = dateMessage;
         this.chatId      = chatId;
         this.contactId   = contactId;
@@ -136,6 +137,7 @@ public class Chat {
         return "Chat{" +
                 "contactName='" + contactName + '\'' +
                 ", message='" + message + '\'' +
+                ", messageId='" + messageId + '\'' +
                 ", dateMessage='" + dateMessage + '\'' +
                 ", chatId=" + chatId +
                 ", contactId='" + contactId + '\'' +

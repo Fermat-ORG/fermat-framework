@@ -244,18 +244,16 @@ public class ChatMiddlewareEventActions {
 
             updateMessageStatus(messageMetadata);
 
-            if (messageMetadata.getMessageStatus() != MessageStatus.READ) {
-                FermatBundle listUpdateView = new FermatBundle();
-                listUpdateView.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
-                listUpdateView.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-                listUpdateView.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
+            FermatBundle listUpdateView = new FermatBundle();
+            listUpdateView.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+            listUpdateView.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+            listUpdateView.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
 
-                listUpdateView.put(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE, ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE);
-                listUpdateView.put(ChatBroadcasterConstants.CHAT_MESSAGE_STATUS, messageMetadata.getMessageStatus());
-                listUpdateView.put(ChatBroadcasterConstants.CHAT_MESSAGE_ID, messageMetadata.getMessageId());
+            listUpdateView.put(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE, ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE);
+            listUpdateView.put(ChatBroadcasterConstants.CHAT_MESSAGE_STATUS, messageMetadata.getMessageStatus());
+            listUpdateView.put(ChatBroadcasterConstants.CHAT_MESSAGE_ID, messageMetadata.getMessageId());
 
-                broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), listUpdateView);
-            }
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), listUpdateView);
 
             FermatBundle chatUpdateView = new FermatBundle();
             chatUpdateView.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
@@ -313,7 +311,6 @@ public class ChatMiddlewareEventActions {
             return;
 
         chatMiddlewareDatabaseDao.updateMessageStatus(messageId, messageMetadata.getMessageStatus());
-        System.out.println("12345 MESSAGE STATUS UPDATED");
     }
 
     public void incomingWritingStatusEventHandler(String senderPk) throws

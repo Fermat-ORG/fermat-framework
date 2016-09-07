@@ -163,7 +163,7 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
             } else {
                 adapterView.refreshEvents();
             }
-        }else adapterView.clean();
+        }
     }
 
     @Override
@@ -243,24 +243,6 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-//        unbindDrawables(adapterView.getRootView().findViewById(R.id.messagesContainer));
-//        unbindDrawables(adapterView.getRootView().findViewById(R.id.chatSendButton));
-//        adapterView.destroy();
-//        adapterView.destroyDrawingCache();
-//        adapterView.removeView(getView());
-//        adapterView.removeAllViews();
-//        adapterView.removeAllViewsInLayout();
-//        adapterView = null;
-//        chatIdentity = null;
-//        chatSettings = null;
-//        chatManager = null;
-//        appSession = null;
-//        destroy();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
@@ -278,8 +260,8 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 try {
-                                    adapterView.clean();
                                     onUpdateViewUIThread();
+                                    adapterView.clean();
                                 }catch (Exception e) {
                                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                 }

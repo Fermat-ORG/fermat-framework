@@ -15,7 +15,6 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 
 import java.sql.Timestamp;
@@ -90,15 +89,34 @@ public class ChatListAdapter extends FermatAdapter<Chat, ChatHolder> implements 
 
                 holder.imageTick.setVisibility(View.VISIBLE);
 
-                if (data.getStatus() == MessageStatus.SENT) {
-                    holder.imageTick.setImageResource(R.drawable.cht_ticksent);
-                } else if (data.getStatus() == MessageStatus.DELIVERED || data.getStatus() == MessageStatus.RECEIVED) {
-                    holder.imageTick.setImageResource(R.drawable.cht_tickdelivered);
-                } else if (data.getStatus() == MessageStatus.READ) {
-                    holder.imageTick.setImageResource(R.drawable.cht_tickread);
+                if (data.getStatus() != null) {
+                    switch (data.getStatus()) {
+                        case SENT:
+                            holder.imageTick.setVisibility(View.VISIBLE);
+                            holder.imageTick.setImageResource(R.drawable.cht_ticksent);
+                            break;
+                        case DELIVERED:
+                            holder.imageTick.setVisibility(View.VISIBLE);
+                            holder.imageTick.setImageResource(R.drawable.cht_tickdelivered);
+                            break;
+                        case READ:
+                            holder.imageTick.setVisibility(View.VISIBLE);
+                            holder.imageTick.setImageResource(R.drawable.cht_tickread);
+                            break;
+                        case CANNOT_SEND:
+                            holder.imageTick.setVisibility(View.VISIBLE);
+                            holder.imageTick.setImageResource(R.drawable.cht_close);
+                            break;
+                        default:
+                            holder.imageTick.setImageResource(0);
+                            holder.imageTick.setVisibility(View.GONE);
+                            break;
+                    }
+                } else {
+                    holder.imageTick.setImageResource(0);
+                    holder.imageTick.setVisibility(View.GONE);
                 }
-            } else
-                holder.imageTick.setVisibility(View.GONE);
+            }
 
             if (data.getNoReadMsgs() > 0) {
                 String nUnreadMessages = data.getNoReadMsgs().toString();

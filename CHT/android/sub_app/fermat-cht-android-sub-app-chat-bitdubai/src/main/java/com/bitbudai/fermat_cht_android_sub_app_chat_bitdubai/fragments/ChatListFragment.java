@@ -284,6 +284,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 }
                 chatListView();
             } else {
+                chatList.clear();
                 emptyView.setVisibility(View.VISIBLE);
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
@@ -294,7 +295,6 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                chatList.clear();
             }
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -382,8 +382,6 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
     public void onItemClickListener(com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat chatCurrent, int position) {
 
         try {
-
-            System.out.println("entré acá positon "+position);
 
             appSession.setData("whocallme", "chatlist");
             Contact contact = new ContactImpl();
@@ -556,10 +554,17 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
+                                    System.out.println("sago por el dimisss");
                                     try {
                                         updateValues();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                    }
+                                    try {
                                         adapter.changeDataSet(chatList);
                                     } catch (Exception e) {
+                                        e.printStackTrace();
                                         errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                     }
                                 }
@@ -698,17 +703,12 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW)) {
 
-                        System.out.println("paso por aca");
-
                         int chatBroadcasterType = fermatBundle.getInt(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE);
-
-                        System.out.println("paso por aca chatBroadcasterType "+chatBroadcasterType);
 
                         switch (chatBroadcasterType) {
                             case ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE:
 
                                 final String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_REMOTE_PK);
-                                System.out.println("paso por aca remotePK "+remotePK);
 
                                 if (remotePK != null) {
 
@@ -732,15 +732,12 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             case ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE:
 
                                 UUID messageId = (UUID) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_ID);
-                                System.out.println("paso por aca messageId "+messageId);
                                 updateChatByMessageId(messageId);
 
                                 break;
                             case ChatBroadcasterConstants.NEW_MESSAGE_TYPE:
 
                                 Message message = (Message) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE);
-
-                                System.out.println("paso por aca messageId "+message);
 
                                 updateChatByChatId(message.getChatId());
                                 break;
@@ -788,6 +785,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void updateChatByChatId(UUID chatId) {
 
+        boolean found = false;
         try {
 
             for (com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat chat : chatList) {
@@ -810,6 +808,8 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    found = true;
                     adapter.changeDataSet(chatList);
 
                     break;
@@ -817,6 +817,20 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+
+        try {
+            if (!found) {
+
+                Chat chatPersisted = chatManager.getChatByChatId(chatId);
+
+                ChatActorCommunityInformation cont = chatManager.getChatActorConnection(chatIdentity.getPublicKey(), chatPersisted.getRemoteActorPublicKey());
+
+                chatList.add(getChatFromChat(chatPersisted, cont));
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
