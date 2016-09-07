@@ -85,11 +85,11 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
             positiveBtn.setOnClickListener(this);
             negativeBtn.setOnClickListener(this);
 
-            title.setText(R.string.confirmation_notification_dialog_title);
+            title.setText(this.activity.getResources().getString(R.string.confirmation_notification_dialog_title));
             title.setTextColor(Color.BLACK);
-            description.setText(R.string.confirmation_notification_dialog_description);
+            description.setText( this.activity.getResources().getString(R.string.confirmation_notification_dialog_description));
             description.setTextColor(Color.parseColor("#5ddad1"));
-            userName.setText(intraUserInformation.getName() + " "+R.string.confirmation_notification_dialog_message);
+            userName.setText(intraUserInformation.getName() + " "+ this.activity.getResources().getString(R.string.confirmation_notification_dialog_message));
             userName.setTextColor(Color.parseColor("#3f3f3f"));
             userName.setVisibility(View.VISIBLE);
             userName.setTextSize(14);

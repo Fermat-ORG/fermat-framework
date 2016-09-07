@@ -4848,7 +4848,7 @@ public class SubAppAppsGenerator {
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
 
-        runtimeActivity.setOptionsMenu(optionsMenuBrowser);
+        runtimeFragment.setOptionsMenu(optionsMenuBrowser);
 
         runtimeTab.setFragment(runtimeFragment);
         runtimeTabStrip.addTab(runtimeTab);
@@ -4897,7 +4897,7 @@ public class SubAppAppsGenerator {
         optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
-        runtimeActivity.setOptionsMenu(optionsMenuConn);
+        runtimeFragment.setOptionsMenu(optionsMenuConn);
 
         runtimeTab.setFragment(runtimeFragment);
         runtimeTabStrip.addTab(runtimeTab);
