@@ -14,8 +14,8 @@ public enum MessageStatus implements FermatEnum {
     CREATED("CRET"),
     DELIVERED("DELR"),
     READ("READ"),
-    RECEIVE("RXED"),
-    SEND("SEND"),;
+    RECEIVED("RXED"),
+    SENT("SENT"),;
 
     /**
      * Represent the code of the message status
@@ -53,8 +53,8 @@ public enum MessageStatus implements FermatEnum {
         switch (code) {
             case "CRET":
                 return MessageStatus.CREATED;
-            case "SEND":
-                return MessageStatus.SEND;
+            case "SENT":
+                return MessageStatus.SENT;
             case "DELR":
                 return MessageStatus.DELIVERED;
             case "READ":
@@ -62,7 +62,7 @@ public enum MessageStatus implements FermatEnum {
             case "CSED":
                 return MessageStatus.CANNOT_SEND;
             case "RXED":
-                return MessageStatus.RECEIVE;
+                return MessageStatus.RECEIVED;
         }
 
         /**

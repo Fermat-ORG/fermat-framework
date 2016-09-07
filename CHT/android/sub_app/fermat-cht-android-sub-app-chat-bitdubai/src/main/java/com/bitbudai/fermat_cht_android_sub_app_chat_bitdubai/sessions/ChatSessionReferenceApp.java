@@ -17,6 +17,7 @@ public class ChatSessionReferenceApp extends AbstractReferenceAppFermatSession<I
     public static final String CONTACT_DATA = "CONTACT_DATA";
     public static final String PROFILE_DATA = "PROFILE_DATA";
     public static final String CHAT_DATA = "CHAT_DATA";
+    public static final String CHATS_ID = "CHATS_ID";
 
     public ChatSessionReferenceApp() {
     }

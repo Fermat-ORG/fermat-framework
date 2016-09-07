@@ -2,24 +2,24 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters;
 
 import android.widget.Filter;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatMessageListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * ChatFilter
+ * ChatMessageListFilter
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/04/16.
  * @version 1.0
  */
-public class ChatFilter extends
-        Filter {
+public class ChatMessageListFilter extends Filter {
 
-    private ArrayList<ChatMessage> data;
-    private ChatAdapter adapter;
+    private List<ChatMessage> data;
+    private ChatMessageListAdapter adapter;
 
-    public ChatFilter(ArrayList<ChatMessage> data, ChatAdapter adapter) {
+    public ChatMessageListFilter(List<ChatMessage> data, ChatMessageListAdapter adapter) {
         this.data = data;
         this.adapter = adapter;
     }
@@ -31,7 +31,7 @@ public class ChatFilter extends
 
         FilterResults results = new FilterResults();
 
-        final ArrayList<ChatMessage> list = data;
+        final List<ChatMessage> list = data;
 
         int count = list.size();
         final ArrayList<ChatMessage> nlist = new ArrayList<>(count);
@@ -55,9 +55,6 @@ public class ChatFilter extends
 
     @Override
     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-//        adapter.changeDataSet((List<DigitalAsset>) filterResults.values);
-        //adapter.setData((ArrayList<ChatMessage>) filterResults.values);
         adapter.changeDataSet((ArrayList<ChatMessage>) filterResults.values);
-        adapter.notifyDataSetChanged();
     }
 }

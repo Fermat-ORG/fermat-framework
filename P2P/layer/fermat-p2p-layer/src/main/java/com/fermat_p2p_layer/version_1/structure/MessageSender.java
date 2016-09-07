@@ -60,7 +60,7 @@ public class MessageSender {
                 messagesSentWaitingForAck.put(packageId,createPackageInformation(networkServiceType,packageType));
             return packageId;
         }
-        throw new CantSendMessageException("Client is not connected");
+        return null;
     }
 
     public UUID sendMessage(NetworkServiceMessage networkServiceMessage, NetworkServiceType networkServiceType, String nodeDestinationPublicKey) throws CantSendMessageException {

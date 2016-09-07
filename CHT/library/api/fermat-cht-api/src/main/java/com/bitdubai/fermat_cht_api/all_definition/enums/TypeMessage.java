@@ -10,7 +10,7 @@ public enum TypeMessage implements FermatEnum {
     /**
      * Definition types
      */
-    INCOMMING("INC"),
+    INCOMING("INC"),
     OUTGOING("OUT");
 
     /**
@@ -48,7 +48,7 @@ public enum TypeMessage implements FermatEnum {
 
         switch (code) {
             case "INC":
-                return TypeMessage.INCOMMING;
+                return TypeMessage.INCOMING;
             case "OUT":
                 return TypeMessage.OUTGOING;
         }

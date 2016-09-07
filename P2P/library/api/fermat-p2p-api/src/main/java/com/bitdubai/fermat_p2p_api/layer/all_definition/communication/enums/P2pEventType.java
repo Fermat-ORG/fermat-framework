@@ -32,9 +32,6 @@ public enum P2pEventType implements FermatEventEnum {
     NETWORK_CLIENT_ACTOR_PROFILE_UPDATED("NCAPU"){
         public NetworkClientProfileRegisteredEvent getNewEvent() { return new NetworkClientProfileRegisteredEvent(this); }
     },
-    NETWORK_CLIENT_CONNNECTED_TO_NODE("NCCTN"){
-        public NetworkClientConnectedToNodeEvent getNewEvent() {    return new NetworkClientConnectedToNodeEvent(this);}
-    },
     NETWORK_CLIENT_CONNECTION_SUCCESS("NCCSU"){
         public NetworkClientConnectionSuccessEvent getNewEvent() { return new NetworkClientConnectionSuccessEvent(this); }
     },
@@ -50,14 +47,8 @@ public enum P2pEventType implements FermatEventEnum {
     NETWORK_CLIENT_REGISTERED("NCR"){
         public NetworkClientRegisteredEvent getNewEvent() { return new NetworkClientRegisteredEvent(this); }
     },
-    NETWORK_CLIENT_ACTOR_FOUND("NCAF"){
-        public NetworkClientActorFoundEvent getNewEvent() { return new NetworkClientActorFoundEvent(this); }
-    },
     NETWORK_CLIENT_ACTOR_LIST_RECEIVED("NCALR"){
         public NetworkClientActorListReceivedEvent getNewEvent() { return new NetworkClientActorListReceivedEvent(this); }
-    },
-    NETWORK_CLIENT_ACTOR_UNREACHABLE("NCAD"){
-        public NetworkClientActorUnreachableEvent getNewEvent() { return new NetworkClientActorUnreachableEvent(this); }
     },
     NETWORK_CLIENT_NEW_MESSAGE_TRANSMIT("NCNWT"){
         public NetworkClientNewMessageTransmitEvent getNewEvent() { return new NetworkClientNewMessageTransmitEvent(this); }
@@ -70,9 +61,6 @@ public enum P2pEventType implements FermatEventEnum {
     },
     NETWORK_CLIENT_SENT_MESSAGE_FAILED("NCSENTMF"){
         public NetworkClientNewMessageFailedEvent getNewEvent() { return new NetworkClientNewMessageFailedEvent(this); }
-    },
-    NETWORK_CLIENT_CALL_CONNECTED("NCACC"){
-        public NetworkClientCallConnectedEvent getNewEvent() { return new NetworkClientCallConnectedEvent(this); }
     },
     NETWORK_CLIENT_IS_ACTOR_ONLINE("NCIAO"){
         public NetworkClientIsActorOnlineEvent getNewEvent() { return new NetworkClientIsActorOnlineEvent(this);}

@@ -153,7 +153,9 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         if (getConnection() != null ) {
 
             try {
-                this.getConnection().register(actorToRegister, getProfile());
+                UUID packageId = this.getConnection().register(actorToRegister, getProfile());
+                if (packageId != null)
+                    registeredActorsByPackageId.put(packageId, actorToRegister);
             } catch (CantRegisterProfileException | CantSendMessageException e) {
                 throw new CantRegisterActorException(e.getCause(), e.getContext(), e.getPossibleReason());
             }
@@ -191,7 +193,8 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
             try {
                 UUID packageId = this.getConnection().register(actorToRegister, getProfile());
-                registeredActorsByPackageId.put(packageId, actorToRegister);
+                if (packageId != null)
+                    registeredActorsByPackageId.put(packageId, actorToRegister);
             } catch (CantRegisterProfileException | CantSendMessageException e) {
                 throw new CantRegisterActorException(e.getCause(), e.getContext(), e.getPossibleReason());
             }
@@ -301,7 +304,9 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
                 try {
 
-                    this.getConnection().register(actorToRegister.getKey(), getProfile());
+                    UUID packageId = this.getConnection().register(actorToRegister.getKey(), getProfile());
+                    if (packageId != null)
+                        registeredActorsByPackageId.put(packageId, actorToRegister.getKey());
 
                 } catch (CantRegisterProfileException | CantSendMessageException e) {
                     e.printStackTrace();

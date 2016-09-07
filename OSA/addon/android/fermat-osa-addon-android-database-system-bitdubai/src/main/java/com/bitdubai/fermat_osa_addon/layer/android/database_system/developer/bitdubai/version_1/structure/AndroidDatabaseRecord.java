@@ -139,9 +139,12 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
     @Override
     public void setUUIDValue(String columnName, UUID value) {
 
-        DatabaseRecord record = new AndroidRecord(columnName, value.toString(), true);
+        if (value != null) {
 
-        values.put(columnName, record);
+            DatabaseRecord record = new AndroidRecord(columnName, value.toString(), true);
+
+            values.put(columnName, record);
+        }
     }
 
     /**

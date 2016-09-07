@@ -54,20 +54,12 @@ public class ChatMiddlewareDeveloperDatabaseFactory {
         List<String> chatsColumns = new ArrayList<String>();
 
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_ID_OBJECT_COLUMN_NAME);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CHAT_NAME_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_IS_ONLINE);
+
         /**
          * Table Chats addition.
          */
@@ -84,48 +76,12 @@ public class ChatMiddlewareDeveloperDatabaseFactory {
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_TEXT_MESSAGE_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME);
-        messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME);
-        messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID);
-        messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT);
+        messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_DATE_COLUMN_NAME);
         /**
          * Table Message addition.
          */
         DeveloperDatabaseTable messageTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME, messageColumns);
         tables.add(messageTable);
-
-        /**
-         * Table Events columns.
-         */
-        List<String> eventsColumns = new ArrayList<String>();
-
-        eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME);
-        eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_EVENT_COLUMN_NAME);
-        eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_SOURCE_COLUMN_NAME);
-        eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME);
-        eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
-        eventsColumns.add(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_CHAT_ID_COLUMN_NAME);
-        /**
-         * Table Events addition.
-         */
-        DeveloperDatabaseTable eventsTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TABLE_NAME, eventsColumns);
-        tables.add(eventsTable);
-
-        /**
-         * Table Group Member columns.
-         */
-        List<String> groupMemberColumns = new ArrayList<String>();
-
-        groupMemberColumns.add(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_ID_COLUMN_NAME);
-        groupMemberColumns.add(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_GROUP_ID_COLUMN_NAME);
-        groupMemberColumns.add(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME);
-        groupMemberColumns.add(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_ALIAS_COLUMN_NAME);
-
-
-        /**
-         * Table Group Member addition.
-         */
-        DeveloperDatabaseTable groupMemberTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_TABLE_NAME, groupMemberColumns);
-        tables.add(groupMemberTable);
 
         return tables;
     }

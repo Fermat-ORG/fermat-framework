@@ -495,6 +495,8 @@ public class BrowserTabFragment
                         break;
                     case DISCONNECTED_REMOTELY:
                         Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
+
+
                         break;
 
                     default:

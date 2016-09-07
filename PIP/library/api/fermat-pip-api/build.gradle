@@ -26,6 +26,7 @@ repositories {
 dependencies {
 
     compile project(':fermat-api')
+    //compile project(':fermat-p2p-api')
     compile project(':fermat-wpd-api')
 
 //    compile 'org.bouncycastle:bcprov-jdk15on:1.52'

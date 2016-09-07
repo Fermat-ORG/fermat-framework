@@ -62,6 +62,7 @@ public class OptionsMenu implements FermatMainMenu<OptionMenuItem>, Serializable
      */
 
     public void addMenuItems(List<? extends OptionMenuItem> menuItems) {
+//        this.menuItems.clear();
         this.menuItems.addAll(menuItems);
     }
 

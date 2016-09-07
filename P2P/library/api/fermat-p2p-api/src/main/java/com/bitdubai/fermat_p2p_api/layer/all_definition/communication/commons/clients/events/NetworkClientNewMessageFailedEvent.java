@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.common.AbstractEvent;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 /*
@@ -14,11 +13,6 @@ public class NetworkClientNewMessageFailedEvent extends AbstractEvent<P2pEventTy
      * Represent the content value
      */
     private String id;
-
-    /**
-     * Represent the networkServiceTypeSource value
-     */
-    private NetworkServiceType networkServiceTypeSource;
 
     /**
      * Constructor with parameters
@@ -37,19 +31,10 @@ public class NetworkClientNewMessageFailedEvent extends AbstractEvent<P2pEventTy
         this.id = id;
     }
 
-    public NetworkServiceType getNetworkServiceTypeSource() {
-        return networkServiceTypeSource;
-    }
-
-    public void setNetworkServiceTypeSource(NetworkServiceType networkServiceTypeSource) {
-        this.networkServiceTypeSource = networkServiceTypeSource;
-    }
-
     @Override
     public String toString() {
         return "NetworkClientNewMessageTransmitEvent{" +
                 "id='" + id + '\'' +
-                ", networkServiceTypeSource=" + networkServiceTypeSource +
                 '}';
     }
 }

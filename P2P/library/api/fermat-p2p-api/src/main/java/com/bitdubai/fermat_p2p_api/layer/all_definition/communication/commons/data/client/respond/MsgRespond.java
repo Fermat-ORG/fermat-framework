@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.STATUS;
 import com.google.gson.annotations.Expose;
 
 import java.util.UUID;
@@ -14,15 +15,6 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 public class MsgRespond extends PackageContent {
-
-    /**
-     * Represent the status of the check in process
-     */
-    public enum STATUS{
-        SUCCESS,
-        FAIL,
-        EXCEPTION
-    }
 
     /**
      * Represent the status

@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Fermat
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FrameworkHelpers;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
-import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
 import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatIntentFilter;
@@ -97,6 +95,13 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
 //    protected ViewInflater viewInflater;
     private WizardConfiguration context;
 
+    View view;
+    MenuItem item;
+    FermatDrawable icon;
+    MenuItem oldMenu;
+    int id, groupId, order, showAsAction, iconRes;
+    List<OptionMenuItem> optionsMenuItems;
+    OptionMenuItem menuItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,48 +154,55 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
     @Override
     public void onDestroy() {
         unregisterAllReceivers();
+        view = null;
+        item = null;
+        icon = null;
+        oldMenu = null;
+        optionsMenuItems = null;
+        menuItem = null;
         super.onDestroy();
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         try {
-//            if (fermatFragmentType != null) {
-//                if (isVisible) {
-//                    if (fermatFragmentType.getOptionsMenu() != null) {
-//                        List<OptionMenuItem> optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
-//                        for (int i = 0; i < optionsMenuItems.size(); i++) {
-//                            OptionMenuItem menuItem = optionsMenuItems.get(i);
-//                            int id = menuItem.getId();
-//                            int groupId = menuItem.getGroupId();
-//                            int order = menuItem.getOrder();
-//                            int showAsAction = menuItem.getShowAsAction();
-//                            MenuItem oldMenu = menu.findItem(id);
-//                            if (oldMenu == null) {
-//                                MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
-//                                FermatDrawable icon = menuItem.getFermatDrawable();
-//                                if (icon != null) {
-//                                    int iconRes = obtainRes(ResourceSearcher.DRAWABLE_TYPE, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
-//                                    if (iconRes!=0)
-//                                        item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//                                    else Log.e(TAG,"OptionMenu icon not found, icon: "+icon);
-//                                }
-//                                if (showAsAction != -1)
-//                                    item.setShowAsAction(menuItem.getShowAsAction());
-//                                int actionViewClass = menuItem.getActionViewClass();
-//                                if (actionViewClass != -1) {
-//                                    View view = obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK);
-//                                    if (view!=null) item.setActionView(view);
-//                                    else Log.e(TAG,"ActionViewClass null exception, optionMenu: "+menuItem);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            } else {
-//                if (appSession != null)
-//                    Log.e(TAG, "FermatFragmentType null in fragment for app:" + appSession.getAppPublicKey() + ", contact furszy");
-//            }
+
+            if (fermatFragmentType != null) {
+                if (isVisible) {
+                    if (fermatFragmentType.getOptionsMenu() != null) {
+                        optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
+                        for (int i = 0; i < optionsMenuItems.size(); i++) {
+                            menuItem = optionsMenuItems.get(i);
+                            id = menuItem.getId();
+                            groupId = menuItem.getGroupId();
+                            order = menuItem.getOrder();
+                            showAsAction = menuItem.getShowAsAction();
+                            oldMenu = menu.findItem(id);
+                            if (oldMenu == null) {
+                                item = menu.add(groupId, id, order, menuItem.getLabel());
+                                icon = menuItem.getFermatDrawable();
+                                if (icon != null) {
+                                    iconRes = obtainRes(ResourceSearcher.DRAWABLE_TYPE, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
+                                    if (iconRes!=0)
+                                        item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                                    else Log.e(TAG,"OptionMenu icon not found, icon: "+icon);
+                                }
+                                if (showAsAction != -1)
+                                    item.setShowAsAction(menuItem.getShowAsAction());
+                                int actionViewClass = menuItem.getActionViewClass();
+                                if (actionViewClass != -1) {
+                                    view = obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK);
+                                    if (view!=null) item.setActionView(view);
+                                    else Log.e(TAG,"ActionViewClass null exception, optionMenu: "+menuItem);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (appSession != null)
+                    Log.e(TAG, "FermatFragmentType null in fragment for app:" + appSession.getAppPublicKey() + ", contact furszy");
+            }
 
             onOptionMenuPrepared(menu);
 
