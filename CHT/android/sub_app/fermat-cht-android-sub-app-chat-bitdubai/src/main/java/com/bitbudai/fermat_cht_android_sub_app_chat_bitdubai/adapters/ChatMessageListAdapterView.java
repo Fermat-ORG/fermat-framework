@@ -673,6 +673,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
                     chatHistory.add(mes);
 
                     adapter.changeDataSet(chatHistory);
+                    scroll();
                 }
 
             }

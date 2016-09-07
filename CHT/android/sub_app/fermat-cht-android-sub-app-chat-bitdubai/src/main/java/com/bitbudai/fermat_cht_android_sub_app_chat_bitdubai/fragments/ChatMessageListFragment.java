@@ -315,10 +315,9 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
 
                                 Message message = (Message) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE);
 
-                                if (adapterView != null) {
+                                if (adapterView != null)
                                     adapterView.addMessage(message);
-                                    adapterView.scroll();
-                                }
+
                                 break;
                             default:
 
