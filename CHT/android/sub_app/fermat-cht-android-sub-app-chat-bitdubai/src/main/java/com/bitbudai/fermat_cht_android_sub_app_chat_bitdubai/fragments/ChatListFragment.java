@@ -768,6 +768,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 break;
                         }
                     }
+
                 }
             } catch (ClassCastException e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,

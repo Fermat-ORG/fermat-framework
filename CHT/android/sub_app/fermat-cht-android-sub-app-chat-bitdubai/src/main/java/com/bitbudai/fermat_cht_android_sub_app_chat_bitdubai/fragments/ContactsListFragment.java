@@ -416,7 +416,7 @@ public class ContactsListFragment
 //        mSwipeRefreshLayout = null;
 //        searchView = null;
 //        applicationsHelper = null;
-//        destroy();
+        destroy();
     }
 
     private void unbindDrawables(View view)
