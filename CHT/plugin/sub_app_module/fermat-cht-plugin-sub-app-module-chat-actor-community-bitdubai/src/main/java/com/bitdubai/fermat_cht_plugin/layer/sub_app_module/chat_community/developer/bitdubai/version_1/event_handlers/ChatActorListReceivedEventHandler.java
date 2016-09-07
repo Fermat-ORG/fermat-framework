@@ -26,8 +26,6 @@ public class ChatActorListReceivedEventHandler implements FermatEventHandler<Cha
     @Override
     public void handleEvent(ChatActorListReceivedEvent fermatEvent) throws FermatException {
 
-        System.out.println("CHAT ACTOR LIST FLOW -> HANDLING EVENT -> -> init");
-
         if (this.pluginRoot.getStatus() == ServiceStatus.STARTED)
             manager.handleActorListReceivedEvent(fermatEvent.getActorProfileList());
         else

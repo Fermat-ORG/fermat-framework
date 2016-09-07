@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisc
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRegisterActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantUpdateActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
@@ -410,8 +411,40 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
     }
 
     @Override
-    public void updateActorConnection(ChatActorConnection chatActorConnection) {
-        this.dao.updateChatActorConnection(chatActorConnection);
+    public void updateAlias(UUID connectionId, String alias) throws CantUpdateActorConnectionException, ActorConnectionNotFoundException {
+
+        try {
+
+            dao.changeAlias(connectionId, alias);
+
+        } catch (final CantUpdateActorConnectionException innerException) {
+
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, innerException);
+            throw innerException;
+        }  catch (final Exception exception) {
+
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new CantUpdateActorConnectionException(exception, "connectionId: " + connectionId, "Unhandled error.");
+        }
+    }
+
+
+    @Override
+    public void updateImage(UUID connectionId, byte[] image) throws CantUpdateActorConnectionException, ActorConnectionNotFoundException {
+
+        try {
+
+            dao.changeImage(connectionId, image);
+
+        } catch (final CantUpdateActorConnectionException innerException) {
+
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, innerException);
+            throw innerException;
+        }  catch (final Exception exception) {
+
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new CantUpdateActorConnectionException(exception, "connectionId: " + connectionId, "Unhandled error.");
+        }
     }
 }
 

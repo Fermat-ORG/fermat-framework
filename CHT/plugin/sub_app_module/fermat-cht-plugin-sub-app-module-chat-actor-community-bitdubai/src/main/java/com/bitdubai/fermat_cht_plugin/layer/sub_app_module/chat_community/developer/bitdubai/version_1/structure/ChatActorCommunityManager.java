@@ -67,6 +67,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Geo
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -477,6 +478,8 @@ public class ChatActorCommunityManager
 
         for (ChatExposingData worldActor : actorProfileList) {
 
+            System.out.println(" chat actor community manager processiong -> "+worldActor.getAlias());
+
             country = "--";
             city = "--";
             state = "--";
@@ -498,7 +501,20 @@ public class ChatActorCommunityManager
 
                 connectionState = connectedActor.getConnectionState();
                 connectionID = connectedActor.getConnectionId();
+
+                if (!worldActor.getAlias().equals(connectedActor.getAlias())) {
+                    chatActorConnectionManager.updateAlias(connectionID, worldActor.getAlias());
+                    //todo see if necessary change more fields
+                }
+
+                if (!Arrays.equals(worldActor.getImage(), connectedActor.getImage()))
+                    chatActorConnectionManager.updateImage(connectionID, worldActor.getImage() != null ? worldActor.getImage() : new byte[0]);
+
             } catch (ActorConnectionNotFoundException ex) {
+                connectionState = null;
+                connectionID = null;
+            } catch (Exception ex) {
+                ex.printStackTrace();
                 connectionState = null;
                 connectionID = null;
             }

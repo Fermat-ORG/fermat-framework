@@ -96,38 +96,43 @@ public class ActorConnectionEventActions {
 
             for (final ChatConnectionRequest request : list) {
 
-                switch (request.getRequestAction()) {
+                try {
 
-                    case ACCEPT:
-                        this.handleAcceptConnection(request.getRequestId());//TODO check this, exception when connectionID is not found
+                    switch (request.getRequestAction()) {
 
-                        FermatBundle fermatBundle = new FermatBundle();
-                        fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_CONNECTION.getCode());
-                        fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_COMMUNITY.getCode()));
-                        fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-                        fermatBundle.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_COMMUNITY_CONNECTION_ACCEPTED_NOTIFICATION);
-                        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
+                        case ACCEPT:
+                            this.handleAcceptConnection(request.getRequestId());//TODO check this, exception when connectionID is not found
 
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
-                        break;
-                    case DENY:
-                        this.handleDenyConnection(request.getRequestId());
-                        break;
-                    case DISCONNECT:
-                        this.handleDisconnect(request.getRequestId());
-                        break;
+                            FermatBundle fermatBundle = new FermatBundle();
+                            fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_CONNECTION.getCode());
+                            fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_COMMUNITY.getCode()));
+                            fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+                            fermatBundle.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_COMMUNITY_CONNECTION_ACCEPTED_NOTIFICATION);
+                            fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
 
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+                            break;
+                        case DENY:
+                            this.handleDenyConnection(request.getRequestId());
+                            break;
+                        case DISCONNECT:
+                            this.handleDisconnect(request.getRequestId());
+                            break;
+
+                    }
+                } catch (CantDenyActorConnectionRequestException | ActorConnectionNotFoundException | UnexpectedConnectionStateException | CantAcceptActorConnectionRequestException | CantDisconnectFromActorException exception) {
+                    chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+
+                    try {
+                        chatNetworkService.confirm(request.getRequestId());
+                    } catch (ConnectionRequestNotFoundException | CantConfirmException e) {
+                        chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    }
                 }
 
             }
 
-        } catch (CantListPendingConnectionRequestsException |
-                ActorConnectionNotFoundException |
-                UnexpectedConnectionStateException |
-                CantAcceptActorConnectionRequestException /* |
-                CantCancelActorConnectionRequestException */ |
-                CantDenyActorConnectionRequestException |
-                CantDisconnectFromActorException e) {
+        } catch (CantListPendingConnectionRequestsException e) {
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
             throw new CantHandleUpdateEventException(e, "", "Error handling Crypto Addresses News Event.");
