@@ -20,6 +20,7 @@ import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -56,16 +57,18 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
     private Typeface tf;
     private BlockchainNetworkType blockchainNetworkType;
     private Context context;
+    PaymentRequestHistoryAdapter adapter;
 
 
 
-    public PaymentHistoryItemViewHolder(View itemView,int holderType,Context context, CryptoWallet cryptoWallet, ReferenceAppFermatSession<CryptoWallet> referenceWalletSession) {
+    public PaymentHistoryItemViewHolder(View itemView,int holderType,Context context, CryptoWallet cryptoWallet, ReferenceAppFermatSession<CryptoWallet> referenceWalletSession, PaymentRequestHistoryAdapter adapter) {
         super(itemView,holderType);
 
         res = itemView.getResources();
         this.context = context;
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession = referenceWalletSession;
+        this.adapter = adapter;
 
 
         contactIcon = (ImageView) itemView.findViewById(R.id.profile_Image);
@@ -207,7 +210,7 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
                                 , cryptoWallet.getSelectedActorIdentity().getPublicKey(),
                                 BitcoinFee.valueOf(feeLevel).getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS);
                         Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
-                        //notifyDataSetChanged();
+                        adapter.notifyDataSetChanged();
                     } else
                         showMessage(context, "Insufficient funds - Can't Accept Receive Payment");
                 } catch (Exception e) {
@@ -223,7 +226,7 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
                 try {
                     cryptoWallet.refuseRequest(data.getRequestId());
                     Toast.makeText(context, "Request denied", Toast.LENGTH_SHORT).show();
-                    //notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
                 } catch (Exception e) {
                     showMessage(context, "Cant Denied Receive Payment Exception- " + e.getMessage());
                 }

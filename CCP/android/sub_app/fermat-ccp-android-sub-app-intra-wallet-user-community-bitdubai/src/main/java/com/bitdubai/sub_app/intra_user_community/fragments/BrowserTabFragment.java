@@ -707,7 +707,9 @@ public class BrowserTabFragment
                                 } else {
                                     lstIntraUserInformations = (ArrayList)result;
                                 }
-                                adapter.refreshEvents(lstIntraUserInformations);
+                                adapter.changeDataSet(lstIntraUserInformations);
+                                ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
+                                //adapter.refreshEvents(lstIntraUserInformations);
                             } else {
                                 for (IntraUserInformation info : result) {
                                     if (notInList(info)) {

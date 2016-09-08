@@ -107,66 +107,74 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
                               final long     accuracy       ) throws ActorAlreadyRegisteredException, CantRegisterActorException {
 
         System.out.println("******************* REGISTERING ACTOR: "+name+ " - type: "+type + "  ENTER METHOD");
+        try {
 
-        //validateImageSize(image.length); TODO COMMENTED UNTIL BETTER MANAGEMENT BE IMPLEMENTED
+                //validateImageSize(image.length); TODO COMMENTED UNTIL BETTER MANAGEMENT BE IMPLEMENTED
 
-        ActorProfile actorToRegister = new ActorProfile();
-        actorToRegister.setIdentityPublicKey(publicKey);
+                ActorProfile actorToRegister = new ActorProfile();
+                actorToRegister.setIdentityPublicKey(publicKey);
 
-        if (registeredActors.get(actorToRegister) != null)
-            throw new ActorAlreadyRegisteredException("publicKey: " + publicKey + " - name: " + name, "An actor is already registered with the given public key.");
+                if (registeredActors.get(actorToRegister) != null)
+                    throw new ActorAlreadyRegisteredException("publicKey: " + publicKey + " - name: " + name, "An actor is already registered with the given public key.");
 
-        actorToRegister.setActorType(type.getCode());
-        actorToRegister.setName(name);
-        actorToRegister.setAlias(alias);
-        actorToRegister.setPhoto(image);
+                actorToRegister.setActorType(type.getCode());
+                actorToRegister.setName(name);
+                actorToRegister.setAlias(alias);
+                actorToRegister.setPhoto(image);
 
-        System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  ASK ABOUT LOCATION");
+                System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  ASK ABOUT LOCATION");
 
-        if (location != null)
-            actorToRegister.setLocation(location);
-        else {
-            try {
+                if (location != null)
+                    actorToRegister.setLocation(location);
+                else {
+                    try {
 
-                Location location1 = locationManager.getLastKnownLocation();
-                location1 = LocationUtils.getRandomLocation(location1, accuracy);
-                actorToRegister.setLocation(location1);
+                        Location location1 = locationManager.getLastKnownLocation();
+                        location1 = LocationUtils.getRandomLocation(location1, accuracy);
+                        actorToRegister.setLocation(location1);
 
-            } catch (CantGetDeviceLocationException exception) {
+                    } catch (CantGetDeviceLocationException exception) {
 
-                exception.printStackTrace();
+                        exception.printStackTrace();
+                    }
+                }
+                actorToRegister.setExtraData(extraData);
+
+                System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  LOCATION AND DATA SET");
+
+                registeredActors.put(
+                        actorToRegister,
+                        new RefreshParameters(
+                                1,
+                                refreshInterval,
+                                accuracy
+                        )
+                );
+
+                if (getConnection() != null ) {
+
+                    try {
+                        UUID packageId = this.getConnection().register(actorToRegister, getProfile());
+                        if (packageId != null)
+                            registeredActorsByPackageId.put(packageId, actorToRegister);
+                    } catch (CantRegisterProfileException | CantSendMessageException e) {
+                        throw new CantRegisterActorException(e.getCause(), e.getContext(), e.getPossibleReason());
+                    }
+                    registeredActors.get(actorToRegister).setLastExecution(System.currentTimeMillis());
+
+                } else {
+                    System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  getConnection(): null");
+                }
+
+                System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  GO OUT METHOD");
+
+           } catch (Exception e) {
+                System.out.println("******************* ERROR REGISTERING ACTOR: " + e.getMessage());
+
+                e.printStackTrace();
             }
-        }
-        actorToRegister.setExtraData(extraData);
 
-        System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  LOCATION AND DATA SET");
-
-        registeredActors.put(
-                actorToRegister,
-                new RefreshParameters(
-                        1,
-                        refreshInterval,
-                        accuracy
-                )
-        );
-
-        if (getConnection() != null ) {
-
-            try {
-                UUID packageId = this.getConnection().register(actorToRegister, getProfile());
-                if (packageId != null)
-                    registeredActorsByPackageId.put(packageId, actorToRegister);
-            } catch (CantRegisterProfileException | CantSendMessageException e) {
-                throw new CantRegisterActorException(e.getCause(), e.getContext(), e.getPossibleReason());
-            }
-            registeredActors.get(actorToRegister).setLastExecution(System.currentTimeMillis());
-
-        } else {
-            System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  getConnection(): null");
-        }
-
-        System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  GO OUT METHOD");
-    }
+          }
 
     public void registerActor(final ActorProfile actorToRegister,
                               final long         refreshInterval,
