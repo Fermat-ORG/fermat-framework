@@ -66,7 +66,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-            android:src="@drawable/geolocalitationblue_icon" />
+            android:src="@drawable/geolocalitationblue_icon"
+            android:gravity="center_horizontal" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/location"
