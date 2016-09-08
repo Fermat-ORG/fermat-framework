@@ -453,7 +453,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         if (appSession.getData(SessionConstant.CONTACT_DELETED) == true)
-                            changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS, appSession.getAppPublicKey());
+                            changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_CONTACTS, appSession.getAppPublicKey());
                     }
                 });
             }
