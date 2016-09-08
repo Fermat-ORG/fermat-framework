@@ -38,6 +38,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
@@ -46,6 +47,8 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ContactsT
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.Payment_Request_Help_Dialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
+
+import org.bitcoin.protocols.payments.Protos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -277,8 +280,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         try {
             //when refresh offset set 0
             if(refreshType.equals(FermatRefreshTypes.NEW))
-                offset = 0;
-
+                offset = pos;
             lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey,blockchainNetworkType,MAX,offset);
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
@@ -319,7 +321,11 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                 if (adapter != null){
                     if (offset==0){
                         lstPaymentRequest.clear();
-                        lstPaymentRequest.addAll((ArrayList) result[0]);
+
+                        for (PaymentRequest info : (List<PaymentRequest>)result[0])
+                            if (notInList(info))
+                                lstPaymentRequest.add(info);
+                        //lstPaymentRequest.addAll((ArrayList) result[0]);
                         adapter.changeDataSet(lstPaymentRequest);
                         ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                     }else {
@@ -332,6 +338,14 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             }
         }
         showOrHideEmptyView();
+    }
+
+    private boolean notInList(PaymentRequest info) {
+        for (PaymentRequest contact : lstPaymentRequest) {
+            if (contact.getRequestId().equals(info.getRequestId()))
+                return false;
+        }
+        return true;
     }
 
     @Override

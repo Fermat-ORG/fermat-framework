@@ -371,7 +371,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
             //when refresh offset set 0
             if(refreshType.equals(FermatRefreshTypes.NEW))
-                offset = 0;
+                offset = pos;
             lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, this.blockchainNetworkType ,MAX_PAYMENT_REQUEST,offset);
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
@@ -414,7 +414,10 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                 if (adapter != null){
                     if (offset==0){
                         lstPaymentRequest.clear();
-                        lstPaymentRequest.addAll((ArrayList) result[0]);
+                        for (PaymentRequest info : (List<PaymentRequest>)result[0])
+                            if (notInList(info))
+                                lstPaymentRequest.add(info);
+                        //lstPaymentRequest.addAll((ArrayList) result[0]);
                         adapter.changeDataSet(lstPaymentRequest);
                         ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                     }else {
@@ -436,6 +439,14 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             swipeRefreshLayout.setRefreshing(false);
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
+    }
+
+    private boolean notInList(PaymentRequest info) {
+        for (PaymentRequest contact : lstPaymentRequest) {
+            if (contact.getRequestId().equals(info.getRequestId()))
+                return false;
+        }
+        return true;
     }
 
     private void showOrHideEmptyView() {
