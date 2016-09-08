@@ -30,6 +30,7 @@ import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatBroadcastReceiver;
@@ -368,6 +369,10 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.VERTICAL, false);
         list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
+
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.cht_list_divider);
+        list.addItemDecoration(itemDecoration);
+
         registerForContextMenu(list);
         return layout;
     }
