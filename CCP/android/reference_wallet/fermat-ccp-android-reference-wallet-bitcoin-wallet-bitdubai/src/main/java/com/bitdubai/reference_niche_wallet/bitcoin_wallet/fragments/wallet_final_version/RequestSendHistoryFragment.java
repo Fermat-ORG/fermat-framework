@@ -80,7 +80,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
      * Executor Service
      */
     private ExecutorService executor;
-    private int MAX_TRANSACTIONS = 20;
+
     private int MAX = 10;
     private int offset = 0;
     private View rootView;
@@ -278,9 +278,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         List<PaymentRequest> lstPaymentRequest  = new ArrayList<PaymentRequest>();
 
         try {
-            //when refresh offset set 0
-            if(refreshType.equals(FermatRefreshTypes.NEW))
-                offset = pos;
+            offset = pos;
             lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey,blockchainNetworkType,MAX,offset);
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
@@ -329,7 +327,12 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                         adapter.changeDataSet(lstPaymentRequest);
                         ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                     }else {
-                        lstPaymentRequest.addAll((ArrayList) result[0]);
+                        for (PaymentRequest info : (List<PaymentRequest>) result[0]) {
+                            if (notInList(info)) {
+                                lstPaymentRequest.add(info);
+                            }
+                        }
+
                         adapter.notifyItemRangeInserted(offset, lstPaymentRequest.size() - 1);
                     }
 
@@ -433,7 +436,4 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }

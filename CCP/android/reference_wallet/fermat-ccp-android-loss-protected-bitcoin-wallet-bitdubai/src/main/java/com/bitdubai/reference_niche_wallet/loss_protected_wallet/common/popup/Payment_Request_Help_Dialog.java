@@ -1,18 +1,13 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -27,8 +22,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.Los
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
-import java.io.ByteArrayOutputStream;
-
 /**
  * Created by root on 12/08/16.
  */
@@ -41,18 +34,18 @@ public class Payment_Request_Help_Dialog extends FermatDialog<ReferenceAppFermat
     /**
      * UI
      */
-    private FrameLayout container_john_doe;
-    private FrameLayout container_jane_doe;
-    private FermatTextView txt_title;
+ //   private FrameLayout container_john_doe;
+ //   private FrameLayout container_jane_doe;
+  //  private ImageView image_view_left;
+  //  private ImageView image_view_right;
+  //  private Button btn_left;
+  //  private Button btn_right;
     private ImageView image_banner;
+    private FermatTextView txt_title;
     private FermatTextView txt_sub_title;
     private FermatTextView txt_body;
     private FermatTextView footer_title;
     private CheckBox checkbox_not_show;
-    private ImageView image_view_left;
-    private ImageView image_view_right;
-    private Button btn_left;
-    private Button btn_right;
     private FermatButton btn_dismiss;
 
     private boolean checkButton;
@@ -109,38 +102,38 @@ public class Payment_Request_Help_Dialog extends FermatDialog<ReferenceAppFermat
     }
 
     private void saveSettings() {
-//        if(type!=TYPE_PRESENTATION)
-//        if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
-//        if(checkbox_not_show.isChecked()){
-        //noinspection TryWithIdenticalCatches
-        try {
-            getSession().setData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED, Boolean.FALSE);
-            LossProtectedWalletSettings lossProtectedWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
-            if(lossProtectedWalletSettings!=null) {
-                lossProtectedWalletSettings.setIsPaymentHelpEnabled(!checkbox_not_show.isChecked());
-                getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), lossProtectedWalletSettings);
-            }else{
-                Log.e(TAG, "LossProtectedWalletSettings null");
+               /* if(type!=TYPE_PRESENTATION)
+                if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
+                if(checkbox_not_show.isChecked()){
+                noinspection TryWithIdenticalCatches*/
+            try {
+                getSession().setData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED, Boolean.FALSE);
+                LossProtectedWalletSettings lossProtectedWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
+                if(lossProtectedWalletSettings!=null) {
+                    lossProtectedWalletSettings.setIsPaymentHelpEnabled(!checkbox_not_show.isChecked());
+                    getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), lossProtectedWalletSettings);
+                }else{
+                    Log.e(TAG, "LossProtectedWalletSettings null");
+                }
+            } catch (CantGetSettingsException e) {
+                e.printStackTrace();
+            } catch (SettingsNotFoundException e) {
+                e.printStackTrace();
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            } catch (Exception e){
+                e.printStackTrace();
             }
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantPersistSettingsException e) {
-            e.printStackTrace();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-//        }
+      //  }
     }
 
-    private byte[] convertImage(int resImage) {
+/*    private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         return stream.toByteArray();
     }
-
+*/
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if(isChecked){

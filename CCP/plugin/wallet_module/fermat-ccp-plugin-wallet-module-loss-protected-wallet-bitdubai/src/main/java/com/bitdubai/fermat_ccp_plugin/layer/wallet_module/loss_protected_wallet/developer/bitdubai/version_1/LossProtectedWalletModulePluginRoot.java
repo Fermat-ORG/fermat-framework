@@ -266,7 +266,6 @@ public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossPro
             throw new CantGetModuleManagerException(CantGetCryptoWalletException.DEFAULT_MESSAGE, FermatException.wrapException(e).toString());
         }
     }
-
    /* @Override
     public SettingsManager<LossProtectedWalletSettings> getSettingsManager() {
         if (this.settingsManager != null)
@@ -279,10 +278,5 @@ public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossPro
 
         return this.settingsManager;
     }
-
-
-
-
     */
-
 }

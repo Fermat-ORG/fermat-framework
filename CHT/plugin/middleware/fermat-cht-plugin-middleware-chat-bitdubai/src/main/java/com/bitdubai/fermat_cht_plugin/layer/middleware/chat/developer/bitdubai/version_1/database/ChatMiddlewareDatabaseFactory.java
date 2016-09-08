@@ -72,22 +72,11 @@ public class ChatMiddlewareDatabaseFactory {
             table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
 
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_ID_OBJECT_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_CHAT_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST, DatabaseDataType.STRING, 256, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_IS_ONLINE, DatabaseDataType.STRING, 10, Boolean.FALSE);
-
-            table.addIndex(ChatMiddlewareDatabaseConstants.CHATS_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -105,89 +94,7 @@ public class ChatMiddlewareDatabaseFactory {
             table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_TEXT_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT, DatabaseDataType.STRING, 36, Boolean.FALSE);
-
-            table.addIndex(ChatMiddlewareDatabaseConstants.MESSAGE_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
-
-            /**
-             * Create actions writing table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.ACTIONS_WRITING_TABLE_NAME);
-
-            table.addColumn(ChatMiddlewareDatabaseConstants.ACTIONS_WRITING_ID_CHAT_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.ACTIONS_WRITING_STATE, DatabaseDataType.STRING, 10, Boolean.FALSE);
-
-            table.addIndex(ChatMiddlewareDatabaseConstants.ACTIONS_WRITING_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
-
-            /**
-             * Create actions online table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_TABLE_NAME);
-
-            table.addColumn(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_ID_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_LAST_ON, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION, DatabaseDataType.STRING, 20, Boolean.FALSE);
-
-            table.addIndex(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
-
-            /**
-             * Create Events table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TABLE_NAME);
-
-            table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_CHAT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-
-            table.addIndex(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
-
-            /**
-             * Create Group Member table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.GROUP_MEMBER_TABLE_NAME);
-
-            table.addColumn(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_GROUP_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-
-            table.addIndex(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_FIRST_KEY_COLUMN);
+            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
 
             try {
                 //Create the table

@@ -62,7 +62,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     @Override
     protected FermatViewHolder createHolder(View itemView, int type) {
         if (type == DATA_ITEM)
-            return new PaymentHistoryItemViewHolder(itemView, type, context,cryptoWallet, referenceWalletSession);
+            return new PaymentHistoryItemViewHolder(itemView, type, context,cryptoWallet, referenceWalletSession, this);
         if (type == LOADING_ITEM)
             return new LoadingMoreViewHolder(itemView, type);
         return null;

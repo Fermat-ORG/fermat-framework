@@ -31,7 +31,7 @@ import java.util.ArrayList;
  * @version 1.0
  */
 
-public class ContactListAdapter extends ArrayAdapter implements Filterable {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
+public class ContactListAdapter extends ArrayAdapter implements Filterable {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatMessageHolder> {//ChatFactory
 
     ArrayList<String> contactInfo = new ArrayList<>();
     ArrayList<Bitmap> contactIcon = new ArrayList<>();

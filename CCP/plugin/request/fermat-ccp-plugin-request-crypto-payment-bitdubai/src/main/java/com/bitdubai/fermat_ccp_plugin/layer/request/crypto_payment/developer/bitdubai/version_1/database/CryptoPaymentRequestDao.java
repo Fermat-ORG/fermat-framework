@@ -112,6 +112,8 @@ public class CryptoPaymentRequestDao {
         try {
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
+            //actual date
+            long timestamp = System.currentTimeMillis();
             DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
 
             CryptoPaymentRequestRecord cryptoPaymentRequestRecord = new CryptoPaymentRequestRecord(
@@ -124,7 +126,7 @@ public class CryptoPaymentRequestDao {
                     description      ,
                     cryptoAddress    ,
                     amount           ,
-                    startTimeStamp   ,
+                    timestamp   ,
                     0                ,
                     type             ,
                     state            ,
@@ -342,6 +344,8 @@ public class CryptoPaymentRequestDao {
 
             cryptoPaymentRequestTable.setFilterTop(max.toString());
             cryptoPaymentRequestTable.setFilterOffSet(offset.toString());
+
+            cryptoPaymentRequestTable.addFilterOrder(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             cryptoPaymentRequestTable.loadToMemory();
 

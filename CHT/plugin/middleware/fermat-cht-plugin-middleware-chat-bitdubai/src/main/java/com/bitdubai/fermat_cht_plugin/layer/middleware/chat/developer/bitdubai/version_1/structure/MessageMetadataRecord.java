@@ -36,17 +36,9 @@ public class MessageMetadataRecord implements MessageMetadata {
         return localActorPublicKey;
     }
 
-    public void setLocalActorPublicKey(String localActorPublicKey) {
-        this.localActorPublicKey = localActorPublicKey;
-    }
-
     @Override
     public String getRemoteActorPublicKey() {
         return remoteActorPublicKey;
-    }
-
-    public void setRemoteActorPublicKey(String remoteActorPublicKey) {
-        this.remoteActorPublicKey = remoteActorPublicKey;
     }
 
     @Override
@@ -54,26 +46,14 @@ public class MessageMetadataRecord implements MessageMetadata {
         return messageId;
     }
 
-    public void setMessageId(UUID messageId) {
-        this.messageId = messageId;
-    }
-
     @Override
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     @Override
     public MessageStatus getMessageStatus() {
         return messageStatus;
-    }
-
-    public void setMessageStatus(MessageStatus messageStatus) {
-        this.messageStatus = messageStatus;
     }
 
     @Override
@@ -86,7 +66,4 @@ public class MessageMetadataRecord implements MessageMetadata {
         return null;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
 }

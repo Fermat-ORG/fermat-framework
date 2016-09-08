@@ -232,11 +232,12 @@
     <string name="notification_payment_denied">Requerimiento de Pago Denegado</string>
     <string name="notification_payment_denied_2">Su Requerimiento de Pago por </string>
     <string name="notification_payment_denied_3"> BTC fue denegado.</string>
-    <string name="notification_payment_error">Requerimeinto de Pago Reversado</string>
+    <string name="notification_payment_error">Requerimiento de Pago Reversado</string>
     <string name="notification_payment_error_2">Su Requerimiento de Pago por </string>
     <string name="notification_payment_error_3"> BTC fue reversado.</string>
 
     <!--Delete Wallet Contact Dialog-->
     <string name="delete_title">Borrar Contacto</string>
     <string name="delete_sub_title">Quieres eliminar este contacto de tu cartera?</string>
+    <string name="deleted_toast">Contact Borrado</string>
 </resources>

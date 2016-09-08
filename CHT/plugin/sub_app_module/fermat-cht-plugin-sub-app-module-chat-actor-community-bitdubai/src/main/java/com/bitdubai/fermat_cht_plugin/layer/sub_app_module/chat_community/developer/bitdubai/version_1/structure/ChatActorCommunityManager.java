@@ -464,8 +464,6 @@ public class ChatActorCommunityManager
 
     public void handleActorListReceivedEvent(List<ChatExposingData> actorProfileList) throws FermatException {
 
-        System.out.println("CHAT ACTOR LIST FLOW -> handleActorListReceivedEvent -> INIT");
-
         List<ChatActorCommunityInformation> worldActorList = new ArrayList<>();
 
         final ChatActorCommunitySelectableIdentity selectableIdentity = getSelectedActorIdentity();
@@ -521,8 +519,6 @@ public class ChatActorCommunityManager
                     )
             );
 
-            System.out.println("************** Actor Chat Register: " + worldActor.getAlias() + " - " + worldActor.getStatus() + " - " + worldActor.getStatusConnected());
-
         }
 
         FermatBundle bundle = new FermatBundle();
@@ -531,8 +527,6 @@ public class ChatActorCommunityManager
         bundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
         bundle.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_COMM_ACTOR_RECEIVED);
         bundle.put(ChatBroadcasterConstants.CHAT_COMM_ACTOR_LIST, worldActorList);
-
-        System.out.println("CHAT ACTOR LIST FLOW -> handleActorListReceivedEvent -> END");
 
         broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), bundle);
     }

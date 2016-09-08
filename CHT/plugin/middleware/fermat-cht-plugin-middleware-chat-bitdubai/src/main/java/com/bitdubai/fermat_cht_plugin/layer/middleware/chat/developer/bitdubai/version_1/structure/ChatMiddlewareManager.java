@@ -2,10 +2,8 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
@@ -16,7 +14,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessage
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
-import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
@@ -199,17 +196,50 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
+    @Override
+    public void markChatAs(UUID chatId, ChatStatus chatStatus) throws CantSaveChatException {
+
+        try {
+
+            ObjectChecker.checkArgument(chatId, "The chatId argument is null");
+            ObjectChecker.checkArgument(chatStatus, "The chatStatus argument is null");
+            this.chatMiddlewareDatabaseDao.updateChatStatus(chatId, chatStatus);
+        } catch (ObjectNotSetException e) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantSaveChatException(
+                    e,
+                    "Saving a chat in database",
+                    "The chat probably is null");
+        } catch (DatabaseOperationException e) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantSaveChatException(
+                    e,
+                    "Saving a chat in database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantSaveChatException(
+                    FermatException.wrapException(exception),
+                    "Saving a chat in database",
+                    "Unexpected exception");
+        }
+    }
+
     /**
      * This method deletes a chat from database.
      *
      * @param chatId
+     * @param isDeleteChat
      * @throws CantDeleteChatException
      */
     @Override
-    public void deleteChat(UUID chatId) throws CantDeleteChatException {
+    public void deleteChat(UUID chatId, boolean isDeleteChat) throws CantDeleteChatException {
         try {
             ObjectChecker.checkArgument(chatId, "The chatId argument is null");
-            this.chatMiddlewareDatabaseDao.deleteChat(chatId);
+            this.chatMiddlewareDatabaseDao.deleteChat(chatId, isDeleteChat);
         } catch (ObjectNotSetException e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
@@ -217,6 +247,32 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     e,
                     "Deleting a chat from database",
                     "The chat probably is null");
+        } catch (DatabaseOperationException e) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantDeleteChatException(
+                    e,
+                    "Deleting a chat from database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception) {
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantDeleteChatException(
+                    FermatException.wrapException(exception),
+                    "Deleting a chat from database",
+                    "Unexpected exception");
+        }
+    }
+
+    /**
+     * This method deletes a chat from database.
+     *
+     * @throws CantDeleteChatException
+     */
+    @Override
+    public void deleteAllChats() throws CantDeleteChatException {
+        try {
+            this.chatMiddlewareDatabaseDao.deleteAllChats();
         } catch (DatabaseOperationException e) {
             chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
@@ -466,11 +522,13 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     }
 
     @Override
-    public Timestamp getLastMessageReceivedDate(String remotePk) throws CantGetChatException {
+    public Timestamp getLastMessageReceivedDate(UUID chatId) throws CantGetChatException {
 
         try {
-
-            return chatMiddlewareDatabaseDao.getLastMessageReceivedDateByRemotePK(remotePk);
+            if(chatId != null)
+                return chatMiddlewareDatabaseDao.getLastMessageReceivedDateByChatId(chatId);
+            else
+                return null;
 
         } catch (Exception e) {
             throw new CantGetChatException(
@@ -510,7 +568,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                 chatNetworkServiceManager.sendMessageMetadata(localActorPublicKey,
                         remoteActorPublicKey,
                         messageMetadata);
-                createdMessage.setStatus(MessageStatus.SEND);
+                createdMessage.setStatus(MessageStatus.SENT);
             } catch (IllegalArgumentException e) {
                 /**
                  * In this case, any argument in chat or message was null or not properly set.
@@ -519,13 +577,17 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                 createdMessage.setStatus(MessageStatus.CANNOT_SEND);
             }
             chatMiddlewareDatabaseDao.saveMessage(createdMessage);
-
+/*
             FermatBundle fermatBundle2 = new FermatBundle();
+            fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
             fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
             fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
 
-//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+            fermatBundle2.put(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE, ChatBroadcasterConstants.NEW_MESSAGE_TYPE);
+            fermatBundle2.put(ChatBroadcasterConstants.CHAT_MESSAGE, createdMessage);
+
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);*/
+
         } catch (DatabaseOperationException e) {
             throw new CantSendChatMessageException(
                     e,

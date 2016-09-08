@@ -265,10 +265,20 @@ public class ContactsListFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
     }
 
     public void onOptionMenuPrepared(Menu menu) {
-        MenuItem searchItem = menu.findItem(1);
+        menu.clear();
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.contact_list_menu, menu);
+        menu.add(0, 2, 2, "Go to Profile")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, 3, 3, "Go to Community")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, 4, 4, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        MenuItem searchItem = menu.findItem(R.id.menu_search);// menu.findItem(1);
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
@@ -294,9 +304,7 @@ public class ContactsListFragment
                 if (filterString.length() > 0) {
                     searchView.setQuery(filterString, true);
                     searchView.setIconified(false);
-                    //getToolbar().setTitle("");
                 } else {
-                    //getToolbar().setTitle("P2P Chat");
                     updateValues();
                     adapter.refreshEvents(contactname, contacticon, contactid);
                 }
@@ -377,37 +385,37 @@ public class ContactsListFragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unbindDrawables(layout.findViewById(R.id.list));
-        unbindDrawables(layout.findViewById(R.id.empty_view));
-        adapter.clear();
-        chatSettings = null;
-        errorManager = null;
-        chatIdentity = null;
-        chatManager = null;
-        applicationsHelper = null;
-        layout.destroyDrawingCache();
-        layout = null;
-        contactname.clear();
-        contacticon.clear();
-        contactid.clear();
-        contactStatus.clear();
-        emptyView.destroyDrawingCache();
-        emptyView.removeAllViewsInLayout();
-        chatIdentity = null;
-        emptyView.removeAllViews();
-        noData.destroyDrawingCache();
-        noDatalabel.destroyDrawingCache();
-        nochatssubtitle.destroyDrawingCache();
-        nochatssubtitle1.destroyDrawingCache();
-        nochatssubtitle2.destroyDrawingCache();
-        list.removeAllViewsInLayout();
-        list = null;
-        mSwipeRefreshLayout.removeAllViews();
-        mSwipeRefreshLayout.removeAllViewsInLayout();
-        mSwipeRefreshLayout.destroyDrawingCache();
-        mSwipeRefreshLayout = null;
-        searchView = null;
-        applicationsHelper = null;
+//        unbindDrawables(layout.findViewById(R.id.list));
+//        unbindDrawables(layout.findViewById(R.id.empty_view));
+//        adapter.clear();
+//        chatSettings = null;
+//        errorManager = null;
+//        chatIdentity = null;
+//        chatManager = null;
+//        applicationsHelper = null;
+//        layout.destroyDrawingCache();
+//        layout = null;
+//        contactname.clear();
+//        contacticon.clear();
+//        contactid.clear();
+//        contactStatus.clear();
+//        emptyView.destroyDrawingCache();
+//        emptyView.removeAllViewsInLayout();
+//        chatIdentity = null;
+//        emptyView.removeAllViews();
+//        noData.destroyDrawingCache();
+//        noDatalabel.destroyDrawingCache();
+//        nochatssubtitle.destroyDrawingCache();
+//        nochatssubtitle1.destroyDrawingCache();
+//        nochatssubtitle2.destroyDrawingCache();
+//        list.removeAllViewsInLayout();
+//        list = null;
+//        mSwipeRefreshLayout.removeAllViews();
+//        mSwipeRefreshLayout.removeAllViewsInLayout();
+////        mSwipeRefreshLayout.destroyDrawingCache();
+//        mSwipeRefreshLayout = null;
+//        searchView = null;
+//        applicationsHelper = null;
         destroy();
     }
 

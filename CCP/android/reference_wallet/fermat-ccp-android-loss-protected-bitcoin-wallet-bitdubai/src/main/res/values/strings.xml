@@ -354,5 +354,8 @@
     <string name="chunck_values_btc_rate">Exchange Rate</string>
     <string name="chunck_values_btc_date">Date</string>
 
-    <!-- Custom Dialog Fragment -->
+    <!--Delete Wallet Contact Dialog-->
+    <string name="delete_title">Delete Contact</string>
+    <string name="delete_sub_title">Do you want delete this contact from your wallet?</string>
+    <string name="deleted_toast">Contact Deleted</string>
 </resources>

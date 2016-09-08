@@ -66,18 +66,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-            android:src="@drawable/geolocalitationblue_icon" />
+            android:src="@drawable/geolocalitationblue_icon"
+            android:gravity="center_horizontal" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:text="@string/no_location"
+            android:text="Venezuela , Venezuela"
             android:maxLines="1"
             android:textColor="#7DD5CA"
             android:textSize="12sp"
-            android:layout_marginTop="0dp" />
+            android:layout_marginTop="0dp"
+            android:gravity="center_horizontal" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/connection_state_user"

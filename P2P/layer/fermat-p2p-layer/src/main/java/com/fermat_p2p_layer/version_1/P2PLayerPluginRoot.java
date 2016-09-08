@@ -352,7 +352,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
                 AbstractNetworkService abstractNetworkService = networkServices.get(packageInformation.getNetworkServiceType());
                 if (abstractNetworkService.isStarted()) {
                     System.out.println("P2PLayer discoveryList: "+ fermatEvent.getPackageId());
-                    if (fermatEvent.getStatus() == NetworkClientActorListReceivedEvent.STATUS.SUCCESS)
+                    if (fermatEvent.getStatus() == STATUS.SUCCESS)
                         abstractNetworkService.handleNetworkClientActorListReceivedEvent(fermatEvent.getPackageId(), fermatEvent.getActorList());
                     else
                         System.out.println("ERROR IN THE QUERY WITH ID: "+ fermatEvent.getPackageId());
@@ -370,15 +370,6 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
             @Override
             public void handleEvent(NetworkClientNewMessageFailedEvent fermatEvent) throws FermatException {
                 System.out.println("P2P Layer: FAILED MESSAGE EVENT");
-                AbstractNetworkService abstractNetworkService = networkServices.get(fermatEvent.getNetworkServiceTypeSource());
-                if (abstractNetworkService.isStarted()) {
-                    //todo: ver esto: tengo que ver si voy a buscarlo a la db de la layer o si lo mando directo al ns con el id del mensaje que falló
-//                    abstractNetworkService.onNetworkServiceFailedMessage(fermatEvent.getId());
-
-//                    if(networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().exists(fermatEvent.getId()))
-//                        networkService.onNetworkServiceFailedMessage(networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findById(fermatEvent.getId()));
-
-                }
 
             }
         });
@@ -395,8 +386,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
                 PackageInformation packageInformation = messageSender.packageAck(fermatEvent.getContent().getPackageId());
                 AbstractNetworkService abstractNetworkService = networkServices.get( packageInformation.getNetworkServiceType());
                 if (abstractNetworkService.isStarted()) {
-                    if (fermatEvent.getContent().getStatus() == STATUS.SUCCESS) {
-                        System.out.println("##### ACK MENSAJE LLEGÓ BIEN A LA LAYER!!!##### ID:" + fermatEvent.getContent().getPackageId());
+                    if (fermatEvent.getContent().getStatus() == STATUS.SUCCESS) {System.out.println("##### ACK MENSAJE LLEGÓ BIEN A LA LAYER!!!##### ID:" + fermatEvent.getContent().getPackageId());
                         //Mensaje llega exitoso, falta
                         abstractNetworkService.handleOnMessageSent(fermatEvent.getContent().getPackageId());
                         //If the sending if successful and exists in P2P layer database, we need to delete from there
@@ -503,12 +493,19 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
 
     @Override
     public synchronized void register(AbstractNetworkService abstractNetworkService) {
-        if (client.isConnected()) {
-            try {
-                messageSender.registerProfile(abstractNetworkService.getProfile(),abstractNetworkService.getNetworkServiceType());
-            } catch (FermatException e) {
-                e.printStackTrace();
-            }
+        try {
+            //TODO: verificar que da null point en este punto en los celulares cuando se vuelve a entrar a la app
+            if(client != null)
+                if (client.isConnected()) {
+                    try {
+                        messageSender.registerProfile(abstractNetworkService.getProfile(),abstractNetworkService.getNetworkServiceType());
+                    } catch (FermatException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         networkServices.putIfAbsent(abstractNetworkService.getNetworkServiceType(), abstractNetworkService);
     }

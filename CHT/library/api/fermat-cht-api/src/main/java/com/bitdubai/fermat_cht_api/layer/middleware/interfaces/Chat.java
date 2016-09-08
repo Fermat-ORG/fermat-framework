@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
-import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -17,10 +16,6 @@ public interface Chat extends Serializable {
 
     void setChatId(UUID chatId);
 
-    UUID getObjectId();
-
-    void setObjectId(UUID objectId);
-
     String getLocalActorPublicKey();
 
     void setLocalActorPublicKey(String localActorPublicKey);
@@ -29,27 +24,16 @@ public interface Chat extends Serializable {
 
     void setRemoteActorPublicKey(String remoteActorPublicKey);
 
-    String getChatName();
-
-    void setChatName(String chatName);
-
     ChatStatus getStatus();
 
     void setStatus(ChatStatus status);
 
-    Timestamp getDate();
+    Timestamp getCreationDate();
 
-    void setDate(Timestamp date);
+    void setCreationDate(Timestamp date);
 
     Timestamp getLastMessageDate();
 
     void setLastMessageDate(Timestamp lastMessageDate);
 
-    TypeChat getTypeChat();
-
-    void setTypeChat(TypeChat typeChat);
-
-    boolean getScheduledDelivery();
-
-    void setScheduledDelivery(boolean scheduledDelivery);
 }

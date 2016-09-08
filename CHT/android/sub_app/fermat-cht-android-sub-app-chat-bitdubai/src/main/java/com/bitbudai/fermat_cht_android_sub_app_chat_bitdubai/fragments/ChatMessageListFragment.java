@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.SearchView;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatMessageListAdapterView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -30,14 +30,17 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
@@ -50,8 +53,7 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
  * Update by Miguel Payarez on 15/01/2016
  */
 
-public class ChatFragment
-        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
+public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
     // Fermat Managers
     private ChatManager chatManager;
@@ -61,11 +63,11 @@ public class ChatFragment
     ChatActorCommunitySelectableIdentity chatIdentity;
     private Handler h = new Handler();
 
-    private ChatAdapterView adapterView;
+    private ChatMessageListAdapterView adapterView;
     private SearchView searchView;
 
-    public static ChatFragment newInstance() {
-        return new ChatFragment();
+    public static ChatMessageListFragment newInstance() {
+        return new ChatMessageListFragment();
     }
 
     @Override
@@ -121,8 +123,14 @@ public class ChatFragment
             toolbar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    adapterView.clean();
-                    changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                    try {
+                        if (adapterView != null)
+                            adapterView.clean();
+                        changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                    }catch (Exception e){
+                        if (errorManager != null)
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }
                 }
             });
 
@@ -146,16 +154,16 @@ public class ChatFragment
         }
     }
 
-    public void onUpdateViewUIThread(String remotePk) {
+    public void onUpdateViewUIThread() {
         if(isAttached) {
             if (searchView != null) {
                 if (searchView.getQuery().toString().equals("")) {
-                    adapterView.refreshEvents(remotePk, h);
+                    adapterView.refreshEvents();
                 }
             } else {
-                adapterView.refreshEvents(remotePk, h);
+                adapterView.refreshEvents();
             }
-        }else adapterView.clean();
+        }
     }
 
     @Override
@@ -163,7 +171,7 @@ public class ChatFragment
 
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        adapterView = new ChatAdapterView.Builder(inflater.getContext())
+        adapterView = new ChatMessageListAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
                 .addErrorManager(errorManager)
                 .addAppSession(appSession)
@@ -174,11 +182,19 @@ public class ChatFragment
         return adapterView;
     }
 
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
     }
 
     public void onOptionMenuPrepared(Menu menu) {
-        MenuItem searchItem = menu.findItem(1);
+        menu.clear();
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.chat_menu, menu);
+        menu.add(0, 2, 2, "Clear Chat")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_search);// menu.findItem(1);
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
@@ -207,46 +223,23 @@ public class ChatFragment
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
         unbindDrawables(adapterView.getRootView().findViewById(R.id.messagesContainer));
         unbindDrawables(adapterView.getRootView().findViewById(R.id.chatSendButton));
         System.gc();
     }
 
-    private void unbindDrawables(View view)
-    {
-        if (view.getBackground() != null)
-        {
+    private void unbindDrawables(View view) {
+        if (view.getBackground() != null) {
             view.getBackground().setCallback(null);
         }
-        if (view instanceof ViewGroup && !(view instanceof AdapterView))
-        {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
-            {
+        if (view instanceof ViewGroup && !(view instanceof AdapterView)) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
                 unbindDrawables(((ViewGroup) view).getChildAt(i));
             }
             ((ViewGroup) view).removeAllViews();
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unbindDrawables(adapterView.getRootView().findViewById(R.id.messagesContainer));
-        unbindDrawables(adapterView.getRootView().findViewById(R.id.chatSendButton));
-        adapterView.destroy();
-        adapterView.destroyDrawingCache();
-        adapterView.removeView(getView());
-        adapterView.removeAllViews();
-        adapterView.removeAllViewsInLayout();
-        adapterView = null;
-        chatIdentity = null;
-        chatSettings = null;
-        chatManager = null;
-        appSession = null;
-        destroy();
     }
 
     @Override
@@ -267,8 +260,8 @@ public class ChatFragment
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 try {
+                                    onUpdateViewUIThread();
                                     adapterView.clean();
-                                    onUpdateViewUIThread(null);
                                 }catch (Exception e) {
                                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                 }
@@ -297,8 +290,43 @@ public class ChatFragment
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
-                        String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION);
-                        onUpdateViewUIThread(remotePK);
+
+                        int chatBroadcasterType = fermatBundle.getInt(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE);
+
+                        switch (chatBroadcasterType) {
+                            case ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE:
+
+                                String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_REMOTE_PK);
+
+                                if (adapterView != null)
+                                    adapterView.checkStatus(remotePK, h);
+
+                                break;
+                            case ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE:
+
+                                UUID messageId = (UUID) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_ID);
+
+                                MessageStatus messageStatus = (MessageStatus) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_STATUS);
+
+                                if (adapterView != null)
+                                    adapterView.updateMessageStatus(messageId, messageStatus);
+                                break;
+                            case ChatBroadcasterConstants.NEW_MESSAGE_TYPE:
+
+                                Message message = (Message) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE);
+
+                                if (adapterView != null)
+                                    adapterView.addMessage(message);
+
+                                break;
+                            default:
+
+                                System.out.println("ChatMessageListFragment -> No deberia pasar por aca.");
+
+                                onUpdateViewUIThread();
+                                break;
+                        }
+
                     }
                 }
             } catch (ClassCastException e) {

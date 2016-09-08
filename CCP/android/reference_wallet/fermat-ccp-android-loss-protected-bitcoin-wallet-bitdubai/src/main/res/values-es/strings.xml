@@ -302,4 +302,8 @@
     <string name="chunck_values_btc_rate">Cotizacion</string>
     <string name="chunck_values_btc_date">Fecha</string>
 
+    <!--Delete Wallet Contact Dialog-->
+    <string name="delete_title">Borrar Contacto</string>
+    <string name="delete_sub_title">Quieres eliminar este contacto de tu cartera?</string>
+    <string name="deleted_toast">Contacto Borrado</string>
 </resources>

@@ -9,10 +9,9 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatActorListReceivedEvent;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatConnectionRequestNewEvent;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatConnectionRequestUpdatesEvent;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.ChangedMessageStatusUpdateEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingMessageEvent;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChatStatusUpdateEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingWritingStatusUpdateEvent;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.MessageFailEvent;
 
 /**
  * The enum <code>com.bitdubai.fermat_cht_api.fermat_chp_api.events.enums.EventType</code>
@@ -44,15 +43,12 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    MESSAGE_FAIL("MSGFL"){
-        public final FermatEvent getNewEvent() { return new MessageFailEvent(this);}
-    },
     INCOMING_MESSAGE("INMESSAGE"){
         public final FermatEvent getNewEvent() { return new IncomingMessageEvent(this);}
     },
-    INCOMING_STATUS("INSTS") {
+    CHANGED_MESSAGE_STATUS("INSTS") {
         public final FermatEvent getNewEvent() {
-            return new IncomingChatStatusUpdateEvent(this);
+            return new ChangedMessageStatusUpdateEvent(this);
         }
     },
     INCOMING_WRITING_STATUS("INWSTS") {

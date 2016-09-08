@@ -4,11 +4,11 @@ import com.bitdubai.fermat_cht_api.all_definition.events.AbstractCHTFermatEvent;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 
 /**
- * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 02/05/16.
+ * Created by Gabriel Araujo on 05/01/16.
  */
-public class IncomingNewOnlineStatusUpdate extends AbstractCHTFermatEvent {
+public final class ChangedMessageStatusUpdateEvent extends AbstractCHTFermatEvent {
 
-    public IncomingNewOnlineStatusUpdate(EventType eventType) {
+    public ChangedMessageStatusUpdateEvent(EventType eventType) {
         super(eventType);
     }
 

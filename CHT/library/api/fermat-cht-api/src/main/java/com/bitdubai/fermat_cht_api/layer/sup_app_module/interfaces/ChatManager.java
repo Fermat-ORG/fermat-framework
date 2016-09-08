@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorCon
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
@@ -41,7 +42,11 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
 
     void saveChat(Chat chat) throws CantSaveChatException;
 
-    void deleteChat(UUID chatId) throws CantDeleteChatException;
+    void markChatAs(UUID chatId, ChatStatus chatStatus) throws CantSaveChatException;
+
+    void deleteChat(UUID chatId, boolean isDeleteChat) throws CantDeleteChatException;
+
+    void deleteAllChats() throws CantDeleteChatException;
 
     List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException;
 
@@ -63,7 +68,7 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
                                                                   final int max,
                                                                   final int offset) throws CantListChatActorException;
 
-    ChatActorCommunityInformation getConnectedChatActor(String localPublicKey, String remotePublicKey) throws CantGetActorConnectionException, ActorConnectionNotFoundException;
+    ChatActorCommunityInformation getChatActorConnection(String localPublicKey, String remotePublicKey) throws CantGetActorConnectionException, ActorConnectionNotFoundException;
 
     /**
      * This method sends the message through the Chat Network Service
@@ -81,7 +86,7 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
      */
     void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException;
 
-    Timestamp getLastMessageReceivedDate(String remotePk) throws CantGetChatException;
+    Timestamp getLastMessageReceivedDate(UUID chatId) throws CantGetChatException;
 
     ChatActorCommunitySelectableIdentity newInstanceChatActorCommunitySelectableIdentity(ChatIdentity chatIdentity);
 
