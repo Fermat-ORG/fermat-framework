@@ -39,6 +39,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
@@ -369,9 +370,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
         try {
 
-            //when refresh offset set 0
-            if(refreshType.equals(FermatRefreshTypes.NEW))
-                offset = 0;
+            offset = pos;
             lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, this.blockchainNetworkType ,MAX_PAYMENT_REQUEST,offset);
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
@@ -418,7 +417,11 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                         adapter.changeDataSet(lstPaymentRequest);
                         ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                     }else {
-                        lstPaymentRequest.addAll((ArrayList) result[0]);
+                        for (PaymentRequest info : (List<PaymentRequest>) result[0]) {
+                            if (notInList(info)) {
+                                lstPaymentRequest.add(info);
+                            }
+                        }
                         adapter.notifyItemRangeInserted(offset, lstPaymentRequest.size() - 1);
                     }
 
@@ -427,6 +430,14 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             }
         }
         showOrHideEmptyView();
+    }
+
+    private boolean notInList(PaymentRequest info) {
+        for (PaymentRequest request : lstPaymentRequest) {
+            if (request.getRequestId().equals(info.getRequestId()))
+                return false;
+        }
+        return true;
     }
 
     @Override
