@@ -303,6 +303,7 @@ public class CryptoPaymentRequestDao {
             cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
             cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TYPE_COLUMN_NAME, type.getCode(), DatabaseFilterType.EQUAL);
             cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addFilterOrder(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME,DatabaseFilterOrder.DESCENDING);
 
             cryptoPaymentRequestTable.setFilterTop   (max   .toString());
             cryptoPaymentRequestTable.setFilterOffSet(offset.toString());
@@ -339,6 +340,7 @@ public class CryptoPaymentRequestDao {
             cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
             cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TYPE_COLUMN_NAME, type.getCode(), DatabaseFilterType.EQUAL);
             cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addFilterOrder(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             cryptoPaymentRequestTable.setFilterTop(max.toString());
             cryptoPaymentRequestTable.setFilterOffSet(offset.toString());

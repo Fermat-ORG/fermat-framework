@@ -12,6 +12,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,7 +26,10 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
+import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -47,12 +52,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-import static android.widget.Toast.makeText;
-
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession<CryptoWallet>,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>,onRefreshList {
+public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession<CryptoWallet>,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>,onRefreshList,OnLoadMoreDataListener {
 
     /**
      * Session
@@ -72,11 +75,15 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
      * Executor Service
      */
     private ExecutorService executor;
-    private int MAX_TRANSACTIONS = 20;
+    private int MAX_PAYMENT_REQUEST = 10;
     private int offset = 0;
     private View rootView;
     private LinearLayout empty;
 
+    private FermatWorker fermatWorker;
+
+
+    private PaymentRequestHistoryAdapter adapter;
 
     BlockchainNetworkType blockchainNetworkType;
     com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = null;
@@ -333,6 +340,30 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     }
 
     @Override
+    public RecyclerView.OnScrollListener getScrollListener() {
+        if (scrollListener == null) {
+            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
+            endlessScrollListener.setOnLoadMoreDataListener(this);
+            scrollListener = endlessScrollListener;
+        }
+        return scrollListener;
+    }
+
+    @Override
+    public void onLoadMoreData(int page, final int totalItemsCount) {
+        adapter.setLoadingData(true);
+        fermatWorker = new FermatWorker(getActivity(), this) {
+            @Override
+            protected Object doInBackground() throws Exception {
+                return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
+            }
+        };
+
+        fermatWorker.execute();
+    }
+
+
+    @Override
     public List<PaymentRequest> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<PaymentRequest> lstPaymentRequest  = new ArrayList<PaymentRequest>();
 
@@ -341,8 +372,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             //when refresh offset set 0
             if(refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
-            lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, this.blockchainNetworkType ,10,offset);
-            offset+=10;
+            lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, this.blockchainNetworkType ,MAX_PAYMENT_REQUEST,offset);
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -378,15 +408,25 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
+            adapter.setLoadingData(false);
             if (result != null && result.length > 0) {
-                lstPaymentRequest = (ArrayList) result[0];
-                if (adapter != null)
-                    adapter.changeDataSet(lstPaymentRequest);
-                if(lstPaymentRequest.isEmpty()) FermatAnimationsUtils.showEmpty(getActivity(),true,empty);
-                else FermatAnimationsUtils.showEmpty(getActivity(),false,empty);
+
+                if (adapter != null){
+                    if (offset==0){
+                        lstPaymentRequest.clear();
+                        lstPaymentRequest.addAll((ArrayList) result[0]);
+                        adapter.changeDataSet(lstPaymentRequest);
+                        ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
+                    }else {
+                        lstPaymentRequest.addAll((ArrayList) result[0]);
+                        adapter.notifyItemRangeInserted(offset, lstPaymentRequest.size() - 1);
+                    }
+
+                }
 
             }
         }
+        showOrHideEmptyView();
     }
 
     @Override
@@ -398,7 +438,22 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         }
     }
 
+    private void showOrHideEmptyView() {
+        final boolean show = lstPaymentRequest.isEmpty();
+        final int animationResourceId = show ? android.R.anim.fade_in : android.R.anim.fade_out;
 
+        Animation anim = AnimationUtils.loadAnimation(getActivity(), animationResourceId);
+        if (show && (empty.getVisibility() == View.GONE || empty.getVisibility() == View.INVISIBLE)) {
+            empty.setAnimation(anim);
+            empty.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+        } else if (!show && empty.getVisibility() == View.VISIBLE) {
+            empty.setAnimation(anim);
+            empty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
+    }
 
     public void setReferenceWalletSession(ReferenceAppFermatSession referenceWalletSession) {
         this.appSession = referenceWalletSession;
