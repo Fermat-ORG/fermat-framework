@@ -45,12 +45,12 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
     /**
      * Members
      */
-    String title;
-    String subTitle;
-    String body;
-    String textFooter;
+   // String title;
+   // String subTitle;
+   // String body;
+   // String textFooter;
 
-    int resBannerimage;
+   // int resBannerimage;
 
     /**
      * UI

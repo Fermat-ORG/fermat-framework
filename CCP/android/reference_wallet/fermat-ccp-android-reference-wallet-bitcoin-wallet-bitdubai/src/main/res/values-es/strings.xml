@@ -239,4 +239,5 @@
     <!--Delete Wallet Contact Dialog-->
     <string name="delete_title">Borrar Contacto</string>
     <string name="delete_sub_title">Quieres eliminar este contacto de tu cartera?</string>
+    <string name="deleted_toast">Contact Borrado</string>
 </resources>
