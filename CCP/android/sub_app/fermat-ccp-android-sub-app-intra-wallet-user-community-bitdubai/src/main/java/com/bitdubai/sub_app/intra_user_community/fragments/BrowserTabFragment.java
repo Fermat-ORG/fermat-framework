@@ -647,7 +647,7 @@ public class BrowserTabFragment
     public void onPostExecute(Object... result) {
 
        isRefreshing = false;
-       /* if (isAttached) {
+        if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             adapter.setLoadingData(false);
             if (result != null && result.length > 0) {
@@ -667,7 +667,7 @@ public class BrowserTabFragment
             }
         }
 
-        showOrHideEmptyView();*/
+        showOrHideEmptyView();
     }
 
     @Override
