@@ -169,9 +169,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     private void initViews(View layout) {
         actualizable = true;
         mChatName = (EditText) layout.findViewById(R.id.editTextName);
-        mChatConnectionState = (EditText) layout.findViewById(R.id.editTextStatus);
+        //uncomment when this status or user phrase is visible or available in back end to show it
+        //statusView = (TextView) layout.findViewById(R.id.statusView);
+        //mChatConnectionState = (EditText) layout.findViewById(R.id.editTextStatus);
         final ImageView botonG = (ImageView) layout.findViewById(R.id.cht_button);//Button
-        statusView = (TextView) layout.findViewById(R.id.statusView);
         mChatImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
         placeholdImg = (ImageView) layout.findViewById(R.id.placeholdImg);
@@ -212,8 +213,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
                 mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
                 mChatName.setText(identity.getAlias().toString());
-                String state = identity.getConnectionState();
-                mChatConnectionState.setText(state);
+                //uncomment when this status or user phrase is visible or available in back end to show it
+                /*String state = identity.getConnectionState();
+                mChatConnectionState.setText(state);*/
                 //botonG.setText("Save Changes");
                 botonG.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -576,7 +578,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
 
     private void updateIdentityInBackDevice(String donde) throws CantGetChatIdentityException {
         String chatNameText = mChatName.getText().toString();
-        String state = mChatConnectionState.getText().toString();
+        String state = "";//uncomment and replace when this status or user phrase is visible or available in back end to show it
+        //mChatConnectionState.getText().toString();
 
         if (chatNameText.trim().equals("")) {
             Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_enter_name), Toast.LENGTH_LONG).show();
@@ -622,7 +625,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
 
     private void createNewIdentityInBackDevice(String donde) {
         String chatNameText = mChatName.getText().toString();
-        String identityConnectionNameText = mChatConnectionState.getText().toString();
+        String identityConnectionNameText = "";//uncomment and replace when this status or user phrase is visible or available in back end to show it
+        //mChatConnectionState.getText().toString();
         if (chatBitmap == null) {
             chatBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.cht_id_image_profile);
         }
