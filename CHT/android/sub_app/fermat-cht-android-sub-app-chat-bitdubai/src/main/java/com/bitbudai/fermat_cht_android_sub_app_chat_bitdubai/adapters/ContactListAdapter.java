@@ -66,11 +66,11 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View item = inflater.inflate(R.layout.contact_list_item, null, true);
         try {
-            imagen = (ImageView) item.findViewById(R.id.icon);//imagen.setImageResource(contacticon.get(position));//contacticon[position]);
+            imagen = (ImageView) item.findViewById(R.id.icon);
             if (contactIcon.get(position) != null)
-                imagen.setImageBitmap(Utils.getRoundedShape(contactIcon.get(position), 400));//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
+                imagen.setImageBitmap(Utils.getRoundedShape(contactIcon.get(position), 400));
             else
-                imagen.setImageResource(R.drawable.cht_center_profile_icon_center);//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
+                imagen.setImageResource(R.drawable.cht_center_profile_icon_center);
 
             contactName = (TextView) item.findViewById(R.id.text1);
             contactName.setText(contactInfo.get(position));

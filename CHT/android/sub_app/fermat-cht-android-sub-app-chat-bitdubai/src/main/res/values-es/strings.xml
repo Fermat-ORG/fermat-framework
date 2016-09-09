@@ -102,6 +102,8 @@
     <string name="status">Estatus</string>
     <string name="profile_status">Disponible</string>
 
+    <string name="no_info_available">No hay informacion disponible</string>
+
     <string name="drawer_open">Abrir panel de navegación</string>
     <string name="drawer_close">Cerrar panel de navegación</string>
     <string name="your_phone">Su teléfono</string>

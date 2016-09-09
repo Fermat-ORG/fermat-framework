@@ -104,6 +104,7 @@
     <string name="no_address">No addresses found</string>
     <string name="no_intent_found">No application found to handle this action</string>
     <string name="action_search">Search</string>
+    <string name="no_info_available">No info available</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

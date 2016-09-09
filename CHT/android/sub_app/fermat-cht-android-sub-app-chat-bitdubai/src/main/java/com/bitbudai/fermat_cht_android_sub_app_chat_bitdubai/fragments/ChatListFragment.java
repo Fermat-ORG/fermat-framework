@@ -664,14 +664,6 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         return super.onContextItemSelected(item);
     }
 
-    private String getResourceString(int id) {
-
-        if (Build.VERSION.SDK_INT < 23)
-            return getActivity().getResources().getString(id);
-        else
-            return getContext().getResources().getString(id);
-    }
-
     /**
      * Receiver class implemented
      */
