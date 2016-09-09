@@ -581,7 +581,6 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int id = item.getItemId();
         if (id == R.id.menu_delete_chat) {
             try {
