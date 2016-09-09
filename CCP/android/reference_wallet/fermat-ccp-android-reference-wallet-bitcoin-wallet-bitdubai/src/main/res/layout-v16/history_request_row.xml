@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="140dp"
-    android:background="@null">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,9 +44,21 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_contactName"
                 tools:text="Matias Furszyfer"
-                android:textColor="#ffffff"
+                android:textColor="#FFF"
                 android:fontFamily="roboto"
                 />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_time"
+                tools:text="MON 00 0000 00:00 hh"
+                android:textSize="10sp"
+                android:textColor="#80ffffff"
+                android:fontFamily="roboto"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textIsSelectable="false" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
@@ -67,31 +79,22 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:orientation="vertical"
-            android:gravity="end" >
+            android:gravity="end"
+            >
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:id="@+id/txt_amount"
                 tools:text="0.000000"
                 android:textSize="13sp"
                 android:textColor="#ffffff"
                 android:fontFamily="roboto"
                 android:textIsSelectable="false"
-                android:gravity="end"
+                android:gravity="right"
+                android:paddingRight="0dp"
                 />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_time"
-                tools:text="MON 00 0000 00:00 hh"
-                android:textSize="10sp"
-                android:textColor="#80ffffff"
-                android:fontFamily="roboto"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textIsSelectable="true" />
         </LinearLayout>
     </LinearLayout>
 
