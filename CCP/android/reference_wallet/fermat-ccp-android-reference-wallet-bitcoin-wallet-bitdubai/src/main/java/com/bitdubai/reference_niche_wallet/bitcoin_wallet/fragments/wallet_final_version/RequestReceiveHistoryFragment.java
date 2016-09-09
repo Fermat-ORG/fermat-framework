@@ -369,7 +369,6 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         List<PaymentRequest> lstPaymentRequest  = new ArrayList<PaymentRequest>();
 
         try {
-
             offset = pos;
             lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, this.blockchainNetworkType ,MAX_PAYMENT_REQUEST,offset);
         } catch (Exception e) {
@@ -413,7 +412,10 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                 if (adapter != null){
                     if (offset==0){
                         lstPaymentRequest.clear();
-                        lstPaymentRequest.addAll((ArrayList) result[0]);
+                        for (PaymentRequest info : (List<PaymentRequest>)result[0])
+                            if (notInList(info))
+                                lstPaymentRequest.add(info);
+                        //lstPaymentRequest.addAll((ArrayList) result[0]);
                         adapter.changeDataSet(lstPaymentRequest);
                         ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                     }else {

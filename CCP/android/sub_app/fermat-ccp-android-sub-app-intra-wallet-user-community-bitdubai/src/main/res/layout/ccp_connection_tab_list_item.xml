@@ -52,8 +52,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/geolocalitationblue_icon"
-            android:gravity="center_horizontal" />
+            android:src="@drawable/geolocalitationblue_icon" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/location"
@@ -63,8 +62,7 @@
             android:maxLines="1"
             android:textColor="#7DD5CA"
             android:textSize="14sp"
-            tools:text="No location"
-            android:gravity="center_horizontal" />
+            tools:text="No location"/>
     </LinearLayout>
 
 </LinearLayout>
