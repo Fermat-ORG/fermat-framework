@@ -52,7 +52,7 @@
             android:paddingStart="8dp"
             android:text="@string/description_text"
             android:textColor="@color/primary_text"
-            android:textSize="16sp"
+            android:textSize="13sp"
             tools:ignore="HardcodedText"
             android:maxLines="1"/>
 
@@ -65,7 +65,7 @@
             android:gravity="center"
             android:text="@string/second_description_text"
             android:textColor="@color/primary_text"
-            android:textSize="16sp"
+            android:textSize="13sp"
             android:maxLines="1"
             />
 
