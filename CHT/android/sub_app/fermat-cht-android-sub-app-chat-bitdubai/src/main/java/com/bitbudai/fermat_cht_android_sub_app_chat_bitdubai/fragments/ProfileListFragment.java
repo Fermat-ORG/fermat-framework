@@ -138,7 +138,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
                     builder1.setMessage("Do you want to select " + profileSelected.getAlias() + " as your active profile?");
                     builder1.setCancelable(true);
                     builder1.setPositiveButton(
-                            "Yes",
+                            getResourceString(R.string.cht_yes),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
@@ -154,7 +154,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
                             });
 
                     builder1.setNegativeButton(
-                            "No",
+                            getResourceString(R.string.cht_no),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     try {
@@ -188,7 +188,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
         });
 
         // Inflate the list fragment layout
-        return layout;//return inflater.inflate(R.layout.contact_list_fragment, container, false);
+        return layout;
     }
 
 }

@@ -494,7 +494,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
 
     @Override
     public synchronized void register(AbstractNetworkService abstractNetworkService) {
-        if (client.isConnected()) {
+        if (client != null && client.isConnected()) {
             try {
                 messageSender.registerProfile(abstractNetworkService.getProfile(),abstractNetworkService.getNetworkServiceType());
             } catch (FermatException e) {

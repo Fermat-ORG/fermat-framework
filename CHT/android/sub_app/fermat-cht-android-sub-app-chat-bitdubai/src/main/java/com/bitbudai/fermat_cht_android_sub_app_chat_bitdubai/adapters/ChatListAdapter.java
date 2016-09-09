@@ -12,10 +12,12 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChatComparator;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -38,15 +40,19 @@ public class ChatListAdapter extends FermatAdapter<Chat, ChatHolder> implements 
 
     private String filterString;
 
+    private ReferenceAppFermatSession<ChatManager> appSession;
+
     long time, nanos, milliseconds;
 
-    public ChatListAdapter(Context context, ArrayList<Chat> chats) {
+    public ChatListAdapter(Context context, ArrayList<Chat> chats, ReferenceAppFermatSession<ChatManager> appSession) {
         super(context, chats);
+
+        this.appSession = appSession;
     }
 
     @Override
     protected ChatHolder createHolder(View itemView, int type) {
-        return new ChatHolder(itemView);
+        return new ChatHolder(itemView, appSession, context, this);
     }
 
     @Override
@@ -74,7 +80,7 @@ public class ChatListAdapter extends FermatAdapter<Chat, ChatHolder> implements 
 
             holder.contactname.setText(data.getContactName());
 
-            if (data.getMessage().equals("Typing..")) {
+            if (data.getMessage().equals(context.getResources().getString(R.string.cht_typing))) {
                 holder.lastmessage.setTextColor(Color.parseColor("#FF33A900"));
             } else {
                 holder.lastmessage.setTextColor(Color.parseColor("#757575"));
@@ -126,6 +132,9 @@ public class ChatListAdapter extends FermatAdapter<Chat, ChatHolder> implements 
                 holder.tvnumber.setVisibility(View.VISIBLE);
             } else
                 holder.tvnumber.setVisibility(View.GONE);
+
+            holder.itemView.setOnLongClickListener(null);
+
         }
     }
 

@@ -10,11 +10,15 @@
     <string name="imageview_description">Contact Thumbnail</string>
     <string name="address_button_description">View Address</string>
     <string name="menu_search">Search</string>
+    <string name="menu_help">Help</string>
+    <string name="menu_go_to_community">Go to Community</string>
+    <string name="menu_go_to_profile">Go to Profiles</string>
     <string name="menu_add_contact">Add Contact</string>
     <string name="menu_open_chat">Open Chat</string>
     <string name="menu_create_group">Create Group</string>
     <string name="menu_create_broadcasting">Create Broadcasting</string>
     <string name="menu_delete_all_chats">Delete All Chats</string>
+    <string name="menu_delete_all_chats_body">Do you want to delete all chats? All chats will be erased</string>
     <string name="menu_switch_profile">Switch Profile</string>
     <string name="menu_settings">Error Report</string>
     <string name="menu_block_contact">Block Contact</string>
@@ -23,9 +27,11 @@
     <string name="cht_chat_footer_broadcast_step_one">Footer of step one broadcast chat dialog</string>
     <string name="menu_view_contact">View Contact</string>
     <string name="menu_clean_chat">Clear Chat</string>
+    <string name="menu_clean_chat_body">Do you want to clear this chat? All messages in there will be erased</string>
     <string name="menu_send_chat_email">Send Chat by Email</string>
     <string name="menu_edit_contact">Edit Contact</string>
     <string name="menu_delete_chat">Delete Chat</string>
+    <string name="menu_delete_chat_body">Do you want to delete this chat?</string>
     <string name="menu_delete_contact">Delete Contact</string>
     <string name="no_contacts">No Contacts Found</string>
     <string name="no_contact_selected">No Contact Selected</string>
@@ -52,7 +58,7 @@
     <string name="cht_last_time">Last time </string>
     <string name="cht_last_message_received">Last seen </string>
     <string name="cht_online">Online</string>
-    <string name="cht_typing">Typing...</string>
+    <string name="cht_typing">Typing&#8230;</string>
     <string name="cht_today">today at </string>
     <string name="cht_yesterday">yesterday at </string>
     <string name="status">Status</string>
@@ -98,6 +104,7 @@
     <string name="no_address">No addresses found</string>
     <string name="no_intent_found">No application found to handle this action</string>
     <string name="action_search">Search</string>
+    <string name="no_info_available">No info available</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

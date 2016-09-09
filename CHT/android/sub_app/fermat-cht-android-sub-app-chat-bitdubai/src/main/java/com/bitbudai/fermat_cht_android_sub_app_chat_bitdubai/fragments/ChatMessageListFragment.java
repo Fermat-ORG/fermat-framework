@@ -191,10 +191,10 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
         menu.clear();
         MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.chat_menu, menu);
-        menu.add(0, 2, 2, "Clear Chat")
+        menu.add(0, 2, 2, getResourceString(R.string.menu_clean_chat))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
-        MenuItem searchItem = menu.findItem(R.id.menu_search);// menu.findItem(1);
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
@@ -252,8 +252,8 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
                 case 2:
                     try {
                         final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
-                        alert.setTextTitle("Clear Chat");
-                        alert.setTextBody("Do you want to clear this chat? All messages in here will be erased");
+                        alert.setTextTitle(getResourceString(R.string.menu_clean_chat));
+                        alert.setTextBody(getResourceString(R.string.menu_clean_chat_body));
                         alert.setType("clean-chat");
                         alert.show();
                         alert.setOnDismissListener(new DialogInterface.OnDismissListener() {

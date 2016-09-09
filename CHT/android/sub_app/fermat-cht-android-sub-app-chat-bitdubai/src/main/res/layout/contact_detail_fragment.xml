@@ -50,7 +50,10 @@
            android:weightSum="100"
            >
 
-           <TextView
+           <!--
+           //uncomment when this status or user phrase is visible or available in back end to show it
+
+           TextView
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:paddingTop="10dp"
@@ -86,7 +89,7 @@
                android:paddingStart="10dp"
                android:textSize="18sp"
                android:paddingBottom="5dp"
-               />
+               /-->
 
            <TextView
                android:id="@+id/contact_status_date"

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
@@ -466,6 +467,14 @@ public abstract class AbstractFermatFragment<S extends FermatSession, R extends 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    protected String getResourceString(int id) {
+
+        if (Build.VERSION.SDK_INT < 23)
+            return getActivity().getResources().getString(id);
+        else
+            return getContext().getResources().getString(id);
     }
 
     protected final FermatRuntime getRuntimeManager() {

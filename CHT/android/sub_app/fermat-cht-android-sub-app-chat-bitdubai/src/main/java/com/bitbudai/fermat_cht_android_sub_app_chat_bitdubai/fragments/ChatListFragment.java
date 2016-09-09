@@ -4,12 +4,10 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +28,7 @@ import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatBroadcastReceiver;
@@ -361,19 +360,23 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
             }
         }
 
-        adapter = new ChatListAdapter(getActivity(), chatList);
+        adapter = new ChatListAdapter(getActivity(), chatList, appSession);
         adapter.setFermatListEventListener(this);
 
         list = (RecyclerView) layout.findViewById(R.id.list);
         layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.VERTICAL, false);
         list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
+
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.cht_list_divider);
+        list.addItemDecoration(itemDecoration);
+
         registerForContextMenu(list);
         return layout;
     }
 
     public void clean() {
-        adapter = new ChatListAdapter(this.getActivity(), null);
+        adapter = new ChatListAdapter(this.getActivity(), null, appSession);
         adapter.setFermatListEventListener(this);
         list.setAdapter(adapter);
     }
@@ -498,15 +501,15 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         menu.clear();
         MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.chat_list_menu, menu);
-        menu.add(0, 2, 2, "Delete All Chats")
+        menu.add(0, 2, 2, getResourceString(R.string.menu_delete_all_chats))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0, 3, 3, "Go to Profile")
+        menu.add(0, 3, 3, getResourceString(R.string.menu_go_to_profile))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0, 4, 4, "Go to Community")
+        menu.add(0, 4, 4, getResourceString(R.string.menu_go_to_community))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0, 5, 5, "Help")
+        menu.add(0, 5, 5, getResourceString(R.string.menu_help))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        MenuItem searchItem = menu.findItem(R.id.menu_search);// menu.findItem(1);
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
@@ -566,14 +569,15 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         if (chatList != null && chatList.size() > 0) {
 
                             final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
-                            alert.setTextTitle("Delete All Chats");
-                            alert.setTextBody("Do you want to delete all chats? All chats will be erased");
+
+                            alert.setTextTitle(getResourceString(R.string.menu_delete_all_chats));
+                            alert.setTextBody(getResourceString(R.string.menu_delete_all_chats_body));
+
                             alert.setType("delete-chats");
                             alert.show();
                             alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
-                                    System.out.println("sago por el dimisss");
                                     try {
                                         updateValues();
                                     } catch (Exception e) {
@@ -607,38 +611,15 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId() == R.id.list) {
-            if (Build.VERSION.SDK_INT < 23) {
-                MenuInflater inflater = new MenuInflater(getActivity());
-                inflater.inflate(R.menu.chat_list_context_menu, menu);
-            } else {
-                MenuInflater inflater = new MenuInflater(getContext());
-                inflater.inflate(R.menu.chat_list_context_menu, menu);
-            }
-        }
-        // Get the info on which item was selected
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        try {
-            // Set the info of chat selected in session
-            appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chatManager.getChatByChatId(chatList.get(info.position).getChatId()));
-        } catch (CantGetChatException e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        } catch (Exception e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
-    }
-
-    @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int id = item.getItemId();
         if (id == R.id.menu_delete_chat) {
             try {
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
-                alert.setTextTitle("Delete Chat");
-                alert.setTextBody("Do you want to delete this chat?");
+
+                alert.setTextTitle(getResourceString(R.string.menu_delete_chat));
+                alert.setTextBody(getResourceString(R.string.menu_delete_chat_body));
+
                 alert.setType("delete-chat");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -662,8 +643,10 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         if (id == R.id.menu_clean_chat) {
             try {
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
-                alert.setTextTitle("Clear Chat");
-                alert.setTextBody("Do you want to clear this chat? All messages in here will be erased");
+
+                alert.setTextTitle(getResourceString(R.string.menu_clean_chat));
+                alert.setTextBody(getResourceString(R.string.menu_clean_chat_body));
+
                 alert.setType("clean-chat");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -685,8 +668,10 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         if (id == R.id.menu_delete_all_chats) {
             try {
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
-                alert.setTextTitle("Delete All Chats");
-                alert.setTextBody("Do you want to delete all chats? All chats will be erased");
+
+                alert.setTextTitle(getResourceString(R.string.menu_delete_all_chats));
+                alert.setTextBody(getResourceString(R.string.menu_delete_all_chats_body));
+
                 alert.setType("delete-chats");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -787,10 +772,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
             for (com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat chat : chatList) {
                 if (chat.getContactId().equals(remotePK)) {
 
-                    if (Build.VERSION.SDK_INT < 23)
-                        chat.setMessage(getActivity().getResources().getString(R.string.cht_typing));
-                    else
-                        chat.setMessage(getContext().getResources().getString(R.string.cht_typing));
+                    chat.setMessage(getResourceString(R.string.cht_typing));
 
                     adapter.changeDataSet(chatList);
 

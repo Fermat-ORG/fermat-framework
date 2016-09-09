@@ -38,7 +38,6 @@ public class ContactFragment extends AbstractFermatFragment<ReferenceAppFermatSe
     private Toolbar toolbar;
     ArrayList<Bitmap> contacticon = new ArrayList<>();
 
-    TextView contactStatus;
     TextView contactName;
     TextView contactStatusDate;
 
@@ -69,11 +68,7 @@ public class ContactFragment extends AbstractFermatFragment<ReferenceAppFermatSe
 
         try {
             Contact con = (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA);
-            contactStatus = (TextView) layout.findViewById(R.id.contact_status_input);
-            if(con.getContactStatus() != null){
-                contactStatus.setText(con.getContactStatus());
-            } else
-                contactStatus.setText("Available");
+            //uncomment when this status or user phrase is visible or available in back end to show it
 
             ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
             BitmapDrawable bmd = new BitmapDrawable(bytes);
@@ -81,9 +76,9 @@ public class ContactFragment extends AbstractFermatFragment<ReferenceAppFermatSe
 
             String myDate = (String) appSession.getData("DATELASTCONNECTION");
             if(myDate==null)
-                myDate="No info available";
+                myDate=getResourceString(R.string.no_info_available);
             else if(myDate.equals(""))
-                    myDate="No info available";
+                    myDate=getResourceString(R.string.no_info_available);
 
             contactStatusDate = (TextView) layout.findViewById(R.id.contact_status_date);
             contactStatusDate.setText(myDate);
