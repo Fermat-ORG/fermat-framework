@@ -471,15 +471,15 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         menu.clear();
         MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.chat_list_menu, menu);
-        menu.add(0, 2, 2, "Delete All Chats")
+        menu.add(0, 2, 2, getResourceString(R.string.menu_delete_all_chats))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0, 3, 3, "Go to Profile")
+        menu.add(0, 3, 3, getResourceString(R.string.menu_go_to_profile))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0, 4, 4, "Go to Community")
+        menu.add(0, 4, 4, getResourceString(R.string.menu_go_to_community))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0, 5, 5, "Help")
+        menu.add(0, 5, 5, getResourceString(R.string.menu_help))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        MenuItem searchItem = menu.findItem(R.id.menu_search);// menu.findItem(1);
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
@@ -539,14 +539,15 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         if (chatList != null && chatList.size() > 0) {
 
                             final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
-                            alert.setTextTitle("Delete All Chats");
-                            alert.setTextBody("Do you want to delete all chats? All chats will be erased");
+
+                            alert.setTextTitle(getResourceString(R.string.menu_delete_all_chats));
+                            alert.setTextBody(getResourceString(R.string.menu_delete_all_chats_body));
+
                             alert.setType("delete-chats");
                             alert.show();
                             alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
-                                    System.out.println("sago por el dimisss");
                                     try {
                                         updateValues();
                                     } catch (Exception e) {
@@ -585,8 +586,10 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         if (id == R.id.menu_delete_chat) {
             try {
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
-                alert.setTextTitle("Delete Chat");
-                alert.setTextBody("Do you want to delete this chat?");
+
+                alert.setTextTitle(getResourceString(R.string.menu_delete_chat));
+                alert.setTextBody(getResourceString(R.string.menu_delete_chat_body));
+
                 alert.setType("delete-chat");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -610,8 +613,10 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         if (id == R.id.menu_clean_chat) {
             try {
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
-                alert.setTextTitle("Clear Chat");
-                alert.setTextBody("Do you want to clear this chat? All messages in here will be erased");
+
+                alert.setTextTitle(getResourceString(R.string.menu_clean_chat));
+                alert.setTextBody(getResourceString(R.string.menu_clean_chat_body));
+
                 alert.setType("clean-chat");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -633,8 +638,10 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         if (id == R.id.menu_delete_all_chats) {
             try {
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, chatManager, errorManager);
-                alert.setTextTitle("Delete All Chats");
-                alert.setTextBody("Do you want to delete all chats? All chats will be erased");
+
+                alert.setTextTitle(getResourceString(R.string.menu_delete_all_chats));
+                alert.setTextBody(getResourceString(R.string.menu_delete_all_chats_body));
+
                 alert.setType("delete-chats");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -655,6 +662,14 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
         }
 
         return super.onContextItemSelected(item);
+    }
+
+    private String getResourceString(int id) {
+
+        if (Build.VERSION.SDK_INT < 23)
+            return getActivity().getResources().getString(id);
+        else
+            return getContext().getResources().getString(id);
     }
 
     /**
