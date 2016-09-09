@@ -1,7 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +9,13 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.LoadingMoreViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
 
-
 import java.util.List;
-
-import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
 
 /**
  * Created by Matias Furszyfer on 2015.09.30..
@@ -32,10 +26,10 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     // private View.OnClickListener mOnClickListener;
     private CryptoWallet cryptoWallet;
     private ReferenceAppFermatSession referenceWalletSession;
-    private Typeface tf;
-    private BitcoinWalletSettings bitcoinWalletSettings = null;
+    //private Typeface tf;
+    //private BitcoinWalletSettings bitcoinWalletSettings = null;
 
-    private BlockchainNetworkType blockchainNetworkType;
+    //private BlockchainNetworkType blockchainNetworkType;
     private Context context;
 
     public static final int DATA_ITEM = 1;
