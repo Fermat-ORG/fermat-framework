@@ -57,8 +57,18 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
 
     public void bind(IntraUserInformation data) {
 
-        if (data.getCity()!=null||data.getCountry()!=null)
-            location.setText(data.getCountry()+", "+data.getCity());
+
+        String city = data.getCity();
+        String country = data.getCountry();
+
+        if (city!=null && country!=null)
+            if (!city.equals("----") && !country.equals("----"))
+                if (country!=null &&(city==null || city=="----" || city==""))
+                    location.setText(country);
+                else if (city!=null &&(country==null || country=="----" || country==""))
+                    location.setText(city);
+                else location.setText(country+", "+city);
+            else location.setText("No Location");
         else location.setText("No Location");
 
         row_connection_state.setText((data.getState().equals(ProfileStatus.ONLINE)) ?
