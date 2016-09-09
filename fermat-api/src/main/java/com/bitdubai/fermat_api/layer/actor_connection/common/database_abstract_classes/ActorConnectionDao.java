@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -389,6 +390,8 @@ public abstract class ActorConnectionDao<T extends ActorConnection> {
     public List<T> listActorConnections(final DatabaseTable actorConnectionsTable) throws CantListActorConnectionsException {
 
         try {
+
+            actorConnectionsTable.addFilterOrder(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             actorConnectionsTable.loadToMemory();
 

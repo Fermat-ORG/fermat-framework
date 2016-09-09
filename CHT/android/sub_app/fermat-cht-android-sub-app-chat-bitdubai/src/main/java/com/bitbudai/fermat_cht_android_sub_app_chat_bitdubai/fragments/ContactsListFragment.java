@@ -149,12 +149,12 @@ public class ContactsListFragment
             contactStatus.clear();
             if (chatIdentity != null) {
                 List<ChatActorCommunityInformation> con = chatManager.listAllConnectedChatActor(chatIdentity, MAX, offset);
-                Collections.sort(con, new Comparator<ChatActorCommunityInformation>() {
+                /*Collections.sort(con, new Comparator<ChatActorCommunityInformation>() {
                     @Override
                     public int compare(ChatActorCommunityInformation actorA, ChatActorCommunityInformation actorB) {
                         return (actorA.getAlias().trim().toLowerCase().compareTo(actorB.getAlias().trim().toLowerCase()));
                     }
-                });
+                });*/
                 int size = con.size();
                 if (size > 0) {
                     for (ChatActorCommunityInformation conta : con) {

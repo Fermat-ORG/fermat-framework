@@ -362,7 +362,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
             }
         }
 
-        adapter = new ChatListAdapter(getActivity(), chatList);
+        adapter = new ChatListAdapter(getActivity(), chatList, appSession);
         adapter.setFermatListEventListener(this);
 
         list = (RecyclerView) layout.findViewById(R.id.list);
@@ -378,7 +378,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
     }
 
     public void clean() {
-        adapter = new ChatListAdapter(this.getActivity(), null);
+        adapter = new ChatListAdapter(this.getActivity(), null, appSession);
         adapter.setFermatListEventListener(this);
         list.setAdapter(adapter);
     }
