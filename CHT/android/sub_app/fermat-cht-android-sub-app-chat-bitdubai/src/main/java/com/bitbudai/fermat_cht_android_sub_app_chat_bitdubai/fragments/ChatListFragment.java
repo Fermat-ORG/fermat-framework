@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -578,30 +577,6 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId() == R.id.list) {
-            if (Build.VERSION.SDK_INT < 23) {
-                MenuInflater inflater = new MenuInflater(getActivity());
-                inflater.inflate(R.menu.chat_list_context_menu, menu);
-            } else {
-                MenuInflater inflater = new MenuInflater(getContext());
-                inflater.inflate(R.menu.chat_list_context_menu, menu);
-            }
-        }
-        // Get the info on which item was selected
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        try {
-            // Set the info of chat selected in session
-            appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chatManager.getChatByChatId(chatList.get(info.position).getChatId()));
-        } catch (CantGetChatException e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        } catch (Exception e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
     }
 
     @Override
