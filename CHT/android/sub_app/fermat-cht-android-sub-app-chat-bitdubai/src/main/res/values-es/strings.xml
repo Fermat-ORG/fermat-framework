@@ -57,7 +57,7 @@
     <string name="cht_no">No</string>
     <string name="cht_last_time">Ultima vez </string>
     <string name="cht_online">en línea</string>
-    <string name="cht_typing">escribiendo...</string>
+    <string name="cht_typing">Escribiendo&#8230;</string>
     <string name="cht_today">hoy a </string>
     <string name="cht_yesterday">ayer a </string>
 

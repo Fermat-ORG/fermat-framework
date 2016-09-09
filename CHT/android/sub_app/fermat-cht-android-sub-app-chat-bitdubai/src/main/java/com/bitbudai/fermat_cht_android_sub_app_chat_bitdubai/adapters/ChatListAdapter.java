@@ -80,7 +80,7 @@ public class ChatListAdapter extends FermatAdapter<Chat, ChatHolder> implements 
 
             holder.contactname.setText(data.getContactName());
 
-            if (data.getMessage().equals("Typing..")) {
+            if (data.getMessage().equals(context.getResources().getString(R.string.cht_typing))) {
                 holder.lastmessage.setTextColor(Color.parseColor("#FF33A900"));
             } else {
                 holder.lastmessage.setTextColor(Color.parseColor("#757575"));

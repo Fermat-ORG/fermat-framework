@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
@@ -742,10 +741,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
             for (com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat chat : chatList) {
                 if (chat.getContactId().equals(remotePK)) {
 
-                    if (Build.VERSION.SDK_INT < 23)
-                        chat.setMessage(getActivity().getResources().getString(R.string.cht_typing));
-                    else
-                        chat.setMessage(getContext().getResources().getString(R.string.cht_typing));
+                    chat.setMessage(getResourceString(R.string.cht_typing));
 
                     adapter.changeDataSet(chatList);
 

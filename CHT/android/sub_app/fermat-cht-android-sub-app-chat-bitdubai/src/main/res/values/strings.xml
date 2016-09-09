@@ -58,7 +58,7 @@
     <string name="cht_last_time">Last time </string>
     <string name="cht_last_message_received">Last seen </string>
     <string name="cht_online">Online</string>
-    <string name="cht_typing">Typing...</string>
+    <string name="cht_typing">Typing&#8230;</string>
     <string name="cht_today">today at </string>
     <string name="cht_yesterday">yesterday at </string>
     <string name="status">Status</string>
