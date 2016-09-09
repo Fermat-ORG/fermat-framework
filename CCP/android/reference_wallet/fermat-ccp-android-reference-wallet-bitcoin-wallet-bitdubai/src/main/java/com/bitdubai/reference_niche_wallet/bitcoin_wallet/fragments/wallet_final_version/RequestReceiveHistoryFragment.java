@@ -39,6 +39,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -119,7 +121,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                             public void run() {
                                 try {
                                     getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
-                                }catch (OutOfMemoryError o){
+                                } catch (OutOfMemoryError o) {
                                     o.printStackTrace();
                                 }
                             }
@@ -369,7 +371,6 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         List<PaymentRequest> lstPaymentRequest  = new ArrayList<PaymentRequest>();
 
         try {
-
             offset = pos;
             lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, this.blockchainNetworkType ,MAX_PAYMENT_REQUEST,offset);
         } catch (Exception e) {
@@ -416,6 +417,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                         lstPaymentRequest.addAll((ArrayList) result[0]);
                         adapter.changeDataSet(lstPaymentRequest);
                         ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
+
                     }else {
                         for (PaymentRequest info : (List<PaymentRequest>) result[0]) {
                             if (notInList(info)) {
@@ -483,7 +485,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             else if ( id == R.id.btn_accept_request){
 
                 cryptoWallet.approveRequest(paymentRequest.getRequestId()
-                        , referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
+                        , cryptoWallet.getSelectedActorIdentity().getPublicKey(), BitcoinFee.valueOf("NORMAL").getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS);
                 Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
             }
 

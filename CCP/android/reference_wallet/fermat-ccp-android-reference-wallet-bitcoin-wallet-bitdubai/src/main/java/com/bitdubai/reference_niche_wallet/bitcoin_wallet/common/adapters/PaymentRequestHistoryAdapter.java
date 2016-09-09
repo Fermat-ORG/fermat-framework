@@ -86,7 +86,6 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     public void onBindViewHolder(FermatViewHolder holder, int position) {
         if (holder instanceof PaymentHistoryItemViewHolder)
             super.onBindViewHolder(holder, position);
-
         else if (holder instanceof LoadingMoreViewHolder) {
             final LoadingMoreViewHolder loadingMoreViewHolder = (LoadingMoreViewHolder) holder;
             loadingMoreViewHolder.progressBar.setVisibility(loadingData ? View.VISIBLE : View.GONE);
@@ -126,4 +125,8 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         this.loadingData = loadingData;
     }
 
+    public void refresh()
+    {
+        onRefreshList.onRefresh();
+    }
 }

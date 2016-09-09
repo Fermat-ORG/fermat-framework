@@ -7,8 +7,8 @@
     android:layout_margin="1dp"
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     >
 
     <RelativeLayout
@@ -66,20 +66,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-            android:src="@drawable/geolocalitationblue_icon"
-            android:gravity="center_horizontal" />
+            android:src="@drawable/geolocalitationblue_icon" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:text="Venezuela , Venezuela"
+            android:text="No Location"
             android:maxLines="1"
             android:textColor="#7DD5CA"
             android:textSize="12sp"
-            android:layout_marginTop="0dp"
-            android:gravity="center_horizontal" />
+            android:layout_marginTop="0dp"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/connection_state_user"
@@ -93,8 +91,7 @@
             android:textColor="#ffffff"
             android:textSize="10sp"
             tools:ignore="HardcodedText,RtlSymmetry,SmallSp"
-            android:visibility="gone"
-            />
+            android:visibility="gone"/>
 
     </LinearLayout>
 
