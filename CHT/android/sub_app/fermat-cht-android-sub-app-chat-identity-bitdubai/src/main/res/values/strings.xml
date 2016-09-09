@@ -40,6 +40,7 @@
     <string name="cht_identity_geo_toast">Chat Identity Geolocation Update</string>
     <string name="cht_identity_menu_option">You must create an identity to open this menu option.</string>
     <string name="cht_identity_created_toast">Chat Identity Created</string>
+    <string name="cht_identity_updated_toast">Chat Identity Updated</string>
     <string name="cht_identity_image_small">The image selected is too small. Please select a photo with height and width of at least 192x192</string>
     <string name="cht_identity_error_image">Error on upload image</string>
     <string name="cht_identity_enter_name">Please enter a name or alias</string>
