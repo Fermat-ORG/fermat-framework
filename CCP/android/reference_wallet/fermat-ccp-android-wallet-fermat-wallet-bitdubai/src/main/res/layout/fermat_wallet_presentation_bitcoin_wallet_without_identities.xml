@@ -153,6 +153,7 @@
                     android:layout_height="46dp"
                     android:layout_gravity="center"
                     android:text="@string/close_text"
+                    android:textSize="14sp"
                     android:background="#3c95cc"
                     android:textColor="#ffffff"
                     android:layout_marginTop="30sp"

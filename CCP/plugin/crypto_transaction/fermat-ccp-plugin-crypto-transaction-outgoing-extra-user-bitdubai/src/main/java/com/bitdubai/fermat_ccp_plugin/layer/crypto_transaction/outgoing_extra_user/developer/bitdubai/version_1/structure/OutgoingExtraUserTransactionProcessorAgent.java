@@ -273,7 +273,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
             }  catch (Exception exception) {
 
                 //if I spend more than five minutes I canceled
-                long sentDate = transaction.getTimestamp();
+              /*  long sentDate = transaction.getTimestamp();
                 long currentTime = System.currentTimeMillis();
                 long dif = currentTime - sentDate;
 
@@ -290,7 +290,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
                         e1.printStackTrace();
                     }
 
-                }
+                }*/
 
                 reportUnexpectedError(exception);
             }

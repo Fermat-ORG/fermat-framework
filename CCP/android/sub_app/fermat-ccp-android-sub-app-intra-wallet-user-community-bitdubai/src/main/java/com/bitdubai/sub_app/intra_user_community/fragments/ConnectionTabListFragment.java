@@ -275,6 +275,7 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
                     if (offset == 0) {
                         intraUserlist.clear();
                         intraUserlist.addAll((ArrayList) result[0]);
+                        adapter.changeDataSet(intraUserlist);
                         ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                     } else {
                         for (IntraUserInformation info : (List<IntraUserInformation>) result[0]) {
