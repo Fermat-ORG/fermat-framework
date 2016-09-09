@@ -319,13 +319,10 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                 if (adapter != null){
                     if (offset==0){
                         lstPaymentRequest.clear();
-
-                        for (PaymentRequest info : (List<PaymentRequest>)result[0])
-                            if (notInList(info))
-                                lstPaymentRequest.add(info);
-                        //lstPaymentRequest.addAll((ArrayList) result[0]);
+                        lstPaymentRequest.addAll((ArrayList) result[0]);
                         adapter.changeDataSet(lstPaymentRequest);
                         ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
+
                     }else {
                         for (PaymentRequest info : (List<PaymentRequest>) result[0]) {
                             if (notInList(info)) {
@@ -337,6 +334,8 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                     }
 
                 }
+
+                adapter.notifyDataSetChanged();
 
             }
         }

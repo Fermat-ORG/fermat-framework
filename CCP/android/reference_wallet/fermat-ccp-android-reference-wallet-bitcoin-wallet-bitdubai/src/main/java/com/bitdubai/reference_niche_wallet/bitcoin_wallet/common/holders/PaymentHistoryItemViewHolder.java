@@ -48,8 +48,8 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
     private TextView txt_state;
 
     private LinearLayout linear_layour_container_buttons;
-    private Button btn_refuse_request;
-    private Button btn_accept_request;
+    public Button btn_refuse_request;
+    public Button btn_accept_request;
 
     private CryptoWallet cryptoWallet;
     private ReferenceAppFermatSession referenceWalletSession;
@@ -210,7 +210,7 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
                                 , cryptoWallet.getSelectedActorIdentity().getPublicKey(),
                                 BitcoinFee.valueOf(feeLevel).getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS);
                         Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
-                        adapter.notifyDataSetChanged();
+                        adapter.refresh();
                     } else
                         showMessage(context, "Insufficient funds - Can't Accept Receive Payment");
                 } catch (Exception e) {
@@ -226,7 +226,7 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
                 try {
                     cryptoWallet.refuseRequest(data.getRequestId());
                     Toast.makeText(context, "Request denied", Toast.LENGTH_SHORT).show();
-                    adapter.notifyDataSetChanged();
+                    adapter.refresh();
                 } catch (Exception e) {
                     showMessage(context, "Cant Denied Receive Payment Exception- " + e.getMessage());
                 }
