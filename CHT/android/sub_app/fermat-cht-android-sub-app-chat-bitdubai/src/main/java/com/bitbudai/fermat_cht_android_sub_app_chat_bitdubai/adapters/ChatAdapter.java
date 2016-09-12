@@ -148,7 +148,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
                             break;
                         case CANNOT_SEND:
                             holder.tickstatusimage.setVisibility(View.VISIBLE);
-                            holder.tickstatusimage.setImageResource(R.drawable.cht_close);
+                            holder.tickstatusimage.setImageResource(R.drawable.cht_equis_icon);
                             break;
                         default:
                             holder.tickstatusimage.setImageResource(0);

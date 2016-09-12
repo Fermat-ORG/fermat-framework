@@ -361,7 +361,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                         if (checkCameraPermission()) {
                             if (checkWriteExternalPermission()) {
                                 if (chatBitmap != null) {
-                                    if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
+                                    //if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
                                         final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
                                         dialogCropImage.show();
                                         dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -375,9 +375,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                                                 }
                                             }
                                         });
-                                    } else {
-                                       Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
-                                    }
+//                                    } else {
+//                                       Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
+//                                    }
                                     saveCameraCapture(chatBitmap);
                                 } else {
                                     Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_error_image), Toast.LENGTH_LONG).show();
@@ -398,7 +398,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             chatBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
+//                            if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
                                 final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
                                 dialogCropImagee.show();
                                 dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -412,9 +412,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                                         }
                                     }
                                 });
-                            } else {
-                                Toast.makeText(getActivity(), getContext().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
-                            }
+//                            } else {
+//                                Toast.makeText(getActivity(), getContext().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
+//                            }
                         }
                     } catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -444,7 +444,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                     try {
                         if (isAttached) {
                             chatBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImagee);
-                            if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
+//                            if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
                                 final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
                                 dialogCropImagee.show();
                                 dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -458,9 +458,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                                         }
                                     }
                                 });
-                            } else {
-                                Toast.makeText(getActivity(), getContext().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
-                            }
+//                            } else {
+//                                Toast.makeText(getActivity(), getContext().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
+//                            }
                         }
                     } catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
