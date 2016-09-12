@@ -81,7 +81,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
      */
     private ExecutorService executor;
 
-    private int MAX = 0;
+    private int MAX = 10;
     private int offset = 0;
     private View rootView;
     private LinearLayout empty;
@@ -279,7 +279,6 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
         try {
             offset = pos;
-            MAX = 10;
             lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey,blockchainNetworkType,MAX,offset);
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,

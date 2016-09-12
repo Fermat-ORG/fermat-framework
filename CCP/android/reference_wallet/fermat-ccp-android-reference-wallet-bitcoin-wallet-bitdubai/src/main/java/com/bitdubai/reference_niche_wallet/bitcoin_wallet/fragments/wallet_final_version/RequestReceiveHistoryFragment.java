@@ -428,7 +428,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                     }
 
                 }
-
+                adapter.notifyDataSetChanged();
             }
         }
         showOrHideEmptyView();
