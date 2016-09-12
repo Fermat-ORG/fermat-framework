@@ -111,7 +111,7 @@ public class ChatListAdapter extends FermatAdapter<Chat, ChatHolder> implements 
                             break;
                         case CANNOT_SEND:
                             holder.imageTick.setVisibility(View.VISIBLE);
-                            holder.imageTick.setImageResource(R.drawable.cht_close);
+                            holder.imageTick.setImageResource(R.drawable.cht_equis_icon);
                             break;
                         default:
                             holder.imageTick.setImageResource(0);
@@ -211,5 +211,4 @@ public class ChatListAdapter extends FermatAdapter<Chat, ChatHolder> implements 
     public void setFilterString(String filterString) {
         this.filterString = filterString;
     }
-
 }
