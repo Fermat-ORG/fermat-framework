@@ -353,12 +353,12 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     }
 
     @Override
-    public void onLoadMoreData(int page, final int totalItemsCount) {
+    public void onLoadMoreData(final int page, final int totalItemsCount) {
         adapter.setLoadingData(true);
         fermatWorker = new FermatWorker(getActivity(), this) {
             @Override
             protected Object doInBackground() throws Exception {
-                return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
+                return getMoreDataAsync(FermatRefreshTypes.NEW, page);
             }
         };
 
