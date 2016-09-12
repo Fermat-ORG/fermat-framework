@@ -214,18 +214,25 @@ public class BrowserTabFragment
                 }
             });
 
-            //getting location and setting device locacion
-            location = moduleManager.getLocationManager();
-
-            if(location==null){
-                //  showErrorGPS();
-                Toast.makeText(getActivity(), getResources().getString(R.string.turn_on_gps), Toast.LENGTH_SHORT);
-            }
 
             identity =  moduleManager.getActiveIntraUserIdentity();
 
             if(identity != null)
                 distance = identity.getAccuracy();
+
+            //getting location and setting device locacion
+            location = moduleManager.getLocationManager();
+
+            if(location!=null){
+                if(location.getLatitude() == 0)
+                //  showErrorGPS();
+                Toast.makeText(getActivity(), getResources().getString(R.string.turn_on_gps), Toast.LENGTH_SHORT);
+                else
+                //update profile to reresh location
+                    moduleManager.updateIntraUserIdentity(identity.getPublicKey(),identity.getAlias(),"",
+                            identity.getProfileImage(), identity.getAccuracy(),identity.getFrequency(),location);
+            }
+
 
             // turnGPSOn();
 
