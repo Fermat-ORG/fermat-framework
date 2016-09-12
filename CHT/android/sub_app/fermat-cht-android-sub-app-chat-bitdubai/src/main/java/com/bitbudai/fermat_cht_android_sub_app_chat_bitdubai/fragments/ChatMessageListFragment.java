@@ -53,7 +53,8 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
  * Update by Miguel Payarez on 15/01/2016
  */
 
-public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
+public class ChatMessageListFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
     // Fermat Managers
     private ChatManager chatManager;
@@ -243,6 +244,24 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+//        unbindDrawables(adapterView.getRootView().findViewById(R.id.messagesContainer));
+//        unbindDrawables(adapterView.getRootView().findViewById(R.id.chatSendButton));
+//        adapterView.destroy();
+//        adapterView.destroyDrawingCache();
+//        adapterView.removeView(getView());
+//        adapterView.removeAllViews();
+//        adapterView.removeAllViewsInLayout();
+//        adapterView = null;
+//        chatIdentity = null;
+//        chatSettings = null;
+//        chatManager = null;
+//        appSession = null;
+//        destroy();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
@@ -260,8 +279,10 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 try {
-                                    onUpdateViewUIThread();
-                                    adapterView.clean();
+                                    if(alert.cleanChat()){
+                                        adapterView.clean();
+                                        //onUpdateViewUIThread();
+                                    }
                                 }catch (Exception e) {
                                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                 }

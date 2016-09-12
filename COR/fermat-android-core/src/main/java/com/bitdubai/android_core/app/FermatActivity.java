@@ -1474,7 +1474,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }
 
             if (optionsMenu!=null && !optionsMenu.isEmpty()) {
-                optionsMenu.clear();
+                //Commented because chat identity menu disappears after go out of it, and enter again. Memory has not been affected
+                //optionsMenu.clear();
             }
 
 

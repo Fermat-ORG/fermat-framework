@@ -40,6 +40,7 @@
     <string name="cht_identity_geo_toast">Geolocalización de Chat Identity actualizada</string>
     <string name="cht_identity_menu_option">Debe crear una identidad para abrir este menú.</string>
     <string name="cht_identity_created_toast">Chat Identity creada</string>
+    <string name="cht_identity_updated_toast">Chat Identity actualizada</string>
     <string name="cht_identity_image_small">La imagen seleccionada es muy pequeña. Por favor seleccione una de altura y ancho de al menos 192x192px</string>
     <string name="cht_identity_error_image">Error al cargar imagen</string>
     <string name="cht_identity_enter_name">Por favor ingreseun nombre o alias</string>
