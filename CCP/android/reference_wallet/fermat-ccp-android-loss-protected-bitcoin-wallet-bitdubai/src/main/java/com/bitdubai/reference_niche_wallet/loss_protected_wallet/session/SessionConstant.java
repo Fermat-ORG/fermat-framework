@@ -23,6 +23,7 @@ public class SessionConstant {
     public static final String BLOCKCHANIN_TYPE = "blockchainNetworkType";
     public static final String NOTIFICATION_ENABLED = "NotificationEnabled";
     public static final String BLOCKCHAIN_DOWNLOAD_ENABLED = "BlockchainDownloadEnabled";
+    public static final String CONTACT_DELETED = "ContactDeleted";
     public static final String FEE_LEVEL = "Feelevel";
     public static final String FIAT_CURRENCY = "FiatCurrency";
     public static final String SETTINGS_LOADED = "SettingLoaded";

@@ -347,8 +347,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
                 Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(mphoto_header);
             }
+            imageBitmap = getResizedBitmap(bitmap, dpToPx(), dpToPx());
             //bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
-            brokerImageByteArray = toByteArray(bitmap);
+            brokerImageByteArray = toByteArray(imageBitmap);
             mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
 
         }
@@ -400,7 +401,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                             @Override
                                             public void onDismiss(DialogInterface dialog) {
                                                 if (dialogCropImage.getCroppedImage() != null) {
-                                                    imageBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_ROTATE_270), dpToPx(), dpToPx());
+                                                    imageBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
                                                     mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
                                                     brokerImageByteArray = toByteArray(imageBitmap);
                                                     updateProfileImage = true;
@@ -592,11 +593,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             public void run() {
                                 try {
                                     if (updateProfileImage)
-
                                         moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray, (long)100, Frequency.NORMAL, moduleManager.getLocationManager());
-
                                     else
                                         moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage(), (long)100, Frequency.NORMAL,moduleManager.getLocationManager());
+
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 }catch (Exception e){
                                     e.printStackTrace();
@@ -623,7 +623,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,50,stream);
+        Bitmap imageBitmap = getResizedBitmap(bitmap,dpToPx(), dpToPx());
+
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG,30,stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
@@ -714,7 +716,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
      */
     private byte[] toByteArray(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         return stream.toByteArray();
     }
 
@@ -762,7 +764,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         Uri uri = Uri.fromFile(new File(path));
         InputStream in = null;
         try {
-            final int IMAGE_MAX_SIZE = 3000000; // 1.2MP
+            final int IMAGE_MAX_SIZE = 40000; // 1.2MP
             in = getActivity().getContentResolver().openInputStream(uri);
 
             // Decode image size
@@ -833,6 +835,22 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
         int width = bm.getWidth();
         int height = bm.getHeight();
+        int limitSize = 400;
+
+        if (newHeight > limitSize || newWidth > limitSize) {
+            if (height > width) {
+                if (height > limitSize) {
+                    newHeight = limitSize;
+                    newWidth = width * limitSize / height;
+                }
+            } else {
+                if (width > limitSize) {
+                    newWidth = limitSize;
+                    newHeight = height * limitSize / width;
+                }
+            }
+        }
+
         float scaleWidth = ((float) newWidth) / width;
         float scaleHeight = ((float) newHeight) / height;
         Matrix matrix = new Matrix();

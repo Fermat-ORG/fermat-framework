@@ -116,6 +116,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
             if(!existRequest(requestId))
             {
+                long receivedTimeStamp = System.currentTimeMillis();
                 DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
                 DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
@@ -129,7 +130,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
                         description      ,
                         cryptoAddress    ,
                         amount           ,
-                        startTimeStamp   ,
+                        receivedTimeStamp,
                         type             ,
                         action           ,
                         protocolState    ,

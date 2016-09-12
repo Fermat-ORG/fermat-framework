@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -27,8 +26,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
@@ -48,7 +45,7 @@ public class ReceiveFragmentDialog extends Dialog implements
     public Dialog d;
 
 
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
+  //  SettingsManager<LossProtectedWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
 
     /**
@@ -90,7 +87,7 @@ public class ReceiveFragmentDialog extends Dialog implements
      */
     static public int MARGIN_AUTOMATIC = -1;
 
-    private Typeface tf;
+  //  private Typeface tf;
     /**
      *
      * @param a
@@ -197,9 +194,6 @@ public class ReceiveFragmentDialog extends Dialog implements
         }else if( i == R.id.share_btn){
             shareAddress();
         }
-
-
-
             /*else if (i == R.id.btn_no) {
                 dismiss();
             } else {

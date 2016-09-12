@@ -151,7 +151,7 @@
     <string name="error_msg_no_address">No se tiene una direccion para inviar\nPor favor, espere un rato</string>
     <string name="error_msg_trying_to_reconnect">Por favor espere un momento, intentando reconectar...</string>
     <string name="msg_report_send">Reporte enviado</string>
-    <string name="error_std_message">Ha habido un error. Por favor intente de nuevo</string>
+    <string name="error_std_message">Ocurrio un error. Por favor intente de nuevo</string>
     <string name="request_sent">Solicitud enviada</string>
     <string name="success_msg_address_copied_clipboard">Direccion copiada al portapapeles</string>
     <string name="success_msg_address_sent_wait">Direccion enviada, por favor espere 2 minutos</string>
@@ -239,4 +239,5 @@
     <!--Delete Wallet Contact Dialog-->
     <string name="delete_title">Borrar Contacto</string>
     <string name="delete_sub_title">Quieres eliminar este contacto de tu cartera?</string>
+    <string name="deleted_toast">Contacto Borrado</string>
 </resources>

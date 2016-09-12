@@ -276,10 +276,13 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
                         intraUserlist.clear();
                         intraUserlist.addAll((ArrayList) result[0]);
                         adapter.changeDataSet(intraUserlist);
+                        ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                     } else {
                         for (IntraUserInformation info : (List<IntraUserInformation>) result[0]) {
 
-                            intraUserlist.add(info);
+                            if (notInList(info)) {
+                                intraUserlist.add(info);
+                            }
                         }
 
                         adapter.notifyItemRangeInserted(offset, intraUserlist.size() - 1);
@@ -306,7 +309,7 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
     @Override
     public void onFragmentFocus() {
         super.onFragmentFocus();
-        //onRefresh();
+        onRefresh();
     }
 
     private void showOrHideEmptyView() {
@@ -515,5 +518,13 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
         city = cityFromList.getName();
         country = cityFromList.getCountryName();
         onRefresh();
+    }
+
+    private boolean notInList(IntraUserInformation info) {
+        for (IntraUserInformation contact : intraUserlist) {
+            if (contact.getPublicKey().equals(info.getPublicKey()))
+                return false;
+        }
+        return true;
     }
 }

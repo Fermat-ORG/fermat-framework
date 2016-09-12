@@ -214,18 +214,26 @@ public class BrowserTabFragment
                 }
             });
 
-            //getting location and setting device locacion
-            location = moduleManager.getLocationManager();
-
-            if(location==null){
-                //  showErrorGPS();
-                Toast.makeText(getActivity(), getResources().getString(R.string.turn_on_gps), Toast.LENGTH_SHORT);
-            }
 
             identity =  moduleManager.getActiveIntraUserIdentity();
 
             if(identity != null)
                 distance = identity.getAccuracy();
+
+            //getting location and setting device locacion
+            location = moduleManager.getLocationManager();
+
+            if(location!=null){
+                if(location.getLatitude() == 0)
+                //  showErrorGPS();
+                Toast.makeText(getActivity(), getResources().getString(R.string.turn_on_gps), Toast.LENGTH_SHORT);
+                else
+                //update profile to reresh location
+                if(!location.getLatitude().equals(identity.getLocation().getLatitude()) )
+                    moduleManager.updateIntraUserIdentity(identity.getPublicKey(),identity.getAlias(),"",
+                            identity.getProfileImage(), identity.getAccuracy(),identity.getFrequency(),location);
+            }
+
 
             // turnGPSOn();
 
@@ -478,31 +486,31 @@ public class BrowserTabFragment
                 }
             }else
             {   switch (connectionState)
-                {
-                    case CONNECTED:
-                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_connected_msg),Toast.LENGTH_SHORT).show();
-                        break;
-                    case NO_CONNECTED:
-                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
-                        break;
-                    case PENDING_REMOTELY_ACCEPTANCE:
-                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_request_sent_msg),Toast.LENGTH_SHORT).show();
-                        break;
-                    case PENDING_LOCALLY_ACCEPTANCE:
-                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_request_received_msg),Toast.LENGTH_SHORT).show();
-                        break;
-                    case DENIED_REMOTELY:
-                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_denied_remotely_msg),Toast.LENGTH_SHORT).show();
-                        break;
-                    case DISCONNECTED_REMOTELY:
-                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
+            {
+                case CONNECTED:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_connected_msg),Toast.LENGTH_SHORT).show();
+                    break;
+                case NO_CONNECTED:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
+                    break;
+                case PENDING_REMOTELY_ACCEPTANCE:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_request_sent_msg),Toast.LENGTH_SHORT).show();
+                    break;
+                case PENDING_LOCALLY_ACCEPTANCE:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_request_received_msg),Toast.LENGTH_SHORT).show();
+                    break;
+                case DENIED_REMOTELY:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_denied_remotely_msg),Toast.LENGTH_SHORT).show();
+                    break;
+                case DISCONNECTED_REMOTELY:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
 
 
-                        break;
+                    break;
 
-                    default:
-                        Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
-                }
+                default:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
+            }
 
 
             }
@@ -573,16 +581,16 @@ public class BrowserTabFragment
     @Override
     public void onLoadMoreData(int page, final int totalItemsCount) {
         adapter.setLoadingData(true);
-       // fermatWorker = new FermatWorker(getActivity(), this) {
-         //   @Override
-          //  protected Object doInBackground() throws Exception {
-                offset = totalItemsCount;
-                onRefresh();
-                //return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
-           // }
+        // fermatWorker = new FermatWorker(getActivity(), this) {
+        //   @Override
+        //  protected Object doInBackground() throws Exception {
+        offset = totalItemsCount;
+        onRefresh();
+        //return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
+        // }
         //};
 
-       // fermatWorker.execute();
+        // fermatWorker.execute();
     }
 
     @Override
@@ -649,7 +657,7 @@ public class BrowserTabFragment
     @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
 
-       isRefreshing = false;
+        isRefreshing = false;
        /* if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             adapter.setLoadingData(false);
@@ -697,7 +705,7 @@ public class BrowserTabFragment
 
                 if (result != null /*&& result.size() > 0*/) {
                     if (result.size() > 0) {
-                       swipeRefreshLayout.setRefreshing(false);
+                        swipeRefreshLayout.setRefreshing(false);
                         adapter.setLoadingData(false);
                         if (getActivity() != null && adapter != null) {
                             if (offset == 0) {
@@ -707,7 +715,9 @@ public class BrowserTabFragment
                                 } else {
                                     lstIntraUserInformations = (ArrayList)result;
                                 }
-                                adapter.refreshEvents(lstIntraUserInformations);
+                                adapter.changeDataSet(lstIntraUserInformations);
+                                ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
+                                //adapter.refreshEvents(lstIntraUserInformations);
                             } else {
                                 for (IntraUserInformation info : result) {
                                     if (notInList(info)) {
@@ -915,7 +925,7 @@ public class BrowserTabFragment
             recyclerView.setVisibility(View.VISIBLE);
             //swipeRefreshLayout.setRefreshing(false);
         }else {
-           // swipeRefreshLayout.setRefreshing(false);
+            // swipeRefreshLayout.setRefreshing(false);
         }
 
     }

@@ -382,14 +382,37 @@ public class CryptoPaymentRequestEventActions {
 
         try {
 
-            cryptoPaymentRequestDao.changeState(
-                    requestId,
-                    CryptoPaymentState.REFUSED
-            );
-
-            cryptoPaymentRequestManager.confirmRequest(requestId);
-
             CryptoPayment record = cryptoPaymentRequestDao.getRequestById(requestId);
+
+            if(!record.getState().getCode().equals(CryptoPaymentState.REFUSED.getCode()))
+            {
+                cryptoPaymentRequestDao.changeState(
+                        requestId,
+                        CryptoPaymentState.REFUSED
+                );
+
+                cryptoPaymentRequestManager.confirmRequest(requestId);
+
+                FermatBundle fermatBundle = new FermatBundle();
+                fermatBundle.put(SOURCE_PLUGIN, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST.getCode());
+                try {
+                    fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.getByCode(record.getWalletPublicKey()).getCode()));
+                    fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.getByCode(record.getWalletPublicKey()).getCode());
+                } catch (InvalidParameterException e) {
+                    e.printStackTrace();
+                }
+
+                fermatBundle.put(NOTIFICATION_ID, CCPBroadcasterConstants.PAYMENT_DENIED);
+                fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                fermatBundle.put("InvolvedActor", "");
+                fermatBundle.put("Amount", record.getAmount());
+
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+            }
+
+
+
+
 
            /* InstalledWallet installedWallet = walletManagerManager.getDefaultWallet(
                     record.getCryptoAddress().getCryptoCurrency(),
@@ -397,21 +420,7 @@ public class CryptoPaymentRequestEventActions {
                     record.getNetworkType()
             );*/
 
-            FermatBundle fermatBundle = new FermatBundle();
-            fermatBundle.put(SOURCE_PLUGIN, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST.getCode());
-            try {
-                fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.getByCode(record.getWalletPublicKey()).getCode()));
-                fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.getByCode(record.getWalletPublicKey()).getCode());
-            } catch (InvalidParameterException e) {
-                e.printStackTrace();
-            }
 
-            fermatBundle.put(NOTIFICATION_ID, CCPBroadcasterConstants.PAYMENT_DENIED);
-            fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
-            fermatBundle.put("InvolvedActor", "");
-            fermatBundle.put("Amount", record.getAmount());
-
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
         } catch(CantChangeCryptoPaymentRequestStateException |
                 CryptoPaymentRequestNotFoundException        e) {

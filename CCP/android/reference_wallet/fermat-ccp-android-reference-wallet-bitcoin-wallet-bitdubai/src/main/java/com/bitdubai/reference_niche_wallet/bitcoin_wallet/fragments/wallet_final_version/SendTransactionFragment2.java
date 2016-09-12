@@ -263,8 +263,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
     private void setUpPresentation(boolean checkButton) {
-        PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =
-                null;
+        PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =null;
         try {
 
 
@@ -286,8 +285,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     //noinspection TryWithIdenticalCatches
                     ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = null;
                     try {
-                      //  cryptoWalletIntraUserIdentity = appSession.getModuleManager().getSelectedActorIdentity();
-                        cryptoWalletIntraUserIdentity = intraUserLoginIdentity;
+                        cryptoWalletIntraUserIdentity = appSession.getModuleManager().getSelectedActorIdentity();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -921,6 +919,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     recyclerView.setVisibility(View.GONE);
                     FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
                 }
+
+                adapter.notifyDataSetChanged();
             }
             else {
                 recyclerView.setVisibility(View.GONE);

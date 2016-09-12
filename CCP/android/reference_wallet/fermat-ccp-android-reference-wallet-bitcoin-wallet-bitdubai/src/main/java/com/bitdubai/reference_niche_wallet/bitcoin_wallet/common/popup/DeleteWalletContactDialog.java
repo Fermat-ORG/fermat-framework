@@ -14,10 +14,8 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
-
 
 import java.util.UUID;
 
@@ -79,7 +77,7 @@ public class DeleteWalletContactDialog extends FermatDialog<ReferenceAppFermatSe
                 if (ContactId != null) {
                     getSession().getModuleManager().deleteWalletContact(ContactId);
                     getSession().setData(SessionConstant.CONTACT_DELETED, Boolean.TRUE);
-                    Toast.makeText(getContext(), "Contact Deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.deleted_toast, Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();
                     getSession().setData(SessionConstant.CONTACT_DELETED, Boolean.FALSE);
