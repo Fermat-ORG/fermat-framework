@@ -229,6 +229,7 @@ public class BrowserTabFragment
                 Toast.makeText(getActivity(), getResources().getString(R.string.turn_on_gps), Toast.LENGTH_SHORT);
                 else
                 //update profile to reresh location
+                if(!location.getLatitude().equals(identity.getLocation().getLatitude()) )
                     moduleManager.updateIntraUserIdentity(identity.getPublicKey(),identity.getAlias(),"",
                             identity.getProfileImage(), identity.getAccuracy(),identity.getFrequency(),location);
             }

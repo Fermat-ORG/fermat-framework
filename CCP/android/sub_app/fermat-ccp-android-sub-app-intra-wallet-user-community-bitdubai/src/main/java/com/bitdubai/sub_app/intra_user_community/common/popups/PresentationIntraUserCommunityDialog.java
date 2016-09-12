@@ -191,12 +191,12 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<Reference
     }
 
     private byte[] convertImage(int resImage) {
-        Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
+        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-       // bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-
         Bitmap imageBitmap = getResizedBitmap(bitmap,dpToPx(), dpToPx());
-        imageBitmap.compress(Bitmap.CompressFormat.PNG, 30, stream);
+
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG,30,stream);
+        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 
