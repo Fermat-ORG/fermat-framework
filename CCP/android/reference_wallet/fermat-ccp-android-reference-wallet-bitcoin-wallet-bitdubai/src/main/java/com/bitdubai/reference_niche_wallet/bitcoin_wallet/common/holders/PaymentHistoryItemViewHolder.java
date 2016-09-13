@@ -42,7 +42,7 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
     private TextView txt_notes;
     private TextView txt_time;
 
-    private String feeLevel = "NORMAL";
+    private String feeLevel = "SLOW";
 
     private LinearLayout linear_layour_container_state;
     private TextView txt_state;

@@ -39,7 +39,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 
     ReferenceAppFermatSession<FermatWallet> referenceWalletSession;
     private FermatWalletSettings fermatWalletSettings = null;
-    private String feeLevel = "NORMAL";
+    private String feeLevel = "SLOW";
     Typeface tf;
     BlockchainNetworkType blockchainNetworkType;
 
