@@ -76,7 +76,6 @@ public class ChatMessageListFragment
         super.onCreate(savedInstanceState);
         try {
 
-
             chatManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -179,6 +178,7 @@ public class ChatMessageListFragment
                 .addChatManager(chatManager)
                 .addChatSettings(chatSettings)
                 .addToolbar(toolbar)
+                .addActivity(getActivity())
                 .build();
         return adapterView;
     }

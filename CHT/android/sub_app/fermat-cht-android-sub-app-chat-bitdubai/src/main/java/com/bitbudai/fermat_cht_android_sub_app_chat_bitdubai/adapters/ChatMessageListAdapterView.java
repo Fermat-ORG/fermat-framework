@@ -1,5 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -33,6 +34,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ConstantSubtitle;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.utils.KeyboardUtil;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
@@ -84,6 +86,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
     private ViewGroup rootView;
     private String leftName;
     private UUID chatId;
+    private Activity activity;
     private String remotePk;
     private Bitmap contactIcon;
     private BitmapDrawable contactIconCircular;
@@ -98,7 +101,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
                                       ErrorManager errorManager,
                                       FermatSession appSession,
                                       Toolbar toolbar,
-                                      ChatPreferenceSettings chatSettings) {
+                                      ChatPreferenceSettings chatSettings, Activity activity) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         addView(inflater.inflate(R.layout.chat, (rootView != null) ? rootView : null));
@@ -107,6 +110,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
         this.appSession = appSession;
         this.toolbar = toolbar;
         this.chatSettings = chatSettings;
+        this.activity = activity;
         initControls();
     }
 
@@ -416,7 +420,17 @@ public class ChatMessageListAdapterView extends LinearLayout {
                         }
                     }
                 });
-        toolbar.setSubtitle("");
+        messageET.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                KeyboardUtil keyboardUtil = new KeyboardUtil(activity, v);
+                if(hasFocus) {
+                    keyboardUtil.enable();
+                }else
+                    keyboardUtil.disable();
+            }
+        });
+                toolbar.setSubtitle("");
         messageET.addTextChangedListener(new TextWatcher() {
 
             private long lastTimeSent = 0;
@@ -711,6 +725,9 @@ public class ChatMessageListAdapterView extends LinearLayout {
     private void setToolbar(Toolbar toolbar) {
         this.toolbar = toolbar;
     }
+    private void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
     public static class Builder {
 
@@ -721,6 +738,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
         private ChatPreferenceSettings chatSettings;
         private FermatSession appSession;
         private Toolbar toolbar;
+        private Activity activity;
         String leftName;
 
         public Builder(Context context) {
@@ -757,6 +775,11 @@ public class ChatMessageListAdapterView extends LinearLayout {
             return this;
         }
 
+        public Builder addActivity(Activity activity) {
+            this.activity = activity;
+            return this;
+        }
+
         public ChatMessageListAdapterView build() {
             ChatMessageListAdapterView chatView = new ChatMessageListAdapterView(
                     context,
@@ -764,7 +787,8 @@ public class ChatMessageListAdapterView extends LinearLayout {
                     errorManager,
                     appSession,
                     toolbar,
-                    chatSettings
+                    chatSettings,
+                    activity
             );
 
             if (rootView != null) {
@@ -788,6 +812,9 @@ public class ChatMessageListAdapterView extends LinearLayout {
             }
             if (toolbar != null) {
                 chatView.setToolbar(toolbar);
+            }
+            if (activity != null) {
+                chatView.setActivity(activity);
             }
 
             return chatView;
