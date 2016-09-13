@@ -272,27 +272,30 @@ public class ChatMessageListAdapterView extends LinearLayout {
     }
 
     public void onBackPressed() {
-        RelativeLayout.LayoutParams layoutParams =
-                (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        if (dm.heightPixels < 800)
-            layoutParams.height = 764;
-        else if (dm.heightPixels < 1080 && dm.heightPixels >= 800)
-            layoutParams.height = 944;
-        else if (dm.heightPixels < 1280 && dm.heightPixels >= 1080)
-            layoutParams.height = 1244;
-        messagesContainer.setLayoutParams(layoutParams);
+        if (Build.VERSION.SDK_INT != 19) {
+            RelativeLayout.LayoutParams layoutParams =
+                    (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
+            DisplayMetrics dm = getResources().getDisplayMetrics();
+            if (dm.heightPixels < 800)
+                layoutParams.height = 764;
+            else if (dm.heightPixels < 1080 && dm.heightPixels >= 800)
+                layoutParams.height = 944;
+            else if (dm.heightPixels < 1280 && dm.heightPixels >= 1080)
+                layoutParams.height = 1244;
+            messagesContainer.setLayoutParams(layoutParams);
+        }
     }
 
     public void onAdjustKeyboard() {
-        try {
-            RelativeLayout.LayoutParams layoutParams =
-                    (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
-            layoutParams.height = 440;
-            messagesContainer.setLayoutParams(layoutParams);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
+        if (Build.VERSION.SDK_INT != 19) {
+            try {
+                RelativeLayout.LayoutParams layoutParams =
+                        (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
+                layoutParams.height = 440;
+                messagesContainer.setLayoutParams(layoutParams);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -308,12 +311,12 @@ public class ChatMessageListAdapterView extends LinearLayout {
 
     private boolean isKeyboardShown(View rootView) {
         //SOFT_KEYBOARD_HEIGHT_DP_THRESHOLD = 128;
-        Rect r = new Rect();
-        rootView.getWindowVisibleDisplayFrame(r);
-        DisplayMetrics dm = rootView.getResources().getDisplayMetrics();
-        int heightDiff = rootView.getBottom() - r.bottom;
-        boolean isKeyboardShown = heightDiff > 128 * dm.density;
-        return isKeyboardShown;
+            Rect r = new Rect();
+            rootView.getWindowVisibleDisplayFrame(r);
+            DisplayMetrics dm = rootView.getResources().getDisplayMetrics();
+            int heightDiff = rootView.getBottom() - r.bottom;
+            boolean isKeyboardShown = heightDiff > 128 * dm.density;
+            return isKeyboardShown;
     }
 
     public String setFormatLastTime(Timestamp date) {
@@ -423,7 +426,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
         messageET.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                KeyboardUtil keyboardUtil = new KeyboardUtil(activity, v);
+                KeyboardUtil keyboardUtil = new KeyboardUtil(activity, v.getRootView().findViewById(R.id.inputContainer));
                 if(hasFocus) {
                     keyboardUtil.enable();
                 }else
