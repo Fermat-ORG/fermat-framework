@@ -733,7 +733,7 @@ public class BrowserTabFragment
                 }
 
                 isRefreshing = false;
-                offset = 0;
+                //offset = 0;
                 showOrHideEmptyView();
             }
         } catch (Exception e) {

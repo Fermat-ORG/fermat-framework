@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
         android:background="@color/accent_material_dark">
 
         <ImageView
@@ -126,7 +126,7 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="normal"
                     android:textColor="#4f4f4f"
                     android:textColorHint="#4f4f4f"
