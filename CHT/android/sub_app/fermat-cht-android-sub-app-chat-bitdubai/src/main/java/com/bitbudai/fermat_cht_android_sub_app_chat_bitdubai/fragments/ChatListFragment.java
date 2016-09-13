@@ -394,7 +394,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
             if (chatCurrent.getImgId() != null) {
                 chatCurrent.getImgId().compress(Bitmap.CompressFormat.PNG, 100, stream);
             } else {
-                Drawable d = getResources().getDrawable(R.drawable.cht_id_image_profile);
+                Drawable d = getResources().getDrawable(R.drawable.cht_image_profile);
                 Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             }

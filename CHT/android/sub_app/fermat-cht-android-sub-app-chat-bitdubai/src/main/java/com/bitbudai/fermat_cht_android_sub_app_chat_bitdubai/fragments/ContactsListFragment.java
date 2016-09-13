@@ -158,7 +158,7 @@ public class ContactsListFragment
                         if (conta.getImage() != null) {
                             contacticon.add((new BitmapDrawable(new ByteArrayInputStream(conta.getImage()))).getBitmap());
                         } else {
-                            Drawable d = getResources().getDrawable(R.drawable.cht_center_profile_icon_center);
+                            Drawable d = getResources().getDrawable(R.drawable.cht_image_profile);
                             Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, (new ByteArrayOutputStream()));
                             contacticon.add(bitmap);
@@ -361,7 +361,7 @@ public class ContactsListFragment
         if (adapter.getContactIcon(position) != null) {
             adapter.getContactIcon(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
         } else {
-            Drawable d = getResources().getDrawable(R.drawable.cht_center_profile_icon_center); // the drawable (Captain Obvious, to the rescue!!!)
+            Drawable d = getResources().getDrawable(R.drawable.cht_image_profile); // the drawable (Captain Obvious, to the rescue!!!)
             Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         }
