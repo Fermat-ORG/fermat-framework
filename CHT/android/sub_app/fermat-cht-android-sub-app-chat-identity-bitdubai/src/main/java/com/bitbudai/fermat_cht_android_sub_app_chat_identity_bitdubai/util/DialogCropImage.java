@@ -73,12 +73,12 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.btnCrop) {
-            if (cropImageView.getCroppedImage().getHeight() >= 200 && cropImageView.getCroppedImage().getWidth() >= 200) {
+            //if (cropImageView.getCroppedImage().getHeight() >= 200 && cropImageView.getCroppedImage().getWidth() >= 200) {
                 croppedImage = cropImageView.getCroppedImage();
                 dismiss();
-            } else {
+            /*} else {
                 Toast.makeText(getActivity(), "Image crop is too small", Toast.LENGTH_SHORT).show();
-            }
+            }*/
         }
         if (i == R.id.btnCancel) {
             dismiss();

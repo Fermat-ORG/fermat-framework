@@ -76,7 +76,7 @@ public class ChatListAdapter extends FermatAdapter<Chat, ChatHolder> implements 
             if (data.getImgId() != null)
                 holder.image.setImageBitmap(Utils.getRoundedShape(data.getImgId(), 400));
             else
-                holder.image.setImageResource(R.drawable.cht_center_profile_icon_center);
+                holder.image.setImageResource(R.drawable.cht_id_image_profile);
 
             holder.contactname.setText(data.getContactName());
 
