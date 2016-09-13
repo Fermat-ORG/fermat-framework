@@ -113,6 +113,7 @@ public class ImportedSeedFundsManagerAgent extends AbstractAgent{
                 for (ImportedSeed importedSeed : dao.getImportedSeeds()){
                     for(DeterministicSeed seed : getImportedSeeds()){
                         if (importedSeed.getImportedSeedDate() == seed.getCreationTimeSeconds()){
+                            System.out.println("***Imported Manager*** ImportedSeedFundsMAnager Do Main...");
                             doTheMainTask(importedSeed, seed);
                         }
                     }

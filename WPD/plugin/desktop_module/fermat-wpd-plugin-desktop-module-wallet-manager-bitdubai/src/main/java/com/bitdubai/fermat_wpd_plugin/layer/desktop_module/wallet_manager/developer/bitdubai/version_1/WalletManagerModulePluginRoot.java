@@ -447,12 +447,16 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
     @Override
     public void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType blockchainNetworkType) throws Exception {
+        try {
+            CryptoAddress cryptoAddress = cryptoVaultManager.getCryptoAddress(blockchainNetworkType);
+            cryptoAddressBookManager.registerCryptoAddress(cryptoAddress, "", Actors.EXTRA_USER, "", Actors.EXTRA_USER, Platforms.CRYPTO_CURRENCY_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, VaultType.CRYPTO_CURRENCY_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
-        CryptoAddress cryptoAddress = cryptoVaultManager.getCryptoAddress(blockchainNetworkType);
-        cryptoAddressBookManager.registerCryptoAddress(cryptoAddress, "", Actors.EXTRA_USER, "", Actors.EXTRA_USER, Platforms.CRYPTO_CURRENCY_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, VaultType.CRYPTO_CURRENCY_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
-
-        cryptoVaultManager.importSeedFromMnemonicCode(cryptoAddress, blockchainNetworkType, mnemonicCode, date);
-
+            cryptoVaultManager.importSeedFromMnemonicCode(cryptoAddress, blockchainNetworkType, mnemonicCode, date);
+        } catch (Exception e) {
+            System.out.println("ERROR importMnemonicCode : " + e.getMessage());
+            e.printStackTrace();
+            throw new Exception(e);
+        }
     }
 
     /**

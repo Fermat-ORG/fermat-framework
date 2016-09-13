@@ -300,6 +300,7 @@ public abstract class CryptoVault{
                 throw new CantImportSeedException(null, "Seed to be imported is the same as the actual seed we are using.", "User input error");
         } catch (InvalidSeedException e) {
             //if for some reason I couldn't get it, I will continue.
+            System.out.println("--- importSeedFromMnemonicCode ERROR InvalidSeedException ---");
         }
 
         VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, CRYPTO_VAULT_SEED_FILEPATH, CRYPTO_VAULT_SEED_FILENAME);
