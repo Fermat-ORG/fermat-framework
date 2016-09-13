@@ -597,7 +597,6 @@ public class ChatMessageListAdapterView extends LinearLayout {
     public void displayMessage(ChatMessage message) {
 
         if (message != null && chatHistory != null && adapter != null) {
-
             chatHistory.add(message);
             adapter.changeDataSet(chatHistory);
             this.scroll();

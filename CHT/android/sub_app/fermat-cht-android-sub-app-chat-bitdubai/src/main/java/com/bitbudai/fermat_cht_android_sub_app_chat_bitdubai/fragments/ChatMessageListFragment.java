@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatMessageListAdapterView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
@@ -208,6 +208,7 @@ public class ChatMessageListFragment
                 @Override
                 public boolean onQueryTextChange(String s) {
                     if (s.equals(searchView.getQuery().toString())) {
+                        adapterView.refreshEvents();
                         adapterView.getFilter(s);
                     }
                     return false;

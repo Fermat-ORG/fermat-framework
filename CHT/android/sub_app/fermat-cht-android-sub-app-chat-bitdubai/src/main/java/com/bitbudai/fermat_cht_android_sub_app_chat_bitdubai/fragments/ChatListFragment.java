@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,7 +85,9 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
  * @version 1.0
  */
 
-public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> implements FermatListItemListeners<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat> {
+public class ChatListFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>
+        implements FermatListItemListeners<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat> {
 
     private ChatManager chatManager;
     private ErrorManager errorManager;
