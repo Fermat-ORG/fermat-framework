@@ -10,12 +10,12 @@
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="150dp"
         android:background="@color/accent_material_dark">
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="230dp"
+            android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:id="@+id/image_view_profile"
             android:scaleType="centerCrop"
