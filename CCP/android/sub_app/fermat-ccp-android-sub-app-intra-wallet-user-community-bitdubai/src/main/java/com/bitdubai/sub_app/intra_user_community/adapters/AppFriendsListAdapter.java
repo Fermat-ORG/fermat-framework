@@ -30,7 +30,7 @@ public class AppFriendsListAdapter extends FermatAdapter<IntraUserInformation, F
     @Override
     protected FermatViewHolder createHolder(View itemView, int type) {
         if (type == DATA_ITEM)
-            return new AvailableIntraUserViewHolder(itemView, type);
+            return new AvailableIntraUserViewHolder(itemView, type,context);
         if (type == LOADING_ITEM)
             return new LoadingMoreViewHolder(itemView, type);
         return null;

@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.intra_user_community.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
@@ -22,6 +23,7 @@ import java.util.List;
 public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, AppNotificationsHolder> {
 
     private Context context;
+
     public AppNotificationAdapter(Context context, List<IntraUserInformation> lst) {
         super(context, lst);
 
@@ -52,6 +54,12 @@ public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, 
             // holder.userLocation.setText(data.getCountry()+" - "+data.getCity());
             if (data.getProfileImage() != null && data.getProfileImage().length > 0) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
+                holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+            }
+            else
+            {
+                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_profile_male);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
                 holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
             }

@@ -394,7 +394,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                         if (checkCameraPermission()) {
                             if (checkWriteExternalPermission()) {
                                 if (imageBitmap != null) {
-                                    if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
+                                   // if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
                                         final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, imageBitmap);
                                         dialogCropImage.show();
                                         dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -415,11 +415,11 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                                 }
                                             }
                                         });
-                                    } else {
-                                        Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                    //} else {
+                                     //   Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
                                         //cryptoBrokerBitmap = null;
-                                        Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
-                                    }
+                                      //  Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                                    //}
                                 } else {
                                     Toast.makeText(getActivity(), getResources().getString(R.string.upload_image_error), Toast.LENGTH_LONG).show();
                                     //  cryptoBrokerBitmap = null;
