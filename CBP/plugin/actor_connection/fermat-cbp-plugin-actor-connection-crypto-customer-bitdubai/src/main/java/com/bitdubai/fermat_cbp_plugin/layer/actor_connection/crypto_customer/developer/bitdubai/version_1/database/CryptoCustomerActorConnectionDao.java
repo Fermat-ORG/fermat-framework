@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_c
 import com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetProfileImageException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
@@ -34,7 +35,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoCustomerActorConnectionDao extends ActorConnectionDao<CryptoCustomerLinkedActorIdentity, CryptoCustomerActorConnection> {
+public class CryptoCustomerActorConnectionDao extends ActorConnectionDao<CryptoCustomerActorConnection> {
 
     public CryptoCustomerActorConnectionDao(final PluginDatabaseSystem pluginDatabaseSystem,
                                             final PluginFileSystem pluginFileSystem,
@@ -98,7 +99,7 @@ public class CryptoCustomerActorConnectionDao extends ActorConnectionDao<CryptoC
             byte[] profileImage;
 
             try {
-                profileImage = getProfileImage(publicKey);
+                profileImage = getProfileImage(connectionId);
             } catch (FileNotFoundException e) {
                 profileImage = new byte[0];
             }
@@ -146,7 +147,7 @@ public class CryptoCustomerActorConnectionDao extends ActorConnectionDao<CryptoC
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            CryptoCustomerLinkedActorIdentity linkedActorIdentity = actorConnection.getLinkedIdentity();
+            ActorIdentity linkedActorIdentity = actorConnection.getLinkedIdentity();
 
             actorConnectionsTable.addStringFilter(
                     ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME,

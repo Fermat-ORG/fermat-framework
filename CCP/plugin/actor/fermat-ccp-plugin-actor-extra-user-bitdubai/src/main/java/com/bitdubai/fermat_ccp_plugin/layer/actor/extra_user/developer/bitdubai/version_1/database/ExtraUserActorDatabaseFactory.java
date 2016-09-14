@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
@@ -22,11 +21,8 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ExtraUserActorDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class ExtraUserActorDatabaseFactory {
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
@@ -60,8 +56,6 @@ public class ExtraUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(ExtraUserActorDatabaseConstants.EXTRA_USER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ExtraUserActorDatabaseConstants.EXTRA_USER_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
 
-            table.addIndex(ExtraUserActorDatabaseConstants.EXTRA_USER_FIRST_KEY_COLUMN);
-
             databaseFactory.createTable(ownerId, table);
 
             return database;
@@ -77,13 +71,5 @@ public class ExtraUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
 
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", "General exception.");
         }
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 }
