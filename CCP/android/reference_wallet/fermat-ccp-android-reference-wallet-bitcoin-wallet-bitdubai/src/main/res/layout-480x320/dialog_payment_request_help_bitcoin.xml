@@ -181,7 +181,7 @@
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                 android:id="@+id/btn_dismiss"
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="45dp"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
