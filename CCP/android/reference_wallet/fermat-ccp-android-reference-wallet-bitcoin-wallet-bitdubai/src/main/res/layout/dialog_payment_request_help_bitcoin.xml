@@ -50,7 +50,7 @@
                     android:layout_marginStart="20dp"
                     android:text="@string/payment_title"
                     android:textColor="#00a99d"
-                    android:textSize="20sp"
+                    android:textSize="16dp"
                     app:typeface="CAVIAR_DREAMS_BOLD" />
 
                 <ImageView
@@ -60,8 +60,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
                     android:src="@drawable/ic_bitcoin_wallet" />
             </RelativeLayout>
 
