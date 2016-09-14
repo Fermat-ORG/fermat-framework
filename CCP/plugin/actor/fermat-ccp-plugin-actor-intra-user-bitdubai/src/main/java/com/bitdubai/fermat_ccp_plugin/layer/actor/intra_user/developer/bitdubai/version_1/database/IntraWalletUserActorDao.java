@@ -105,7 +105,7 @@ public class IntraWalletUserActorDao {
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME                , intraUserToAddPublicKey   , DatabaseFilterType.EQUAL);
 
-            if (table.getCount() > 0){
+            if (table.getCount() == 0){
 
                 long milliseconds = System.currentTimeMillis();
 

@@ -479,6 +479,7 @@ public class BrowserTabFragment
                         @Override
                         public void onDismiss(DialogInterface dialog) {
                             isRefreshing = false;
+                            swipeRefreshLayout.setRefreshing(true);
                             onRefresh();
                         }
                     });

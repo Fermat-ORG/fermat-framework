@@ -764,7 +764,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         Uri uri = Uri.fromFile(new File(path));
         InputStream in = null;
         try {
-            final int IMAGE_MAX_SIZE = 40000; // 1.2MP
+            final int IMAGE_MAX_SIZE = 3000000 ; // 40000
             in = getActivity().getContentResolver().openInputStream(uri);
 
             // Decode image size
