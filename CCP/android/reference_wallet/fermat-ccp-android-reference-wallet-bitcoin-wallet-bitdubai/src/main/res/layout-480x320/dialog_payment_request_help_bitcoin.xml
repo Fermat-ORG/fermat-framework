@@ -50,7 +50,7 @@
                     android:layout_marginStart="20dp"
                     android:text="@string/payment_title"
                     android:textColor="#00a99d"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     app:typeface="CAVIAR_DREAMS_BOLD" />
 
                 <ImageView
@@ -60,8 +60,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
                     android:src="@drawable/ic_bitcoin_wallet" />
             </RelativeLayout>
 
@@ -181,8 +181,8 @@
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                 android:id="@+id/btn_dismiss"
-                android:layout_width="80dp"
-                android:layout_height="45dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/dialog_button_close"

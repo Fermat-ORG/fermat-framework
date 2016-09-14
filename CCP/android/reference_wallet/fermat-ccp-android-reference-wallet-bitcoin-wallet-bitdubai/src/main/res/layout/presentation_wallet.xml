@@ -13,6 +13,10 @@
         android:background="@drawable/round_corner_line_dialog"
         android:fitsSystemWindows="true" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,9 +74,6 @@
             android:contentDescription="@string/app_name"
             android:src="@drawable/banner" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -220,6 +221,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-        </ScrollView>
     </LinearLayout>
+    </ScrollView>
 </LinearLayout>
