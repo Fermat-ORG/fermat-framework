@@ -428,6 +428,9 @@ public class ChatMessageListAdapterView extends LinearLayout {
             public void onFocusChange(View v, boolean hasFocus) {
                 KeyboardUtil keyboardUtil = new KeyboardUtil(activity, v.getRootView().findViewById(R.id.inputContainer));
                 if(hasFocus) {
+                    if (!isScrollingUp) {
+                        scroll();
+                    }
                     keyboardUtil.enable();
                 }else
                     keyboardUtil.disable();
@@ -452,7 +455,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
                             lastTimeSent = currentTimeToSend;
                         }
                     }
-                    if ((start > 0 || s.charAt(s.length() - 1) == '\n' || s.length() > 10) && !isScrollingUp) {
+                    if ((start >= 0 || s.charAt(s.length() - 1) == '\n' || s.length() > 10) && !isScrollingUp) {
                         scroll();
                     }
                 }
