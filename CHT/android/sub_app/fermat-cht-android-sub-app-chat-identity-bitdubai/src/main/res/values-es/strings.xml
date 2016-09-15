@@ -30,7 +30,7 @@
     <string name="cht_identity_status">Estatus</string>
     <string name="cht_identity_dont_show_again">No mostrar de nuevo</string>
     <string name="cht_chat_subtitle">Bienvenido a Fermat P2P Chat.</string>
-    <string name="cht_chat_identity_subtitle">Bienvenido to Fermat P2P Chat Identity.</string>
+    <string name="cht_chat_identity_subtitle">Bienvenido a Fermat P2P Chat Identity.</string>
     <string name="cht_chat_body">Si no tiene una identidad creada, favor registre una.</string>
     <string name="cht_chat_identity_body">Si no tiene una identidad creada, registre su identidad aquí!</string>
     <string name="cht_chat_identity_gps">Por favor, encienda su GPS para registrar su ubicación. Así podrá localizar a otros usuarios y ser localizado a su vez por los mismos.</string>
