@@ -53,6 +53,7 @@
                 android:ems="10"
                 android:id="@+id/editTextName"
                 android:hint="@string/cht_identity_name"
+                android:paddingBottom="@dimen/margin_20dp"
                 android:textColor="#616161"
                 android:textColorHint="#B2B2B2"
                 android:foreground="#808080"

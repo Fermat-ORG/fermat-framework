@@ -272,7 +272,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
     }
 
     public void onBackPressed() {
-        if (Build.VERSION.SDK_INT != 19) {
+        if (!(Build.VERSION.SDK_INT > 18 && Build.VERSION.SDK_INT < 21)) {
             RelativeLayout.LayoutParams layoutParams =
                     (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
             DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -287,7 +287,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
     }
 
     public void onAdjustKeyboard() {
-        if (Build.VERSION.SDK_INT != 19) {
+        if (!(Build.VERSION.SDK_INT > 18 && Build.VERSION.SDK_INT < 21)) {
             try {
                 RelativeLayout.LayoutParams layoutParams =
                         (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
@@ -426,7 +426,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
         messageET.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                KeyboardUtil keyboardUtil = new KeyboardUtil(activity, v.getRootView().findViewById(R.id.inputContainer));
+                KeyboardUtil keyboardUtil = new KeyboardUtil(activity, v.getRootView().findViewById(R.id.inputContainer), 6);
                 if(hasFocus) {
                     if (!isScrollingUp) {
                         scroll();

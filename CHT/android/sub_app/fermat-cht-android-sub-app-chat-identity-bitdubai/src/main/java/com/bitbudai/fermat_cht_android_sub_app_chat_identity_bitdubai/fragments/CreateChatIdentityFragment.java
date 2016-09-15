@@ -176,10 +176,13 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         Bitmap bitmap = null;
         checkGPSOn();
         try {
+            if (Build.VERSION.SDK_INT > 18 && Build.VERSION.SDK_INT < 21) {
+                mChatName.setPadding(0, 0, 0, 20);
+            }
             mChatName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    KeyboardUtil keyboardUtil = new KeyboardUtil(getActivity(), v);
+                    KeyboardUtil keyboardUtil = new KeyboardUtil(getActivity(), v, 20);
                     if(hasFocus) {
                         keyboardUtil.enable();
                     }else

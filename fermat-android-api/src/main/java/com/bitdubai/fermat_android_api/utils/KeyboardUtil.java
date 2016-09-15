@@ -20,10 +20,12 @@ import android.view.inputmethod.InputMethodManager;
 public class KeyboardUtil {
     private View decorView;
     private View contentView;
+    private int additionalHeight;
 
-    public KeyboardUtil(Activity act, View contentView) {
+    public KeyboardUtil(Activity act, View contentView, int additionalHeight) {
         this.decorView = act.getWindow().getDecorView();
         this.contentView = contentView;
+        this.additionalHeight = additionalHeight;
 
         //only required on newer android versions. it was working on API level 19
         if (Build.VERSION.SDK_INT == 19) {
@@ -32,13 +34,13 @@ public class KeyboardUtil {
     }
 
     public void enable() {
-        if (Build.VERSION.SDK_INT == 19) {
+        if (Build.VERSION.SDK_INT > 18 && Build.VERSION.SDK_INT < 21) {
             decorView.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
         }
     }
 
     public void disable() {
-        if (Build.VERSION.SDK_INT == 19) {
+        if (Build.VERSION.SDK_INT > 18 && Build.VERSION.SDK_INT < 21) {
             decorView.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
         }
     }
@@ -53,7 +55,7 @@ public class KeyboardUtil {
             decorView.getWindowVisibleDisplayFrame(r);
 
             //get screen height and calculate the difference with the useable area from the r
-            int height = decorView.getContext().getResources().getDisplayMetrics().heightPixels +6;
+            int height = decorView.getContext().getResources().getDisplayMetrics().heightPixels + additionalHeight;
             int diff = height - r.bottom;
 
             //if it could be a keyboard add the padding to the view

@@ -13,8 +13,10 @@
         android:layout_height="4.5dp"
         android:background="@drawable/round_corner_line_dialog"
         android:fitsSystemWindows="true" />
-
-    <LinearLayout
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -23,7 +25,12 @@
         android:paddingLeft="1dp"
         android:paddingRight="1dp"
         android:paddingStart="1dp"
-        android:paddingTop="20dp">
+        android:paddingTop="20dp"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollIndicators="right"
+        android:isScrollContainer="true"
+        android:verticalScrollbarPosition="right">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -181,4 +188,5 @@
                 android:text="@string/dialog_button_close" />
         </RelativeLayout>
     </LinearLayout>
+    </ScrollView>
 </LinearLayout>
