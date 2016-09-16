@@ -5077,11 +5077,11 @@ public class SubAppAppsGenerator {
         optionMenuItemBrowser.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
-        optionMenuItemBrowser = new OptionMenuItem(2);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(2, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemBrowser.setLabel("Location");
-        optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
+//        optionMenuItemBrowser = new OptionMenuItem(2);
+//        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(2, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        optionMenuItemBrowser.setLabel("Location");
+//        optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+//        optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         optionMenuItemBrowser = new OptionMenuItem(3);
         //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
@@ -5318,13 +5318,13 @@ public class SubAppAppsGenerator {
         owner2.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
 
         OptionsMenu optionsMenu = new OptionsMenu();
-        OptionMenuItem menuItem = new OptionMenuItem(1);
-        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner2, SourceLocation.DEVELOPER_RESOURCES));
-        menuItem.setLabel("Location");
-        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenu.addMenuItem(menuItem);
+//        OptionMenuItem menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner2, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setLabel("Location");
+//        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+//        optionsMenu.addMenuItem(menuItem);
 
-        menuItem = new OptionMenuItem(2);
+        OptionMenuItem menuItem = new OptionMenuItem(2);
         menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner2, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         menuItem.setLabel("Help");

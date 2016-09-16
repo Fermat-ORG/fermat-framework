@@ -155,8 +155,11 @@ public class ContactsListFragment
                     for (ChatActorCommunityInformation conta : con) {
                         contactname.add(conta.getAlias());
                         contactid.add(conta.getPublicKey());
+                        ByteArrayInputStream bytes;
                         if (conta.getImage() != null) {
-                            contacticon.add((new BitmapDrawable(new ByteArrayInputStream(conta.getImage()))).getBitmap());
+                            bytes = new ByteArrayInputStream(conta.getImage());
+                            BitmapDrawable bmd = new BitmapDrawable(bytes);
+                            contacticon.add(bmd.getBitmap());
                         } else {
                             Drawable d = getResources().getDrawable(R.drawable.cht_image_profile);
                             Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
@@ -211,7 +214,7 @@ public class ContactsListFragment
         nochatssubtitle.setVisibility(View.VISIBLE);
         nochatssubtitle1.setVisibility(View.VISIBLE);
         nochatssubtitle2.setVisibility(View.VISIBLE);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
+        //mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         updateValues();
         adapter = new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus,
                 errorManager, appSession, this);
@@ -231,28 +234,28 @@ public class ContactsListFragment
             }
         });
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            updateValues();
-                            final ContactListAdapter adaptador =
-                                    new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus,
-                                            errorManager, appSession, null);
-                            adaptador.refreshEvents(contactname, contacticon, contactid);
-                            list.invalidateViews();
-                            list.requestLayout();
-                        } catch (Exception e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 2500);
-            }
-        });
+//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            updateValues();
+//                            final ContactListAdapter adaptador =
+//                                    new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus,
+//                                            errorManager, appSession, null);
+//                            adaptador.refreshEvents(contactname, contacticon, contactid);
+//                            list.invalidateViews();
+//                            list.requestLayout();
+//                        } catch (Exception e) {
+//                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                        }
+//                        mSwipeRefreshLayout.setRefreshing(false);
+//                    }
+//                }, 2500);
+//            }
+//        });
         // Inflate the list fragment layout
         return layout;
     }
