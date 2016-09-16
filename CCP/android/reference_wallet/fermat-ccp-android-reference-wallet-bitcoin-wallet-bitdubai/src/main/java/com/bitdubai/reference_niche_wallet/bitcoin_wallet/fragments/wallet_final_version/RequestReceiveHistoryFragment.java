@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -154,6 +156,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             recyclerView.addItemDecoration(itemDecoration);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
 
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
             onRefresh();
             //setUp();
             return rootView;
@@ -223,18 +228,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         }
     }
 
-    @Override
-    public void onDrawerOpen() {
-        // actionButton.setVisibility(View.GONE);
 
-    }
-
-    @Override
-    public void onDrawerClose() {
-        //  FermatAnimationsUtils.showEmpty(getActivity(), true, actionMenu.getActivityContentView());
-        //  actionButton.setVisibility(View.VISIBLE);
-
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
