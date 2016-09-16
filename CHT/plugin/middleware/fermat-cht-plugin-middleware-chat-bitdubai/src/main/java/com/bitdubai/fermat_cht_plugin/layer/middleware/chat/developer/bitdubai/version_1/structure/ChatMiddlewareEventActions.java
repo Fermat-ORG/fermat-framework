@@ -79,38 +79,39 @@ public class ChatMiddlewareEventActions {
 
             if(connectionState.equals(ConnectionState.CONNECTED)) {
 
-                Message message = saveMessage(messageMetadata);
+                synchronized(this) {
+                    Message message = saveMessage(messageMetadata);
 
-                FermatBundle notification = new FermatBundle();
-                notification.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
-                notification.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode()));
-                notification.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-                notification.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE_NOTIFICATION);
-                notification.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-                notification.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
+                    FermatBundle notification = new FermatBundle();
+                    notification.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+                    notification.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode()));
+                    notification.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                    notification.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE_NOTIFICATION);
+                    notification.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+                    notification.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
 
-                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, notification);
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, notification);
 
-                FermatBundle updateView = new FermatBundle();
-                updateView.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
-                updateView.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-                updateView.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
+                    FermatBundle updateView = new FermatBundle();
+                    updateView.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+                    updateView.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                    updateView.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
 
-                updateView.put(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE, ChatBroadcasterConstants.NEW_MESSAGE_TYPE);
-                updateView.put(ChatBroadcasterConstants.CHAT_MESSAGE, message);
+                    updateView.put(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE, ChatBroadcasterConstants.NEW_MESSAGE_TYPE);
+                    updateView.put(ChatBroadcasterConstants.CHAT_MESSAGE, message);
 
-                broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), updateView);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), updateView);
 
-                FermatBundle listUpdateView = new FermatBundle();
-                listUpdateView.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
-                listUpdateView.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-                listUpdateView.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
+                    FermatBundle listUpdateView = new FermatBundle();
+                    listUpdateView.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+                    listUpdateView.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                    listUpdateView.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
 
-                listUpdateView.put(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE, ChatBroadcasterConstants.NEW_MESSAGE_TYPE);
-                listUpdateView.put(ChatBroadcasterConstants.CHAT_MESSAGE, message);
+                    listUpdateView.put(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE, ChatBroadcasterConstants.NEW_MESSAGE_TYPE);
+                    listUpdateView.put(ChatBroadcasterConstants.CHAT_MESSAGE, message);
 
-                broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), listUpdateView);
-
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), listUpdateView);
+                }
             }else
                 System.out.println("12345 CONTACT IS NOT CONNECTED");
         } catch (CantGetActorConnectionException e) {
