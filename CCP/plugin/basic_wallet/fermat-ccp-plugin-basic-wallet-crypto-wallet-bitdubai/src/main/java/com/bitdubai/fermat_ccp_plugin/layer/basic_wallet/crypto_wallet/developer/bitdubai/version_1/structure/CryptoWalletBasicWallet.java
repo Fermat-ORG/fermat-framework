@@ -93,7 +93,12 @@ public class CryptoWalletBasicWallet implements CryptoWalletWallet {
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeCryptoWalletBasicException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
-            throw new CantInitializeCryptoWalletBasicException("Database does not exists", databaseNotFoundException, "WalletId: " + walletId.toString(), "");
+            try {
+                this.pluginDatabaseSystem.createDatabase(this.pluginId, walletId.toString());
+            } catch (CantCreateDatabaseException e) {
+                throw new CantInitializeCryptoWalletBasicException(CantInitializeCryptoWalletBasicException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "loadWallet didn't create database");
+
+            }
         } catch (Exception exception) {
             throw new CantInitializeCryptoWalletBasicException(CantInitializeCryptoWalletBasicException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
