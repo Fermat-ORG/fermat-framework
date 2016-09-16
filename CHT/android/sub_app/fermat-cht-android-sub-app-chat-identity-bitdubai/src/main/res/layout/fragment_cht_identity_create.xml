@@ -92,7 +92,7 @@
                 android:id="@+id/cht_button"
                 android:layout_width="188dp"
                 android:layout_height="38dp"
-                android:background="#47bf73"
+                android:background="#f7f7f7"
                 android:src="@drawable/chort_buttom_accept"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
