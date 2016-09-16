@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -24,7 +25,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 17/03/16.
  */
 public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListener {
-    Button btn_yes, btn_no;
+    FermatButton btn_yes, btn_no;
     TextView txt_title, txt_body;
     private ChatManager chatManager;
     private FermatSession appSession;
@@ -50,10 +51,10 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        txt_title = (TextView) this.findViewById(R.id.cht_alert_txt_title);
-        txt_body = (TextView) this.findViewById(R.id.cht_alert_txt_body);
-        btn_yes = (Button) this.findViewById(R.id.cht_alert_btn_yes);
-        btn_no = (Button) this.findViewById(R.id.cht_alert_btn_no);
+        txt_title = (TextView) this.findViewById(R.id.cht_alert_txt_title_new);
+        txt_body = (TextView) this.findViewById(R.id.cht_alert_txt_body_new);
+        btn_yes = (FermatButton) this.findViewById(R.id.cht_alert_btn_yes_new);
+        btn_no = (FermatButton) this.findViewById(R.id.cht_alert_btn_no_new);
 
         txt_title.setText(title);
         txt_body.setText(body);
@@ -87,7 +88,7 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
     }
 
     protected int setLayoutId() {
-        return R.layout.cht_alert_dialog_yes_no;
+        return R.layout.cht_alert_dialog_yes_no_new;
     }
 
     private void setUpListeners() {
@@ -101,7 +102,7 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
 
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.cht_alert_btn_yes) {
+        if (id == R.id.cht_alert_btn_yes_new) {
             dismiss();
             if (AlertType == 1) {
                 try {
@@ -178,7 +179,7 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
             }
         }
 
-        if (id == R.id.cht_alert_btn_no) {
+        if (id == R.id.cht_alert_btn_no_new) {
             dismiss();
         }
     }

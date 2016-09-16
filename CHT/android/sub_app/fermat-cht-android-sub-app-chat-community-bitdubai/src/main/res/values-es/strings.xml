@@ -23,7 +23,7 @@
     <string name="cht_comm_resend_toast">The connection request has been sent
  you need to wait until the user responds</string>
     <string name="cht_comm_not_found">Ilocalizable</string>
-    <string name="cht_comm_disconnection_request">Dessconectado</string>
+    <string name="cht_comm_disconnection_request">Desconectado</string>
     <string name="cht_comm_resend_request">Reenvío de solicitud de conexíon</string>
     <string name="cht_comm_text_connect">¿Está seguro de enviar una solicitud de contacto a este usuario?</string>
     <string name="cht_comm_text_disconnect">¿Quiere desconectarse de </string>

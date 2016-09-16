@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical"
-    android:textColor="@color/cht_dialog_yes_no"
+    android:textColor="#47BF73"
     android:background="@drawable/rounded_corners">
 
     <View
@@ -38,7 +38,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/cht_alert_txt_title"
+                android:id="@+id/cht_alert_txt_title2"
                 android:paddingLeft="5dp"
                 android:layout_weight="1"
                 android:textSize="20sp"
