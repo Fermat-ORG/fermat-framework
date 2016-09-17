@@ -184,7 +184,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootLayout = inflater.inflate(R.layout.fragment_create_intra_user_identity, container, false);
+        View rootLayout = inflater.inflate(R.layout.fragment_bitcoin_create_intra_user_identity, container, false);
         initViews(rootLayout);
         setUpIdentity();
         SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
