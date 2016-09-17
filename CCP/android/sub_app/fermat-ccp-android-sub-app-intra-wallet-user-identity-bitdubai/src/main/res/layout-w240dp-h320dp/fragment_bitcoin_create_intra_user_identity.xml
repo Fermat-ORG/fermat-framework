@@ -2,26 +2,25 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#ffff">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/user_image">
 
         <ImageView
             android:id="@+id/img_photo_header"
             android:layout_width="wrap_content"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:background="@drawable/default2"/>
 
         <RelativeLayout
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:background="@drawable/circle_frame"
             android:gravity="center"
@@ -29,11 +28,12 @@
 
             <ImageView
                 android:id="@+id/img_photo"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
+                android:layout_marginBottom="14dp"
                 android:background="@drawable/default_profileimage"
                 tools:ignore="ContentDescription" />
 
@@ -57,7 +57,7 @@
             android:orientation="vertical"
             android:layout_gravity="center_horizontal">
 
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:gravity="center_horizontal"
                 android:id="@+id/crypto_broker_name_title"
                 android:layout_width="match_parent"
@@ -81,8 +81,7 @@
                 android:layout_below="@+id/crypto_broker_name_title"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:layout_marginLeft="8dp"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:digits="0123456789 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ñÑ"/>
 
 
@@ -133,12 +132,11 @@
 
     <Button
         android:id="@+id/create_crypto_broker_button"
-        android:layout_width="80dp"
+        android:layout_width="166dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
-        android:textSize="10dp"
         android:background="@drawable/agree"/>
 
 </RelativeLayout>
