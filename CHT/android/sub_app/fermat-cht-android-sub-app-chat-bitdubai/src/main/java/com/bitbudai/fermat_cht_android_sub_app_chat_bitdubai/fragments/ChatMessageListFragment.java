@@ -219,6 +219,8 @@ public class ChatMessageListFragment
                 if (filterString.length() > 0) {
                     searchView.setQuery(filterString, true);
                     searchView.setIconified(false);
+                } else {
+                    adapterView.refreshEvents();
                 }
             }
         }

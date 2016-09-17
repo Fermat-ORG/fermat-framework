@@ -179,7 +179,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
                 }
             }
 
-            if (adapter == null || adapter.getItemCount() > 0) {
+            if (adapter == null || adapter.getItemCount() > 0 || adapter.getDataSet().size() == 0) {
                 adapter = new ChatMessageListAdapter(this.getContext(), chatHistory);
                 messagesContainer.setAdapter(adapter);
             } else {
