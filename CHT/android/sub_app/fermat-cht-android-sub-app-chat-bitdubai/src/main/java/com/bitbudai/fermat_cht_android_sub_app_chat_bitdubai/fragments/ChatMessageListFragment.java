@@ -124,8 +124,6 @@ public class ChatMessageListFragment
                 @Override
                 public void onClick(View v) {
                     try {
-                        if (adapterView != null)
-                            adapterView.clean();
 //                        changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
                     }catch (Exception e){
                         if (errorManager != null)
