@@ -120,17 +120,17 @@ public class ChatMessageListFragment
             }
 
             toolbar = getToolbar();
-            toolbar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
+//            toolbar.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    try {
 //                        changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
-                    }catch (Exception e){
-                        if (errorManager != null)
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    }
-                }
-            });
+//                    }catch (Exception e){
+//                        if (errorManager != null)
+//                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                    }
+//                }
+//            });
 
         } catch (Exception e) {
             if (errorManager != null)

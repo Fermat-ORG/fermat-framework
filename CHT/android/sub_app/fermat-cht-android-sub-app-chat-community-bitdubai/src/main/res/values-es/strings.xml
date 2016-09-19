@@ -29,7 +29,7 @@
     <string name="cht_comm_text_disconnect">¿Quiere desconectarse de </string>
     <string name="cht_comm_text_disconnect2">¿Quiere ser desconectado de  </string>
     <string name="cht_comm_text_disconnect3">Desconectado</string>
-    <string name="cht_comm_text_resend">¿Quiere reenviar </string>
+    <string name="cht_comm_text_resend">¿Quiere reenviar \n una solicitud de conexíon?</string>
     <string name="cht_comm_text_accept"> quiere ser tu contacto en P2P Chat</string>
     <string name="cht_comm_text_resend2">una solicitud de conexíon?</string>
     <string name="cht_comm_text_resend_toast">La solicitud de conexíon ha sido enviada,\n necesita esperar hasta que el usuario responda</string>
