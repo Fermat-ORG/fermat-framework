@@ -94,6 +94,7 @@ public class CryptoWalletBasicWallet implements CryptoWalletWallet {
             throw new CantInitializeCryptoWalletBasicException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
             throw new CantInitializeCryptoWalletBasicException("Database does not exists", databaseNotFoundException, "WalletId: " + walletId.toString(), "");
+
         } catch (Exception exception) {
             throw new CantInitializeCryptoWalletBasicException(CantInitializeCryptoWalletBasicException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }

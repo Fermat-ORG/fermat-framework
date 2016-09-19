@@ -479,6 +479,7 @@ public class BrowserTabFragment
                         @Override
                         public void onDismiss(DialogInterface dialog) {
                             isRefreshing = false;
+                            offset = 0;
                             onRefresh();
                         }
                     });

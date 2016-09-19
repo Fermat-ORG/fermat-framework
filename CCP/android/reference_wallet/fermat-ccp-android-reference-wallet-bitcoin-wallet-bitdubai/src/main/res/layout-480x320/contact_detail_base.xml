@@ -7,40 +7,6 @@
     android:orientation="vertical"
     android:background="#FFF">
 
-    <RelativeLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@color/accent_material_dark">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:adjustViewBounds="true"
-            android:id="@+id/image_view_profile"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/celine_profile_picture"
-            tools:ignore="ContentDescription" />
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/account_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:shadowColor="#000"
-            android:shadowDy="10"
-            android:shadowRadius="8"
-            android:text="@string/matias_furszyfer_text"
-            android:textColor="#4f4f4f"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:typeface="ROBOTO_REGULAR" />
-
-    </RelativeLayout>
 
     <ScrollView
         android:id="@+id/body"
@@ -52,8 +18,36 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:adjustViewBounds="true"
+                android:id="@+id/image_view_profile"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/celine_profile_picture"
+                tools:ignore="ContentDescription" />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/account_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:shadowColor="#000"
+                android:shadowDy="10"
+                android:shadowRadius="8"
+                android:text="@string/matias_furszyfer_text"
+                android:textColor="#4f4f4f"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:typeface="ROBOTO_REGULAR" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
@@ -126,7 +120,7 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:textStyle="normal"
                     android:textColor="#4f4f4f"
                     android:textColorHint="#4f4f4f"
@@ -202,8 +196,8 @@
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/receive_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_action_send_now_grey"
                     android:padding="5dp"
@@ -217,8 +211,8 @@
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/send_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_action_send_now_grey"
                     android:padding="5dp"

@@ -142,23 +142,7 @@
                             android:textSize="14sp"
                             tools:ignore="HardcodedText" />
 
-                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:gravity="center"
-                            android:paddingBottom="5dp"
-                            android:paddingEnd="30dp"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="30dp"
-                            android:paddingStart="16dp"
-                            android:text="@string/more"
-                            android:textColor="#1d1d26"
-                            android:textSize="14sp"
-                            tools:ignore="HardcodedText" />
                     </LinearLayout>
-
-
 
                     <View
                         android:layout_width="match_parent"

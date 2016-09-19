@@ -4852,11 +4852,11 @@ public class SubAppAppsGenerator {
         optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
-        optionMenuItemBrowser = new OptionMenuItem(2);
+       /* optionMenuItemBrowser = new OptionMenuItem(2);
         optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(2, "geolocalitation_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Geolocalitation");
         optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
+        optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);*/
 
         optionMenuItemBrowser = new OptionMenuItem(3);
         optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));

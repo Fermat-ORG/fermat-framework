@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -111,7 +113,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
 
-        getExecutor().execute(new Runnable() {
+       /* getExecutor().execute(new Runnable() {
             @Override
             public void run() {
 //                final FermatDrawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
@@ -122,7 +124,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                     }
                 });
             }
-        });
+        });*/
         try {
             cryptoWallet = appSession.getModuleManager();
 
@@ -163,6 +165,10 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         }catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
+
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
         return container;
     }
 

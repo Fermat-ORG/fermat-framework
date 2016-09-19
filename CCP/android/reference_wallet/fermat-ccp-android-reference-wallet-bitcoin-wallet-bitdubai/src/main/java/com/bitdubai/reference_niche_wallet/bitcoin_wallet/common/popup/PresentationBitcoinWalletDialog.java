@@ -203,7 +203,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
         // bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
 
         Bitmap imageBitmap = getResizedBitmap(bitmap,dpToPx(), dpToPx());
-        imageBitmap.compress(Bitmap.CompressFormat.PNG, 30, stream);
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         return stream.toByteArray();
     }
 

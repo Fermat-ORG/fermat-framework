@@ -136,6 +136,7 @@ public class CryptoWalletBasicWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void start() throws CantStartPluginException {
         try {
+
             loadWalletIdsMap();
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantStartPluginException exception) {

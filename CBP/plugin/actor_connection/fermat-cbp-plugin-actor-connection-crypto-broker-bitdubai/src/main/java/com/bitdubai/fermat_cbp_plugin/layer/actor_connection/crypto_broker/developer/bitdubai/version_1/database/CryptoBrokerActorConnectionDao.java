@@ -99,7 +99,7 @@ public class CryptoBrokerActorConnectionDao extends ActorConnectionDao<CryptoBro
             byte[] profileImage;
 
             try {
-                profileImage = getProfileImage(publicKey);
+                profileImage = getProfileImage(connectionId);
             } catch (FileNotFoundException e) {
                 profileImage = new byte[0];
             }

@@ -50,7 +50,7 @@
                     android:layout_marginStart="20dp"
                     android:text="@string/payment_title"
                     android:textColor="#00a99d"
-                    android:textSize="16dp"
+                    android:textSize="15sp"
                     app:typeface="CAVIAR_DREAMS_BOLD" />
 
                 <ImageView
@@ -182,7 +182,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                 android:id="@+id/btn_dismiss"
                 android:layout_width="wrap_content"
-                android:layout_height="45dp"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/dialog_button_close"

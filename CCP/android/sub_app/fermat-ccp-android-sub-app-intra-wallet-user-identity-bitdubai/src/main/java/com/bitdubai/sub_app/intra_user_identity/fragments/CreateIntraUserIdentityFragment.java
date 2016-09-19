@@ -184,7 +184,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootLayout = inflater.inflate(R.layout.fragment_create_intra_user_identity, container, false);
+        View rootLayout = inflater.inflate(R.layout.fragment_bitcoin_create_intra_user_identity, container, false);
         initViews(rootLayout);
         setUpIdentity();
         SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
@@ -764,7 +764,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         Uri uri = Uri.fromFile(new File(path));
         InputStream in = null;
         try {
-            final int IMAGE_MAX_SIZE = 40000; // 1.2MP
+            final int IMAGE_MAX_SIZE = 3000000 ; // 40000
             in = getActivity().getContentResolver().openInputStream(uri);
 
             // Decode image size

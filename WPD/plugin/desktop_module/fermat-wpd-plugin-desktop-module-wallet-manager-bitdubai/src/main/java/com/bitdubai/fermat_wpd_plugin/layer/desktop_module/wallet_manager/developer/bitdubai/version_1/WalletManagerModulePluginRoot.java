@@ -188,7 +188,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
          *
          */
         //TODO: Verificar si este bloque de codigo es necesario que quede aca
-        boolean existWallet = false;
+       boolean existWallet = false;
         boolean existWalletLoss = false;
         boolean existFermatWallet = false;
         try {
@@ -282,9 +282,6 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                 }
             }
 
-
-
-            this.serviceStatus = ServiceStatus.STARTED;
 
 
         } catch (Exception cantLoadWalletsException) {
