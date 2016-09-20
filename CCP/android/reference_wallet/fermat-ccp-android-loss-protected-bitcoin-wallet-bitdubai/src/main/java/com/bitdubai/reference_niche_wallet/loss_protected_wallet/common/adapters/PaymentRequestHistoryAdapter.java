@@ -9,7 +9,6 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.LoadingMoreViewHolder;
@@ -26,21 +25,24 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
 
     private onRefreshList onRefreshList;
     LossProtectedWallet lossProtectedWallet;
-    LossProtectedWalletSettings lossProtectedWalletSettings;
+    //LossProtectedWalletSettings lossProtectedWalletSettings;
     ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession;
-  //  Typeface tf;
+    //Typeface tf;
 
-   // boolean lossProtectedEnabled;
+    boolean lossProtectedEnabled;
    // BlockchainNetworkType blockchainNetworkType;
-    //private String feeLevel = "NORMAL";
+   // private String feeLevel = "NORMAL";
+
+    private Context context;
 
     public static final int DATA_ITEM = 1;
     public static final int LOADING_ITEM = 2;
     private boolean loadingData = true;
 
-    protected PaymentRequestHistoryAdapter(Context context) {
+    /*protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
     }
+    */
     public PaymentRequestHistoryAdapter(Context context, List<LossProtectedPaymentRequest> dataSet, LossProtectedWallet wallet, ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession,onRefreshList onRefresh) {
         super(context, dataSet);
         this.lossProtectedWallet = wallet;
@@ -60,7 +62,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
     @Override
     protected FermatViewHolder createHolder(View itemView, int type) {
         if (type == DATA_ITEM)
-            return new PaymentHistoryItemViewHolder(itemView, type, context, lossProtectedWallet, referenceWalletSession);
+            return new PaymentHistoryItemViewHolder(itemView, type, context, lossProtectedWallet, referenceWalletSession, this);
         if (type == LOADING_ITEM)
             return new LoadingMoreViewHolder(itemView, type);
         return null;
@@ -130,6 +132,10 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
         this.loadingData = loadingData;
     }
 
+    public void refresh()
+    {
+        onRefreshList.onRefresh();
+    }
 
 
 }

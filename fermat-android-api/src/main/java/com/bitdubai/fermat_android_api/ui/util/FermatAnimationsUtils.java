@@ -13,10 +13,9 @@ public class FermatAnimationsUtils {
 
     public static void showEmpty(Context activity, boolean show, View emptyView) {
         if (emptyView != null) {
-            Animation anim = AnimationUtils.loadAnimation(activity,
-                    show ? android.R.anim.fade_in : android.R.anim.fade_out);
-            if (show &&
-                    (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+
+            Animation anim = AnimationUtils.loadAnimation(activity, show ? android.R.anim.fade_in : android.R.anim.fade_out);
+            if (show && (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
                 emptyView.setAnimation(anim);
                 emptyView.setVisibility(View.VISIBLE);
             } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
