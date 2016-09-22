@@ -2,6 +2,7 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -37,7 +38,6 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.PaymentRequestHistoryAdapter;
@@ -48,7 +48,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.Session
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.makeText;
 
@@ -66,7 +65,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
      * MANAGERS
      */
     private LossProtectedWallet lossProtectedWalletManager;
-    private LossProtectedWalletSettings lossProtectedWalletSettings;
+    //private LossProtectedWalletSettings lossProtectedWalletSettings;
     /**
      * DATA
      */
@@ -75,7 +74,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
     /**
      * Executor Service
      */
-    private ExecutorService executor;
+    //private ExecutorService executor;
     private int MAX_TRANSACTIONS = 20;
     private int MAX= 10;
     private int offset = 0;
@@ -107,7 +106,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
 
         lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
 
-
+/*
         getExecutor().execute(new Runnable() {
             @Override
             public void run() {
@@ -120,7 +119,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
                 });
             }
         });
-        try {
+ */       try {
             lossProtectedWalletManager = referenceWalletSession.getModuleManager();
 
             if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
@@ -150,7 +149,18 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
         } catch (Exception e) {
             Toast.makeText(getActivity().getApplicationContext(), R.string.Whooops_text, Toast.LENGTH_SHORT).show();
         }
+
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
         return container;
+    }
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+        isRefreshing = false;
+        onRefresh();
     }
 
     @Override
@@ -223,12 +233,12 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
     }
 
     @Override
-    public void onLoadMoreData(int page, final int totalItemsCount) {
+    public void onLoadMoreData(final int page, final int totalItemsCount) {
         adapter.setLoadingData(true);
         fermatWorker = new FermatWorker(getActivity(), this) {
             @Override
             protected Object doInBackground() throws Exception {
-                return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
+                return getMoreDataAsync(FermatRefreshTypes.NEW, page);
             }
         };
 
@@ -284,22 +294,21 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
     @Override
     public List<LossProtectedPaymentRequest> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<LossProtectedPaymentRequest> lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
-        if(blockchainNetworkType != null)
+       /* if(blockchainNetworkType != null)
         {
             try {
                 //when refresh offset set 0
-                if (refreshType.equals(FermatRefreshTypes.NEW))
-                    offset = 0;
-
+                if (refreshType.equals(FermatRefreshTypes.NEW))*/
+            try{
+                offset = 0;
                 lstPaymentRequest = lossProtectedWalletManager.listSentPaymentRequest(walletPublicKey, blockchainNetworkType, MAX, offset);
-                offset += MAX_TRANSACTIONS;
+               // offset += MAX_TRANSACTIONS;
             } catch (Exception e) {
                 referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 e.printStackTrace();
             }
-        }
-
+      //}
 
         return lstPaymentRequest;
     }
@@ -336,16 +345,28 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
                         adapter.changeDataSet(lstPaymentRequest);
                         ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                     } else {
-                        lstPaymentRequest.addAll((ArrayList) result[0]);
+                        for (LossProtectedPaymentRequest info : (List<LossProtectedPaymentRequest>) result[0]) {
+                            if (notInList(info)) {
+                                lstPaymentRequest.add(info);
+                            }
+                        }
+                        //lstPaymentRequest.addAll((ArrayList) result[0]);
                         adapter.notifyItemRangeInserted(offset, lstPaymentRequest.size() - 1);
                     }
                 }
-
+                adapter.notifyDataSetChanged();
             }
         }
         FermatAnimationsUtils.showEmpty(getActivity(), false, empty);
     }
 
+    private boolean notInList(LossProtectedPaymentRequest info) {
+        for (LossProtectedPaymentRequest contact : lstPaymentRequest) {
+            if (contact.getRequestId().equals(info.getRequestId()))
+                return false;
+        }
+        return true;
+    }
     @Override
     public void onErrorOccurred(Exception ex) {
         isRefreshing = false;

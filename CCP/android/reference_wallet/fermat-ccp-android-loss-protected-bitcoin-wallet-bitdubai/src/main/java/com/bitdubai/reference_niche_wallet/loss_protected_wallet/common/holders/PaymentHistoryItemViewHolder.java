@@ -20,6 +20,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
@@ -55,16 +56,17 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
     private LinearLayout linear_layour_container_buttons;
     private Button btn_refuse_request;
     private Button btn_accept_request;
+    PaymentRequestHistoryAdapter adapter;
 
 
-
-    public PaymentHistoryItemViewHolder(View itemView,int holderType,Context context, LossProtectedWallet wallet, ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession) {
+    public PaymentHistoryItemViewHolder(View itemView,int holderType,Context context, LossProtectedWallet wallet, ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession, PaymentRequestHistoryAdapter adapter) {
         super(itemView,holderType);
 
         res = itemView.getResources();
         this.context = context;
         this.wallet = wallet;
         this.referenceWalletSession = referenceWalletSession;
+        this.adapter = adapter;
 
         contactIcon = (ImageView) itemView.findViewById(R.id.profile_Image);
         txt_contactName = (TextView) itemView.findViewById(R.id.txt_contactName);
@@ -116,7 +118,7 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
         else
             txt_contactName.setText("Unknown");
 
-        txt_contactName.setTypeface(tf);
+       // txt_contactName.setTypeface(tf);
 
         txt_notes.setText(data.getReason());
         //txt_notes.setTypeface(tf);
@@ -181,7 +183,7 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
             linear_layour_container_buttons.setVisibility(View.GONE);
             linear_layour_container_state.setVisibility(View.VISIBLE);
             txt_state.setText(state);
-            txt_state.setTypeface(tf);
+           // txt_state.setTypeface(tf);
         }
         else
         {
@@ -215,7 +217,7 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
                         wallet.approveRequest(data.getRequestId()
                                 , wallet.getSelectedActorIdentity().getPublicKey());
                         Toast.makeText(context, context.getResources().getString(R.string.Request_accepted), Toast.LENGTH_SHORT).show();
-
+                        adapter.refresh();
                     } else
                     showMessage(context, context.getResources().getString(R.string.Insufficient_funds));
                 } catch (Exception e) {
@@ -232,6 +234,7 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
                 try {
                     wallet.refuseRequest(data.getRequestId());
                     Toast.makeText(context, context.getResources().getString(R.string.Request_denied), Toast.LENGTH_SHORT).show();
+                    adapter.refresh();
                     //notifyDataSetChanged();
                 } catch (Exception e) {
                     showMessage(context, context.getResources().getString(R.string.Cant_accept)+ e.getMessage());

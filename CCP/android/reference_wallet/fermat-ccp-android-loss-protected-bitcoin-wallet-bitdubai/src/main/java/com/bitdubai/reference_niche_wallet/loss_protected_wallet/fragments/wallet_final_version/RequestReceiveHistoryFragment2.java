@@ -13,9 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
@@ -157,7 +155,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
         return container;
     }
 
-    private void setUp() {
+    /*private void setUp() {
         FrameLayout frameLayout = new FrameLayout(getActivity());
 
         FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -202,7 +200,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
                 }
             }
         });
-    }
+    }*/
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -280,12 +278,12 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     }
 
     @Override
-    public void onLoadMoreData(int page, final int totalItemsCount) {
+    public void onLoadMoreData(final int page, final int totalItemsCount) {
         adapter.setLoadingData(true);
         fermatWorker = new FermatWorker(getActivity(), this) {
             @Override
             protected Object doInBackground() throws Exception {
-                return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
+                return getMoreDataAsync(FermatRefreshTypes.NEW, page);
             }
         };
 
@@ -296,12 +294,14 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     public List<LossProtectedPaymentRequest> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<LossProtectedPaymentRequest> lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
 
-        if(blockchainNetworkType != null)
+        /*if(blockchainNetworkType != null)
         {
             try {
                 //when refresh offset set 0
                 if (refreshType.equals(FermatRefreshTypes.NEW))
-                    offset = 0;
+                    offset = 0;*/
+            try {
+                    offset = pos;
                 lstPaymentRequest = lossProtectedWalletManager.listReceivedPaymentRequest(walletPublicKey, blockchainNetworkType, MAX_PAYMENT_REQUEST, offset);
                 //offset += MAX_TRANSACTIONS;
             } catch (Exception e) {
@@ -309,9 +309,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 e.printStackTrace();
             }
-        }
-
-
+      //}
         return lstPaymentRequest;
     }
 
@@ -396,17 +394,31 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
                         if (offset==0){
                             lstPaymentRequest.clear();
                             lstPaymentRequest = (ArrayList) result[0];
+                            adapter.changeDataSet(lstPaymentRequest);
                             ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                         }else {
-                            lstPaymentRequest.addAll((ArrayList) result[0]);
+                            for (LossProtectedPaymentRequest info : (List<LossProtectedPaymentRequest>) result[0]) {
+                                if (notInList(info)) {
+                                    lstPaymentRequest.add(info);
+                                }
+                            }
                             adapter.notifyItemRangeInserted(offset, lstPaymentRequest.size() - 1);
                         }
                     }
+                    adapter.notifyDataSetChanged();
             }
-                FermatAnimationsUtils.showEmpty(getActivity(), true, empty);
         }
+        FermatAnimationsUtils.showEmpty(getActivity(), lstPaymentRequest.isEmpty(), empty);
+
     }
 
+    private boolean notInList(LossProtectedPaymentRequest info) {
+        for (LossProtectedPaymentRequest request : lstPaymentRequest) {
+            if (request.getRequestId().equals(info.getRequestId()))
+                return false;
+        }
+        return true;
+    }
     @Override
     public void onErrorOccurred(Exception ex) {
         isRefreshing = false;
