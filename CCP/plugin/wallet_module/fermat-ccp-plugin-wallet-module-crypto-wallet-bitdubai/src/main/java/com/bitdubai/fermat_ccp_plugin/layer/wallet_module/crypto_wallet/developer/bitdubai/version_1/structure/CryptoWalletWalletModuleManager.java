@@ -895,7 +895,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
             List<CryptoWalletTransaction> bitcoinWalletTransactionList = cryptoWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset,blockchainNetworkType,actorType);
 
             for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
-                if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode()))
+
                     cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 

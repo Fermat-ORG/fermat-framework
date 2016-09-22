@@ -166,8 +166,6 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
 
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
         return container;
     }

@@ -156,8 +156,6 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             recyclerView.addItemDecoration(itemDecoration);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
 
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
             onRefresh();
             //setUp();

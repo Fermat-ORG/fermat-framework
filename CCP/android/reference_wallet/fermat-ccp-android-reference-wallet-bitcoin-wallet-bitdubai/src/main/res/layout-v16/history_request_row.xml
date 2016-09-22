@@ -46,6 +46,10 @@
                 tools:text="Matias Furszyfer"
                 android:textColor="#FFF"
                 android:fontFamily="roboto"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -58,7 +62,11 @@
                 android:fontFamily="roboto"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:textIsSelectable="false" />
+                android:textIsSelectable="false"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
@@ -70,7 +78,11 @@
                 android:fontFamily="roboto"
                 android:layout_gravity="left"
                 android:maxLines="1"
-                android:ellipsize="end"/>
+                android:ellipsize="end"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
 
         </LinearLayout>
 
