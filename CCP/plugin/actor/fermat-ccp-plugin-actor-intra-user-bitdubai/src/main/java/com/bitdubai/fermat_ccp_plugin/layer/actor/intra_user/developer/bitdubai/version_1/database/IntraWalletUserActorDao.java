@@ -174,13 +174,20 @@ public class IntraWalletUserActorDao {
             record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CITY_COLUMN_NAME,city);
             record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_COUNTRY_COLUMN_NAME,country);
 
-            table.updateRecord(record);
+            //only connections users
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode());
 
-            /**
-             * Persist profile image on a file
-             */
-            if(profileImage != null && profileImage.length > 0)
-                persistNewUserProfileImage(intraUserToUpdatePublicKey, profileImage);
+            if(table.numRecords() > 0){
+                table.updateRecord(record);
+
+                /**
+                 * Persist profile image on a file
+                 */
+                if(profileImage != null && profileImage.length > 0)
+                    persistNewUserProfileImage(intraUserToUpdatePublicKey, profileImage);
+            }
+
+
 
         }catch (Exception e){
             throw new CantUpdateIntraWalletUserException("CAN'T INSERT INTRA USER", e, "", "Cant Update intra user, insert database problems.");

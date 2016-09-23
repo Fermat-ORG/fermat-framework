@@ -236,26 +236,20 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
             cryptoPaymentRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, senderPublicKey, DatabaseFilterType.EQUAL);
 
-            cryptoPaymentRequestTable.loadToMemory();
-
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
-
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
+                DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
 
                 record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, notificationDescriptor.getCode());
 
                 cryptoPaymentRequestTable.updateRecord(record);
-            } else {
-                throw new RequestNotFoundException("RequestId: "+senderPublicKey, "Cannot find a intra user request with the given id.");
-            }
 
-        } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantUpdateRecordDataBaseException( "Exception not handled by the plugin, there is a problem in database and i cannot load the table.",e);
-        } catch (CantUpdateRecordException exception) {
+         } catch (CantUpdateRecordException exception) {
 
             throw new CantUpdateRecordDataBaseException("Cant update record exception.",exception);
+
+        } catch (Exception e) {
+
+        throw new CantUpdateRecordDataBaseException( "Exception not handled by the plugin, there is a problem in database and i cannot load the table.",e);
         }
     }
 
@@ -275,26 +269,22 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
             cryptoPaymentRequestTable.addUUIDFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, notitficationId, DatabaseFilterType.EQUAL);
 
-            cryptoPaymentRequestTable.loadToMemory();
 
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
+                DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
 
                 record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
 
                 cryptoPaymentRequestTable.updateRecord(record);
-            } else {
-                throw new Exception("Notification: "+notitficationId,new Throwable("Cannot find a intra user request with the given id."));
-            }
 
-        } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantUpdateRecordDataBaseException( "Exception not handled by the plugin, there is a problem in database and i cannot load the table.",e);
         } catch (CantUpdateRecordException exception) {
 
             throw new CantUpdateRecordDataBaseException("Cant update record exception.",exception);
+        } catch (Exception e) {
+
+            throw new CantUpdateRecordDataBaseException( "Exception not handled by the plugin, there is a problem in database and i cannot load the table.",e);
+
         }
     }
 
@@ -340,21 +330,17 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
             intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
             intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
-            intraActorRequestTable.loadToMemory();
 
-            List<DatabaseTableRecord> records = intraActorRequestTable.getRecords();
-
-            for (DatabaseTableRecord record : records) {
-                //update record
+                DatabaseTableRecord record = intraActorRequestTable.getEmptyRecord();
 
                 record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME,  ActorProtocolState.PROCESSING_SEND.getCode());
                 intraActorRequestTable.updateRecord(record);
 
-            }
-        } catch (CantLoadTableToMemoryException e) {
 
+           } catch (CantUpdateRecordException e) {
             throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-        } catch (CantUpdateRecordException e) {
+        } catch (Exception e) {
+
             throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
 
         }

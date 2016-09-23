@@ -445,20 +445,24 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
         {
             if(!code.equals("BlockchainDownloadComplete"))
             {
-                //update contact address
-                cryptoWalletWalletContact = cryptoWallet.findWalletContactById(UUID.fromString(code), PublicKey);
 
+                //check contact to show is de same to update
+                if(cryptoWalletWalletContact.getContactId().equals(UUID.fromString(code))){
+                    //update contact address
+                    CryptoWalletWalletContact cryptoWalletWalletContactUpdate = cryptoWallet.findWalletContactById(UUID.fromString(code), PublicKey);
 
-                if(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
-                {
-                    text_view_address.setText(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
-                    img_update.setVisibility(View.GONE);
-                    receive_button.setVisibility(View.VISIBLE);
-                    send_button.setVisibility(View.VISIBLE);
+                    if(cryptoWalletWalletContactUpdate.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
+                    {
+                        cryptoWalletWalletContact = cryptoWalletWalletContactUpdate;
+                        text_view_address.setText(cryptoWalletWalletContactUpdate.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
+                        img_update.setVisibility(View.GONE);
+                        receive_button.setVisibility(View.VISIBLE);
+                        send_button.setVisibility(View.VISIBLE);
 
+                    }
+
+                    appSession.setData("LastContactSelected", cryptoWalletWalletContactUpdate);
                 }
-
-                appSession.setData("LastContactSelected",cryptoWalletWalletContact);
 
             }
 
