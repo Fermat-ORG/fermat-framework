@@ -82,7 +82,7 @@ public class ChatFermatAppConnection
         switch (notificationID) {
             case ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE_NOTIFICATION:
                 return new ChatNotificationPainter(getContext().getResources().getString(R.string.cht_notif_new_msg_title),
-                        getContext().getResources().getString(R.string.cht_notif_new_msg_content), "", R.drawable.chat_subapp);
+                        getContext().getResources().getString(R.string.cht_notif_new_msg_content), "", R.drawable.cht_status_icon);
             default:
                 return null;
         }

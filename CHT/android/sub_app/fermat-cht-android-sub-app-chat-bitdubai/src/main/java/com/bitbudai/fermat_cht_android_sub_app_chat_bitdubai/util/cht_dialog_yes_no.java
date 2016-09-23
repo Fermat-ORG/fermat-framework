@@ -95,6 +95,10 @@ public class cht_dialog_yes_no extends FermatDialog implements View.OnClickListe
         btn_no.setOnClickListener(this);
     }
 
+    public boolean cleanChat(){
+        return clean_chat;
+    }
+
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.cht_alert_btn_yes) {

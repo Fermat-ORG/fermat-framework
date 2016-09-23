@@ -187,8 +187,10 @@ public class PresentationChatCommunityDialog
 
                 try {
                     ChatActorCommunitySettings chatUserCommunitySettings = moduleManager.loadAndGetSettings(getSession().getAppPublicKey());
-                    chatUserCommunitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
-                    moduleManager.persistSettings(getSession().getAppPublicKey(), chatUserCommunitySettings);
+                    if(dontShowAgainCheckBox != null) {
+                        chatUserCommunitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
+                        moduleManager.persistSettings(getSession().getAppPublicKey(), chatUserCommunitySettings);
+                    }
                 } catch (CantGetSettingsException
                         | SettingsNotFoundException
                         | CantPersistSettingsException e) {

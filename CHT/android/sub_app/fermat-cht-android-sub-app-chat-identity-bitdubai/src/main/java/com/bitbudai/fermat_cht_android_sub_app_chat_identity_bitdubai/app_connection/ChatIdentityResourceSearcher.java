@@ -16,7 +16,6 @@ public class ChatIdentityResourceSearcher extends ResourceSearcher {
         switch (id) {
             case 7:
                 resId = R.drawable.cht_ic_back_buttom;
-                ;
                 break;
             case 1:
                 resId = R.drawable.cht_ic_menu_help;

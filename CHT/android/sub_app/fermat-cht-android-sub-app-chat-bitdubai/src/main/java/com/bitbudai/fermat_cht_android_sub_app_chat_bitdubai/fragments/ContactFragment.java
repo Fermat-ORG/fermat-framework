@@ -69,11 +69,12 @@ public class ContactFragment extends AbstractFermatFragment<ReferenceAppFermatSe
 
         try {
             Contact con = (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA);
-            contactStatus = (TextView) layout.findViewById(R.id.contact_status_input);
-            if(con.getContactStatus() != null){
-                contactStatus.setText(con.getContactStatus());
-            } else
-                contactStatus.setText("Available");
+            //uncomment when this status or user phrase is visible or available in back end to show it
+//            contactStatus = (TextView) layout.findViewById(R.id.contact_status_input);
+//            if(con.getContactStatus() != null){
+//                contactStatus.setText(con.getContactStatus());
+//            } else
+//                contactStatus.setText("");
 
             ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
             BitmapDrawable bmd = new BitmapDrawable(bytes);

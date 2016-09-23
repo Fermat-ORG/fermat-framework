@@ -198,27 +198,28 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>, 
             //Application state observer
             application.registerActivityLifecycleCallbacks(new ApplicationLifecycleManager());
 
-            scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-            scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
-                @Override
-                public void run() {
-//                    Log.i(TAG, "##########################################################3");
-//                    Log.e(TAG, "App in foreground: " + ApplicationLifecycleManager.isAppInForeground());
-//                    Log.i(TAG, "##########################################################3");
-                    if (!ApplicationLifecycleManager.isAppInForeground()) {
-                        if (isApplicationInForeground) {
-                            isApplicationInForeground = false;
-                        } else {
-                            appOnBackground();
-                        }
-                    } else {
-                        if (!isApplicationInForeground) {
-                            isApplicationInForeground = true;
-                            appOnForeground();
-                        }
-                    }
-                }
-            }, 30, 30, TimeUnit.SECONDS);
+//            Comment to testing, possible cause of plugins turning off
+//            scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+//            scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+//                @Override
+//                public void run() {
+////                    Log.i(TAG, "##########################################################3");
+////                    Log.e(TAG, "App in foreground: " + ApplicationLifecycleManager.isAppInForeground());
+////                    Log.i(TAG, "##########################################################3");
+//                    if (!ApplicationLifecycleManager.isAppInForeground()) {
+//                        if (isApplicationInForeground) {
+//                            isApplicationInForeground = false;
+//                        } else {
+//                            appOnBackground();
+//                        }
+//                    } else {
+//                        if (!isApplicationInForeground) {
+//                            isApplicationInForeground = true;
+//                            appOnForeground();
+//                        }
+//                    }
+//                }
+//            }, 30, 30, TimeUnit.SECONDS);
 
         }
 

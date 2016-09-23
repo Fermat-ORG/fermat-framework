@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.SearchView;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatMessageListAdapterView;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -30,17 +30,14 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.util.List;
-import java.util.UUID;
 
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
@@ -53,7 +50,8 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
  * Update by Miguel Payarez on 15/01/2016
  */
 
-public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
+public class ChatFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> {
 
     // Fermat Managers
     private ChatManager chatManager;
@@ -63,11 +61,11 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
     ChatActorCommunitySelectableIdentity chatIdentity;
     private Handler h = new Handler();
 
-    private ChatMessageListAdapterView adapterView;
+    private ChatAdapterView adapterView;
     private SearchView searchView;
 
-    public static ChatMessageListFragment newInstance() {
-        return new ChatMessageListFragment();
+    public static ChatFragment newInstance() {
+        return new ChatFragment();
     }
 
     @Override
@@ -154,16 +152,16 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
         }
     }
 
-    public void onUpdateViewUIThread() {
+    public void onUpdateViewUIThread(String remotePk) {
         if(isAttached) {
             if (searchView != null) {
                 if (searchView.getQuery().toString().equals("")) {
-                    adapterView.refreshEvents();
+                    adapterView.refreshEvents(remotePk, h);
                 }
             } else {
-                adapterView.refreshEvents();
+                adapterView.refreshEvents(remotePk, h);
             }
-        }
+        }else adapterView.clean();
     }
 
     @Override
@@ -171,7 +169,7 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
 
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        adapterView = new ChatMessageListAdapterView.Builder(inflater.getContext())
+        adapterView = new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
                 .addErrorManager(errorManager)
                 .addAppSession(appSession)
@@ -223,23 +221,46 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
     }
 
     @Override
-    public void onPause() {
+    public void onPause()
+    {
         super.onPause();
         unbindDrawables(adapterView.getRootView().findViewById(R.id.messagesContainer));
         unbindDrawables(adapterView.getRootView().findViewById(R.id.chatSendButton));
         System.gc();
     }
 
-    private void unbindDrawables(View view) {
-        if (view.getBackground() != null) {
+    private void unbindDrawables(View view)
+    {
+        if (view.getBackground() != null)
+        {
             view.getBackground().setCallback(null);
         }
-        if (view instanceof ViewGroup && !(view instanceof AdapterView)) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        if (view instanceof ViewGroup && !(view instanceof AdapterView))
+        {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+            {
                 unbindDrawables(((ViewGroup) view).getChildAt(i));
             }
             ((ViewGroup) view).removeAllViews();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+//        unbindDrawables(adapterView.getRootView().findViewById(R.id.messagesContainer));
+//        unbindDrawables(adapterView.getRootView().findViewById(R.id.chatSendButton));
+//        adapterView.destroy();
+//        adapterView.destroyDrawingCache();
+//        adapterView.removeView(getView());
+//        adapterView.removeAllViews();
+//        adapterView.removeAllViewsInLayout();
+//        adapterView = null;
+//        chatIdentity = null;
+//        chatSettings = null;
+//        chatManager = null;
+//        appSession = null;
+//        destroy();
     }
 
     @Override
@@ -260,8 +281,10 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 try {
-                                    onUpdateViewUIThread();
-                                    adapterView.clean();
+                                    if(alert.cleanChat()){
+                                        adapterView.clean();
+                                        onUpdateViewUIThread(null);
+                                    }
                                 }catch (Exception e) {
                                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                 }
@@ -290,43 +313,8 @@ public class ChatMessageListFragment extends AbstractFermatFragment<ReferenceApp
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
-
-                        int chatBroadcasterType = fermatBundle.getInt(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE);
-
-                        switch (chatBroadcasterType) {
-                            case ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE:
-
-                                String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_REMOTE_PK);
-
-                                if (adapterView != null)
-                                    adapterView.checkStatus(remotePK, h);
-
-                                break;
-                            case ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE:
-
-                                UUID messageId = (UUID) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_ID);
-
-                                MessageStatus messageStatus = (MessageStatus) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_STATUS);
-
-                                if (adapterView != null)
-                                    adapterView.updateMessageStatus(messageId, messageStatus);
-                                break;
-                            case ChatBroadcasterConstants.NEW_MESSAGE_TYPE:
-
-                                Message message = (Message) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE);
-
-                                if (adapterView != null)
-                                    adapterView.addMessage(message);
-
-                                break;
-                            default:
-
-                                System.out.println("ChatMessageListFragment -> No deberia pasar por aca.");
-
-                                onUpdateViewUIThread();
-                                break;
-                        }
-
+                        String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION);
+                        onUpdateViewUIThread(remotePK);
                     }
                 }
             } catch (ClassCastException e) {

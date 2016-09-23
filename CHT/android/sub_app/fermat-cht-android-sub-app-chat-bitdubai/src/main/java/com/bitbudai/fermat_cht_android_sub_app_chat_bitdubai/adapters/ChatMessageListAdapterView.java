@@ -435,7 +435,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
                             lastTimeSent = currentTimeToSend;
                         }
                     }
-                    if ((start > 0 || s.charAt(s.length() - 1) == '\n') && !isScrollingUp) {
+                    if ((start > 0 || s.charAt(s.length() - 1) == '\n' || s.length() > 10) && !isScrollingUp) {
                         scroll();
                     }
                 }
