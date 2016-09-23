@@ -149,12 +149,7 @@ public class ContactsListFragment
             contactStatus.clear();
             if (chatIdentity != null) {
                 List<ChatActorCommunityInformation> con = chatManager.listAllConnectedChatActor(chatIdentity, MAX, offset);
-                Collections.sort(con, new Comparator<ChatActorCommunityInformation>() {
-                    @Override
-                    public int compare(ChatActorCommunityInformation actorA, ChatActorCommunityInformation actorB) {
-                        return (actorA.getAlias().trim().toLowerCase().compareTo(actorB.getAlias().trim().toLowerCase()));
-                    }
-                });
+
                 int size = con.size();
                 if (size > 0) {
                     for (ChatActorCommunityInformation conta : con) {
@@ -243,7 +238,6 @@ public class ContactsListFragment
                     @Override
                     public void run() {
                         try {
-                            //Toast.makeText(getActivity(), "Contacts Updated", Toast.LENGTH_SHORT).show();
                             updateValues();
                             final ContactListAdapter adaptador =
                                     new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus,
@@ -260,7 +254,7 @@ public class ContactsListFragment
             }
         });
         // Inflate the list fragment layout
-        return layout;//return inflater.inflate(R.layout.contact_list_fragment, container, false);
+        return layout;
     }
 
     @Override
@@ -272,11 +266,11 @@ public class ContactsListFragment
         menu.clear();
         MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.contact_list_menu, menu);
-        menu.add(0, 2, 2, "Go to Profile")
+        menu.add(0, 2, 2, getResourceString(R.string.menu_go_to_profile))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0, 3, 3, "Go to Community")
+        menu.add(0, 3, 3, getResourceString(R.string.menu_go_to_community))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0, 4, 4, "Help")
+        menu.add(0, 4, 4, getResourceString(R.string.menu_help))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         MenuItem searchItem = menu.findItem(R.id.menu_search);// menu.findItem(1);
         if (searchItem != null) {
@@ -416,7 +410,7 @@ public class ContactsListFragment
 //        mSwipeRefreshLayout = null;
 //        searchView = null;
 //        applicationsHelper = null;
-//        destroy();
+        destroy();
     }
 
     private void unbindDrawables(View view)

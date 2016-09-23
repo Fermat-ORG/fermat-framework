@@ -10,11 +10,15 @@
     <string name="imageview_description">Imagen en miniatura de contacto</string>
     <string name="address_button_description">Ver dirección</string>
     <string name="menu_search">Búsqueda</string>
+    <string name="menu_help">Ayuda</string>
+    <string name="menu_go_to_community">Ir a la comunidad</string>
+    <string name="menu_go_to_profile">Ir a perfiles</string>
     <string name="menu_add_contact">Agregar contacto</string>
     <string name="menu_open_chat">Abrir chat</string>
     <string name="menu_create_group">Crear grupo</string>
     <string name="menu_create_broadcasting">Crear difusión</string>
     <string name="menu_delete_all_chats">Borrar todos los chats</string>
+    <string name="menu_delete_all_chats_body">¿Quieres borrar todos los chats? Se borraran todos los chats y sus mensajes</string>
     <string name="menu_switch_profile">Cambiar de perfil</string>
     <string name="menu_settings">Reporte de Errores</string>
     <string name="menu_block_contact">Bloquear Contacto</string>
@@ -23,9 +27,11 @@
     <string name="cht_chat_footer_broadcast_step_one">Piecera del paso uno del dialogo de difusión de chat</string>
     <string name="menu_view_contact">Ver contacto</string>
     <string name="menu_clean_chat">Limpiar Chat</string>
+    <string name="menu_clean_chat_body">¿Estás seguro de limpiar este chat? Todos los mensajes se borraran.</string>
     <string name="menu_send_chat_email">Enviar chat por Email</string>
-    <string name="menu_edit_contact">Editar contact</string>
+    <string name="menu_edit_contact">Editar contacto</string>
     <string name="menu_delete_chat">Borrar chat</string>
+    <string name="menu_delete_chat_body">¿Quieres borrar este chat?</string>
     <string name="menu_delete_contact">Borrar contact</string>
     <string name="no_contacts">No se encontraron contactos</string>
     <string name="no_contact_selected">No hay contacto seleccionado</string>
@@ -51,7 +57,7 @@
     <string name="cht_no">No</string>
     <string name="cht_last_time">Ultima vez </string>
     <string name="cht_online">en línea</string>
-    <string name="cht_typing">escribiendo...</string>
+    <string name="cht_typing">Escribiendo&#8230;</string>
     <string name="cht_today">hoy a </string>
     <string name="cht_yesterday">ayer a </string>
 
@@ -95,6 +101,8 @@
     <string name="action_search">Buscar</string>
     <string name="status">Estatus</string>
     <string name="profile_status">Disponible</string>
+
+    <string name="no_info_available">No hay informacion disponible</string>
 
     <string name="drawer_open">Abrir panel de navegación</string>
     <string name="drawer_close">Cerrar panel de navegación</string>
