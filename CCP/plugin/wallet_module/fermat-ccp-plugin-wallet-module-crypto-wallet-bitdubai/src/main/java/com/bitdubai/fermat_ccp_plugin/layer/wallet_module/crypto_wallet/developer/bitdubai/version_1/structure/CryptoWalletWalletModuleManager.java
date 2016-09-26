@@ -896,15 +896,26 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
             for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
 
+                if(notInList(cryptoWalletTransactionList,bwt))
                     cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 
             return cryptoWalletTransactionList;
+
+
         } catch (CantLoadWalletsException | com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException e) {
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, e);
         } catch(Exception e){
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
+    }
+
+    private boolean notInList(List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> cryptoWalletTransactionList, CryptoWalletTransaction transaction) {
+        for (com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction item : cryptoWalletTransactionList) {
+            if (item.getTransactionHash().equals(transaction.getTransactionHash()))
+                return false;
+        }
+        return true;
     }
 
     @Override

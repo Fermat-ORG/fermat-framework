@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
+    android:layout_height="130dp"
     >
 
     <LinearLayout
@@ -133,7 +133,8 @@
             android:padding="5dp"
             android:paddingRight="7dp"
             android:paddingLeft="7dp"
-            android:textIsSelectable="true" />
+            android:textIsSelectable="true"
+            android:layout_marginBottom="5dp" />
     </LinearLayout>
 
     <LinearLayout

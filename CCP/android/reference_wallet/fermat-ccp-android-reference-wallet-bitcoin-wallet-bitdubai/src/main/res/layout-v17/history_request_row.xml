@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
+    android:layout_height="130dp"
     >
 
     <LinearLayout
@@ -141,7 +141,8 @@
             android:clickable="false"
             android:cursorVisible="false"
             android:focusable="false"
-            android:focusableInTouchMode="false"/>
+            android:focusableInTouchMode="false"
+            android:layout_marginBottom="5dp" />
     </LinearLayout>
 
     <LinearLayout
