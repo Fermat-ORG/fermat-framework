@@ -420,7 +420,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                             }
                         });
                 if(!isContact)
-                   if(!notActorInList(intraUserActorList,intraUser))
+                   if(notActorInList(intraUserActorList,intraUser))
                          intraUserActorList.add(new CryptoWalletWalletModuleIntraUserActor(
                                 intraUser.getName(),
                                 isContact,

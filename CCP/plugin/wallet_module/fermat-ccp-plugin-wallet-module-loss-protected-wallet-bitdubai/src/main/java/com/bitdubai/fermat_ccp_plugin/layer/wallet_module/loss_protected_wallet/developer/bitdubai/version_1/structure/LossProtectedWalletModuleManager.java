@@ -95,6 +95,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.Crypt
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListReceivePaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListSentPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantApproveLossProtectedRequestPaymentException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantCreateLossProtectedWalletContactException;
@@ -409,6 +410,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                             }
                         });
                 if(!isContact)
+                    if(notActorInList(intraUserActorList,intraUser))
                 intraUserActorList.add(new LossProtectedWalletModuleIntraUserActor(
                         intraUser.getName(),
                         isContact,
@@ -423,6 +425,13 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
         }
     }
 
+    private boolean notActorInList( List<LossProtectedWalletIntraUserActor> connectionList, IntraWalletUserActor actor) {
+        for (LossProtectedWalletIntraUserActor item : connectionList) {
+            if (item.getPublicKey().equals(actor.getPublicKey()))
+                return false;
+        }
+        return true;
+    }
 
     private LossProtectedWalletIntraUserActor enrichIntraUser(IntraWalletUserActor intraWalletUser,
                                                        String walletPublicKey) throws CantEnrichLossProtectedIntraUserException {
