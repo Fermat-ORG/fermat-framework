@@ -468,25 +468,26 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
 
     @Override
     public void onUpdateViewOnUIThread(String code){
-      try
-        {
-            //update contact address
-            lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
+      try {
+          if(!code.equals("BlockchainDownloadComplete"))
+          {
+              //check contact to show is de same to update
+              if (lossProtectedWalletContact.getContactId().equals(UUID.fromString(code))) {
+                  //update contact address
+                  LossProtectedWalletContact lossProtectedWalletContactUpdate = lossProtectedWalletManager.findWalletContactById(UUID.fromString(code), PublicKey);
 
-            lossProtectedWalletContact = lossProtectedWalletManager.findWalletContactById(UUID.fromString(code), PublicKey);
+                  if(lossProtectedWalletContactUpdate.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
+                  {    lossProtectedWalletContact = lossProtectedWalletContactUpdate;
+                      text_view_address.setText(lossProtectedWalletContactUpdate.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
+                      img_update.setVisibility(View.GONE);
+                      receive_button.setVisibility(View.VISIBLE);
+                      send_button.setVisibility(View.VISIBLE);
 
+                  }
 
-            if(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
-            {
-                text_view_address.setText(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
-                img_update.setVisibility(View.GONE);
-                receive_button.setVisibility(View.VISIBLE);
-                send_button.setVisibility(View.VISIBLE);
-
-            }
-
-            lossProtectedWalletSession.setData(SessionConstant.LAST_SELECTED_CONTACT,lossProtectedWalletContact);
-
+                lossProtectedWalletSession.setData(SessionConstant.LAST_SELECTED_CONTACT,lossProtectedWalletContact);
+              }
+          }
         }
         catch(Exception e)
         {

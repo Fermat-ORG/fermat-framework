@@ -420,11 +420,12 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                             }
                         });
                 if(!isContact)
-                intraUserActorList.add(new CryptoWalletWalletModuleIntraUserActor(
-                        intraUser.getName(),
-                        isContact,
-                        intraUser.getProfileImage(),
-                        intraUser.getPublicKey()));
+                   if(!notActorInList(intraUserActorList,intraUser))
+                         intraUserActorList.add(new CryptoWalletWalletModuleIntraUserActor(
+                                intraUser.getName(),
+                                isContact,
+                                intraUser.getProfileImage(),
+                                intraUser.getPublicKey()));
             }
             return intraUserActorList;
         } catch (CantGetIntraWalletUsersException e) {
@@ -434,6 +435,13 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         }
     }
 
+    private boolean notActorInList( List<CryptoWalletIntraUserActor> connectionList, IntraWalletUserActor actor) {
+        for (CryptoWalletIntraUserActor item : connectionList) {
+            if (item.getPublicKey().equals(actor.getPublicKey()))
+                return false;
+        }
+        return true;
+    }
 
     private CryptoWalletIntraUserActor enrichIntraUser(IntraWalletUserActor intraWalletUser,
                                                        String walletPublicKey) throws CantEnrichIntraUserException {

@@ -189,7 +189,7 @@
                             android:textColorHint="#9a9a9c"
                             android:textSize="16sp"
                             android:textStyle="normal"
-                            android:maxLength="8"/>
+                            android:maxLength="12"/>
 
                         <Spinner
                             android:id="@+id/spinner"

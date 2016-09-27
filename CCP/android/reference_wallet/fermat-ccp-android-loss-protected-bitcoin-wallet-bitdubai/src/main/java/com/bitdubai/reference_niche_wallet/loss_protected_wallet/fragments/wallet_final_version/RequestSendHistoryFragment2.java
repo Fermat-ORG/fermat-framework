@@ -75,7 +75,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
      * Executor Service
      */
     //private ExecutorService executor;
-    private int MAX_TRANSACTIONS = 20;
+
     private int MAX= 10;
     private int offset = 0;
     private View rootView;
@@ -106,20 +106,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
 
         lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
 
-/*
-        getExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-//                final FermatDrawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //                      getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
-                    }
-                });
-            }
-        });
- */       try {
+       try {
             lossProtectedWalletManager = referenceWalletSession.getModuleManager();
 
             if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
@@ -300,9 +287,9 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
                 //when refresh offset set 0
                 if (refreshType.equals(FermatRefreshTypes.NEW))*/
             try{
-                offset = 0;
+                offset = pos;
                 lstPaymentRequest = lossProtectedWalletManager.listSentPaymentRequest(walletPublicKey, blockchainNetworkType, MAX, offset);
-               // offset += MAX_TRANSACTIONS;
+
             } catch (Exception e) {
                 referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

@@ -217,8 +217,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                intraUserInformationList = (ArrayList) result[0];
                 clean(intraUserInformationList);
+                intraUserInformationList = (ArrayList) result[0];
+
                 if (adapter != null)
                     adapter.changeDataSet(intraUserInformationList);
                 if(intraUserInformationList.isEmpty()){

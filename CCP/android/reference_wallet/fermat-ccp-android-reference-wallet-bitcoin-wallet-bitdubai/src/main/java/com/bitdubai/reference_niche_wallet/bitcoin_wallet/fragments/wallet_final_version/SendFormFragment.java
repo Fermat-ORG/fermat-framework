@@ -331,7 +331,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
 
 
-        editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11, 8)});
+        editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11, 6)});
 
         List<String> list = new ArrayList<String>();
         list.add("BTC");
