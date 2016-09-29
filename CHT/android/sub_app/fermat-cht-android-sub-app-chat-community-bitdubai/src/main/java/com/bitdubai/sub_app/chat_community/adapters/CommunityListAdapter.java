@@ -343,7 +343,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                     connectDialog.setTitle( context.getResources().getString(R.string.cht_comm_resend_request));
                     connectDialog.setDescription( context.getResources().getString(R.string.cht_comm_text_resend));
                     connectDialog.setUsername(dat.getAlias());
-                    connectDialog.setSecondDescription(context.getResources().getString(R.string.cht_comm_text_resend2));
+                    //connectDialog.setSecondDescription(context.getResources().getString(R.string.cht_comm_text_resend2));
                     connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {

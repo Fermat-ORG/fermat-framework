@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/cht_comm_notif_list_bg"
     android:orientation="vertical"
-    android:paddingLeft="16dp"
+    android:paddingLeft="0dp"
     android:paddingRight="16dp"
     android:layout_marginBottom="10dp"
-    android:paddingTop="10dp">
+    >
+
+    <ImageView
+        android:layout_width="5dp"
+        android:layout_height="64dp"
+        android:background="#09D260"
+        android:paddingRight="16dp"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,10 +30,12 @@
                 android:id="@+id/imageView_avatar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
-                android:src="@drawable/cht_comm_notification"/>
+                android:src="@drawable/cht_comm_notification"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
         </RelativeLayout>
 
         <LinearLayout
@@ -87,4 +96,4 @@
         android:layout_marginTop="8dp"
         android:background="#ffffff" />
 
-</LinearLayout>
+</RelativeLayout>

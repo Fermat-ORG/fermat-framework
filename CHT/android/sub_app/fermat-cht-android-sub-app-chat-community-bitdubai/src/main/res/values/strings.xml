@@ -27,7 +27,7 @@
     <string name="cht_comm_text_disconnect">Do you want to disconnect </string>
     <string name="cht_comm_text_disconnect2">Do you want to be disconnected from </string>
     <string name="cht_comm_text_disconnect3">Disconnected</string>
-    <string name="cht_comm_text_resend">Do you want to resend </string>
+    <string name="cht_comm_text_resend">Do you want to resend \n a connection request?</string>
     <string name="cht_comm_text_accept"> wants to be your contact in P2P Chat</string>
     <string name="cht_comm_text_resend2">a connection request?</string>
     <string name="cht_comm_text_resend_toast">The connection request has been sent\n you need to wait until the user responds</string>

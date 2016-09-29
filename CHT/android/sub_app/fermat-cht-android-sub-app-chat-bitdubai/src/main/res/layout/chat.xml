@@ -64,7 +64,6 @@
                 android:id="@+id/chatSendButton"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_gravity="bottom"
                 android:background="@drawable/cht_buttom_send"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"

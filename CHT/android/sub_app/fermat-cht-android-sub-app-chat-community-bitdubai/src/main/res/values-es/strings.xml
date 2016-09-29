@@ -23,13 +23,13 @@
     <string name="cht_comm_resend_toast">The connection request has been sent
  you need to wait until the user responds</string>
     <string name="cht_comm_not_found">Ilocalizable</string>
-    <string name="cht_comm_disconnection_request">Dessconectado</string>
+    <string name="cht_comm_disconnection_request">Desconectado</string>
     <string name="cht_comm_resend_request">Reenvío de solicitud de conexíon</string>
     <string name="cht_comm_text_connect">¿Está seguro de enviar una solicitud de contacto a este usuario?</string>
     <string name="cht_comm_text_disconnect">¿Quiere desconectarse de </string>
     <string name="cht_comm_text_disconnect2">¿Quiere ser desconectado de  </string>
     <string name="cht_comm_text_disconnect3">Desconectado</string>
-    <string name="cht_comm_text_resend">¿Quiere reenviar </string>
+    <string name="cht_comm_text_resend">¿Quiere reenviar \n una solicitud de conexíon?</string>
     <string name="cht_comm_text_accept"> quiere ser tu contacto en P2P Chat</string>
     <string name="cht_comm_text_resend2">una solicitud de conexíon?</string>
     <string name="cht_comm_text_resend_toast">La solicitud de conexíon ha sido enviada,\n necesita esperar hasta que el usuario responda</string>

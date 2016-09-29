@@ -40,11 +40,13 @@ import java.util.TimeZone;
 public class ChatMessageListAdapter extends FermatAdapter<ChatMessage, ChatMessageHolder> implements Filterable {
 
     private String filterString;
+    private ArrayList<ChatMessage> chatMessages;
 
     long time, nanos, milliseconds;
 
     public ChatMessageListAdapter(Context context, ArrayList<ChatMessage> chatMessages) {
         super(context, chatMessages);
+        this.chatMessages = chatMessages;
     }
 
     @Override
@@ -63,6 +65,10 @@ public class ChatMessageListAdapter extends FermatAdapter<ChatMessage, ChatMessa
         Collections.sort(dataSet, new ChatMessageComparator());
 
         super.changeDataSet(dataSet);
+    }
+
+    public List<ChatMessage> getDataSet() {
+        return this.dataSet;
     }
 
     @Override

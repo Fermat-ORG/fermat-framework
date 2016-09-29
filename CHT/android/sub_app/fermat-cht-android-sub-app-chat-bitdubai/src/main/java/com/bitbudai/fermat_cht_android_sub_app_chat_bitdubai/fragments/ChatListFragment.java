@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,7 +85,9 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
  * @version 1.0
  */
 
-public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager> implements FermatListItemListeners<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat> {
+public class ChatListFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>
+        implements FermatListItemListeners<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.Chat> {
 
     private ChatManager chatManager;
     private ErrorManager errorManager;
@@ -394,7 +396,7 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
             if (chatCurrent.getImgId() != null) {
                 chatCurrent.getImgId().compress(Bitmap.CompressFormat.PNG, 100, stream);
             } else {
-                Drawable d = getResources().getDrawable(R.drawable.cht_center_profile_icon_center);
+                Drawable d = getResources().getDrawable(R.drawable.cht_image_profile);
                 Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             }
@@ -458,7 +460,38 @@ public class ChatListFragment extends AbstractFermatFragment<ReferenceAppFermatS
     @Override
     public void onDestroy() {
         super.onDestroy();
-        destroy();
+//        unbindDrawables(layout.findViewById(R.id.list));
+//        unbindDrawables(layout.findViewById(R.id.empty_view));
+//        adapter.clear();
+//        chatSettings = null;
+//        chatIdentity = null;
+//        chatManager = null;
+//        applicationsHelper = null;
+//        contactName.clear();
+//        message.clear();
+//        chatId.clear();
+//        dateMessage.clear();
+//        contactId.clear();
+//        status.clear();
+//        typeMessage.clear();
+//        noReadMsgs.clear();
+//        imgId.clear();
+//        emptyView.removeAllViewsInLayout();
+//        contactName.clear();
+//        message.clear();
+//        searchView.destroyDrawingCache();
+//        searchView.removeAllViews();
+//        searchView.removeAllViewsInLayout();
+//        searchView = null;
+//        applicationsHelper =null;
+//        chatId.clear();
+//        dateMessage.clear();
+//        contactId.clear();
+//        status.clear();
+//        typeMessage.clear();
+//        noReadMsgs.clear();
+//        imgId.clear();
+//        destroy();
     }
 
     @Override

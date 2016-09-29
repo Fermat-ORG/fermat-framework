@@ -1,5 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -33,6 +34,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ConstantSubtitle;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.utils.KeyboardUtil;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
@@ -84,6 +86,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
     private ViewGroup rootView;
     private String leftName;
     private UUID chatId;
+    private Activity activity;
     private String remotePk;
     private Bitmap contactIcon;
     private BitmapDrawable contactIconCircular;
@@ -98,7 +101,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
                                       ErrorManager errorManager,
                                       FermatSession appSession,
                                       Toolbar toolbar,
-                                      ChatPreferenceSettings chatSettings) {
+                                      ChatPreferenceSettings chatSettings, Activity activity) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         addView(inflater.inflate(R.layout.chat, (rootView != null) ? rootView : null));
@@ -107,6 +110,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
         this.appSession = appSession;
         this.toolbar = toolbar;
         this.chatSettings = chatSettings;
+        this.activity = activity;
         initControls();
     }
 
@@ -175,7 +179,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
                 }
             }
 
-            if (adapter == null || adapter.getItemCount() > 0) {
+            if (adapter == null || adapter.getItemCount() > 0 || adapter.getDataSet().size() == 0) {
                 adapter = new ChatMessageListAdapter(this.getContext(), chatHistory);
                 messagesContainer.setAdapter(adapter);
             } else {
@@ -268,27 +272,30 @@ public class ChatMessageListAdapterView extends LinearLayout {
     }
 
     public void onBackPressed() {
-        RelativeLayout.LayoutParams layoutParams =
-                (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        if (dm.heightPixels < 800)
-            layoutParams.height = 764;
-        else if (dm.heightPixels < 1080 && dm.heightPixels >= 800)
-            layoutParams.height = 944;
-        else if (dm.heightPixels < 1280 && dm.heightPixels >= 1080)
-            layoutParams.height = 1244;
-        messagesContainer.setLayoutParams(layoutParams);
+        if (!(Build.VERSION.SDK_INT > 18 && Build.VERSION.SDK_INT < 21)) {
+            RelativeLayout.LayoutParams layoutParams =
+                    (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
+            DisplayMetrics dm = getResources().getDisplayMetrics();
+            if (dm.heightPixels < 800)
+                layoutParams.height = 764;
+            else if (dm.heightPixels < 1080 && dm.heightPixels >= 800)
+                layoutParams.height = 944;
+            else if (dm.heightPixels < 1280 && dm.heightPixels >= 1080)
+                layoutParams.height = 1244;
+            messagesContainer.setLayoutParams(layoutParams);
+        }
     }
 
     public void onAdjustKeyboard() {
-        try {
-            RelativeLayout.LayoutParams layoutParams =
-                    (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
-            layoutParams.height = 440;
-            messagesContainer.setLayoutParams(layoutParams);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
+        if (!(Build.VERSION.SDK_INT > 18 && Build.VERSION.SDK_INT < 21)) {
+            try {
+                RelativeLayout.LayoutParams layoutParams =
+                        (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
+                layoutParams.height = 440;
+                messagesContainer.setLayoutParams(layoutParams);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -304,12 +311,12 @@ public class ChatMessageListAdapterView extends LinearLayout {
 
     private boolean isKeyboardShown(View rootView) {
         //SOFT_KEYBOARD_HEIGHT_DP_THRESHOLD = 128;
-        Rect r = new Rect();
-        rootView.getWindowVisibleDisplayFrame(r);
-        DisplayMetrics dm = rootView.getResources().getDisplayMetrics();
-        int heightDiff = rootView.getBottom() - r.bottom;
-        boolean isKeyboardShown = heightDiff > 128 * dm.density;
-        return isKeyboardShown;
+            Rect r = new Rect();
+            rootView.getWindowVisibleDisplayFrame(r);
+            DisplayMetrics dm = rootView.getResources().getDisplayMetrics();
+            int heightDiff = rootView.getBottom() - r.bottom;
+            boolean isKeyboardShown = heightDiff > 128 * dm.density;
+            return isKeyboardShown;
     }
 
     public String setFormatLastTime(Timestamp date) {
@@ -416,7 +423,20 @@ public class ChatMessageListAdapterView extends LinearLayout {
                         }
                     }
                 });
-        toolbar.setSubtitle("");
+        messageET.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                KeyboardUtil keyboardUtil = new KeyboardUtil(activity, v.getRootView().findViewById(R.id.inputContainer), 6);
+                if(hasFocus) {
+                    if (!isScrollingUp) {
+                        scroll();
+                    }
+                    keyboardUtil.enable();
+                }else
+                    keyboardUtil.disable();
+            }
+        });
+                toolbar.setSubtitle("");
         messageET.addTextChangedListener(new TextWatcher() {
 
             private long lastTimeSent = 0;
@@ -435,7 +455,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
                             lastTimeSent = currentTimeToSend;
                         }
                     }
-                    if ((start > 0 || s.charAt(s.length() - 1) == '\n' || s.length() > 10) && !isScrollingUp) {
+                    if ((start >= 0 || s.charAt(s.length() - 1) == '\n' || s.length() > 10) && !isScrollingUp) {
                         scroll();
                     }
                 }
@@ -597,7 +617,6 @@ public class ChatMessageListAdapterView extends LinearLayout {
     public void displayMessage(ChatMessage message) {
 
         if (message != null && chatHistory != null && adapter != null) {
-
             chatHistory.add(message);
             adapter.changeDataSet(chatHistory);
             this.scroll();
@@ -712,6 +731,9 @@ public class ChatMessageListAdapterView extends LinearLayout {
     private void setToolbar(Toolbar toolbar) {
         this.toolbar = toolbar;
     }
+    private void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
     public static class Builder {
 
@@ -722,6 +744,7 @@ public class ChatMessageListAdapterView extends LinearLayout {
         private ChatPreferenceSettings chatSettings;
         private FermatSession appSession;
         private Toolbar toolbar;
+        private Activity activity;
         String leftName;
 
         public Builder(Context context) {
@@ -758,6 +781,11 @@ public class ChatMessageListAdapterView extends LinearLayout {
             return this;
         }
 
+        public Builder addActivity(Activity activity) {
+            this.activity = activity;
+            return this;
+        }
+
         public ChatMessageListAdapterView build() {
             ChatMessageListAdapterView chatView = new ChatMessageListAdapterView(
                     context,
@@ -765,7 +793,8 @@ public class ChatMessageListAdapterView extends LinearLayout {
                     errorManager,
                     appSession,
                     toolbar,
-                    chatSettings
+                    chatSettings,
+                    activity
             );
 
             if (rootView != null) {
@@ -789,6 +818,9 @@ public class ChatMessageListAdapterView extends LinearLayout {
             }
             if (toolbar != null) {
                 chatView.setToolbar(toolbar);
+            }
+            if (activity != null) {
+                chatView.setActivity(activity);
             }
 
             return chatView;

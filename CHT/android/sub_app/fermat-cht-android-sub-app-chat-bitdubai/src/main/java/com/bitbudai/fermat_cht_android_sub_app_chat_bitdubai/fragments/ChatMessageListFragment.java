@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatMessageListAdapterView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
@@ -73,7 +73,6 @@ public class ChatMessageListFragment
         super.onCreate(savedInstanceState);
         try {
 
-
             chatManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -118,19 +117,17 @@ public class ChatMessageListFragment
             }
 
             toolbar = getToolbar();
-            toolbar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        if (adapterView != null)
-                            adapterView.clean();
-                        changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
-                    }catch (Exception e){
-                        if (errorManager != null)
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    }
-                }
-            });
+//            toolbar.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    try {
+//                        changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+//                    }catch (Exception e){
+//                        if (errorManager != null)
+//                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                    }
+//                }
+//            });
 
         } catch (Exception e) {
             if (errorManager != null)
@@ -176,6 +173,7 @@ public class ChatMessageListFragment
                 .addChatManager(chatManager)
                 .addChatSettings(chatSettings)
                 .addToolbar(toolbar)
+                .addActivity(getActivity())
                 .build();
         return adapterView;
     }
@@ -205,6 +203,7 @@ public class ChatMessageListFragment
                 @Override
                 public boolean onQueryTextChange(String s) {
                     if (s.equals(searchView.getQuery().toString())) {
+                        adapterView.refreshEvents();
                         adapterView.getFilter(s);
                     }
                     return false;
@@ -215,6 +214,8 @@ public class ChatMessageListFragment
                 if (filterString.length() > 0) {
                     searchView.setQuery(filterString, true);
                     searchView.setIconified(false);
+                } else {
+                    adapterView.refreshEvents();
                 }
             }
         }
@@ -283,7 +284,7 @@ public class ChatMessageListFragment
                                 try {
                                     if(alert.cleanChat()){
                                         adapterView.clean();
-                                        onUpdateViewUIThread(null);
+                                        //onUpdateViewUIThread();
                                     }
                                 }catch (Exception e) {
                                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

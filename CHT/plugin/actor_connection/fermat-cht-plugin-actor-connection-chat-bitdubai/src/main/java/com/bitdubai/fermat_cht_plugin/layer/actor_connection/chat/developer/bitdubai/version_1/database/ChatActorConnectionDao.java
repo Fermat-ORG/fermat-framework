@@ -112,7 +112,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatActorConnecti
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            actorConnectionsTable.addUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
+           actorConnectionsTable.addUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
 
             final DatabaseTableRecord record = actorConnectionsTable.getEmptyRecord();
 
@@ -136,6 +136,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatActorConnecti
         if (connectionId == null)
             throw new CantUpdateActorConnectionException("", "The connectionId is required, can not be null");
 
+
         if (image == null)
             throw new CantUpdateActorConnectionException("", "The image is required, can not be null");
 
@@ -153,9 +154,6 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatActorConnecti
             );
         }
     }
-
-
-
 
     protected ChatActorConnection buildActorConnectionNewRecord(DatabaseTableRecord record) throws InvalidParameterException {
         UUID connectionId = record.getUUIDValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME);

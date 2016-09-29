@@ -13,8 +13,10 @@
         android:layout_height="4.5dp"
         android:background="@drawable/cht_comm_round_corner_line_dialog"
         android:fitsSystemWindows="true" />
-
-    <LinearLayout
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -220,4 +222,5 @@
                 android:textColor="#ffffff"/>
         </RelativeLayout>
     </LinearLayout>
+    </ScrollView>
 </LinearLayout>

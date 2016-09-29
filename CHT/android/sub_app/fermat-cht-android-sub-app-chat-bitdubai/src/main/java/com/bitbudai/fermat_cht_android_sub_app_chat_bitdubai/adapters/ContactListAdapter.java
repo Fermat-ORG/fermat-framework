@@ -70,7 +70,7 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
             if (contactIcon.get(position) != null)
                 imagen.setImageBitmap(Utils.getRoundedShape(contactIcon.get(position), 400));
             else
-                imagen.setImageResource(R.drawable.cht_center_profile_icon_center);
+                imagen.setImageResource(R.drawable.cht_image_profile);
 
             contactName = (TextView) item.findViewById(R.id.text1);
             contactName.setText(contactInfo.get(position));
